@@ -1,0 +1,122 @@
+.stats-card {
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  margin: 0px 0px 16px;
+  padding: 18px 14px;
+}
+.stats-card h3 {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0px 0px 9px;
+}
+.stats-card p {
+  margin: 12px 0px 0px;
+}
+.stats-card.halves {
+  padding: 0px;
+}
+.stats-card.halves > button + button {
+  border-top: 1px solid var(--line);
+}
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.donut-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+}
+.donut-center {
+  position: absolute;
+  inset: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 15px;
+  pointer-events: none;
+}
+.donut-center strong {
+  font-size: 22px;
+}
+.donut-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+.stats-category {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0px;
+  width: 100%;
+  text-align: left;
+}
+.empty p {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 35px;
+}
+.sheet-account strong {
+  font-weight: 500;
+  font-size: 18px;
+}
+.stats-card.flow {
+  padding: 18px 12px;
+}
+.stats-card .cash-total .money {
+  font-size: 23px;
+}
+.stats-card.halves h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.stats-card.halves .money {
+  font-size: 22px;
+}
+.stats-card.halves > button {
+  display: block;
+  width: 100%;
+  padding: 24px 12px;
+  text-align: center;
+  padding: 24px 12px;
+}
+.donut-center strong {
+  font-size: 18px;
+}
+.donut-center small {
+  text-align: center;
+}
+.empty svg {
+  width: 155px;
+  height: 155px;
+  margin: 30px auto 45px;
+  color: var(--accent);
+  width: 80px;
+  height: 80px;
+  margin: 20px auto;
+}
+.average-selected {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 15px;
+  text-align: left;
+  font-size: 14px;
+  margin-top: 16px;
+}
+.average-selected > span:nth-child(2n) {
+  text-align: right;
+}
+.accounts-content .account-section-heading .money {
+  font-size: 18px;
+}
+.accounts-content .account-row .money {
+  font-size: 17px;
+  line-height: 1.3;
+}
+.mon-add-item strong {
+  font-size: 15px;
+  font-weight: 400;
+}

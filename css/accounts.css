@@ -1,0 +1,468 @@
+.account-row.big {
+  min-height: 82px;
+}
+.goal-info {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.9;
+}
+.accounts-archive-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 18px 4px;
+  text-align: left;
+}
+.sheet-account .total {
+  text-align: center;
+  padding-top: 18px;
+}
+.account-row .goal-info {
+  max-width: 112px;
+  font-size: 13px;
+  flex: 0 0 auto;
+  line-height: 1.8;
+}
+.goal-strip {
+  width: 7px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 8px;
+  width: 7px;
+}
+.total-card {
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  overflow: hidden;
+  margin: 0px 0px 30px;
+}
+.converted-total {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  text-align: center;
+  background: color-mix(in srgb, var(--positive) 10%, var(--bg));
+  font-size: 20px;
+  border-top: 1px solid var(--line);
+}
+#base:has(.accounts-content) {
+  background: rgb(255, 251, 255);
+}
+#base:has(.accounts-content) .hero .caption {
+  font-size: 15px;
+  line-height: 22px;
+  gap: 5px;
+}
+#base:has(.accounts-content) .hero .hero-action {
+  right: 12px;
+  top: 20px;
+}
+#base:has(.accounts-content) .hero .hero-action svg {
+  width: 29px;
+  height: 29px;
+}
+.accounts-content {
+  padding: 0px 16px 24px;
+  background: rgb(255, 251, 255);
+}
+.accounts-content .account-section-heading {
+  padding: 0px;
+  min-height: 30px;
+  margin: 12px 0px 14px;
+  font-size: 17px;
+  font-weight: 400;
+}
+.accounts-content .account-section-heading:not(:first-child) {
+  margin-top: 23px;
+}
+.accounts-content .account-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.accounts-content .account-row {
+  width: 100%;
+  min-height: 72px;
+  margin: 0px;
+  padding: 8px 9px;
+  gap: 16px;
+  border-radius: 15px;
+  border: 1px solid rgb(224, 220, 227);
+  background: rgb(255, 251, 255);
+  text-align: left;
+  position: relative;
+}
+.accounts-content .account-row .badge {
+  width: 54px;
+  height: 54px;
+  border-radius: 9px;
+}
+.accounts-content .account-row .badge svg {
+  width: 28px;
+  height: 28px;
+}
+.accounts-content .account-row .grow {
+  gap: 4px;
+}
+.accounts-content .account-row .name {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0px;
+}
+.accounts-content .account-row .goal-info {
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgb(196, 190, 200);
+  padding-right: 10px;
+}
+.accounts-content .account-row .goal-strip {
+  width: 8px;
+  border-radius: 8px 0px 0px 8px;
+  right: 0px;
+}
+.accounts-content .accounts-archive-toggle {
+  display: block;
+  margin: 24px auto 0px;
+  padding: 12px;
+  color: rgb(119, 113, 124);
+  font-size: 13px;
+}
+.accounts-content .total-card {
+  margin-bottom: 20px;
+}
+@media (max-width: 360px) {
+  .accounts-content {
+    padding-inline: 12px;
+  }
+  .accounts-content .account-row {
+    gap: 10px;
+  }
+  .accounts-content .account-row .badge {
+    width: 47px;
+    height: 47px;
+  }
+}
+.account-section-heading {
+  margin-top: 20px;
+  margin-bottom: 9px;
+}
+.account-group {
+  overflow: hidden;
+  border-radius: 15px;
+}
+@media (max-width: 370px) {
+  .account-row .goal-info {
+    font-size: 11px;
+  }
+}
+.account-editor-content {
+  padding-top: 12px;
+  padding-bottom: 100px;
+}
+.account-detail-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 10px 22px;
+}
+.account-detail-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 9px;
+}
+.account-detail-money {
+  font-size: 18px;
+  margin-top: 2px;
+}
+.account-favorite {
+  border: 0px;
+  background: transparent;
+  padding: 6px;
+  align-self: flex-start;
+  color: rgb(40, 85, 233);
+}
+.account-favorite.is-favorite {
+  color: rgb(40, 85, 233);
+}
+.account-favorite.is-favorite svg {
+  fill: currentcolor;
+}
+.account-actions-six {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0px, 1fr));
+  gap: 9px;
+  padding: 0px 6px 18px;
+}
+.account-action-tile {
+  border: 0px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  min-height: 77px;
+  line-height: 1.15;
+  text-align: center;
+  padding: 3px 0px;
+}
+.account-action-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgb(241, 228, 248);
+  color: rgb(171, 57, 194);
+}
+.account-actions-six .account-action-tile:nth-child(2) .account-action-icon {
+  background: rgb(240, 232, 242);
+  color: rgb(121, 113, 139);
+}
+.account-actions-six .account-action-tile:nth-child(3) .account-action-icon {
+  background: rgb(226, 244, 250);
+  color: rgb(52, 165, 197);
+}
+.account-actions-six .account-action-tile:nth-child(4) .account-action-icon {
+  background: rgb(223, 248, 237);
+  color: rgb(64, 183, 139);
+}
+.account-actions-six .account-action-tile:nth-child(5) .account-action-icon {
+  background: rgb(249, 241, 217);
+  color: rgb(189, 157, 69);
+}
+.account-actions-six .account-action-tile:nth-child(6) .account-action-icon {
+  background: rgb(249, 228, 237);
+  color: rgb(200, 84, 140);
+}
+.account-editor-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 24px 0px 20px;
+}
+.account-editor-archive {
+  background: rgb(238, 231, 246);
+  border: 0px;
+}
+.account-editor-delete {
+  background: rgb(252, 225, 230);
+  border: 0px;
+  color: rgb(184, 61, 85);
+}
+.account-favorite-badge {
+  position: absolute;
+  left: 58px;
+  top: 58px;
+  font-size: 12px;
+  line-height: 13px;
+  color: rgb(40, 85, 233);
+  background: var(--bg);
+  border-radius: 3px;
+  padding: 0px 2px;
+}
+.account-detail-head .account-favorite {
+  margin-left: auto;
+}
+.account-detail-head .account-favorite svg {
+  stroke: rgb(40, 85, 233);
+}
+.mon-debt-completed {
+  border-right: 4px solid rgb(40, 189, 137);
+}
+.mon-account-available {
+  display: block;
+  color: rgb(115, 113, 128);
+  font-size: 12px;
+  margin-top: 2px;
+  font-weight: 400;
+}
+.hero-balance-label:focus-visible {
+  outline: 2px solid var(--accent);
+  border-radius: 6px;
+}
+.hero-balance-label {
+  border: 0px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 2px 1px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 10px;
+  padding: 5px 9px;
+  margin: -3px -7px;
+  transition:
+    background-color 0.18s,
+    box-shadow 0.18s,
+    transform 0.16s;
+  touch-action: manipulation;
+  min-height: 36px;
+  gap: 7px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-balance-label {
+    transition: none;
+  }
+}
+.hero-balance-label:active,
+.hero-balance-label.balance-pressed {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
+  transform: scale(0.965);
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
+  transform: scale(0.965);
+}
+.mon-goal-pct-main {
+  font-size: 1em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.mon-goal-pct-frac {
+  font-size: 0.57em;
+  vertical-align: baseline;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.mon-goal-pct-unit {
+  font-size: 0.8em;
+  margin-left: 1px;
+}
+.account-editor-reference {
+  padding-top: 13px;
+  padding: 4px 10px 38px;
+  background: rgb(255, 251, 255);
+}
+.account-editor-reference .account-editor-bottom {
+  margin: 13px 0px 15px;
+  gap: 8px;
+}
+.account-editor-reference .account-editor-bottom button {
+  margin: 0px;
+  min-height: 45px;
+  font-size: 13px;
+}
+.mon-account-type-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 2px 14px;
+}
+.mon-account-type-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid rgb(227, 220, 230);
+  border-radius: 13px;
+  background: rgb(255, 251, 255);
+  text-align: left;
+  min-height: 81px;
+}
+.mon-type-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: rgb(56, 81, 220);
+  flex: 0 0 auto;
+}
+.mon-type-text {
+  flex: 1 1 0%;
+  min-width: 0px;
+}
+.mon-type-chevron {
+  font-size: 26px;
+  color: rgb(132, 123, 137);
+}
+#base .hero .caption,
+#base:has(.accounts-content) .hero .caption {
+  height: 22px !important;
+  line-height: 22px !important;
+  font-size: 13px !important;
+  gap: 4px !important;
+}
+.account-type-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0px 16px;
+}
+.account-icon-wrap {
+  display: inline-flex;
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+}
+.account-row.big .account-icon-wrap {
+  width: 48px;
+  height: 48px;
+}
+.account-icon-wrap > .account-favorite-badge {
+  position: absolute;
+  inset: auto -1px -1px auto;
+  z-index: 1;
+  font-size: 11px;
+  line-height: 13px;
+  padding: 0px 2px;
+  background: var(--bg);
+  color: rgb(40, 85, 233);
+  border-radius: 3px;
+  -webkit-text-stroke: 1.15px rgb(255, 250, 254);
+  paint-order: stroke;
+  text-shadow: rgba(30, 32, 75, 0.2) 0px 0px 1px;
+  pointer-events: none;
+  background: transparent !important;
+  padding: 0px !important;
+  border: 0px !important;
+  right: 0px !important;
+  bottom: -1px !important;
+  line-height: 1 !important;
+  font-size: 12px !important;
+  color: rgb(40, 85, 233) !important;
+}
+.hero-search .caption {
+  display: none;
+}
+.hero-search {
+  height: 82px;
+}
+.ops-hero-search {
+  position: absolute;
+  left: 15px;
+  right: 64px;
+  top: 16px;
+  height: 51px;
+  border-bottom: 1px solid rgb(168, 160, 170);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-search .ops-hero-search {
+  left: 12px;
+  right: 65px;
+  gap: 4px;
+  border-bottom: 1px solid rgb(169, 161, 170);
+}
+.hero-search .ops-hero-search .icon-button {
+  width: 38px;
+  height: 42px;
+  flex: 0 0 auto;
+}

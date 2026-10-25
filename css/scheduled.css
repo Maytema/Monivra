@@ -1,0 +1,149 @@
+.stats-halves {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: center;
+  padding: 12px;
+}
+.stats-halves > div {
+  flex: 1 1 0%;
+}
+.stats-halves small {
+  display: block;
+  margin-bottom: 7px;
+}
+.right small {
+  display: block;
+  margin-top: 4px;
+}
+.bar-track {
+  height: 7px;
+  background: var(--soft);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 7px;
+  display: block;
+}
+.bar-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 10px;
+}
+.budget-card small {
+  display: block;
+  margin-top: 12px;
+}
+.mon-add-item small {
+  font-size: 13px;
+  margin-top: 5px;
+}
+.more-empty h2 {
+  font-size: 19px;
+  font-weight: 500;
+}
+.budget-card {
+  width: 100%;
+  padding: 15px 17px;
+}
+.budget-card .bar-track {
+  margin: 15px 0px 10px;
+}
+.more-empty {
+  padding: 90px 28px;
+  text-align: center;
+  max-width: 440px;
+  margin: 0px auto;
+  padding: 64px 22px 24px;
+}
+.schedule-modal {
+  padding: 0px 2px 8px;
+}
+.schedule-modal h2 {
+  margin: 6px 0px 22px;
+  font-size: 23px;
+}
+.schedule-unit {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0px, 1fr));
+  gap: 6px;
+  margin: 4px 0px 22px;
+  background: var(--nav);
+  border-radius: 15px;
+  padding: 5px;
+}
+.schedule-unit-btn {
+  padding: 13px 2px;
+  text-align: center;
+  border-radius: 11px;
+  font-size: 13px;
+}
+.schedule-subtitle {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 22px 0px 12px;
+}
+.schedule-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0px, 1fr));
+  gap: 5px;
+}
+.schedule-weekday {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--nav);
+  font-weight: 500;
+  text-align: center;
+}
+.schedule-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.schedule-choice,
+.schedule-lead {
+  border: 1px solid var(--line);
+  padding: 13px 9px;
+  border-radius: 14px;
+  text-align: center;
+}
+.schedule-leads {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0px, 1fr));
+  gap: 8px;
+}
+.schedule-lead {
+  font-size: 13px;
+}
+.schedule-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.schedule-disable {
+  display: block;
+  margin: 10px auto 0px;
+}
+.scheduled-date {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+  margin: 17px 0px 9px;
+  padding: 14px 16px 0px;
+  font-weight: 500;
+}
+.recur-caption {
+  margin: -5px 0px 10px 64px;
+  color: var(--accent);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: -4px 0px 12px 64px;
+  padding-left: 64px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: -7px;
+  margin-bottom: 12px;
+}
