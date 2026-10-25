@@ -1,33 +1,49 @@
 /* Recurrence, reminders, scheduled payments and budgets */
 import { render } from "../app/shell.js";
-import { I, TODAY, clone, esc, uid } from "../core/constants.js";
-import { D, U } from "../core/state.js";
-import { acc, bounds, cat, convert, dateLabel, money } from "../domain/finance.js";
+import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { appData, uiState } from "../core/state.js";
+import {
+  accountById,
+  categoryById,
+  convertCurrency,
+  dateLabel,
+  formatMoney,
+  periodBounds,
+} from "../domain/finance.js";
 import { operationStart } from "./operation-editor.js";
 import { multiSelect, opRow, recurLabel } from "./operations.js";
 import {
   amountPicker,
-  close,
+  closeLayers,
   confirmAction,
   currencyPicker,
-  finish,
-  header,
+  finishFlow,
+  openPage,
+  openSheet,
   optionSheet,
-  page,
+  pageHeader,
   periodBar,
-  sheet,
 } from "../ui/kit.js";
-import { B, IB, field, t, toast, toggle, txt } from "../ui/primitives.js";
+import {
+  buttonHtml,
+  fieldButtonHtml,
+  iconButtonHtml,
+  textFieldHtml,
+  toast,
+  toggleRowHtml,
+  translate,
+} from "../ui/primitives.js";
 
+// Recurrence picker (every N days/weeks/months/years).
 export function recurrence(d) {
-  let r = clone(d.recur || { every: 1, unit: "Days", remaining: null, days: [] }),
+  let r = deepClone(d.recur || { every: 1, unit: "Days", remaining: null, days: [] }),
     limited = r.remaining !== null;
   const units = ["Days", "Weeks", "Months", "Years"];
-  sheet(
+  openSheet(
     () =>
       `<div class="schedule-modal"><h2>Repeat</h2><div class="schedule-unit">${units
         .map((unit) =>
-          B(
+          buttonHtml(
             unit,
             () => {
               r.unit = unit;
@@ -38,7 +54,7 @@ export function recurrence(d) {
         )
         .join(
           "",
-        )}</div>${txt("Repeat every", r.every, (v) => (r.every = Number(v)), "", "number")}${
+        )}</div>${textFieldHtml("Repeat every", r.every, (v) => (r.every = Number(v)), "", "number")}${
         r.unit === "Weeks"
           ? `<div class="schedule-subtitle">Days of the week</div><div class="schedule-week">${[
               "S",
@@ -50,7 +66,7 @@ export function recurrence(d) {
               "S",
             ]
               .map((name, i) =>
-                B(
+                buttonHtml(
                   name,
                   () => {
                     r.days = r.days.includes(i) ? r.days.filter((n) => n !== i) : [...r.days, i];
@@ -62,7 +78,7 @@ export function recurrence(d) {
               )
               .join("")}</div>`
           : ""
-      }<div class="schedule-subtitle">Number of repetitions</div><div class="schedule-choices">${B(
+      }<div class="schedule-subtitle">Number of repetitions</div><div class="schedule-choices">${buttonHtml(
         "Unlimited",
         () => {
           limited = false;
@@ -70,7 +86,7 @@ export function recurrence(d) {
           render();
         },
         "schedule-choice " + (!limited ? "chosen" : ""),
-      )}${B(
+      )}${buttonHtml(
         "Limited",
         () => {
           limited = true;
@@ -78,7 +94,7 @@ export function recurrence(d) {
           render();
         },
         "schedule-choice " + (limited ? "chosen" : ""),
-      )}</div>${limited ? txt("Repetitions", r.remaining, (v) => (r.remaining = Number(v)), "", "number") : ""}<div class="schedule-modal-actions">${B("Cancel", () => close(), "outline")}${B(
+      )}</div>${limited ? textFieldHtml("Repetitions", r.remaining, (v) => (r.remaining = Number(v)), "", "number") : ""}<div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Save",
         () => {
           if (!Number.isInteger(r.every) || r.every < 1 || r.every > 365)
@@ -89,16 +105,16 @@ export function recurrence(d) {
             return toast("Choose at least one weekday");
           r.remaining = limited ? r.remaining : null;
           d.recur = r;
-          close();
+          closeLayers();
         },
         "primary",
       )}</div>${
         d.recur
-          ? B(
+          ? buttonHtml(
               "Turn off repeating",
               () => {
                 d.recur = null;
-                close();
+                closeLayers();
               },
               "text-button schedule-disable",
             )
@@ -108,6 +124,7 @@ export function recurrence(d) {
     "dialog",
   );
 }
+// Reminder time picker for scheduled payments.
 export function reminder(d) {
   let raw = d.reminder || "09:00",
     clock = /^\d{2}:\d{2}$/.test(raw) ? raw : "09:00",
@@ -121,16 +138,16 @@ export function reminder(d) {
     "1 hour before",
     "1 day before",
   ];
-  sheet(
+  openSheet(
     () =>
-      `<div class="schedule-modal"><h2>Reminder</h2>${toggle("Remind me", enabled, () => {
+      `<div class="schedule-modal"><h2>Reminder</h2>${toggleRowHtml("Remind me", enabled, () => {
         enabled = !enabled;
         render();
       })}${
         enabled
           ? `<div class="schedule-subtitle">When to remind</div><div class="schedule-leads">${leads
               .map((x) =>
-                B(
+                buttonHtml(
                   x,
                   () => {
                     lead = x;
@@ -139,16 +156,16 @@ export function reminder(d) {
                   "schedule-lead " + (lead === x ? "chosen" : ""),
                 ),
               )
-              .join("")}</div>${txt("Time", clock, (v) => (clock = v), "", "time")}`
+              .join("")}</div>${textFieldHtml("Time", clock, (v) => (clock = v), "", "time")}`
           : ""
-      }<p class="footnote">Notifications are stored locally. Browser background reminders are not available in this offline preview.</p><div class="schedule-modal-actions">${B("Cancel", () => close(), "outline")}${B(
+      }<p class="footnote">Notifications are stored locally. Browser background reminders are not available in this offline preview.</p><div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Save",
         () => {
           if (enabled && !/^([01]\d|2[0-3]):[0-5]\d$/.test(clock))
             return toast("Enter a valid time");
           d.reminder = enabled ? clock : null;
           d.reminderLead = enabled ? lead : null;
-          close();
+          closeLayers();
         },
         "primary",
       )}</div></div>`,
@@ -156,16 +173,17 @@ export function reminder(d) {
     "dialog",
   );
 }
+// Scheduled payments page.
 export function scheduledView() {
-  const sorted = [...D.scheduled].sort((a, b) =>
-      U.scheduleDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date),
+  const sorted = [...appData.scheduled].sort((a, b) =>
+      uiState.scheduleDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date),
     ),
     dates = [...new Set(sorted.map((o) => o.date))];
   return (
-    header(
+    pageHeader(
       "Scheduled payments",
-      IB("sort", "Sort scheduled payments", () => {
-        U.scheduleDesc = !U.scheduleDesc;
+      iconButtonHtml("sort", "Sort scheduled payments", () => {
+        uiState.scheduleDesc = !uiState.scheduleDesc;
         render();
       }),
     ) +
@@ -174,28 +192,29 @@ export function scheduledView() {
         ? dates
             .map(
               (date) =>
-                `<p class="scheduled-date">${esc(dateLabel(date))}</p>${sorted
+                `<p class="scheduled-date">${escapeHtml(dateLabel(date))}</p>${sorted
                   .filter((o) => o.date === date)
                   .map(
                     (o) =>
                       opRow(o, true) +
-                      `<div class="recur-caption">${o.recur ? I("repeat", 14) : I("calendar", 14)} ${esc(recurLabel(o.recur))}</div>`,
+                      `<div class="recur-caption">${o.recur ? iconSvg("repeat", 14) : iconSvg("calendar", 14)} ${escapeHtml(recurLabel(o.recur))}</div>`,
                   )
                   .join("")}`,
             )
             .join("")
-        : `<div class="more-empty">${I("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${B("Create", () => operationStart({}, true), "primary")}</div>`
-    }</div>${dates.length ? B(I("plus", 26), () => operationStart({}, true), "fab no-nav", `aria-label="Add scheduled payment"`) : ""}`
+        : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", () => operationStart({}, true), "primary")}</div>`
+    }</div>${dates.length ? buttonHtml(iconSvg("plus", 26), () => operationStart({}, true), "fab no-nav", `aria-label="Add scheduled payment"`) : ""}`
   );
 }
 
+// Amount spent in a budget's period.
 export function budgetSpend(b) {
   let period = {
     mode: b.period || "month",
-    anchor: U.period.anchor || TODAY,
+    anchor: uiState.period.anchor || TODAY,
   };
-  const [from, to] = bounds(period);
-  return D.ops
+  const [from, to] = periodBounds(period);
+  return appData.ops
     .filter(
       (o) =>
         o.type === "expense" &&
@@ -203,56 +222,59 @@ export function budgetSpend(b) {
         o.date <= to &&
         (!b.categories ||
           b.categories.includes(o.category) ||
-          b.categories.includes(cat(o.category)?.parent)),
+          b.categories.includes(categoryById(o.category)?.parent)),
     )
-    .reduce((s, o) => s + convert(o.amount, acc(o.from)?.currency, b.currency), 0);
+    .reduce((s, o) => s + convertCurrency(o.amount, accountById(o.from)?.currency, b.currency), 0);
 }
+// Budgets list page.
 export function budgetsView() {
   return (
-    header(
+    pageHeader(
       "Budgets",
-      IB("plus", "Create a budget", () => editBudget()),
+      iconButtonHtml("plus", "Create a budget", () => editBudget()),
     ) +
     periodBar() +
     `<div class="content">${
-      D.budgets.length
-        ? D.budgets
+      appData.budgets.length
+        ? appData.budgets
             .map((b) => {
               let used = budgetSpend(b),
                 pct = b.amount ? (used / b.amount) * 100 : 0;
-              return B(
-                `<div style="display:flex;align-items:center;gap:12px"><span class="badge small">${I("budget")}</span><div class="grow"><strong>${esc(b.name)}</strong><div class="muted" style="font-size:12px;margin-top:5px">${b.categories ? b.categories.length + " categories" : "Entire expenses"}</div></div>${I("right", 18)}</div><div class="stats-halves" style="margin-top:19px"><span>${money(used, b.currency)} <small>spent</small></span><span>${money(b.amount, b.currency)} <small>limit</small></span></div><div class="bar-track"><span style="width:${Math.min(100, pct)}%;background:${pct > 100 ? "var(--negative)" : "var(--accent)"}"></span></div><small>${Math.round(pct)}% · ${t(b.period === "week" ? "Weekly" : b.period === "day" ? "Daily" : b.period === "year" ? "Yearly" : "Monthly")}</small>`,
+              return buttonHtml(
+                `<div style="display:flex;align-items:center;gap:12px"><span class="badge small">${iconSvg("budget")}</span><div class="grow"><strong>${escapeHtml(b.name)}</strong><div class="muted" style="font-size:12px;margin-top:5px">${b.categories ? b.categories.length + " categories" : "Entire expenses"}</div></div>${iconSvg("right", 18)}</div><div class="stats-halves" style="margin-top:19px"><span>${formatMoney(used, b.currency)} <small>spent</small></span><span>${formatMoney(b.amount, b.currency)} <small>limit</small></span></div><div class="bar-track"><span style="width:${Math.min(100, pct)}%;background:${pct > 100 ? "var(--negative)" : "var(--accent)"}"></span></div><small>${Math.round(pct)}% · ${translate(b.period === "week" ? "Weekly" : b.period === "day" ? "Daily" : b.period === "year" ? "Yearly" : "Monthly")}</small>`,
                 () => editBudget(b),
                 "card budget-card",
               );
             })
             .join("")
-        : `<div class="more-empty">${I("budget", 75)}<h2>Budgets will be here</h2><p class="muted">Create a budget to track your expenses</p>${B("Create a budget", () => editBudget(), "primary")}</div>`
-    }</div>${D.budgets.length ? B(I("plus", 26), () => editBudget(), "fab no-nav", `aria-label="Create a budget"`) : ""}`
+        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">Create a budget to track your expenses</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+    }</div>${appData.budgets.length ? buttonHtml(iconSvg("plus", 26), () => editBudget(), "fab no-nav", `aria-label="Create a budget"`) : ""}`
   );
 }
 
+// Open the budget editor (new budget when no argument is given).
 export function editBudget(b) {
-  page("budget", {
+  openPage("budget", {
     draft: b
-      ? clone(b)
+      ? deepClone(b)
       : {
           id: null,
           name: "",
-          currency: D.settings.currency,
+          currency: appData.settings.currency,
           amount: 0,
           period: "month",
           categories: null,
         },
   });
 }
+// Budget editor form.
 export function budgetView(p) {
   const b = p.draft;
   return (
-    header(b.id ? "Edit budget" : "Create a budget") +
-    `<div class="content"><div class="fields">${!b.id ? txt("Title", b.name, (v) => (b.name = v), "Enter a name") : ""}${field(
+    pageHeader(b.id ? "Edit budget" : "Create a budget") +
+    `<div class="content"><div class="fields">${!b.id ? textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter a name") : ""}${fieldButtonHtml(
       "Time period",
-      t({ day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" }[b.period]),
+      translate({ day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" }[b.period]),
       () =>
         optionSheet(
           "Time period",
@@ -268,32 +290,32 @@ export function budgetView(p) {
             render();
           },
         ),
-    )}${field(
+    )}${fieldButtonHtml(
       "Categories",
       b.categories
-        ? b.categories.map((id) => esc(cat(id)?.name || "")).join(", ")
-        : t("Entire expenses"),
+        ? b.categories.map((id) => escapeHtml(categoryById(id)?.name || "")).join(", ")
+        : translate("Entire expenses"),
       () =>
         multiSelect(
           "Categories",
-          D.categories.filter((c) => c.type === "expense"),
+          appData.categories.filter((c) => c.type === "expense"),
           b.categories,
           (v) => {
             b.categories = v;
             render();
           },
         ),
-    )}${field("Budget currency", esc(b.currency), () =>
+    )}${fieldButtonHtml("Budget currency", escapeHtml(b.currency), () =>
       currencyPicker(b.currency, (v) => {
         b.currency = v;
         render();
       }),
-    )}${field("Budget amount", money(b.amount, b.currency), () =>
+    )}${fieldButtonHtml("Budget amount", formatMoney(b.amount, b.currency), () =>
       amountPicker("Budget amount", b.amount, (v) => {
         b.amount = v;
         render();
       }),
-    )}</div>${B(
+    )}</div>${buttonHtml(
       b.id ? "Save" : "Create",
       () => {
         if (!b.name.trim()) return toast("Enter a name");
@@ -301,23 +323,23 @@ export function budgetView(p) {
         if (b.categories?.length === 0) return toast("Select at least one category");
         if (b.id)
           Object.assign(
-            D.budgets.find((x) => x.id === b.id),
+            appData.budgets.find((x) => x.id === b.id),
             b,
           );
-        else D.budgets.push({ ...b, id: uid() });
-        finish("Budget saved");
+        else appData.budgets.push({ ...b, id: newId() });
+        finishFlow("Budget saved");
       },
       "primary",
     )}${
       b.id
-        ? B(
+        ? buttonHtml(
             "Delete",
             () =>
               confirmAction(
                 "Delete this budget?",
                 () => {
-                  D.budgets = D.budgets.filter((x) => x.id !== b.id);
-                  finish("Budget deleted");
+                  appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
+                  finishFlow("Budget deleted");
                 },
                 true,
                 "Delete",

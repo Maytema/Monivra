@@ -1,24 +1,25 @@
-/* Application state: data (D) and UI state (U) */
-import { KEY, TODAY } from "./constants.js";
-import { emptyData, seed } from "../data/seed.js";
-import { validData } from "../data/storage.js";
+/* Application state: persistent data (appData) and UI state (uiState) */
+import { STORAGE_KEY, TODAY } from "./constants.js";
+import { createEmptyData, createSeedData } from "../data/seed.js";
+import { isValidData } from "../data/storage.js";
 
 // Install editable demonstration data only on the very first launch.
 // Existing datasets (including deliberately emptied ones) are never reseeded.
-export let D;
+export let appData;
 try {
-  const stored = localStorage.getItem(KEY);
+  const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === null) {
-    D = seed();
-    localStorage.setItem(KEY, JSON.stringify(D));
+    appData = createSeedData();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
   } else {
-    D = JSON.parse(stored);
-    if (!validData(D)) D = emptyData();
+    appData = JSON.parse(stored);
+    if (!isValidData(appData)) appData = createEmptyData();
   }
 } catch {
-  D = emptyData();
+  appData = createEmptyData();
 }
-export let U = {
+// Transient UI state: active tab, period, filters, page/sheet stacks, selection.
+export let uiState = {
   tab: "accounts",
   accountTab: "Accounts",
   catType: "expense",
@@ -40,12 +41,40 @@ export let U = {
   layers: [],
   reorder: false,
 };
-export function setD(value) {
-  D = value;
+// Callback waiting for a photo chosen through the hidden file input.
+export let photoCallback = null;
+// Kind of file the import dialog expects: "json" or "csv".
+export let importKind = "json";
+// True while the PIN lock screen is shown.
+export let locked = false;
+// Digits typed so far on the PIN lock screen.
+export let pinEntry = "";
+export function setAppData(value) {
+  appData = value;
   return value;
 }
 
-export function setU(value) {
-  U = value;
+export function setUiState(value) {
+  uiState = value;
+  return value;
+}
+
+export function setPhotoCallback(value) {
+  photoCallback = value;
+  return value;
+}
+
+export function setImportKind(value) {
+  importKind = value;
+  return value;
+}
+
+export function setLocked(value) {
+  locked = value;
+  return value;
+}
+
+export function setPinEntry(value) {
+  pinEntry = value;
   return value;
 }

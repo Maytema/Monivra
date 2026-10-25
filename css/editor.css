@@ -1,3 +1,63 @@
+/* Operation editor: calculator, counterparty and account pickers.
+   Files are loaded in the order listed in index.html; later files may override earlier ones. */
+.calc-amount input:focus {
+  border: 0px;
+  padding: 0px;
+}
+.calc-amount span {
+  font-size: 29px;
+}
+.mon-calc-tile-value > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mon-calc-number input:focus {
+  border: 0px;
+  padding: 0px;
+}
+.account-editor-reference .field input {
+  font-size: 14px;
+  border: 1px solid rgb(143, 135, 146);
+  border-radius: 3px;
+  padding: 9px 10px;
+  min-height: 35px;
+}
+.ops-compact-actions button:last-child svg {
+  background: rgb(224, 210, 255);
+  color: rgb(108, 58, 255);
+}
+.hero-search .ops-hero-search input {
+  font-size: 16px;
+  flex: 1 1 0%;
+  padding: 7px 4px !important;
+}
+.ops-compact-editor .mon-calc-number input,
+.ops-compact-editor .mon-calc-number .mon-dual-value {
+  font-size: 34px !important;
+}
+.ops-compact-editor .ops-compact-actions button {
+  font-size: 13px !important;
+  gap: 5px !important;
+  min-width: 80px !important;
+}
+.mon-nine-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentcolor;
+  opacity: 0.86;
+}
+.mon-single-tappable input {
+  pointer-events: none;
+}
+.mon-calc-date .icon-button {
+  height: 32px;
+  width: 32px;
+}
+.mon-calc-attachments .icon-button {
+  width: 55px;
+  height: 49px;
+}
 .account-row,
 .cat-tile {
   border: 1px solid var(--line);
@@ -8,14 +68,61 @@
   min-width: 0px;
   background: var(--bg);
 }
+.account-row {
+  width: 100%;
+  margin-bottom: 15px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 17px;
+  box-sizing: border-box;
+  min-height: 64px;
+}
+@media (max-width: 380px) {
+  .account-row {
+    padding-inline: 12px;
+    gap: 10px;
+  }
+}
+@media (max-width: 370px) {
+  .account-row {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+.calc-pickers .badge {
+  width: 24px;
+  height: 24px;
+  background: none;
+}
+@media (max-width: 359px) {
+  .cat-tile .badge {
+    width: 35px;
+    height: 40px;
+  }
+}
 .cat-tile {
   gap: 10px;
   padding: 7px;
   border-radius: 13px;
   min-height: 61px;
 }
+@media (max-width: 359px) {
+  .cat-tile {
+    gap: 7px;
+  }
+}
 .secondary {
   background: var(--soft);
+}
+.operation-form .calc-tools .text-button {
+  font-size: 13px;
+  padding: 8px;
+}
+.overlay:has(.mon-calc-shell:not(.ops-compact-editor)) .panel {
+  padding-bottom: 8px;
 }
 .calc-amount:focus {
   border: 0px;
@@ -35,11 +142,50 @@
   padding: 4px 0px;
   margin: 10px -16px;
 }
+.operation-form .calc-tools {
+  margin: 6px -16px;
+}
+.calc-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+.calc-amount {
+  text-align: center;
+  width: 100%;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: none;
+  background: none;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 0px 14px;
+  font-size: 30px;
+}
+.operation-form .keypad {
+  margin-top: 8px;
+}
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 9px 0px;
+}
+.ops-compact-editor .tag-cloud {
+  display: flex;
+  max-height: 34px !important;
+  overflow: hidden !important;
+  margin: 3px 10px !important;
+  flex-wrap: nowrap !important;
+}
+.ops-compact-editor .tag-cloud .tag {
+  white-space: nowrap;
+  font-size: 11px !important;
 }
 .dots {
   text-align: center;
@@ -58,79 +204,9 @@
   overflow: visible;
   padding: 0px 0px 8px;
 }
-.operation-form .calc-tools {
-  margin: 6px -16px;
-}
-.calc-pickers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 14px;
-}
-.calc-amount {
-  display: block;
-  font-size: 34px;
-  text-align: center;
-  width: 100%;
-  padding: 22px 4px;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: none;
-  background: none;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 24px 0px 14px;
-  font-size: 30px;
-}
-.calc-amount input:focus {
-  border: 0px;
-  padding: 0px;
-}
-.calc-amount span {
-  font-size: 29px;
-}
-.operation-form .keypad {
-  margin-top: 8px;
-}
-.operation-form .calc-tools .text-button {
-  font-size: 13px;
-  padding: 8px;
-}
-@media (max-width: 359px) {
-  .cat-tile {
-    gap: 7px;
-  }
-}
-.account-row {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 15px;
-  position: relative;
-  min-height: 66px;
-  overflow: hidden;
-  min-height: 74px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 17px;
-  box-sizing: border-box;
-  min-height: 64px;
-}
-@media (max-width: 380px) {
-  .account-row {
-    padding-inline: 12px;
-    gap: 10px;
-  }
-}
-@media (max-width: 370px) {
-  .account-row {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
+.mon-mode-indicator.is-active {
+  background: rgb(36, 184, 122);
+  box-shadow: rgba(36, 184, 122, 0.32) 0px 0px 5px;
 }
 .counterparty-title {
   margin: 10px 18px 14px;
@@ -152,10 +228,6 @@
   padding: 18px 12px 9px;
   color: var(--text, #26252a);
 }
-.mon-calc-date .icon-button {
-  height: 32px;
-  width: 32px;
-}
 .mon-calc-tile {
   border: 1px solid rgb(222, 212, 231);
   background: rgb(247, 240, 250);
@@ -168,20 +240,12 @@
   min-width: 0px;
   text-align: left;
 }
-.mon-calc-tile-value > span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .mon-calc-number {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 52px;
   gap: 7px;
-}
-.mon-calc-number input:focus {
-  border: 0px;
-  padding: 0px;
 }
 .mon-calc-rate,
 .mon-calc-note {
@@ -224,14 +288,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px;
-  border-bottom: 1px solid var(--line);
   height: 52px;
   border-bottom: 0px;
   margin-bottom: 9px;
 }
 .mon-calc-date-label {
-  font-size: 13px;
   font-weight: 500;
   text-align: center;
   flex: 1 1 0%;
@@ -240,8 +301,6 @@
 .mon-calc-parties {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 8px 0px;
   gap: 9px;
   margin: 5px 0px 10px;
 }
@@ -258,17 +317,13 @@
   border-color: rgb(180, 121, 240);
 }
 .mon-calc-tile-caption {
-  font-size: 11px;
-  color: rgb(132, 121, 138);
   font-size: 14px;
   color: rgb(51, 45, 55);
   font-weight: 600;
 }
 .mon-calc-tile-value {
-  font-size: 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
   overflow: hidden;
   white-space: nowrap;
   font-size: 18px;
@@ -284,24 +339,12 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  min-height: 35px;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
   min-height: 51px;
   margin: 0px -16px;
   border-top: 1px solid rgb(216, 210, 223);
   border-bottom: 1px solid rgb(216, 210, 223);
 }
-.mon-calc-attachments .icon-button {
-  width: 38px;
-  height: 34px;
-  width: 55px;
-  height: 49px;
-}
 .mon-calc-keypad {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0px, 1fr));
-  gap: 4px;
   margin-top: 8px;
   display: grid;
   grid-template-columns: repeat(5, minmax(0px, 1fr));
@@ -317,9 +360,6 @@
   background: rgb(255, 251, 255);
 }
 .mon-calc-confirm {
-  background: rgb(224, 216, 252);
-  color: rgb(51, 50, 160);
-  grid-area: 3 / 5 / span 2;
   height: auto;
   grid-area: 3 / 5 / span 2;
   background: rgb(222, 219, 253);
@@ -330,7 +370,6 @@
   color: rgb(41, 37, 45);
 }
 .mon-calc-delete {
-  font-size: 18px;
   font-size: 25px;
 }
 @media (min-height: 740px) {
@@ -358,6 +397,89 @@
   font-weight: 500;
   line-height: 1;
 }
+.mon-calc-shell {
+  max-width: 430px;
+  margin: auto;
+  padding: 0px 0px 10px;
+  position: relative;
+}
+.mon-calc-number,
+.mon-calc-number.mon-dual-number,
+.mon-calc-number.mon-dual-number.mon-dual-receive {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+}
+.mon-calc-key.mon-calc-toggle {
+  font-size: 20px;
+  position: relative;
+}
+.ops-compact-editor .mon-calc-keypad {
+  display: none;
+}
+.mon-calc-shell:not(.ops-compact-editor) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0px;
+}
+.mon-calc-shell:not(.ops-compact-editor) .mon-calc-keypad {
+  flex: 1 1 0%;
+  min-height: 260px;
+  max-height: 43dvh;
+}
+.ops-compact-editor .mon-calc-number {
+  min-height: 78px !important;
+  margin: 0px !important;
+  padding: 9px 0px !important;
+}
+.ops-compact-editor .mon-calc-rate {
+  font-size: 11px !important;
+  padding: 0px 8px !important;
+}
+.ops-compact-editor .mon-calc-note {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 4px 10px !important;
+  font-size: 12px !important;
+}
+.mon-calc-toggle {
+  position: relative !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+.ops-compact-editor .mon-calc-date {
+  margin: 0px 0px 10px !important;
+  flex-shrink: 0;
+  height: 37px !important;
+  margin-bottom: 6px !important;
+}
+.ops-compact-editor .mon-calc-parties {
+  gap: 9px !important;
+  margin: 0px 0px 10px !important;
+  flex-shrink: 0;
+  margin-bottom: 6px !important;
+}
+.ops-compact-editor .mon-calc-tile {
+  min-height: 70px !important;
+  padding: 8px !important;
+}
+.ops-compact-editor .mon-calc-attachments {
+  margin: 0px !important;
+  flex-shrink: 0;
+  min-height: 46px !important;
+}
+@media (max-height: 740px) {
+  .ops-compact-editor .mon-calc-tile {
+    min-height: 60px !important;
+  }
+}
 .mon-calc-number.mon-dual-number.mon-dual-receive {
   background: rgb(251, 227, 247);
 }
@@ -377,16 +499,7 @@
   padding: 10px;
   cursor: pointer;
 }
-.mon-calc-shell {
-  padding: 0px 10px 12px;
-  max-width: 430px;
-  margin: auto;
-  padding: 0px 0px 10px;
-  position: relative;
-}
 .mon-calc-number.mon-dual-number {
-  margin: 0px -10px;
-  min-height: 69px;
   display: flex;
   justify-content: center;
   background: rgb(231, 229, 241);
@@ -406,20 +519,11 @@
 .mon-dual-number.mon-dual-active .mon-dual-value {
   font-weight: 650;
 }
-.mon-calc-number,
-.mon-calc-number.mon-dual-number,
-.mon-calc-number.mon-dual-number.mon-dual-receive {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  box-sizing: border-box !important;
-}
 .mon-calc-number .mon-dual-value {
   font-variant-numeric: tabular-nums;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: center;
   text-align: center !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -427,74 +531,57 @@
   padding: 10px 18px !important;
 }
 .mon-calc-number.mon-dual-number.mon-dual-active {
-  background: rgb(224, 231, 251);
-  background: rgb(224, 231, 251) !important;
-  box-shadow: rgb(117, 152, 232) 0px 0px 0px 2px inset !important;
   background: rgb(237, 240, 250) !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 .mon-calc-number.mon-dual-number.mon-dual-receive.mon-dual-active {
-  background: rgb(251, 224, 245);
-  background: rgb(249, 223, 244) !important;
-  box-shadow: rgb(225, 123, 219) 0px 0px 0px 2px inset !important;
   background: rgb(247, 236, 247) !important;
-  box-shadow: none !important;
-}
-.mon-calc-key.mon-calc-toggle {
-  font-size: 20px;
-  position: relative;
+  box-shadow: none;
 }
 .mon-calc-number.mon-dual-number .mon-dual-value {
   font-weight: 400 !important;
   text-align: center !important;
-  justify-content: center !important;
+  justify-content: center;
 }
 .mon-calc-number.mon-dual-number.mon-dual-active .mon-dual-value {
-  font-weight: 650 !important;
   font-weight: 500 !important;
-}
-.account-editor-reference .field input {
-  font-size: 14px;
-  border: 1px solid rgb(143, 135, 146);
-  border-radius: 3px;
-  padding: 9px 10px;
-  min-height: 35px;
 }
 .mon-calc-number.mon-dual-number,
 .mon-calc-number.mon-dual-number.mon-dual-receive {
-  transition:
-    background-color 0.13s,
-    box-shadow 0.13s;
-  background: rgb(255, 255, 255) !important;
-  background: rgb(255, 255, 255) !important;
-  box-shadow: none !important;
-  border: 0px !important;
   border-radius: 0px !important;
   transition: background 0.16s !important;
   background: rgb(255, 250, 254) !important;
   box-shadow: none !important;
   border: 0px !important;
-  background: rgb(232, 231, 238);
-  box-shadow: none;
   border-bottom: 1px solid rgb(211, 207, 217);
 }
 .mon-calc-number.mon-dual-number.mon-dual-active,
 .mon-calc-number.mon-dual-number.mon-dual-receive.mon-dual-active {
   background: rgb(248, 230, 244) !important;
-  box-shadow: none !important;
   border: 0px !important;
-  background: rgb(249, 223, 247);
   box-shadow: none;
 }
 .mon-dual-number .mon-dual-value {
-  width: 100%;
   min-height: 65px;
   font-weight: 500;
   width: 100%;
   text-align: center;
 }
-.ops-compact-editor .mon-calc-keypad {
-  display: none;
+.ops-compact-editor .mon-dual-number {
+  min-height: 63px !important;
+}
+.ops-compact-editor .mon-calc-number {
+  flex-shrink: 0;
+  min-height: 56px !important;
+  padding: 3px 0px !important;
+}
+.ops-compact-editor .mon-dual-number {
+  min-height: 53px !important;
+}
+@media (max-height: 740px) {
+  .ops-compact-editor .mon-calc-number {
+    min-height: 48px !important;
+  }
 }
 .ops-tap-to-edit {
   text-align: center;
@@ -506,80 +593,27 @@
   justify-content: space-around;
   padding: 28px 0px 10px;
 }
-.ops-compact-actions button:last-child svg {
-  background: rgb(224, 210, 255);
-  color: rgb(108, 58, 255);
-}
-.mon-calc-shell:not(.ops-compact-editor) {
-  display: flex;
-  flex-direction: column;
-  min-height: 0px;
-}
-.mon-calc-shell:not(.ops-compact-editor) .mon-calc-keypad {
-  flex: 1 1 0%;
-  min-height: 260px;
-  max-height: 43dvh;
-}
-.overlay:has(.mon-calc-shell:not(.ops-compact-editor)) .panel {
-  padding-bottom: 8px;
-}
-.hero-search .ops-hero-search input {
-  font-size: 16px;
-  flex: 1 1 0%;
-  padding: 7px 4px !important;
-}
-.ops-compact-editor .mon-calc-number {
-  min-height: 78px !important;
-  margin: 0px !important;
-  padding: 9px 0px !important;
-}
-.ops-compact-editor .mon-calc-number input,
-.ops-compact-editor .mon-calc-number .mon-dual-value {
-  font-size: 34px !important;
-}
-.ops-compact-editor .mon-dual-number {
-  min-height: 63px !important;
-}
-.ops-compact-editor .mon-calc-rate {
-  font-size: 11px !important;
-  padding: 0px 8px !important;
-}
 .ops-compact-editor .ops-tap-to-edit {
   min-height: 32px !important;
   font-size: 13px !important;
   margin: 0px !important;
 }
-.ops-compact-editor .mon-calc-note {
-  max-height: 28px;
+.ops-compact-editor {
+  padding: 0px 0px 4px !important;
+  max-height: calc(100dvh - 108px);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 4px 10px !important;
-  font-size: 12px !important;
-}
-.ops-compact-editor .tag-cloud {
   display: flex;
-  max-height: 34px !important;
-  overflow: hidden !important;
-  margin: 3px 10px !important;
-  flex-wrap: nowrap !important;
+  flex-direction: column;
 }
-.ops-compact-editor .tag-cloud .tag {
-  white-space: nowrap;
-  font-size: 11px !important;
+.ops-compact-editor .ops-compact-actions {
+  gap: 32px !important;
+  flex-shrink: 0;
+  padding: 7px 0px 4px !important;
 }
-.ops-compact-editor .ops-compact-actions button {
-  font-size: 13px !important;
-  gap: 5px !important;
-  min-width: 80px !important;
-}
-.mon-calc-toggle {
-  position: relative !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  flex-direction: column !important;
-  gap: 3px !important;
+@media (max-height: 740px) {
+  .ops-compact-editor .ops-compact-actions {
+    padding: 4px 0px !important;
+  }
 }
 .mon-nine-dots {
   display: grid;
@@ -590,13 +624,6 @@
   border-radius: 9px;
   background: rgba(99, 72, 143, 0.07);
 }
-.mon-nine-dots i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentcolor;
-  opacity: 0.86;
-}
 .mon-mode-indicator {
   width: 21px;
   height: 3px;
@@ -606,70 +633,6 @@
     background 0.15s,
     box-shadow 0.15s;
 }
-.mon-mode-indicator.is-active {
-  background: rgb(36, 184, 122);
-  box-shadow: rgba(36, 184, 122, 0.32) 0px 0px 5px;
-}
 .mon-single-tappable {
   cursor: pointer;
-}
-.mon-single-tappable input {
-  pointer-events: none;
-}
-.ops-compact-editor {
-  padding: 0px 0px 4px !important;
-  max-height: calc(100dvh - 108px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.ops-compact-editor .mon-calc-date {
-  height: 42px !important;
-  margin: 0px 0px 10px !important;
-  flex-shrink: 0;
-  height: 37px !important;
-  margin-bottom: 6px !important;
-}
-.ops-compact-editor .mon-calc-parties {
-  gap: 9px !important;
-  margin: 0px 0px 10px !important;
-  flex-shrink: 0;
-  margin-bottom: 6px !important;
-}
-.ops-compact-editor .mon-calc-tile {
-  min-height: 82px !important;
-  padding: 11px !important;
-  min-height: 70px !important;
-  padding: 8px !important;
-}
-.ops-compact-editor .mon-calc-number {
-  flex-shrink: 0;
-  min-height: 56px !important;
-  padding: 3px 0px !important;
-}
-.ops-compact-editor .mon-dual-number {
-  min-height: 53px !important;
-}
-.ops-compact-editor .mon-calc-attachments {
-  min-height: 55px !important;
-  margin: 0px !important;
-  flex-shrink: 0;
-  min-height: 46px !important;
-}
-.ops-compact-editor .ops-compact-actions {
-  padding: 12px 0px 4px !important;
-  gap: 32px !important;
-  flex-shrink: 0;
-  padding: 7px 0px 4px !important;
-}
-@media (max-height: 740px) {
-  .ops-compact-editor .mon-calc-tile {
-    min-height: 60px !important;
-  }
-  .ops-compact-editor .mon-calc-number {
-    min-height: 48px !important;
-  }
-  .ops-compact-editor .ops-compact-actions {
-    padding: 4px 0px !important;
-  }
 }

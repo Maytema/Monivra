@@ -1,9 +1,10 @@
 /* Data validation and persistence */
-import { KEY } from "../core/constants.js";
-import { D } from "../core/state.js";
+import { STORAGE_KEY } from "../core/constants.js";
+import { appData } from "../core/state.js";
 import { toast } from "../ui/primitives.js";
 
-export function validData(x) {
+// Check that an object matches the stored dataset schema (also used for imports).
+export function isValidData(x) {
   try {
     if (
       !x ||
@@ -132,9 +133,10 @@ export function validData(x) {
   }
 }
 
+// Persist appData to localStorage.
 export function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify(D));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     return true;
   } catch {
     toast("DEMO: storage is unavailable or full. Export a Data file to keep changes.");

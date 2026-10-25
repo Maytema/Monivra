@@ -1,73 +1,81 @@
-.account-row.big {
-  min-height: 82px;
+/* Accounts tab and account editor.
+   Files are loaded in the order listed in index.html; later files may override earlier ones. */
+.accounts-content .account-row .badge svg {
+  width: 28px;
+  height: 28px;
 }
-.goal-info {
+.account-favorite.is-favorite svg {
+  fill: currentcolor;
+}
+.account-detail-head .account-favorite svg {
+  stroke: rgb(40, 85, 233);
+}
+.account-editor-reference .account-editor-bottom button {
+  margin: 0px;
+  min-height: 45px;
   font-size: 13px;
-  color: var(--muted);
-  text-align: right;
-  line-height: 1.9;
-}
-.accounts-archive-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 9px;
-  width: 100%;
-  padding: 18px 4px;
-  text-align: left;
-}
-.sheet-account .total {
-  text-align: center;
-  padding-top: 18px;
-}
-.account-row .goal-info {
-  max-width: 112px;
-  font-size: 13px;
-  flex: 0 0 auto;
-  line-height: 1.8;
-}
-.goal-strip {
-  width: 7px;
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  border-radius: 8px;
-  width: 7px;
-}
-.total-card {
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  overflow: hidden;
-  margin: 0px 0px 30px;
-}
-.converted-total {
-  display: block;
-  width: 100%;
-  padding: 18px;
-  text-align: center;
-  background: color-mix(in srgb, var(--positive) 10%, var(--bg));
-  font-size: 20px;
-  border-top: 1px solid var(--line);
 }
 #base:has(.accounts-content) {
   background: rgb(255, 251, 255);
+}
+.hero-balance-label:focus-visible {
+  outline: 2px solid var(--accent);
+  border-radius: 6px;
+}
+.hero-balance-label {
+  border: 0px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin: -3px -7px;
+  transition:
+    background-color 0.18s,
+    box-shadow 0.18s,
+    transform 0.16s;
+  touch-action: manipulation;
+  min-height: 36px;
+  gap: 7px;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-balance-label {
+    transition: none;
+  }
+}
+.hero-balance-label:active,
+.hero-balance-label.balance-pressed {
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
+  transform: scale(0.965);
+}
+.hero-search {
+  height: 82px;
 }
 #base:has(.accounts-content) .hero .caption {
   font-size: 15px;
   line-height: 22px;
   gap: 5px;
 }
-#base:has(.accounts-content) .hero .hero-action {
-  right: 12px;
-  top: 20px;
+#base .hero .caption,
+#base:has(.accounts-content) .hero .caption {
+  height: 22px !important;
+  line-height: 22px !important;
+  font-size: 13px !important;
+  gap: 4px !important;
 }
-#base:has(.accounts-content) .hero .hero-action svg {
-  width: 29px;
-  height: 29px;
+.hero-search .caption {
+  display: none;
 }
-.accounts-content {
-  padding: 0px 16px 24px;
-  background: rgb(255, 251, 255);
+.hero-search .ops-hero-search .icon-button {
+  width: 38px;
+  height: 42px;
+  flex: 0 0 auto;
 }
 .accounts-content .account-section-heading {
   padding: 0px;
@@ -96,55 +104,9 @@
   text-align: left;
   position: relative;
 }
-.accounts-content .account-row .badge {
-  width: 54px;
-  height: 54px;
-  border-radius: 9px;
-}
-.accounts-content .account-row .badge svg {
-  width: 28px;
-  height: 28px;
-}
-.accounts-content .account-row .grow {
-  gap: 4px;
-}
-.accounts-content .account-row .name {
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.25;
-  margin: 0px;
-}
-.accounts-content .account-row .goal-info {
-  font-size: 12px;
-  line-height: 1.7;
-  color: rgb(196, 190, 200);
-  padding-right: 10px;
-}
-.accounts-content .account-row .goal-strip {
-  width: 8px;
-  border-radius: 8px 0px 0px 8px;
-  right: 0px;
-}
-.accounts-content .accounts-archive-toggle {
-  display: block;
-  margin: 24px auto 0px;
-  padding: 12px;
-  color: rgb(119, 113, 124);
-  font-size: 13px;
-}
-.accounts-content .total-card {
-  margin-bottom: 20px;
-}
 @media (max-width: 360px) {
-  .accounts-content {
-    padding-inline: 12px;
-  }
   .accounts-content .account-row {
     gap: 10px;
-  }
-  .accounts-content .account-row .badge {
-    width: 47px;
-    height: 47px;
   }
 }
 .account-section-heading {
@@ -154,11 +116,6 @@
 .account-group {
   overflow: hidden;
   border-radius: 15px;
-}
-@media (max-width: 370px) {
-  .account-row .goal-info {
-    font-size: 11px;
-  }
 }
 .account-editor-content {
   padding-top: 12px;
@@ -185,12 +142,6 @@
   padding: 6px;
   align-self: flex-start;
   color: rgb(40, 85, 233);
-}
-.account-favorite.is-favorite {
-  color: rgb(40, 85, 233);
-}
-.account-favorite.is-favorite svg {
-  fill: currentcolor;
 }
 .account-actions-six {
   display: grid;
@@ -271,76 +222,6 @@
 .account-detail-head .account-favorite {
   margin-left: auto;
 }
-.account-detail-head .account-favorite svg {
-  stroke: rgb(40, 85, 233);
-}
-.mon-debt-completed {
-  border-right: 4px solid rgb(40, 189, 137);
-}
-.mon-account-available {
-  display: block;
-  color: rgb(115, 113, 128);
-  font-size: 12px;
-  margin-top: 2px;
-  font-weight: 400;
-}
-.hero-balance-label:focus-visible {
-  outline: 2px solid var(--accent);
-  border-radius: 6px;
-}
-.hero-balance-label {
-  border: 0px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  padding: 2px 1px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  border-radius: 10px;
-  padding: 5px 9px;
-  margin: -3px -7px;
-  transition:
-    background-color 0.18s,
-    box-shadow 0.18s,
-    transform 0.16s;
-  touch-action: manipulation;
-  min-height: 36px;
-  gap: 7px;
-  padding: 5px 10px;
-  white-space: nowrap;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-balance-label {
-    transition: none;
-  }
-}
-.hero-balance-label:active,
-.hero-balance-label.balance-pressed {
-  background: color-mix(in srgb, var(--accent) 11%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
-  transform: scale(0.965);
-  background: color-mix(in srgb, var(--accent) 11%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
-  transform: scale(0.965);
-}
-.mon-goal-pct-main {
-  font-size: 1em;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.mon-goal-pct-frac {
-  font-size: 0.57em;
-  vertical-align: baseline;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-.mon-goal-pct-unit {
-  font-size: 0.8em;
-  margin-left: 1px;
-}
 .account-editor-reference {
   padding-top: 13px;
   padding: 4px 10px 38px;
@@ -349,53 +230,6 @@
 .account-editor-reference .account-editor-bottom {
   margin: 13px 0px 15px;
   gap: 8px;
-}
-.account-editor-reference .account-editor-bottom button {
-  margin: 0px;
-  min-height: 45px;
-  font-size: 13px;
-}
-.mon-account-type-choices {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0px 2px 14px;
-}
-.mon-account-type-choice {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 11px;
-  border: 1px solid rgb(227, 220, 230);
-  border-radius: 13px;
-  background: rgb(255, 251, 255);
-  text-align: left;
-  min-height: 81px;
-}
-.mon-type-icon {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: rgb(56, 81, 220);
-  flex: 0 0 auto;
-}
-.mon-type-text {
-  flex: 1 1 0%;
-  min-width: 0px;
-}
-.mon-type-chevron {
-  font-size: 26px;
-  color: rgb(132, 123, 137);
-}
-#base .hero .caption,
-#base:has(.accounts-content) .hero .caption {
-  height: 22px !important;
-  line-height: 22px !important;
-  font-size: 13px !important;
-  gap: 4px !important;
 }
 .account-type-header {
   height: 64px;
@@ -419,11 +253,6 @@
   position: absolute;
   inset: auto -1px -1px auto;
   z-index: 1;
-  font-size: 11px;
-  line-height: 13px;
-  padding: 0px 2px;
-  background: var(--bg);
-  color: rgb(40, 85, 233);
   border-radius: 3px;
   -webkit-text-stroke: 1.15px rgb(255, 250, 254);
   paint-order: stroke;
@@ -432,17 +261,175 @@
   background: transparent !important;
   padding: 0px !important;
   border: 0px !important;
-  right: 0px !important;
-  bottom: -1px !important;
+  right: 0px;
+  bottom: -1px;
   line-height: 1 !important;
   font-size: 12px !important;
   color: rgb(40, 85, 233) !important;
 }
-.hero-search .caption {
-  display: none;
+.accounts-content .account-row .name {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0px;
 }
-.hero-search {
-  height: 82px;
+.account-row.big {
+  min-height: 82px;
+}
+.accounts-content .account-row .badge {
+  width: 54px;
+  height: 54px;
+  border-radius: 9px;
+}
+@media (max-width: 360px) {
+  .accounts-content .account-row .badge {
+    width: 47px;
+    height: 47px;
+  }
+}
+.accounts-content .account-row .grow {
+  gap: 4px;
+}
+.goal-info {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.9;
+}
+.account-row .goal-info {
+  max-width: 112px;
+  font-size: 13px;
+  flex: 0 0 auto;
+  line-height: 1.8;
+}
+.goal-strip {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  border-radius: 8px;
+  width: 7px;
+}
+.accounts-content .account-row .goal-info {
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgb(196, 190, 200);
+  padding-right: 10px;
+}
+.accounts-content .account-row .goal-strip {
+  width: 8px;
+  border-radius: 8px 0px 0px 8px;
+  right: 0px;
+}
+@media (max-width: 370px) {
+  .account-row .goal-info {
+    font-size: 11px;
+  }
+}
+.accounts-archive-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 18px 4px;
+  text-align: left;
+}
+.accounts-content {
+  padding: 0px 16px 24px;
+  background: rgb(255, 251, 255);
+}
+.accounts-content .accounts-archive-toggle {
+  display: block;
+  margin: 24px auto 0px;
+  padding: 12px;
+  color: rgb(119, 113, 124);
+  font-size: 13px;
+}
+@media (max-width: 360px) {
+  .accounts-content {
+    padding-inline: 12px;
+  }
+}
+.total-card {
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  overflow: hidden;
+  margin: 0px 0px 30px;
+}
+.accounts-content .total-card {
+  margin-bottom: 20px;
+}
+.converted-total {
+  display: block;
+  width: 100%;
+  padding: 18px;
+  text-align: center;
+  background: color-mix(in srgb, var(--positive) 10%, var(--bg));
+  font-size: 20px;
+  border-top: 1px solid var(--line);
+}
+.account-favorite.is-favorite {
+  color: rgb(40, 85, 233);
+}
+.mon-debt-completed {
+  border-right: 4px solid rgb(40, 189, 137);
+}
+.mon-account-available {
+  display: block;
+  color: rgb(115, 113, 128);
+  font-size: 12px;
+  margin-top: 2px;
+  font-weight: 400;
+}
+.mon-account-type-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 2px 14px;
+}
+.mon-account-type-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid rgb(227, 220, 230);
+  border-radius: 13px;
+  background: rgb(255, 251, 255);
+  text-align: left;
+  min-height: 81px;
+}
+.mon-goal-pct-main {
+  font-size: 1em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.mon-goal-pct-frac {
+  font-size: 0.57em;
+  vertical-align: baseline;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.mon-goal-pct-unit {
+  font-size: 0.8em;
+  margin-left: 1px;
+}
+.mon-type-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: rgb(56, 81, 220);
+  flex: 0 0 auto;
+}
+.mon-type-text {
+  flex: 1 1 0%;
+  min-width: 0px;
+}
+.mon-type-chevron {
+  font-size: 26px;
+  color: rgb(132, 123, 137);
 }
 .ops-hero-search {
   position: absolute;
@@ -460,9 +447,4 @@
   right: 65px;
   gap: 4px;
   border-bottom: 1px solid rgb(169, 161, 170);
-}
-.hero-search .ops-hero-search .icon-button {
-  width: 38px;
-  height: 42px;
-  flex: 0 0 auto;
 }

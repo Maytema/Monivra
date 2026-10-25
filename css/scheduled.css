@@ -1,10 +1,5 @@
-.stats-halves {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  text-align: center;
-  padding: 12px;
-}
+/* Scheduled payments and budgets.
+   Files are loaded in the order listed in index.html; later files may override earlier ones. */
 .stats-halves > div {
   flex: 1 1 0%;
 }
@@ -15,14 +10,6 @@
 .right small {
   display: block;
   margin-top: 4px;
-}
-.bar-track {
-  height: 7px;
-  background: var(--soft);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 7px;
-  display: block;
 }
 .bar-track > span {
   display: block;
@@ -41,15 +28,52 @@
   font-size: 19px;
   font-weight: 500;
 }
-.budget-card {
-  width: 100%;
-  padding: 15px 17px;
+.schedule-modal h2 {
+  margin: 6px 0px 22px;
+  font-size: 23px;
+}
+.stats-halves {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: center;
+  padding: 12px;
+}
+.bar-track {
+  height: 7px;
+  background: var(--soft);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 7px;
+  display: block;
 }
 .budget-card .bar-track {
   margin: 15px 0px 10px;
 }
+.budget-card {
+  width: 100%;
+  padding: 15px 17px;
+}
+.scheduled-date {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 20px;
+  margin: 17px 0px 9px;
+  padding: 14px 16px 0px;
+  font-weight: 500;
+}
+.recur-caption {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: -4px 0px 12px 64px;
+  padding-left: 64px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: -7px;
+  margin-bottom: 12px;
+}
 .more-empty {
-  padding: 90px 28px;
   text-align: center;
   max-width: 440px;
   margin: 0px auto;
@@ -57,10 +81,6 @@
 }
 .schedule-modal {
   padding: 0px 2px 8px;
-}
-.schedule-modal h2 {
-  margin: 6px 0px 22px;
-  font-size: 23px;
 }
 .schedule-unit {
   display: grid;
@@ -124,26 +144,4 @@
 .schedule-disable {
   display: block;
   margin: 10px auto 0px;
-}
-.scheduled-date {
-  text-align: center;
-  font-size: 14px;
-  margin-top: 20px;
-  margin: 17px 0px 9px;
-  padding: 14px 16px 0px;
-  font-weight: 500;
-}
-.recur-caption {
-  margin: -5px 0px 10px 64px;
-  color: var(--accent);
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin: -4px 0px 12px 64px;
-  padding-left: 64px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: -7px;
-  margin-bottom: 12px;
 }

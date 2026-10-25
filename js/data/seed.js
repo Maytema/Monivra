@@ -1,6 +1,7 @@
 /* Demo data and empty data factory */
 
-export function seed() {
+// Demo dataset installed on the very first launch.
+export function createSeedData() {
   const accounts = [
     ["Wallet", "Regular", 1846700, "card", "#5067d7"],
     ["Personal", "Regular", 120000, "cash", "#24b5d1"],
@@ -181,8 +182,9 @@ export function seed() {
     },
   };
 }
-export function emptyData() {
-  const x = seed();
+// Empty dataset with default settings.
+export function createEmptyData() {
+  const x = createSeedData();
   return {
     ...x,
     accounts: [],

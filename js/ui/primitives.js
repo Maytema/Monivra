@@ -1,107 +1,104 @@
 /* UI primitives: translation, action registry, buttons, fields, toast */
-import { I, esc } from "../core/constants.js";
-import { D } from "../core/state.js";
+import { escapeHtml, iconSvg } from "../core/constants.js";
+import { appData } from "../core/state.js";
 import { russianStrings } from "../core/translations.js";
 
-export let actions = {};
-export let inputs = {};
-export let counter = 0;
+// Registry of click handlers referenced from markup via data-action.
+export let actionHandlers = {};
+// Registry of input handlers referenced from markup via data-input.
+export let inputHandlers = {};
+// Counter used to generate unique handler ids.
+export let handlerCounter = 0;
 let toastTimer = 0;
-export let photoCallback = null;
-export let importKind = "json";
-export let locked = false;
-export let pinEntry = "";
 
-export const t = (s) => (D.settings.language === "ru" ? russianStrings[s] || s : s),
-  act = (fn) => {
-    const id = "a" + ++counter;
-    actions[id] = fn;
-    return id;
-  },
-  inp = (fn) => {
-    const id = "i" + ++counter;
-    inputs[id] = fn;
-    return id;
-  };
-export const B = (label, fn, cls = "", attrs = "") =>
-  `<button class="${cls}" data-action="${act(fn)}" ${attrs}>${t(label)}</button>`;
-export const IB = (icon, label, fn) =>
-  B(I(icon), fn, "icon-button", `aria-label="${esc(t(label))}" title="${esc(t(label))}"`);
-export const badge = (x, small = false) =>
-  `<span class="badge${small ? " small" : ""}" style="--c:${esc(x?.color || "#777")}">${I(x?.icon || "wallet")}</span>`;
-export const txt = (label, value, fn, placeholder = "", type = "text") =>
-  `<label class="field"><span class="field-label">${t(label)}</span><input aria-label="${esc(t(label))}" type="${type}" value="${esc(value)}" placeholder="${esc(t(placeholder))}" data-input="${inp(fn)}"></label>`;
-function select(label, value, options, fn) {
-  return `<label class="field"><span class="field-label">${t(label)}</span><select aria-label="${esc(t(label))}" data-input="${inp(fn)}">${options
+// Translate a UI string according to the selected language.
+export const translate = (s) => (appData.settings.language === "ru" ? russianStrings[s] || s : s);
+// Register a click handler and return the id to put in data-action.
+export const registerAction = (fn) => {
+  const id = "a" + ++handlerCounter;
+  actionHandlers[id] = fn;
+  return id;
+};
+// Register an input handler and return the id to put in data-input.
+export const registerInput = (fn) => {
+  const id = "i" + ++handlerCounter;
+  inputHandlers[id] = fn;
+  return id;
+};
+
+// HTML for a button wired to a click handler.
+export const buttonHtml = (label, fn, cls = "", attrs = "") =>
+  `<button class="${cls}" data-action="${registerAction(fn)}" ${attrs}>${translate(label)}</button>`;
+// HTML for an icon-only button with an accessible label.
+export const iconButtonHtml = (icon, label, fn) =>
+  buttonHtml(
+    iconSvg(icon),
+    fn,
+    "icon-button",
+    `aria-label="${escapeHtml(translate(label))}" title="${escapeHtml(translate(label))}"`,
+  );
+// Colored round badge with an account/category icon.
+export const badgeHtml = (x, small = false) =>
+  `<span class="badge${small ? " small" : ""}" style="--c:${escapeHtml(x?.color || "#777")}">${iconSvg(x?.icon || "wallet")}</span>`;
+// Labeled text input wired to an input handler.
+export const textFieldHtml = (label, value, fn, placeholder = "", type = "text") =>
+  `<label class="field"><span class="field-label">${translate(label)}</span><input aria-label="${escapeHtml(translate(label))}" type="${type}" value="${escapeHtml(value)}" placeholder="${escapeHtml(translate(placeholder))}" data-input="${registerInput(fn)}"></label>`;
+// Labeled <select> wired to an input handler.
+function selectFieldHtml(label, value, options, fn) {
+  return `<label class="field"><span class="field-label">${translate(label)}</span><select aria-label="${escapeHtml(translate(label))}" data-input="${registerInput(fn)}">${options
     .map((o) => {
       let [v, l] = Array.isArray(o) ? o : [o, o];
-      return `<option value="${esc(v)}" ${v == value ? "selected" : ""}>${esc(t(l))}</option>`;
+      return `<option value="${escapeHtml(v)}" ${v == value ? "selected" : ""}>${escapeHtml(translate(l))}</option>`;
     })
     .join("")}</select></label>`;
 }
-export const field = (label, value, fn, hint = "") =>
-  B(
-    `<span class="field-label">${t(label)}</span><span class="value">${value}</span>${hint ? `<span class="hint">${t(hint)}</span>` : ""}`,
+// Form row that looks like a field and opens a picker when clicked.
+export const fieldButtonHtml = (label, value, fn, hint = "") =>
+  buttonHtml(
+    `<span class="field-label">${translate(label)}</span><span class="value">${value}</span>${hint ? `<span class="hint">${translate(hint)}</span>` : ""}`,
     fn,
     "field",
-    `aria-label="${esc(t(label))}"`,
+    `aria-label="${escapeHtml(translate(label))}"`,
   );
-export const toggle = (label, on, fn, hint = "") =>
-  B(
-    `<span class="grow"><span>${t(label)}</span>${hint ? `<small class="hint">${t(hint)}</small>` : ""}</span><span class="toggle ${on ? "on" : ""}"></span>`,
+// Switch row (label, optional hint, on/off toggle).
+export const toggleRowHtml = (label, on, fn, hint = "") =>
+  buttonHtml(
+    `<span class="grow"><span>${translate(label)}</span>${hint ? `<small class="hint">${translate(hint)}</small>` : ""}</span><span class="toggle ${on ? "on" : ""}"></span>`,
     fn,
     "field inline",
-    `role="switch" aria-checked="${!!on}" aria-label="${esc(t(label))}"`,
+    `role="switch" aria-checked="${!!on}" aria-label="${escapeHtml(translate(label))}"`,
   );
-export const row = (label, icon, fn, sub = "", end = "") =>
-  B(
-    `${icon ? I(icon, 22) : ""}<span class="grow"><span class="title">${t(label)}</span>${sub ? `<span class="sub" style="display:block">${t(sub)}</span>` : ""}</span>${end || '<span class="chevron">›</span>'}`,
+// List row with icon, label, optional subtitle and trailing content.
+export const menuRowHtml = (label, icon, fn, sub = "", end = "") =>
+  buttonHtml(
+    `${icon ? iconSvg(icon, 22) : ""}<span class="grow"><span class="title">${translate(label)}</span>${sub ? `<span class="sub" style="display:block">${translate(sub)}</span>` : ""}</span>${end || '<span class="chevron">›</span>'}`,
     fn,
     "row",
-    `aria-label="${esc(t(label))}"`,
+    `aria-label="${escapeHtml(translate(label))}"`,
   );
+// Show a short message at the bottom of the screen.
 export function toast(s) {
   if (window.__MONIVRA_TEST__) {
     window.__toast = s;
     return;
   }
   const el = document.getElementById("toast");
-  el.textContent = t(s);
+  el.textContent = translate(s);
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 1450);
 }
-export function setActions(value) {
-  actions = value;
+export function setActionHandlers(value) {
+  actionHandlers = value;
   return value;
 }
 
-export function setInputs(value) {
-  inputs = value;
+export function setInputHandlers(value) {
+  inputHandlers = value;
   return value;
 }
 
-export function setCounter(value) {
-  counter = value;
-  return value;
-}
-
-export function setPhotoCallback(value) {
-  photoCallback = value;
-  return value;
-}
-
-export function setImportKind(value) {
-  importKind = value;
-  return value;
-}
-
-export function setLocked(value) {
-  locked = value;
-  return value;
-}
-
-export function setPinEntry(value) {
-  pinEntry = value;
+export function setHandlerCounter(value) {
+  handlerCounter = value;
   return value;
 }

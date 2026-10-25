@@ -1,3 +1,5 @@
+/* Base: theme variables (colors, fonts) and element defaults.
+   Files are loaded in the order listed in index.html; later files may override earlier ones. */
 :root {
   --bg: #fffafe;
   --ink: #252127;
@@ -16,6 +18,11 @@
   font-family: Roboto, "Noto Sans", Arial, sans-serif;
   font-size: 16px;
   --accounts-reference-blue: #3155e9;
+}
+@media (max-width: 359px) {
+  :root {
+    font-size: 14px;
+  }
 }
 body {
   margin: 0px;
@@ -88,11 +95,6 @@ small {
 }
 p {
   line-height: 1.5;
-}
-@media (max-width: 359px) {
-  :root {
-    font-size: 14px;
-  }
 }
 @media print {
   body {

@@ -1,54 +1,72 @@
 /* Accounts screens */
 import { render } from "../app/shell.js";
-import { CURRENCIES, I, TODAY, clone, esc, uid } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { acc, bal, convert, money, moneySpan, overall } from "../domain/finance.js";
+import {
+  accountBalance,
+  accountById,
+  convertCurrency,
+  formatMoney,
+  moneySpanHtml,
+  overallBalance,
+} from "../domain/finance.js";
 import { deleteAccount, putOperation, validateOp } from "../domain/operations.js";
 import { accountPicker } from "./categories.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
 import {
   amountPicker,
-  back,
-  close,
+  closeLayers,
   confirmAction,
   currencyPicker,
-  finish,
-  header,
-  home,
+  finishFlow,
+  goBack,
+  goHome,
   iconPicker,
+  openPage,
+  openSheet,
   optionSheet,
-  page,
-  sheet,
+  pageHeader,
 } from "../ui/kit.js";
-import { B, IB, badge, field, inp, t, toast, toggle, txt } from "../ui/primitives.js";
+import {
+  badgeHtml,
+  buttonHtml,
+  fieldButtonHtml,
+  iconButtonHtml,
+  registerInput,
+  textFieldHtml,
+  toast,
+  toggleRowHtml,
+  translate,
+} from "../ui/primitives.js";
 
+// Header block of the root screens: title, balance and action buttons.
 export function hero() {
   let icon =
-    U.tab === "accounts"
+    uiState.tab === "accounts"
       ? "plus"
-      : U.tab === "categories"
+      : uiState.tab === "categories"
         ? "edit"
-        : U.tab === "statistics"
+        : uiState.tab === "statistics"
           ? "filter"
-          : U.search
+          : uiState.search
             ? "filter"
             : "more";
   let fn =
-    U.tab === "accounts"
+    uiState.tab === "accounts"
       ? () => editAccount()
-      : U.tab === "categories"
-        ? () => page("categoryManage")
-        : U.tab === "statistics"
+      : uiState.tab === "categories"
+        ? () => openPage("categoryManage")
+        : uiState.tab === "statistics"
           ? filters
-          : U.search
+          : uiState.search
             ? filters
             : operationsMenu;
-  return `<div class="hero ${U.tab === "operations" && U.search ? "hero-search" : ""}"><div class="caption">${B(
-    `<span>${t("Overall balance")}</span>${I(D.settings.hidden ? "eye" : "eyeOpen", 20)}`,
+  return `<div class="hero ${uiState.tab === "operations" && uiState.search ? "hero-search" : ""}"><div class="caption">${buttonHtml(
+    `<span>${translate("Overall balance")}</span>${iconSvg(appData.settings.hidden ? "eye" : "eyeOpen", 20)}`,
     () => {
-      D.settings.hidden = !D.settings.hidden;
+      appData.settings.hidden = !appData.settings.hidden;
       save();
       render();
       const label = document.querySelector(".hero-balance-label");
@@ -58,21 +76,21 @@ export function hero() {
       }
     },
     "hero-balance-label",
-    'aria-label="Toggle balance visibility" aria-pressed="' + D.settings.hidden + '"',
+    'aria-label="Toggle balance visibility" aria-pressed="' + appData.settings.hidden + '"',
   )}</div>${
-    U.tab === "operations" && U.search
-      ? `<div class="ops-hero-search">${IB("back", "Close search", () => {
-          U.search = false;
-          U.filters.comment = "";
+    uiState.tab === "operations" && uiState.search
+      ? `<div class="ops-hero-search">${iconButtonHtml("back", "Close search", () => {
+          uiState.search = false;
+          uiState.filters.comment = "";
           render();
-        })}<input aria-label="Search by comments" placeholder="Search by comments" value="${esc(U.filters.comment)}" data-input="${inp(
+        })}<input aria-label="Search by comments" placeholder="Search by comments" value="${escapeHtml(uiState.filters.comment)}" data-input="${registerInput(
           (v) => {
-            U.filters.comment = v;
+            uiState.filters.comment = v;
             render();
           },
         )}"></div>`
-      : `<div class="balance">${money(overall(), D.settings.currency, true)}</div>`
-  }<div class="hero-action">${IB(icon, icon === "plus" ? "New account" : icon === "edit" ? "Change categories" : icon === "filter" ? "Filters" : "Operation search", fn)}</div></div><!--MONIVRA_HERO_END-->`;
+      : `<div class="balance">${formatMoney(overallBalance(), appData.settings.currency, true)}</div>`
+  }<div class="hero-action">${iconButtonHtml(icon, icon === "plus" ? "New account" : icon === "edit" ? "Change categories" : icon === "filter" ? "Filters" : "Operation search", fn)}</div></div><!--MONIVRA_HERO_END-->`;
 }
 
 // Show fractional progress without rounding an incomplete goal up to 100%.
@@ -82,107 +100,112 @@ function savingsPercent(balance, goal) {
   if (balance >= goal) return 100;
   return Math.max(0, Math.min(99.99, Math.floor((Math.max(0, balance) / goal) * 10000) / 100));
 }
+// Text label for savings progress.
 function savingsPercentLabel(balance, goal) {
   const n = savingsPercent(balance, goal);
   const parts = n.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
   return `<span class="mon-goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="mon-goal-pct-frac">.${parts[1]}</span>` : ""}<span class="mon-goal-pct-unit">%</span>`;
 }
+// One row in the accounts list.
 function accountLine(a) {
-  const n = bal(a.id),
+  const n = accountBalance(a.id),
     goal = a.type === "Savings" && a.goal > 0;
   const percent = goal ? savingsPercent(n, a.goal) : 0;
-  return B(
-    `<span class="account-icon-wrap">${badge(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${esc(a.name)}</span>${moneySpan(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="mon-account-available">Available: ${money(n + a.limit, a.currency)}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + money(n - a.goal, a.currency) : money(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
+  return buttonHtml(
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="mon-account-available">Available: ${formatMoney(n + a.limit, a.currency)}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
     () => accountActions(a),
     "account-row " +
-      (a.type === "Debt" && bal(a.id) === 0 ? "mon-debt-completed " : "") +
-      (D.settings.bigAccounts ? "big" : ""),
+      (a.type === "Debt" && accountBalance(a.id) === 0 ? "mon-debt-completed " : "") +
+      (appData.settings.bigAccounts ? "big" : ""),
   );
 }
+// Accounts tab.
 export function accountsView() {
-  const live = D.accounts.filter((a) => !a.archived),
-    archived = D.accounts.filter((a) => a.archived),
+  const live = appData.accounts.filter((a) => !a.archived),
+    archived = appData.accounts.filter((a) => a.archived),
     hasDebts = live.some((a) => a.type === "Debt"),
     tabs = hasDebts ? ["Accounts", "Debts", "Total"] : ["Accounts", "Total"];
-  if (!tabs.includes(U.accountTab)) U.accountTab = "Accounts";
+  if (!tabs.includes(uiState.accountTab)) uiState.accountTab = "Accounts";
   const list =
-    U.accountTab === "Debts"
+    uiState.accountTab === "Debts"
       ? live.filter((a) => a.type === "Debt")
       : live.filter((a) => a.type !== "Debt");
   const groups =
-    U.accountTab === "Debts"
+    uiState.accountTab === "Debts"
       ? ["Owe me", "I owe", "Owe me - Completed", "I owe - Completed"]
       : ["Regular", "Savings"];
   let body =
-    U.accountTab === "Total"
+    uiState.accountTab === "Total"
       ? accountTotals(live)
       : groups
           .map((type) => {
             const rows = list.filter((a) =>
               a.type === "Debt"
-                ? type === a.debt + (bal(a.id) === 0 ? " - Completed" : "")
+                ? type === a.debt + (accountBalance(a.id) === 0 ? " - Completed" : "")
                 : a.type === type,
             );
             if (!rows.length && type !== "Savings") return "";
             const total = rows.reduce(
-              (n, a) => n + convert(bal(a.id), a.currency, D.settings.currency),
+              (n, a) =>
+                n + convertCurrency(accountBalance(a.id), a.currency, appData.settings.currency),
               0,
             );
-            return `<div class="section-label account-section-heading"><span>${t(type === "Regular" ? "Accounts" : type)}</span>${moneySpan(total, D.settings.currency, false, true)}</div>${rows.length ? `<div class="account-group">${rows.map(accountLine).join("")}</div>` : ""}`;
+            return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type)}</span>${moneySpanHtml(total, appData.settings.currency, false, true)}</div>${rows.length ? `<div class="account-group">${rows.map(accountLine).join("")}</div>` : ""}`;
           })
           .join("");
-  if (!body) body = `<div class="empty">${t("Empty")}</div>`;
+  if (!body) body = `<div class="empty">${translate("Empty")}</div>`;
   return (
     hero() +
     `<div class="tabs account-tabs">${tabs
       .map((x) =>
-        B(
-          t(x),
+        buttonHtml(
+          translate(x),
           () => {
-            U.accountTab = x;
+            uiState.accountTab = x;
             render();
           },
-          U.accountTab === x ? "active" : "",
+          uiState.accountTab === x ? "active" : "",
         ),
       )
       .join("")}</div><div class="content accounts-content">${body}${
       archived.length
-        ? B(
-            `${I("archive", 18)} ${t("Archive")} ${I(U.archive ? "up" : "down", 14)}`,
+        ? buttonHtml(
+            `${iconSvg("archive", 18)} ${translate("Archive")} ${iconSvg(uiState.archive ? "up" : "down", 14)}`,
             () => {
-              U.archive = !U.archive;
+              uiState.archive = !uiState.archive;
               render();
             },
             "accounts-archive-toggle",
           )
         : ""
-    }${U.archive && archived.length ? `<div class="account-group">${archived.map(accountLine).join("")}</div>` : ""}</div>`
+    }${uiState.archive && archived.length ? `<div class="account-group">${archived.map(accountLine).join("")}</div>` : ""}</div>`
   );
 }
+// Totals strip: all accounts, regular, savings and debt.
 function accountTotals(list) {
   return ["Total", "Regular", "Savings", "Debt"]
     .map((type) => {
       const rows = list.filter((a) => type === "Total" || a.type === type),
         currencies = [...new Set(rows.map((a) => a.currency))];
       if (!rows.length) return "";
-      const to = D.settings.totalCurrency?.[type] || D.settings.currency;
-      return `<div class="section-label account-section-heading"><span>${t(type === "Regular" ? "Accounts" : type === "Debt" ? "Debts" : type)}</span></div><div class="total-card">${currencies
+      const to = appData.settings.totalCurrency?.[type] || appData.settings.currency;
+      return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type === "Debt" ? "Debts" : type)}</span></div><div class="total-card">${currencies
         .map(
           (c) =>
-            `<div class="row"><span class="grow">${c}</span>${moneySpan(
-              rows.filter((a) => a.currency === c).reduce((n, a) => n + bal(a.id), 0),
+            `<div class="row"><span class="grow">${c}</span>${moneySpanHtml(
+              rows.filter((a) => a.currency === c).reduce((n, a) => n + accountBalance(a.id), 0),
               c,
             )}</div>`,
         )
-        .join("")}${B(
-        moneySpan(
-          rows.reduce((n, a) => n + convert(bal(a.id), a.currency, to), 0),
+        .join("")}${buttonHtml(
+        moneySpanHtml(
+          rows.reduce((n, a) => n + convertCurrency(accountBalance(a.id), a.currency, to), 0),
           to,
         ),
         () =>
           currencyPicker(to, (v) => {
-            D.settings.totalCurrency = {
-              ...D.settings.totalCurrency,
+            appData.settings.totalCurrency = {
+              ...appData.settings.totalCurrency,
               [type]: v,
             };
             save();
@@ -194,19 +217,20 @@ function accountTotals(list) {
     .join("");
 }
 
+// Action sheet shown when an account is tapped.
 export function accountActions(a) {
-  const n = bal(a.id),
+  const n = accountBalance(a.id),
     available = a.type === "Regular" && a.limit > 0;
   const act = (icon, label, fn) =>
-    B(
-      `<span class="account-action-icon">${I(icon, 23)}</span><span>${t(label)}</span>`,
+    buttonHtml(
+      `<span class="account-action-icon">${iconSvg(icon, 23)}</span><span>${translate(label)}</span>`,
       fn,
       "account-action-tile",
     );
-  sheet(
+  openSheet(
     () =>
-      `<div class="account-detail-head">${badge(a)}<div class="grow"><strong>${esc(a.name)}</strong><div class="account-detail-label">${t("Current balance")}</div><div class="account-detail-money">${moneySpan(n, a.currency, false, true)}</div>${available ? `<div class="account-detail-label">${t("Available balance")}</div><div class="account-detail-money">${moneySpan(n + a.limit, a.currency, false, true)}</div>` : ""}</div>${B(
-        I("star", 23),
+      `<div class="account-detail-head">${badgeHtml(a)}<div class="grow"><strong>${escapeHtml(a.name)}</strong><div class="account-detail-label">${translate("Current balance")}</div><div class="account-detail-money">${moneySpanHtml(n, a.currency, false, true)}</div>${available ? `<div class="account-detail-label">${translate("Available balance")}</div><div class="account-detail-money">${moneySpanHtml(n + a.limit, a.currency, false, true)}</div>` : ""}</div>${buttonHtml(
+        iconSvg("star", 23),
         () => {
           a.favorite = !a.favorite;
           save();
@@ -220,20 +244,21 @@ export function accountActions(a) {
         () => {
           a.archived = !a.archived;
           save();
-          close();
+          closeLayers();
         },
       )}${act("receipt", "Operations", () => {
-        U.filters.accounts = [a.id];
-        U.period = { mode: "all", anchor: TODAY };
-        home("operations");
+        uiState.filters.accounts = [a.id];
+        uiState.period = { mode: "all", anchor: TODAY };
+        goHome("operations");
       })}${act("income", "Top up", () => operationStart({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", () => operationStart({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", () => operationStart({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
     a.name,
   );
 }
 
+// Open the account editor (new account when no argument is given).
 export function editAccount(a) {
   const d = a
-    ? clone(a)
+    ? deepClone(a)
     : {
         id: null,
         name: "",
@@ -241,7 +266,7 @@ export function editAccount(a) {
         opening: 0,
         icon: "wallet",
         color: "#9d00b5",
-        currency: D.settings.currency,
+        currency: appData.settings.currency,
         goal: 0,
         limit: 0,
         include: true,
@@ -254,21 +279,25 @@ export function editAccount(a) {
         showExpense: false,
         showIncome: false,
       };
-  d.balance = a ? bal(a.id) : 0;
+  d.balance = a ? accountBalance(a.id) : 0;
   if (d.type === "Debt" && d.totalDebt === undefined)
     d.totalDebt = Math.abs(a?.opening || d.balance);
   d.createOperation = false;
-  d.counterpart = D.accounts.find((x) => !x.archived && x.id !== d.id && x.type === "Regular")?.id;
-  page("accountEdit", { draft: d, editing: !!a });
+  d.counterpart = appData.accounts.find(
+    (x) => !x.archived && x.id !== d.id && x.type === "Regular",
+  )?.id;
+  openPage("accountEdit", { draft: d, editing: !!a });
   if (!a) accountTypeReferenceSheet(d);
 }
+// Validate and store the account being edited.
 export function saveAccount(p) {
-  const d = clone(p.draft);
+  const d = deepClone(p.draft);
   d.name = String(d.name || "").trim();
   if (!d.name) return toast("Enter a name");
   if (d.name.length > 64) return toast("Name is too long");
   if (!["Regular", "Savings", "Debt"].includes(d.type)) return toast("Select account type");
-  if (!D.rates[d.currency] || D.rates[d.currency] <= 0) return toast("Select account currency");
+  if (!appData.rates[d.currency] || appData.rates[d.currency] <= 0)
+    return toast("Select account currency");
   for (const key of ["balance", "goal", "limit"])
     if (!Number.isSafeInteger(d[key] || 0)) return toast("Invalid amount");
   if (d.type === "Savings" && d.goal < 0) return toast("Goal cannot be negative");
@@ -278,26 +307,30 @@ export function saveAccount(p) {
     if (d.totalDebt === undefined) d.totalDebt = Math.abs(d.balance);
     if (!Number.isSafeInteger(d.totalDebt) || d.totalDebt < 0) return toast("Invalid total debt");
   }
-  let old = acc(d.id),
-    change = d.balance - (old ? bal(old.id) : 0);
-  if (d.createOperation && d.type === "Debt" && (!acc(d.counterpart) || d.counterpart === d.id))
+  let old = accountById(d.id),
+    change = d.balance - (old ? accountBalance(old.id) : 0);
+  if (
+    d.createOperation &&
+    d.type === "Debt" &&
+    (!accountById(d.counterpart) || d.counterpart === d.id)
+  )
     return toast("Select a different account"); // Validate debt-operation conversion before mutating account state.
   if (d.createOperation && d.type === "Debt" && change) {
-    const other = acc(d.counterpart);
+    const other = accountById(d.counterpart);
     if (!other) return toast("Select a different account");
-    const candidate = change > 0 ? convert(change, d.currency, other.currency) : -change;
+    const candidate = change > 0 ? convertCurrency(change, d.currency, other.currency) : -change;
     if (!Number.isSafeInteger(candidate) || candidate <= 0)
       return toast("Invalid debt transfer amount");
     const received =
       change > 0
-        ? convert(candidate, other.currency, d.currency)
-        : convert(candidate, d.currency, other.currency);
+        ? convertCurrency(candidate, other.currency, d.currency)
+        : convertCurrency(candidate, d.currency, other.currency);
     if (!Number.isSafeInteger(received) || received <= 0)
       return toast("Converted debt amount is too small");
   }
   const temp = {
     ...d,
-    id: d.id || uid(),
+    id: d.id || newId(),
     opening: old ? old.opening : d.balance,
   };
   delete temp.balance;
@@ -305,10 +338,10 @@ export function saveAccount(p) {
   delete temp.createOperation;
   delete temp.counterpart;
   if (old) Object.assign(old, temp);
-  else D.accounts.push(temp);
+  else appData.accounts.push(temp);
   if (old && change && !(d.createOperation && d.type === "Debt")) {
-    D.ops.push({
-      id: uid(),
+    appData.ops.push({
+      id: newId(),
       type: "adjustment",
       date: TODAY,
       from: change < 0 ? temp.id : null,
@@ -319,8 +352,8 @@ export function saveAccount(p) {
     });
   }
   if (d.createOperation && d.type === "Debt" && change) {
-    const target = acc(temp.id),
-      other = acc(d.counterpart);
+    const target = accountById(temp.id),
+      other = accountById(d.counterpart);
     let op = {
       type: "transfer",
       date: TODAY,
@@ -330,7 +363,7 @@ export function saveAccount(p) {
     if (change > 0) {
       op.from = other.id;
       op.to = target.id;
-      op.amount = convert(change, target.currency, other.currency);
+      op.amount = convertCurrency(change, target.currency, other.currency);
     } else {
       op.from = target.id;
       op.to = other.id;
@@ -340,8 +373,9 @@ export function saveAccount(p) {
     target.opening -= op.to === target.id ? op.receive : -op.amount;
     putOperation(op);
   }
-  finish("Account saved");
+  finishFlow("Account saved");
 }
+// Explanation of the Regular / Savings / Debt account types.
 function accountTypeReferenceSheet(d) {
   const types = [
     [
@@ -363,14 +397,14 @@ function accountTypeReferenceSheet(d) {
       "#ffebdf",
     ],
   ];
-  sheet(
+  openSheet(
     () =>
-      `<div class="account-type-header">${IB("back", "Back", () => close())}<h2>${t("Account type")}</h2><span style="width:42px"></span></div><div class="mon-account-type-choices">${types
+      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div><div class="mon-account-type-choices">${types
         .map(([v, desc, icon, bg]) =>
-          B(
-            `<span class="mon-type-icon" style="background:${bg}">${I(icon, 23)}</span><span class="mon-type-text"><strong>${t(v)}</strong><small>${desc}</small></span><span class="mon-type-chevron">›</span>`,
+          buttonHtml(
+            `<span class="mon-type-icon" style="background:${bg}">${iconSvg(icon, 23)}</span><span class="mon-type-text"><strong>${translate(v)}</strong><small>${desc}</small></span><span class="mon-type-chevron">›</span>`,
             () => {
-              close();
+              closeLayers();
               d.type = v;
               if (v === "Debt" && !d.debt) d.debt = "Owe me";
               render();
@@ -383,6 +417,7 @@ function accountTypeReferenceSheet(d) {
     "full",
   );
 }
+// Account editor form.
 export function accountEditView(p) {
   const d = p.draft,
     debt = d.type === "Debt",
@@ -390,27 +425,27 @@ export function accountEditView(p) {
     regular = d.type === "Regular",
     current = p.editing;
   return (
-    header(current ? "Change account" : "New account") +
-    `<div class="content account-editor-content account-editor-reference"><div class="fields">${txt("Title", d.name, (v) => (d.name = v), "Enter a name")}${field("Icon", badge(d), () => iconPicker(d))}${txt("Description", d.description, (v) => (d.description = v))}${field("Account type", t(d.type), () => accountTypeReferenceSheet(d))}${
+    pageHeader(current ? "Change account" : "New account") +
+    `<div class="content account-editor-content account-editor-reference"><div class="fields">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter a name")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${textFieldHtml("Description", d.description, (v) => (d.description = v))}${fieldButtonHtml("Account type", translate(d.type), () => accountTypeReferenceSheet(d))}${
       debt
-        ? field("Type of debt", t(d.debt), () =>
+        ? fieldButtonHtml("Type of debt", translate(d.debt), () =>
             optionSheet("Type of debt", ["Owe me", "I owe"], d.debt, (v) => {
               d.debt = v;
               render();
             }),
           )
         : ""
-    }${field(
+    }${fieldButtonHtml(
       "Account currency",
-      esc(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
+      escapeHtml(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
       () =>
         currencyPicker(d.currency, (v) => {
           d.currency = v;
           render();
         }),
-    )}${field(
+    )}${fieldButtonHtml(
       debt ? (current ? "Current debt" : "Amount of debt") : "Current balance",
-      money(debt ? Math.abs(d.balance) : d.balance, d.currency),
+      formatMoney(debt ? Math.abs(d.balance) : d.balance, d.currency),
       () =>
         amountPicker(
           debt ? "Amount of debt" : "Current balance",
@@ -423,21 +458,24 @@ export function accountEditView(p) {
         ),
     )}${
       debt && current
-        ? field("Total debt", money(d.totalDebt ?? Math.abs(d.opening || 0), d.currency), () =>
-            amountPicker(
-              "Total debt",
-              d.totalDebt ?? Math.abs(d.opening || 0),
-              (v) => {
-                d.totalDebt = Math.abs(v);
-                render();
-              },
-              false,
-            ),
+        ? fieldButtonHtml(
+            "Total debt",
+            formatMoney(d.totalDebt ?? Math.abs(d.opening || 0), d.currency),
+            () =>
+              amountPicker(
+                "Total debt",
+                d.totalDebt ?? Math.abs(d.opening || 0),
+                (v) => {
+                  d.totalDebt = Math.abs(v);
+                  render();
+                },
+                false,
+              ),
           )
         : ""
     }${
       regular
-        ? field("Credit limit", money(d.limit, d.currency), () =>
+        ? fieldButtonHtml("Credit limit", formatMoney(d.limit, d.currency), () =>
             amountPicker("Credit limit", d.limit, (v) => {
               d.limit = v;
               render();
@@ -446,7 +484,7 @@ export function accountEditView(p) {
         : ""
     }${
       savings
-        ? field("Goal", money(d.goal, d.currency), () =>
+        ? fieldButtonHtml("Goal", formatMoney(d.goal, d.currency), () =>
             amountPicker("Goal", d.goal, (v) => {
               d.goal = v;
               render();
@@ -455,7 +493,7 @@ export function accountEditView(p) {
         : ""
     }${
       debt && !current
-        ? toggle(
+        ? toggleRowHtml(
             "Create operation",
             d.createOperation,
             () => {
@@ -467,18 +505,21 @@ export function accountEditView(p) {
         : ""
     }${
       debt && !current && d.createOperation
-        ? field("Account", esc(acc(d.counterpart)?.name || t("Not selected")), () =>
-            accountPicker(
-              d.counterpart,
-              (v) => {
-                d.counterpart = v;
-                render();
-              },
-              d.id,
-            ),
+        ? fieldButtonHtml(
+            "Account",
+            escapeHtml(accountById(d.counterpart)?.name || translate("Not selected")),
+            () =>
+              accountPicker(
+                d.counterpart,
+                (v) => {
+                  d.counterpart = v;
+                  render();
+                },
+                d.id,
+              ),
           )
         : ""
-    }${toggle(
+    }${toggleRowHtml(
       "Include in overall balance",
       d.include,
       () => {
@@ -490,7 +531,7 @@ export function accountEditView(p) {
       debt
         ? ["considerExpense", "showExpense", "considerIncome", "showIncome"]
             .map((key, i) =>
-              toggle(
+              toggleRowHtml(
                 ["Consider as expense", "Show in expenses", "Consider as income", "Show in income"][
                   i
                 ],
@@ -509,16 +550,16 @@ export function accountEditView(p) {
             )
             .join("")
         : ""
-    }</div><div class="account-editor-bottom">${B(current ? "Save" : "Create", () => saveAccount(p), "primary")}${
+    }</div><div class="account-editor-bottom">${buttonHtml(current ? "Save" : "Create", () => saveAccount(p), "primary")}${
       current
-        ? B(
+        ? buttonHtml(
             d.archived ? "Return from archive" : "Move to archive",
             () => {
-              const a = acc(d.id);
+              const a = accountById(d.id);
               if (a) {
                 a.archived = !a.archived;
                 save();
-                back();
+                goBack();
               }
             },
             "account-editor-archive",
@@ -526,15 +567,15 @@ export function accountEditView(p) {
         : ""
     }${
       current
-        ? B(
+        ? buttonHtml(
             "Delete",
             () =>
               confirmAction(
                 "Delete this account and all linked operations?",
                 () => {
                   deleteAccount(d.id);
-                  U.layers = [];
-                  back();
+                  uiState.layers = [];
+                  goBack();
                 },
                 true,
                 "Delete",

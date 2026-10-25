@@ -1,21 +1,28 @@
 /* Constants: storage key, dates, helpers, icons, currencies, palette */
 
-export const KEY = "monivra.offline.2026.v1",
-  TODAY = new Date().toLocaleDateString("en-CA"),
-  clone = (x) => JSON.parse(JSON.stringify(x)),
-  uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
-  esc = (x) =>
-    String(x ?? "").replace(
-      /[&<>"']/g,
-      (c) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;",
-        })[c],
-    );
+// localStorage key for the persisted dataset (bump the suffix on breaking schema changes).
+export const STORAGE_KEY = "monivra.offline.2026.v1";
+// Today's date as YYYY-MM-DD (local time).
+export const TODAY = new Date().toLocaleDateString("en-CA");
+// Deep copy of JSON-serializable data.
+export const deepClone = (x) => JSON.parse(JSON.stringify(x));
+// Generate a short unique id.
+export const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+// Escape text before inserting it into HTML strings.
+export const escapeHtml = (x) =>
+  String(x ?? "").replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      })[c],
+  );
+
+// Inline SVG paths for every icon used in the UI.
 export const ICONS = {
   wallet: "M4 5h15v4H5a2 2 0 0 1 0-4zm-1 2v13h18V9H5m12 4h4v4h-4z",
   card: "M3 5h18v14H3zM3 9h18M6 15h5m4 0h3",
@@ -91,8 +98,10 @@ export const ICONS = {
     "m10 2 4 0 1 3 3 1 3-1 1 4-2 2 0 3 2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-1-4 2-2v-3L1 9l2-4 3 1 3-1zm2 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   sun: "M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2",
 };
-export const I = (name, size = 24) =>
+// Render an icon from ICONS as an <svg> string.
+export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
+// Supported currencies: code, name, default rate and symbol.
 export const CURRENCIES = [
   ["KGS", "Kyrgyzstani Som"],
   ["USD", "US Dollar"],
@@ -107,6 +116,7 @@ export const CURRENCIES = [
   ["JPY", "Japanese Yen"],
   ["CHF", "Swiss Franc"],
 ];
+// Colors offered in account/category color pickers.
 export const PALETTE = [
   "#9d00b5",
   "#7051df",

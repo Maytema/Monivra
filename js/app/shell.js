@@ -1,8 +1,8 @@
 /* App shell: navigation, root view, rendering */
-import { I, esc } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { escapeHtml, iconSvg } from "../core/constants.js";
+import { appData, locked, uiState } from "../core/state.js";
 import { dataView } from "../data/import-export.js";
-import { overall } from "../domain/finance.js";
+import { overallBalance } from "../domain/finance.js";
 import { accountEditView, accountsView } from "../screens/accounts.js";
 import {
   categoriesView,
@@ -15,21 +15,21 @@ import { operationView } from "../screens/operation-editor.js";
 import { operationsView } from "../screens/operations.js";
 import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
 import { statisticsView } from "../screens/statistics.js";
-import { home } from "../ui/kit.js";
+import { goHome } from "../ui/kit.js";
 import {
-  B,
-  actions,
-  counter,
-  inputs,
-  locked,
-  setActions,
-  setCounter,
-  setInputs,
-  t,
+  actionHandlers,
+  buttonHtml,
+  handlerCounter,
+  inputHandlers,
+  setActionHandlers,
+  setHandlerCounter,
+  setInputHandlers,
+  translate,
 } from "../ui/primitives.js";
 
-function nav() {
-  return `<nav class="navbar labels-${D.settings.navLabels === "active" ? "selected" : D.settings.navLabels}" aria-label="Main navigation">${[
+// Bottom navigation bar.
+function navigationBar() {
+  return `<nav class="navbar labels-${appData.settings.navLabels === "active" ? "selected" : appData.settings.navLabels}" aria-label="Main navigation">${[
     ["accounts", "wallet", "Accounts"],
     ["categories", "categories", "Categories"],
     ["operations", "receipt", "Operations"],
@@ -37,18 +37,19 @@ function nav() {
     ["more", "more", "More"],
   ]
     .map(([id, icon, label]) =>
-      B(
-        `<span class="navicon">${I(icon)}</span><span>${t(label)}</span>`,
-        () => home(id),
-        U.tab === id ? "active" : "",
-        `aria-label="${t(label)}" ${U.tab === id ? 'aria-current="page"' : ""}`,
+      buttonHtml(
+        `<span class="navicon">${iconSvg(icon)}</span><span>${translate(label)}</span>`,
+        () => goHome(id),
+        uiState.tab === id ? "active" : "",
+        `aria-label="${translate(label)}" ${uiState.tab === id ? 'aria-current="page"' : ""}`,
       ),
     )
     .join("")}</nav>`;
 }
+// HTML of the whole screen: current root tab or the top page, plus layers.
 export function rootView() {
   if (locked) return lockView();
-  const p = U.pages.at(-1);
+  const p = uiState.pages.at(-1);
   let out;
   if (p) {
     switch (p.kind) {
@@ -107,15 +108,15 @@ export function rootView() {
         operations: operationsView,
         statistics: statisticsView,
         more: moreView,
-      }[U.tab] || accountsView
+      }[uiState.tab] || accountsView
     )();
-    if (["accounts", "categories", "operations", "statistics"].includes(U.tab)) {
+    if (["accounts", "categories", "operations", "statistics"].includes(uiState.tab)) {
       const marker = "<!--MONIVRA_HERO_END-->";
       const cut = out.indexOf(marker);
       if (cut >= 0) {
         let head = out.slice(0, cut + marker.length),
           body = out.slice(cut + marker.length);
-        if (U.tab === "accounts") {
+        if (uiState.tab === "accounts") {
           const tabEnd = body.indexOf("</div>");
           if (tabEnd >= 0 && body.startsWith('<div class="tabs account-tabs">')) {
             head += body.slice(0, tabEnd + 6);
@@ -125,13 +126,14 @@ export function rootView() {
         out = head + '<div class="swipe-pane">' + body + "</div>";
       } else out = '<div class="swipe-pane">' + out + "</div>";
     }
-    if (!(U.tab === "operations" && U.selection)) out += nav();
+    if (!(uiState.tab === "operations" && uiState.selection)) out += navigationBar();
   }
   return out;
 }
+// Keep header and FAB fixed while the content area swipes.
 function stabilizeSwipeChrome() {
   const base = document.getElementById("base");
-  if (!base || U.pages.length || U.layers.length) return;
+  if (!base || uiState.pages.length || uiState.layers.length) return;
   const pane = base.querySelector(".swipe-pane");
   if (!pane) return;
   const accountTabs = base.querySelector(":scope > .account-tabs");
@@ -180,8 +182,12 @@ function stabilizeSwipeChrome() {
     }
   }
 }
-let opsPressTimer = null,
-  opsLongPressed = false;
+// Timer used to detect a long press on an operation row.
+let opsPressTimer = null;
+// Set when a long press just happened so the following click is ignored.
+let opsLongPressed = false;
+
+// Long press on an operation row starts selection mode.
 function initOpsLongPress() {
   const app = document.getElementById("app");
   if (!app || app.dataset.opsLongPress) return;
@@ -195,7 +201,13 @@ function initOpsLongPress() {
     "pointerdown",
     (e) => {
       const row = e.target.closest(".op-row[data-operation]");
-      if (!row || U.tab !== "operations" || U.selection || U.layers.length || U.pages.length)
+      if (
+        !row ||
+        uiState.tab !== "operations" ||
+        uiState.selection ||
+        uiState.layers.length ||
+        uiState.pages.length
+      )
         return;
       cancel();
       const id = row.dataset.operation;
@@ -213,8 +225,8 @@ function initOpsLongPress() {
             try {
               navigator.vibrate(22);
             } catch {}
-          U.selection = true;
-          U.selected = [id];
+          uiState.selection = true;
+          uiState.selected = [id];
           render();
           setTimeout(() => {
             opsLongPressed = false;
@@ -250,19 +262,20 @@ function initOpsLongPress() {
   );
 }
 
+// Re-render the application and restore focus and scroll positions.
 export function render(top = false) {
-  setActions({});
-  setInputs({});
-  setCounter(0);
+  setActionHandlers({});
+  setInputHandlers({});
+  setHandlerCounter(0);
   let html =
     '<div id="base"' +
-    (U.layers.length ? ' inert aria-hidden="true"' : "") +
+    (uiState.layers.length ? ' inert aria-hidden="true"' : "") +
     ">" +
     rootView() +
     "</div>" +
-    U.layers
+    uiState.layers
       .map((s, i) => {
-        return `<div class="overlay ${s.kind}" data-layer="${i}" style="z-index:${10 + i * 2}" ${i < U.layers.length - 1 ? 'inert aria-hidden="true"' : ""}><section class="panel" role="dialog" aria-modal="true" aria-label="${esc(t(s.title))}">${s.kind === "sheet" ? '<div class="handle"></div>' : ""}${s.fn()}</section></div>`;
+        return `<div class="overlay ${s.kind}" data-layer="${i}" style="z-index:${10 + i * 2}" ${i < uiState.layers.length - 1 ? 'inert aria-hidden="true"' : ""}><section class="panel" role="dialog" aria-modal="true" aria-label="${escapeHtml(translate(s.title))}">${s.kind === "sheet" ? '<div class="handle"></div>' : ""}${s.fn()}</section></div>`;
       })
       .join("");
   if (window.__MONIVRA_TEST__) {
@@ -270,13 +283,13 @@ export function render(top = false) {
     return html;
   }
   const monBeforeBalance = window.__monBalancePrevious ?? null,
-    monCurrentBalance = overall(),
+    monCurrentBalance = overallBalance(),
     monShouldAnimate =
       monBeforeBalance !== null &&
       monBeforeBalance !== monCurrentBalance &&
-      !D.settings.hidden &&
-      !U.pages.length &&
-      !U.layers.length;
+      !appData.settings.hidden &&
+      !uiState.pages.length &&
+      !uiState.layers.length;
   window.__monBalancePrevious = monCurrentBalance;
   const app = document.getElementById("app"),
     old = app.querySelector(".content"),
@@ -291,13 +304,13 @@ export function render(top = false) {
     selEnd = focused?.selectionEnd;
   app.innerHTML = html;
   initOpsLongPress();
-  document.documentElement.style.setProperty("--accent", D.settings.accent);
+  document.documentElement.style.setProperty("--accent", appData.settings.accent);
   document.documentElement.classList.toggle(
     "dark",
-    D.settings.theme === "dark" ||
-      (D.settings.theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches),
+    appData.settings.theme === "dark" ||
+      (appData.settings.theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches),
   );
-  document.documentElement.lang = D.settings.language;
+  document.documentElement.lang = appData.settings.language;
   const content = app.querySelector(".content");
   if (content) content.scrollTop = scroll;
   app.querySelectorAll(".panel").forEach((x, i) => (x.scrollTop = oldPanels[i] || 0));

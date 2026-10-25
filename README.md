@@ -26,7 +26,7 @@ js/
   domain/             finance model (balances, periods, reports) and mutations
   ui/                 UI primitives and reusable kit (sheets, dialogs, pickers)
   screens/            one file per feature screen
-  app/                shell/rendering, gestures + startup, self checks, entry point
+  app/                shell/rendering, swipe gestures, startup, self checks, entry point
 ```
 
 ### Where to change what
@@ -34,7 +34,9 @@ js/
 | I want to change…                          | Look at                                   |
 | ------------------------------------------ | ----------------------------------------- |
 | Colors, fonts, theme variables             | `css/base.css`                            |
-| Navigation bar, header, swipe, FAB         | `css/layout.css`, `js/app/shell.js`       |
+| Navigation bar, header, FAB                | `css/layout.css`, `js/app/shell.js`       |
+| Swipe between tabs                         | `js/app/swipe.js`                         |
+| Global click/keyboard handlers, lock       | `js/app/startup.js`                       |
 | Buttons, fields, sheets, dialogs, pickers  | `css/components.css`, `js/ui/`            |
 | Accounts list and account editor           | `js/screens/accounts.js`, `css/accounts.css` |
 | Categories and sub-categories              | `js/screens/categories.js`, `css/categories.css` |
@@ -51,15 +53,26 @@ js/
 
 ### Architecture notes
 
-- **State:** `D` (persistent data) and `U` (UI state) live in `js/core/state.js`.
+- **State:** `appData` (persistent data) and `uiState` (UI state) live in `js/core/state.js`.
   Changing data → `save()` → `render()`.
 - **Rendering:** screens return HTML strings; `render()` in `js/app/shell.js` puts them in the DOM.
   Click and input handlers are registered with `act()` / `inp()` and referenced from markup via
   `data-action` / `data-input`.
 - **Modules:** variables that are re-assigned from other modules have setters
-  (`setD`, `setU`, …) exported by their owner module.
+  (`setAppData`, `setUiState`, …) exported by their owner module.
 
 ## Self checks
 
 Open the app and run `Monivra.runSelfChecks()` in the browser console; every entry should have
 `pass: true`.
+
+## Regression tools
+
+`tools/visual-regression/` records screenshots of every reachable screen and compares two builds
+pixel by pixel — run it before and after any refactoring. See its README.
+
+## Notes
+
+- Some stylesheet rules still use `!important`. They come from the original layered styles and are
+  kept where removing them could change the cascade or the swipe-preview inline styles.
+- Reference analysis of the original app's screens and behaviour is kept outside the repository.

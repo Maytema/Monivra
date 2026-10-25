@@ -1,161 +1,187 @@
 /* Finance model: balances, currency conversion, periods, reports */
-import { clone, esc, uid } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { deepClone, escapeHtml, newId } from "../core/constants.js";
+import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { t } from "../ui/primitives.js";
+import { translate } from "../ui/primitives.js";
 
-export const acc = (id) => D.accounts.find((a) => a.id === id),
-  cat = (id) => D.categories.find((c) => c.id === id),
-  bal = (id) => {
-    const a = acc(id);
-    return a
-      ? a.opening +
-          D.ops.reduce(
-            (n, o) =>
-              n + (o.to === id ? (o.receive ?? o.amount) : 0) - (o.from === id ? o.amount : 0),
-            0,
-          )
-      : 0;
-  },
-  rate = (c) => D.rates[c] || 1;
-export const convert = (n, from, to) => Math.round((n * rate(from)) / rate(to));
-export function overall() {
-  return D.accounts
+// Find an account by id.
+export const accountById = (id) => appData.accounts.find((a) => a.id === id);
+// Find a category by id.
+export const categoryById = (id) => appData.categories.find((c) => c.id === id);
+// Current balance of an account: opening balance plus incoming minus outgoing operations.
+export const accountBalance = (id) => {
+  const a = accountById(id);
+  return a
+    ? a.opening +
+        appData.ops.reduce(
+          (n, o) =>
+            n + (o.to === id ? (o.receive ?? o.amount) : 0) - (o.from === id ? o.amount : 0),
+          0,
+        )
+    : 0;
+};
+// Exchange rate of a currency relative to the base currency.
+export const currencyRate = (c) => appData.rates[c] || 1;
+
+// Convert a minor-unit amount between currencies.
+export const convertCurrency = (n, from, to) =>
+  Math.round((n * currencyRate(from)) / currencyRate(to));
+// Total balance of accounts included in the total, converted to the main currency.
+export function overallBalance() {
+  return appData.accounts
     .filter((a) => a.include && !a.archived)
-    .reduce((s, a) => s + convert(bal(a.id), a.currency, D.settings.currency), 0);
+    .reduce(
+      (s, a) => s + convertCurrency(accountBalance(a.id), a.currency, appData.settings.currency),
+      0,
+    );
 }
-export function money(n, currency = D.settings.currency, isBalance = false) {
-  if (D.settings.hidden && (D.settings.hiddenValues !== "Balances only" || isBalance))
-    return "•••• " + esc(currency);
+// Format an amount in minor units (cents) honoring the formatting settings; masks it when values are hidden.
+export function formatMoney(n, currency = appData.settings.currency, isBalance = false) {
+  if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
+    return "•••• " + escapeHtml(currency);
   let v = n / 100,
-    dec = D.settings.hideCents ? 0 : D.settings.decimal ? 2 : Math.abs(n) % 100 ? 2 : 0;
-  let text = v.toLocaleString(D.settings.language === "ru" ? "ru-RU" : "en-US", {
+    dec = appData.settings.hideCents ? 0 : appData.settings.decimal ? 2 : Math.abs(n) % 100 ? 2 : 0;
+  let text = v.toLocaleString(appData.settings.language === "ru" ? "ru-RU" : "en-US", {
     minimumFractionDigits: dec,
     maximumFractionDigits: dec,
-    useGrouping: D.settings.groupDigits,
+    useGrouping: appData.settings.groupDigits,
   });
-  return esc(D.settings.currencyFirst ? currency + " " + text : text + " " + currency);
+  return escapeHtml(appData.settings.currencyFirst ? currency + " " + text : text + " " + currency);
 }
-export const moneySpan = (n, c, sign = false, isBalance = false) =>
-  `<span class="money ${n > 0 ? "pos" : n < 0 ? "neg" : "muted"}">${sign && n > 0 ? "+" : ""}${money(n, c, isBalance)}</span>`;
-export const dateObj = (s) => new Date(s + "T12:00:00Z"),
-  iso = (d) => d.toISOString().slice(0, 10),
-  addDays = (s, n) => {
-    let d = dateObj(s);
-    d.setUTCDate(d.getUTCDate() + n);
-    return iso(d);
-  },
-  dateLabel = (s, short = false) =>
-    D.settings.dateFormat === "iso"
-      ? s
-      : dateObj(s).toLocaleDateString(
-          D.settings.language === "ru"
-            ? "ru-RU"
-            : D.settings.dateFormat === "day"
-              ? "en-GB"
-              : "en-US",
-          {
-            timeZone: "UTC",
-            ...(short
-              ? { month: "long", day: "numeric" }
-              : { year: "numeric", month: "long", day: "numeric" }),
-          },
-        );
-export function bounds(p = U.period) {
-  const d = dateObj(p.anchor),
+// Amount wrapped in a <span> colored by sign.
+export const moneySpanHtml = (n, c, sign = false, isBalance = false) =>
+  `<span class="money ${n > 0 ? "pos" : n < 0 ? "neg" : "muted"}">${sign && n > 0 ? "+" : ""}${formatMoney(n, c, isBalance)}</span>`;
+// Parse YYYY-MM-DD into a Date (noon UTC, avoids DST issues).
+export const parseDate = (s) => new Date(s + "T12:00:00Z");
+// Format a Date as YYYY-MM-DD.
+export const toIsoDate = (d) => d.toISOString().slice(0, 10);
+// Add days to a YYYY-MM-DD string.
+export const addDays = (s, n) => {
+  let d = parseDate(s);
+  d.setUTCDate(d.getUTCDate() + n);
+  return toIsoDate(d);
+};
+// Human-readable date according to the date-format setting.
+export const dateLabel = (s, short = false) =>
+  appData.settings.dateFormat === "iso"
+    ? s
+    : parseDate(s).toLocaleDateString(
+        appData.settings.language === "ru"
+          ? "ru-RU"
+          : appData.settings.dateFormat === "day"
+            ? "en-GB"
+            : "en-US",
+        {
+          timeZone: "UTC",
+          ...(short
+            ? { month: "long", day: "numeric" }
+            : { year: "numeric", month: "long", day: "numeric" }),
+        },
+      );
+
+// Start and end dates of the selected statistics/operations period.
+export function periodBounds(p = uiState.period) {
+  const d = parseDate(p.anchor),
     y = d.getUTCFullYear(),
     m = d.getUTCMonth();
   if (p.mode === "all") return ["0000-01-01", "9999-12-31"];
   if (p.mode === "range") return [p.from, p.to];
   if (p.mode === "day") return [p.anchor, p.anchor];
   if (p.mode === "week") {
-    let a = addDays(p.anchor, -((d.getUTCDay() - Number(D.settings.weekStart) + 7) % 7));
+    let a = addDays(p.anchor, -((d.getUTCDay() - Number(appData.settings.weekStart) + 7) % 7));
     return [a, addDays(a, 6)];
   }
   if (p.mode === "year") return [`${y}-01-01`, `${y}-12-31`];
-  const day = Number(D.settings.monthStart) || 1;
+  const day = Number(appData.settings.monthStart) || 1;
   const start = (month) => {
     let z = new Date(Date.UTC(y, month, 1, 12));
     z.setUTCDate(
       Math.min(day, new Date(Date.UTC(z.getUTCFullYear(), z.getUTCMonth() + 1, 0)).getUTCDate()),
     );
-    return iso(z);
+    return toIsoDate(z);
   };
   let month = p.anchor < start(m) ? m - 1 : m;
   return [start(month), addDays(start(month + 1), -1)];
 }
 
+// Title shown in the period bar, e.g. "October 2026".
 export function periodTitle() {
-  const [a, b] = bounds();
-  if (U.period.mode === "all") return t("All time");
-  if (U.period.mode === "month")
-    return dateObj(a).toLocaleDateString(D.settings.language === "ru" ? "ru-RU" : "en-US", {
+  const [a, b] = periodBounds();
+  if (uiState.period.mode === "all") return translate("All time");
+  if (uiState.period.mode === "month")
+    return parseDate(a).toLocaleDateString(appData.settings.language === "ru" ? "ru-RU" : "en-US", {
       timeZone: "UTC",
       month: "long",
       year: "numeric",
     });
-  if (U.period.mode === "year") return a.slice(0, 4);
-  if (U.period.mode === "day") return dateLabel(a);
+  if (uiState.period.mode === "year") return a.slice(0, 4);
+  if (uiState.period.mode === "day") return dateLabel(a);
   return dateLabel(a, true) + " – " + dateLabel(b, true);
 }
-export function matches(o, f = U.filters) {
+// Does an operation pass the active filters?
+export function operationMatchesFilters(o, f = uiState.filters) {
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
     (!f.categories ||
       f.categories.includes(o.category) ||
-      f.categories.includes(cat(o.category)?.parent)) &&
+      f.categories.includes(categoryById(o.category)?.parent)) &&
     (!f.types || o.type === "adjustment" || f.types.includes(o.type)) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
     (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase()))
   );
 }
-export function visibleOps() {
-  const [a, b] = bounds();
-  return D.ops
-    .filter((o) => o.date >= a && o.date <= b && matches(o))
+// Operations that pass the active filters and period, newest first.
+export function visibleOperations() {
+  const [a, b] = periodBounds();
+  return appData.ops
+    .filter((o) => o.date >= a && o.date <= b && operationMatchesFilters(o))
     .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
 }
-export function reportRows(ops = visibleOps()) {
+// Flat rows used by CSV export and the printable report.
+export function reportRows(ops = visibleOperations()) {
   let out = [];
   for (const o of ops) {
     if (o.type === "adjustment") continue;
     if (o.type !== "transfer") {
-      const a = acc(o.from || o.to);
+      const a = accountById(o.from || o.to);
       out.push({
         ...o,
         reportType: o.type,
-        reportAmount: convert(o.amount, a?.currency || "KGS", D.settings.currency),
+        reportAmount: convertCurrency(o.amount, a?.currency || "KGS", appData.settings.currency),
       });
     } else {
-      const source = acc(o.from),
-        dest = acc(o.to);
+      const source = accountById(o.from),
+        dest = accountById(o.to);
       if (dest?.type === "Debt" && dest.considerExpense)
         out.push({
           ...o,
           category: "debt:" + dest.id,
           reportType: "expense",
-          reportAmount: convert(o.amount, source.currency, D.settings.currency),
+          reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
         });
       if (source?.type === "Debt" && source.considerIncome)
         out.push({
           ...o,
           category: "debt:" + source.id,
           reportType: "income",
-          reportAmount: convert(o.amount, source.currency, D.settings.currency),
+          reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
         });
     }
   }
   return out;
 }
-export const totalType = (type, ops) =>
+// Sum of operations of one type (expense/income/transfer).
+export const totalByType = (type, ops) =>
   reportRows(ops)
     .filter((o) => o.reportType === type)
     .reduce((s, o) => s + o.reportAmount, 0);
+// Sum of operations in a category, including its sub-categories.
 export const categoryTotal = (id) =>
   reportRows()
-    .filter((o) => o.category === id || cat(o.category)?.parent === id)
+    .filter((o) => o.category === id || categoryById(o.category)?.parent === id)
     .reduce((s, o) => s + o.reportAmount, 0);
-export function calculate(expr) {
+// Evaluate a calculator expression (+ − × ÷) and return the result in minor units.
+export function evaluateExpression(expr) {
   const clean = String(expr)
     .replace(/[×]/g, "*")
     .replace(/[÷]/g, "/")
@@ -182,17 +208,19 @@ export function calculate(expr) {
   if (!Number.isSafeInteger(n) || Math.abs(n) > 9e12) throw Error("Amount is too large");
   return n;
 }
-export function snapshot() {
-  const x = clone(D);
+// Copy of the dataset without its backup list.
+export function dataSnapshot() {
+  const x = deepClone(appData);
   x.backups = [];
   return x;
 }
-export function backup() {
-  D.backups.unshift({
-    id: uid(),
+// Store a snapshot of the dataset in the backup list (before destructive actions).
+export function createBackup() {
+  appData.backups.unshift({
+    id: newId(),
     at: new Date().toISOString(),
-    data: snapshot(),
+    data: dataSnapshot(),
   });
-  D.backups = D.backups.slice(0, 10);
+  appData.backups = appData.backups.slice(0, 10);
   save();
 }

@@ -3,21 +3,21 @@ import { runSelfChecks } from "./self-checks.js";
 import { render } from "./shell.js";
 import { startup } from "./startup.js";
 import { TODAY } from "../core/constants.js";
-import { D, U, setD, setU } from "../core/state.js";
+import { appData, locked, setAppData, setLocked, setUiState, uiState } from "../core/state.js";
 import { csvText, handleImport, parseCSV, prepareCSV } from "../data/import-export.js";
-import { emptyData, seed } from "../data/seed.js";
-import { save, validData } from "../data/storage.js";
+import { createEmptyData, createSeedData } from "../data/seed.js";
+import { isValidData, save } from "../data/storage.js";
 import {
-  backup,
-  bal,
-  bounds,
-  calculate,
-  convert,
-  matches,
-  overall,
+  accountBalance,
+  convertCurrency,
+  createBackup,
+  dataSnapshot,
+  evaluateExpression,
+  operationMatchesFilters,
+  overallBalance,
+  periodBounds,
   reportRows,
-  snapshot,
-  totalType,
+  totalByType,
 } from "../domain/finance.js";
 import {
   deleteAccount,
@@ -44,17 +44,17 @@ import { budgetSpend, editBudget, recurrence, reminder } from "../screens/schedu
 import { statsSettings } from "../screens/statistics.js";
 import {
   amountPicker,
-  back,
-  close,
+  closeLayers,
   currencyPicker,
-  home,
+  goBack,
+  goHome,
   iconPicker,
-  info,
-  page,
+  openPage,
+  openSheet,
   periodPicker,
-  sheet,
+  showInfo,
 } from "../ui/kit.js";
-import { actions, inputs, locked, setLocked } from "../ui/primitives.js";
+import { actionHandlers, inputHandlers } from "../ui/primitives.js";
 
 window.Monivra = {
   version: "1.0.0",
@@ -63,21 +63,21 @@ window.Monivra = {
 if (window.__MONIVRA_TEST__) {
   Object.assign(window.Monivra, {
     get data() {
-      return D;
+      return appData;
     },
-    state: () => U,
-    getData: () => D,
+    state: () => uiState,
+    getData: () => appData,
     setData: (x) => {
-      setD(x);
+      setAppData(x);
     },
-    seed,
-    emptyData,
-    validData,
-    calculate,
-    convert,
-    bal,
-    overall,
-    bounds,
+    seed: createSeedData,
+    emptyData: createEmptyData,
+    validData: isValidData,
+    calculate: evaluateExpression,
+    convert: convertCurrency,
+    bal: accountBalance,
+    overall: overallBalance,
+    bounds: periodBounds,
     nextDate,
     putOperation,
     validateOp,
@@ -87,22 +87,22 @@ if (window.__MONIVRA_TEST__) {
     moveCategory,
     processScheduled,
     reportRows,
-    totalType,
+    totalType: totalByType,
     budgetSpend,
-    matches,
+    matches: operationMatchesFilters,
     parseCSV,
     prepareCSV,
     csvText,
-    snapshot,
-    backup,
+    snapshot: dataSnapshot,
+    backup: createBackup,
     save,
     render,
-    home,
-    page,
-    back,
-    close,
-    sheet,
-    info,
+    home: goHome,
+    page: openPage,
+    back: goBack,
+    close: closeLayers,
+    sheet: openSheet,
+    info: showInfo,
     filters,
     periodPicker,
     accountPicker,
@@ -127,13 +127,13 @@ if (window.__MONIVRA_TEST__) {
     statsSettings,
     pinSetup,
     handleImport,
-    actions: () => actions,
-    inputs: () => inputs,
-    invoke: (id) => actions[id]?.(),
-    input: (id, value) => inputs[id]?.(value),
+    actions: () => actionHandlers,
+    inputs: () => inputHandlers,
+    invoke: (id) => actionHandlers[id]?.(),
+    input: (id, value) => inputHandlers[id]?.(value),
     reset: () => {
-      setD(seed());
-      setU({
+      setAppData(createSeedData());
+      setUiState({
         tab: "accounts",
         accountTab: "Accounts",
         catType: "expense",

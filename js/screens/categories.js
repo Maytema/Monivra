@@ -1,40 +1,50 @@
 /* Categories screens */
 import { render } from "../app/shell.js";
-import { CURRENCIES, I, clone, esc, uid } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { CURRENCIES, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
-  bal,
-  cat,
+  accountBalance,
+  categoryById,
   categoryTotal,
-  convert,
-  money,
-  moneySpan,
-  totalType,
+  convertCurrency,
+  formatMoney,
+  moneySpanHtml,
+  totalByType,
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/operations.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
 import {
-  back,
-  close,
+  closeLayers,
   confirmAction,
   currencyPicker,
-  finish,
-  header,
-  home,
+  finishFlow,
+  goBack,
+  goHome,
   iconPicker,
-  page,
+  openPage,
+  openSheet,
+  pageHeader,
   periodBar,
   promptText,
-  sheet,
 } from "../ui/kit.js";
-import { B, IB, badge, field, row, t, toast, txt } from "../ui/primitives.js";
+import {
+  badgeHtml,
+  buttonHtml,
+  fieldButtonHtml,
+  iconButtonHtml,
+  menuRowHtml,
+  textFieldHtml,
+  toast,
+  translate,
+} from "../ui/primitives.js";
 
+// Screen for changing the order of accounts or categories.
 export function orderView(kind) {
-  const list = kind === "accounts" ? D.accounts : D.categories.filter((c) => !c.parent);
+  const list = kind === "accounts" ? appData.accounts : appData.categories.filter((c) => !c.parent);
   function move(id, n) {
-    const arr = kind === "accounts" ? D.accounts : D.categories,
+    const arr = kind === "accounts" ? appData.accounts : appData.categories,
       i = arr.findIndex((x) => x.id === id),
       j = i + n;
     if (j < 0 || j >= arr.length) return;
@@ -43,108 +53,116 @@ export function orderView(kind) {
     render();
   }
   return (
-    header("Change order") +
-    `<div class="content">${list.map((a, i) => `<div class="row">${badge(a, true)}<span class="grow">${esc(a.name)}</span>${IB("up", "Move up", () => move(a.id, -1))}${IB("down", "Move down", () => move(a.id, 1))}</div>`).join("")}${B("Complete", back, "primary")}</div>`
+    pageHeader("Change order") +
+    `<div class="content">${list.map((a, i) => `<div class="row">${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${iconButtonHtml("up", "Move up", () => move(a.id, -1))}${iconButtonHtml("down", "Move down", () => move(a.id, 1))}</div>`).join("")}${buttonHtml("Complete", goBack, "primary")}</div>`
   );
 }
+// Expense/income tabs shared by categories and statistics.
 export function sumTabs() {
   return `<div class="sum-tabs">${["expense", "income"]
     .map((type) =>
-      B(
-        `<span>${t(type === "expense" ? "Expenses" : "Incomes")}</span><span class="money ${type === "expense" ? "neg" : "pos"}">${money(totalType(type))}</span>`,
+      buttonHtml(
+        `<span>${translate(type === "expense" ? "Expenses" : "Incomes")}</span><span class="money ${type === "expense" ? "neg" : "pos"}">${formatMoney(totalByType(type))}</span>`,
         () => {
-          U.catType = type;
-          U.donut = null;
+          uiState.catType = type;
+          uiState.donut = null;
           render();
         },
-        U.catType === type ? "active" : "",
+        uiState.catType === type ? "active" : "",
       ),
     )
     .join("")}</div>`;
 }
 
+// One tile in the categories grid.
 function categoryTile(c, fn = null) {
-  return B(
-    `${badge(c)}<span class="grow"><span class="name">${esc(c.name)}</span><span class="money ${categoryTotal(c.id) === 0 ? "muted" : c.type === "income" ? "pos" : "neg"}">${money(convert(categoryTotal(c.id), D.settings.currency, c.currency), c.currency)}</span></span>`,
+  return buttonHtml(
+    `${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><span class="money ${categoryTotal(c.id) === 0 ? "muted" : c.type === "income" ? "pos" : "neg"}">${formatMoney(convertCurrency(categoryTotal(c.id), appData.settings.currency, c.currency), c.currency)}</span></span>`,
     fn ||
       (() =>
         operationStart({
           type: c.type,
           category: c.id,
-          from: c.type === "expense" ? D.accounts.find((a) => !a.archived)?.id : null,
-          to: c.type === "income" ? D.accounts.find((a) => !a.archived)?.id : null,
+          from: c.type === "expense" ? appData.accounts.find((a) => !a.archived)?.id : null,
+          to: c.type === "income" ? appData.accounts.find((a) => !a.archived)?.id : null,
         })),
     "cat-tile",
     `data-category="${c.id}"`,
   );
 }
 
+// Categories tab.
 export function categoriesView() {
-  let list = D.categories.filter((c) => c.type === U.catType && !c.archived && !c.parent);
+  let list = appData.categories.filter(
+    (c) => c.type === uiState.catType && !c.archived && !c.parent,
+  );
   return (
     hero() +
     periodBar() +
     sumTabs() +
-    `<div class="content"><div class="grid ${D.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${D.accounts
+    `<div class="content"><div class="grid ${appData.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${appData.accounts
       .filter(
         (a) =>
           a.type === "Debt" &&
           !a.archived &&
-          (U.catType === "expense" ? a.showExpense : a.showIncome),
+          (uiState.catType === "expense" ? a.showExpense : a.showIncome),
       )
       .map((a) =>
-        categoryTile({ ...a, id: "debt:" + a.id, type: U.catType }, () => accountActions(a)),
+        categoryTile({ ...a, id: "debt:" + a.id, type: uiState.catType }, () => accountActions(a)),
       )
       .join("")}</div></div>`
   );
 }
+// Action sheet shown when a category is tapped.
 export function categoryActions(c) {
-  sheet(
+  openSheet(
     () =>
-      `<div class="sheet-account">${badge(c)}<div class="grow"><strong>${esc(c.name)}</strong><div>${money(categoryTotal(c.id), c.currency)}</div></div>${IB("edit", "Edit", () => editCategory(c))}</div><div class="action-grid two">${B(I("plus") + t("Add an operation"), () => operationStart({ type: c.type, category: c.id }))}${B(
-        I("receipt") + t("Operations"),
+      `<div class="sheet-account">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><div>${formatMoney(categoryTotal(c.id), c.currency)}</div></div>${iconButtonHtml("edit", "Edit", () => editCategory(c))}</div><div class="action-grid two">${buttonHtml(iconSvg("plus") + translate("Add an operation"), () => operationStart({ type: c.type, category: c.id }))}${buttonHtml(
+        iconSvg("receipt") + translate("Operations"),
         () => {
-          U.filters.categories = [c.id];
-          home("operations");
+          uiState.filters.categories = [c.id];
+          goHome("operations");
         },
       )}</div>${
-        D.settings.subcategories
-          ? D.categories
+        appData.settings.subcategories
+          ? appData.categories
               .filter((x) => x.parent === c.id && !x.archived)
               .map((x) =>
-                row(
-                  esc(x.name),
+                menuRowHtml(
+                  escapeHtml(x.name),
                   x.icon,
                   () => categoryActions(x),
-                  money(categoryTotal(x.id), x.currency),
+                  formatMoney(categoryTotal(x.id), x.currency),
                 ),
               )
               .join("")
           : ""
-      }${!c.parent ? row("Add subcategory", "plus", () => editCategory(null, c.id)) : ""}${row("Edit", "edit", () => editCategory(c))}`,
+      }${!c.parent ? menuRowHtml("Add subcategory", "plus", () => editCategory(null, c.id)) : ""}${menuRowHtml("Edit", "edit", () => editCategory(c))}`,
     c.name,
   );
 }
+// Open the category editor (new category when no argument is given).
 export function editCategory(c, parent = null) {
-  page("categoryEdit", {
+  openPage("categoryEdit", {
     editing: !!c,
     draft: c
-      ? clone(c)
+      ? deepClone(c)
       : {
           id: null,
           name: "",
-          type: cat(parent)?.type || U.catType,
-          icon: U.catType === "income" ? "trend" : "pizza",
+          type: categoryById(parent)?.type || uiState.catType,
+          icon: uiState.catType === "income" ? "trend" : "pizza",
           color: "#9d00b5",
-          currency: D.settings.currency,
+          currency: appData.settings.currency,
           parent,
           archived: false,
         },
     pending: null,
   });
 }
+// Picker for the target category when merging, nesting or moving categories.
 function categoryTarget(d, mode, p, subId = null) {
-  const opts = D.categories.filter(
+  const opts = appData.categories.filter(
     (c) =>
       !c.archived &&
       c.type === d.type &&
@@ -155,14 +173,14 @@ function categoryTarget(d, mode, p, subId = null) {
           ? !c.parent
           : !c.parent),
   );
-  sheet(
+  openSheet(
     () =>
-      `<h2>${t(mode === "mergeSub" ? "Choose a subcategory" : "Choose a category")}</h2><div class="cat-target-grid">${opts
+      `<h2>${translate(mode === "mergeSub" ? "Choose a subcategory" : "Choose a category")}</h2><div class="cat-target-grid">${opts
         .map((c) =>
-          B(
-            `${badge(c)}<span>${esc(c.name)}</span>`,
+          buttonHtml(
+            `${badgeHtml(c)}<span>${escapeHtml(c.name)}</span>`,
             () => {
-              close();
+              closeLayers();
               if (mode === "nest" || mode === "merge") {
                 p.pending = { mode, target: c.id };
                 render();
@@ -173,12 +191,13 @@ function categoryTarget(d, mode, p, subId = null) {
             "cat-target-item",
           ),
         )
-        .join("")}</div>${B("Cancel", () => close(), "outline")}`,
+        .join("")}</div>${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
     "Choose a category",
   );
 }
+// Sub-menu: schedule or add an operation for a sub-category.
 function categoryScheduleSub(p, id, mode, target = null) {
-  const sub = D.categories.find((c) => c.id === id);
+  const sub = appData.categories.find((c) => c.id === id);
   if (!sub) return;
   const titles = {
     moveSub: "Move to a category?",
@@ -211,32 +230,33 @@ function categoryScheduleSub(p, id, mode, target = null) {
     mode === "promoteSub" ? "Confirm" : "Schedule",
   );
 }
+// Action sheet for a sub-category.
 function categorySubMenu(p, id) {
-  const c = D.categories.find((x) => x.id === id);
+  const c = appData.categories.find((x) => x.id === id);
   if (!c) return;
-  sheet(
+  openSheet(
     () =>
-      `<div class="mon-submenu-title">${esc(c.name)}</div><div class="cat-sub-actions">${row(
+      `<div class="mon-submenu-title">${escapeHtml(c.name)}</div><div class="cat-sub-actions">${menuRowHtml(
         "Edit",
         "edit",
         () => {
-          close();
+          closeLayers();
           editCategory(c);
         },
-      )}${row("Move to a category", "transfer", () => {
-        close();
+      )}${menuRowHtml("Move to a category", "transfer", () => {
+        closeLayers();
         categoryTarget(p.draft, "moveSub", p, id);
-      })}${row("Merge into a subcategory", "transfer", () => {
-        close();
+      })}${menuRowHtml("Merge into a subcategory", "transfer", () => {
+        closeLayers();
         categoryTarget(p.draft, "mergeSub", p, id);
-      })}${row("Convert to a category", "categories", () => {
-        close();
+      })}${menuRowHtml("Convert to a category", "categories", () => {
+        closeLayers();
         categoryScheduleSub(p, id, "promoteSub");
-      })}${row(c.archived ? "Return from archive" : "Move to archive", "archive", () => {
-        close();
+      })}${menuRowHtml(c.archived ? "Return from archive" : "Move to archive", "archive", () => {
+        closeLayers();
         categoryScheduleSub(p, id, c.archived ? "restoreSub" : "archiveSub");
-      })}${row("Delete", "trash", () => {
-        close();
+      })}${menuRowHtml("Delete", "trash", () => {
+        closeLayers();
         confirmAction(
           "Delete this subcategory and its associated operations?",
           () => {
@@ -251,41 +271,43 @@ function categorySubMenu(p, id) {
     "Subcategory actions",
   );
 }
+// Validate and store the category being edited.
 export function saveCategory(p) {
   const d = p.draft;
   if (!d.name.trim()) return toast("Enter a name");
   const apply = () => {
-    if (d.id && cat(d.id)) {
-      Object.assign(cat(d.id), d);
+    if (d.id && categoryById(d.id)) {
+      Object.assign(categoryById(d.id), d);
     } else {
-      if (!d.id) d.id = uid();
-      D.categories.push(clone(d));
+      if (!d.id) d.id = newId();
+      appData.categories.push(deepClone(d));
     }
     for (const sub of p.newSubcategories || []) {
       sub.parent = d.id;
-      if (!D.categories.some((c) => c.id === sub.id)) D.categories.push(clone(sub));
+      if (!appData.categories.some((c) => c.id === sub.id)) appData.categories.push(deepClone(sub));
     }
     for (const a of p.subActions || []) {
-      const sub = cat(a.id);
+      const sub = categoryById(a.id);
       if (!sub) continue;
       if (a.mode === "archiveSub") sub.archived = true;
       else if (a.mode === "restoreSub") sub.archived = false;
       else if (a.mode === "promoteSub") sub.parent = null;
-      else if (a.mode === "moveSub" && cat(a.target)?.type === sub.type) sub.parent = a.target;
-      else if (a.mode === "mergeSub" && cat(a.target)?.type === sub.type) {
+      else if (a.mode === "moveSub" && categoryById(a.target)?.type === sub.type)
+        sub.parent = a.target;
+      else if (a.mode === "mergeSub" && categoryById(a.target)?.type === sub.type) {
         for (const key of ["ops", "scheduled"])
-          for (const o of D[key]) if (o.category === sub.id) o.category = a.target;
-        D.categories = D.categories.filter((x) => x.id !== sub.id);
+          for (const o of appData[key]) if (o.category === sub.id) o.category = a.target;
+        appData.categories = appData.categories.filter((x) => x.id !== sub.id);
       } else if (a.mode === "deleteSub") {
         deleteCategory(sub.id);
       }
     }
-    if (p.pending?.mode === "nest" && cat(p.pending.target))
+    if (p.pending?.mode === "nest" && categoryById(p.pending.target))
       moveCategory(d.id, p.pending.target, true);
-    if (p.pending?.mode === "merge" && cat(p.pending.target))
+    if (p.pending?.mode === "merge" && categoryById(p.pending.target))
       moveCategory(d.id, p.pending.target, false);
     save();
-    finish("Category saved");
+    finishFlow("Category saved");
   };
   if (
     p.pending ||
@@ -299,43 +321,45 @@ export function saveCategory(p) {
     );
   else apply();
 }
+// Expense/income switch in the category editor.
 function categoryTypePicker(d) {
   const typeSvg = (kind) =>
     kind === "expense"
       ? `<svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>`
       : `<svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>`;
-  sheet(
+  openSheet(
     () =>
-      `<div class="mon65-cat-type-picker"><h2>Select type</h2>${[
+      `<div class="mon-type-picker"><h2>Select type</h2>${[
         ["expense", "Expenses"],
         ["income", "Incomes"],
       ]
         .map(([value, label]) =>
-          B(
-            `<span class="mon65-cat-type-icon ${value}">${typeSvg(value)}</span><span class="grow">${label}</span><span class="mon65-cat-type-radio ${d.type === value ? "selected" : ""}"></span>`,
+          buttonHtml(
+            `<span class="mon-type-picker-icon ${value}">${typeSvg(value)}</span><span class="grow">${label}</span><span class="mon-type-picker-radio ${d.type === value ? "selected" : ""}"></span>`,
             () => {
-              if (d.parent && cat(d.parent)?.type !== value)
+              if (d.parent && categoryById(d.parent)?.type !== value)
                 return toast("Subcategory type follows its parent");
               d.type = value;
-              close();
+              closeLayers();
               render();
             },
-            "mon65-cat-type-choice",
+            "mon-type-picker-choice",
           ),
         )
         .join("")}</div>`,
     "Select type",
   );
 }
+// Category editor form.
 export function categoryEditView(p) {
   const d = p.draft,
-    children = d.id ? D.categories.filter((c) => c.parent === d.id) : [];
+    children = d.id ? appData.categories.filter((c) => c.parent === d.id) : [];
   const active = children.filter((c) => !c.archived),
     archived = children.filter((c) => c.archived);
   const planned = (id) => (p.subActions || []).find((x) => x.id === id);
   const chip = (c) =>
-    `<div class="cat-sub-chip">${B(
-      `<span class="cat-sub-row-name">${esc(c.name)}</span>${I("right", 19)}`,
+    `<div class="cat-sub-chip">${buttonHtml(
+      `<span class="cat-sub-row-name">${escapeHtml(c.name)}</span>${iconSvg("right", 19)}`,
       () => {
         if ((p.newSubcategories || []).some((x) => x.id === c.id))
           promptText(
@@ -350,32 +374,32 @@ export function categoryEditView(p) {
         else categorySubMenu(p, c.id);
       },
       "cat-sub-chip-button",
-    )}${planned(c.id) ? `<small>→ ${esc({ moveSub: "Move to " + (cat(planned(c.id).target)?.name || ""), mergeSub: "Merge into " + (cat(planned(c.id).target)?.name || ""), promoteSub: "Make a category", archiveSub: "Move to archive", restoreSub: "Return from archive", deleteSub: "Delete" }[planned(c.id).mode] || "")}</small>` : ""}</div>`;
+    )}${planned(c.id) ? `<small>→ ${escapeHtml({ moveSub: "Move to " + (categoryById(planned(c.id).target)?.name || ""), mergeSub: "Merge into " + (categoryById(planned(c.id).target)?.name || ""), promoteSub: "Make a category", archiveSub: "Move to archive", restoreSub: "Return from archive", deleteSub: "Delete" }[planned(c.id).mode] || "")}</small>` : ""}</div>`;
   return (
-    header(p.editing ? "Change category" : "New category") +
-    `<div class="content cat-editor-content"><div class="cat-edit-form">${txt("Title", d.name, (v) => (d.name = v), "Enter the title")}${field("Icon", badge(d), () => iconPicker(d))}${field("Type", (d.type === "expense" ? '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>' : '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>') + " " + t(d.type === "expense" ? "Expenses" : "Incomes"), () => categoryTypePicker(d))}${field(
+    pageHeader(p.editing ? "Change category" : "New category") +
+    `<div class="content cat-editor-content"><div class="cat-edit-form">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter the title")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${fieldButtonHtml("Type", (d.type === "expense" ? '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>' : '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>') + " " + translate(d.type === "expense" ? "Expenses" : "Incomes"), () => categoryTypePicker(d))}${fieldButtonHtml(
       "Account currency",
-      esc(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
+      escapeHtml(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
       () =>
         currencyPicker(d.currency, (v) => {
           d.currency = v;
           render();
         }),
-    )}<div class="cat-sub-section"><div class="cat-sub-heading">${t("Subcategories")}</div>${active.map(chip).join("")}${B(
-      t("Add subcategory"),
+    )}<div class="cat-sub-section"><div class="cat-sub-heading">${translate("Subcategories")}</div>${active.map(chip).join("")}${buttonHtml(
+      translate("Add subcategory"),
       () => {
-        sheet(
+        openSheet(
           () =>
-            `<h2>Subcategory</h2><input id="cat-sub-name" aria-label="Subcategory name" placeholder="Name" maxlength="80"/> <div class="cat-sub-modal-buttons">${B("Cancel", () => close(), "outline")}${B(
+            `<h2>Subcategory</h2><input id="cat-sub-name" aria-label="Subcategory name" placeholder="Name" maxlength="80"/> <div class="cat-sub-modal-buttons">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
               "OK",
               () => {
                 const input = document.getElementById("cat-sub-name");
                 const name = input?.value?.trim();
                 if (!name) return toast("Enter a name");
-                if (!d.id) d.id = uid();
+                if (!d.id) d.id = newId();
                 p.newSubcategories = p.newSubcategories || [];
                 p.newSubcategories.push({
-                  id: uid(),
+                  id: newId(),
                   name,
                   type: d.type,
                   parent: d.id,
@@ -384,7 +408,7 @@ export function categoryEditView(p) {
                   currency: d.currency,
                   archived: false,
                 });
-                close();
+                closeLayers();
                 render();
               },
               "primary",
@@ -396,7 +420,7 @@ export function categoryEditView(p) {
       "cat-add-sub",
     )}${archived.length ? `<div class="cat-sub-heading cat-archive-heading">Archive</div>${archived.map(chip).join("")}` : ""}</div></div>${
       p.pending
-        ? `<div class="cat-scheduled">→ ${esc(p.pending.mode === "nest" ? "Nest into " + (cat(p.pending.target)?.name || "") : "Move into " + (cat(p.pending.target)?.name || ""))}${B(
+        ? `<div class="cat-scheduled">→ ${escapeHtml(p.pending.mode === "nest" ? "Nest into " + (categoryById(p.pending.target)?.name || "") : "Move into " + (categoryById(p.pending.target)?.name || ""))}${buttonHtml(
             "Cancel",
             () => {
               p.pending = null;
@@ -405,9 +429,9 @@ export function categoryEditView(p) {
             "text-button",
           )}</div>`
         : ""
-    }<div class="cat-editor-actions">${B(t(p.editing ? "Save" : "Create"), () => saveCategory(p), "primary")}${p.editing && !d.parent ? B("Nest into category", () => categoryTarget(d, "nest", p), "cat-action-secondary") : ""}${p.editing && !d.parent ? B("Move into category", () => categoryTarget(d, "merge", p), "cat-action-secondary") : ""}${
+    }<div class="cat-editor-actions">${buttonHtml(translate(p.editing ? "Save" : "Create"), () => saveCategory(p), "primary")}${p.editing && !d.parent ? buttonHtml("Nest into category", () => categoryTarget(d, "nest", p), "cat-action-secondary") : ""}${p.editing && !d.parent ? buttonHtml("Move into category", () => categoryTarget(d, "merge", p), "cat-action-secondary") : ""}${
       p.editing
-        ? B(
+        ? buttonHtml(
             d.archived ? "Return from archive" : "Move to archive",
             () => {
               d.archived = !d.archived;
@@ -418,14 +442,14 @@ export function categoryEditView(p) {
         : ""
     }${
       p.editing
-        ? B(
+        ? buttonHtml(
             "Delete",
             () =>
               confirmAction(
                 "All operations associated with the category will be deleted. This applies to both normal operations and scheduled ones. The category and transactions cannot be restored. If a category or subcategory was included in a budget, it will be removed from that budget.",
                 () => {
                   deleteCategory(d.id);
-                  finish("Category deleted");
+                  finishFlow("Category deleted");
                 },
                 true,
                 "Delete",
@@ -436,52 +460,59 @@ export function categoryEditView(p) {
     }</div></div>`
   );
 }
+// Expense/income tabs on the manage-categories page.
 function manageCategoryTabs() {
   return `<div class="cat-manage-tabs">${["expense", "income"]
     .map((type) =>
-      B(
-        t(type === "expense" ? "Expenses" : "Incomes"),
+      buttonHtml(
+        translate(type === "expense" ? "Expenses" : "Incomes"),
         () => {
-          U.catType = type;
-          U.manageArchive = false;
+          uiState.catType = type;
+          uiState.manageArchive = false;
           render();
         },
-        U.catType === type ? "active" : "",
+        uiState.catType === type ? "active" : "",
       ),
     )
     .join("")}</div>`;
 }
+// Manage-categories page (reorder, archive).
 export function categoryManageView() {
-  const active = D.categories.filter((c) => c.type === U.catType && !c.parent && !c.archived),
-    archived = D.categories.filter((c) => c.type === U.catType && !c.parent && c.archived);
+  const active = appData.categories.filter(
+      (c) => c.type === uiState.catType && !c.parent && !c.archived,
+    ),
+    archived = appData.categories.filter(
+      (c) => c.type === uiState.catType && !c.parent && c.archived,
+    );
   return (
-    header("Change categories") +
+    pageHeader("Change categories") +
     manageCategoryTabs() +
-    `<div class="content cat-manage-content">${B(`${I("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => B(`${badge(c)}<span class="grow"><span class="name">${esc(c.name)}</span><small>${money(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile")).join("")}</div>${
+    `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${formatMoney(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile")).join("")}</div>${
       archived.length
-        ? `<div class="cat-manage-archive">${B(
-            `Archive (${archived.length}) ${I(U.manageArchive ? "chevronUp" : "chevronDown", 17)}`,
+        ? `<div class="cat-manage-archive">${buttonHtml(
+            `Archive (${archived.length}) ${iconSvg(uiState.manageArchive ? "chevronUp" : "chevronDown", 17)}`,
             () => {
-              U.manageArchive = !U.manageArchive;
+              uiState.manageArchive = !uiState.manageArchive;
               render();
             },
             "cat-archive-toggle",
-          )}${U.manageArchive ? `<div class="cat-manage-grid">${archived.map((c) => B(`${badge(c)}<span>${esc(c.name)}</span>`, () => editCategory(c), "cat-manage-tile cat-is-archived")).join("")}</div>` : ""}</div>`
+          )}${uiState.manageArchive ? `<div class="cat-manage-grid">${archived.map((c) => buttonHtml(`${badgeHtml(c)}<span>${escapeHtml(c.name)}</span>`, () => editCategory(c), "cat-manage-tile cat-is-archived")).join("")}</div>` : ""}</div>`
         : ""
     }</div>`
   );
 }
+// Sheet for choosing an account.
 export function accountPicker(value, fn, exclude = null) {
-  sheet(() => {
-    const list = D.accounts.filter((a) => !a.archived && a.id !== exclude);
-    return `<h2>${t("Account")}</h2>${
+  openSheet(() => {
+    const list = appData.accounts.filter((a) => !a.archived && a.id !== exclude);
+    return `<h2>${translate("Account")}</h2>${
       list.length
         ? list
             .map((a) =>
-              B(
-                `${badge(a, true)}<span class="grow">${esc(a.name)}</span>${moneySpan(bal(a.id), a.currency, false, true)}${value === a.id ? I("check", 18) : ""}`,
+              buttonHtml(
+                `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}${value === a.id ? iconSvg("check", 18) : ""}`,
                 () => {
-                  close();
+                  closeLayers();
                   fn(a.id);
                 },
                 "row",
@@ -489,17 +520,18 @@ export function accountPicker(value, fn, exclude = null) {
             )
             .join("")
         : '<p class="footnote">No available accounts</p>'
-    }${B("Cancel", () => close(), "outline")}`;
+    }${buttonHtml("Cancel", () => closeLayers(), "outline")}`;
   }, "Account");
 }
+// Sheet for choosing a category.
 export function categoryPicker(type, value, fn) {
   let active = type;
-  sheet(
+  openSheet(
     () =>
-      `<h2>${t("Category")}</h2><div class="tabs">${["expense", "income"]
+      `<h2>${translate("Category")}</h2><div class="tabs">${["expense", "income"]
         .map((x) =>
-          B(
-            t(x === "expense" ? "Expenses" : "Incomes"),
+          buttonHtml(
+            translate(x === "expense" ? "Expenses" : "Incomes"),
             () => {
               active = x;
               render();
@@ -507,13 +539,15 @@ export function categoryPicker(type, value, fn) {
             active === x ? "active" : "",
           ),
         )
-        .join("")}</div><div class="grid ${D.settings.onePicker ? "one" : ""}">${D.categories
+        .join(
+          "",
+        )}</div><div class="grid ${appData.settings.onePicker ? "one" : ""}">${appData.categories
         .filter((c) => !c.archived && c.type === active)
         .map((c) =>
-          B(
-            `${badge(c)}<span>${c.parent ? "↳ " : ""}${esc(c.name)}</span>${c.id === value ? I("check", 16) : ""}`,
+          buttonHtml(
+            `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>${c.id === value ? iconSvg("check", 16) : ""}`,
             () => {
-              close();
+              closeLayers();
               fn(c.id);
             },
             "cat-tile",

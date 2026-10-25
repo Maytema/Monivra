@@ -1,19 +1,19 @@
 /* Operation editor: pickers, calculator, forms */
 import { render } from "../app/shell.js";
-import { I, TODAY, clone, esc } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import { appData, photoCallback, setPhotoCallback, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
-  acc,
-  bal,
-  calculate,
-  cat,
-  convert,
+  accountBalance,
+  accountById,
+  categoryById,
+  convertCurrency,
+  currencyRate,
   dateLabel,
-  dateObj,
-  iso,
-  moneySpan,
-  rate,
+  evaluateExpression,
+  moneySpanHtml,
+  parseDate,
+  toIsoDate,
 } from "../domain/finance.js";
 import { deleteOperation, putOperation } from "../domain/operations.js";
 import { accountPicker, categoryPicker } from "./categories.js";
@@ -22,30 +22,29 @@ import { recurrence, reminder } from "./scheduled-budgets.js";
 import {
   calculatorKeys,
   calendar,
-  close,
+  closeLayers,
   confirmAction,
-  finish,
-  header,
+  finishFlow,
+  openPage,
+  openSheet,
   optionSheet,
-  page,
+  pageHeader,
   promptText,
-  sheet,
 } from "../ui/kit.js";
 import {
-  B,
-  IB,
-  badge,
-  field,
-  inp,
-  photoCallback,
-  row,
-  setPhotoCallback,
-  t,
+  badgeHtml,
+  buttonHtml,
+  fieldButtonHtml,
+  iconButtonHtml,
+  menuRowHtml,
+  registerInput,
+  textFieldHtml,
   toast,
-  txt,
+  translate,
 } from "../ui/primitives.js";
 
 /* Counterparty picker: choose a category or an account from the same sheet. */
+// Choose a category or an account from the same sheet.
 function counterpartyPicker(direction, d, onChosen = null) {
   const incoming = direction === "from";
   let active = incoming ? "category" : "category";
@@ -53,18 +52,18 @@ function counterpartyPicker(direction, d, onChosen = null) {
   const title = incoming ? "Take from" : "Add to";
   const tabName = incoming ? "Incomes" : "Expenses";
   const eligible = () =>
-    D.accounts.filter((a) => !a.archived && a.id !== (incoming ? d.to : d.from));
-  sheet(
+    appData.accounts.filter((a) => !a.archived && a.id !== (incoming ? d.to : d.from));
+  openSheet(
     () =>
-      `<h2 class="counterparty-title">${t(title)}</h2><div class="tabs counterparty-tabs">${B(
-        t(tabName),
+      `<h2 class="counterparty-title">${translate(title)}</h2><div class="tabs counterparty-tabs">${buttonHtml(
+        translate(tabName),
         () => {
           active = "category";
           render();
         },
         active === "category" ? "active" : "",
-      )}${B(
-        t("Accounts"),
+      )}${buttonHtml(
+        translate("Accounts"),
         () => {
           active = "account";
           render();
@@ -72,11 +71,11 @@ function counterpartyPicker(direction, d, onChosen = null) {
         active === "account" ? "active" : "",
       )}</div>${
         active === "category"
-          ? `<div class="grid ${D.settings.onePicker ? "one" : ""} counterparty-categories">${D.categories
+          ? `<div class="grid ${appData.settings.onePicker ? "one" : ""} counterparty-categories">${appData.categories
               .filter((c) => !c.archived && c.type === catType)
               .map((c) =>
-                B(
-                  `${badge(c)}<span>${c.parent ? "↳ " : ""}${esc(c.name)}</span>`,
+                buttonHtml(
+                  `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>`,
                   () => {
                     if (incoming) {
                       d.type = "income";
@@ -87,7 +86,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
                       d.to = null;
                       d.category = c.id;
                     }
-                    close();
+                    closeLayers();
                     if (onChosen) onChosen();
                     else render();
                   },
@@ -95,34 +94,34 @@ function counterpartyPicker(direction, d, onChosen = null) {
                 ),
               )
               .join("")}</div>`
-          : `<div class="counterparty-accounts">${eligible().filter((a) => a.type !== "Savings").length ? `<div class="picker-group-title">${t("Accounts")}</div>` : ""}${eligible()
+          : `<div class="counterparty-accounts">${eligible().filter((a) => a.type !== "Savings").length ? `<div class="picker-group-title">${translate("Accounts")}</div>` : ""}${eligible()
               .filter((a) => a.type !== "Savings")
               .map((a) =>
-                B(
-                  `${badge(a, true)}<span class="grow">${esc(a.name)}</span>${moneySpan(bal(a.id), a.currency, false, true)}`,
+                buttonHtml(
+                  `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
                   () => {
                     d.type = "transfer";
                     d.category = null;
                     if (incoming) d.from = a.id;
                     else d.to = a.id;
-                    close();
+                    closeLayers();
                     if (onChosen) onChosen();
                     else render();
                   },
                   "row",
                 ),
               )
-              .join("")}<div class="picker-group-title">${t("Savings")}</div>${eligible()
+              .join("")}<div class="picker-group-title">${translate("Savings")}</div>${eligible()
               .filter((a) => a.type === "Savings")
               .map((a) =>
-                B(
-                  `${badge(a, true)}<span class="grow">${esc(a.name)}</span>${moneySpan(bal(a.id), a.currency, false, true)}`,
+                buttonHtml(
+                  `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
                   () => {
                     d.type = "transfer";
                     d.category = null;
                     if (incoming) d.from = a.id;
                     else d.to = a.id;
-                    close();
+                    closeLayers();
                     if (onChosen) onChosen();
                     else render();
                   },
@@ -139,11 +138,12 @@ function counterpartyPicker(direction, d, onChosen = null) {
 
 /* Transfers use a dedicated destination-account selector,
    not the mixed expenses/accounts counterparty picker. */
+// Choose the destination account of a transfer.
 function transferDestinationPicker(d, onChosen = null, side = "to") {
   const excluded = side === "to" ? d.from : d.to;
-  sheet(
+  openSheet(
     () => {
-      const available = D.accounts.filter((a) => !a.archived && a.id !== excluded);
+      const available = appData.accounts.filter((a) => !a.archived && a.id !== excluded);
       const groups = [
         ["Regular", "Accounts"],
         ["Savings", "Savings"],
@@ -158,15 +158,15 @@ function transferDestinationPicker(d, onChosen = null, side = "to") {
               : a.type === "Debt" && a.debt === kind,
           );
           if (!rows.length) return "";
-          return `<div class="picker-group-title">${t(label)}</div>${rows
+          return `<div class="picker-group-title">${translate(label)}</div>${rows
             .map((a) =>
-              B(
-                `${badge(a, true)}<span class="grow"><span class="name">${esc(a.name)}</span>${moneySpan(bal(a.id), a.currency, false, true)}</span>`,
+              buttonHtml(
+                `${badgeHtml(a, true)}<span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}</span>`,
                 () => {
                   d.type = "transfer";
                   d.category = null;
                   d[side] = a.id;
-                  close();
+                  closeLayers();
                   if (onChosen) onChosen();
                   else render();
                 },
@@ -182,6 +182,7 @@ function transferDestinationPicker(d, onChosen = null, side = "to") {
     side === "from" ? "From account" : "To account",
   );
 }
+// Open the operation editor with a fresh draft.
 export function operationStart(options = {}, scheduled = false) {
   const d = {
     type: "expense",
@@ -195,7 +196,7 @@ export function operationStart(options = {}, scheduled = false) {
     photo: null,
     recur: null,
     reminder: null,
-    ...clone(options),
+    ...deepClone(options),
   };
   d.expr = String((d.amount || 0) / 100);
   d.fresh = !d.id;
@@ -206,9 +207,9 @@ export function operationStart(options = {}, scheduled = false) {
     sheet: !scheduled,
     compact: !!d.id,
   };
-  const openEditor = () => sheet(() => operationView(p), "Add an operation");
+  const openEditor = () => openSheet(() => operationView(p), "Add an operation");
   if (scheduled) {
-    page("operation", p);
+    openPage("operation", p);
     return;
   }
   // An account-action choice is a separate state. No calculator layer exists
@@ -221,12 +222,12 @@ export function operationStart(options = {}, scheduled = false) {
   if (!d.id && d.type === "transfer" && !d.from) {
     accountPicker(null, (id) => {
       d.from = id;
-      close();
+      closeLayers();
       accountPicker(
         null,
         (to) => {
           d.to = to;
-          close();
+          closeLayers();
           openEditor();
         },
         id,
@@ -239,7 +240,7 @@ export function operationStart(options = {}, scheduled = false) {
       null,
       (id) => {
         d.to = id;
-        close();
+        closeLayers();
         openEditor();
       },
       d.from,
@@ -250,11 +251,11 @@ export function operationStart(options = {}, scheduled = false) {
     accountPicker(null, (id) => {
       if (d.type === "income") d.to = id;
       else d.from = id;
-      close();
+      closeLayers();
       if (!d.category)
         categoryPicker(d.type, null, (cid) => {
           d.category = cid;
-          close();
+          closeLayers();
           openEditor();
         });
       else openEditor();
@@ -264,7 +265,7 @@ export function operationStart(options = {}, scheduled = false) {
   if (!d.id && !d.category && d.type !== "adjustment" && d.type !== "transfer") {
     categoryPicker(d.type, null, (id) => {
       d.category = id;
-      close();
+      closeLayers();
       openEditor();
     });
     return;
@@ -272,6 +273,7 @@ export function operationStart(options = {}, scheduled = false) {
   openEditor();
 }
 
+// Validate and store the operation being edited.
 export function commitOperation(p) {
   try {
     if (p.sheet && !p.scratchMode && /[+×÷−*/]/.test(String(p.draft.expr).replace(/^-/, "")))
@@ -282,25 +284,26 @@ export function commitOperation(p) {
       throw Error("Select an account");
     if (!["transfer", "adjustment"].includes(p.draft.type) && !p.draft.category)
       throw Error("Select a category");
-    p.draft.amount = calculate(p.draft.expr);
+    p.draft.amount = evaluateExpression(p.draft.expr);
     delete p.draft.accountAction;
     putOperation(p.draft, p.scheduled);
     if (p.sheet) {
-      U.layers = [];
+      uiState.layers = [];
       save();
       render();
       toast("Operation saved");
-    } else finish(p.scheduled ? "Scheduled payment saved" : "Operation saved");
+    } else finishFlow(p.scheduled ? "Scheduled payment saved" : "Operation saved");
   } catch (e) {
     toast(e.message);
   }
 }
 
+// Calculator-style editor for operations between accounts.
 function accountCalculatorView(p) {
   const d = p.draft,
-    from = acc(d.from),
-    to = acc(d.to),
-    c = cat(d.category),
+    from = accountById(d.from),
+    to = accountById(d.to),
+    c = categoryById(d.category),
     isTransfer = d.type === "transfer";
   const isAdjustment = d.type === "adjustment";
   const source = isAdjustment ? from || to : isTransfer ? from : d.type === "income" ? c : from,
@@ -311,10 +314,10 @@ function accountCalculatorView(p) {
         : d.type === "income"
           ? to
           : c;
-  const currency = (from || to)?.currency || D.settings.currency;
+  const currency = (from || to)?.currency || appData.settings.currency;
   const tile = (label, item, fn) =>
-    B(
-      `<span class="mon-calc-tile-caption">${t(label)}</span><span class="mon-calc-tile-value">${item ? badge(item, true) + `<span>${esc(item.name)}</span>` : `<span>${t("Not selected")}</span>`}</span>`,
+    buttonHtml(
+      `<span class="mon-calc-tile-caption">${translate(label)}</span><span class="mon-calc-tile-value">${item ? badgeHtml(item, true) + `<span>${escapeHtml(item.name)}</span>` : `<span>${translate("Not selected")}</span>`}</span>`,
       fn,
       "mon-calc-tile",
     );
@@ -339,12 +342,12 @@ function accountCalculatorView(p) {
     secondary = isAdjustment ? null : isTransfer ? to : c;
   const dual = !!(primary && secondary && primary.currency !== secondary.currency);
   if (p.currencySide !== "receive") p.currencySide = "send";
-  const sourceToReceive = (v) => convert(v, primary.currency, secondary.currency);
-  const receiveToSource = (v) => convert(v, secondary.currency, primary.currency);
+  const sourceToReceive = (v) => convertCurrency(v, primary.currency, secondary.currency);
+  const receiveToSource = (v) => convertCurrency(v, secondary.currency, primary.currency);
   const asDecimal = (n) => String(n / 100);
   const receiveExpression = () => {
     try {
-      return asDecimal(sourceToReceive(calculate(calcMode ? p.scratchExpr : d.expr)));
+      return asDecimal(sourceToReceive(evaluateExpression(calcMode ? p.scratchExpr : d.expr)));
     } catch {
       return "0";
     }
@@ -361,7 +364,7 @@ function accountCalculatorView(p) {
     p.receiveExpr = v;
     p.scratchReady = false;
     try {
-      const cents = calculate(v);
+      const cents = evaluateExpression(v);
       const source = asDecimal(receiveToSource(cents));
       if (calcMode) p.scratchExpr = source;
       else d.expr = source;
@@ -410,7 +413,7 @@ function accountCalculatorView(p) {
     else if (k === "C") assignExpr("0");
     else if (k === "=") {
       try {
-        const result = String(calculate(currentExpr()) / 100);
+        const result = String(evaluateExpression(currentExpr()) / 100);
         if (dual && p.currencySide === "receive") {
           setReceiveExpr(result);
         } else {
@@ -438,26 +441,29 @@ function accountCalculatorView(p) {
     commitOperation(p);
   };
   const additionally = () =>
-    sheet(
+    openSheet(
       () =>
-        `<h2>Additionally</h2>${row(
+        `<h2>Additionally</h2>${menuRowHtml(
           "Fill max",
           "wallet",
           () => {
-            const a = acc(d.from);
+            const a = accountById(d.from);
             if (!a) return toast("Select sender account");
-            const max = Math.max(0, bal(a.id) + (a.type === "Regular" ? a.limit || 0 : 0));
+            const max = Math.max(
+              0,
+              accountBalance(a.id) + (a.type === "Regular" ? a.limit || 0 : 0),
+            );
             if (!max) return toast("No available balance");
             d.expr = String(max / 100);
             p.receiveExpr = undefined;
-            close();
+            closeLayers();
             render();
           },
           "Use full sender account balance",
-        )}${row("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${row("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${row("Tax", "receipt", () => toast("Tax settings are not yet verified"))}${row("Commission", "percent", () => toast("Commission settings are not yet verified"))}`,
+        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => toast("Tax settings are not yet verified"))}${menuRowHtml("Commission", "percent", () => toast("Commission settings are not yet verified"))}`,
       "Additionally",
     );
-  const nums3 = D.settings.reverseKeys
+  const nums3 = appData.settings.reverseKeys
     ? ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     : ["7", "8", "9", "4", "5", "6", "1", "2", "3"];
   const grid = [
@@ -475,30 +481,32 @@ function accountCalculatorView(p) {
     "0",
     ".",
   ];
-  return `<div class="mon-calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="mon-calc-date">${IB(
+  return `<div class="mon-calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="mon-calc-date">${iconButtonHtml(
     "left",
     "Previous day",
     () => {
-      d.date = iso(new Date(dateObj(d.date).getTime() - 86400000));
+      d.date = toIsoDate(new Date(parseDate(d.date).getTime() - 86400000));
       render();
     },
-  )}${B(
-    I("calendar", 16) + " " + esc(dateLabel(d.date, true)),
+  )}${buttonHtml(
+    iconSvg("calendar", 16) + " " + escapeHtml(dateLabel(d.date, true)),
     () =>
       calendar(d.date, (v) => {
         d.date = v;
         render();
       }),
     "mon-calc-date-label",
-  )}${IB("right", "Next day", () => {
-    d.date = iso(new Date(dateObj(d.date).getTime() + 86400000));
+  )}${iconButtonHtml("right", "Next day", () => {
+    d.date = toIsoDate(new Date(parseDate(d.date).getTime() + 86400000));
     render();
   })}</div><div class="mon-calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${
     dual
-      ? `<div class="mon-calc-number mon-dual-number ${p.currencySide === "send" ? "mon-dual-active" : ""}" data-side="send">${B(
-          esc(p.currencySide === "send" ? currentExpr() : calcMode ? p.scratchExpr : d.expr) +
+      ? `<div class="mon-calc-number mon-dual-number ${p.currencySide === "send" ? "mon-dual-active" : ""}" data-side="send">${buttonHtml(
+          escapeHtml(
+            p.currencySide === "send" ? currentExpr() : calcMode ? p.scratchExpr : d.expr,
+          ) +
             " " +
-            esc(primary.currency),
+            escapeHtml(primary.currency),
           () => {
             p.currencySide = "send";
             p.receiveExpr = undefined;
@@ -506,11 +514,11 @@ function accountCalculatorView(p) {
             render();
           },
           "mon-dual-value",
-          `aria-label="Edit amount in ${esc(primary.currency)}" aria-pressed="${p.currencySide === "send"}"`,
-        )}</div><div class="mon-calc-number mon-dual-number mon-dual-receive ${p.currencySide === "receive" ? "mon-dual-active" : ""}">${B(
-          esc(p.currencySide === "receive" ? currentExpr() : receiveExpression()) +
+          `aria-label="Edit amount in ${escapeHtml(primary.currency)}" aria-pressed="${p.currencySide === "send"}"`,
+        )}</div><div class="mon-calc-number mon-dual-number mon-dual-receive ${p.currencySide === "receive" ? "mon-dual-active" : ""}">${buttonHtml(
+          escapeHtml(p.currencySide === "receive" ? currentExpr() : receiveExpression()) +
             " " +
-            esc(secondary.currency),
+            escapeHtml(secondary.currency),
           () => {
             p.currencySide = "receive";
             p.receiveExpr = receiveExpression();
@@ -518,17 +526,17 @@ function accountCalculatorView(p) {
             render();
           },
           "mon-dual-value",
-          `aria-label="Edit amount in ${esc(secondary.currency)}" aria-pressed="${p.currencySide === "receive"}"`,
-        )}</div><div class="mon-calc-rate mon-dual-rate mon-dual-rate-line">1 ${esc(primary.currency)} = ${(rate(primary.currency) / rate(secondary.currency)).toFixed(4)} ${esc(secondary.currency)} · ${p.currencySide === "receive" ? "Edit second currency" : "Edit first currency"}</div>`
-      : `<div class="mon-calc-number mon-single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${esc(currentExpr())}" data-input="${inp((v) => assignExpr(v))}"><span>${esc(currency)}</span></div>`
+          `aria-label="Edit amount in ${escapeHtml(secondary.currency)}" aria-pressed="${p.currencySide === "receive"}"`,
+        )}</div><div class="mon-calc-rate mon-dual-rate mon-dual-rate-line">1 ${escapeHtml(primary.currency)} = ${(currencyRate(primary.currency) / currencyRate(secondary.currency)).toFixed(4)} ${escapeHtml(secondary.currency)} · ${p.currencySide === "receive" ? "Edit second currency" : "Edit first currency"}</div>`
+      : `<div class="mon-calc-number mon-single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${escapeHtml(currentExpr())}" data-input="${registerInput((v) => assignExpr(v))}"><span>${escapeHtml(currency)}</span></div>`
   }${
     p.compact
-      ? `<div class="ops-tap-to-edit">${B("Click on the value to edit", () => {
+      ? `<div class="ops-tap-to-edit">${buttonHtml("Click on the value to edit", () => {
           p.compact = false;
           render();
         })}</div>`
       : ""
-  }<div class="mon-calc-attachments">${B('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${IB(
+  }<div class="mon-calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
     "comment",
     "Comment",
     () =>
@@ -541,33 +549,35 @@ function accountCalculatorView(p) {
         },
         "Comment",
       ),
-  )}${IB("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="mon-calc-note">${esc(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${esc(x)}</span>`).join("")}</div>` : ""}${
+  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="mon-calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${
     p.compact
-      ? `<div class="ops-compact-actions">${B(I("trash", 28) + "<span>Delete</span>", () =>
-          confirmAction(
-            "Delete this operation?",
-            () => {
-              deleteOperation(d.id, false);
-              U.layers = [];
-              render();
-            },
-            true,
-            "Delete",
-          ),
-        )}${B(I("copy", 28) + "<span>Duplicate</span>", () => {
-          const duplicate = clone(d);
+      ? `<div class="ops-compact-actions">${buttonHtml(
+          iconSvg("trash", 28) + "<span>Delete</span>",
+          () =>
+            confirmAction(
+              "Delete this operation?",
+              () => {
+                deleteOperation(d.id, false);
+                uiState.layers = [];
+                render();
+              },
+              true,
+              "Delete",
+            ),
+        )}${buttonHtml(iconSvg("copy", 28) + "<span>Duplicate</span>", () => {
+          const duplicate = deepClone(d);
           delete duplicate.id;
           operationStart(duplicate);
         })}</div>`
       : `<div class="mon-calc-keypad">${grid
           .map((k) =>
             k === "✓"
-              ? B(
+              ? buttonHtml(
                   calcMode
                     ? p.scratchReady
-                      ? I("check", 30)
+                      ? iconSvg("check", 30)
                       : '<span class="mon-calc-equals">=</span>'
-                    : I("check", 30),
+                    : iconSvg("check", 30),
                   calcMode
                     ? p.scratchReady
                       ? saveCalculated
@@ -577,9 +587,9 @@ function accountCalculatorView(p) {
                   `aria-label="${calcMode ? (p.scratchReady ? "Save operation with calculated result" : "Calculate equals without saving") : "Save operation"}"`,
                 )
               : k === "currency"
-                ? `<div class="mon-calc-currency mon-calc-key">${esc(currency)}</div>`
+                ? `<div class="mon-calc-currency mon-calc-key">${escapeHtml(currency)}</div>`
                 : k === "mode"
-                  ? B(
+                  ? buttonHtml(
                       '<span class="mon-nine-dots" aria-hidden="true">' +
                         Array(9).fill("<i></i>").join("") +
                         '</span><span class="mon-mode-indicator ' +
@@ -603,18 +613,23 @@ function accountCalculatorView(p) {
                       "mon-calc-key mon-calc-toggle",
                       `aria-label="Additionally"`,
                     )
-                  : B(k, () => press(k), "mon-calc-key " + (k === "⌫" ? "mon-calc-delete" : "")),
+                  : buttonHtml(
+                      k,
+                      () => press(k),
+                      "mon-calc-key " + (k === "⌫" ? "mon-calc-delete" : ""),
+                    ),
           )
           .join("")}</div>`
   }</div>`;
 }
+// Operation editor form.
 export function operationView(p) {
   if (p.sheet && !p.scheduled) return accountCalculatorView(p);
   const d = p.draft,
-    a = acc(d.from || d.to),
+    a = accountById(d.from || d.to),
     chooseCat = (id) => {
       d.category = id;
-      const type = cat(id).type;
+      const type = categoryById(id).type;
       if (d.type !== type) {
         const account = d.from || d.to;
         d.from = type === "expense" ? account : null;
@@ -626,13 +641,15 @@ export function operationView(p) {
   return (
     (p.sheet
       ? ""
-      : header(
+      : pageHeader(
           p.scheduled ? "Scheduled payments" : p.editing ? "Edit operation" : "Add an operation",
         )) +
-    `<div class="content operation-form"><div class="calc-tools">${B(
-      esc(t(d.type === "expense" ? "Expenses" : d.type === "income" ? "Incomes" : "Transfer")) +
+    `<div class="content operation-form"><div class="calc-tools">${buttonHtml(
+      escapeHtml(
+        translate(d.type === "expense" ? "Expenses" : d.type === "income" ? "Incomes" : "Transfer"),
+      ) +
         " " +
-        I("down", 15),
+        iconSvg("down", 15),
       () =>
         optionSheet(
           "Type",
@@ -652,17 +669,17 @@ export function operationView(p) {
           },
         ),
       "text-button",
-    )}${B(
-      I("calendar", 17) + " " + esc(dateLabel(d.date, true)),
+    )}${buttonHtml(
+      iconSvg("calendar", 17) + " " + escapeHtml(dateLabel(d.date, true)),
       () =>
         calendar(d.date, (v) => {
           d.date = v;
           render();
         }),
       "text-button",
-    )}</div><div class="calc-pickers">${field(
+    )}</div><div class="calc-pickers">${fieldButtonHtml(
       d.type === "income" ? "Add to" : "Take from",
-      a ? badge(a, true) + " " + esc(a.name) : t("Not selected"),
+      a ? badgeHtml(a, true) + " " + escapeHtml(a.name) : translate("Not selected"),
       () =>
         accountPicker(
           d.from || d.to,
@@ -675,9 +692,11 @@ export function operationView(p) {
         ),
     )}${
       d.type === "transfer"
-        ? field(
+        ? fieldButtonHtml(
             "Add to",
-            acc(d.to) ? badge(acc(d.to), true) + " " + esc(acc(d.to).name) : t("Not selected"),
+            accountById(d.to)
+              ? badgeHtml(accountById(d.to), true) + " " + escapeHtml(accountById(d.to).name)
+              : translate("Not selected"),
             () =>
               accountPicker(
                 d.to,
@@ -688,14 +707,16 @@ export function operationView(p) {
                 d.from,
               ),
           )
-        : field(
+        : fieldButtonHtml(
             "Category",
-            cat(d.category)
-              ? badge(cat(d.category), true) + " " + esc(cat(d.category).name)
-              : t("Not selected"),
+            categoryById(d.category)
+              ? badgeHtml(categoryById(d.category), true) +
+                  " " +
+                  escapeHtml(categoryById(d.category).name)
+              : translate("Not selected"),
             () => categoryPicker(d.type, d.category, chooseCat),
           )
-    }</div><label class="calc-amount"><input inputmode="decimal" type="text" aria-label="Amount" value="${esc(d.expr)}" data-input="${inp((v) => (d.expr = v))}"><span>${esc(a?.currency || D.settings.currency)}</span></label>${d.type === "transfer" && d.to && a?.currency !== acc(d.to)?.currency ? `<p class="calc-hint">1 ${a.currency} = ${(rate(a.currency) / rate(acc(d.to).currency)).toFixed(4)} ${acc(d.to).currency}</p>` : ""}<div class="calc-tools">${IB(
+    }</div><label class="calc-amount"><input inputmode="decimal" type="text" aria-label="Amount" value="${escapeHtml(d.expr)}" data-input="${registerInput((v) => (d.expr = v))}"><span>${escapeHtml(a?.currency || appData.settings.currency)}</span></label>${d.type === "transfer" && d.to && a?.currency !== accountById(d.to)?.currency ? `<p class="calc-hint">1 ${a.currency} = ${(currencyRate(a.currency) / currencyRate(accountById(d.to).currency)).toFixed(4)} ${accountById(d.to).currency}</p>` : ""}<div class="calc-tools">${iconButtonHtml(
       "comment",
       "Comment",
       () =>
@@ -708,14 +729,14 @@ export function operationView(p) {
           },
           "Comment",
         ),
-    )}${IB("tag", "Tags", () => tagsPicker(d))}${IB("clip", "Photo", () => photoMenu(d))}</div>${d.comment ? `<p class="calc-hint">${esc(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((v) => `<span class="tag">${esc(v)}</span>`).join("")}</div>` : ""}${d.photo ? `<img class="preview-photo" src="${d.photo}" alt="Attached photo">` : ""}${
+    )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}${iconButtonHtml("clip", "Photo", () => photoMenu(d))}</div>${d.comment ? `<p class="calc-hint">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((v) => `<span class="tag">${escapeHtml(v)}</span>`).join("")}</div>` : ""}${d.photo ? `<img class="preview-photo" src="${d.photo}" alt="Attached photo">` : ""}${
       p.scheduled
-        ? `<div class="fields">${field("Date", esc(dateLabel(d.date)), () =>
+        ? `<div class="fields">${fieldButtonHtml("Date", escapeHtml(dateLabel(d.date)), () =>
             calendar(d.date, (v) => {
               d.date = v;
               render();
             }),
-          )}${field("Recur", recurLabel(d.recur), () => recurrence(d))}${field("Reminder", d.reminder ? esc((d.reminderLead || "At the time") + " · " + d.reminder) : t("Turned off"), () => reminder(d))}</div>`
+          )}${fieldButtonHtml("Recur", recurLabel(d.recur), () => recurrence(d))}${fieldButtonHtml("Reminder", d.reminder ? escapeHtml((d.reminderLead || "At the time") + " · " + d.reminder) : translate("Turned off"), () => reminder(d))}</div>`
         : ""
     }${calculatorKeys(
       () => d.expr,
@@ -724,15 +745,16 @@ export function operationView(p) {
     )}</div>`
   );
 }
+// Sheet for choosing tags of an operation.
 export function tagsPicker(d) {
   let chosen = [...(d.tags || [])],
     q = "";
-  sheet(
+  openSheet(
     () =>
-      `<h2>${t("Tags")}</h2>${txt("Search or add tag", q, (v) => (q = v))}<div class="tag-cloud">${D.tags
+      `<h2>${translate("Tags")}</h2>${textFieldHtml("Search or add tag", q, (v) => (q = v))}<div class="tag-cloud">${appData.tags
         .map((tag) =>
-          B(
-            esc(tag),
+          buttonHtml(
+            escapeHtml(tag),
             () => {
               chosen = chosen.includes(tag) ? chosen.filter((x) => x !== tag) : [...chosen, tag];
               render();
@@ -740,36 +762,37 @@ export function tagsPicker(d) {
             "tag " + (chosen.includes(tag) ? "active" : ""),
           ),
         )
-        .join("")}</div>${row("Manage tags", "gear", () => manageTags(chosen))}${B(
+        .join("")}</div>${menuRowHtml("Manage tags", "gear", () => manageTags(chosen))}${buttonHtml(
         "Add",
         () => {
           const x = q.trim();
           if (!x) return toast("Enter a tag");
-          if (!D.tags.includes(x)) D.tags.push(x);
+          if (!appData.tags.includes(x)) appData.tags.push(x);
           if (!chosen.includes(x)) chosen.push(x);
           q = "";
           save();
           render();
         },
         "outline",
-      )}${B(
+      )}${buttonHtml(
         "Save",
         () => {
-          d.tags = chosen.filter((v) => D.tags.includes(v));
-          close();
+          d.tags = chosen.filter((v) => appData.tags.includes(v));
+          closeLayers();
         },
         "primary",
-      )}${B("Cancel", () => close(), "outline")}`,
+      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
     "Tags",
   );
 }
+// Sheet for adding, renaming and removing tags.
 function manageTags(chosen) {
-  sheet(
+  openSheet(
     () =>
-      `<h2>Manage tags</h2>${D.tags
+      `<h2>Manage tags</h2>${appData.tags
         .map(
           (tag) =>
-            `<div class="row"><span class="grow">${esc(tag)}</span>${IB(
+            `<div class="row"><span class="grow">${escapeHtml(tag)}</span>${iconButtonHtml(
               "edit",
               "Rename " + tag,
               () =>
@@ -779,10 +802,10 @@ function manageTags(chosen) {
                   (v) => {
                     v = v.trim();
                     if (!v) return toast("Enter a tag");
-                    if (v !== tag && D.tags.includes(v)) return toast("Tag already exists");
-                    D.tags = D.tags.map((t) => (t === tag ? v : t));
+                    if (v !== tag && appData.tags.includes(v)) return toast("Tag already exists");
+                    appData.tags = appData.tags.map((t) => (t === tag ? v : t));
                     for (const key of ["ops", "scheduled"])
-                      for (const o of D[key])
+                      for (const o of appData[key])
                         o.tags = (o.tags || []).map((t) => (t === tag ? v : t));
                     const i = chosen.indexOf(tag);
                     if (i >= 0) chosen[i] = v;
@@ -791,13 +814,13 @@ function manageTags(chosen) {
                   },
                   "Name",
                 ),
-            )}${IB("trash", "Delete " + tag, () =>
+            )}${iconButtonHtml("trash", "Delete " + tag, () =>
               confirmAction(
                 "Remove this tag from all operations?",
                 () => {
-                  D.tags = D.tags.filter((t) => t !== tag);
+                  appData.tags = appData.tags.filter((t) => t !== tag);
                   for (const key of ["ops", "scheduled"])
-                    for (const o of D[key]) o.tags = (o.tags || []).filter((t) => t !== tag);
+                    for (const o of appData[key]) o.tags = (o.tags || []).filter((t) => t !== tag);
                   let i = chosen.indexOf(tag);
                   if (i >= 0) chosen.splice(i, 1);
                   save();
@@ -808,24 +831,26 @@ function manageTags(chosen) {
               ),
             )}</div>`,
         )
-        .join("")}${B("Complete", () => close(), "primary")}`,
+        .join("")}${buttonHtml("Complete", () => closeLayers(), "primary")}`,
     "Manage tags",
   );
 }
+// Menu for attaching or removing a photo.
 function photoMenu(d) {
-  sheet(
+  openSheet(
     () =>
-      `<h2>${t("Photo")}</h2>${row("Camera", "camera", () => choosePhoto(d, true))}${row("Gallery", "image", () => choosePhoto(d, false))}${
+      `<h2>${translate("Photo")}</h2>${menuRowHtml("Camera", "camera", () => choosePhoto(d, true))}${menuRowHtml("Gallery", "image", () => choosePhoto(d, false))}${
         d.photo
-          ? row("Delete photo", "trash", () => {
+          ? menuRowHtml("Delete photo", "trash", () => {
               d.photo = null;
-              close();
+              closeLayers();
             })
           : ""
       }<p class="footnote">DEMO: camera availability depends on the browser. Images are stored locally with the operation.</p>`,
     "Photo",
   );
 }
+// Open the file chooser for an operation photo.
 function choosePhoto(d, camera) {
   if (window.__MONIVRA_TEST__) {
     toast("File picker requested");
@@ -833,7 +858,7 @@ function choosePhoto(d, camera) {
   }
   setPhotoCallback((data) => {
     d.photo = data;
-    close();
+    closeLayers();
   });
   const e = document.getElementById("photo-file");
   e.value = "";
@@ -841,10 +866,11 @@ function choosePhoto(d, camera) {
   else e.removeAttribute("capture");
   e.click();
 }
+// Display title of an operation.
 export function opTitle(o) {
   return o.type === "adjustment"
     ? "Adjustment"
     : o.type === "transfer"
-      ? t("Transfer")
-      : cat(o.category)?.name || t("Category");
+      ? translate("Transfer")
+      : categoryById(o.category)?.name || translate("Category");
 }

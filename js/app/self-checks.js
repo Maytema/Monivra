@@ -1,12 +1,19 @@
 /* Built-in self checks */
 import { rootView } from "./shell.js";
 import { TODAY } from "../core/constants.js";
-import { D, U } from "../core/state.js";
+import { appData, uiState } from "../core/state.js";
 import { parseCSV } from "../data/import-export.js";
-import { validData } from "../data/storage.js";
-import { bal, calculate, convert, overall, reportRows } from "../domain/finance.js";
+import { isValidData } from "../data/storage.js";
+import {
+  accountBalance,
+  convertCurrency,
+  evaluateExpression,
+  overallBalance,
+  reportRows,
+} from "../domain/finance.js";
 import { nextDate } from "../domain/operations.js";
 
+// Built-in regression checks; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
 export function runSelfChecks() {
   const results = [];
   const test = (name, fn) => {
@@ -17,69 +24,70 @@ export function runSelfChecks() {
       results.push({ name, pass: false, error: e.message });
     }
   };
-  test("Arithmetic precedence", () => calculate("12+3×4") === 2400);
-  test("Decimal accuracy", () => calculate("0.1+0.2") === 30);
+  test("Arithmetic precedence", () => evaluateExpression("12+3×4") === 2400);
+  test("Decimal accuracy", () => evaluateExpression("0.1+0.2") === 30);
   test("Reject division by zero", () => {
     try {
-      calculate("1/0");
+      evaluateExpression("1/0");
       return false;
     } catch {
       return true;
     }
   });
-  test("Stored schema", () => validData(D));
+  test("Stored schema", () => isValidData(appData));
   test("Income edit updates account and overall totals", () => {
-    const a = D.accounts.find((x) => x.include && !x.archived);
+    const a = appData.accounts.find((x) => x.include && !x.archived);
     if (!a) return true;
-    const before = bal(a.id),
-      overallBefore = overall(),
-      ops = D.ops;
+    const before = accountBalance(a.id),
+      overallBefore = overallBalance(),
+      ops = appData.ops;
     try {
-      D.ops = [
+      appData.ops = [
         ...ops,
         {
           id: "__test_income_edit",
           type: "income",
           to: a.id,
-          category: D.categories.find((c) => c.type === "income")?.id,
+          category: appData.categories.find((c) => c.type === "income")?.id,
           amount: 350000,
           date: TODAY,
           comment: "test",
           tags: [],
         },
       ];
-      const first = bal(a.id),
-        allFirst = overall();
-      D.ops[D.ops.length - 1] = { ...D.ops.at(-1), amount: 360000 };
+      const first = accountBalance(a.id),
+        allFirst = overallBalance();
+      appData.ops[appData.ops.length - 1] = { ...appData.ops.at(-1), amount: 360000 };
       return (
         first - before === 350000 &&
-        bal(a.id) - first === 10000 &&
-        allFirst - overallBefore === convert(350000, a.currency, D.settings.currency) &&
-        overall() - allFirst ===
-          convert(360000, a.currency, D.settings.currency) -
-            convert(350000, a.currency, D.settings.currency)
+        accountBalance(a.id) - first === 10000 &&
+        allFirst - overallBefore ===
+          convertCurrency(350000, a.currency, appData.settings.currency) &&
+        overallBalance() - allFirst ===
+          convertCurrency(360000, a.currency, appData.settings.currency) -
+            convertCurrency(350000, a.currency, appData.settings.currency)
       );
     } finally {
-      D.ops = ops;
+      appData.ops = ops;
     }
   });
   test("Deleting an account reverses linked transfer on remaining account", () => {
-    const accounts = D.accounts,
-      ops = D.ops;
+    const accounts = appData.accounts,
+      ops = appData.ops;
     try {
       const x = {
           id: "__audit_from",
           name: "Audit A",
           type: "Regular",
-          currency: D.settings.currency,
+          currency: appData.settings.currency,
           opening: 100000,
           include: true,
           archived: false,
           color: "#123456",
         },
         y = { ...x, id: "__audit_to", name: "Audit B", opening: 0 };
-      D.accounts = [...accounts, x, y];
-      D.ops = [
+      appData.accounts = [...accounts, x, y];
+      appData.ops = [
         ...ops,
         {
           id: "__audit_transfer",
@@ -92,24 +100,24 @@ export function runSelfChecks() {
           tags: [],
         },
       ];
-      const during = bal(x.id) === 80000 && bal(y.id) === 20000;
-      D.ops = D.ops.filter((o) => o.from !== y.id && o.to !== y.id);
-      D.accounts = D.accounts.filter((a) => a.id !== y.id);
-      return during && bal(x.id) === 100000;
+      const during = accountBalance(x.id) === 80000 && accountBalance(y.id) === 20000;
+      appData.ops = appData.ops.filter((o) => o.from !== y.id && o.to !== y.id);
+      appData.accounts = appData.accounts.filter((a) => a.id !== y.id);
+      return during && accountBalance(x.id) === 100000;
     } finally {
-      D.accounts = accounts;
-      D.ops = ops;
+      appData.accounts = accounts;
+      appData.ops = ops;
     }
   });
   test("Debt transfer classified once per direction with all four toggles", () => {
-    const accounts = D.accounts,
-      ops = D.ops;
+    const accounts = appData.accounts,
+      ops = appData.ops;
     try {
       const c = {
           id: "__audit_cash",
           name: "Cash",
           type: "Regular",
-          currency: D.settings.currency,
+          currency: appData.settings.currency,
           opening: 100000,
           include: true,
           archived: false,
@@ -126,7 +134,7 @@ export function runSelfChecks() {
           considerIncome: true,
           showIncome: true,
         };
-      D.accounts = [...accounts, c, d];
+      appData.accounts = [...accounts, c, d];
       const inbound = {
           id: "__audit_in",
           type: "transfer",
@@ -145,7 +153,7 @@ export function runSelfChecks() {
           amount: 4000,
           receive: 4000,
         };
-      D.ops = [...ops, inbound, outbound];
+      appData.ops = [...ops, inbound, outbound];
       const rows = reportRows([inbound, outbound]);
       return (
         rows.length === 2 &&
@@ -153,21 +161,21 @@ export function runSelfChecks() {
         rows[0].reportAmount === 10000 &&
         rows[1].reportType === "income" &&
         rows[1].reportAmount === 4000 &&
-        bal(c.id) === 94000 &&
-        bal(d.id) === 6000
+        accountBalance(c.id) === 94000 &&
+        accountBalance(d.id) === 6000
       );
     } finally {
-      D.accounts = accounts;
-      D.ops = ops;
+      appData.accounts = accounts;
+      appData.ops = ops;
     }
   });
   test("Scheduled operations do not alter current balance", () => {
-    const a = D.accounts[0];
+    const a = appData.accounts[0];
     if (!a) return true;
-    const before = bal(a.id),
-      scheduled = D.scheduled;
+    const before = accountBalance(a.id),
+      scheduled = appData.scheduled;
     try {
-      D.scheduled = [
+      appData.scheduled = [
         ...scheduled,
         {
           id: "__audit_scheduled",
@@ -178,16 +186,16 @@ export function runSelfChecks() {
           tags: [],
         },
       ];
-      return bal(a.id) === before;
+      return accountBalance(a.id) === before;
     } finally {
-      D.scheduled = scheduled;
+      appData.scheduled = scheduled;
     }
   });
   test("Adjustment edit and delete reconcile balances", () => {
-    const a = D.accounts[0];
+    const a = appData.accounts[0];
     if (!a) return true;
-    const ops = D.ops,
-      base = bal(a.id);
+    const ops = appData.ops,
+      base = accountBalance(a.id);
     try {
       const o = {
         id: "__audit_adj",
@@ -198,18 +206,18 @@ export function runSelfChecks() {
         date: TODAY,
         tags: [],
       };
-      D.ops = [...ops, o];
-      const first = bal(a.id);
-      D.ops[D.ops.length - 1] = { ...o, amount: 16000 };
-      const edited = bal(a.id);
-      D.ops = ops;
-      return first - base === 10000 && edited - first === 6000 && bal(a.id) === base;
+      appData.ops = [...ops, o];
+      const first = accountBalance(a.id);
+      appData.ops[appData.ops.length - 1] = { ...o, amount: 16000 };
+      const edited = accountBalance(a.id);
+      appData.ops = ops;
+      return first - base === 10000 && edited - first === 6000 && accountBalance(a.id) === base;
     } finally {
-      D.ops = ops;
+      appData.ops = ops;
     }
   });
   test("Debt switches are independent", () => {
-    const a = D.accounts.find((x) => x.type === "Debt");
+    const a = appData.accounts.find((x) => x.type === "Debt");
     if (!a) return true;
     const copy = {
       ...a,
@@ -221,13 +229,13 @@ export function runSelfChecks() {
     return Object.values(copy).filter((v) => v === true).length >= 4;
   });
   test("More root navigation", () => {
-    const oldTab = U.tab,
-      oldPages = U.pages;
-    U.tab = "more";
-    U.pages = [];
+    const oldTab = uiState.tab,
+      oldPages = uiState.pages;
+    uiState.tab = "more";
+    uiState.pages = [];
     const view = rootView();
-    U.tab = oldTab;
-    U.pages = oldPages;
+    uiState.tab = oldTab;
+    uiState.pages = oldPages;
     return view.includes("more-menu") && view.includes('class="navbar');
   });
   test("Calendar month clamping", () =>
