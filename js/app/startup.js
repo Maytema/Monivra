@@ -146,7 +146,9 @@ export function startup() {
         history.pushState({ Monivra: true }, "");
       }
     });
-  } catch {}
+  } catch {
+    // history API is unavailable in some embedded views
+  }
   if (
     appData.settings.autoBackup &&
     !appData.backups.some((b) => b.at.slice(0, 10) === new Date().toISOString().slice(0, 10))

@@ -24,7 +24,6 @@ import {
   openSheet,
   pageHeader,
   promptText,
-  showInfo,
 } from "../ui/kit.js";
 import { menuRowHtml, toast } from "../ui/primitives.js";
 
@@ -247,16 +246,6 @@ function printReport() {
   }
   document.getElementById("printout").innerHTML = out;
   window.print();
-}
-// Copy text to the clipboard.
-function copyText(text) {
-  if (isTestMode()) return toast("Copied");
-  if (navigator.clipboard?.writeText)
-    navigator.clipboard
-      .writeText(text)
-      .then(() => toast("Copied"))
-      .catch(() => showInfo(text, "Diagnostic report"));
-  else showInfo(text, "Diagnostic report");
 }
 // Apply a selected import file after confirmation.
 export function handleImport(text) {

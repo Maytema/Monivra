@@ -176,7 +176,9 @@ export function render(top = false) {
     if (field && selectionStart !== null && selectionStart !== undefined)
       try {
         field.setSelectionRange(selectionStart, selectionEnd);
-      } catch {}
+      } catch {
+        // some input types have no caret
+      }
   }
   return html;
 }

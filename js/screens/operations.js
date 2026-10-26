@@ -1,6 +1,6 @@
 /* Operations list, filters, details, bulk actions */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -9,12 +9,10 @@ import {
   categoryById,
   convertCurrency,
   dateLabel,
-  evaluateExpression,
   formatMoney,
   moneySpanHtml,
   parseDate,
   periodBounds,
-  toIsoDate,
   visibleOperations,
 } from "../domain/finance.js";
 import { deleteOperation, processScheduled, validateOp } from "../domain/operations.js";
@@ -26,7 +24,6 @@ import {
   closeLayers,
   confirmAction,
   openSheet,
-  optionSheet,
   periodBar,
   promptText,
   swipePane,
@@ -38,7 +35,6 @@ import {
   iconButtonHtml,
   menuRowHtml,
   registerAction,
-  registerInput,
   toast,
   translate,
 } from "../ui/primitives.js";
@@ -196,10 +192,6 @@ function operationsAddMenu() {
     const dir = state.direction;
     closeLayers();
     const accounts = appData.accounts.filter((a) => !a.archived);
-    const expense = appData.categories.find(
-      (c) => !c.archived && !c.parent && c.type === "expense",
-    );
-    const income = appData.categories.find((c) => !c.archived && !c.parent && c.type === "income");
     const preferred = accounts.find((a) => a.type === "Regular") || accounts[0];
     if (dir === "expense")
       operationStart({
@@ -281,114 +273,6 @@ export function operationsMenu() {
   uiState.search = !uiState.search;
   if (!uiState.search) uiState.filters.comment = "";
   render();
-}
-// Editor for balance adjustments.
-function adjustmentEditor(source, duplicate = false) {
-  const d = deepClone(source),
-    originalId = source.id;
-  if (duplicate) delete d.id;
-  const initialAccount = d.from || d.to;
-  const state = {
-    account: initialAccount,
-    direction: d.to ? "increase" : "decrease",
-    amount: d.amount,
-    date: d.date,
-    comment: d.comment || "",
-  };
-  function show() {
-    const a = accountById(state.account);
-    openSheet(
-      () => `<h2>${translate(duplicate ? "Duplicate adjustment" : "Edit adjustment")}</h2>
-   ${menuRowHtml(
-     "Account",
-     a ? badgeHtml(a, true) + " " + escapeHtml(a.name) : "Select account",
-     () =>
-       accountPicker(state.account, (id) => {
-         state.account = id;
-         render();
-       }),
-   )}
-   ${menuRowHtml(
-     "Direction",
-     state.direction === "increase" ? "Increase balance (+)" : "Decrease balance (−)",
-     () =>
-       optionSheet(
-         "Direction",
-         [
-           ["increase", "Increase balance (+)"],
-           ["decrease", "Decrease balance (−)"],
-         ],
-         state.direction,
-         (v) => {
-           state.direction = v;
-           render();
-         },
-       ),
-   )}
-   <label><small>${translate("Amount")} (${escapeHtml(a?.currency || appData.settings.currency)})</small><input inputmode="decimal" type="text" aria-label="Adjustment amount" value="${escapeHtml(String(state.amount / 100))}" data-input="${registerInput(
-     (v) => {
-       try {
-         state.amount = evaluateExpression(v);
-       } catch (e) {
-         state.amount = NaN;
-       }
-     },
-   )}"></label>
-   ${menuRowHtml("Date", dateLabel(state.date), () =>
-     calendar(state.date, (v) => {
-       state.date = v;
-       render();
-     }),
-   )}
-   ${menuRowHtml("Comment", escapeHtml(state.comment || "—"), () =>
-     promptText("Comment", state.comment, (v) => {
-       state.comment = v;
-       render();
-     }),
-   )}
-   ${buttonHtml(
-     duplicate ? "Create duplicate" : "Save changes",
-     () => {
-       try {
-         if (!accountById(state.account)) throw Error("Select an account");
-         if (!Number.isSafeInteger(state.amount) || state.amount <= 0)
-           throw Error("Enter an amount greater than zero");
-         if (
-           !/^\d{4}-\d{2}-\d{2}$/.test(state.date) ||
-           toIsoDate(parseDate(state.date)) !== state.date
-         )
-           throw Error("Choose a valid date");
-         const op = {
-           ...d,
-           type: "adjustment",
-           from: state.direction === "decrease" ? state.account : null,
-           to: state.direction === "increase" ? state.account : null,
-           amount: state.amount,
-           date: state.date,
-           comment: state.comment,
-           tags: Array.isArray(d.tags) ? d.tags : [],
-         };
-         if (duplicate) op.id = newId();
-         else op.id = originalId;
-         const i = appData.ops.findIndex((x) => x.id === op.id);
-         if (!duplicate && i < 0) throw Error("Original adjustment no longer exists");
-         if (i >= 0) appData.ops[i] = op;
-         else appData.ops.push(op);
-         save();
-         uiState.layers = [];
-         render();
-         toast(duplicate ? "Adjustment duplicated" : "Adjustment updated");
-       } catch (e) {
-         toast(e.message);
-       }
-     },
-     "primary",
-   )}
-   ${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
-      "Adjustment",
-    );
-  }
-  show();
 }
 // Details page of a single operation.
 export function operationDetails(o, scheduled = false) {
@@ -554,7 +438,6 @@ function filterCategorySelect(selected, done) {
     expanded = new Set(["expense", "income"]);
   const parentExpanded = new Set(appData.categories.filter((c) => !c.parent).map((c) => c.id));
   const checked = (group) => group.length > 0 && group.every((id) => values.has(id));
-  const partial = (group) => group.some((id) => values.has(id)) && !checked(group);
   const toggle = (group) => {
     const on = checked(group);
     group.forEach((id) => (on ? values.delete(id) : values.add(id)));
@@ -735,8 +618,7 @@ export function bulkEdit() {
         : (d.tagMode === "add" ? "Add: " : "Remove: ") + (d.tagNames.join(", ") || "Select tags");
   const chooseTags = () => {
     let mode = d.tagMode || "add",
-      chosen = [...d.tagNames],
-      query = "";
+      chosen = [...d.tagNames];
     const allTags = [...new Set([...appData.tags, ...selected.flatMap((o) => o.tags || [])])];
     openSheet(
       () =>

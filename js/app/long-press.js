@@ -22,7 +22,9 @@ export function initOperationLongPress() {
     if (navigator.vibrate)
       try {
         navigator.vibrate(22);
-      } catch {}
+      } catch {
+        // vibration is optional
+      }
     uiState.selection = true;
     uiState.selected = [id];
     render();

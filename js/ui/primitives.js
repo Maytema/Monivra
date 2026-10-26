@@ -44,15 +44,6 @@ export const badgeHtml = (x, small = false) =>
 // Labeled text input wired to an input handler.
 export const textFieldHtml = (label, value, fn, placeholder = "", type = "text") =>
   `<label class="field"><span class="field-label">${translate(label)}</span><input aria-label="${escapeHtml(translate(label))}" type="${type}" value="${escapeHtml(value)}" placeholder="${escapeHtml(translate(placeholder))}" data-input="${registerInput(fn)}"></label>`;
-// Labeled <select> wired to an input handler.
-function selectFieldHtml(label, value, options, fn) {
-  return `<label class="field"><span class="field-label">${translate(label)}</span><select aria-label="${escapeHtml(translate(label))}" data-input="${registerInput(fn)}">${options
-    .map((o) => {
-      let [v, l] = Array.isArray(o) ? o : [o, o];
-      return `<option value="${escapeHtml(v)}" ${v == value ? "selected" : ""}>${escapeHtml(translate(l))}</option>`;
-    })
-    .join("")}</select></label>`;
-}
 // Form row that looks like a field and opens a picker when clicked.
 export const fieldButtonHtml = (label, value, fn, hint = "") =>
   buttonHtml(

@@ -446,7 +446,6 @@ export function iconPicker(obj) {
     ["Other", names],
   ];
   const chooseIcon = () => {
-    let chosen = obj.icon;
     openSheet(() => {
       const usedNames = new Set();
       const groups = iconGroups

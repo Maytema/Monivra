@@ -91,7 +91,7 @@ export function hero() {
           },
         )}"></div>`
       : `<div class="balance">${formatMoney(overallBalance(), appData.settings.currency, true)}</div>`
-  }<div class="hero-action">${iconButtonHtml(icon, icon === "plus" ? "New account" : icon === "edit" ? "Change categories" : icon === "filter" ? "Filters" : "Operation search", fn)}</div></div><!--MONIVRA_HERO_END-->`;
+  }<div class="hero-action">${iconButtonHtml(icon, icon === "plus" ? "New account" : icon === "edit" ? "Change categories" : icon === "filter" ? "Filters" : "Operation search", fn)}</div></div>`;
 }
 
 // Show fractional progress without rounding an incomplete goal up to 100%.

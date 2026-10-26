@@ -371,7 +371,9 @@ function accountCalculatorView(p) {
       else d.expr = source;
       d.receive = cents;
       d.receiveManual = true;
-    } catch {}
+    } catch {
+      // keep the previous value while the expression is incomplete
+    }
   };
   if (p.scratchExpr === undefined) p.scratchExpr = String(d.expr || "0");
   const currentExpr = () => displayedExpr();
