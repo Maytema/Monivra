@@ -21,7 +21,8 @@ ES modules need a web server (opening `index.html` from the file system will not
 index.html            page shell, loads CSS files and js/app/main.js
 css/                  styles, one file per feature (see below)
 js/
-  core/               constants, translations, application state
+  core/               constants, application state
+  i18n/               languages and translations (one file per language)
   data/               seed data, validation + storage, import/export
   domain/             finance model (balances, periods, reports) and mutations
   ui/                 UI primitives and reusable kit (sheets, dialogs, pickers)

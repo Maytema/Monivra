@@ -170,33 +170,6 @@
   font-size: 15px !important;
   min-width: 0px !important;
 }
-#base > .fab.mon-fab-collapsed {
-  width: 62px !important;
-  height: 62px !important;
-  min-width: 62px !important;
-  padding: 0px !important;
-  justify-content: center !important;
-  gap: 0px !important;
-  border-radius: 19px !important;
-}
-#base > .fab.mon-fab-collapsed .mon-fab-label {
-  width: 0px !important;
-  max-width: 0px !important;
-  margin: 0px !important;
-  flex: 0 0 0px !important;
-  opacity: 0;
-  display: inline-block !important;
-}
-#base > .fab.mon-operations-add.mon-fab-collapsed {
-  border-radius: 21px !important;
-  width: 62px !important;
-  height: 62px !important;
-  min-width: 0px !important;
-  max-width: none !important;
-  padding: 0px 18px !important;
-  gap: 10px !important;
-  justify-content: flex-end !important;
-}
 @media (prefers-reduced-motion: reduce) {
   #base > .swipe-pane {
     scroll-behavior: auto;
@@ -213,8 +186,4 @@
 }
 .mon-tabs-progress {
   transition: none !important;
-}
-#base > .fab.mon-operations-add:not(.mon-fab-collapsed) {
-  width: auto !important;
-  min-width: 116px !important;
 }

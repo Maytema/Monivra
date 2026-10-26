@@ -167,12 +167,6 @@
 #base > .navbar.labels-selected > button:not(.active) > span:last-child {
   visibility: hidden !important;
 }
-#base > .fab.mon-operations-add svg {
-  width: 26px;
-  height: 26px;
-  flex: 0 0 26px;
-  order: 2;
-}
 .hero {
   min-height: 82px;
   max-height: 82px;
@@ -811,12 +805,6 @@
   position: fixed;
   right: 16px;
   bottom: calc(94px + env(safe-area-inset-bottom, 0px));
-  white-space: nowrap;
-  overflow: hidden;
-  transition:
-    padding 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-radius 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
-    gap 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 .mon-pager-viewport .fab,
 .mon-pager-viewport .mon-period-arrows {
@@ -1471,17 +1459,6 @@
   height: auto !important;
   min-height: 0px !important;
 }
-#base > .fab .mon-fab-label {
-  max-width: 110px;
-  opacity: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  transition:
-    max-width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
-    opacity 0.23s,
-    margin 0.32s;
-  display: inline-block !important;
-}
 .schedule-unit-btn.chosen {
   background: var(--accent);
   color: white;
@@ -1950,24 +1927,4 @@
   min-width: 45px;
   text-align: right;
   font-size: 16px;
-}
-#base > .fab.mon-operations-add {
-  will-change: width;
-  box-sizing: border-box !important;
-  width: 122px !important;
-  min-width: 0px !important;
-  max-width: none !important;
-  height: 62px !important;
-  padding: 0px 18px !important;
-  gap: 10px !important;
-  justify-content: flex-end !important;
-  overflow: hidden;
-  transition:
-    width 0.23s,
-    border-radius 0.23s !important;
-}
-@media (prefers-reduced-motion: reduce) {
-  #base > .fab.mon-operations-add {
-    transition: none !important;
-  }
 }

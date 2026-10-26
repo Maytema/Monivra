@@ -17,6 +17,7 @@ import {
   toIsoDate,
 } from "../domain/finance.js";
 import { deleteOperation, putOperation } from "../domain/operations.js";
+import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
 import { recurLabel } from "./operations.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
@@ -41,7 +42,6 @@ import {
   registerInput,
   textFieldHtml,
   toast,
-  translate,
 } from "../ui/primitives.js";
 
 /* Counterparty picker: choose a category or an account from the same sheet. */

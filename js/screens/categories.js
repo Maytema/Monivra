@@ -13,6 +13,7 @@ import {
   totalByType,
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/operations.js";
+import { translate } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
 import {
@@ -38,7 +39,6 @@ import {
   menuRowHtml,
   textFieldHtml,
   toast,
-  translate,
 } from "../ui/primitives.js";
 
 // Screen for changing the order of accounts or categories.

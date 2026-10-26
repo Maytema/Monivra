@@ -10,6 +10,7 @@ import {
   formatMoney,
   periodBounds,
 } from "../domain/finance.js";
+import { translate } from "../i18n/index.js";
 import { operationStart } from "./operation-editor.js";
 import { multiSelect, opRow, recurLabel } from "./operations.js";
 import {
@@ -31,7 +32,6 @@ import {
   textFieldHtml,
   toast,
   toggleRowHtml,
-  translate,
 } from "../ui/primitives.js";
 
 // Recurrence picker (every N days/weeks/months/years).

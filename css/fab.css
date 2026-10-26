@@ -1,0 +1,46 @@
+/* Floating "Add" button of the operations tab: text collapses into a round icon button */
+.fab-add {
+  box-sizing: border-box;
+  align-items: center;
+  height: 62px;
+  padding: 0 18px;
+  border-radius: 22px;
+  font-size: 19px;
+  font-weight: 600;
+  gap: 10px;
+  justify-content: flex-end;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: gap 0.28s ease;
+}
+.fab-add svg {
+  order: 2;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+}
+.fab-label {
+  order: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  transition:
+    grid-template-columns 0.28s ease,
+    opacity 0.2s ease;
+}
+.fab-label > span {
+  min-width: 0;
+  overflow: hidden;
+}
+.fab-add.is-collapsed {
+  gap: 0;
+}
+.fab-add.is-collapsed .fab-label {
+  grid-template-columns: 0fr;
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fab-add,
+  .fab-label {
+    transition: none;
+  }
+}

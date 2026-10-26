@@ -512,25 +512,6 @@
   min-width: 0px;
   flex: 1 1 0%;
 }
-.mon-operations-add .mon-fab-label {
-  display: inline-block;
-  white-space: nowrap;
-}
-#base > .fab.mon-operations-add .mon-fab-label {
-  order: 1;
-  white-space: nowrap;
-  flex: 0 0 auto;
-  opacity: 1;
-  display: block !important;
-  transition: opacity 0.12s !important;
-}
-#base > .fab.mon-operations-add.mon-fab-collapsed .mon-fab-label {
-  margin: 0px !important;
-  opacity: 0 !important;
-  width: 0px !important;
-  max-width: 0px !important;
-  overflow: hidden;
-}
 .ops-select-icon.is-selected {
   border-radius: 14px;
   display: grid;
@@ -601,15 +582,4 @@
   color: white !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-}
-.mon-operations-add {
-  align-items: center;
-  display: flex !important;
-  gap: 9px !important;
-  padding: 0px 22px !important;
-  min-width: 0px !important;
-  min-height: 62px !important;
-  border-radius: 22px !important;
-  font-size: 19px !important;
-  font-weight: 600 !important;
 }

@@ -12,6 +12,7 @@ import {
   overallBalance,
 } from "../domain/finance.js";
 import { deleteAccount, putOperation, validateOp } from "../domain/operations.js";
+import { translate } from "../i18n/index.js";
 import { accountPicker } from "./categories.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
@@ -39,7 +40,6 @@ import {
   textFieldHtml,
   toast,
   toggleRowHtml,
-  translate,
 } from "../ui/primitives.js";
 
 // Header block of the root screens: title, balance and action buttons.

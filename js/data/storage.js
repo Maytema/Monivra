@@ -1,6 +1,7 @@
 /* Data validation and persistence */
 import { STORAGE_KEY } from "../core/constants.js";
 import { appData } from "../core/state.js";
+import { isSupportedLanguage } from "../i18n/index.js";
 import { toast } from "../ui/primitives.js";
 
 // Check that an object matches the stored dataset schema (also used for imports).
@@ -23,7 +24,7 @@ export function isValidData(x) {
     const st = x.settings;
     if (
       !/^#[a-f0-9]{6}$/i.test(st.accent) ||
-      !["en", "ru"].includes(st.language) ||
+      !isSupportedLanguage(st.language) ||
       !["light", "dark", "system"].includes(st.theme) ||
       !Array.isArray(st.stats) ||
       !Number.isFinite(x.rates[st.currency]) ||

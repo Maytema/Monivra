@@ -1,6 +1,5 @@
-/* Russian UI translations */
+/* Russian UI strings; keys are the English texts */
 
-// Russian translations; keys are the English UI strings.
 export const russianStrings = {
   Accounts: "Счета",
   Categories: "Категории",

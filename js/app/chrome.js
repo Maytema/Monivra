@@ -49,7 +49,7 @@ function bindFabCollapse(pane) {
   const fab = document.querySelector("#base > .fab");
   const content = pane.querySelector(".content");
   if (!fab || !content) return;
-  const update = () => fab.classList.toggle("mon-fab-collapsed", content.scrollTop > 35);
+  const update = () => fab.classList.toggle("is-collapsed", content.scrollTop > 35);
   content.addEventListener("scroll", update, { passive: true });
   update();
 }

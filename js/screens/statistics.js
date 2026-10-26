@@ -14,6 +14,7 @@ import {
   reportRows,
   totalByType,
 } from "../domain/finance.js";
+import { translate } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { sumTabs } from "./categories.js";
 import { filterActive, filters } from "./operations.js";
@@ -25,7 +26,6 @@ import {
   menuRowHtml,
   registerAction,
   toggleRowHtml,
-  translate,
 } from "../ui/primitives.js";
 
 // Category totals for the statistics screen.

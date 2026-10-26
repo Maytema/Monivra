@@ -21,14 +21,8 @@ import {
   periodTitle,
   toIsoDate,
 } from "../domain/finance.js";
-import {
-  buttonHtml,
-  iconButtonHtml,
-  registerInput,
-  textFieldHtml,
-  toast,
-  translate,
-} from "./primitives.js";
+import { translate } from "../i18n/index.js";
+import { buttonHtml, iconButtonHtml, registerInput, textFieldHtml, toast } from "./primitives.js";
 
 // Wrap the part of a root screen that slides when swiping between tabs or periods.
 export function swipePane(html) {

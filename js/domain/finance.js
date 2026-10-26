@@ -2,7 +2,7 @@
 import { deepClone, escapeHtml, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { translate } from "../ui/primitives.js";
+import { currentLocale, translate } from "../i18n/index.js";
 
 // Find an account by id.
 export const accountById = (id) => appData.accounts.find((a) => a.id === id);
@@ -41,7 +41,7 @@ export function formatMoney(n, currency = appData.settings.currency, isBalance =
     return "•••• " + escapeHtml(currency);
   let v = n / 100,
     dec = appData.settings.hideCents ? 0 : appData.settings.decimal ? 2 : Math.abs(n) % 100 ? 2 : 0;
-  let text = v.toLocaleString(appData.settings.language === "ru" ? "ru-RU" : "en-US", {
+  let text = v.toLocaleString(currentLocale(), {
     minimumFractionDigits: dec,
     maximumFractionDigits: dec,
     useGrouping: appData.settings.groupDigits,
@@ -61,23 +61,21 @@ export const addDays = (s, n) => {
   d.setUTCDate(d.getUTCDate() + n);
   return toIsoDate(d);
 };
+// Locale for dates: the English "day first" format uses the British locale.
+const dateLocale = () =>
+  appData.settings.language === "en" && appData.settings.dateFormat === "day"
+    ? "en-GB"
+    : currentLocale();
 // Human-readable date according to the date-format setting.
 export const dateLabel = (s, short = false) =>
   appData.settings.dateFormat === "iso"
     ? s
-    : parseDate(s).toLocaleDateString(
-        appData.settings.language === "ru"
-          ? "ru-RU"
-          : appData.settings.dateFormat === "day"
-            ? "en-GB"
-            : "en-US",
-        {
-          timeZone: "UTC",
-          ...(short
-            ? { month: "long", day: "numeric" }
-            : { year: "numeric", month: "long", day: "numeric" }),
-        },
-      );
+    : parseDate(s).toLocaleDateString(dateLocale(), {
+        timeZone: "UTC",
+        ...(short
+          ? { month: "long", day: "numeric" }
+          : { year: "numeric", month: "long", day: "numeric" }),
+      });
 
 // Start and end dates of the selected statistics/operations period.
 export function periodBounds(p = uiState.period) {
@@ -109,7 +107,7 @@ export function periodTitle() {
   const [a, b] = periodBounds();
   if (uiState.period.mode === "all") return translate("All time");
   if (uiState.period.mode === "month")
-    return parseDate(a).toLocaleDateString(appData.settings.language === "ru" ? "ru-RU" : "en-US", {
+    return parseDate(a).toLocaleDateString(currentLocale(), {
       timeZone: "UTC",
       month: "long",
       year: "numeric",

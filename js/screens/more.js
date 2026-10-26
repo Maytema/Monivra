@@ -7,6 +7,7 @@ import { download, exportJSON } from "../data/import-export.js";
 import { createSeedData } from "../data/seed.js";
 import { save } from "../data/storage.js";
 import { createBackup, formatMoney, parseDate } from "../domain/finance.js";
+import { LANGUAGES, currentLocale, translate } from "../i18n/index.js";
 import {
   closeLayers,
   confirmAction,
@@ -27,7 +28,6 @@ import {
   textFieldHtml,
   toast,
   toggleRowHtml,
-  translate,
 } from "../ui/primitives.js";
 
 // More tab: menu with settings, data and info pages.
@@ -110,10 +110,11 @@ export function settingsPage(kind) {
         fieldButtonHtml("Currency", escapeHtml(appData.settings.currency), () =>
           currencyPicker(appData.settings.currency, (v) => setting("currency", v)),
         ) +
-        settingOptions("Language", "language", [
-          ["en", "English"],
-          ["ru", "Русский"],
-        ]) +
+        settingOptions(
+          "Language",
+          "language",
+          LANGUAGES.map((language) => [language.code, language.name]),
+        ) +
         fieldButtonHtml("Month starts on", String(appData.settings.monthStart), () =>
           promptText(
             "Month starts on",
@@ -343,10 +344,12 @@ export function settingsPage(kind) {
 // Date formatting used in settings previews.
 function formatDate(s) {
   if (appData.settings.dateFormat === "iso") return s;
-  return parseDate(s).toLocaleDateString(
-    appData.settings.dateFormat === "day" ? "en-GB" : "en-US",
-    { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" },
-  );
+  return parseDate(s).toLocaleDateString(currentLocale(), {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 // Set or remove the PIN.
 export function pinSetup(remove) {

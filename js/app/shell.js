@@ -6,6 +6,7 @@ import { appData, locked, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
+import { translate } from "../i18n/index.js";
 import { accountEditView, accountsView } from "../screens/accounts.js";
 import {
   categoriesView,
@@ -24,7 +25,6 @@ import {
   setActionHandlers,
   setHandlerCounter,
   setInputHandlers,
-  translate,
 } from "../ui/primitives.js";
 
 // Bottom navigation bar.

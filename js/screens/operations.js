@@ -16,6 +16,7 @@ import {
   visibleOperations,
 } from "../domain/finance.js";
 import { deleteOperation, processScheduled, validateOp } from "../domain/operations.js";
+import { currentLocale, translate } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { accountPicker, categoryPicker } from "./categories.js";
 import { opTitle, operationStart } from "./operation-editor.js";
@@ -36,7 +37,6 @@ import {
   menuRowHtml,
   registerAction,
   toast,
-  translate,
 } from "../ui/primitives.js";
 
 // One row in the operations list.
@@ -131,8 +131,8 @@ function dayTotal(dayOps) {
 function dayGroup(date, ops) {
   const dayOps = ops.filter((o) => o.date === date);
   const day = parseDate(date);
-  const weekday = day.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" });
-  const monthYear = day.toLocaleDateString("en-US", {
+  const weekday = day.toLocaleDateString(currentLocale(), { weekday: "short", timeZone: "UTC" });
+  const monthYear = day.toLocaleDateString(currentLocale(), {
     month: "short",
     year: "numeric",
     timeZone: "UTC",
@@ -154,9 +154,9 @@ function selectionActions() {
 // Floating "Add" button of the operations tab.
 export function operationsFab() {
   return buttonHtml(
-    iconSvg("plus", 26) + '<span class="mon-fab-label">Add</span>',
+    iconSvg("plus", 26) + `<span class="fab-label"><span>${translate("Add")}</span></span>`,
     () => operationsAddMenu(),
-    "fab mon-operations-add",
+    "fab fab-add",
     `aria-label="Add operation"`,
   );
 }

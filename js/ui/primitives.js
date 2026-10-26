@@ -1,8 +1,7 @@
 /* UI primitives: translation, action registry, buttons, fields, toast */
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { appData } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
-import { russianStrings } from "../core/translations.js";
+import { translate } from "../i18n/index.js";
 
 // Registry of click handlers referenced from markup via data-action.
 export let actionHandlers = {};
@@ -12,8 +11,6 @@ export let inputHandlers = {};
 export let handlerCounter = 0;
 let toastTimer = 0;
 
-// Translate a UI string according to the selected language.
-export const translate = (s) => (appData.settings.language === "ru" ? russianStrings[s] || s : s);
 // Register a click handler and return the id to put in data-action.
 export const registerAction = (fn) => {
   const id = "a" + ++handlerCounter;
