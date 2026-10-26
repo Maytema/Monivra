@@ -286,6 +286,24 @@
   position: relative;
   flex: 0 0 auto;
 }
+/* While pages slide, the period title passes behind the arrows and fades out
+   before it can overlap the arrow icons. */
+.mon-period-arrows > .icon-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background: var(--bg);
+}
+.mon-period-arrows > .icon-button:first-child::before {
+  box-shadow: 16px 0 12px 0 var(--bg);
+}
+.mon-period-arrows > .icon-button:last-child::before {
+  box-shadow: -16px 0 12px 0 var(--bg);
+}
 .swipe-pane .period > .icon-button:first-child,
 .swipe-pane .period > .icon-button:last-child {
   visibility: hidden;

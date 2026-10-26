@@ -236,7 +236,7 @@ function swipeFinish(s, commit) {
   const from = new DOMMatrix(getComputedStyle(s.track).transform).m41;
   const to = commit ? (s.direction === 1 ? -width : 0) : s.direction === 1 ? 0 : -width;
   const dist = Math.abs(to - from),
-    duration = reduce ? 0 : Math.max(145, Math.min(360, (dist / width) * 330 + 105));
+    duration = reduce ? 0 : Math.max(120, Math.min(280, (dist / width) * 230 + 90));
   const track = s.track;
   const g = s.tabsGeometry;
   if (g && g.active >= 0 && s.underlineBox && duration) {
