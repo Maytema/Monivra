@@ -241,7 +241,7 @@ function categorySubMenu(p, id) {
   if (!c) return;
   openSheet(
     () =>
-      `<div class="mon-submenu-title">${escapeHtml(c.name)}</div><div class="cat-sub-actions">${menuRowHtml(
+      `<div class="submenu-title">${escapeHtml(c.name)}</div><div class="cat-sub-actions">${menuRowHtml(
         "Edit",
         "edit",
         () => {
@@ -334,13 +334,13 @@ function categoryTypePicker(d) {
       : `<svg viewBox="0 0 24 24" width="29" height="29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>`;
   openSheet(
     () =>
-      `<div class="mon-type-picker"><h2>Select type</h2>${[
+      `<div class="type-picker"><h2>Select type</h2>${[
         ["expense", "Expenses"],
         ["income", "Incomes"],
       ]
         .map(([value, label]) =>
           buttonHtml(
-            `<span class="mon-type-picker-icon ${value}">${typeSvg(value)}</span><span class="grow">${label}</span><span class="mon-type-picker-radio ${d.type === value ? "selected" : ""}"></span>`,
+            `<span class="type-picker-icon ${value}">${typeSvg(value)}</span><span class="grow">${label}</span><span class="type-picker-radio ${d.type === value ? "selected" : ""}"></span>`,
             () => {
               if (d.parent && categoryById(d.parent)?.type !== value)
                 return toast("Subcategory type follows its parent");
@@ -348,7 +348,7 @@ function categoryTypePicker(d) {
               closeLayers();
               render();
             },
-            "mon-type-picker-choice",
+            "type-picker-choice",
           ),
         )
         .join("")}</div>`,

@@ -79,7 +79,7 @@ function swipePreview(direction) {
     wrapper.innerHTML = rootView();
     node = wrapper.querySelector(".swipe-pane");
     if (node) {
-      node.querySelectorAll(".fab,.mon-period-arrows").forEach((e) => e.remove());
+      node.querySelectorAll(".fab,.period-arrows").forEach((e) => e.remove());
       node.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
       node.setAttribute("aria-hidden", "true");
       node.setAttribute("inert", "");
@@ -99,7 +99,7 @@ function swipeCleanup(s) {
   if (s.viewport?.isConnected) s.viewport.remove();
   else if (s.track?.isConnected) s.track.remove();
   s.underlineAnimation?.cancel();
-  const underline = document.querySelector("#base>.account-tabs .mon-tabs-progress");
+  const underline = document.querySelector("#base>.account-tabs .tabs-progress");
   if (underline) placeTabUnderline(underline);
   if (s.el) {
     s.el.style.transform = "";
@@ -122,16 +122,16 @@ function swipePrepare(s, direction) {
   const rect = s.el.getBoundingClientRect();
   if (rect.width < 30 || rect.height < 30) return;
   const viewport = document.createElement("div");
-  viewport.className = "mon-pager-viewport";
+  viewport.className = "pager-viewport";
   viewport.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;max-height:${rect.height}px`;
   const track = document.createElement("div");
-  track.className = "mon-swipe-track";
+  track.className = "swipe-track";
   const current = s.el.cloneNode(true);
-  current.querySelectorAll(".fab,.mon-period-arrows").forEach((e) => e.remove());
-  current.classList.add("mon-swipe-page");
+  current.querySelectorAll(".fab,.period-arrows").forEach((e) => e.remove());
+  current.classList.add("swipe-page");
   current.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
   current.setAttribute("inert", "");
-  node.classList.add("mon-swipe-page");
+  node.classList.add("swipe-page");
   if (direction === 1) track.append(current, node);
   else track.append(node, current);
   viewport.append(track);
@@ -165,7 +165,7 @@ function swipePrepare(s, direction) {
 // Measure the tab underline once per gesture so dragging never forces layout.
 function swipeTabsGeometry() {
   const tabs = document.querySelector("#base>.account-tabs");
-  const underline = tabs?.querySelector(".mon-tabs-progress");
+  const underline = tabs?.querySelector(".tabs-progress");
   if (!underline) return null;
   const tabsRect = tabs.getBoundingClientRect();
   const buttons = [...tabs.querySelectorAll("button")];

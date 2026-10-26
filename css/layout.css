@@ -154,14 +154,14 @@
     transition: none;
   }
 }
-.mon-filter-scroll {
+.filter-scroll {
   max-height: min(63vh, 600px);
   overflow: auto;
   padding: 8px 0px;
   scrollbar-gutter: stable;
   overscroll-behavior: contain;
 }
-.mon-add-tab {
+.add-tab {
   font-weight: 500;
   border-bottom-width: 3px;
   flex: 1 1 0%;
@@ -175,7 +175,7 @@
     scroll-behavior: auto;
   }
 }
-.mon-period-arrows {
+.period-arrows {
   position: fixed;
   z-index: 7;
   pointer-events: none;
@@ -184,6 +184,6 @@
   align-items: center;
   box-sizing: border-box;
 }
-.mon-tabs-progress {
+.tabs-progress {
   transition: none !important;
 }

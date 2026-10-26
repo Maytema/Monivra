@@ -1,5 +1,5 @@
 /* Keyframe animations. */
-@keyframes monBalanceRise {
+@keyframes balanceRise {
   0% {
     opacity: 0.45;
     transform: translate3d(12px, 0px, 0px);
@@ -9,7 +9,7 @@
     transform: translate3d(0px, 0px, 0px);
   }
 }
-@keyframes monBalanceFall {
+@keyframes balanceFall {
   0% {
     opacity: 0.45;
     transform: translate3d(-12px, 0px, 0px);

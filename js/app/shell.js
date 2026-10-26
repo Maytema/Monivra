@@ -127,7 +127,7 @@ function animateBalance(before, now) {
   if (uiState.pages.length || uiState.layers.length) return;
   document
     .querySelector("#base .hero .balance")
-    ?.classList.add(now > before ? "mon-balance-rise" : "mon-balance-fall");
+    ?.classList.add(now > before ? "balance-rise" : "balance-fall");
 }
 
 // Re-render the application and restore focus and scroll positions.
@@ -147,7 +147,7 @@ export function render(top = false) {
   // Remember what has to survive the re-render.
   const scroll = top ? 0 : app.querySelector(".content")?.scrollTop || 0;
   const panelScrolls = [...app.querySelectorAll(".panel")].map((x) => x.scrollTop);
-  const filterScrolls = [...app.querySelectorAll(".overlay .mon-filter-scroll")].map(
+  const filterScrolls = [...app.querySelectorAll(".overlay .filter-scroll")].map(
     (x) => x.scrollTop,
   );
   const focused = document.activeElement;
@@ -161,7 +161,7 @@ export function render(top = false) {
   const content = app.querySelector(".content");
   if (content) content.scrollTop = scroll;
   app.querySelectorAll(".panel").forEach((x, i) => (x.scrollTop = panelScrolls[i] || 0));
-  app.querySelectorAll(".overlay .mon-filter-scroll").forEach((x, i) => {
+  app.querySelectorAll(".overlay .filter-scroll").forEach((x, i) => {
     x.scrollTop = filterScrolls[i] || 0;
   });
   mountSwipeChrome();

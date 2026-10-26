@@ -105,7 +105,7 @@ function savingsPercent(balance, goal) {
 function savingsPercentLabel(balance, goal) {
   const n = savingsPercent(balance, goal);
   const parts = n.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
-  return `<span class="mon-goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="mon-goal-pct-frac">.${parts[1]}</span>` : ""}<span class="mon-goal-pct-unit">%</span>`;
+  return `<span class="goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="goal-pct-frac">.${parts[1]}</span>` : ""}<span class="goal-pct-unit">%</span>`;
 }
 // One row in the accounts list.
 function accountLine(a) {
@@ -113,10 +113,10 @@ function accountLine(a) {
     goal = a.type === "Savings" && a.goal > 0;
   const percent = goal ? savingsPercent(n, a.goal) : 0;
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="mon-account-available">Available: ${formatMoney(n + a.limit, a.currency)}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">Available: ${formatMoney(n + a.limit, a.currency)}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
     () => accountActions(a),
     "account-row " +
-      (a.type === "Debt" && accountBalance(a.id) === 0 ? "mon-debt-completed " : "") +
+      (a.type === "Debt" && accountBalance(a.id) === 0 ? "debt-completed " : "") +
       (appData.settings.bigAccounts ? "big" : ""),
   );
 }
@@ -403,17 +403,17 @@ function accountTypeReferenceSheet(d) {
   ];
   openSheet(
     () =>
-      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div><div class="mon-account-type-choices">${types
+      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div><div class="account-type-choices">${types
         .map(([v, desc, icon, bg]) =>
           buttonHtml(
-            `<span class="mon-type-icon" style="background:${bg}">${iconSvg(icon, 23)}</span><span class="mon-type-text"><strong>${translate(v)}</strong><small>${desc}</small></span><span class="mon-type-chevron">›</span>`,
+            `<span class="type-icon" style="background:${bg}">${iconSvg(icon, 23)}</span><span class="type-text"><strong>${translate(v)}</strong><small>${desc}</small></span><span class="type-chevron">›</span>`,
             () => {
               closeLayers();
               d.type = v;
               if (v === "Debt" && !d.debt) d.debt = "Owe me";
               render();
             },
-            "mon-account-type-choice",
+            "account-type-choice",
           ),
         )
         .join("")}</div>`,

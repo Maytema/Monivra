@@ -158,7 +158,7 @@ function importFile(kind) {
 export function dataView() {
   return (
     pageHeader("Data") +
-    `<div class="content flush mon-data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("backups"))}${menuRowHtml(
+    `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("backups"))}${menuRowHtml(
       "Data file",
       "receipt",
       () =>

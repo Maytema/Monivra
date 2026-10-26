@@ -371,23 +371,23 @@
 .account-favorite.is-favorite {
   color: rgb(40, 85, 233);
 }
-.mon-debt-completed {
+.debt-completed {
   border-right: 4px solid rgb(40, 189, 137);
 }
-.mon-account-available {
+.account-available {
   display: block;
   color: rgb(115, 113, 128);
   font-size: 12px;
   margin-top: 2px;
   font-weight: 400;
 }
-.mon-account-type-choices {
+.account-type-choices {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 0px 2px 14px;
 }
-.mon-account-type-choice {
+.account-type-choice {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -399,22 +399,22 @@
   text-align: left;
   min-height: 81px;
 }
-.mon-goal-pct-main {
+.goal-pct-main {
   font-size: 1em;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-.mon-goal-pct-frac {
+.goal-pct-frac {
   font-size: 0.57em;
   vertical-align: baseline;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
-.mon-goal-pct-unit {
+.goal-pct-unit {
   font-size: 0.8em;
   margin-left: 1px;
 }
-.mon-type-icon {
+.type-icon {
   width: 44px;
   height: 44px;
   display: grid;
@@ -423,11 +423,11 @@
   color: rgb(56, 81, 220);
   flex: 0 0 auto;
 }
-.mon-type-text {
+.type-text {
   flex: 1 1 0%;
   min-width: 0px;
 }
-.mon-type-chevron {
+.type-chevron {
   font-size: 26px;
   color: rgb(132, 123, 137);
 }

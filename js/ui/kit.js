@@ -306,7 +306,7 @@ export function currencyPicker(value, fn) {
         ["Major currencies", matches.filter(([id]) => majors.includes(id))],
         ["Other currencies", matches.filter(([id]) => !selected.has(id) && !majors.includes(id))],
       ];
-      return `<div class="mon-currency-sheet"><div class="mon-currency-sheet-head">${buttonHtml(iconSvg("close", 27), () => closeLayers(), "mon-currency-sheet-close", 'aria-label="Close currency selection"')}<h2>Select currency</h2><span></span></div><div class="mon-currency-sheet-search"><span>${iconSvg("search", 23)}</span><input aria-label="Title or code" placeholder="Title or code" value="${escapeHtml(q)}" data-input="${registerInput(
+      return `<div class="currency-sheet"><div class="currency-sheet-head">${buttonHtml(iconSvg("close", 27), () => closeLayers(), "currency-sheet-close", 'aria-label="Close currency selection"')}<h2>Select currency</h2><span></span></div><div class="currency-sheet-search"><span>${iconSvg("search", 23)}</span><input aria-label="Title or code" placeholder="Title or code" value="${escapeHtml(q)}" data-input="${registerInput(
         (v) => {
           q = v;
           render();
@@ -317,20 +317,20 @@ export function currencyPicker(value, fn) {
           q = "";
           render();
         },
-        "mon-currency-sheet-clear",
+        "currency-sheet-clear",
         'aria-label="Clear search"',
-      )}</div><div class="mon-currency-sheet-scroll">${groups
+      )}</div><div class="currency-sheet-scroll">${groups
         .map(([label, items]) =>
           items.length
             ? `<h3>${label}</h3>${items
                 .map(([id, name]) =>
                   buttonHtml(
-                    `<span class="mon-currency-sheet-radio ${value === id ? "selected" : ""}"></span><span class="mon-currency-sheet-name">${escapeHtml(name)}</span><span class="mon-currency-sheet-symbol">${escapeHtml(symbols[id] || id)}</span>`,
+                    `<span class="currency-sheet-radio ${value === id ? "selected" : ""}"></span><span class="currency-sheet-name">${escapeHtml(name)}</span><span class="currency-sheet-symbol">${escapeHtml(symbols[id] || id)}</span>`,
                     () => {
                       closeLayers();
                       fn(id);
                     },
-                    "mon-currency-sheet-row",
+                    "currency-sheet-row",
                     `aria-label="${escapeHtml(name)} ${escapeHtml(id)}"`,
                   ),
                 )
@@ -388,25 +388,25 @@ export function iconPicker(obj) {
       ...excluded(),
     };
     const item = (label, key) =>
-      `<div class="mon-customize-setting-row"><span>${label}</span>${buttonHtml(
-        `<span class="mon-customize-toggle ${working[key] ? "on" : ""}"><i></i></span>`,
+      `<div class="customize-setting-row"><span>${label}</span>${buttonHtml(
+        `<span class="customize-toggle ${working[key] ? "on" : ""}"><i></i></span>`,
         () => {
           working[key] = !working[key];
           render();
         },
-        "mon-customize-switch",
+        "customize-switch",
         `role="switch" aria-checked="${working[key]}" aria-label="${label}"`,
       )}</div>`;
     openSheet(
       () =>
-        `<div class="mon-customize-settings"><h2>Setting random selection</h2><p>With this setting, you can exclude icons and colors selected for current accounts and categories from random selection.</p><h3>Icons</h3><div class="mon-customize-setting-card">${item("Exclude selected in accounts", "iconAccounts")}${item("Exclude selected in categories", "iconCategories")}</div><h3>Colors</h3><div class="mon-customize-setting-card">${item("Exclude selected in accounts", "colorAccounts")}${item("Exclude selected in categories", "colorCategories")}</div><div class="mon-customize-setting-actions">${buttonHtml("Cancel", () => closeLayers(), "mon-customize-cancel")}${buttonHtml(
+        `<div class="customize-settings"><h2>Setting random selection</h2><p>With this setting, you can exclude icons and colors selected for current accounts and categories from random selection.</p><h3>Icons</h3><div class="customize-setting-card">${item("Exclude selected in accounts", "iconAccounts")}${item("Exclude selected in categories", "iconCategories")}</div><h3>Colors</h3><div class="customize-setting-card">${item("Exclude selected in accounts", "colorAccounts")}${item("Exclude selected in categories", "colorCategories")}</div><div class="customize-setting-actions">${buttonHtml("Cancel", () => closeLayers(), "customize-cancel")}${buttonHtml(
           "Complete",
           () => {
             appData.settings.randomSelectionFlags = working;
             save();
             closeLayers();
           },
-          "mon-customize-primary",
+          "customize-primary",
         )}</div></div>`,
       "Setting random selection",
       "dialog",
@@ -448,10 +448,10 @@ export function iconPicker(obj) {
           keys.filter((k) => names.includes(k) && !usedNames.has(k) && !!usedNames.add(k)),
         ])
         .filter(([, keys]) => keys.length);
-      return `<div class="mon-picker-icon-picker"><div class="mon-picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "mon-picker-back", 'aria-label="Back"')}<h2>Select an icon</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("icon"), "mon-picker-gear", 'aria-label="Icon selection settings"')}</div><div class="mon-picker-list">${groups
+      return `<div class="picker-icon-picker"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Select an icon</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("icon"), "picker-gear", 'aria-label="Icon selection settings"')}</div><div class="picker-list">${groups
         .map(
           ([title, keys]) =>
-            `<div class="mon-picker-icon-group"><div class="mon-picker-group-title"><span>${title}</span></div><div class="mon-picker-icon-grid">${keys
+            `<div class="picker-icon-group"><div class="picker-icon-group-title"><span>${title}</span></div><div class="picker-icon-grid">${keys
               .map((x) =>
                 buttonHtml(
                   iconSvg(x, 25),
@@ -459,7 +459,7 @@ export function iconPicker(obj) {
                     obj.icon = x;
                     closeLayers();
                   },
-                  "mon-picker-icon-cell " + (obj.icon === x ? "selected" : ""),
+                  "picker-icon-cell " + (obj.icon === x ? "selected" : ""),
                   `aria-label="${x}" title="${x}"`,
                 ),
               )
@@ -477,25 +477,25 @@ export function iconPicker(obj) {
       ? ["colorAccounts", "colorCategories"]
       : ["iconAccounts", "iconCategories"];
     const row = (label, key) =>
-      `<div class="mon-picker-setting-row"><span>${label}</span>${buttonHtml(
-        `<span class="mon-customize-toggle ${working[key] ? "on" : ""}"><i></i></span>`,
+      `<div class="picker-setting-row"><span>${label}</span>${buttonHtml(
+        `<span class="customize-toggle ${working[key] ? "on" : ""}"><i></i></span>`,
         () => {
           working[key] = !working[key];
           render();
         },
-        "mon-customize-switch",
+        "customize-switch",
         `role="switch" aria-checked="${!!working[key]}"`,
       )}</div>`;
     openSheet(
       () =>
-        `<div class="mon-picker-settings"><h2>${isColor ? "Colors" : "Icon"} list customization</h2><p>With this setting, you can exclude ${isColor ? "colors" : "icons"} selected for current accounts and categories from the ${isColor ? "colors" : "icons"} list.</p><div class="mon-picker-setting-rows">${row("Exclude selected in accounts", keys[0])}${row("Exclude selected in categories", keys[1])}</div><div class="mon-picker-setting-buttons">${buttonHtml("Cancel", () => closeLayers(), "mon-customize-cancel")}${buttonHtml(
+        `<div class="picker-settings"><h2>${isColor ? "Colors" : "Icon"} list customization</h2><p>With this setting, you can exclude ${isColor ? "colors" : "icons"} selected for current accounts and categories from the ${isColor ? "colors" : "icons"} list.</p><div class="picker-setting-rows">${row("Exclude selected in accounts", keys[0])}${row("Exclude selected in categories", keys[1])}</div><div class="picker-setting-buttons">${buttonHtml("Cancel", () => closeLayers(), "customize-cancel")}${buttonHtml(
           "Complete",
           () => {
             appData.settings[isColor ? "colorPickerExclusions" : "iconPickerExclusions"] = working;
             save();
             closeLayers();
           },
-          "mon-customize-primary",
+          "customize-primary",
         )}</div></div>`,
       "List customization",
       "dialog",
@@ -521,7 +521,7 @@ export function iconPicker(obj) {
                   pending = color;
                   render();
                 },
-                "mon-picker-color-tile",
+                "picker-color-tile",
                 `style="background:${color}" aria-label="Color row ${r + 1} column ${c + 1}"`,
               ),
             )
@@ -530,7 +530,7 @@ export function iconPicker(obj) {
         .join("");
     openSheet(
       () =>
-        `<div class="mon-picker-color-picker mon-picker-color-page"><div class="mon-picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "mon-picker-back", 'aria-label="Back"')}<h2>Choose color</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("color"), "mon-picker-gear", 'aria-label="Color list customization"')}</div><div class="mon-picker-color-preview" style="color:${pending};background:color-mix(in srgb,${pending} 20%,#fffafe)">${iconSvg(obj.icon, 32)}</div><p class="mon-picker-color-hint">You can scroll colors horizontally or vertically.</p><div class="mon-picker-color-grid">${grid()}</div><div class="mon-picker-color-quick">${PALETTE.map(
+        `<div class="picker-color-picker picker-color-page"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Choose color</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("color"), "picker-gear", 'aria-label="Color list customization"')}</div><div class="picker-color-preview" style="color:${pending};background:color-mix(in srgb,${pending} 20%,#fffafe)">${iconSvg(obj.icon, 32)}</div><p class="picker-color-hint">You can scroll colors horizontally or vertically.</p><div class="picker-color-grid">${grid()}</div><div class="picker-color-quick">${PALETTE.map(
           (c) =>
             buttonHtml(
               pending === c ? iconSvg("check", 14) : "",
@@ -538,7 +538,7 @@ export function iconPicker(obj) {
                 pending = c;
                 render();
               },
-              "mon-picker-quick-swatch",
+              "picker-quick-swatch",
               `style="background:${c}" aria-label="Color ${c}"`,
             ),
         ).join("")}</div>${buttonHtml(
@@ -547,20 +547,20 @@ export function iconPicker(obj) {
             obj.color = pending;
             closeLayers();
           },
-          "mon-customize-complete",
+          "customize-complete",
         )}</div>`,
       "Choose color",
     );
   };
   const action = (icon, label, fn) =>
     buttonHtml(
-      `<span class="mon-customize-action-icon">${iconSvg(icon, 25)}</span><span>${label}</span>`,
+      `<span class="customize-action-icon">${iconSvg(icon, 25)}</span><span>${label}</span>`,
       fn,
-      "mon-customize-action",
+      "customize-action",
     );
   openSheet(
     () =>
-      `<div class="mon-customize-customize"><div class="mon-customize-preview" style="color:${obj.color};background:color-mix(in srgb,${obj.color} 17%,#fffafe)">${iconSvg(obj.icon, 34)}</div><h2>Customize icon</h2><div class="mon-customize-choices">${action("smile", "Choose an icon", chooseIcon)}${action("palette", "Choose color", chooseColor)}</div><div class="mon-customize-actions">${action("gear", "✦ Setting random selection", randomSettings)}${action("smile", "✦ Random icon", () => chooseRandom("icon"))}${action("palette", "✦ Random color", () => chooseRandom("color"))}${action("spark", "Random icon and color", () => chooseRandom("both"))}</div>${buttonHtml("Complete", () => closeLayers(), "mon-customize-complete")}</div>`,
+      `<div class="customize-customize"><div class="customize-preview" style="color:${obj.color};background:color-mix(in srgb,${obj.color} 17%,#fffafe)">${iconSvg(obj.icon, 34)}</div><h2>Customize icon</h2><div class="customize-choices">${action("smile", "Choose an icon", chooseIcon)}${action("palette", "Choose color", chooseColor)}</div><div class="customize-actions">${action("gear", "✦ Setting random selection", randomSettings)}${action("smile", "✦ Random icon", () => chooseRandom("icon"))}${action("palette", "✦ Random color", () => chooseRandom("color"))}${action("spark", "Random icon and color", () => chooseRandom("both"))}</div>${buttonHtml("Complete", () => closeLayers(), "customize-complete")}</div>`,
     "Customize icon",
     "dialog",
   );

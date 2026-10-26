@@ -318,9 +318,9 @@ function accountCalculatorView(p) {
   const currency = (from || to)?.currency || appData.settings.currency;
   const tile = (label, item, fn) =>
     buttonHtml(
-      `<span class="mon-calc-tile-caption">${translate(label)}</span><span class="mon-calc-tile-value">${item ? badgeHtml(item, true) + `<span>${escapeHtml(item.name)}</span>` : `<span>${translate("Not selected")}</span>`}</span>`,
+      `<span class="calc-tile-caption">${translate(label)}</span><span class="calc-tile-value">${item ? badgeHtml(item, true) + `<span>${escapeHtml(item.name)}</span>` : `<span>${translate("Not selected")}</span>`}</span>`,
       fn,
-      "mon-calc-tile",
+      "calc-tile",
     );
   const chooseSource = () =>
     isAdjustment
@@ -484,7 +484,7 @@ function accountCalculatorView(p) {
     "0",
     ".",
   ];
-  return `<div class="mon-calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="mon-calc-date">${iconButtonHtml(
+  return `<div class="calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="calc-date">${iconButtonHtml(
     "left",
     "Previous day",
     () => {
@@ -498,13 +498,13 @@ function accountCalculatorView(p) {
         d.date = v;
         render();
       }),
-    "mon-calc-date-label",
+    "calc-date-label",
   )}${iconButtonHtml("right", "Next day", () => {
     d.date = toIsoDate(new Date(parseDate(d.date).getTime() + 86400000));
     render();
-  })}</div><div class="mon-calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${
+  })}</div><div class="calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${
     dual
-      ? `<div class="mon-calc-number mon-dual-number ${p.currencySide === "send" ? "mon-dual-active" : ""}" data-side="send">${buttonHtml(
+      ? `<div class="calc-number dual-number ${p.currencySide === "send" ? "dual-active" : ""}" data-side="send">${buttonHtml(
           escapeHtml(
             p.currencySide === "send" ? currentExpr() : calcMode ? p.scratchExpr : d.expr,
           ) +
@@ -516,9 +516,9 @@ function accountCalculatorView(p) {
             p.compact = false;
             render();
           },
-          "mon-dual-value",
+          "dual-value",
           `aria-label="Edit amount in ${escapeHtml(primary.currency)}" aria-pressed="${p.currencySide === "send"}"`,
-        )}</div><div class="mon-calc-number mon-dual-number mon-dual-receive ${p.currencySide === "receive" ? "mon-dual-active" : ""}">${buttonHtml(
+        )}</div><div class="calc-number dual-number dual-receive ${p.currencySide === "receive" ? "dual-active" : ""}">${buttonHtml(
           escapeHtml(p.currencySide === "receive" ? currentExpr() : receiveExpression()) +
             " " +
             escapeHtml(secondary.currency),
@@ -528,10 +528,10 @@ function accountCalculatorView(p) {
             p.compact = false;
             render();
           },
-          "mon-dual-value",
+          "dual-value",
           `aria-label="Edit amount in ${escapeHtml(secondary.currency)}" aria-pressed="${p.currencySide === "receive"}"`,
-        )}</div><div class="mon-calc-rate mon-dual-rate mon-dual-rate-line">1 ${escapeHtml(primary.currency)} = ${(currencyRate(primary.currency) / currencyRate(secondary.currency)).toFixed(4)} ${escapeHtml(secondary.currency)} · ${p.currencySide === "receive" ? "Edit second currency" : "Edit first currency"}</div>`
-      : `<div class="mon-calc-number mon-single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${escapeHtml(currentExpr())}" data-input="${registerInput((v) => assignExpr(v))}"><span>${escapeHtml(currency)}</span></div>`
+        )}</div><div class="calc-rate dual-rate dual-rate-line">1 ${escapeHtml(primary.currency)} = ${(currencyRate(primary.currency) / currencyRate(secondary.currency)).toFixed(4)} ${escapeHtml(secondary.currency)} · ${p.currencySide === "receive" ? "Edit second currency" : "Edit first currency"}</div>`
+      : `<div class="calc-number single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${escapeHtml(currentExpr())}" data-input="${registerInput((v) => assignExpr(v))}"><span>${escapeHtml(currency)}</span></div>`
   }${
     p.compact
       ? `<div class="ops-tap-to-edit">${buttonHtml("Click on the value to edit", () => {
@@ -539,7 +539,7 @@ function accountCalculatorView(p) {
           render();
         })}</div>`
       : ""
-  }<div class="mon-calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
+  }<div class="calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
     "comment",
     "Comment",
     () =>
@@ -552,7 +552,7 @@ function accountCalculatorView(p) {
         },
         "Comment",
       ),
-  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="mon-calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${
+  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${
     p.compact
       ? `<div class="ops-compact-actions">${buttonHtml(
           iconSvg("trash", 28) + "<span>Delete</span>",
@@ -572,30 +572,30 @@ function accountCalculatorView(p) {
           delete duplicate.id;
           operationStart(duplicate);
         })}</div>`
-      : `<div class="mon-calc-keypad">${grid
+      : `<div class="calc-keypad">${grid
           .map((k) =>
             k === "✓"
               ? buttonHtml(
                   calcMode
                     ? p.scratchReady
                       ? iconSvg("check", 30)
-                      : '<span class="mon-calc-equals">=</span>'
+                      : '<span class="calc-equals">=</span>'
                     : iconSvg("check", 30),
                   calcMode
                     ? p.scratchReady
                       ? saveCalculated
                       : () => press("=")
                     : () => commitOperation(p),
-                  "mon-calc-key mon-calc-confirm",
+                  "calc-key calc-confirm",
                   `aria-label="${calcMode ? (p.scratchReady ? "Save operation with calculated result" : "Calculate equals without saving") : "Save operation"}"`,
                 )
               : k === "currency"
-                ? `<div class="mon-calc-currency mon-calc-key">${escapeHtml(currency)}</div>`
+                ? `<div class="calc-currency calc-key">${escapeHtml(currency)}</div>`
                 : k === "mode"
                   ? buttonHtml(
-                      '<span class="mon-nine-dots" aria-hidden="true">' +
+                      '<span class="nine-dots" aria-hidden="true">' +
                         Array(9).fill("<i></i>").join("") +
-                        '</span><span class="mon-mode-indicator ' +
+                        '</span><span class="mode-indicator ' +
                         (calcMode ? "is-active" : "") +
                         '" aria-hidden="true"></span>',
                       () => {
@@ -613,14 +613,10 @@ function accountCalculatorView(p) {
                           }, 350);
                         }
                       },
-                      "mon-calc-key mon-calc-toggle",
+                      "calc-key calc-toggle",
                       `aria-label="Additionally"`,
                     )
-                  : buttonHtml(
-                      k,
-                      () => press(k),
-                      "mon-calc-key " + (k === "⌫" ? "mon-calc-delete" : ""),
-                    ),
+                  : buttonHtml(k, () => press(k), "calc-key " + (k === "⌫" ? "calc-delete" : "")),
           )
           .join("")}</div>`
   }</div>`;

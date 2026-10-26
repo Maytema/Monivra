@@ -218,7 +218,7 @@ function operationsAddMenu() {
       dir === "accounts"
         ? appData.accounts.filter((a) => !a.archived)
         : appData.categories.filter((c) => !c.archived && !c.parent && c.type === dir);
-    return `<div class="mon-add-shell" data-add-chooser="1"><h2 class="mon-add-heading">Add an operation</h2><div class="mon-add-tabs">${directions
+    return `<div class="add-shell" data-add-chooser="1"><h2 class="add-heading">Add an operation</h2><div class="add-tabs">${directions
       .map((id) =>
         buttonHtml(
           id === "income" ? "Incomes" : id === "expense" ? "Expenses" : "Accounts",
@@ -226,12 +226,12 @@ function operationsAddMenu() {
             state.direction = id;
             render();
           },
-          "mon-add-tab " + (dir === id ? "active" : ""),
+          "add-tab " + (dir === id ? "active" : ""),
         ),
       )
       .join(
         "",
-      )}</div><div class="mon-add-grid">${items.map((item) => buttonHtml(`${badgeHtml(item)}<span class="mon-add-item-text"><strong>${escapeHtml(item.name)}</strong><small>${formatMoney(dir === "accounts" ? accountBalance(item.id) : appData.ops.filter((o) => o.category === item.id).reduce((n, o) => n + o.amount, 0), item.currency || appData.settings.currency)}</small></span>`, () => choose(item), "mon-add-item")).join("")}</div></div>`;
+      )}</div><div class="add-grid">${items.map((item) => buttonHtml(`${badgeHtml(item)}<span class="add-item-text"><strong>${escapeHtml(item.name)}</strong><small>${formatMoney(dir === "accounts" ? accountBalance(item.id) : appData.ops.filter((o) => o.category === item.id).reduce((n, o) => n + o.amount, 0), item.currency || appData.settings.currency)}</small></span>`, () => choose(item), "add-item")).join("")}</div></div>`;
   };
   openSheet(view, "Add an operation");
   // Event delegation survives redraws of the sheet's inner content.
@@ -388,18 +388,18 @@ function filterAccountSelect(selected, done) {
   const expanded = new Set(groups.map((g) => g[0]));
   openSheet(
     () =>
-      `<div class="mon-filter-picker-head"><h2>Accounts</h2><span>${values.size} selected</span></div><div class="mon-filter-scroll">${groups
+      `<div class="filter-picker-head"><h2>Accounts</h2><span>${values.size} selected</span></div><div class="filter-scroll">${groups
         .map(([name, predicate]) => {
           const items = appData.accounts.filter(predicate),
             ids = items.map((a) => a.id);
           if (!items.length) return "";
-          return `<div class="mon-filter-group"><div class="mon-filter-group-head"><button type="button" class="mon-filter-group-check" aria-label="Toggle all ${name}" data-action="${registerAction(
+          return `<div class="filter-group"><div class="filter-group-head"><button type="button" class="filter-group-check" aria-label="Toggle all ${name}" data-action="${registerAction(
             () => {
               const on = checked(ids);
               ids.forEach((id) => (on ? values.delete(id) : values.add(id)));
               render();
             },
-          )}"><span class="mon-check ${checked(ids) ? "on" : ""}">${checked(ids) ? "✓" : ""}</span></button><button type="button" class="mon-filter-group-toggle" data-action="${registerAction(
+          )}"><span class="checkbox ${checked(ids) ? "on" : ""}">${checked(ids) ? "✓" : ""}</span></button><button type="button" class="filter-group-toggle" data-action="${registerAction(
             () => {
               expanded.has(name) ? expanded.delete(name) : expanded.add(name);
               render();
@@ -409,10 +409,10 @@ function filterAccountSelect(selected, done) {
               ? items
                   .map(
                     (a) =>
-                      `<button class="mon-filter-choice" data-action="${registerAction(() => {
+                      `<button class="filter-choice" data-action="${registerAction(() => {
                         values.has(a.id) ? values.delete(a.id) : values.add(a.id);
                         render();
-                      })}"><span class="mon-check ${values.has(a.id) ? "on" : ""}">${values.has(a.id) ? "✓" : ""}</span>${badgeHtml(a, true)}<span>${escapeHtml(a.name)}</span></button>`,
+                      })}"><span class="checkbox ${values.has(a.id) ? "on" : ""}">${values.has(a.id) ? "✓" : ""}</span>${badgeHtml(a, true)}<span>${escapeHtml(a.name)}</span></button>`,
                   )
                   .join("")
               : ""
@@ -420,7 +420,7 @@ function filterAccountSelect(selected, done) {
         })
         .join(
           "",
-        )}</div><div class="mon-filter-footer">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
+        )}</div><div class="filter-footer">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Confirm",
         () => {
           closeLayers();
@@ -445,19 +445,19 @@ function filterCategorySelect(selected, done) {
   };
   openSheet(
     () =>
-      `<div class="mon-filter-picker-head"><h2>Filter by categories</h2></div><div class="mon-filter-scroll mon-filter-category-tree">${[
+      `<div class="filter-picker-head"><h2>Filter by categories</h2></div><div class="filter-scroll filter-category-tree">${[
         "expense",
         "income",
       ]
         .map((type) => {
           const group = appData.categories.filter((c) => c.type === type),
             groupIds = group.map((c) => c.id);
-          return `<div class="mon-filter-group"><div class="mon-filter-group-head"><button class="mon-filter-expand" aria-label="Expand ${type}" data-action="${registerAction(
+          return `<div class="filter-group"><div class="filter-group-head"><button class="filter-expand" aria-label="Expand ${type}" data-action="${registerAction(
             () => {
               expanded.has(type) ? expanded.delete(type) : expanded.add(type);
               render();
             },
-          )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="mon-filter-check-action" aria-label="Select ${type}" data-action="${registerAction(() => toggle(groupIds))}"><span class="mon-check ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
+          )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="filter-check-action" aria-label="Select ${type}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
             expanded.has(type)
               ? group
                   .filter((c) => !c.parent)
@@ -465,16 +465,16 @@ function filterCategorySelect(selected, done) {
                     const children = group.filter((x) => x.parent === c.id),
                       groupIds = [c.id, ...children.map((x) => x.id)],
                       open = parentExpanded.has(c.id);
-                    return `<div class="mon-filter-parent-row">${
+                    return `<div class="filter-parent-row">${
                       children.length
-                        ? `<button class="mon-filter-expand" aria-label="Expand ${escapeHtml(c.name)}" data-action="${registerAction(
+                        ? `<button class="filter-expand" aria-label="Expand ${escapeHtml(c.name)}" data-action="${registerAction(
                             () => {
                               open ? parentExpanded.delete(c.id) : parentExpanded.add(c.id);
                               render();
                             },
                           )}">${iconSvg(open ? "down" : "right", 18)}</button>`
-                        : '<span class="mon-filter-expand-placeholder"></span>'
-                    }${badgeHtml(c, true)}<span class="mon-filter-label">${escapeHtml(c.name)}</span><button class="mon-filter-check-action" aria-label="Select ${escapeHtml(c.name)}" data-action="${registerAction(() => toggle(groupIds))}"><span class="mon-check ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="mon-filter-subcategories">${children.map((x) => `<div class="mon-filter-child-row"><span class="mon-filter-label">${escapeHtml(x.name)}</span><button class="mon-filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="mon-check ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
+                        : '<span class="filter-expand-placeholder"></span>'
+                    }${badgeHtml(c, true)}<span class="filter-label">${escapeHtml(c.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(c.name)}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="filter-subcategories">${children.map((x) => `<div class="filter-child-row"><span class="filter-label">${escapeHtml(x.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="checkbox ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
                   })
                   .join("")
               : ""
@@ -482,7 +482,7 @@ function filterCategorySelect(selected, done) {
         })
         .join(
           "",
-        )}</div><div class="mon-filter-footer">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
+        )}</div><div class="filter-footer">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Confirm",
         () => {
           closeLayers();
@@ -499,7 +499,7 @@ export function filters() {
   const count = (v, all) => (v ? `${v.length} ${all}` : null);
   openSheet(
     () =>
-      `<h2 class="mon-filters-title">Filters</h2><p class="mon-filters-note">Archived accounts and categories are included in the selection.</p><div class="mon-filter-fields">${fieldButtonHtml(
+      `<h2 class="filters-title">Filters</h2><p class="filters-note">Archived accounts and categories are included in the selection.</p><div class="filter-fields">${fieldButtonHtml(
         "Accounts",
         count(f.accounts, "accounts") || "All accounts",
         () =>
@@ -552,7 +552,7 @@ export function filters() {
           },
           "Comment",
         ),
-      )}</div><div class="mon-filter-main-actions">${buttonHtml(
+      )}</div><div class="filter-main-actions">${buttonHtml(
         "Apply",
         () => {
           uiState.filters = f;

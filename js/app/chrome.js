@@ -17,7 +17,7 @@ function mountTabUnderline(base) {
   const tabs = base.querySelector(":scope > .account-tabs");
   if (!tabs) return;
   const underline = document.createElement("span");
-  underline.className = "mon-tabs-progress";
+  underline.className = "tabs-progress";
   tabs.append(underline);
   placeTabUnderline(underline);
 }
@@ -30,7 +30,7 @@ function mountPeriodArrows(base, pane) {
   if (!buttons || buttons.length < 2) return;
   const rect = period.getBoundingClientRect();
   const overlay = document.createElement("div");
-  overlay.className = "mon-period-arrows";
+  overlay.className = "period-arrows";
   Object.assign(overlay.style, {
     left: rect.left + "px",
     top: rect.top + "px",
@@ -85,7 +85,7 @@ export function bindAddChooserSwipe() {
       const dx = e.changedTouches[0].clientX - startX;
       const dy = e.changedTouches[0].clientY - startY;
       if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      const tabs = [...root.querySelectorAll(".mon-add-tab")];
+      const tabs = [...root.querySelectorAll(".add-tab")];
       const current = tabs.findIndex((t) => t.classList.contains("active"));
       tabs[current + (dx < 0 ? 1 : -1)]?.click();
     },
