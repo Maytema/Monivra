@@ -29,16 +29,16 @@
 .hero-search .ops-hero-search input {
   font-size: 16px;
   flex: 1 1 0%;
-  padding: 7px 4px !important;
+  padding: 7px 4px;
 }
 .ops-compact-editor .calc-number input,
 .ops-compact-editor .calc-number .dual-value {
-  font-size: 34px !important;
+  font-size: 34px;
 }
 .ops-compact-editor .ops-compact-actions button {
-  font-size: 13px !important;
-  gap: 5px !important;
-  min-width: 80px !important;
+  font-size: 13px;
+  gap: 5px;
+  min-width: 80px;
 }
 .nine-dots i {
   width: 4px;
@@ -178,14 +178,14 @@
 }
 .ops-compact-editor .tag-cloud {
   display: flex;
-  max-height: 34px !important;
-  overflow: hidden !important;
-  margin: 3px 10px !important;
-  flex-wrap: nowrap !important;
+  max-height: 34px;
+  overflow: hidden;
+  margin: 3px 10px;
+  flex-wrap: nowrap;
 }
 .ops-compact-editor .tag-cloud .tag {
   white-space: nowrap;
-  font-size: 11px !important;
+  font-size: 11px;
 }
 .dots {
   text-align: center;
@@ -406,11 +406,11 @@
 .calc-number,
 .calc-number.dual-number,
 .calc-number.dual-number.dual-receive {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  box-sizing: border-box !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
 }
 .calc-key.calc-toggle {
   font-size: 20px;
@@ -430,54 +430,54 @@
   max-height: 43dvh;
 }
 .ops-compact-editor .calc-number {
-  min-height: 78px !important;
-  margin: 0px !important;
-  padding: 9px 0px !important;
+  min-height: 78px;
+  margin: 0px;
+  padding: 9px 0px;
 }
 .ops-compact-editor .calc-rate {
-  font-size: 11px !important;
-  padding: 0px 8px !important;
+  font-size: 11px;
+  padding: 0px 8px;
 }
 .ops-compact-editor .calc-note {
   max-height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 4px 10px !important;
-  font-size: 12px !important;
+  margin: 4px 10px;
+  font-size: 12px;
 }
 .calc-toggle {
-  position: relative !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  flex-direction: column !important;
-  gap: 3px !important;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
 }
 .ops-compact-editor .calc-date {
-  margin: 0px 0px 10px !important;
+  margin: 0px 0px 10px;
   flex-shrink: 0;
-  height: 37px !important;
-  margin-bottom: 6px !important;
+  height: 37px;
+  margin-bottom: 6px;
 }
 .ops-compact-editor .calc-parties {
-  gap: 9px !important;
-  margin: 0px 0px 10px !important;
+  gap: 9px;
+  margin: 0px 0px 10px;
   flex-shrink: 0;
-  margin-bottom: 6px !important;
+  margin-bottom: 6px;
 }
 .ops-compact-editor .calc-tile {
-  min-height: 70px !important;
-  padding: 8px !important;
+  min-height: 70px;
+  padding: 8px;
 }
 .ops-compact-editor .calc-attachments {
-  margin: 0px !important;
+  margin: 0px;
   flex-shrink: 0;
-  min-height: 46px !important;
+  min-height: 46px;
 }
 @media (max-height: 740px) {
   .ops-compact-editor .calc-tile {
-    min-height: 60px !important;
+    min-height: 60px;
   }
 }
 .calc-number.dual-number.dual-receive {
@@ -508,57 +508,57 @@
   margin: 0px -16px;
   border-radius: 0px;
   border: 0px;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 .dual-rate-line {
   text-align: center;
   opacity: 0.65;
-  font-size: 10px !important;
-  padding: 3px 8px !important;
+  font-size: 10px;
+  padding: 3px 8px;
 }
 .dual-number.dual-active .dual-value {
   font-weight: 650;
 }
 .calc-number .dual-value {
   font-variant-numeric: tabular-nums;
-  display: flex !important;
-  align-items: center !important;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  text-align: center !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0px !important;
-  padding: 10px 18px !important;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0px;
+  padding: 10px 18px;
 }
 .calc-number.dual-number.dual-active {
-  background: rgb(237, 240, 250) !important;
+  background: rgb(237, 240, 250);
   box-shadow: none;
 }
 .calc-number.dual-number.dual-receive.dual-active {
-  background: rgb(247, 236, 247) !important;
+  background: rgb(247, 236, 247);
   box-shadow: none;
 }
 .calc-number.dual-number .dual-value {
-  font-weight: 400 !important;
-  text-align: center !important;
+  font-weight: 400;
+  text-align: center;
   justify-content: center;
 }
 .calc-number.dual-number.dual-active .dual-value {
-  font-weight: 500 !important;
+  font-weight: 500;
 }
 .calc-number.dual-number,
 .calc-number.dual-number.dual-receive {
-  border-radius: 0px !important;
-  transition: background 0.16s !important;
-  background: rgb(255, 250, 254) !important;
-  box-shadow: none !important;
-  border: 0px !important;
+  border-radius: 0px;
+  transition: background 0.16s;
+  background: rgb(255, 250, 254);
+  box-shadow: none;
+  border: 0px;
   border-bottom: 1px solid rgb(211, 207, 217);
 }
 .calc-number.dual-number.dual-active,
 .calc-number.dual-number.dual-receive.dual-active {
-  background: rgb(248, 230, 244) !important;
-  border: 0px !important;
+  background: rgb(248, 230, 244);
+  border: 0px;
   box-shadow: none;
 }
 .dual-number .dual-value {
@@ -568,19 +568,19 @@
   text-align: center;
 }
 .ops-compact-editor .dual-number {
-  min-height: 63px !important;
+  min-height: 63px;
 }
 .ops-compact-editor .calc-number {
   flex-shrink: 0;
-  min-height: 56px !important;
-  padding: 3px 0px !important;
+  min-height: 56px;
+  padding: 3px 0px;
 }
 .ops-compact-editor .dual-number {
-  min-height: 53px !important;
+  min-height: 53px;
 }
 @media (max-height: 740px) {
   .ops-compact-editor .calc-number {
-    min-height: 48px !important;
+    min-height: 48px;
   }
 }
 .ops-tap-to-edit {
@@ -594,25 +594,25 @@
   padding: 28px 0px 10px;
 }
 .ops-compact-editor .ops-tap-to-edit {
-  min-height: 32px !important;
-  font-size: 13px !important;
-  margin: 0px !important;
+  min-height: 32px;
+  font-size: 13px;
+  margin: 0px;
 }
 .ops-compact-editor {
-  padding: 0px 0px 4px !important;
+  padding: 0px 0px 4px;
   max-height: calc(100dvh - 108px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 .ops-compact-editor .ops-compact-actions {
-  gap: 32px !important;
+  gap: 32px;
   flex-shrink: 0;
-  padding: 7px 0px 4px !important;
+  padding: 7px 0px 4px;
 }
 @media (max-height: 740px) {
   .ops-compact-editor .ops-compact-actions {
-    padding: 4px 0px !important;
+    padding: 4px 0px;
   }
 }
 .nine-dots {
