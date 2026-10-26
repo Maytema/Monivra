@@ -35,7 +35,7 @@
 @media print {
   #app,
   #toast {
-    display: none !important;
+    display: none;
   }
   #printout {
     display: block;
@@ -56,12 +56,12 @@
 }
 #base > .navbar .navicon svg,
 #base:has(.more-menu) .navbar .navicon svg {
-  width: 24px !important;
-  height: 24px !important;
-  stroke: currentcolor !important;
+  width: 24px;
+  height: 24px;
+  stroke: currentcolor;
 }
 #base > .navbar.labels-never > button > span:last-child {
-  display: none !important;
+  display: none;
 }
 .navbar {
   height: 78px;
@@ -87,18 +87,18 @@
   width: 56px;
 }
 #base:has(> .more-menu) > .navbar .navicon {
-  width: 56px !important;
-  height: 32px !important;
+  width: 56px;
+  height: 32px;
 }
 #base > .navbar .navicon,
 #base:has(.more-menu) .navbar .navicon {
-  box-sizing: border-box !important;
-  width: 56px !important;
-  height: 32px !important;
-  min-height: 32px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  box-sizing: border-box;
+  width: 56px;
+  height: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .op-row {
   display: flex;
@@ -167,8 +167,8 @@
   flex: 1 1 0%;
   padding: 14px 5px;
   border-bottom: 3px solid transparent;
-  font-size: 15px !important;
-  min-width: 0px !important;
+  font-size: 15px;
+  min-width: 0px;
 }
 @media (prefers-reduced-motion: reduce) {
   #base > .swipe-pane {
@@ -185,5 +185,5 @@
   box-sizing: border-box;
 }
 .tabs-progress {
-  transition: none !important;
+  transition: none;
 }
