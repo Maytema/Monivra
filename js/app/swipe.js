@@ -157,8 +157,8 @@ function swipePrepare(s, direction) {
   }
   // The preview must never inherit viewport percentage widths that differ from the source page.
   for (const pg of [current, node]) {
-    pg.style.setProperty("min-width", rect.width + "px", "important");
-    pg.style.setProperty("max-width", rect.width + "px", "important");
+    pg.style.setProperty("min-width", rect.width + "px");
+    pg.style.setProperty("max-width", rect.width + "px");
   }
   s.el.style.opacity = "0";
 }
