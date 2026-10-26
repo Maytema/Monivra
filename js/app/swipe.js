@@ -96,6 +96,7 @@ function swipeCleanup(s) {
   if (!s) return;
   if (s.viewport?.isConnected) s.viewport.remove();
   else if (s.track?.isConnected) s.track.remove();
+  s.underlineAnimation?.cancel();
   const underline = document.querySelector("#base>.account-tabs .mon-tabs-progress");
   if (underline) {
     const tabs = underline.parentElement,
@@ -161,46 +162,6 @@ function swipePrepare(s, direction) {
     const neighborContent = node.querySelector(".content");
     if (neighborContent) neighborContent.scrollTop = content.scrollTop;
   }
-  if (uiState.tab === "categories") {
-    const originalGrid = s.el.querySelector(".grid"),
-      previewGrid = current.querySelector(".grid"),
-      nextGrid = node.querySelector(".grid");
-    if (originalGrid) {
-      const originalRect = originalGrid.getBoundingClientRect(),
-        gridStyle = getComputedStyle(originalGrid);
-      const sourceTiles = [...originalGrid.children];
-      for (const g of [previewGrid, nextGrid])
-        if (g) {
-          g.style.gridTemplateColumns = gridStyle.gridTemplateColumns;
-          g.style.columnGap = gridStyle.columnGap;
-          g.style.rowGap = gridStyle.rowGap;
-          g.style.width = originalRect.width + "px";
-          g.style.minWidth = originalRect.width + "px";
-          g.style.maxWidth = originalRect.width + "px";
-          for (const tile of g.children) {
-            tile.style.minHeight = "0";
-            tile.style.flexShrink = "0";
-          }
-        }
-      // Preserve source tile geometry on both neighboring pages, including box sizing.
-      // Do not mix the source page's fixed heights with the neighbor's auto heights.
-      for (const g of [previewGrid, nextGrid])
-        if (g) {
-          for (const tile of g.children) {
-            const template =
-              sourceTiles[Math.min([...g.children].indexOf(tile), sourceTiles.length - 1)];
-            if (!template) continue;
-            const tr = template.getBoundingClientRect(),
-              cs = getComputedStyle(template);
-            tile.style.boxSizing = "border-box";
-            tile.style.minHeight = tr.height + "px";
-            tile.style.height = tr.height + "px";
-            tile.style.padding = cs.padding;
-            tile.style.borderWidth = cs.borderWidth;
-          }
-        }
-    }
-  }
   // The preview must never inherit viewport percentage widths that differ from the source page.
   for (const pg of [current, node]) {
     pg.style.setProperty("min-width", rect.width + "px", "important");
@@ -208,33 +169,44 @@ function swipePrepare(s, direction) {
   }
   s.el.style.opacity = "0";
 }
+// Measure the tab underline once per gesture so dragging never forces layout.
+function swipeTabsGeometry() {
+  const tabs = document.querySelector("#base>.account-tabs");
+  const underline = tabs?.querySelector(".mon-tabs-progress");
+  if (!underline) return null;
+  const tabsRect = tabs.getBoundingClientRect();
+  const buttons = [...tabs.querySelectorAll("button")];
+  return {
+    underline,
+    active: buttons.findIndex((b) => b.classList.contains("active")),
+    rects: buttons.map((b) => {
+      const r = b.getBoundingClientRect();
+      return { left: r.left - tabsRect.left, width: r.width };
+    }),
+  };
+}
+function underlineStyle(box) {
+  return { width: box.width + "px", transform: `translate3d(${box.left}px,0,0)` };
+}
 function swipeMove(s, dx) {
   if (!s.el) return;
   const direction = dx < 0 ? 1 : -1;
   swipePrepare(s, direction);
   const width = s.width || s.el.getBoundingClientRect().width || innerWidth;
   if (uiState.tab === "accounts") {
-    const tabs = document.querySelector("#base>.account-tabs");
-    if (tabs) {
-      const buttons = [...tabs.querySelectorAll("button")];
-      const active = buttons.findIndex((b) => b.classList.contains("active"));
-      const next = active + direction;
-      const underline = tabs.querySelector(".mon-tabs-progress");
-      if (underline && active >= 0) {
-        const fraction =
-          next >= 0 && next < buttons.length
-            ? Math.max(0, Math.min(1, Math.abs(dx) / (s.width || innerWidth)))
-            : 0;
-        const from = buttons[active],
-          to = buttons[next] || from;
-        underline.style.transition = "none";
-        const tr = tabs.getBoundingClientRect(),
-          fr = from.getBoundingClientRect(),
-          nr = to.getBoundingClientRect();
-        underline.style.width = fr.width + (nr.width - fr.width) * fraction + "px";
-        underline.style.transform =
-          "translate3d(" + (fr.left - tr.left + (nr.left - fr.left) * fraction) + "px,0,0)";
-      }
+    if (s.tabsGeometry === undefined) s.tabsGeometry = swipeTabsGeometry();
+    const g = s.tabsGeometry;
+    if (g && g.active >= 0) {
+      const next = g.active + direction;
+      const fraction =
+        next >= 0 && next < g.rects.length ? Math.min(1, Math.abs(dx) / (s.width || innerWidth)) : 0;
+      const from = g.rects[g.active],
+        to = g.rects[next] || from;
+      s.underlineBox = {
+        left: from.left + (to.left - from.left) * fraction,
+        width: from.width + (to.width - from.width) * fraction,
+      };
+      Object.assign(g.underline.style, underlineStyle(s.underlineBox));
     }
   }
   if (s.track) {
@@ -266,6 +238,14 @@ function swipeFinish(s, commit) {
   const dist = Math.abs(to - from),
     duration = reduce ? 0 : Math.max(145, Math.min(360, (dist / width) * 330 + 105));
   const track = s.track;
+  const g = s.tabsGeometry;
+  if (g && g.active >= 0 && s.underlineBox && duration) {
+    const target = g.rects[commit ? g.active + s.direction : g.active] || g.rects[g.active];
+    s.underlineAnimation = g.underline.animate(
+      [underlineStyle(s.underlineBox), underlineStyle(target)],
+      { duration, easing: swipeEase, fill: "forwards" },
+    );
+  }
   let finalized = false;
   const finalize = () => {
     if (finalized) return;

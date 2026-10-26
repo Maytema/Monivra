@@ -696,7 +696,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 11px;
 }
-#base:has(.sum-tabs) .grid {
+:is(#base, .mon-pager-viewport):has(.sum-tabs) .grid {
   gap: 9px 10px;
   row-gap: 9px;
 }
