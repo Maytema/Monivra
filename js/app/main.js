@@ -3,7 +3,8 @@ import { runSelfChecks } from "./self-checks.js";
 import { render } from "./shell.js";
 import { startup } from "./startup.js";
 import { TODAY } from "../core/constants.js";
-import { appData, locked, setAppData, setLocked, setUiState, uiState } from "../core/state.js";
+import { appData, setAppData, setLocked, setUiState, uiState } from "../core/state.js";
+import { isTestMode } from "../core/test-mode.js";
 import { csvText, handleImport, parseCSV, prepareCSV } from "../data/import-export.js";
 import { createEmptyData, createSeedData } from "../data/seed.js";
 import { isValidData, save } from "../data/storage.js";
@@ -60,7 +61,7 @@ window.Monivra = {
   version: "1.0.0",
   runSelfChecks,
 };
-if (window.__MONIVRA_TEST__) {
+if (isTestMode()) {
   Object.assign(window.Monivra, {
     get data() {
       return appData;

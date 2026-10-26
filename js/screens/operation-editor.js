@@ -1,7 +1,8 @@
 /* Operation editor: pickers, calculator, forms */
 import { render } from "../app/shell.js";
 import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, photoCallback, setPhotoCallback, uiState } from "../core/state.js";
+import { appData, setPhotoCallback, uiState } from "../core/state.js";
+import { isTestMode } from "../core/test-mode.js";
 import { save } from "../data/storage.js";
 import {
   accountBalance,
@@ -852,7 +853,7 @@ function photoMenu(d) {
 }
 // Open the file chooser for an operation photo.
 function choosePhoto(d, camera) {
-  if (window.__MONIVRA_TEST__) {
+  if (isTestMode()) {
     toast("File picker requested");
     return;
   }

@@ -15,7 +15,6 @@ import {
   parseDate,
   periodBounds,
   toIsoDate,
-  totalByType,
   visibleOperations,
 } from "../domain/finance.js";
 import { deleteOperation, processScheduled, validateOp } from "../domain/operations.js";
@@ -30,6 +29,7 @@ import {
   optionSheet,
   periodBar,
   promptText,
+  swipePane,
 } from "../ui/kit.js";
 import {
   badgeHtml,
@@ -104,71 +104,86 @@ function periodOpening() {
 function periodClosing() {
   return balanceAt(periodBounds()[1]);
 }
+// Header of the selection mode: exit button, counter and select-all.
+function selectionHeader(ops) {
+  const exit = iconButtonHtml("close", "Exit selection", () => {
+    uiState.selection = false;
+    uiState.selected = [];
+    render();
+  });
+  const selectAll = iconButtonHtml("check", "Select all", () => {
+    uiState.selected = uiState.selected.length === ops.length ? [] : ops.map((o) => o.id);
+    render();
+  });
+  return `<div class="ops-selection-header">${exit}<strong>Selected: ${uiState.selected.length}</strong>${selectAll}</div>`;
+}
+// Opening and closing balance of the selected period.
+function balanceSummary() {
+  const opening = moneySpanHtml(periodOpening(), undefined, false, true);
+  const closing = moneySpanHtml(periodClosing(), undefined, false, true);
+  return `<div class="opening"><span>${translate("Opening balance")}${opening}</span><span>${translate("Closing balance")}${closing}</span></div>`;
+}
+// Net result of one day (income minus expenses) in the main currency.
+function dayTotal(dayOps) {
+  return dayOps.reduce((sum, o) => {
+    const sign = o.type === "income" ? 1 : o.type === "expense" ? -1 : 0;
+    const currency = accountById(o.from || o.to)?.currency;
+    return sum + sign * convertCurrency(o.amount, currency, appData.settings.currency);
+  }, 0);
+}
+// Date heading with the day total, followed by the operations of that day.
+function dayGroup(date, ops) {
+  const dayOps = ops.filter((o) => o.date === date);
+  const day = parseDate(date);
+  const weekday = day.toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" });
+  const monthYear = day.toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return `<div class="day-head"><span class="day-num">${Number(date.slice(-2))}</span><span class="day-desc">${weekday}<br>${monthYear}</span><span class="day-total">${moneySpanHtml(dayTotal(dayOps))}</span></div>${dayOps.map((o) => opRow(o)).join("")}`;
+}
+// Delete / change date / more buttons shown in selection mode.
+function selectionActions() {
+  const changeDate = () => {
+    if (!uiState.selected.length) return toast("Select operations");
+    calendar(TODAY, (date) => {
+      appData.ops.filter((o) => uiState.selected.includes(o.id)).forEach((o) => (o.date = date));
+      save();
+      render();
+    });
+  };
+  return `<div class="operations-selection-actions">${buttonHtml(iconSvg("trash", 21) + " Delete", bulkDeleteOperations, "selection-action")}${buttonHtml(iconSvg("calendar", 21) + " Date", changeDate, "selection-action")}${buttonHtml(iconSvg("more", 21) + " More", bulkEdit, "selection-action")}</div>`;
+}
+// Floating "Add" button of the operations tab.
+export function operationsFab() {
+  return buttonHtml(
+    iconSvg("plus", 26) + '<span class="mon-fab-label">Add</span>',
+    () => operationsAddMenu(),
+    "fab mon-operations-add",
+    `aria-label="Add operation"`,
+  );
+}
 // Operations tab.
 export function operationsView() {
-  const ops = visibleOperations(),
-    dates = [...new Set(ops.map((o) => o.date))],
-    income = totalByType("income", ops),
-    expense = totalByType("expense", ops);
-  let opening = periodOpening();
-  return (
-    (uiState.selection
-      ? `<div class="ops-selection-header">${iconButtonHtml("close", "Exit selection", () => {
-          uiState.selection = false;
-          uiState.selected = [];
-          render();
-        })}<strong>Selected: ${uiState.selected.length}</strong>${iconButtonHtml(
-          "check",
-          "Select all",
-          () => {
-            uiState.selected = uiState.selected.length === ops.length ? [] : ops.map((o) => o.id);
-            render();
-          },
-        )}</div>`
-      : hero()) +
-    periodBar() +
-    `${
-      false
-        ? `<div class="searchbar"><input aria-label="Search by comments" placeholder="${translate("Search by comments")}" value="${escapeHtml(uiState.filters.comment)}" data-input="${registerInput(
-            (v) => {
-              uiState.filters.comment = v;
-              render();
-            },
-          )}">${iconButtonHtml("close", "Clear search", () => {
-            uiState.filters.comment = "";
-            uiState.search = false;
-            render();
-          })}</div>`
-        : ""
-    }${filterActive() ? buttonHtml(translate("Filtered data") + " " + iconSvg("filter", 15), filters, "filtered-banner") : ""}<div class="content">${appData.settings.opening && ops.length > 0 && !filterActive() ? `<div class="opening"><span>${translate("Opening balance")}${moneySpanHtml(opening, undefined, false, true)}</span><span>${translate("Closing balance")}${moneySpanHtml(periodClosing(), undefined, false, true)}</span></div>` : ""}${dates
-      .map(
-        (date) =>
-          `<div class="day-head"><span class="day-num">${Number(date.slice(-2))}</span><span class="day-desc">${parseDate(date).toLocaleDateString("en-US", { weekday: "short", timeZone: "UTC" })}<br>${parseDate(date).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })}</span><span class="day-total">${moneySpanHtml(ops.filter((o) => o.date === date).reduce((s, o) => s + (o.type === "income" ? 1 : o.type === "expense" ? -1 : 0) * convertCurrency(o.amount, accountById(o.from || o.to)?.currency, appData.settings.currency), 0))}</span></div>${ops
-            .filter((o) => o.date === date)
-            .map((o) => opRow(o))
-            .join("")}`,
+  const ops = visibleOperations();
+  const dates = [...new Set(ops.map((o) => o.date))];
+  const banner = filterActive()
+    ? buttonHtml(
+        translate("Filtered data") + " " + iconSvg("filter", 15),
+        filters,
+        "filtered-banner",
       )
-      .join(
-        "",
-      )}${!ops.length ? `<div class="empty">${iconSvg("receipt", 46)}<p>${translate("Empty")}</p></div>` : ""}</div>${!uiState.selection ? buttonHtml(iconSvg("plus", 26) + '<span class="mon-fab-label">Add</span>', () => operationsAddMenu(), "fab mon-operations-add", `aria-label="Add operation"`) : ""}${
-      uiState.selection
-        ? `<div class="operations-selection-actions">${buttonHtml(iconSvg("trash", 21) + " Delete", bulkDeleteOperations, "selection-action")}${buttonHtml(
-            iconSvg("calendar", 21) + " Date",
-            () => {
-              if (!uiState.selected.length) return toast("Select operations");
-              calendar(TODAY, (v) => {
-                appData.ops
-                  .filter((o) => uiState.selected.includes(o.id))
-                  .forEach((o) => (o.date = v));
-                save();
-                render();
-              });
-            },
-            "selection-action",
-          )}${buttonHtml(iconSvg("more", 21) + " More", bulkEdit, "selection-action")}</div>`
-        : ""
-    }`
-  );
+    : "";
+  const summary =
+    appData.settings.opening && ops.length > 0 && !filterActive() ? balanceSummary() : "";
+  const empty = ops.length
+    ? ""
+    : `<div class="empty">${iconSvg("receipt", 46)}<p>${translate("Empty")}</p></div>`;
+  const list = `<div class="content">${summary}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`;
+  const pane = periodBar() + banner + list;
+  if (uiState.selection) return swipePane(selectionHeader(ops) + pane + selectionActions());
+  return hero() + swipePane(pane);
 }
 
 // Chooser opened by the + button on the operations tab.

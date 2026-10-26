@@ -28,6 +28,7 @@ import {
   pageHeader,
   periodBar,
   promptText,
+  swipePane,
 } from "../ui/kit.js";
 import {
   badgeHtml,
@@ -98,19 +99,23 @@ export function categoriesView() {
   );
   return (
     hero() +
-    periodBar() +
-    sumTabs() +
-    `<div class="content"><div class="grid ${appData.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${appData.accounts
-      .filter(
-        (a) =>
-          a.type === "Debt" &&
-          !a.archived &&
-          (uiState.catType === "expense" ? a.showExpense : a.showIncome),
-      )
-      .map((a) =>
-        categoryTile({ ...a, id: "debt:" + a.id, type: uiState.catType }, () => accountActions(a)),
-      )
-      .join("")}</div></div>`
+    swipePane(
+      periodBar() +
+        sumTabs() +
+        `<div class="content"><div class="grid ${appData.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${appData.accounts
+          .filter(
+            (a) =>
+              a.type === "Debt" &&
+              !a.archived &&
+              (uiState.catType === "expense" ? a.showExpense : a.showIncome),
+          )
+          .map((a) =>
+            categoryTile({ ...a, id: "debt:" + a.id, type: uiState.catType }, () =>
+              accountActions(a),
+            ),
+          )
+          .join("")}</div></div>`,
+    )
   );
 }
 // Action sheet shown when a category is tapped.

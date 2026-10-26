@@ -1,6 +1,7 @@
 /* UI primitives: translation, action registry, buttons, fields, toast */
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData } from "../core/state.js";
+import { isTestMode } from "../core/test-mode.js";
 import { russianStrings } from "../core/translations.js";
 
 // Registry of click handlers referenced from markup via data-action.
@@ -78,7 +79,7 @@ export const menuRowHtml = (label, icon, fn, sub = "", end = "") =>
   );
 // Show a short message at the bottom of the screen.
 export function toast(s) {
-  if (window.__MONIVRA_TEST__) {
+  if (isTestMode()) {
     window.__toast = s;
     return;
   }

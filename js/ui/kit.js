@@ -30,6 +30,10 @@ import {
   translate,
 } from "./primitives.js";
 
+// Wrap the part of a root screen that slides when swiping between tabs or periods.
+export function swipePane(html) {
+  return `<div class="swipe-pane">${html}</div>`;
+}
 // Push a full-screen page onto the page stack.
 export function openPage(kind, params = {}) {
   uiState.pages.push({ kind, ...params });

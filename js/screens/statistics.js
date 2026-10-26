@@ -17,7 +17,7 @@ import {
 import { hero } from "./accounts.js";
 import { sumTabs } from "./categories.js";
 import { filterActive, filters } from "./operations.js";
-import { closeLayers, goHome, openPage, openSheet, periodBar } from "../ui/kit.js";
+import { closeLayers, goHome, openPage, openSheet, periodBar, swipePane } from "../ui/kit.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -152,9 +152,11 @@ export function statisticsView() {
   };
   return (
     hero() +
-    periodBar() +
-    sumTabs() +
-    `${filterActive() ? buttonHtml(translate("Filtered data") + " " + iconSvg("filter", 15), filters, "filtered-banner") : ""}<div class="content">${appData.settings.stats.map((k) => blocks[k]?.() || "").join("")}${buttonHtml(iconSvg("gear", 20) + " Statistics settings", statsSettings, "text-button")}</div>`
+    swipePane(
+      periodBar() +
+        sumTabs() +
+        `${filterActive() ? buttonHtml(translate("Filtered data") + " " + iconSvg("filter", 15), filters, "filtered-banner") : ""}<div class="content">${appData.settings.stats.map((k) => blocks[k]?.() || "").join("")}${buttonHtml(iconSvg("gear", 20) + " Statistics settings", statsSettings, "text-button")}</div>`,
+    )
   );
 }
 

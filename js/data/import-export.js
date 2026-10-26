@@ -2,6 +2,7 @@
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, newId } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
+import { isTestMode } from "../core/test-mode.js";
 import { createEmptyData } from "./seed.js";
 import { isValidData, save } from "./storage.js";
 import {
@@ -29,7 +30,7 @@ import { menuRowHtml, toast } from "../ui/primitives.js";
 
 // Trigger a file download from text content.
 export function download(name, content, type) {
-  if (window.__MONIVRA_TEST__) {
+  if (isTestMode()) {
     window.__download = { name, content, type };
     toast("File prepared");
     return;
@@ -148,7 +149,7 @@ export function prepareCSV(text) {
 // Open the file chooser for JSON/CSV import.
 function importFile(kind) {
   setImportKind(kind);
-  if (window.__MONIVRA_TEST__) return toast("File picker requested");
+  if (isTestMode()) return toast("File picker requested");
   const e = document.getElementById("import-file");
   e.accept = kind === "csv" ? ".csv" : ".json";
   e.value = "";
@@ -240,7 +241,7 @@ function printReport() {
         `<tr><td>${escapeHtml(o.date)}</td><td>${escapeHtml(opTitle(o))}</td><td>${escapeHtml(accountById(o.from || o.to)?.name)}</td><td>${formatMoney(o.amount, accountById(o.from || o.to)?.currency)}</td></tr>`,
     )
     .join("")}</tbody></table>`;
-  if (window.__MONIVRA_TEST__) {
+  if (isTestMode()) {
     window.__print = out;
     return;
   }
@@ -249,7 +250,7 @@ function printReport() {
 }
 // Copy text to the clipboard.
 function copyText(text) {
-  if (window.__MONIVRA_TEST__) return toast("Copied");
+  if (isTestMode()) return toast("Copied");
   if (navigator.clipboard?.writeText)
     navigator.clipboard
       .writeText(text)

@@ -2,15 +2,7 @@
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
 import { CURRENCIES, PALETTE, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
-import {
-  appData,
-  locked,
-  pinEntry,
-  setAppData,
-  setLocked,
-  setPinEntry,
-  uiState,
-} from "../core/state.js";
+import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
 import { createSeedData } from "../data/seed.js";
 import { save } from "../data/storage.js";

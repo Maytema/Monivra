@@ -28,6 +28,7 @@ import {
   openSheet,
   optionSheet,
   pageHeader,
+  swipePane,
 } from "../ui/kit.js";
 import {
   badgeHtml,
@@ -167,18 +168,21 @@ export function accountsView() {
           uiState.accountTab === x ? "active" : "",
         ),
       )
-      .join("")}</div><div class="content accounts-content">${body}${
-      archived.length
-        ? buttonHtml(
-            `${iconSvg("archive", 18)} ${translate("Archive")} ${iconSvg(uiState.archive ? "up" : "down", 14)}`,
-            () => {
-              uiState.archive = !uiState.archive;
-              render();
-            },
-            "accounts-archive-toggle",
-          )
-        : ""
-    }${uiState.archive && archived.length ? `<div class="account-group">${archived.map(accountLine).join("")}</div>` : ""}</div>`
+      .join("")}</div>` +
+    swipePane(
+      `<div class="content accounts-content">${body}${
+        archived.length
+          ? buttonHtml(
+              `${iconSvg("archive", 18)} ${translate("Archive")} ${iconSvg(uiState.archive ? "up" : "down", 14)}`,
+              () => {
+                uiState.archive = !uiState.archive;
+                render();
+              },
+              "accounts-archive-toggle",
+            )
+          : ""
+      }${uiState.archive && archived.length ? `<div class="account-group">${archived.map(accountLine).join("")}</div>` : ""}</div>`,
+    )
   );
 }
 // Totals strip: all accounts, regular, savings and debt.

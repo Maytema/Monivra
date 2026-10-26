@@ -1,7 +1,9 @@
 /* Swipe gestures: horizontal swipe between the four root tabs with a live page preview. */
+import { placeTabUnderline } from "./chrome.js";
 import { render, rootView } from "./shell.js";
 import { deepClone } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
+import { isTestMode } from "../core/test-mode.js";
 import { addDays, parseDate, toIsoDate } from "../domain/finance.js";
 import {
   actionHandlers,
@@ -98,16 +100,7 @@ function swipeCleanup(s) {
   else if (s.track?.isConnected) s.track.remove();
   s.underlineAnimation?.cancel();
   const underline = document.querySelector("#base>.account-tabs .mon-tabs-progress");
-  if (underline) {
-    const tabs = underline.parentElement,
-      active = tabs.querySelector("button.active");
-    if (active) {
-      const tr = tabs.getBoundingClientRect(),
-        ar = active.getBoundingClientRect();
-      underline.style.width = ar.width + "px";
-      underline.style.transform = "translate3d(" + (ar.left - tr.left) + "px,0,0)";
-    }
-  }
+  if (underline) placeTabUnderline(underline);
   if (s.el) {
     s.el.style.transform = "";
     s.el.style.opacity = "";
@@ -199,7 +192,9 @@ function swipeMove(s, dx) {
     if (g && g.active >= 0) {
       const next = g.active + direction;
       const fraction =
-        next >= 0 && next < g.rects.length ? Math.min(1, Math.abs(dx) / (s.width || innerWidth)) : 0;
+        next >= 0 && next < g.rects.length
+          ? Math.min(1, Math.abs(dx) / (s.width || innerWidth))
+          : 0;
       const from = g.rects[g.active],
         to = g.rects[next] || from;
       s.underlineBox = {
@@ -220,7 +215,7 @@ function swipeMove(s, dx) {
 }
 function swipeFinish(s, commit) {
   if (!s?.el) return;
-  const reduce = window.__MONIVRA_TEST__ || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduce = isTestMode() || matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!s.track) {
     const old = s.el.style.transform;
     s.el.style.transform = "";
