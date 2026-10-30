@@ -40,7 +40,7 @@ import {
 } from "../screens/categories.js";
 import { pinSetup } from "../screens/more.js";
 import { commitOperation, operationStart, tagsPicker } from "../screens/operation-editor.js";
-import { bulkEdit, filters, operationDetails } from "../screens/operations.js";
+import { bulkEdit, filters } from "../screens/operations.js";
 import { budgetSpend, editBudget, recurrence, reminder } from "../screens/scheduled-budgets.js";
 import { statsSettings } from "../screens/statistics.js";
 import {
@@ -112,7 +112,6 @@ if (isTestMode()) {
     operationStart,
     accountActions,
     categoryActions,
-    operationDetails,
     editAccount,
     editCategory,
     editBudget,

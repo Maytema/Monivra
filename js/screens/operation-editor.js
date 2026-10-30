@@ -16,7 +16,7 @@ import {
   parseDate,
   toIsoDate,
 } from "../domain/finance.js";
-import { deleteOperation, putOperation } from "../domain/operations.js";
+import { deleteOperation, processScheduled, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
 import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
@@ -570,7 +570,7 @@ function accountCalculatorView(p) {
             confirmAction(
               "Delete this operation?",
               () => {
-                deleteOperation(d.id, false);
+                deleteOperation(d.id, p.scheduled);
                 uiState.layers = [];
                 render();
               },
@@ -580,8 +580,29 @@ function accountCalculatorView(p) {
         )}${buttonHtml(iconSvg("copy", 28) + "<span>Duplicate</span>", () => {
           const duplicate = deepClone(d);
           delete duplicate.id;
-          operationStart(duplicate);
-        })}</div>`
+          operationStart(duplicate, p.scheduled);
+        })}${
+          p.scheduled
+            ? buttonHtml(iconSvg("right", 28) + "<span>Skip</span>", () =>
+                confirmAction(
+                  "Skip this occurrence?",
+                  () => {
+                    processScheduled(d.id, false);
+                    uiState.layers = [];
+                    render();
+                  },
+                  false,
+                  "Skip",
+                ),
+              ) +
+              buttonHtml(iconSvg("plus", 28) + "<span>Add now</span>", () => {
+                processScheduled(d.id, true);
+                uiState.layers = [];
+                render();
+                toast("Payment added");
+              })
+            : ""
+        }</div>`
       : `<div class="calc-keypad">${grid
           .map((k) =>
             k === "✓"

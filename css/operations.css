@@ -30,12 +30,18 @@
   min-height: 42px;
 }
 .interval-grid button {
-  padding: 17px 8px;
+  padding: 12px 8px;
   text-align: center;
   background: var(--key);
   border-radius: 7px;
-  min-height: 104px;
+  min-height: 88px;
   font-size: 14px;
+}
+.interval-grid small {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  opacity: 0.75;
 }
 .interval-grid svg {
   display: block;
@@ -582,4 +588,41 @@
   color: white;
   font-size: 17px;
   font-weight: 700;
+}
+
+/* Bulk edit rows: title, chosen value and a cross to clear it */
+.bulk-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.bulk-field {
+  flex: 1;
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  padding: 12px 0;
+  background: none;
+  border: 0;
+  font: inherit;
+}
+.bulk-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.bulk-value {
+  font-size: 16px;
+}
+.bulk-value.muted {
+  opacity: 0.55;
+}
+.bulk-tags-title {
+  margin: 12px 0 6px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+.tag.tag-clear {
+  color: var(--negative);
 }

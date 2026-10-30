@@ -22,6 +22,7 @@ import {
   currencyPicker,
   goBack,
   goHome,
+  monthStartDialog,
   openPage,
   openSheet,
   optionSheet,
@@ -124,16 +125,7 @@ export function settingsPage(kind) {
           LANGUAGES.map((language) => [language.code, language.name]),
         ) +
         fieldButtonHtml("Month starts on", String(appData.settings.monthStart), () =>
-          promptText(
-            "Month starts on",
-            String(appData.settings.monthStart),
-            (v) => {
-              let n = Number(v);
-              if (!Number.isInteger(n) || n < 1 || n > 31) return toast("Use a day from 1 to 31");
-              setting("monthStart", n);
-            },
-            "Day",
-          ),
+          monthStartDialog(() => render()),
         ) +
         settingOptions("Week starts on", "weekStart", [
           [0, "Sunday"],

@@ -16,7 +16,7 @@ import {
   periodBounds,
   visibleOperations,
 } from "../domain/finance.js";
-import { deleteOperation, processScheduled, validateOp } from "../domain/operations.js";
+import { validateOp } from "../domain/operations.js";
 import { currentLocale, translate } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { accountPicker, categoryPicker } from "./categories.js";
@@ -36,7 +36,6 @@ import {
   buttonHtml,
   fieldButtonHtml,
   iconButtonHtml,
-  menuRowHtml,
   registerAction,
   toast,
 } from "../ui/primitives.js";
@@ -270,61 +269,6 @@ export function operationsMenu() {
   uiState.search = !uiState.search;
   if (!uiState.search) uiState.filters.comment = "";
   render();
-}
-// Details page of a single operation.
-export function operationDetails(o, scheduled = false) {
-  openSheet(
-    () =>
-      `<div class="sheet-account">${badgeHtml(categoryById(o.category) || { icon: "transfer", color: "#8694bb" })}<div class="grow"><strong>${escapeHtml(opTitle(o))}</strong><div>${formatMoney(o.amount, accountById(o.from || o.to)?.currency)}</div></div>${iconButtonHtml("edit", "Edit", () => operationStart(o, scheduled))}</div><p>${escapeHtml(dateLabel(o.date))}</p><p>${escapeHtml(accountById(o.from || o.to)?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}</p>${o.comment ? `<p>${escapeHtml(o.comment)}</p>` : ""}${o.photo ? `<img class="preview-photo" src="${o.photo}" alt="Attached photo">` : ""}${
-        scheduled
-          ? `<p>${recurLabel(o.recur)}</p><div class="action-grid two">${buttonHtml(
-              iconSvg("plus") + translate("Add now"),
-              () => {
-                processScheduled(o.id, true);
-                uiState.layers = [];
-                render();
-                toast("Payment added");
-              },
-            )}${buttonHtml(iconSvg("right") + translate("Skip"), () =>
-              confirmAction(
-                "Skip this occurrence?",
-                () => {
-                  processScheduled(o.id, false);
-                  uiState.layers = [];
-                  render();
-                },
-                false,
-                "Skip",
-              ),
-            )}</div>${menuRowHtml("Date", "calendar", () =>
-              calendar(o.date, (v) => {
-                o.date = v;
-                save();
-                render();
-              }),
-            )}`
-          : ""
-      }${
-        menuRowHtml("Edit", "edit", () => operationStart(o, scheduled)) +
-        menuRowHtml("Duplicate", "copy", () => {
-          let d = deepClone(o);
-          delete d.id;
-          operationStart(d, scheduled);
-        })
-      }${menuRowHtml("Delete", "trash", () =>
-        confirmAction(
-          "Delete this operation?",
-          () => {
-            deleteOperation(o.id, scheduled);
-            uiState.layers = [];
-            render();
-          },
-          true,
-          "Delete",
-        ),
-      )}`,
-    opTitle(o),
-  );
 }
 // Generic multi-select sheet with select-all.
 export function multiSelect(title, items, selected, fn) {
@@ -592,124 +536,199 @@ function bulkDeleteOperations() {
 export function bulkEdit() {
   if (!uiState.selected.length) return toast("Select operations");
   const selected = appData.ops.filter((o) => uiState.selected.includes(o.id));
-  let d = {
+  const d = {
+    category: null,
     account: null,
     role: "sender",
-    category: null,
-    date: null,
     comment: null,
-    tagMode: null,
-    tagNames: [],
+    addTags: [],
+    removeTags: [],
+    clearTags: false,
+    date: null,
   };
   const hasTransfers = selected.some((o) => o.type === "transfer");
-  const tagsLabel = () =>
-    d.tagMode === null
-      ? translate("No changes")
-      : d.tagMode === "clear"
-        ? "Clear all"
-        : (d.tagMode === "add" ? "Add: " : "Remove: ") + (d.tagNames.join(", ") || "Select tags");
-  const chooseTags = () => {
-    let mode = d.tagMode || "add",
-      chosen = [...d.tagNames];
-    const allTags = [...new Set([...appData.tags, ...selected.flatMap((o) => o.tags || [])])];
+  const tagsLabel = () => {
+    if (d.clearTags) return translate("Clear all");
+    const parts = [...d.addTags.map((t) => "+" + t), ...d.removeTags.map((t) => "−" + t)];
+    return parts.length ? parts.join(", ") : "";
+  };
+  // Row with a title, the chosen value (or "No changes") and a cross that clears it.
+  const row = (label, icon, value, open, clear) =>
+    `<div class="bulk-row">${buttonHtml(
+      `<span class="bulk-label">${iconSvg(icon, 16)} ${translate(label)}</span><span class="bulk-value ${value ? "" : "muted"}">${value ? escapeHtml(value) : translate("No changes")}</span>`,
+      open,
+      "bulk-field",
+    )}${value ? iconButtonHtml("close", "Clear", () => (clear(), render())) : ""}</div>`;
+  // Which account of a transfer is replaced.
+  const askRole = () =>
     openSheet(
       () =>
-        `<h2>Tags</h2><div class="tabs">${[
-          ["add", "Add"],
-          ["remove", "Remove"],
-          ["clear", "Clear all"],
-        ]
-          .map(([v, label]) =>
-            buttonHtml(
-              label,
-              () => {
-                mode = v;
+        `<h2>${translate("For transfers")}</h2><p>${translate("For transfer operations, which account to replace?")}</p>${buttonHtml(
+          "Sender",
+          () => {
+            d.role = "sender";
+            closeLayers();
+          },
+          "primary",
+        )}${buttonHtml(
+          "Receiver",
+          () => {
+            d.role = "receiver";
+            closeLayers();
+          },
+          "primary",
+        )}${buttonHtml(
+          "Cancel",
+          () => {
+            d.account = null;
+            closeLayers();
+          },
+          "outline",
+        )}`,
+      "For transfers",
+      "dialog",
+    );
+  const chooseTags = () => {
+    const draft = { add: [...d.addTags], remove: [...d.removeTags], clear: d.clearTags };
+    const used = [...new Set(selected.flatMap((o) => o.tags || []))];
+    const toggle = (list, tag) =>
+      list.includes(tag) ? list.filter((x) => x !== tag) : [...list, tag];
+    const chips = (list, names, onTap) =>
+      names
+        .map((tag) =>
+          buttonHtml(
+            escapeHtml(tag),
+            () => onTap(tag),
+            "tag " + (list.includes(tag) ? "active" : ""),
+          ),
+        )
+        .join("");
+    openSheet(
+      () =>
+        `<h2>${translate("Tags")}</h2><div class="bulk-tags-title">${translate("Add")}</div><div class="tag-cloud">${chips(
+          draft.add,
+          appData.tags,
+          (tag) => {
+            draft.add = toggle(draft.add, tag);
+            draft.remove = draft.remove.filter((x) => x !== tag);
+            draft.clear = false;
+            render();
+          },
+        )}${buttonHtml(
+          `${iconSvg("plus", 14)} ${translate("Add")}`,
+          () =>
+            promptText(
+              "New tag",
+              "",
+              (v) => {
+                const name = v.trim();
+                if (!name) return toast("Enter a tag");
+                if (!appData.tags.includes(name)) appData.tags.push(name);
+                draft.add = [...new Set([...draft.add, name])];
+                draft.clear = false;
+                save();
                 render();
               },
-              mode === v ? "active" : "",
+              "Tag name",
             ),
-          )
-          .join("")}</div>${
-          mode === "clear"
-            ? '<p class="footnote">Remove all tags from selected operations</p>'
-            : `<div class="tag-cloud">${allTags
-                .map((tag) =>
-                  buttonHtml(
-                    escapeHtml(tag) + (chosen.includes(tag) ? " " + iconSvg("check", 15) : ""),
-                    () => {
-                      chosen = chosen.includes(tag)
-                        ? chosen.filter((x) => x !== tag)
-                        : [...chosen, tag];
-                      render();
-                    },
-                    "tag " + (chosen.includes(tag) ? "active" : ""),
-                  ),
-                )
-                .join("")}</div>`
-        }${buttonHtml(
+          "tag tag-add",
+        )}</div><div class="bulk-tags-title">${translate("Remove")}</div><div class="tag-cloud">${chips(
+          draft.remove,
+          used,
+          (tag) => {
+            draft.remove = toggle(draft.remove, tag);
+            draft.add = draft.add.filter((x) => x !== tag);
+            draft.clear = false;
+            render();
+          },
+        )}${buttonHtml(
+          `${iconSvg("trash", 14)} ${translate("Clear all")}`,
+          () => {
+            draft.clear = !draft.clear;
+            if (draft.clear) {
+              draft.add = [];
+              draft.remove = [];
+            }
+            render();
+          },
+          "tag tag-clear " + (draft.clear ? "active" : ""),
+        )}</div>${buttonHtml(
           "Complete",
           () => {
-            if (mode !== "clear" && !chosen.length) return toast("Select tags");
-            d.tagMode = mode;
-            d.tagNames = mode === "clear" ? [] : [...chosen];
+            d.addTags = draft.add;
+            d.removeTags = draft.remove;
+            d.clearTags = draft.clear;
             closeLayers();
             render();
           },
           "primary",
-        )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+        )}`,
       "Tags",
     );
   };
+  const apply = () => {
+    const replacements = selected.map((o) => {
+      const n = deepClone(o);
+      if (d.category && n.type !== "transfer") {
+        n.category = d.category;
+        const a = n.from || n.to;
+        n.type = categoryById(d.category).type;
+        n.from = n.type === "expense" ? a : null;
+        n.to = n.type === "income" ? a : null;
+      }
+      if (d.account) {
+        if (n.type === "transfer") n[d.role === "receiver" ? "to" : "from"] = d.account;
+        else if (n.type === "income") n.to = d.account;
+        else n.from = d.account;
+      }
+      if (d.date) n.date = d.date;
+      if (d.comment !== null) n.comment = d.comment;
+      if (d.clearTags) n.tags = [];
+      else
+        n.tags = [...new Set([...(n.tags || []), ...d.addTags])].filter(
+          (x) => !d.removeTags.includes(x),
+        );
+      validateOp(n);
+      return n;
+    });
+    for (const o of replacements) appData.ops[appData.ops.findIndex((x) => x.id === o.id)] = o;
+    uiState.selection = false;
+    uiState.selected = [];
+    save();
+    closeLayers();
+    toast("Operations updated");
+  };
   openSheet(
     () =>
-      `<h2>${translate("Bulk edit")}</h2>${fieldButtonHtml(
-        "Account",
-        escapeHtml(accountById(d.account)?.name || translate("No changes")),
-        () =>
-          accountPicker(d.account, (v) => {
-            d.account = v;
-            render();
-          }),
-      )}${
-        hasTransfers
-          ? fieldButtonHtml("Transfer account", d.role === "sender" ? "Sender" : "Receiver", () =>
-              openSheet(
-                () =>
-                  `<h2>Transfer account</h2>${menuRowHtml("Sender", "left", () => {
-                    d.role = "sender";
-                    closeLayers();
-                    render();
-                  })}${menuRowHtml("Receiver", "right", () => {
-                    d.role = "receiver";
-                    closeLayers();
-                    render();
-                  })}`,
-                "Transfer account",
-              ),
-            )
-          : ""
-      }${fieldButtonHtml(
+      `<h2>${translate("Bulk edit")}</h2>${row(
         "Category",
-        escapeHtml(categoryById(d.category)?.name || translate("No changes")),
+        "categories",
+        categoryById(d.category)?.name,
         () =>
-          categoryPicker("expense", d.category, (v) => {
+          categoryPicker(categoryById(d.category)?.type || "expense", d.category, (v) => {
             d.category = v;
             render();
           }),
-      )}${fieldButtonHtml("Tags", escapeHtml(tagsLabel()), chooseTags)}${fieldButtonHtml(
-        "Date",
-        d.date || translate("No changes"),
+        () => (d.category = null),
+      )}${row(
+        "Account",
+        "wallet",
+        accountById(d.account)?.name,
         () =>
-          calendar(d.date || TODAY, (v) => {
-            d.date = v;
-            render();
+          accountPicker(d.account, (v) => {
+            closeLayers();
+            d.account = v;
+            if (hasTransfers) askRole();
+            else render();
           }),
-      )}${fieldButtonHtml(
+        () => (d.account = null),
+      )}${row(
         "Comment",
-        d.comment === null ? translate("No changes") : escapeHtml(d.comment),
+        "comment",
+        d.comment === null ? "" : d.comment || translate("Empty"),
         () =>
           promptText(
-            "Comment",
+            "Add a comment",
             d.comment || "",
             (v) => {
               d.comment = v;
@@ -717,51 +736,32 @@ export function bulkEdit() {
             },
             "Comment",
           ),
+        () => (d.comment = null),
+      )}${row("Tags", "tag", tagsLabel(), chooseTags, () => {
+        d.addTags = [];
+        d.removeTags = [];
+        d.clearTags = false;
+      })}${row(
+        "Date",
+        "calendar",
+        d.date ? dateLabel(d.date) : "",
+        () =>
+          calendar(d.date || TODAY, (v) => {
+            d.date = v;
+            render();
+          }),
+        () => (d.date = null),
       )}${buttonHtml(
         "Confirm",
-        () => {
-          try {
-            const replacements = selected.map((o) => {
-              const n = deepClone(o);
-              if (d.category && n.type !== "transfer") {
-                n.category = d.category;
-                const a = n.from || n.to;
-                n.type = categoryById(d.category).type;
-                n.from = n.type === "expense" ? a : null;
-                n.to = n.type === "income" ? a : null;
-              }
-              if (d.account) {
-                if (n.type === "transfer") n[d.role === "receiver" ? "to" : "from"] = d.account;
-                else if (n.type === "income") n.to = d.account;
-                else n.from = d.account;
-              }
-              if (d.date) n.date = d.date;
-              if (d.comment !== null) n.comment = d.comment;
-              if (d.tagMode) {
-                const old = [...(n.tags || [])];
-                n.tags =
-                  d.tagMode === "clear"
-                    ? []
-                    : d.tagMode === "add"
-                      ? [...new Set([...old, ...d.tagNames])]
-                      : old.filter((x) => !d.tagNames.includes(x));
-              }
-              validateOp(n);
-              return n;
-            });
-            for (const o of replacements)
-              appData.ops[appData.ops.findIndex((x) => x.id === o.id)] = o;
-            uiState.selection = false;
-            uiState.selected = [];
-            save();
-            closeLayers();
-            toast("Operations updated");
-          } catch (e) {
-            toast(e.message);
-          }
-        },
+        () =>
+          confirmAction(
+            "The selected changes will be applied to all selected operations.",
+            apply,
+            true,
+            "Confirm",
+          ),
         "primary",
-      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+      )}`,
     "Bulk edit",
   );
 }

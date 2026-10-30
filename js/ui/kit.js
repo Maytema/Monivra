@@ -22,6 +22,7 @@ import {
   toIsoDate,
 } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
+import { hintHtml } from "./hint.js";
 import { buttonHtml, iconButtonHtml, registerInput, textFieldHtml, toast } from "./primitives.js";
 
 // Wrap the part of a root screen that slides when swiping between tabs or periods.
@@ -168,11 +169,36 @@ function shiftPeriod(n) {
   uiState.donut = null;
   render();
 }
+// Dialog for the day on which a month starts (payday instead of the 1st).
+export function monthStartDialog(onDone) {
+  promptText(
+    "Month starts on",
+    String(appData.settings.monthStart),
+    (v) => {
+      const n = Number(v);
+      if (!Number.isInteger(n) || n < 1 || n > 31) return toast("Use a day from 1 to 31");
+      appData.settings.monthStart = n;
+      save();
+      onDone();
+    },
+    "Day",
+  );
+}
+// Small caption of an interval tile: the range it would select right now.
+function intervalNote(mode) {
+  if (!["week", "today", "year", "month"].includes(mode)) return "";
+  const period = { mode: mode === "today" ? "day" : mode, anchor: TODAY };
+  const [from, to] = periodBounds(period);
+  // A week inside one month reads "October 25 - 31".
+  if (mode === "week" && from.slice(0, 7) === to.slice(0, 7))
+    return `${dateLabel(from, true)} - ${Number(to.slice(8))}`;
+  return periodTitle(period);
+}
 // Sheet for choosing the period mode and range.
 export function periodPicker() {
   openSheet(
     () =>
-      `<h2>${translate("Time interval")}</h2><div class="interval-grid">${[
+      `<h2>${translate("Time interval")}</h2>${hintHtml("month-start", "Your month can start on payday instead of the 1st. Tap to set it up.", () => monthStartDialog(() => render()))}<div class="interval-grid">${[
         ["range", "Select date range"],
         ["all", "All time"],
         ["day", "Choose a day"],
@@ -183,7 +209,9 @@ export function periodPicker() {
       ]
         .map(([mode, label]) =>
           buttonHtml(
-            iconSvg("calendar", 32) + translate(label),
+            iconSvg("calendar", 32) +
+              translate(label) +
+              (intervalNote(mode) ? `<small>${intervalNote(mode)}</small>` : ""),
             () => {
               if (mode === "range") {
                 let [a, b] = periodBounds();

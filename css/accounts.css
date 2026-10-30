@@ -473,3 +473,14 @@
   background: rgb(243, 237, 247);
   font-size: 14px;
 }
+.hint-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  text-align: left;
+  background: none;
+  border: 0;
+  font: inherit;
+  padding: 6px 0;
+}

@@ -112,17 +112,17 @@ export function periodBounds(p = uiState.period) {
 }
 
 // Title shown in the period bar, e.g. "October 2026".
-export function periodTitle() {
-  const [a, b] = periodBounds();
-  if (uiState.period.mode === "all") return translate("All time");
-  if (uiState.period.mode === "month")
+export function periodTitle(period = uiState.period) {
+  const [a, b] = periodBounds(period);
+  if (period.mode === "all") return translate("All time");
+  if (period.mode === "month")
     return parseDate(a).toLocaleDateString(currentLocale(), {
       timeZone: "UTC",
       month: "long",
       year: "numeric",
     });
-  if (uiState.period.mode === "year") return a.slice(0, 4);
-  if (uiState.period.mode === "day") return dateLabel(a);
+  if (period.mode === "year") return a.slice(0, 4);
+  if (period.mode === "day") return dateLabel(a);
   return dateLabel(a, true) + " – " + dateLabel(b, true);
 }
 // Does an operation pass the active filters?

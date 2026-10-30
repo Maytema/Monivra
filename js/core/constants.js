@@ -105,7 +105,7 @@ export const ICONS = {
 };
 // Render an icon from ICONS as an <svg> string.
 // Release stamp shown in More, so it is easy to see which version is open.
-export const APP_BUILD = "2026-10-30.5";
+export const APP_BUILD = "2026-10-30.6";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Supported currencies: code, name, default rate and symbol.

@@ -11,6 +11,18 @@ export const russianStrings = {
   "Payment scheduled": "Платёж запланирован",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
+  Sender: "Отправитель",
+  Receiver: "Получатель",
+  "Clear all": "Очистить всё",
+  "Add a comment": "Добавить комментарий",
+  "Select operations": "Выберите операции",
+  "Operations updated": "Операции обновлены",
+  "For transfers": "Для переводов",
+  "For transfer operations, which account to replace?": "В операциях перевода какой счёт заменить?",
+  "The selected changes will be applied to all selected operations.":
+    "Выбранные изменения будут применены ко всем выбранным операциям.",
+  "Your month can start on payday instead of the 1st. Tap to set it up.":
+    "Месяц может начинаться со дня зарплаты, а не с 1-го числа. Нажмите, чтобы настроить.",
   "Select tags": "Выбор тегов",
   "New tag": "Новый тег",
   "Tag name": "Название тега",
