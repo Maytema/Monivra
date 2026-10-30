@@ -2,6 +2,7 @@
 import { TODAY, deepClone, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
+import { netAmount } from "./fees.js";
 import {
   accountById,
   addDays,
@@ -24,7 +25,7 @@ export function validateOp(d) {
     d.receive =
       d.receiveManual === true && Number.isSafeInteger(d.receive) && d.receive > 0
         ? d.receive
-        : convertCurrency(d.amount, accountById(d.from).currency, accountById(d.to).currency);
+        : convertCurrency(netAmount(d), accountById(d.from).currency, accountById(d.to).currency);
     if (!Number.isSafeInteger(d.receive) || d.receive <= 0)
       throw Error("Converted amount is too small or too large for the destination currency");
     delete d.category;
@@ -42,7 +43,9 @@ export function validateOp(d) {
       d.to = accountId;
       delete d.from;
     }
-    delete d.receive;
+    // Income: the account gets what is left after fees; expense: the account pays in full.
+    if (d.type === "income" && d.fees?.length) d.receive = netAmount(d);
+    else delete d.receive;
   } else throw Error("Unsupported operation type");
 }
 // Validate and insert or update an operation (or a scheduled payment), then save.
@@ -53,6 +56,7 @@ export function putOperation(d, schedule = false) {
   delete d.origin;
   delete d.error;
   delete d.fresh;
+  if (!d.fees?.length) delete d.fees;
   validateOp(d);
   const list = schedule ? appData.scheduled : appData.ops;
   if (!d.id) d.id = newId();

@@ -20,7 +20,7 @@ import {
 import { deleteOperation, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
-import { feeDialog, feeLabel } from "./fees.js";
+import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
 import { recurLabel } from "./operations.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
 import {
@@ -393,6 +393,14 @@ function accountCalculatorView(p) {
   };
   if (p.scratchExpr === undefined) p.scratchExpr = String(d.expr || "0");
   const currentExpr = () => displayedExpr();
+  // Amount on the sender side for the fee preview; zero while the expression is incomplete.
+  const enteredAmount = () => {
+    try {
+      return evaluateExpression(calcMode ? p.scratchExpr : d.expr);
+    } catch {
+      return 0;
+    }
+  };
   const assignExpr = (v) => {
     if (dual && p.currencySide === "receive") {
       setReceiveExpr(v);
@@ -479,7 +487,7 @@ function accountCalculatorView(p) {
             render();
           },
           "Use full sender account balance",
-        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", "Add tax", render), feeLabel(d.tax))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", "Add commission", render), feeLabel(d.commission))}`,
+        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", render), feeLabel(d, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", render), feeLabel(d, "commission"))}`,
       "Additionally",
     );
   const nums3 = appData.settings.reverseKeys
@@ -568,7 +576,14 @@ function accountCalculatorView(p) {
         },
         "Comment",
       ),
-  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${
+  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${feeBlockHtml(
+    d,
+    enteredAmount(),
+    currency,
+    dual ? secondary.currency : currency,
+    dual ? sourceToReceive : (n) => n,
+    render,
+  )}${
     p.compact
       ? `<div class="ops-compact-actions">${buttonHtml(
           iconSvg("trash", 28) + "<span>Delete</span>",

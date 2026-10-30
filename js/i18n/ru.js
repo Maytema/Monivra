@@ -11,6 +11,13 @@ export const russianStrings = {
   "Payment scheduled": "Платёж запланирован",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
+  "Result (from -> to)": "Результат (из -> в)",
+  Result: "Результат",
+  "Change order": "Изменить порядок",
+  Remove: "Убрать",
+  Help: "Справка",
+  "Fees are applied one after another, in the order shown. The sender account is charged the full amount; the receiver gets the result.":
+    "Налог и комиссия применяются по очереди в показанном порядке. Со счёта отправителя списывается вся сумма, получатель получает результат.",
   "Add commission": "Добавить комиссию",
   Percent: "Процент",
   Value: "Значение",

@@ -2,6 +2,7 @@
 import { deepClone, escapeHtml, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
+import { netAmount } from "./fees.js";
 import { currentLocale, translate } from "../i18n/index.js";
 
 // Find an account by id.
@@ -153,7 +154,12 @@ export function reportRows(ops = visibleOperations()) {
       out.push({
         ...o,
         reportType: o.type,
-        reportAmount: convertCurrency(o.amount, a?.currency || "KGS", appData.settings.currency),
+        // The category records what is left after fees on an expense.
+        reportAmount: convertCurrency(
+          o.type === "expense" ? netAmount(o) : o.amount,
+          a?.currency || "KGS",
+          appData.settings.currency,
+        ),
       });
     } else {
       const source = accountById(o.from),

@@ -55,6 +55,7 @@ export const ICONS = {
   down: "m6 9 6 6 6-6",
   up: "m6 15 6-6 6 6",
   close: "m5 5 14 14M19 5 5 19",
+  swap: "M8 4v16m0 0-3-3m3 3 3-3M16 20V4m0 0-3 3m3-3 3 3",
   check: "m4 12 5 5 11-11",
   edit: "m4 16 12-12 4 4L8 20l-5 1zM13 7l4 4",
   eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm8-2a3 3 0 1 0 4 4M3 2l18 20",
@@ -102,7 +103,7 @@ export const ICONS = {
 };
 // Render an icon from ICONS as an <svg> string.
 // Release stamp shown in More, so it is easy to see which version is open.
-export const APP_BUILD = "2026-10-30.3";
+export const APP_BUILD = "2026-10-30.4";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Supported currencies: code, name, default rate and symbol.

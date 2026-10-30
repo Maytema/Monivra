@@ -4,6 +4,7 @@ import { TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { parseCSV } from "../data/import-export.js";
 import { isValidData } from "../data/storage.js";
+import { applyFees } from "../domain/fees.js";
 import {
   accountBalance,
   convertCurrency,
@@ -11,7 +12,7 @@ import {
   overallBalance,
   reportRows,
 } from "../domain/finance.js";
-import { nextDate } from "../domain/operations.js";
+import { nextDate, validateOp } from "../domain/operations.js";
 
 // Built-in regression checks; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
 export function runSelfChecks() {
@@ -35,6 +36,18 @@ export function runSelfChecks() {
     }
   });
   test("Stored schema", () => isValidData(appData));
+  test("Fees apply one after another on the running amount", () => {
+    const commission = { kind: "commission", percent: 3.5, value: 0, add: false };
+    const tax = { kind: "tax", percent: 5, value: 0, add: false };
+    const first = applyFees(50000, [commission, tax]);
+    return (
+      first.steps[0].delta === -1750 &&
+      first.steps[1].delta === -2413 &&
+      first.net === 45838 &&
+      applyFees(50000, [tax, commission]).net === 45838 &&
+      applyFees(1000, [{ kind: "tax", percent: 0, value: 2, add: true }]).net === 1200
+    );
+  });
   test("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
     const a = appData.accounts.find((x) => x.include && !x.archived && x.currency !== "USD");
     if (!a) return true;
@@ -189,6 +202,63 @@ export function runSelfChecks() {
       );
     } finally {
       appData.accounts = accounts;
+      appData.ops = ops;
+    }
+  });
+  test("Fees: the account pays in full, the category and the receiver get the rest", () => {
+    const accounts = appData.accounts,
+      ops = appData.ops,
+      categories = appData.categories;
+    try {
+      const cash = {
+          ...accounts[0],
+          id: "__fee_cash",
+          opening: 100000,
+          include: true,
+          archived: false,
+        },
+        card = { ...cash, id: "__fee_card", opening: 0 };
+      const category = { ...categories.find((c) => c.type === "expense"), id: "__fee_cat" };
+      appData.accounts = [...accounts, cash, card];
+      appData.categories = [...categories, category];
+      appData.ops = [...ops];
+      const fees = [
+        { kind: "commission", percent: 3.5, value: 0, add: false },
+        { kind: "tax", percent: 5, value: 0, add: false },
+      ];
+      const expense = {
+        id: "__fee_expense",
+        type: "expense",
+        from: cash.id,
+        category: category.id,
+        amount: 50000,
+        fees,
+        date: TODAY,
+        tags: [],
+      };
+      const transfer = {
+        id: "__fee_transfer",
+        type: "transfer",
+        from: cash.id,
+        to: card.id,
+        amount: 50000,
+        fees,
+        date: TODAY,
+        tags: [],
+      };
+      validateOp(expense);
+      validateOp(transfer);
+      appData.ops = [...ops, expense, transfer];
+      const row = reportRows([expense])[0];
+      return (
+        accountBalance(cash.id) === 0 &&
+        accountBalance(card.id) === 45838 &&
+        transfer.receive === 45838 &&
+        convertCurrency(row.reportAmount, appData.settings.currency, cash.currency) === 45838
+      );
+    } finally {
+      appData.accounts = accounts;
+      appData.categories = categories;
       appData.ops = ops;
     }
   });
