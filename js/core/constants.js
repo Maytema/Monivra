@@ -100,6 +100,8 @@ export const ICONS = {
   sun: "M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2",
 };
 // Render an icon from ICONS as an <svg> string.
+// Release stamp shown in More, so it is easy to see which version is open.
+export const APP_BUILD = "2026-10-30.2";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Supported currencies: code, name, default rate and symbol.

@@ -1,7 +1,15 @@
 /* More tab, settings and info pages */
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
-import { CURRENCIES, PALETTE, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import {
+  APP_BUILD,
+  CURRENCIES,
+  PALETTE,
+  TODAY,
+  deepClone,
+  escapeHtml,
+  iconSvg,
+} from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
 import { createSeedData } from "../data/seed.js";
@@ -53,7 +61,7 @@ export function moreView() {
       ["Terms of use", "receipt", "terms"],
     ],
   ];
-  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (Closed Beta)</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
+  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (Closed Beta) · build ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
 }
 
 // Settings page.
