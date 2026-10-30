@@ -265,6 +265,13 @@ function swipeFinish(s, commit) {
   animation.oncancel = finalize;
 }
 
+// Drop the swipe in progress, e.g. when a long press turns the touch into a drag.
+export function cancelSwipe() {
+  const s = rootSwipe;
+  rootSwipe = null;
+  if (s) swipeFinish(s, false);
+}
+
 // True for a short moment after a swipe so the click that ends the gesture is ignored.
 export function isSwipeClickSuppressed() {
   return Date.now() < swipeSuppressClickUntil;

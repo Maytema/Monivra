@@ -1,5 +1,6 @@
 /* App shell: navigation, root view, rendering */
 import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
+import { initAccountDrag } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, locked, uiState } from "../core/state.js";
@@ -156,6 +157,7 @@ export function render(top = false) {
   const selectionEnd = focused?.selectionEnd;
   app.innerHTML = html;
   initOperationLongPress();
+  initAccountDrag();
   applyAppearance();
   // Restore scroll positions.
   const content = app.querySelector(".content");

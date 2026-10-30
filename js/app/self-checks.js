@@ -12,7 +12,7 @@ import {
   overallBalance,
   reportRows,
 } from "../domain/finance.js";
-import { nextDate, validateOp } from "../domain/operations.js";
+import { nextDate, reorderedAccounts, validateOp } from "../domain/operations.js";
 
 // Built-in regression checks; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
 export function runSelfChecks() {
@@ -261,6 +261,14 @@ export function runSelfChecks() {
       appData.categories = categories;
       appData.ops = ops;
     }
+  });
+  test("Reordering a group of accounts keeps the other groups in place", () => {
+    const list = ["a", "b", "c", "d", "e"].map((id) => ({ id }));
+    return (
+      reorderedAccounts(list, ["c", "a", "e"])
+        .map((x) => x.id)
+        .join("") === "cbade"
+    );
   });
   test("Scheduled operations do not alter current balance", () => {
     const a = appData.accounts[0];

@@ -73,6 +73,18 @@ export function toggleFavoriteAccount(id) {
   appData.accounts.forEach((a) => (a.favorite = !wasFavorite && a.id === id));
   save();
 }
+// Put the accounts of one group (given by ids in their new order) back into the slots
+// those accounts already occupy in the list, so other groups keep their places.
+export function reorderedAccounts(accounts, orderedIds) {
+  const slots = accounts.flatMap((a, i) => (orderedIds.includes(a.id) ? [i] : []));
+  const next = [...accounts];
+  slots.forEach((slot, n) => (next[slot] = accounts.find((a) => a.id === orderedIds[n])));
+  return next;
+}
+export function reorderAccounts(orderedIds) {
+  appData.accounts = reorderedAccounts(appData.accounts, orderedIds);
+  save();
+}
 export function deleteOperation(id, scheduled = false) {
   let key = scheduled ? "scheduled" : "ops";
   appData[key] = appData[key].filter((o) => o.id !== id);

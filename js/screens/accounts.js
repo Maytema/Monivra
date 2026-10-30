@@ -21,6 +21,7 @@ import { translate } from "../i18n/index.js";
 import { accountPicker } from "./categories.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
+import { hintHtml } from "../ui/hint.js";
 import {
   amountPicker,
   closeLayers,
@@ -123,6 +124,7 @@ function accountLine(a) {
     "account-row " +
       (a.type === "Debt" && accountBalance(a.id) === 0 ? "debt-completed " : "") +
       (appData.settings.bigAccounts ? "big" : ""),
+    `data-account="${a.id}"`,
   );
 }
 // Accounts tab.
@@ -175,7 +177,7 @@ export function accountsView() {
       )
       .join("")}</div>` +
     swipePane(
-      `<div class="content accounts-content">${body}${
+      `<div class="content accounts-content">${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${
         archived.length
           ? buttonHtml(
               `${iconSvg("archive", 18)} ${translate("Archive")} ${iconSvg(uiState.archive ? "up" : "down", 14)}`,
@@ -186,7 +188,7 @@ export function accountsView() {
               "accounts-archive-toggle",
             )
           : ""
-      }${uiState.archive && archived.length ? `<div class="account-group">${archived.map(accountLine).join("")}</div>` : ""}</div>`,
+      }${uiState.archive && archived.length ? `<div class="account-group archived-accounts">${archived.map(accountLine).join("")}</div>` : ""}</div>`,
     )
   );
 }

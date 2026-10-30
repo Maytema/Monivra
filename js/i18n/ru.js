@@ -11,6 +11,8 @@ export const russianStrings = {
   "Payment scheduled": "Платёж запланирован",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
+  "Hold an account to drag and reorder": "Удерживайте счёт, чтобы перетащить и изменить порядок",
+  Dismiss: "Закрыть",
   "Result (from -> to)": "Результат (из -> в)",
   Result: "Результат",
   "Change order": "Изменить порядок",
