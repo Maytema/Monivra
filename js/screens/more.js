@@ -7,7 +7,7 @@ import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
-import { translate } from "../i18n/index.js";
+import { currencyName, translate } from "../i18n/index.js";
 import { setting, settingOptions, switchSetting } from "./settings.js";
 import {
   closeLayers,
@@ -45,7 +45,7 @@ export function moreView() {
       ["Terms of use", "receipt", "terms"],
     ],
   ];
-  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (Closed Beta) · build ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
+  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (${translate("Closed Beta")}) · ${translate("build")} ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
 }
 
 // Settings sub-pages: notifications, security, privacy, backups, rates.
@@ -205,7 +205,7 @@ export function settingsPage(kind) {
                 },
                 "1 " + id + " in KGS",
               ),
-            name,
+            currencyName(id, name),
             String(appData.rates[id]),
           ),
         ).join("");

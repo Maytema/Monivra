@@ -25,7 +25,7 @@ import {
   toIsoDate,
 } from "../domain/finance.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
-import { translate } from "../i18n/index.js";
+import { currencyName, translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
 import { buttonHtml, iconButtonHtml, registerInput, textFieldHtml, toast } from "./primitives.js";
 
@@ -362,8 +362,12 @@ export function currencyPicker(value, fn) {
     ]);
   openSheet(
     () => {
-      const matches = CURRENCIES.filter(([id, name]) =>
-        (id + " " + name).toLowerCase().includes(q.toLowerCase()),
+      const matches = CURRENCIES.map(([id, english]) => [
+        id,
+        currencyName(id, english),
+        english,
+      ]).filter(([id, name, english]) =>
+        (id + " " + name + " " + english).toLowerCase().includes(q.toLowerCase()),
       );
       const selected = used();
       const groups = [

@@ -14,27 +14,31 @@ import {
 import { toast } from "../ui/primitives.js";
 
 // Throw an Error with a user-facing message if an operation draft is invalid.
-export function validateOp(d) {
+export function validateOp(d, lookup = { account: accountById, category: categoryById }) {
   if (!Number.isSafeInteger(d.amount) || d.amount <= 0)
     throw Error("Enter an amount greater than zero");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.date) || toIsoDate(parseDate(d.date)) !== d.date)
     throw Error("Choose a valid date");
   if (d.type === "transfer") {
-    if (!accountById(d.from) || !accountById(d.to) || d.from === d.to)
+    if (!lookup.account(d.from) || !lookup.account(d.to) || d.from === d.to)
       throw Error("Choose two different accounts");
     d.receive =
       d.receiveManual === true && Number.isSafeInteger(d.receive) && d.receive > 0
         ? d.receive
-        : convertCurrency(netAmount(d), accountById(d.from).currency, accountById(d.to).currency);
+        : convertCurrency(
+            netAmount(d),
+            lookup.account(d.from).currency,
+            lookup.account(d.to).currency,
+          );
     if (!Number.isSafeInteger(d.receive) || d.receive <= 0)
       throw Error("Converted amount is too small or too large for the destination currency");
     delete d.category;
   } else if (d.type === "expense" || d.type === "income") {
-    const category = categoryById(d.category);
+    const category = lookup.category(d.category);
     if (!category) throw Error("Select a category");
     if (category.type !== d.type) throw Error("Category does not match operation type");
     const accountId = d.type === "expense" ? d.from || d.to : d.to || d.from;
-    if (!accountById(accountId)) throw Error("Select an account");
+    if (!lookup.account(accountId)) throw Error("Select an account");
     // A changed operation type must not retain the other side of an earlier transfer.
     if (d.type === "expense") {
       d.from = accountId;

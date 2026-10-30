@@ -17,7 +17,7 @@ import {
   visibleOperations,
 } from "../domain/finance.js";
 import { validateOp } from "../domain/operations.js";
-import { currentLocale, translate } from "../i18n/index.js";
+import { currentLocale, translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { opTitle, operationStart } from "./operation-editor.js";
 import { accountPicker, categoryPicker } from "./pickers.js";
@@ -112,7 +112,7 @@ function selectionHeader(ops) {
     uiState.selected = uiState.selected.length === ops.length ? [] : ops.map((o) => o.id);
     render();
   });
-  return `<div class="ops-selection-header">${exit}<strong>Selected: ${uiState.selected.length}</strong>${selectAll}</div>`;
+  return `<div class="ops-selection-header">${exit}<strong>${translateWith("Selected: {n}", { n: uiState.selected.length })}</strong>${selectAll}</div>`;
 }
 // Opening and closing balance of the selected period.
 function balanceSummary() {

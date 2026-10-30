@@ -1,20 +1,20 @@
 /* Import and export (JSON, CSV) */
 import { render } from "../app/shell.js";
-import { deepClone, escapeHtml, newId } from "../core/constants.js";
+import { deepClone, escapeHtml } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
+import { csvText, prepareCSV } from "./csv.js";
 import { createEmptyData } from "./defaults.js";
 import { isValidData, save } from "./storage.js";
 import {
   accountById,
-  categoryById,
   dataSnapshot,
   formatMoney,
   periodTitle,
   totalByType,
   visibleOperations,
 } from "../domain/finance.js";
-import { validateOp } from "../domain/operations.js";
+import { translate, translateMarkup, translateWith } from "../i18n/index.js";
 import { opTitle } from "../screens/operation-editor.js";
 import {
   closeLayers,
@@ -48,102 +48,6 @@ export function download(name, content, type) {
 // Export the whole dataset as a JSON backup.
 export function exportJSON() {
   download("monivra-data.json", JSON.stringify(dataSnapshot(), null, 2), "application/json");
-}
-// Build CSV text of the visible operations.
-export function csvText() {
-  const q = (s) => '"' + String(s ?? "").replace(/"/g, '""') + '"';
-  return [
-    "type,date,amount,currency,from,to,category,comment,tags",
-    ...appData.ops.map((o) =>
-      [
-        o.type,
-        o.date,
-        (o.amount / 100).toFixed(2),
-        accountById(o.from || o.to)?.currency,
-        accountById(o.from)?.name,
-        accountById(o.to)?.name,
-        categoryById(o.category)?.name,
-        o.comment,
-        (o.tags || []).join("|"),
-      ]
-        .map(q)
-        .join(","),
-    ),
-  ].join("\r\n");
-}
-// Parse CSV text into rows.
-export function parseCSV(text) {
-  text = text.replace(/^\uFEFF/, "");
-  let rows = [],
-    row = [],
-    cell = "",
-    quoted = false;
-  for (let i = 0; i < text.length; i++) {
-    let c = text[i];
-    if (c === '"') {
-      if (quoted && text[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (c === "," && !quoted) {
-      row.push(cell);
-      cell = "";
-    } else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      row.push(cell);
-      if (row.some(Boolean)) rows.push(row);
-      row = [];
-      cell = "";
-    } else cell += c;
-  }
-  if (quoted) throw Error("Unclosed CSV quote");
-  row.push(cell);
-  if (row.some(Boolean)) rows.push(row);
-  if (!rows.length) throw Error("CSV is empty");
-  const headers = rows.shift();
-  if (
-    !["type", "date", "amount", "currency", "from", "to", "category"].every((x) =>
-      headers.includes(x),
-    )
-  )
-    throw Error("Use the demo CSV header format");
-  return rows.map((values) => Object.fromEntries(headers.map((h, i) => [h, values[i] || ""])));
-}
-// Turn parsed CSV rows into validated operations.
-export function prepareCSV(text) {
-  const rows = parseCSV(text),
-    out = [];
-  for (const [i, r] of rows.entries()) {
-    const findAccount = (name) => {
-      const candidates = appData.accounts.filter(
-        (a) => a.name === name && a.currency === r.currency,
-      );
-      if (candidates.length !== 1)
-        throw Error("CSV row " + (i + 2) + ": account name/currency missing or ambiguous");
-      return candidates[0].id;
-    };
-    if (!/^\d+(\.\d{1,2})?$/.test(r.amount)) throw Error("CSV row " + (i + 2) + ": invalid amount");
-    const o = {
-      id: newId(),
-      type: r.type,
-      date: r.date,
-      amount: Math.round(Number(r.amount) * 100),
-      comment: r.comment,
-      tags: r.tags ? r.tags.split("|") : [],
-    };
-    if (r.type !== "income") o.from = findAccount(r.from);
-    if (r.type !== "expense") o.to = findAccount(r.to);
-    if (r.type !== "transfer") {
-      const c = appData.categories.filter((c) => c.name === r.category && c.type === r.type);
-      if (c.length !== 1) throw Error("CSV row " + (i + 2) + ": category missing or ambiguous");
-      o.category = c[0].id;
-    }
-    if (!["income", "expense", "transfer"].includes(o.type))
-      throw Error("CSV row " + (i + 2) + ": invalid type");
-    validateOp(o);
-    out.push(o);
-  }
-  return out;
 }
 // Open the file chooser for JSON/CSV import.
 function importFile(kind) {
@@ -205,7 +109,7 @@ export function dataView() {
             },
           )}${menuRowHtml("Operations (CSV)", "download", () => {
             closeLayers();
-            download("monivra-operations.csv", csvText(), "text/csv;charset=utf-8");
+            download("monivra-operations.csv", "\ufeff" + csvText(), "text/csv;charset=utf-8");
           })}${menuRowHtml("Report (PDF)", "receipt", () => {
             closeLayers();
             printReport();
@@ -234,12 +138,14 @@ export function dataView() {
 }
 // Open the printable report.
 function printReport() {
-  const out = `<h1>Monivra · Demo report</h1><p>${escapeHtml(periodTitle())}</p><p>Income: ${formatMoney(totalByType("income"))} · Expense: ${formatMoney(totalByType("expense"))}</p><table><thead><tr><th>Date</th><th>Type / category</th><th>Account</th><th>Amount</th></tr></thead><tbody>${visibleOperations()
-    .map(
-      (o) =>
-        `<tr><td>${escapeHtml(o.date)}</td><td>${escapeHtml(opTitle(o))}</td><td>${escapeHtml(accountById(o.from || o.to)?.name)}</td><td>${formatMoney(o.amount, accountById(o.from || o.to)?.currency)}</td></tr>`,
-    )
-    .join("")}</tbody></table>`;
+  const out = translateMarkup(
+    `<h1>Monivra · ${translate("Report")}</h1><p>${escapeHtml(periodTitle())}</p><p>${translate("Income")}: ${formatMoney(totalByType("income"))} · ${translate("Expenses")}: ${formatMoney(totalByType("expense"))}</p><table><thead><tr><th>Date</th><th>Type / category</th><th>Account</th><th>Amount</th></tr></thead><tbody>${visibleOperations()
+      .map(
+        (o) =>
+          `<tr><td>${escapeHtml(o.date)}</td><td>${escapeHtml(opTitle(o))}</td><td>${escapeHtml(accountById(o.from || o.to)?.name)}</td><td>${formatMoney(o.amount, accountById(o.from || o.to)?.currency)}</td></tr>`,
+      )
+      .join("")}</tbody></table>`,
+  );
   if (isTestMode()) {
     window.__print = out;
     return;
@@ -250,10 +156,17 @@ function printReport() {
 // Apply a selected import file after confirmation.
 export function handleImport(text) {
   if (importKind === "csv") {
-    const ops = prepareCSV(text);
+    const { ops, created, duplicates } = prepareCSV(text);
+    const news = created.accounts.length + created.categories.length;
     confirmAction(
-      "Append " + ops.length + " operations from this CSV?",
+      translateWith("Append {n} operations from this CSV?", { n: ops.length }) +
+        (news
+          ? " " + translateWith("{n} accounts and categories will be created.", { n: news })
+          : "") +
+        (duplicates ? " " + translateWith("{n} duplicates are skipped.", { n: duplicates }) : ""),
       () => {
+        appData.accounts.push(...created.accounts);
+        appData.categories.push(...created.categories);
         appData.ops.push(...ops);
         for (const o of ops)
           for (const tag of o.tags) if (!appData.tags.includes(tag)) appData.tags.push(tag);
@@ -271,13 +184,14 @@ export function handleImport(text) {
         "The selected JSON does not match the Monivra backup format. Check the file and try again.",
       );
     confirmAction(
-      "Replace existing accounts, categories and operations with " +
-        data.accounts.length +
-        " accounts, " +
-        data.categories.length +
-        " categories and " +
-        data.ops.length +
-        " operations from this file?",
+      translateWith(
+        "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?",
+        {
+          accounts: data.accounts.length,
+          categories: data.categories.length,
+          ops: data.ops.length,
+        },
+      ),
       () => {
         const backups = deepClone(appData.backups);
         setAppData(deepClone(data));

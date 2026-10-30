@@ -72,17 +72,23 @@ export function categoryPicker(type, value, fn) {
   let active = type;
   openSheet(
     () =>
-      `<h2>${translate("Category")}</h2>${tabsHtml(
+      `<h2 class="counterparty-title">${translate("Category")}</h2>${tabsHtml(
         [
           ["expense", "Expenses"],
           ["income", "Incomes"],
         ],
         active,
         (id) => (active = id),
-      )}${categoryTilesHtml(active, value, (c) => {
-        closeLayers();
-        fn(c.id);
-      })}`,
+        "tabs counterparty-tabs",
+      )}${categoryTilesHtml(
+        active,
+        value,
+        (c) => {
+          closeLayers();
+          fn(c.id);
+        },
+        "counterparty-categories",
+      )}`,
     "Category",
   );
 }

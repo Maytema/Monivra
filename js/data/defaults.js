@@ -91,42 +91,52 @@ const STARTER_INCOMES = [
   ["Other", "trend", "#9f37a9"],
 ];
 
+// A new account with every field set; `fields` override the defaults.
+export const blankAccount = (fields = {}) => ({
+  id: newId(),
+  name: "",
+  type: "Regular",
+  opening: 0,
+  icon: "wallet",
+  color: "#a000b8",
+  currency: "KGS",
+  goal: 0,
+  limit: 0,
+  include: true,
+  archived: false,
+  favorite: false,
+  description: "",
+  debt: "Owe me",
+  considerExpense: false,
+  considerIncome: false,
+  showExpense: false,
+  showIncome: false,
+  ...fields,
+});
+// A new category with every field set; `fields` override the defaults.
+export const blankCategory = (fields = {}) => ({
+  id: newId(),
+  name: "",
+  type: "expense",
+  icon: "tag",
+  color: "#a5a3c8",
+  currency: "KGS",
+  parent: null,
+  archived: false,
+  ...fields,
+});
+
 // A few ordinary accounts and categories. Names follow the interface language and,
 // once created, are plain records: every one can be edited or deleted.
 export function createStarterData() {
   const base = createEmptyData();
-  base.accounts = STARTER_ACCOUNTS.map(([name, type, icon, color]) => ({
-    id: newId(),
-    name: translate(name),
-    type,
-    opening: 0,
-    icon,
-    color,
-    currency: base.settings.currency,
-    goal: 0,
-    limit: 0,
-    include: true,
-    archived: false,
-    favorite: false,
-    description: "",
-    debt: "Owe me",
-    considerExpense: false,
-    considerIncome: false,
-    showExpense: false,
-    showIncome: false,
-  }));
+  base.accounts = STARTER_ACCOUNTS.map(([name, type, icon, color]) =>
+    blankAccount({ name: translate(name), type, icon, color, currency: base.settings.currency }),
+  );
   const category =
     (type) =>
-    ([name, icon, color]) => ({
-      id: newId(),
-      name: translate(name),
-      type,
-      icon,
-      color,
-      currency: base.settings.currency,
-      parent: null,
-      archived: false,
-    });
+    ([name, icon, color]) =>
+      blankCategory({ name: translate(name), type, icon, color, currency: base.settings.currency });
   base.categories = [
     ...STARTER_EXPENSES.map(category("expense")),
     ...STARTER_INCOMES.map(category("income")),

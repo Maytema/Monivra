@@ -1,4 +1,5 @@
 /* Startup: global event handlers, routing and lifecycle */
+import { photoDataUrl } from "./photo.js";
 import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
 import { appData, photoCallback, setLocked, setPinEntry, uiState } from "../core/state.js";
@@ -95,25 +96,16 @@ export function startup() {
       console.error("Import failed:", error);
     }
   });
-  document.getElementById("photo-file").addEventListener("change", (e) => {
+  document.getElementById("photo-file").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (!/^image\//.test(file.type)) return toast("Choose an image");
-    const reader = new FileReader();
-    reader.onload = () => {
-      const image = new Image();
-      image.onload = () => {
-        const scale = Math.min(1, 800 / Math.max(image.width, image.height)),
-          canvas = document.createElement("canvas");
-        canvas.width = Math.round(image.width * scale);
-        canvas.height = Math.round(image.height * scale);
-        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-        photoCallback?.(canvas.toDataURL("image/jpeg", 0.75));
-      };
-      image.onerror = () => toast("This image could not be opened");
-      image.src = reader.result;
-    };
-    reader.readAsDataURL(file);
+    try {
+      photoCallback?.(await photoDataUrl(file));
+      toast("Photo attached");
+    } catch (error) {
+      console.error("Photo failed:", error);
+      toast("This image could not be opened");
+    }
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {

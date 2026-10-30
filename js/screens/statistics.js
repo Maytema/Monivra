@@ -15,7 +15,7 @@ import {
   totalByType,
   visibleOperations,
 } from "../domain/finance.js";
-import { translate } from "../i18n/index.js";
+import { translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { sumTabs } from "./categories.js";
 import { filterActive, filters } from "./operations.js";
@@ -129,7 +129,7 @@ export function statisticsView() {
       `<section class="stats-card halves" data-stat="scheduled">${[uiState.catType, "transfer"].map((type) => buttonHtml(`<h3>${translate(type === "expense" ? "Scheduled expenses" : type === "income" ? "Scheduled incomes" : "Scheduled transfers")}</h3><span class="money ${type === "expense" ? "neg" : type === "income" ? "pos" : "muted"}">${formatMoney(appData.scheduled.filter((o) => o.type === type).reduce((n, o) => n + convertCurrency(o.amount, accountById(o.from || o.to)?.currency, appData.settings.currency), 0))}</span>`, () => openPage("scheduled"))).join("")}</section>`,
     bar: () => `<section class="stats-card" data-stat="bar">${chartBars()}</section>`,
     average: () =>
-      `<section class="stats-card" data-stat="average"><h3>${translate("Average values")}</h3><small>Based on ${days} days</small><div class="average-selected">${[
+      `<section class="stats-card" data-stat="average"><h3>${translate("Average values")}</h3><small>${translateWith("Based on {n} days", { n: days })}</small><div class="average-selected">${[
         ["Day", 1],
         ["Week", 7],
       ]

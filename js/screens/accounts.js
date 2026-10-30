@@ -1,6 +1,6 @@
 /* Accounts screens */
 import { render } from "../app/shell.js";
-import { CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -17,7 +17,7 @@ import {
   toggleFavoriteAccount,
   validateOp,
 } from "../domain/operations.js";
-import { translate } from "../i18n/index.js";
+import { currencyName, translate } from "../i18n/index.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
@@ -457,14 +457,11 @@ export function accountEditView(p) {
             }),
           )
         : ""
-    }${fieldButtonHtml(
-      "Account currency",
-      escapeHtml(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
-      () =>
-        currencyPicker(d.currency, (v) => {
-          d.currency = v;
-          render();
-        }),
+    }${fieldButtonHtml("Account currency", escapeHtml(currencyName(d.currency)), () =>
+      currencyPicker(d.currency, (v) => {
+        d.currency = v;
+        render();
+      }),
     )}${fieldButtonHtml(
       debt ? (current ? "Current debt" : "Amount of debt") : "Current balance",
       formatMoney(debt ? Math.abs(d.balance) : d.balance, d.currency),

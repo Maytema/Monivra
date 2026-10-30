@@ -1,6 +1,6 @@
 /* Categories screens */
 import { render } from "../app/shell.js";
-import { CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -13,7 +13,7 @@ import {
   totalByType,
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/operations.js";
-import { translate } from "../i18n/index.js";
+import { currencyName, translate, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
 import {
@@ -408,7 +408,7 @@ export function categoryEditView(p) {
     pageHeader(p.editing ? "Change category" : "New category") +
     `<div class="content cat-editor-content"><div class="cat-edit-form">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter the title")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${fieldButtonHtml("Type", (d.type === "expense" ? '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>' : '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>') + " " + translate(d.type === "expense" ? "Expenses" : "Incomes"), () => categoryTypePicker(d))}${fieldButtonHtml(
       "Account currency",
-      escapeHtml(CURRENCIES.find(([id]) => id === d.currency)?.[1] || d.currency),
+      escapeHtml(currencyName(d.currency)),
       () =>
         currencyPicker(d.currency, (v) => {
           d.currency = v;
@@ -518,7 +518,7 @@ export function categoryManageView() {
     `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${formatMoney(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile", `data-category="${escapeHtml(c.id)}"`)).join("")}</div>${
       archived.length
         ? `<div class="cat-manage-archive">${buttonHtml(
-            `Archive (${archived.length}) ${iconSvg(uiState.manageArchive ? "chevronUp" : "chevronDown", 17)}`,
+            `${translateWith("Archive ({n})", { n: archived.length })} ${iconSvg(uiState.manageArchive ? "chevronUp" : "chevronDown", 17)}`,
             () => {
               uiState.manageArchive = !uiState.manageArchive;
               render();

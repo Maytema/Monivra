@@ -9,7 +9,7 @@ import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
-import { translate } from "../i18n/index.js";
+import { translate, translateMarkup } from "../i18n/index.js";
 import { accountEditView, accountTypeView, accountsView } from "../screens/accounts.js";
 import {
   categoriesView,
@@ -140,7 +140,7 @@ export function render(top = false) {
   setInputHandlers({});
   setHandlerCounter(0);
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
-  const html = `<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`;
+  const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
   if (isTestMode()) {
     window.__html = html;
     return html;

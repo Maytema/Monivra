@@ -25,3 +25,40 @@ export const currentLocale = () => currentLanguage().locale;
 
 // Translate a UI string; falls back to the English text.
 export const translate = (text) => currentLanguage().strings[text] || text;
+
+// Translate a string with {name} placeholders and fill them in.
+export const translateWith = (text, values) =>
+  translate(text).replace(/\{(\w+)\}/g, (match, name) => values[name] ?? match);
+
+const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'" };
+const decode = (text) => text.replace(/&(?:amp|lt|gt|quot|#39);/g, (e) => ENTITIES[e]);
+const encode = (text) => text.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+// Translate the text and the label attributes of finished markup, so every screen is
+// translated in one place and no string has to be wrapped by hand.
+export function translateMarkup(html) {
+  const { strings } = currentLanguage();
+  const lookup = (text) => {
+    const translated = strings[decode(text)];
+    return translated ? encode(translated) : text;
+  };
+  return html
+    .replace(/>([^<>]*[A-Za-z][^<>]*)</g, (match, text) => {
+      const [, before, body, after] = /^(\s*)([\s\S]*?)(\s*)$/.exec(text);
+      return `>${before}${lookup(body)}${after}<`;
+    })
+    .replace(
+      /\b(aria-label|placeholder|title)="([^"]*)"/g,
+      (match, name, text) => `${name}="${lookup(text)}"`,
+    );
+}
+
+// Currency name in the interface language, e.g. "Киргизский сом" for KGS.
+export function currencyName(code, fallback = code) {
+  try {
+    const name = new Intl.DisplayNames([currentLocale()], { type: "currency" }).of(code);
+    return name.charAt(0).toLocaleUpperCase(currentLocale()) + name.slice(1);
+  } catch {
+    return fallback;
+  }
+}

@@ -2,7 +2,7 @@
 import { rootView } from "./shell.js";
 import { TODAY } from "../core/constants.js";
 import { appData, firstLaunch, setAppData, setFirstLaunch, uiState } from "../core/state.js";
-import { parseCSV } from "../data/import-export.js";
+import { parseCSV } from "../data/csv.js";
 import { createSampleData } from "../data/sample.js";
 import { isValidData } from "../data/storage.js";
 import { applyFees } from "../domain/fees.js";

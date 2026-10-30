@@ -12,8 +12,9 @@ import {
   uiState,
 } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
+import { csvText, parseCSV, prepareCSV } from "../data/csv.js";
 import { createEmptyData } from "../data/defaults.js";
-import { csvText, handleImport, parseCSV, prepareCSV } from "../data/import-export.js";
+import { handleImport } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { isValidData, save } from "../data/storage.js";
 import {
