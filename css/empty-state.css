@@ -42,56 +42,77 @@
   stroke: var(--accent);
   stroke-width: 4;
   transform-origin: 78px 70px;
-  animation: empty-cross 2.4s ease-in-out infinite;
-}
-@keyframes empty-cross {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: scale(0.7);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 .empty-art .bar {
   stroke: none;
   transform-box: fill-box;
   transform-origin: bottom;
-  animation: empty-bar 2.4s ease-in-out infinite;
+  fill: var(--accent);
 }
-.empty-art .bar-1 {
+.empty-art .bar:nth-child(1) {
   fill: #f5a623;
 }
-.empty-art .bar-2 {
+.empty-art .bar:nth-child(2) {
+  fill: #c9c93a;
+}
+.empty-art .bar:nth-child(3) {
   fill: #8bd23f;
-  animation-delay: 0.15s;
 }
-.empty-art .bar-3 {
+.empty-art .bar:nth-child(4) {
   fill: #19b8a6;
-  animation-delay: 0.3s;
 }
-.empty-art .bar-4 {
-  fill: var(--accent);
-  animation-delay: 0.45s;
+.empty-art .bar:nth-child(5) {
+  fill: #3a8fe0;
 }
-.empty-arrow {
+.empty-arrow,
+.empty-head {
   stroke: #2ecc71;
   stroke-width: 4;
 }
+.empty-arrow {
+  stroke-dasharray: 1;
+}
+/* One-time animation: the bars rise one after another, then the arrow is drawn along its arc. */
+[data-play] .bar {
+  animation: empty-bar 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+  animation-delay: calc(var(--i) * 0.2s + var(--elapsed, 0ms));
+}
+[data-play] .empty-arrow {
+  animation: empty-draw 0.9s ease-in-out 1.3s backwards;
+  animation-delay: calc(1.3s + var(--elapsed, 0ms));
+}
+[data-play] .empty-head {
+  animation: empty-fade 0.3s ease-out backwards;
+  animation-delay: calc(2.1s + var(--elapsed, 0ms));
+}
+[data-play] .empty-cross {
+  animation: empty-cross 0.8s ease-out 0.2s backwards;
+  animation-delay: calc(0.2s + var(--elapsed, 0ms));
+}
 @keyframes empty-bar {
-  0%,
-  100% {
-    transform: scaleY(0.85);
+  from {
+    transform: scaleY(0);
+    opacity: 0;
   }
-  50% {
-    transform: scaleY(1);
+}
+@keyframes empty-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes empty-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes empty-cross {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .empty-cross,
-  .empty-art .bar {
+  [data-play] * {
     animation: none;
   }
 }

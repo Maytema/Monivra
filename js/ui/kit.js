@@ -644,14 +644,24 @@ function calculatorKeys(get, set, done) {
   return `<div class="keypad">${cells.map((k) => buttonHtml(k, k === "…" ? () => optionSheet("Calculator", ["Calculate", "Clear"], null, (v) => press(v === "Clear" ? "C" : "=")) : () => press(k), "key", `aria-label="${k === "⌫" ? "Backspace" : k === "C" ? "Clear amount" : k}"`)).join("")}${buttonHtml(iconSvg("check", 30), done, "key ok", `aria-label="${translate("Save")}"`)}</div>`;
 }
 
-/* Empty states: a small animated illustration with a title and a hint. */
+/* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
   operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 22h46a8 8 0 0 1 8 8v52a8 8 0 0 0 8 8H38a8 8 0 0 1-8-8z"/><path class="empty-lines" d="M42 40h30M42 54h22M42 68h14"/><circle class="empty-lens" cx="78" cy="70" r="20"/><path class="empty-handle" d="m92 85 14 14"/><path class="empty-cross" d="m72 64 12 12m0-12-12 12"/></svg>`,
-  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar bar-1" x="20" y="74" width="14" height="26" rx="4"/><rect class="bar bar-2" x="40" y="62" width="14" height="38" rx="4"/><rect class="bar bar-3" x="60" y="48" width="14" height="52" rx="4"/><rect class="bar bar-4" x="80" y="30" width="14" height="70" rx="4"/><path class="empty-arrow" d="M16 58 46 40l18 8 40-28m0 0H88m16 0v16"/></svg>`,
+  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="82" width="12" height="18" rx="4"/><rect class="bar" style="--i:1" x="28" y="72" width="12" height="28" rx="4"/><rect class="bar" style="--i:2" x="46" y="60" width="12" height="40" rx="4"/><rect class="bar" style="--i:3" x="64" y="48" width="12" height="52" rx="4"/><rect class="bar" style="--i:4" x="82" y="36" width="12" height="64" rx="4"/><rect class="bar" style="--i:5" x="100" y="22" width="12" height="78" rx="4"/><path class="empty-arrow" pathLength="1" d="M10 58C40 50 80 22 108 9"/><path class="empty-head" d="M96 9l13-2-4 13"/></svg>`,
 };
+// When each illustration was first shown (ms); the play class lasts while its animation runs.
+const firstShown = {};
+const PLAY_MS = 2600;
 // Empty-state block; `kind` is "operations" or "statistics".
 export function emptyStateHtml(kind, title, hint) {
-  return `<div class="empty-state">${EMPTY_ILLUSTRATIONS[kind]}<h3>${translate(title)}</h3><p>${translate(hint)}</p></div>`;
+  firstShown[kind] ??= performance.now();
+  const elapsed = performance.now() - firstShown[kind];
+  // A redraw while the animation runs continues it from where it was.
+  const art = EMPTY_ILLUSTRATIONS[kind].replace(
+    "<svg ",
+    elapsed < PLAY_MS ? `<svg data-play style="--elapsed:-${Math.round(elapsed)}ms" ` : "<svg ",
+  );
+  return `<div class="empty-state">${art}<h3>${translate(title)}</h3><p>${translate(hint)}</p></div>`;
 }
 
 // Strip of tabs: `tabs` are [id, label] pairs; `onChange(id)` runs before the redraw.
