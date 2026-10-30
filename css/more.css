@@ -31,7 +31,7 @@
 .more-menu-item svg {
   width: 22px;
   height: 22px;
-  color: rgb(76, 74, 81);
+  color: var(--ink-soft);
   stroke-width: 2.25;
 }
 .account-tabs button {
@@ -39,7 +39,7 @@
   font-size: 16px;
   font-weight: 500;
   border-bottom-width: 3px;
-  color: rgb(38, 35, 41);
+  color: var(--ink);
 }
 .filter-main-actions button {
   min-height: 52px;
@@ -74,7 +74,7 @@
 }
 .feature svg {
   flex: 0 0 auto;
-  color: rgb(52, 72, 229);
+  color: var(--accent-ink);
   stroke-width: 2.3;
 }
 .review p {
@@ -83,7 +83,7 @@
 }
 .review small {
   font-size: 11px;
-  color: rgb(99, 93, 105);
+  color: var(--ink-soft);
 }
 .profile-orbit svg {
   width: 160px;
@@ -113,8 +113,8 @@
   margin-bottom: 24px;
 }
 .guide-step span {
-  background: rgb(236, 238, 254);
-  color: rgb(48, 75, 217);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color: var(--accent-ink);
   border-radius: 50%;
   width: 29px;
   height: 29px;
@@ -346,7 +346,7 @@
   height: 60px;
 }
 .more-menu-item:active {
-  background: rgb(242, 237, 245);
+  background: var(--sheet);
 }
 .more-version {
   text-align: center;
@@ -456,8 +456,8 @@
   min-height: 0px;
   display: flex;
   flex-direction: column;
-  background: rgb(255, 251, 255);
-  color: rgb(33, 31, 35);
+  background: var(--bg);
+  color: var(--ink);
   height: 100%;
   max-height: 100%;
   overflow: hidden;
@@ -473,7 +473,7 @@
   flex: 0 0 auto;
   margin-top: 0px;
   padding: 11px 21px max(15px, env(safe-area-inset-bottom));
-  background: rgb(255, 251, 255);
+  background: var(--bg);
   border-top: 1px solid rgb(236, 230, 237);
 }
 @media (max-height: 650px) {
@@ -527,8 +527,8 @@
   align-items: center;
   gap: 8px;
   border: 1px solid rgb(222, 217, 225);
-  background: rgb(255, 251, 255);
-  color: rgb(36, 32, 39);
+  background: var(--key);
+  color: var(--ink);
   text-align: left;
   box-shadow: rgba(48, 32, 68, 0.04) 0px 2px 6px;
   overflow: visible;
@@ -555,8 +555,8 @@
 }
 .plan-check {
   position: absolute;
-  background: rgb(52, 72, 229);
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -567,7 +567,7 @@
   top: -8px;
 }
 .plan.is-selected {
-  border: 2px solid rgb(52, 72, 229);
+  border: 2px solid var(--accent);
   padding: 14px 12px;
 }
 .feature {
@@ -578,7 +578,7 @@
   gap: 12px;
 }
 .review {
-  background: rgb(243, 239, 249);
+  background: var(--sheet);
   text-align: center;
   border-radius: 4px;
   font-size: 13px;
@@ -594,7 +594,7 @@
   margin: 10px 0px 18px;
 }
 .stars {
-  color: rgb(52, 72, 229);
+  color: var(--accent-ink);
   font-size: 23px;
   letter-spacing: 2px;
 }
@@ -602,7 +602,7 @@
   border: 1px solid rgb(220, 214, 224);
   background: transparent;
   border-radius: 40px;
-  color: rgb(51, 48, 57);
+  color: var(--ink);
   width: 100%;
   white-space: normal;
   display: flex;
@@ -615,11 +615,11 @@
   font-size: 13px;
 }
 .continue {
-  color: rgb(255, 255, 255);
+  color: var(--on-accent);
   border-radius: 40px;
   width: 100%;
   font-weight: 600;
-  background: rgb(49, 73, 235);
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -662,7 +662,7 @@
 }
 .profile-value {
   font-size: 15px;
-  color: rgb(41, 37, 43);
+  color: var(--ink);
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
@@ -701,14 +701,14 @@
 }
 .info-pill {
   display: inline-block;
-  background: rgb(234, 234, 250);
-  color: rgb(51, 70, 169);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  color: var(--accent-ink);
   padding: 5px 12px;
   border-radius: 18px;
   font-size: 12px;
 }
 .caution {
-  background: rgb(243, 240, 248);
+  background: var(--sheet);
   border-left: 3px solid rgb(140, 132, 174);
   padding: 12px 13px;
   border-radius: 5px;
@@ -748,8 +748,8 @@
   width: 76px;
   height: 76px;
   border-radius: 22px;
-  background: rgb(240, 239, 250);
-  color: rgb(51, 79, 232);
+  background: var(--sheet);
+  color: var(--accent-ink);
   display: grid;
   place-items: center;
   margin: 8px auto 20px;

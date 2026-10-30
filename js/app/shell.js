@@ -2,6 +2,7 @@
 import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
 import { initAccountDrag } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
+import { readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
@@ -117,8 +118,13 @@ function applyAppearance() {
   const dark =
     appData.settings.theme === "dark" ||
     (appData.settings.theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
-  root.style.setProperty("--accent", appData.settings.accent);
   root.classList.toggle("dark", dark);
+  // Text colors derived from the accent so that every accent stays readable.
+  const accent = appData.settings.accent;
+  const background = dark ? "#1e1a21" : "#ffffff";
+  root.style.setProperty("--accent", accent);
+  root.style.setProperty("--on-accent", textOn(accent));
+  root.style.setProperty("--accent-ink", readableOver(accent, background));
   root.lang = appData.settings.language;
 }
 

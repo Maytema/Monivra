@@ -343,7 +343,7 @@
   overflow: hidden;
   border-radius: 14px;
   margin: 7px 0px 12px;
-  background: rgb(247, 245, 249);
+  background: var(--sheet);
 }
 .filter-group-head {
   align-items: center;
@@ -479,7 +479,7 @@
   border: 1px solid rgb(217, 213, 224);
   border-radius: 17px;
   padding: 9px 6px;
-  background: var(--surface, #fff);
+  background: var(--key);
   min-width: 0px;
   min-height: 68px;
   display: flex;
@@ -495,8 +495,8 @@
   border-radius: 14px;
   display: grid;
   place-items: center;
-  background: rgb(41, 77, 245);
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .operations-selection-actions {
   display: flex;
@@ -509,7 +509,7 @@
   z-index: 1;
   flex: 0 0 auto;
   box-shadow: none;
-  background: rgb(224, 227, 252);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg));
   gap: 10px;
   padding: 9px 14px 12px;
 }
@@ -517,7 +517,7 @@
   align-items: center;
   flex: 1 1 0%;
   min-width: 0px;
-  background: rgb(255, 250, 254);
+  background: var(--bg);
   height: 62px;
   display: flex;
   flex-direction: column;
@@ -544,7 +544,7 @@
   width: 44px;
   height: 44px;
   border-radius: 9px;
-  background: rgb(40, 80, 240);
+  background: var(--accent);
   flex: 0 0 auto;
 }
 .ops-selection-header {

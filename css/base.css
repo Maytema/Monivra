@@ -1,23 +1,26 @@
 /* Base: theme variables (colors, fonts) and element defaults.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
 :root {
-  --bg: #fffafe;
+  --bg: color-mix(in srgb, var(--accent) 2%, #ffffff);
   --ink: #252127;
   --muted: #8c858e;
+  --ink-soft: #5d5360;
   --line: #e4dde4;
   --accent: #a000b8;
-  --soft: #f3d7f0;
-  --sheet: #faeafd;
-  --dialog: #ece6f2;
-  --key: #fffbff;
+  /* Text on an accent background and accent used as text; both are adjusted in js/app/shell.js */
+  --on-accent: #ffffff;
+  --accent-ink: var(--accent);
+  --soft: color-mix(in srgb, var(--accent) 16%, #ffffff);
+  --sheet: color-mix(in srgb, var(--accent) 8%, #ffffff);
+  --dialog: color-mix(in srgb, var(--accent) 6%, #ebe8ee);
+  --key: color-mix(in srgb, var(--accent) 1.5%, #ffffff);
   --positive: #45bd96;
   --negative: #ce3c71;
-  --nav: #f9e8f8;
-  --tint: #fbd0fe;
+  --nav: color-mix(in srgb, var(--accent) 9%, #ffffff);
+  --tint: color-mix(in srgb, var(--accent) 18%, #ffffff);
   color-scheme: light;
   font-family: Roboto, "Noto Sans", Arial, sans-serif;
   font-size: 16px;
-  --accounts-reference-blue: #3155e9;
 }
 @media (max-width: 359px) {
   :root {

@@ -1,6 +1,7 @@
 /* More tab, settings and info pages */
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
+import { textOn } from "../core/color.js";
 import {
   APP_BUILD,
   CURRENCIES,
@@ -161,7 +162,7 @@ export function settingsPage(kind) {
           () =>
             openSheet(
               () =>
-                `<h2>Accent color</h2><div class="color-grid">${PALETTE.map((c) => buttonHtml(appData.settings.accent === c ? iconSvg("check") : "", () => setting("accent", c), "", `style="background:${c};color:white" aria-label="${c}"`)).join("")}</div>${buttonHtml("Complete", () => closeLayers(), "primary")}`,
+                `<h2>Accent color</h2><div class="color-grid">${PALETTE.map((c) => buttonHtml(appData.settings.accent === c ? iconSvg("check") : "", () => setting("accent", c), "", `style="background:${c};color:${textOn(c)}" aria-label="${c}"`)).join("")}</div>${buttonHtml("Complete", () => closeLayers(), "primary")}`,
               "Accent color",
               "dialog",
             ),

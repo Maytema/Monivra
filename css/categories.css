@@ -14,7 +14,7 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  color: rgb(93, 83, 96);
+  color: var(--ink-soft);
   font-size: 12px;
   min-width: 0px;
   min-height: 56px;
@@ -130,7 +130,7 @@
 }
 .cat-scheduled {
   padding: 12px;
-  background: rgb(245, 240, 255);
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
   border-radius: 10px;
 }
 .cat-manage-content {
@@ -145,7 +145,7 @@
   gap: 9px;
   font-size: 14px;
   margin-bottom: 14px;
-  background: rgb(247, 244, 250);
+  background: var(--sheet);
   border: 1px solid rgb(235, 230, 240);
   min-height: 46px;
   border-radius: 10px;
@@ -169,12 +169,12 @@
   gap: 10px;
 }
 .cat-action-secondary {
-  background: rgb(255, 250, 254);
+  background: var(--bg);
   border: 1px solid rgb(221, 215, 227);
 }
 .cat-action-archive {
-  color: rgb(34, 34, 34);
-  background: rgb(224, 225, 250);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg));
 }
 .cat-action-delete {
   color: rgb(187, 52, 52);
@@ -235,7 +235,7 @@
   gap: 0px;
   margin: 5px 15px 10px;
   padding: 2px;
-  background: rgb(242, 239, 252);
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
   border-radius: 8px;
   box-shadow: none;
 }
@@ -265,7 +265,7 @@
   white-space: normal;
   overflow-wrap: anywhere;
   font-size: 14px;
-  color: rgb(48, 84, 217);
+  color: var(--accent-ink);
 }
 .cat-add-sub {
   width: 100%;
@@ -275,7 +275,7 @@
   padding: 11px;
   margin-top: 5px;
   border-top: 0px;
-  color: rgb(46, 75, 234);
+  color: var(--accent-ink);
   min-height: 37px;
   margin: 1px 0px 0px;
   font-size: 13px;
@@ -295,14 +295,14 @@
   min-height: 70px;
   border-color: rgb(221, 215, 227);
   border-radius: 12px;
-  background: rgb(255, 250, 254);
+  background: var(--bg);
 }
 .cat-sub-section {
   padding: 11px 14px;
 }
 .cat-edit-form > .field,
 .cat-sub-section {
-  background: rgb(255, 250, 253);
+  background: var(--bg);
   border: 1px solid rgb(228, 223, 232);
   border-radius: 10px;
 }

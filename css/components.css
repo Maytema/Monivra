@@ -67,7 +67,7 @@
   }
 }
 .data-menu > .row svg {
-  color: rgb(77, 74, 83);
+  color: var(--ink-soft);
 }
 .overlay.dialog:has(#cat-sub-name) .panel h2 {
   text-align: center;
@@ -111,10 +111,10 @@
 #base:has(.more-menu) .navbar button {
   font-size: 12px;
   gap: 5px;
-  color: rgb(76, 74, 88);
+  color: var(--ink-soft);
 }
 #base:has(.more-menu) .navbar button.active svg {
-  stroke: rgb(40, 70, 198);
+  stroke: var(--accent-ink);
 }
 #base:has(> .more-menu) {
   min-height: 0px;
@@ -125,7 +125,7 @@
 #base:has(> .more-menu) > .navbar button {
   font-size: 10px;
   gap: 4px;
-  color: rgb(93, 83, 96);
+  color: var(--ink-soft);
   min-height: 56px;
   font-weight: 400;
 }
@@ -150,7 +150,7 @@
   line-height: 16px;
   font-weight: 400;
   letter-spacing: normal;
-  color: rgb(93, 83, 96);
+  color: var(--ink-soft);
   transform: none;
   transition:
     color 0.12s,
@@ -185,7 +185,7 @@
 #base:has(.accounts-content) .hero {
   height: 102px;
   padding-top: 12px;
-  background: rgb(255, 251, 255);
+  background: var(--bg);
 }
 #base:has(.accounts-content) .hero .hero-action {
   right: 12px;
@@ -239,7 +239,7 @@
   font-size: 29px;
   font-weight: 400;
   line-height: 1.32;
-  color: rgb(28, 27, 30);
+  color: var(--ink);
 }
 .hero .balance {
   line-height: 1.35;
@@ -402,36 +402,36 @@
   color: var(--ink);
 }
 .navbar button.active {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 600;
 }
 .tag.active {
   background: var(--soft);
   border-color: var(--accent);
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .calendar .active {
-  color: white;
+  color: var(--on-accent);
   background: var(--accent);
 }
 .chip.active {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 .account-tabs button.active {
-  border-color: var(--accounts-reference-blue);
+  border-color: var(--accent);
   font-weight: 600;
 }
 #base:has(.more-menu) .navbar button.active {
-  color: rgb(40, 70, 198);
+  color: var(--accent-ink);
 }
 #base:has(> .more-menu) > .navbar button.active {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 600;
 }
 #base > .navbar > button.active,
 #base:has(.more-menu) .navbar > button.active {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 600;
   font-size: 12px;
 }
@@ -439,9 +439,9 @@
   border-bottom-color: transparent;
 }
 .cat-manage-tabs button.active {
-  color: rgb(37, 33, 39);
+  color: var(--ink);
   border: 0px;
-  background: rgb(255, 255, 255);
+  background: var(--key);
   box-shadow: rgba(41, 32, 52, 0.09) 0px 1px 2px;
 }
 .add-tab.active {
@@ -567,12 +567,12 @@
   color: var(--muted);
 }
 .accent {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .account-tabs {
   height: 54px;
   border-bottom: 1px solid rgb(215, 209, 217);
-  background: rgb(255, 251, 255);
+  background: var(--bg);
   display: flex;
   gap: 0px;
 }
@@ -725,7 +725,7 @@
 }
 #base:has(.more-menu) .navbar {
   height: 75px;
-  background: rgb(238, 235, 255);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg));
   padding: 8px 0px 6px;
 }
 #base:has(> .more-menu) > .navbar {
@@ -755,7 +755,7 @@
   letter-spacing: normal;
 }
 #base:has(.more-menu) .navbar .active .navicon {
-  background: rgb(227, 224, 250);
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg));
 }
 #base:has(> .more-menu) > .navbar .active .navicon {
   background: var(--soft);
@@ -840,12 +840,12 @@
   margin-bottom: 12px;
 }
 .field .value {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 15px;
 }
 .account-editor-reference .field .value {
   font-size: 13px;
-  color: rgb(53, 79, 228);
+  color: var(--accent-ink);
 }
 .field.inline {
   display: flex;
@@ -897,7 +897,7 @@
 }
 .primary {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 .empty .primary {
   margin-top: 30px;
@@ -920,12 +920,12 @@
   margin-top: 22px;
 }
 .account-editor-bottom .primary {
-  background: rgb(48, 77, 229);
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .cat-editor-actions .primary {
-  background: rgb(48, 77, 240);
-  color: rgb(255, 255, 255);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .outline {
   border: 1px solid rgb(203, 193, 208);
@@ -936,14 +936,14 @@
 }
 .text-button {
   padding: 14px;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .toggle {
   border: 1.5px solid rgb(131, 119, 131);
   width: 49px;
   height: 29px;
   border-radius: 30px;
-  background: rgb(229, 222, 232);
+  background: color-mix(in srgb, var(--ink) 14%, var(--bg));
   flex: 0 0 auto;
   position: relative;
 }
@@ -966,16 +966,16 @@
   left: 24px;
 }
 .checkbox.on {
-  background: rgb(41, 81, 245);
-  border-color: rgb(41, 81, 245);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 .account-editor-reference .toggle.on {
-  background: rgb(48, 77, 229);
-  border-color: rgb(48, 77, 229);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 .customize-toggle.on {
-  background: rgb(40, 71, 247);
-  border-color: rgb(40, 71, 247);
+  background: var(--accent);
+  border-color: var(--accent);
   justify-content: flex-end;
 }
 .row {
@@ -1024,7 +1024,7 @@
   margin: 0px 0px 13px;
   padding: 14px 13px;
   min-height: 69px;
-  background: rgb(255, 251, 255);
+  background: var(--key);
 }
 .counterparty-accounts .row {
   min-height: 62px;
@@ -1046,35 +1046,35 @@
   line-height: 1.35;
 }
 .row .chevron {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 .op-row:not(.selected) {
   background: transparent;
 }
 .picker-icon-cell.selected {
-  border-color: rgb(40, 71, 247);
-  color: rgb(40, 71, 247);
-  background: rgb(233, 234, 255);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg));
 }
 .type-picker-radio.selected {
-  border-color: rgb(40, 80, 236);
+  border-color: var(--accent);
 }
 .type-picker-radio.selected::after {
   content: "";
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  background: rgb(40, 80, 236);
+  background: var(--accent);
 }
 .currency-sheet-radio.selected {
-  border-color: rgb(40, 80, 236);
+  border-color: var(--accent);
 }
 .currency-sheet-radio.selected::after {
   content: "";
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  background: rgb(40, 80, 236);
+  background: var(--accent);
 }
 .op-row.selected {
   padding-left: 7px;
@@ -1084,7 +1084,7 @@
   box-shadow: none;
   margin-top: 3px;
   margin-bottom: 3px;
-  background: rgb(227, 229, 255);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg));
   border-radius: 13px;
   margin: 4px 0px;
   padding: 7px 10px;
@@ -1166,7 +1166,7 @@
   width: calc(100% - 46px);
   max-width: 384px;
   border-radius: 30px;
-  background: rgb(236, 230, 241);
+  background: var(--sheet);
   padding: 26px 26px 30px;
   max-height: calc(100dvh - 95px);
   overflow-y: auto;
@@ -1179,7 +1179,7 @@
   max-width: none;
   border-radius: 0px;
   padding: 0px;
-  background: rgb(255, 250, 254);
+  background: var(--bg);
   overflow: hidden;
 }
 .overlay.dialog:has(.customize-settings) .panel {
@@ -1189,18 +1189,18 @@
 .overlay.dialog:has(.picker-settings) .panel {
   width: calc(100% - 70px);
   max-width: 350px;
-  background: rgb(236, 230, 241);
+  background: var(--sheet);
   border-radius: 26px;
   padding: 22px 20px;
   max-height: calc(100dvh - 70px);
 }
 .overlay.sheet:has(.type-picker) .panel {
-  background: rgb(244, 240, 250);
+  background: var(--sheet);
   border-radius: 30px 30px 0px 0px;
   padding: 22px 16px 48px;
 }
 .overlay.full:has(.currency-sheet) .panel {
-  background: rgb(245, 241, 255);
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
   padding: 0px;
   overflow: hidden;
 }
@@ -1239,7 +1239,7 @@
   align-items: stretch;
 }
 .overlay.full:has(.currency-sheet) {
-  background: rgb(245, 241, 255);
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
 }
 .overlay.sheet:has([data-add-chooser]) .panel > .handle {
   margin: 11px auto 8px;
@@ -1256,7 +1256,7 @@
 .overlay.sheet:has(.picker-color-picker) {
   align-items: stretch;
   padding: 0px;
-  background: rgb(255, 250, 254);
+  background: var(--bg);
 }
 .sheet-account .total {
   text-align: center;
@@ -1371,16 +1371,17 @@
   translate: 0px;
 }
 .dark {
-  --bg: #211c25;
+  --bg: color-mix(in srgb, var(--accent) 4%, #1e1a21);
   --ink: #f4eaf6;
   --muted: #b8aebd;
+  --ink-soft: #d3c8d7;
   --line: #4d4052;
-  --sheet: #35263d;
-  --dialog: #403246;
-  --nav: #2d2034;
-  --key: #48364f;
-  --soft: #563661;
-  --tint: #693275;
+  --sheet: color-mix(in srgb, var(--accent) 13%, #211d25);
+  --dialog: color-mix(in srgb, var(--accent) 15%, #2a252e);
+  --nav: color-mix(in srgb, var(--accent) 11%, #211d25);
+  --key: color-mix(in srgb, var(--accent) 17%, #2b2630);
+  --soft: color-mix(in srgb, var(--accent) 24%, #2b2630);
+  --tint: color-mix(in srgb, var(--accent) 32%, #2b2630);
   color-scheme: dark;
 }
 .right {
@@ -1392,8 +1393,8 @@
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
-  background: rgb(255, 251, 255);
-  color: rgb(29, 27, 32);
+  background: var(--bg);
+  color: var(--ink);
 }
 .more-menu::-webkit-scrollbar {
   display: none;
@@ -1407,12 +1408,12 @@
 }
 .schedule-unit-btn.chosen {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   font-weight: 600;
 }
 .schedule-weekday.chosen {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 .schedule-choice.chosen,
 .schedule-lead.chosen {
@@ -1513,7 +1514,7 @@
   position: absolute;
   bottom: 0px;
   height: 3px;
-  background: var(--accounts-reference-blue);
+  background: var(--accent);
   pointer-events: none;
   will-change: transform;
   transform-origin: left center;
@@ -1549,7 +1550,7 @@
   margin-bottom: 15px;
 }
 .customize-action {
-  background: rgb(255, 251, 255);
+  background: var(--key);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1583,8 +1584,8 @@
 }
 .customize-complete,
 .customize-primary {
-  background: rgb(40, 71, 247);
-  color: white;
+  background: var(--accent);
+  color: var(--on-accent);
   text-align: center;
   border-radius: 40px;
   min-height: 47px;
@@ -1596,7 +1597,7 @@
   margin-top: 26px;
 }
 .customize-setting-card {
-  background: rgb(255, 251, 255);
+  background: var(--key);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -1604,7 +1605,7 @@
   border-top: 1px solid rgb(215, 209, 217);
 }
 .customize-cancel {
-  color: rgb(40, 71, 247);
+  color: var(--accent-ink);
   font-weight: 500;
   padding: 12px;
 }
@@ -1638,7 +1639,7 @@
   height: 27px;
   border: 2px solid rgb(129, 128, 137);
   border-radius: 25px;
-  background: rgb(229, 225, 232);
+  background: color-mix(in srgb, var(--ink) 14%, var(--bg));
   display: flex;
   align-items: center;
   padding: 3px;
@@ -1648,7 +1649,7 @@
   min-height: 48px;
 }
 .customize-customize .customize-action-icon {
-  color: rgb(75, 73, 82);
+  color: var(--ink-soft);
 }
 .picker-setting-buttons .customize-primary {
   min-height: 40px;
@@ -1711,7 +1712,7 @@
 .picker-color-preview {
   height: 65px;
   margin: 0px 16px 7px;
-  background: rgb(238, 232, 237);
+  background: var(--sheet);
   border-radius: 13px;
   display: flex;
   align-items: center;
@@ -1720,7 +1721,7 @@
 .picker-color-hint {
   text-align: center;
   font-size: 11px;
-  color: rgb(102, 102, 102);
+  color: var(--ink-soft);
   margin: 2px 0px 10px;
 }
 .picker-color-quick {
@@ -1743,7 +1744,7 @@
   border: 1px solid rgb(222, 219, 227);
 }
 .picker-setting-rows {
-  background: rgb(255, 251, 255);
+  background: var(--key);
   border-radius: 14px;
   overflow: hidden;
 }
@@ -1796,7 +1797,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgb(86, 82, 91);
+  color: var(--ink-soft);
   border: 1px solid rgb(227, 220, 229);
   border-radius: 8px;
   height: 44px;
@@ -1814,7 +1815,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: rgb(245, 241, 255);
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
 }
 .currency-sheet-head {
   height: 77px;

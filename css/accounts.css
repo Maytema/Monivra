@@ -8,7 +8,7 @@
   fill: currentcolor;
 }
 .account-detail-head .account-favorite svg {
-  stroke: rgb(40, 85, 233);
+  stroke: var(--accent-ink);
 }
 .account-editor-reference .account-editor-bottom button {
   margin: 0px;
@@ -16,7 +16,7 @@
   font-size: 13px;
 }
 #base:has(.accounts-content) {
-  background: rgb(255, 251, 255);
+  background: var(--bg);
 }
 .hero-balance-label:focus-visible {
   outline: 2px solid var(--accent);
@@ -100,7 +100,7 @@
   gap: 16px;
   border-radius: 15px;
   border: 1px solid rgb(224, 220, 227);
-  background: rgb(255, 251, 255);
+  background: var(--key);
   text-align: left;
   position: relative;
 }
@@ -141,7 +141,7 @@
   background: transparent;
   padding: 6px;
   align-self: flex-start;
-  color: rgb(40, 85, 233);
+  color: var(--accent-ink);
 }
 .account-actions-six {
   display: grid;
@@ -170,7 +170,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: rgb(241, 228, 248);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
   color: rgb(171, 57, 194);
 }
 .account-actions-six .account-action-tile:nth-child(2) .account-action-icon {
@@ -200,7 +200,7 @@
   margin: 24px 0px 20px;
 }
 .account-editor-archive {
-  background: rgb(238, 231, 246);
+  background: color-mix(in srgb, var(--accent) 10%, var(--bg));
   border: 0px;
 }
 .account-editor-delete {
@@ -214,7 +214,7 @@
   top: 58px;
   font-size: 12px;
   line-height: 13px;
-  color: rgb(40, 85, 233);
+  color: var(--accent-ink);
   background: var(--bg);
   border-radius: 3px;
   padding: 0px 2px;
@@ -225,7 +225,7 @@
 .account-editor-reference {
   padding-top: 13px;
   padding: 4px 10px 38px;
-  background: rgb(255, 251, 255);
+  background: var(--bg);
 }
 .account-editor-reference .account-editor-bottom {
   margin: 13px 0px 15px;
@@ -265,7 +265,7 @@
   bottom: -1px;
   line-height: 1;
   font-size: 12px;
-  color: rgb(40, 85, 233);
+  color: var(--accent-ink);
 }
 .accounts-content .account-row .name {
   font-size: 17px;
@@ -336,7 +336,7 @@
 }
 .accounts-content {
   padding: 0px 16px 24px;
-  background: rgb(255, 251, 255);
+  background: var(--bg);
 }
 .accounts-content .accounts-archive-toggle {
   display: block;
@@ -369,7 +369,7 @@
   border-top: 1px solid var(--line);
 }
 .account-favorite.is-favorite {
-  color: rgb(40, 85, 233);
+  color: var(--accent-ink);
 }
 .debt-completed {
   border-right: 4px solid rgb(40, 189, 137);
@@ -395,7 +395,7 @@
   padding: 11px;
   border: 1px solid rgb(227, 220, 230);
   border-radius: 13px;
-  background: rgb(255, 251, 255);
+  background: var(--key);
   text-align: left;
   min-height: 81px;
 }
@@ -420,7 +420,7 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
-  color: rgb(56, 81, 220);
+  color: var(--accent-ink);
   flex: 0 0 auto;
 }
 .type-text {
@@ -469,7 +469,7 @@
   margin: 12px 0 0;
   padding: 6px 4px 6px 14px;
   border-radius: 14px;
-  background: rgb(243, 237, 247);
+  background: var(--sheet);
   font-size: 14px;
 }
 .hint-text {
