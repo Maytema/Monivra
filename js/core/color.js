@@ -43,3 +43,41 @@ export function readableOver(color, background, min = 4.5) {
   }
   return toHex([target, target, target]);
 }
+
+// "#rrggbb" from hue (0–360), saturation and value (0–1).
+export function hsvToHex(h, s, v) {
+  const f = (n) => {
+    const k = (n + h / 60) % 6;
+    return v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
+  };
+  return toHex([f(5) * 255, f(3) * 255, f(1) * 255]);
+}
+
+// [hue 0–360, saturation 0–1, value 0–1] of "#rrggbb".
+export function hexToHsv(hex) {
+  const [r, g, b] = channels(hex).map((v) => v / 255);
+  const max = Math.max(r, g, b),
+    delta = max - Math.min(r, g, b);
+  let h = 0;
+  if (delta) {
+    if (max === r) h = ((g - b) / delta + 6) % 6;
+    else if (max === g) h = (b - r) / delta + 2;
+    else h = (r - g) / delta + 4;
+  }
+  return [h * 60, max ? delta / max : 0, max];
+}
+
+// "#rrggbb" from hue (0–360), saturation and lightness (0–1).
+export function hslToHex(h, s, l) {
+  const v = l + s * Math.min(l, 1 - l);
+  return hsvToHex(h, v ? 2 * (1 - l / v) : 0, v);
+}
+
+// True for a complete "#rrggbb" string.
+export const isHex = (text) => /^#[0-9a-f]{6}$/i.test(text);
+
+// Seven shades of the color's hue, from light to dark.
+export function shadesOf(hex) {
+  const [h] = hexToHsv(hex);
+  return [0.86, 0.74, 0.62, 0.5, 0.4, 0.3, 0.2].map((l) => hslToHex(h, 0.72, l));
+}

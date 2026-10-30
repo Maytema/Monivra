@@ -1,5 +1,6 @@
 /* App shell: navigation, root view, rendering */
 import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
+import { initColorWheel } from "./color-wheel.js";
 import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
@@ -158,6 +159,7 @@ export function render(top = false) {
   app.innerHTML = html;
   initOperationLongPress();
   initDragReorder();
+  initColorWheel();
   applyAppearance();
   // Restore scroll positions.
   const content = app.querySelector(".content");

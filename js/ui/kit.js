@@ -1,9 +1,12 @@
 /* UI kit: pages, sheets, dialogs and pickers */
+import { wheelHtml, wheelValues } from "../app/color-wheel.js";
 import { render } from "../app/shell.js";
+import { isHex, shadesOf } from "../core/color.js";
 import {
   CURRENCIES,
-  ICONS,
+  ICON_GROUPS,
   PALETTE,
+  QUICK_COLORS,
   TODAY,
   escapeHtml,
   iconSvg,
@@ -376,7 +379,7 @@ export function currencyPicker(value, fn) {
 }
 // Sheet for choosing an icon and color for an account or category.
 export function iconPicker(obj) {
-  const names = Object.keys(ICONS),
+  const names = ICON_GROUPS.flatMap(([, keys]) => keys),
     excluded = () => appData.settings.randomSelectionFlags || {};
   const used = (key, kind) =>
     new Set(
@@ -441,60 +444,24 @@ export function iconPicker(obj) {
       "dialog",
     );
   };
-  const iconGroups = [
-    [
-      "Common",
-      [
-        "wallet",
-        "card",
-        "cash",
-        "calendar",
-        "settings",
-        "star",
-        "help",
-        "info",
-        "tag",
-        "gift",
-        "briefcase",
-        "receipt",
-      ],
-    ],
-    ["Food and drink", ["pizza"]],
-    ["Buildings", ["home"]],
-    ["Health and medicine", ["heart"]],
-    ["Delivery", ["transfer", "upload", "download"]],
-    ["Leisure", ["bike", "camera", "image", "play"]],
-    ["People", ["user", "smile"]],
-    ["Nature", ["paw", "sun"]],
-    ["Other", names],
-  ];
   const chooseIcon = () => {
     openSheet(() => {
-      const usedNames = new Set();
-      const groups = iconGroups
-        .map(([title, keys]) => [
-          title,
-          keys.filter((k) => names.includes(k) && !usedNames.has(k) && !!usedNames.add(k)),
-        ])
-        .filter(([, keys]) => keys.length);
-      return `<div class="picker-icon-picker"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Select an icon</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("icon"), "picker-gear", 'aria-label="Icon selection settings"')}</div><div class="picker-list">${groups
-        .map(
-          ([title, keys]) =>
-            `<div class="picker-icon-group"><div class="picker-icon-group-title"><span>${title}</span></div><div class="picker-icon-grid">${keys
-              .map((x) =>
-                buttonHtml(
-                  iconSvg(x, 25),
-                  () => {
-                    obj.icon = x;
-                    closeLayers();
-                  },
-                  "picker-icon-cell " + (obj.icon === x ? "selected" : ""),
-                  `aria-label="${x}" title="${x}"`,
-                ),
-              )
-              .join("")}</div></div>`,
-        )
-        .join("")}</div></div>`;
+      return `<div class="picker-icon-picker"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Select an icon</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("icon"), "picker-gear", 'aria-label="Icon selection settings"')}</div><div class="picker-list">${ICON_GROUPS.map(
+        ([title, keys]) =>
+          `<div class="picker-icon-group"><div class="picker-icon-group-title"><span>${translate(title)}</span></div><div class="picker-icon-grid">${keys
+            .map((x) =>
+              buttonHtml(
+                iconSvg(x, 25),
+                () => {
+                  obj.icon = x;
+                  closeLayers();
+                },
+                "picker-icon-cell " + (obj.icon === x ? "selected" : ""),
+                `aria-label="${x}" title="${x}"`,
+              ),
+            )
+            .join("")}</div></div>`,
+      ).join("")}</div></div>`;
     }, "Select an icon");
   };
   const pickerSettings = (mode = "icon") => {
@@ -531,55 +498,47 @@ export function iconPicker(obj) {
     );
   };
   const chooseColor = () => {
-    let pending = obj.color;
-    const colors = Array.from({ length: 16 }, (_, r) =>
-      Array.from({ length: 10 }, (_, c) => {
-        const hue = (c * 36 + r * 7) % 360;
-        const light = 32 + r * 3.3;
-        return `hsl(${hue} 75% ${light}%)`;
-      }),
-    );
-    const grid = () =>
-      colors
-        .map((row, r) =>
-          row
-            .map((color, c) =>
-              buttonHtml(
-                pending === color ? iconSvg("check", 19) : "",
-                () => {
-                  pending = color;
-                  render();
-                },
-                "picker-color-tile",
-                `style="background:${color}" aria-label="Color row ${r + 1} column ${c + 1}"`,
-              ),
-            )
-            .join(""),
-        )
-        .join("");
-    openSheet(
-      () =>
-        `<div class="picker-color-picker picker-color-page"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Choose color</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("color"), "picker-gear", 'aria-label="Color list customization"')}</div><div class="picker-color-preview" style="color:${pending};background:color-mix(in srgb,${pending} 20%,#fffafe)">${iconSvg(obj.icon, 32)}</div><p class="picker-color-hint">You can scroll colors horizontally or vertically.</p><div class="picker-color-grid">${grid()}</div><div class="picker-color-quick">${PALETTE.map(
-          (c) =>
-            buttonHtml(
-              pending === c ? iconSvg("check", 14) : "",
-              () => {
-                pending = c;
-                render();
-              },
-              "picker-quick-swatch",
-              `style="background:${c}" aria-label="Color ${c}"`,
-            ),
-        ).join("")}</div>${buttonHtml(
-          "Complete",
-          () => {
-            obj.color = pending;
-            closeLayers();
-          },
-          "customize-complete",
-        )}</div>`,
-      "Choose color",
-    );
+    let pending = obj.color,
+      lastHue = 0;
+    const swatch = (color, size) =>
+      buttonHtml(
+        pending.toLowerCase() === color.toLowerCase() ? iconSvg("check", 16) : "",
+        () => {
+          pending = color;
+          render();
+        },
+        `picker-swatch ${size}`,
+        `style="background:${color}" aria-label="Color ${color}"`,
+      );
+    openSheet(() => {
+      lastHue = wheelValues(pending, lastHue)[0];
+      return `<div class="picker-color-picker picker-color-page" style="--picked:${pending}"><div class="picker-head">${buttonHtml(iconSvg("left", 23), () => closeLayers(), "picker-back", 'aria-label="Back"')}<h2>Choose color</h2>${buttonHtml(iconSvg("gear", 23), () => pickerSettings("color"), "picker-gear", 'aria-label="Color list customization"')}</div><div class="picker-scroll"><div class="picker-color-preview">${iconSvg(obj.icon, 32)}</div>${wheelHtml(
+        pending,
+        lastHue,
+        (c) => (pending = c),
+        () => render(),
+      )}<div class="picker-row picker-quick">${QUICK_COLORS.map((c) => swatch(c, "large")).join("")}</div><div class="picker-row picker-shades">${shadesOf(
+        pending,
+      )
+        .map((c) => swatch(c, "small"))
+        .join(
+          "",
+        )}</div><label class="picker-hex"><span>HEX</span><input aria-label="Color code" maxlength="7" autocapitalize="off" spellcheck="false" value="${pending}" data-input="${registerInput(
+        (v) => {
+          const code = v.startsWith("#") ? v : "#" + v;
+          if (!isHex(code)) return;
+          pending = code.toLowerCase();
+          render();
+        },
+      )}"></label></div>${buttonHtml(
+        "Complete",
+        () => {
+          obj.color = pending;
+          closeLayers();
+        },
+        "customize-complete",
+      )}</div>`;
+    }, "Choose color");
   };
   const action = (icon, label, fn) =>
     buttonHtml(

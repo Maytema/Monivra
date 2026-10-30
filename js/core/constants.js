@@ -102,7 +102,174 @@ export const ICONS = {
   settings:
     "m10 2 4 0 1 3 3 1 3-1 1 4-2 2 0 3 2 2-2 4-3-1-3 1-1 3h-4l-1-3-3-1-3 1-1-4 2-2v-3L1 9l2-4 3 1 3-1zm2 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   sun: "M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2",
+  coffee: "M4 8h12v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M7 2v3m4-3v3",
+  restaurant: "M6 2v7a2 2 0 0 0 2 2v11M10 2v7a2 2 0 0 1-2 2M18 22V2c-3 2-4 6-4 9h4",
+  burger: "M4 11a8 6 0 0 1 16 0zM3 15h18M4 15v1a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-1",
+  cart: "M2 3h3l3 12h11l2-8H6M9 20h.1M18 20h.1",
+  apple:
+    "M12 7c-3-2-8 0-8 6 0 4 3 8 5 8 1.5 0 2-1 3-1s1.5 1 3 1c2 0 5-4 5-8 0-6-5-8-8-6zM12 7c0-2 1-4 3-5",
+  wine: "M7 2h10l-1 7a4 4 0 0 1-8 0zM12 13v8M8 21h8",
+  beer: "M5 4h11v16H5zM16 8h3v8h-3M9 8v8m3-8v8",
+  cake: "M4 13h16v8H4zM4 17c2 2 4-2 6 0s4-2 6 0 2 1 4 0M12 13V9m0-3v.1",
+  icecream: "M7 11a5 5 0 0 1 10 0zM8 11l4 11 4-11",
+  building: "M5 22V3h10v19M15 9h4v13M2 22h20M8 7h4M8 11h4M8 15h4",
+  key: "M7 11a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM9.8 12.2 20 2m-4 4 3 3",
+  sofa: "M4 11V8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2zM5 18v2m14-2v2",
+  bed: "M3 19V5m0 11h18v3M21 16v-4a3 3 0 0 0-3-3h-7v7M7 12h.1",
+  bulb: "M9 18h6M10 21h4M12 2a6 6 0 0 0-4 10.5c1 1 1 2 1 3.5h6c0-1.5 0-2.5 1-3.5A6 6 0 0 0 12 2z",
+  drop: "M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z",
+  flame:
+    "M12 22a6 6 0 0 0 6-6c0-4-3-6-4-10-3 2-4 4-4 7-1-1-1.5-2-1.5-3C6 11 6 13 6 16a6 6 0 0 0 6 6z",
+  bolt: "M13 2 4 14h7l-1 8 9-12h-7z",
+  car: "M3 13l2-6a2 2 0 0 1 2-1h10a2 2 0 0 1 2 1l2 6v5h-3v-2H6v2H3zM3 13h18M7 16h.1M17 16h.1",
+  bus: "M5 3h14v15H5zM5 11h14M8 7h8M5 18v3m14-3v3M8 15h.1M16 15h.1",
+  train:
+    "M7 2h10a2 2 0 0 1 2 2v12a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V4a2 2 0 0 1 2-2zM5 11h14M9 15h.1M15 15h.1M8 22l2-3m6 3-2-3",
+  plane:
+    "M21 16v-2l-8-5V4a1.5 1.5 0 0 0-3 0v5l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z",
+  boat: "M2 17l2 4h16l2-4zM6 17v-6h12v6M10 11V7h4v4M12 7V3",
+  fuel: "M4 21V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v17M3 21h12M4 9h10M14 8h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V8l-3-3",
+  parking: "M5 3h14v18H5zM10 17V7h3a3 3 0 0 1 0 6h-3",
+  bag: "M5 8h14l1 13H4zM8 8V6a4 4 0 0 1 8 0v2",
+  shirt: "M8 3 2 6l3 4 3-1v12h8V9l3 1 3-4-6-3a4 4 0 0 1-8 0z",
+  shoe: "M3 18v-6l4-1 3 3h5l6 2v2zM10 14l1-2",
+  diamond: "M6 3h12l4 6-10 13L2 9zM2 9h20M9 3l3 6 3-6M12 22 9 9m3 13 3-13",
+  shop: "M3 9l2-6h14l2 6M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M5 12v9h14v-9M10 21v-5h4v5",
+  scissors:
+    "M6 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 12a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM8.5 7.5 20 18M8.5 16.5 20 6",
+  heart: "M12 21s-9-5.5-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-9 12-9 12z",
+  pill: "M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7zM7 7l7 7",
+  medical: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+  tooth:
+    "M7 3c-3 0-4 3-4 5 0 3 2 4 2 8 0 3 1 5 2 5 2 0 1-5 3-5s1 5 3 5c1 0 2-2 2-5 0-4 2-5 2-8 0-2-1-5-4-5-2 0-3 1-5 1S9 3 7 3z",
+  stethoscope: "M6 3v6a4 4 0 0 0 8 0V3M10 13v3a4 4 0 0 0 8 0v-2M18 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z",
+  dumbbell: "M2 9v6M5 6v12M19 6v12M22 9v6M5 12h14",
+  music: "M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z",
+  gamepad:
+    "M6 8h12a4 4 0 0 1 4 4v3a3 3 0 0 1-5 2l-1-2H8l-1 2a3 3 0 0 1-5-2v-3a4 4 0 0 1 4-4zM7 10v4m-2-2h4M16 11h.1M18 13h.1",
+  film: "M3 5h18v14H3zM7 5v14M17 5v14M3 9h4m10 0h4M3 15h4m10 0h4",
+  book: "M12 7a4 4 0 0 0-4-3H3v14h5a4 4 0 0 1 4 3 4 4 0 0 1 4-3h5V4h-5a4 4 0 0 0-4 3zM12 7v14",
+  ticket: "M3 7h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4zM14 7v10",
+  trophy:
+    "M7 3h10v6a5 5 0 0 1-10 0zM7 5H3v2a4 4 0 0 0 4 4M17 5h4v2a4 4 0 0 1-4 4M12 14v4M8 21h8M10 18h4v3h-4",
+  headphones: "M4 15v-3a8 8 0 0 1 16 0v3M4 15h4v6H6a2 2 0 0 1-2-2zM20 15h-4v6h2a2 2 0 0 0 2-2z",
+  tent: "M2 21 12 4l10 17zM12 21v-8l-4 8m4-8 4 8",
+  umbrella: "M12 3a9 9 0 0 0-9 9h18a9 9 0 0 0-9-9zM12 12v7a2 2 0 0 0 4 0",
+  group:
+    "M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 21v-1a6 6 0 0 1 12 0v1M16 4a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 4 6v1",
+  baby: "M12 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM7 22l2-8h6l2 8M9 14l-3-3m9 3 3-3",
+  ring: "M8 3h8l2 4-6 3-6-3zM12 10a6 6 0 1 0 0 12 6 6 0 0 0 0-12z",
+  tree: "M12 22v-6M12 2 6 10h3l-4 6h14l-4-6h3z",
+  leaf: "M4 20c0-10 6-16 16-16 0 10-6 16-16 16zM4 20 13 11",
+  flower:
+    "M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM12 9a3 3 0 0 1 0-6 3 3 0 0 1 0 6M12 15a3 3 0 0 1 0 6 3 3 0 0 1 0-6M9 12a3 3 0 0 1-6 0 3 3 0 0 1 6 0M21 12a3 3 0 0 1-6 0 3 3 0 0 1 6 0",
+  moon: "M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z",
+  rain: "M6 14a5 5 0 0 1-1-9 7 7 0 0 1 14 2 4 4 0 0 1-1 7zM8 18l-1 3m5-3-1 3m5-3-1 3",
+  fish: "M2 12c4-6 11-6 15 0-4 6-11 6-15 0zM17 12l5-4v8zM7 11h.1",
+  mountain: "M2 20 9 6l4 8 3-5 6 11z",
+  bank: "M3 9l9-6 9 6H3zM5 11v7M9 11v7M15 11v7M19 11v7M3 21h18",
+  coins:
+    "M12 3c-5 0-8 1.5-8 3.5S7 10 12 10s8-1.5 8-3.5S17 3 12 3zM4 6.5v4C4 12.5 7 14 12 14s8-1.5 8-3.5v-4M4 10.5v4C4 16.5 7 18 12 18s8-1.5 8-3.5v-4",
+  bars: "M3 21h18M6 21v-8m6 8V5m6 16v-11",
+  pie: "M12 2a10 10 0 1 0 10 10H12zM15 2a8 8 0 0 1 7 7h-7z",
+  laptop: "M4 5h16v11H4zM2 20h20",
+  document: "M6 2h9l5 5v15H6zM14 2v6h6M9 13h8m-8 4h8",
+  rocket:
+    "M12 2c4 2 6 6 5 11l-3 3h-4l-3-3c-1-5 1-9 5-11zM12 9h.1M9 16l-3 2 1-4m8 2 3 2-1-4M10 20l2 2 2-2",
+  target: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM12 11.5v1",
+  dollar: "M12 2v20M17 7c0-2-2.5-3-5-3s-5 1-5 3.5 2 3 5 4 5 1.5 5 4S14.5 20 12 20s-5-1-5-3",
+  phone: "M7 2h10v20H7zM11 18h2",
+  tv: "M2 5h20v13H2zM8 22h8M12 18v4",
+  mail: "M3 5h18v14H3zM3 6l9 7 9-7",
+  call: "M5 3h4l2 5-2 1.5a11 11 0 0 0 6 6L16.5 14l5 2v4a2 2 0 0 1-2 2C10 22 2 14 3 5a2 2 0 0 1 2-2z",
+  school: "M2 9l10-5 10 5-10 5zM6 11v5c0 2 3 3 6 3s6-1 6-3v-5M22 9v6",
+  backpack: "M8 6V4a4 4 0 0 1 8 0v2M5 8a3 3 0 0 1 3-2h8a3 3 0 0 1 3 2v13H5zM9 14h6v4H9z",
+  flask: "M9 2h6M10 2v6L4 20a1 1 0 0 0 1 2h14a1 1 0 0 0 1-2l-6-12V2M7 15h10",
+  suitcase: "M5 7h14v14H5zM9 7V3h6v4M9 11v6m6-6v6",
+  map: "M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15m6-12v15",
+  pin: "M12 22s7-7 7-12a7 7 0 1 0-14 0c0 5 7 12 7 12zM12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
+  flag: "M5 22V3m0 1h13l-3 4 3 4H5",
+  bookmark: "M6 2h12v20l-6-5-6 5z",
 };
+// Icons offered when choosing an icon for an account or category, grouped by theme.
+export const ICON_GROUPS = [
+  [
+    "Common",
+    [
+      "wallet",
+      "card",
+      "cash",
+      "receipt",
+      "gift",
+      "star",
+      "tag",
+      "flag",
+      "bookmark",
+      "spark",
+      "calendar",
+      "goal",
+      "smile",
+    ],
+  ],
+  [
+    "Money and work",
+    [
+      "bank",
+      "coins",
+      "dollar",
+      "pig",
+      "bars",
+      "pie",
+      "trend",
+      "budget",
+      "percent",
+      "debt",
+      "briefcase",
+      "business",
+      "laptop",
+      "document",
+      "target",
+      "rocket",
+    ],
+  ],
+  [
+    "Food and drink",
+    ["restaurant", "coffee", "burger", "pizza", "apple", "wine", "beer", "cake", "icecream"],
+  ],
+  [
+    "Home and bills",
+    ["home", "building", "sofa", "bed", "key", "bulb", "drop", "flame", "bolt", "wifi", "repair"],
+  ],
+  ["Transport", ["car", "bus", "train", "plane", "boat", "bike", "fuel", "parking"]],
+  ["Shopping", ["cart", "bag", "shop", "shirt", "shoe", "diamond", "scissors"]],
+  ["Health and sport", ["heart", "pill", "medical", "tooth", "stethoscope", "dumbbell"]],
+  [
+    "Leisure",
+    [
+      "music",
+      "gamepad",
+      "film",
+      "book",
+      "ticket",
+      "trophy",
+      "headphones",
+      "camera",
+      "image",
+      "palette",
+      "play",
+      "tent",
+      "umbrella",
+    ],
+  ],
+  ["People", ["user", "group", "baby", "ring"]],
+  [
+    "Nature and pets",
+    ["paw", "tree", "leaf", "flower", "sun", "moon", "rain", "cloud", "fish", "mountain"],
+  ],
+  ["Devices", ["phone", "tv", "mail", "call"]],
+  ["Education", ["school", "backpack", "flask", "globe"]],
+  ["Travel", ["suitcase", "map", "pin"]],
+];
 // Render an icon from ICONS as an <svg> string.
 // Release stamp shown in More, so it is easy to see which version is open.
 export const APP_BUILD = "2026-10-30.6";
@@ -143,6 +310,8 @@ export const THEME_COLORS = [
   "#b01c00",
 ];
 // Colors offered in account/category color pickers.
+// Six vivid colors offered first in the color picker.
+export const QUICK_COLORS = ["#e5322d", "#f58a0a", "#f2c200", "#22b35e", "#1f7ae0", "#9b3fd1"];
 export const PALETTE = [
   "#9d00b5",
   "#7051df",
