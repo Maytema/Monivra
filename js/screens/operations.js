@@ -185,7 +185,7 @@ export function operationsView() {
 }
 
 // Chooser opened by the + button on the operations tab.
-function operationsAddMenu() {
+export function operationsAddMenu(extra = {}, scheduled = false) {
   // Three primary tabs exactly as the source application. Selection is the
   // only transition into an editor; switching or dismissing never creates one.
   const state = { direction: "expense" };
@@ -194,10 +194,20 @@ function operationsAddMenu() {
     const dir = state.direction;
     closeLayers();
     if (dir === "expense")
-      operationStart({ type: "expense", category: item.id, from: defaultAccountId() });
+      operationStart(
+        { type: "expense", category: item.id, from: defaultAccountId(), ...extra },
+        scheduled,
+      );
     else if (dir === "income")
-      operationStart({ type: "income", category: item.id, to: defaultAccountId() });
-    else operationStart({ type: "transfer", from: item.id, to: defaultAccountId(item.id) });
+      operationStart(
+        { type: "income", category: item.id, to: defaultAccountId(), ...extra },
+        scheduled,
+      );
+    else
+      operationStart(
+        { type: "transfer", from: item.id, to: defaultAccountId(item.id), ...extra },
+        scheduled,
+      );
   };
   const view = () => {
     const dir = state.direction;

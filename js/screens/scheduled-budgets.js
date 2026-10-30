@@ -11,10 +11,10 @@ import {
   periodBounds,
 } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
-import { operationStart } from "./operation-editor.js";
-import { multiSelect, opRow, recurLabel } from "./operations.js";
+import { multiSelect, opRow, operationsAddMenu, recurLabel } from "./operations.js";
 import {
   amountPicker,
+  calendar,
   closeLayers,
   confirmAction,
   currencyPicker,
@@ -29,6 +29,7 @@ import {
   buttonHtml,
   fieldButtonHtml,
   iconButtonHtml,
+  menuRowHtml,
   textFieldHtml,
   toast,
   toggleRowHtml,
@@ -173,6 +174,45 @@ export function reminder(d) {
     "dialog",
   );
 }
+// Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
+export function scheduledCreate() {
+  const setup = { date: TODAY, recur: null, reminder: null };
+  const tiles = () =>
+    openSheet(
+      () =>
+        `<h2>${translate("Select date")}</h2>${menuRowHtml(
+          "Date",
+          "calendar",
+          () =>
+            calendar(setup.date, (v) => {
+              setup.date = v;
+              render();
+            }),
+          dateLabel(setup.date),
+        )}${menuRowHtml("Recur", "repeat", () => recurrence(setup), setup.recur ? recurLabel(setup.recur) : "Turned off")}${menuRowHtml("Reminder", "bell", () => reminder(setup), setup.reminder || "Turned off")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+          "Complete",
+          () => {
+            closeLayers();
+            operationsAddMenu(
+              {
+                date: setup.date,
+                recur: setup.recur,
+                reminder: setup.reminder,
+                reminderLead: setup.reminderLead,
+              },
+              true,
+            );
+          },
+          "primary",
+        )}</div>`,
+      "Select date",
+      "dialog",
+    );
+  calendar(setup.date, (v) => {
+    setup.date = v;
+    tiles();
+  });
+}
 // Scheduled payments page.
 export function scheduledView() {
   const sorted = [...appData.scheduled].sort((a, b) =>
@@ -202,8 +242,8 @@ export function scheduledView() {
                   .join("")}`,
             )
             .join("")
-        : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", () => operationStart({}, true), "primary")}</div>`
-    }</div>${dates.length ? buttonHtml(iconSvg("plus", 26), () => operationStart({}, true), "fab no-nav", `aria-label="Add scheduled payment"`) : ""}`
+        : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", scheduledCreate, "primary")}</div>`
+    }</div>${dates.length ? buttonHtml(iconSvg("plus", 26), scheduledCreate, "fab no-nav", `aria-label="Add scheduled payment"`) : ""}`
   );
 }
 

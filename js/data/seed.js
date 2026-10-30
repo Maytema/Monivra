@@ -7,7 +7,7 @@ export function createSeedData() {
     ["Personal", "Regular", 120000, "cash", "#24b5d1"],
     ["Rent", "Regular", 0, "home", "#435057"],
     ["For a dream", "Savings", 4720000, "spark", "#8d4ed9"],
-    ["For a dream", "Savings", 4500000, "goal", "#98d8b6"],
+    ["Vacation", "Savings", 4500000, "goal", "#98d8b6"],
   ].map((a, i) => ({
     id: "a" + i,
     name: a[0],
@@ -30,7 +30,7 @@ export function createSeedData() {
   }));
   const categories = [
     ["Internet", "expense", "wifi", "#7064cc"],
-    ["Rent", "expense", "bike", "#479ee2"],
+    ["Transport", "expense", "bike", "#479ee2"],
     ["Rent", "expense", "home", "#45585e"],
     ["Repair", "expense", "repair", "#9614b9"],
     ["Pets", "expense", "paw", "#b520c5"],
@@ -38,7 +38,7 @@ export function createSeedData() {
     ["Other", "expense", "trend", "#a5a3c8"],
     ["Food", "expense", "pizza", "#f57400"],
     ["Job", "income", "briefcase", "#3c4e55"],
-    ["Bones", "income", "gift", "#ead447"],
+    ["Bonus", "income", "gift", "#ead447"],
     ["Tips", "income", "cash", "#5663a6"],
     ["Salary", "income", "briefcase", "#858585"],
     ["Other", "income", "trend", "#9f37a9"],
@@ -82,7 +82,7 @@ export function createSeedData() {
       amount: 85000,
       date: "2026-10-11",
       comment: "Demo groceries",
-      tags: ["Everyday"],
+      tags: [],
     },
     {
       id: "o4",
@@ -129,7 +129,7 @@ export function createSeedData() {
     accounts,
     categories,
     ops,
-    tags: ["Everyday"],
+    tags: [],
     scheduled: [],
     budgets: [],
     backups: [],

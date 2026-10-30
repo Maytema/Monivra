@@ -9,7 +9,6 @@ import {
   accountById,
   categoryById,
   convertCurrency,
-  currencyRate,
   dateLabel,
   defaultAccountId,
   evaluateExpression,
@@ -21,28 +20,14 @@ import { deleteOperation, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
 import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
-import { recurLabel } from "./operations.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
-import {
-  calculatorKeys,
-  calendar,
-  closeLayers,
-  confirmAction,
-  finishFlow,
-  openPage,
-  openSheet,
-  optionSheet,
-  pageHeader,
-  promptText,
-} from "../ui/kit.js";
+import { calendar, closeLayers, confirmAction, openSheet, promptText } from "../ui/kit.js";
 import {
   badgeHtml,
   buttonHtml,
-  fieldButtonHtml,
   iconButtonHtml,
   menuRowHtml,
   registerInput,
-  textFieldHtml,
   toast,
 } from "../ui/primitives.js";
 
@@ -227,14 +212,9 @@ export function operationStart(options = {}, scheduled = false) {
     draft: d,
     scheduled,
     editing: !!d.id,
-    sheet: !scheduled,
     compact: !!d.id,
   };
   const openEditor = () => openSheet(() => operationView(p), "Add an operation");
-  if (scheduled) {
-    openPage("operation", p);
-    return;
-  }
   // An account-action choice is a separate state. No calculator layer exists
   // until a counterparty has actually been selected.
   if (!d.id && d.accountAction) {
@@ -299,7 +279,7 @@ export function operationStart(options = {}, scheduled = false) {
 // Validate and store the operation being edited.
 export function commitOperation(p) {
   try {
-    if (p.sheet && !p.scratchMode && /[+×÷−*/]/.test(String(p.draft.expr).replace(/^-/, "")))
+    if (!p.scratchMode && /[+×÷−*/]/.test(String(p.draft.expr).replace(/^-/, "")))
       throw Error("Enable calculator for arithmetic");
     if (p.draft.type === "transfer" && (!p.draft.from || !p.draft.to))
       throw Error("Select both accounts");
@@ -310,12 +290,10 @@ export function commitOperation(p) {
     p.draft.amount = evaluateExpression(p.draft.expr);
     delete p.draft.accountAction;
     putOperation(p.draft, p.scheduled);
-    if (p.sheet) {
-      uiState.layers = [];
-      save();
-      render();
-      toast("Operation saved");
-    } else finishFlow(p.scheduled ? "Payment scheduled" : "Operation saved");
+    uiState.layers = [];
+    save();
+    render();
+    toast(p.scheduled ? "Payment scheduled" : "Operation saved");
   } catch (e) {
     toast(e.message);
   }
@@ -652,136 +630,30 @@ function accountCalculatorView(p) {
           .join("")}</div>`
   }</div>`;
 }
-// Operation editor form.
+// Operation editor: one calculator form for every entry point (new, edit, scheduled).
 export function operationView(p) {
-  if (p.sheet && !p.scheduled) return accountCalculatorView(p);
-  const d = p.draft,
-    a = accountById(d.from || d.to),
-    chooseCat = (id) => {
-      d.category = id;
-      const type = categoryById(id).type;
-      if (d.type !== type) {
-        const account = d.from || d.to;
-        d.from = type === "expense" ? account : null;
-        d.to = type === "income" ? account : null;
-        d.type = type;
-      }
-      render();
-    };
-  return (
-    (p.sheet
-      ? ""
-      : pageHeader(
-          p.scheduled ? "Scheduled payments" : p.editing ? "Edit operation" : "Add an operation",
-        )) +
-    `<div class="content operation-form"><div class="calc-tools">${buttonHtml(
-      escapeHtml(
-        translate(d.type === "expense" ? "Expenses" : d.type === "income" ? "Incomes" : "Transfer"),
-      ) +
-        " " +
-        iconSvg("down", 15),
-      () =>
-        optionSheet(
-          "Type",
-          [
-            ["expense", "Expenses"],
-            ["income", "Incomes"],
-            ["transfer", "Transfer"],
-          ],
-          d.type,
-          (v) => {
-            const account = d.from || d.to;
-            d.type = v;
-            d.from = v === "income" ? null : account;
-            d.to = v === "income" ? account : null;
-            d.category = null;
-            render();
-          },
-        ),
-      "text-button",
-    )}${buttonHtml(
-      iconSvg("calendar", 17) + " " + escapeHtml(dateLabel(d.date, true)),
-      () =>
-        calendar(d.date, (v) => {
-          d.date = v;
-          render();
-        }),
-      "text-button",
-    )}</div><div class="calc-pickers">${fieldButtonHtml(
-      d.type === "income" ? "Add to" : "Take from",
-      a ? badgeHtml(a, true) + " " + escapeHtml(a.name) : translate("Not selected"),
-      () =>
-        accountPicker(
-          d.from || d.to,
-          (id) => {
-            if (d.type === "income") d.to = id;
-            else d.from = id;
-            render();
-          },
-          d.type === "transfer" ? d.to : null,
-        ),
-    )}${
-      d.type === "transfer"
-        ? fieldButtonHtml(
-            "Add to",
-            accountById(d.to)
-              ? badgeHtml(accountById(d.to), true) + " " + escapeHtml(accountById(d.to).name)
-              : translate("Not selected"),
-            () =>
-              accountPicker(
-                d.to,
-                (id) => {
-                  d.to = id;
-                  render();
-                },
-                d.from,
-              ),
-          )
-        : fieldButtonHtml(
-            "Category",
-            categoryById(d.category)
-              ? badgeHtml(categoryById(d.category), true) +
-                  " " +
-                  escapeHtml(categoryById(d.category).name)
-              : translate("Not selected"),
-            () => categoryPicker(d.type, d.category, chooseCat),
-          )
-    }</div><label class="calc-amount"><input inputmode="decimal" type="text" aria-label="Amount" value="${escapeHtml(d.expr)}" data-input="${registerInput((v) => (d.expr = v))}"><span>${escapeHtml(a?.currency || appData.settings.currency)}</span></label>${d.type === "transfer" && d.to && a?.currency !== accountById(d.to)?.currency ? `<p class="calc-hint">1 ${a.currency} = ${(currencyRate(a.currency) / currencyRate(accountById(d.to).currency)).toFixed(4)} ${accountById(d.to).currency}</p>` : ""}<div class="calc-tools">${iconButtonHtml(
-      "comment",
-      "Comment",
-      () =>
-        promptText(
-          "Comment",
-          d.comment,
-          (v) => {
-            d.comment = v;
-            render();
-          },
-          "Comment",
-        ),
-    )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}${iconButtonHtml("clip", "Photo", () => photoMenu(d))}</div>${d.comment ? `<p class="calc-hint">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((v) => `<span class="tag">${escapeHtml(v)}</span>`).join("")}</div>` : ""}${d.photo ? `<img class="preview-photo" src="${d.photo}" alt="Attached photo">` : ""}${
-      p.scheduled
-        ? `<div class="fields">${fieldButtonHtml("Date", escapeHtml(dateLabel(d.date)), () =>
-            calendar(d.date, (v) => {
-              d.date = v;
-              render();
-            }),
-          )}${fieldButtonHtml("Recur", recurLabel(d.recur), () => recurrence(d))}${fieldButtonHtml("Reminder", d.reminder ? escapeHtml((d.reminderLead || "At the time") + " · " + d.reminder) : translate("Turned off"), () => reminder(d))}</div>`
-        : ""
-    }${calculatorKeys(
-      () => d.expr,
-      (v) => (d.expr = v),
-      () => commitOperation(p),
-    )}</div>`
-  );
+  return accountCalculatorView(p);
 }
-// Sheet for choosing tags of an operation.
+// Sheet for choosing tags of an operation: several can be picked, "+ Add" creates a new one.
 export function tagsPicker(d) {
-  let chosen = [...(d.tags || [])],
-    q = "";
+  let chosen = [...(d.tags || [])];
+  const addTag = () =>
+    promptText(
+      "New tag",
+      "",
+      (v) => {
+        const name = v.trim();
+        if (!name) return toast("Enter a tag");
+        if (!appData.tags.includes(name)) appData.tags.push(name);
+        if (!chosen.includes(name)) chosen.push(name);
+        save();
+        render();
+      },
+      "Tag name",
+    );
   openSheet(
     () =>
-      `<h2>${translate("Tags")}</h2>${textFieldHtml("Search or add tag", q, (v) => (q = v))}<div class="tag-cloud">${appData.tags
+      `<h2>${translate("Select tags")}</h2><div class="tag-cloud tag-picker">${appData.tags
         .map((tag) =>
           buttonHtml(
             escapeHtml(tag),
@@ -792,27 +664,22 @@ export function tagsPicker(d) {
             "tag " + (chosen.includes(tag) ? "active" : ""),
           ),
         )
-        .join("")}</div>${menuRowHtml("Manage tags", "gear", () => manageTags(chosen))}${buttonHtml(
-        "Add",
-        () => {
-          const x = q.trim();
-          if (!x) return toast("Enter a tag");
-          if (!appData.tags.includes(x)) appData.tags.push(x);
-          if (!chosen.includes(x)) chosen.push(x);
-          q = "";
-          save();
-          render();
-        },
-        "outline",
-      )}${buttonHtml(
-        "Save",
+        .join(
+          "",
+        )}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, addTag, "tag tag-add")}</div>${
+        appData.tags.length
+          ? buttonHtml("Manage tags", () => manageTags(chosen), "text-button")
+          : ""
+      }${buttonHtml(
+        "Complete",
         () => {
           d.tags = chosen.filter((v) => appData.tags.includes(v));
           closeLayers();
+          render();
         },
         "primary",
-      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
-    "Tags",
+      )}`,
+    "Select tags",
   );
 }
 // Sheet for adding, renaming and removing tags.

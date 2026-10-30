@@ -16,7 +16,6 @@ import {
   orderView,
 } from "../screens/categories.js";
 import { lockView, moreView, settingsPage, settingsView, simplePage } from "../screens/more.js";
-import { operationView } from "../screens/operation-editor.js";
 import { operationsFab, operationsView } from "../screens/operations.js";
 import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
 import { statisticsView } from "../screens/statistics.js";
@@ -54,7 +53,6 @@ const PAGE_VIEWS = {
   categoryOrder: () => orderView("categories"),
   categoryEdit: categoryEditView,
   categoryManage: categoryManageView,
-  operation: operationView,
   scheduled: scheduledView,
   budgets: budgetsView,
   budget: budgetView,

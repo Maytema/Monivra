@@ -11,6 +11,9 @@ export const russianStrings = {
   "Payment scheduled": "Платёж запланирован",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
+  "Select tags": "Выбор тегов",
+  "New tag": "Новый тег",
+  "Tag name": "Название тега",
   "Double-tap the calculator key to enable calculations":
     "Дважды нажмите на клавишу калькулятора, чтобы включить вычисления",
   "Calculator is on": "Калькулятор включён",

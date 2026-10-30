@@ -46,7 +46,7 @@ export function initAccountDrag() {
   const slotAt = (dy) =>
     Math.max(0, Math.min(drag.rows.length - 1, drag.home + Math.round(dy / drag.height)));
   const move = (dy) => {
-    drag.row.style.transform = `translateY(${dy}px) scale(1.02)`;
+    drag.row.style.transform = `translateY(${dy}px) rotate(-3deg) scale(1.03)`;
     const slot = slotAt(dy);
     drag.rows.forEach((r, i) => {
       if (r === drag.row) return;

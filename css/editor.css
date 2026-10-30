@@ -321,7 +321,7 @@
   min-height: 76px;
   display: flex;
   justify-content: center;
-  gap: 0px;
+  gap: 6px;
 }
 .calc-attachments {
   display: flex;
@@ -584,4 +584,16 @@
 .calc-toggle.is-on svg {
   color: rgb(20, 140, 92);
   transform: scale(1.08);
+}
+
+/* Tag chips in the picker; the last one adds a new tag */
+.tag-picker {
+  margin: 12px 0;
+}
+.tag.tag-add {
+  border-style: dashed;
+  background: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }

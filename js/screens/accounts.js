@@ -228,6 +228,11 @@ function accountTotals(list) {
     .join("");
 }
 
+// An account action replaces the account sheet, so one "back" returns to the list.
+function startFromAccount(options) {
+  closeLayers();
+  operationStart(options);
+}
 // Action sheet shown when an account is tapped.
 export function accountActions(a) {
   const n = accountBalance(a.id),
@@ -260,7 +265,7 @@ export function accountActions(a) {
         uiState.filters.accounts = [a.id];
         uiState.period = { mode: "all", anchor: TODAY };
         goHome("operations");
-      })}${act("income", "Top up", () => operationStart({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", () => operationStart({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", () => operationStart({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
+      })}${act("income", "Top up", () => startFromAccount({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", () => startFromAccount({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", () => startFromAccount({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
     a.name,
   );
 }
