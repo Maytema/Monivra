@@ -7,7 +7,7 @@ import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
-import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
+import { currencyName, translate, translateWith } from "../i18n/index.js";
 import { setting, settingOptions, switchSetting } from "./settings.js";
 import {
   closeLayers,
@@ -222,60 +222,37 @@ export function settingsPage(kind) {
     ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div></div>`
     : pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
 }
-// PIN lengths that can be chosen.
+// PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
-// Set or remove the PIN.
+// Set or remove the PIN: the digits are typed into the fields on the keypad docked below.
 export function pinSetup(remove) {
-  let length = PIN_LENGTHS[0],
-    first = "",
+  let first = "",
     second = "";
   openSheet(
     () => {
-      const size = remove ? appData.settings.pin.length : length;
-      return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${
-        remove
-          ? ""
-          : `<div class="pin-length">${PIN_LENGTHS.map((n) =>
-              buttonHtml(
-                translateCount("{n} digit", "{n} digits", n),
-                () => {
-                  length = n;
-                  first = first.slice(0, n);
-                  second = second.slice(0, n);
-                  render();
-                },
-                length === n ? "active" : "",
-              ),
-            ).join("")}</div>`
-      }${numberFieldHtml(
+      const size = remove ? appData.settings.pin.length : Math.max(...PIN_LENGTHS);
+      const hint = "Enter 4 or 6 digits";
+      return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${numberFieldHtml(
         remove ? "Current PIN" : "New PIN",
         first,
-        (v) => {
-          first = v;
-          render();
-        },
-        { mask: true, maxLength: size },
+        (v) => (first = v),
+        { mask: true, maxLength: size, hint: remove ? "" : hint },
       )}${
-        !remove
-          ? numberFieldHtml(
-              "Confirm PIN",
-              second,
-              (v) => {
-                second = v;
-                render();
-              },
-              { mask: true, maxLength: size },
-            )
-          : ""
-      }<p class="footnote">DEMO interface lock. This does not encrypt data.</p>${buttonHtml(
+        remove
+          ? ""
+          : numberFieldHtml("Confirm PIN", second, (v) => (second = v), {
+              mask: true,
+              maxLength: size,
+              hint,
+            })
+      }<p class="footnote">DEMO interface lock. This does not encrypt data.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "Save",
         () => {
           if (remove) {
             if (first !== appData.settings.pin) return toast("Incorrect PIN");
             appData.settings.pin = false;
           } else {
-            if (first.length !== length)
-              return toast(translateWith("Enter {n} digits", { n: length }));
+            if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
             if (first !== second) return toast("PINs do not match");
             appData.settings.pin = first;
           }
@@ -283,7 +260,7 @@ export function pinSetup(remove) {
           closeLayers();
         },
         "primary",
-      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`;
+      )}</div>`;
     },
     "PIN",
     "dialog",
@@ -310,7 +287,7 @@ export function lockView() {
     "7",
     "8",
     "9",
-    "",
+    "C",
     "0",
     "⌫",
   ]
@@ -320,7 +297,8 @@ export function lockView() {
             k === "⌫" ? iconSvg("backspace", 26) : k,
             () => {
               pinFailed = false;
-              if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
+              if (k === "C") setPinEntry("");
+              else if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
               else if (pinEntry.length < size) setPinEntry(pinEntry + k);
               if (pinEntry.length === size) {
                 if (pinEntry === appData.settings.pin) setLocked(false);
@@ -333,7 +311,11 @@ export function lockView() {
               render();
             },
             "key",
-            k === "⌫" ? `aria-label="${translate("Backspace")}"` : "",
+            k === "⌫"
+              ? `aria-label="${translate("Backspace")}"`
+              : k === "C"
+                ? `aria-label="${translate("Clear amount")}"`
+                : "",
           )
         : "<span></span>",
     )
@@ -342,12 +324,14 @@ export function lockView() {
 // Info pages: profile, subscription, support, videos, about, terms and similar.
 export function simplePage(kind) {
   let title = "",
-    body = "";
+    body = "",
+    footer = "";
   if (kind === "profile") {
     title = "Profile";
     body = `<div class="profile"><div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle class="orbit-ring" cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g class="orbit-particles" fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/><circle cx="150" cy="30" r="1.8"/><circle cx="44" cy="164" r="2"/></g><g class="orbit-particles slow" fill="#8bbcc1"><circle cx="100" cy="188" r="2.2"/><circle cx="31" cy="52" r="1.6"/><circle cx="182" cy="140" r="1.8"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
   } else if (kind === "subscription") {
-    title = "Use the full potential of the application!";
+    title = "Subscription";
+    footer = `<div class="sub-bottom">${buttonHtml("Continue", () => showInfo("Closed beta preview: no purchase will be made."), "continue")}</div>`;
     const plan = uiState.morePlan || "Lifetime";
     const plans = [
       [
@@ -370,7 +354,7 @@ export function simplePage(kind) {
       "Backup and restore data",
       "No ads",
     ];
-    body = `<div class="subscription"><div class="sub-plans">${plans
+    body = `<div class="subscription"><h2 class="sub-title">${translate("Use the full potential of the application!")}</h2><div class="sub-plans">${plans
       .map(([key, name, price, detail, tag]) =>
         buttonHtml(
           `<span class="plan-left"><strong>${key === "Lifetime" ? "Lifetime access" : name}</strong>${tag && key === "Annually" ? `<em>${tag}</em>` : ""}<small>${detail}</small>${key === "Lifetime" ? `<small>All future features are included at no additional cost</small>` : ""}</span><span class="plan-price">${price}</span>${plan === key ? `<span class="plan-check">${iconSvg("check", 13)}</span>` : ""}`,
@@ -384,7 +368,7 @@ export function simplePage(kind) {
       )
       .join(
         "",
-      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>Your feedback will help shape Monivra before its public release.</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div><div class="sub-bottom">${buttonHtml("Continue", () => showInfo("Closed beta preview: no purchase will be made."), "continue")}</div>`;
+      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>Your feedback will help shape Monivra before its public release.</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div>`;
   } else if (kind === "refund") {
     title = "Request a refund";
     body = `<div class="support-form"><h2>Refund requests</h2><p>Purchases are disabled during the closed beta, so there are no Monivra payments to refund.</p><p>If payments are introduced in a future release, refund instructions will be shown here.</p>${buttonHtml("Back to Support", () => goBack(), "outline")}</div>`;
@@ -553,5 +537,7 @@ export function simplePage(kind) {
     title = "Information";
     body = "<p>Information is not available in this preview.</p>";
   }
-  return pageHeader(title) + `<div class="content">${body}</div>`;
+  return footer
+    ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div>${footer}</div>`
+    : pageHeader(title) + `<div class="content">${body}</div>`;
 }

@@ -64,25 +64,35 @@ export function startup() {
       e.preventDefault();
     }
   });
+  // Long press on a category tile opens its sheet; small finger movements do not cancel it.
+  const HOLD_MOVE_TOLERANCE_PX = 15;
+  let holdStart = null;
   document.addEventListener("pointerdown", (e) => {
-    let target = e.target.closest("[data-category]");
-    if (uiState.tab === "operations") return;
-    if (target && !uiState.pages.length) {
-      heldTimer = setTimeout(() => {
-        skipClick = true;
-        if (target.dataset.category) {
-          const c = categoryById(target.dataset.category);
-          if (c) categoryActions(c);
-        } else {
-          uiState.selection = true;
-          uiState.selected = [target.dataset.operation];
-          render();
-        }
-      }, 550);
-    }
+    clearTimeout(heldTimer);
+    const target = e.target.closest("[data-category]");
+    if (uiState.tab === "operations" || !target || uiState.pages.length) return;
+    holdStart = { x: e.clientX, y: e.clientY };
+    heldTimer = setTimeout(() => {
+      skipClick = true;
+      const c = categoryById(target.dataset.category);
+      if (c) categoryActions(c);
+    }, 550);
   });
-  for (const ev of ["pointerup", "pointercancel", "pointermove"])
-    document.addEventListener(ev, () => clearTimeout(heldTimer));
+  document.addEventListener("pointermove", (e) => {
+    if (
+      holdStart &&
+      Math.hypot(e.clientX - holdStart.x, e.clientY - holdStart.y) > HOLD_MOVE_TOLERANCE_PX
+    )
+      clearTimeout(heldTimer);
+  });
+  document.addEventListener("contextmenu", (e) => {
+    if (e.target.closest("[data-category]")) e.preventDefault();
+  });
+  for (const ev of ["pointerup", "pointercancel"])
+    document.addEventListener(ev, () => {
+      clearTimeout(heldTimer);
+      holdStart = null;
+    });
   document.getElementById("import-file").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;

@@ -8,10 +8,18 @@
   display: none;
 }
 .panel h2 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 400;
   text-align: center;
-  margin: 10px 0px 16px;
+  margin: 6px 0px 12px;
+}
+.panel .primary,
+.panel .secondary,
+.panel .outline,
+.panel .danger {
+  min-height: 48px;
+  margin: 8px 0px;
+  padding: 12px 18px;
 }
 .panel p {
   white-space: pre-line;

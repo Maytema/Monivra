@@ -351,3 +351,8 @@
   text-align: center;
   margin: 2px 0px 12px;
 }
+/* A long press must not start text selection or the browser's context menu */
+[data-category] {
+  -webkit-touch-callout: none;
+  user-select: none;
+}

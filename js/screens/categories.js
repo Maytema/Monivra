@@ -140,7 +140,7 @@ export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
                 menuRowHtml(
                   escapeHtml(x.name),
                   x.icon,
-                  () => categoryActions(x),
+                  () => openFilteredOperations({ categories: [x.id] }, period),
                   formatMoney(categoryTotal(x.id), x.currency),
                 ),
               )

@@ -27,7 +27,7 @@ import {
 import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { currencyName, currentLocale, translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
-import { buttonHtml, fieldButtonHtml, iconButtonHtml, registerInput, toast } from "./primitives.js";
+import { buttonHtml, iconButtonHtml, registerInput, toast } from "./primitives.js";
 
 // Wrap the part of a root screen that slides when swiping between tabs or periods.
 export function swipePane(html) {
@@ -52,7 +52,8 @@ export function closeLayers(n = 1) {
 // Go back one step: close the top layer, otherwise pop the top page.
 export function goBack() {
   if (locked) return;
-  if (uiState.layers.length) uiState.layers.pop();
+  if (uiState.numpad) uiState.numpad = null;
+  else if (uiState.layers.length) uiState.layers.pop();
   else if (uiState.pages.length) uiState.pages.pop().restore?.();
   else if (uiState.selection) {
     uiState.selection = false;
@@ -691,56 +692,100 @@ export function amountPicker(title, value, fn, allowNegative = false, currency =
     title,
   );
 }
-// Sheet with a digit keypad for a plain number (a day, a count, a percent, a PIN).
+// Digit keypad shared by the number sheet and the docked keypad: the digits and a backspace
+// in four columns, the tall confirm key at the right, the zero as wide as the digits.
+function digitPadHtml(press, confirm, decimal) {
+  const digits = keypadDigits();
+  const digit = (i) => buttonHtml(digits[i], () => press(digits[i]), "key");
+  return `<div class="keypad digit-pad">${digit(0)}${digit(1)}${digit(2)}${buttonHtml(
+    iconSvg("backspace", 26),
+    () => press("⌫"),
+    "key",
+    `aria-label="${translate("Backspace")}"`,
+  )}${digit(3)}${digit(4)}${digit(5)}${buttonHtml(
+    iconSvg("check", 30),
+    confirm,
+    "key ok",
+    `aria-label="${translate("Save")}"`,
+  )}${digit(6)}${digit(7)}${digit(8)}${buttonHtml("0", () => press("0"), `key ${decimal ? "" : "zero-wide"}`)}${
+    decimal ? buttonHtml(".", () => press("."), "key") : ""
+  }</div>`;
+}
+// The text after a key of the digit keypad; `maxLength` limits the digits.
+function typeDigit(text, key, { decimal = false, maxLength = 12 }, fresh = false) {
+  const base = fresh ? "" : text;
+  if (key === "⌫") return base.slice(0, -1);
+  if (key === "." && (!decimal || base.includes("."))) return base;
+  if (base.length >= maxLength) return base;
+  return base + (key === "." && !base ? "0." : key);
+}
+// Sheet with a digit keypad for a plain number (a day, an exchange rate).
 // `fn` gets the typed text; returning false keeps the sheet open.
-export function numberPicker(
-  title,
-  value,
-  fn,
-  { decimal = false, mask = false, maxLength = 12 } = {},
-) {
+export function numberPicker(title, value, fn, options = {}) {
   let text = value === null || value === undefined ? "" : String(value);
+  let fresh = text !== "";
   const press = (k) => {
-    if (k === "⌫") text = text.slice(0, -1);
-    else if (k === "C") text = "";
-    else if (k === "." && (!decimal || text.includes("."))) return;
-    else if (text.length < maxLength) text += k === "." && !text ? "0." : k;
+    text = typeDigit(text, k, options, fresh && k !== "⌫");
+    fresh = false;
     render();
   };
-  const keys = [...keypadDigits(), "C", "0", decimal ? "." : ""];
   openSheet(
     () =>
-      `<h2>${translate(title)}</h2><div class="number-display" aria-live="polite">${escapeHtml(mask ? "•".repeat(text.length) : text) || "&nbsp;"}</div><div class="numpad">${keys
-        .map((k) =>
-          k
-            ? buttonHtml(
-                k,
-                () => press(k),
-                "key",
-                `aria-label="${k === "C" ? translate("Clear amount") : k}"`,
-              )
-            : "<span></span>",
-        )
-        .join(
-          "",
-        )}${buttonHtml(iconSvg("backspace", 26), () => press("⌫"), "key", `aria-label="${translate("Backspace")}"`)}${buttonHtml(
-        iconSvg("check", 30),
+      `<h2>${translate(title)}</h2><div class="number-display" aria-live="polite">${escapeHtml(options.mask ? "•".repeat(text.length) : text) || "&nbsp;"}</div>${digitPadHtml(
+        press,
         () => {
           if (fn(text) !== false) closeLayers();
         },
-        "key ok",
-        `aria-label="${translate("Save")}"`,
-      )}</div>`,
+        options.decimal,
+      )}`,
     title,
   );
 }
-// Form field that shows a number and opens the digit keypad when tapped.
-export const numberFieldHtml = (label, value, fn, options = {}) =>
-  fieldButtonHtml(
-    label,
-    escapeHtml(options.mask ? "•".repeat(String(value).length) : value === "" ? "—" : value),
-    () => numberPicker(label, value, fn, options),
+// Form field that shows a number. Tapping it docks the digit keypad at the bottom of the screen
+// and the digits go straight into the field.
+export const numberFieldHtml = (label, value, fn, options = {}) => {
+  const active = uiState.numpad?.label === label;
+  const text = active
+    ? uiState.numpad.text
+    : value === null || value === undefined
+      ? ""
+      : String(value);
+  const shown = options.mask ? "•".repeat(text.length) : text;
+  return buttonHtml(
+    `<span class="field-label">${translate(label)}</span><span class="value">${escapeHtml(shown) || (active || options.hint ? "" : "—")}${active ? '<i class="typing-caret"></i>' : ""}${!shown && options.hint ? `<small class="field-hint">${translate(options.hint)}</small>` : ""}</span>`,
+    () => {
+      uiState.numpad = {
+        label,
+        text: String(value ?? ""),
+        fresh: String(value ?? "") !== "",
+        fn,
+        options,
+      };
+      render();
+    },
+    `field ${active ? "is-active" : ""}`,
+    `data-numfield="${escapeHtml(label)}" aria-label="${escapeHtml(translate(label))}"`,
   );
+};
+// The docked keypad of the field being typed in, or an empty string.
+export function numpadDockHtml() {
+  const pad = uiState.numpad;
+  if (!pad) return "";
+  const press = (k) => {
+    pad.text = typeDigit(pad.text, k, pad.options, pad.fresh && k !== "⌫");
+    pad.fresh = false;
+    pad.fn(pad.text);
+    render();
+  };
+  return `<div class="numpad-dock">${digitPadHtml(
+    press,
+    () => {
+      uiState.numpad = null;
+      render();
+    },
+    pad.options.decimal,
+  )}</div>`;
+}
 
 // Calculator keypad shared by all amount inputs. The operators stand in the first column,
 // the digits in the middle, the backspace and the tall confirm key at the right.
@@ -776,12 +821,12 @@ function calculatorKeys(get, set, takeFresh, done) {
 
 /* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
-  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 20h50v66H30z"/><path class="empty-roll" d="M72 12h12a6 6 0 0 1 6 6v6a8 8 0 0 1-8 8h-10zM22 86h48a9 9 0 0 1 0 18H31a9 9 0 0 1-9-9z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 34h26"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 46h18"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 58h24"/><path class="empty-line" style="--i:3" pathLength="1" d="M38 70h14"/><g class="empty-search"><circle class="empty-lens" cx="78" cy="62" r="18"/><path class="empty-handle" d="m91 75 11 11"/><path class="empty-cross" d="M72 62h12M78 56v12"/></g></svg>`,
-  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M14 66C46 62 80 44 106 8L94 12.9 106 8 105.1 21"/></svg>`,
+  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 22h50v62H30z"/><path class="empty-curl" d="M72 12h14a6 6 0 0 1 0 12H72a6 6 0 0 1 0-12z"/><path class="empty-curl" d="M24 84h46a7 7 0 0 1 0 14H24a7 7 0 0 1 0-14z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 36h26"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 48h18"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 60h24"/><path class="empty-line" style="--i:3" pathLength="1" d="M38 72h14"/><g class="empty-search"><circle class="empty-lens" cx="78" cy="62" r="18"/><path class="empty-handle" d="m91 75 11 11"/><path class="empty-cross" d="m72 56 12 12m0-12-12 12"/></g></svg>`,
+  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M12 52C40 54 70 30 106 4L93.0 4.9 106 4 101.1 16.0"/></svg>`,
 };
 // When each illustration was first shown (ms); the play class lasts while its animation runs.
 const firstShown = {};
-const PLAY_MS = 2400;
+const PLAY_MS = 3800;
 // Empty-state block; `kind` is "operations" or "statistics".
 export function emptyStateHtml(kind, title, hint) {
   firstShown[kind] ??= performance.now();

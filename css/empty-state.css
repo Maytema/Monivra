@@ -28,9 +28,10 @@
   stroke: var(--muted);
   stroke-width: 3;
 }
-.empty-roll {
-  fill: var(--muted);
-  stroke: none;
+.empty-curl {
+  fill: color-mix(in srgb, var(--muted) 22%, var(--bg, #fff));
+  stroke: var(--muted);
+  stroke-width: 3;
 }
 .empty-line,
 .empty-handle {
@@ -73,7 +74,7 @@
   fill: #3a8fe0;
 }
 .empty-arrow {
-  stroke: #2ecc71;
+  stroke: var(--positive);
   stroke-width: 4;
   stroke-dasharray: 1;
 }
@@ -98,17 +99,17 @@
   animation: empty-draw 0.4s ease-out backwards;
   animation-delay: calc(0.3s + var(--i) * 0.25s + var(--elapsed, 0ms));
 }
-[data-play] .empty-roll {
+[data-play] .empty-curl {
   animation: empty-fade 0.4s ease-out backwards;
   animation-delay: var(--elapsed, 0ms);
 }
 [data-play] .empty-search {
-  animation: empty-slide 0.8s cubic-bezier(0.3, 0.7, 0.3, 1) backwards;
-  animation-delay: calc(1.3s + var(--elapsed, 0ms));
+  animation: empty-scan 2.6s ease-in-out backwards;
+  animation-delay: calc(0.9s + var(--elapsed, 0ms));
 }
 [data-play] .empty-cross {
-  animation: empty-cross 0.6s ease-in-out backwards;
-  animation-delay: calc(1.6s + var(--elapsed, 0ms));
+  animation: empty-found-nothing 0.4s ease-out backwards;
+  animation-delay: calc(3.1s + var(--elapsed, 0ms));
 }
 @keyframes empty-bar {
   from {
@@ -126,15 +127,33 @@
     stroke-dashoffset: 1;
   }
 }
-@keyframes empty-slide {
-  from {
+/* The lens fades in, goes over the paper line by line and finds nothing. */
+@keyframes empty-scan {
+  0% {
     opacity: 0;
-    transform: translate(-6px, -8px);
+    transform: translate(-30px, -30px);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-30px, -26px);
+  }
+  32% {
+    transform: translate(-6px, -26px);
+  }
+  50% {
+    transform: translate(-30px, -12px);
+  }
+  70% {
+    transform: translate(-6px, -12px);
+  }
+  100% {
+    transform: translate(0px, 0px);
   }
 }
-@keyframes empty-cross {
+@keyframes empty-found-nothing {
   from {
-    transform: rotate(45deg);
+    opacity: 0;
+    transform: scale(0.4);
   }
 }
 @media (prefers-reduced-motion: reduce) {

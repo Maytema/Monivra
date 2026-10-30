@@ -826,3 +826,24 @@
   border-radius: 50%;
   color: #ffffff;
 }
+/* Subscription: the heading sits in the content, the confirm button stays pinned */
+.sub-title {
+  margin: 4px 0px 16px;
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+}
+.subscription {
+  padding: 8px 20px 24px;
+}
+.sub-features {
+  padding: 0px 4px;
+}
+.review {
+  border-radius: 14px;
+}
+.sub-actions {
+  display: grid;
+  gap: 8px;
+}
