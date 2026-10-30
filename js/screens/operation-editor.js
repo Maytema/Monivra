@@ -423,6 +423,7 @@ function accountCalculatorView(p) {
   };
   const switchMode = () => {
     p.scratchMode = !p.scratchMode;
+    toast(p.scratchMode ? "Calculator is on" : "Calculator is off");
     if (p.scratchMode) {
       /* Carry the current amount into scratch; never modify the operation until Save. */ p.scratchExpr =
         String(d.expr || "0");
@@ -433,7 +434,7 @@ function accountCalculatorView(p) {
   };
   const press = (k) => {
     if (!calcMode && ["÷", "×", "−", "+", "="].includes(k)) {
-      toast("Double-tap the nine dots to enable calculations");
+      toast("Double-tap the calculator key to enable calculations");
       return;
     }
     if (k === "⌫") assignExpr(String(currentExpr()).slice(0, -1) || "0");
@@ -624,9 +625,8 @@ function accountCalculatorView(p) {
                 ? `<div class="calc-currency calc-key">${escapeHtml(currency)}</div>`
                 : k === "mode"
                   ? buttonHtml(
-                      '<span class="nine-dots" aria-hidden="true">' +
-                        Array(9).fill("<i></i>").join("") +
-                        '</span><span class="mode-indicator ' +
+                      iconSvg("calculator", 26) +
+                        '<span class="mode-indicator ' +
                         (calcMode ? "is-active" : "") +
                         '" aria-hidden="true"></span>',
                       () => {
@@ -644,8 +644,8 @@ function accountCalculatorView(p) {
                           }, 350);
                         }
                       },
-                      "calc-key calc-toggle",
-                      `aria-label="Additionally"`,
+                      "calc-key calc-toggle" + (calcMode ? " is-on" : ""),
+                      `aria-label="Additionally" aria-pressed="${calcMode}" title="${translate("Tap: more options. Double tap: calculator")}"`,
                     )
                   : buttonHtml(k, () => press(k), "calc-key " + (k === "⌫" ? "calc-delete" : "")),
           )

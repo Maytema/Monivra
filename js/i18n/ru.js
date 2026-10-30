@@ -11,6 +11,11 @@ export const russianStrings = {
   "Payment scheduled": "Платёж запланирован",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
+  "Double-tap the calculator key to enable calculations":
+    "Дважды нажмите на клавишу калькулятора, чтобы включить вычисления",
+  "Calculator is on": "Калькулятор включён",
+  "Calculator is off": "Калькулятор выключен",
+  "Tap: more options. Double tap: calculator": "Нажатие: дополнительно. Двойное: калькулятор",
   "Hold an account to drag and reorder": "Удерживайте счёт, чтобы перетащить и изменить порядок",
   Dismiss: "Закрыть",
   "Result (from -> to)": "Результат (из -> в)",
