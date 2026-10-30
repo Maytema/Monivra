@@ -123,6 +123,25 @@ export const CURRENCIES = [
   ["JPY", "Japanese Yen"],
   ["CHF", "Swiss Franc"],
 ];
+// Colors of the application theme (4 × 4 as on the color theme page).
+export const THEME_COLORS = [
+  "#c10000",
+  "#c2185b",
+  "#8e00c8",
+  "#a000b8",
+  "#6a2cf0",
+  "#2f5cf0",
+  "#0b6aa8",
+  "#0b7a86",
+  "#00756a",
+  "#0a7d1e",
+  "#3a7d00",
+  "#5c6e00",
+  "#6e6600",
+  "#7a4a00",
+  "#b04a00",
+  "#b01c00",
+];
 // Colors offered in account/category color pickers.
 export const PALETTE = [
   "#9d00b5",

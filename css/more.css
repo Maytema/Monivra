@@ -771,3 +771,20 @@
   text-align: center;
   margin-top: 24px;
 }
+
+/* Color theme page: 4 × 4 circles */
+.theme-colors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  padding: 24px 8px;
+  justify-items: center;
+}
+.theme-color {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  color: #ffffff;
+}

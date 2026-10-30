@@ -16,9 +16,10 @@ import {
   categoryManageView,
   orderView,
 } from "../screens/categories.js";
-import { lockView, moreView, settingsPage, settingsView, simplePage } from "../screens/more.js";
+import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
 import { operationsFab, operationsView } from "../screens/operations.js";
 import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
+import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
 import { welcomeView } from "../screens/welcome.js";
 import { goHome } from "../ui/kit.js";
@@ -61,16 +62,7 @@ const PAGE_VIEWS = {
   settings: settingsView,
   data: dataView,
 };
-const SETTINGS_PAGE_KINDS = [
-  "global",
-  "formatting",
-  "styles",
-  "backups",
-  "notifications",
-  "security",
-  "privacy",
-  "rates",
-];
+const SETTINGS_PAGE_KINDS = ["backups", "notifications", "security", "privacy", "rates"];
 // Root tabs.
 const TAB_VIEWS = {
   accounts: accountsView,
@@ -84,6 +76,7 @@ const TAB_VIEWS = {
 function pageView(page) {
   const view = PAGE_VIEWS[page.kind];
   if (view) return view(page);
+  if (SETTINGS_TREE_KINDS.includes(page.kind)) return settingsTreePage(page.kind);
   return SETTINGS_PAGE_KINDS.includes(page.kind) ? settingsPage(page.kind) : simplePage(page.kind);
 }
 

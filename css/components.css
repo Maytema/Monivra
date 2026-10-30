@@ -1883,3 +1883,23 @@
   font-size: 13px;
   color: var(--muted);
 }
+
+/* Switch rows inside flat settings lists look like the other rows */
+.content.flush .field.inline {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-height: 62px;
+  margin: 0px;
+  padding: 17px 9px;
+  border: 0px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0px;
+  background: transparent;
+}
+.content.flush .field.inline small.hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}

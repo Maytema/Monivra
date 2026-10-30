@@ -1,44 +1,26 @@
 /* More tab, settings and info pages */
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
-import { textOn } from "../core/color.js";
-import {
-  APP_BUILD,
-  CURRENCIES,
-  PALETTE,
-  TODAY,
-  deepClone,
-  escapeHtml,
-  iconSvg,
-} from "../core/constants.js";
+import { APP_BUILD, CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
-import { createBackup, formatMoney, parseDate } from "../domain/finance.js";
-import { LANGUAGES, currentLocale, translate } from "../i18n/index.js";
+import { createBackup } from "../domain/finance.js";
+import { translate } from "../i18n/index.js";
+import { setting, settingOptions, switchSetting } from "./settings.js";
 import {
   closeLayers,
   confirmAction,
-  currencyPicker,
   goBack,
   goHome,
-  monthStartDialog,
   openPage,
   openSheet,
-  optionSheet,
   pageHeader,
   promptText,
   showInfo,
 } from "../ui/kit.js";
-import {
-  buttonHtml,
-  fieldButtonHtml,
-  menuRowHtml,
-  textFieldHtml,
-  toast,
-  toggleRowHtml,
-} from "../ui/primitives.js";
+import { buttonHtml, menuRowHtml, textFieldHtml, toast, toggleRowHtml } from "../ui/primitives.js";
 
 // More tab: menu with settings, data and info pages.
 export function moreView() {
@@ -66,120 +48,11 @@ export function moreView() {
   return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (Closed Beta) · build ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
 }
 
-// Settings page.
-export function settingsView() {
-  return (
-    pageHeader("Settings") +
-    `<div class="content flush">${[
-      ["Formatting", "receipt", "formatting", ""],
-      ["Styles and elements", "sun", "styles", ""],
-      ["Backups", "archive", "backups", ""],
-      ["Notifications", "bell", "notifications", ""],
-      ["Security", "lock", "security", ""],
-      ["Privacy", "shield", "privacy", ""],
-      ["Exchange rates", "transfer", "rates", ""],
-    ]
-      .map(([label, icon, kind, hint]) => menuRowHtml(label, icon, () => openPage(kind), hint))
-      .join("")}</div>`
-  );
-}
-
-// Change a setting, persist it and re-render.
-function setting(key, value) {
-  appData.settings[key] = value;
-  save();
-  render();
-}
-// Toggle row bound to a boolean setting.
-function switchSetting(label, key, hint = "") {
-  return toggleRowHtml(
-    label,
-    appData.settings[key],
-    () => setting(key, !appData.settings[key]),
-    hint,
-  );
-}
-// Field that opens an option sheet for a setting.
-function settingOptions(label, key, options) {
-  const o = options.find((o) => (Array.isArray(o) ? o[0] : o) == appData.settings[key]);
-  return fieldButtonHtml(
-    label,
-    escapeHtml(translate(Array.isArray(o) ? o[1] : (o ?? String(appData.settings[key])))),
-    () => optionSheet(label, options, appData.settings[key], (v) => setting(key, v)),
-  );
-}
-
-// Settings sub-pages: global, formatting, styles, notifications, security, privacy, backups, rates.
+// Settings sub-pages: notifications, security, privacy, backups, rates.
 export function settingsPage(kind) {
   let title = "",
     body = "";
   switch (kind) {
-    case "global":
-      title = "Global";
-      body =
-        fieldButtonHtml("Currency", escapeHtml(appData.settings.currency), () =>
-          currencyPicker(appData.settings.currency, (v) => setting("currency", v)),
-        ) +
-        settingOptions(
-          "Language",
-          "language",
-          LANGUAGES.map((language) => [language.code, language.name]),
-        ) +
-        fieldButtonHtml("Month starts on", String(appData.settings.monthStart), () =>
-          monthStartDialog(() => render()),
-        ) +
-        settingOptions("Week starts on", "weekStart", [
-          [0, "Sunday"],
-          [1, "Monday"],
-          [6, "Saturday"],
-        ]);
-      break;
-    case "formatting":
-      title = "Formatting";
-      body =
-        switchSetting("Group digits", "groupDigits") +
-        switchSetting("Two decimal places", "decimal") +
-        switchSetting("Hide cents", "hideCents") +
-        switchSetting("Currency before amount", "currencyFirst") +
-        settingOptions("Date format", "dateFormat", [
-          ["month", "Month first"],
-          ["day", "Day first"],
-          ["iso", "YYYY-MM-DD"],
-        ]) +
-        `<div class="card"><small>Preview</small><p>${formatMoney(12345678)}</p><p>${formatDate(TODAY)}</p></div>`;
-      break;
-    case "styles":
-      title = "Styles and elements";
-      body =
-        settingOptions("Theme", "theme", [
-          ["light", "Light"],
-          ["dark", "Dark"],
-          ["system", "System"],
-        ]) +
-        fieldButtonHtml(
-          "Accent color",
-          `<span class="color-dot" style="background:${appData.settings.accent}"></span> ${appData.settings.accent}`,
-          () =>
-            openSheet(
-              () =>
-                `<h2>Accent color</h2><div class="color-grid">${PALETTE.map((c) => buttonHtml(appData.settings.accent === c ? iconSvg("check") : "", () => setting("accent", c), "", `style="background:${c};color:${textOn(c)}" aria-label="${c}"`)).join("")}</div>${buttonHtml("Complete", () => closeLayers(), "primary")}`,
-              "Accent color",
-              "dialog",
-            ),
-        ) +
-        `<div class="section-label">${translate("Bottom navigation")}</div>` +
-        settingOptions("Labels", "navLabels", [
-          ["always", "Always"],
-          ["active", "Selected tab"],
-          ["never", "Never"],
-        ]) +
-        `<div class="section-label">${translate("Elements")}</div>` +
-        switchSetting("Large account rows", "bigAccounts") +
-        switchSetting("One category column", "oneColumn") +
-        switchSetting("One column in category picker", "onePicker") +
-        switchSetting("Show subcategories", "subcategories") +
-        switchSetting("Reverse calculator keys", "reverseKeys");
-      break;
     case "notifications":
       title = "Notifications";
       body =
@@ -341,16 +214,6 @@ export function settingsPage(kind) {
   return kind === "subscription"
     ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div></div>`
     : pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
-}
-// Date formatting used in settings previews.
-function formatDate(s) {
-  if (appData.settings.dateFormat === "iso") return s;
-  return parseDate(s).toLocaleDateString(currentLocale(), {
-    timeZone: "UTC",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 }
 // Set or remove the PIN.
 export function pinSetup(remove) {

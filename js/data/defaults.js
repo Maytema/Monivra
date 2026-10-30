@@ -24,6 +24,7 @@ export function createEmptyData() {
       theme: "light",
       language: browserLanguage(),
       currency: "KGS",
+      numberFormat: browserLanguage() === "ru" ? "space-comma" : "comma-dot",
       groupDigits: true,
       decimal: false,
       hideCents: true,

@@ -44,17 +44,33 @@ export function overallBalance() {
       0,
     );
 }
+// Ways to write 1234567.89: group and decimal separators.
+const SEPARATORS = {
+  "comma-dot": [",", "."],
+  "dot-comma": [".", ","],
+  "space-dot": ["\u00a0", "."],
+  "space-comma": ["\u00a0", ","],
+};
+export const NUMBER_FORMATS = Object.keys(SEPARATORS);
+// Number with the chosen separators; `decimals` shows two fraction digits.
+export function formatNumber(n, format, group, decimals) {
+  const [groupSign, decimalSign] = SEPARATORS[format] || SEPARATORS["comma-dot"];
+  const fraction = decimals ? 2 : 0;
+  return (n / 100)
+    .toLocaleString("en-US", {
+      minimumFractionDigits: fraction,
+      maximumFractionDigits: fraction,
+      useGrouping: group,
+    })
+    .replace(/[,.]/g, (c) => (c === "," ? groupSign : decimalSign));
+}
 // Format an amount in minor units (cents) honoring the formatting settings; masks it when values are hidden.
 export function formatMoney(n, currency = appData.settings.currency, isBalance = false) {
   if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
     return "•••• " + escapeHtml(currency);
-  let v = n / 100,
-    dec = appData.settings.hideCents ? 0 : appData.settings.decimal ? 2 : Math.abs(n) % 100 ? 2 : 0;
-  let text = v.toLocaleString(currentLocale(), {
-    minimumFractionDigits: dec,
-    maximumFractionDigits: dec,
-    useGrouping: appData.settings.groupDigits,
-  });
+  const s = appData.settings;
+  const decimals = s.hideCents ? false : s.decimal || Math.abs(n) % 100 !== 0;
+  const text = formatNumber(n, s.numberFormat, s.groupDigits, decimals);
   return escapeHtml(appData.settings.currencyFirst ? currency + " " + text : text + " " + currency);
 }
 // Amount wrapped in a <span> colored by sign.

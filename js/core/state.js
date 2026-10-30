@@ -15,6 +15,8 @@ try {
   } else {
     appData = JSON.parse(stored);
     if (!isValidData(appData)) appData = createEmptyData();
+    // Settings added by newer versions get their defaults.
+    appData.settings = { ...createEmptyData().settings, ...appData.settings };
   }
 } catch {
   appData = createEmptyData();
