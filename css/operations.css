@@ -204,6 +204,17 @@
 .op-name {
   font-size: 17px;
 }
+.op-name svg {
+  margin-left: 6px;
+  vertical-align: -2px;
+  color: var(--muted);
+}
+.op-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
 .op-account {
   font-size: 15px;
   margin-top: 5px;

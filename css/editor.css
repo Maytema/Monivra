@@ -221,7 +221,7 @@
   margin-top: 8px;
   display: grid;
   grid-template-columns: repeat(5, minmax(0px, 1fr));
-  grid-template-rows: repeat(4, minmax(54px, 1fr));
+  grid-template-rows: repeat(4, minmax(44px, 1fr));
   gap: 8px;
   margin: 9px -10px 0px;
 }
@@ -234,11 +234,6 @@
 .calc-delete {
   font-size: 25px;
 }
-@media (min-height: 740px) {
-  .calc-keypad {
-    grid-template-rows: repeat(4, minmax(60px, 1fr));
-  }
-}
 @media (max-height: 650px) {
   .calc-tile {
     min-height: 65px;
@@ -249,10 +244,6 @@
   .calc-number {
     min-height: 56px;
   }
-  .calc-keypad {
-    grid-template-rows: repeat(4, 48px);
-    gap: 5px;
-  }
 }
 .calc-equals {
   font-size: 32px;
@@ -261,9 +252,14 @@
 }
 .calc-shell {
   max-width: 430px;
+  width: 100%;
   margin: auto;
   padding: 0px 0px 10px;
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 .calc-key.calc-toggle {
   font-size: 20px;
@@ -278,9 +274,8 @@
   min-height: 0px;
 }
 .calc-shell:not(.ops-compact-editor) .calc-keypad {
-  flex: 1 1 0%;
-  min-height: 260px;
-  max-height: 43dvh;
+  flex: 0 0 auto;
+  height: clamp(204px, 36dvh, 330px);
 }
 .ops-compact-editor .calc-number {
   min-height: 56px;
@@ -446,7 +441,7 @@
 }
 /* Tag chips in the picker; the last one adds a new tag */
 .tag-picker {
-  margin: 12px 0;
+  margin: 0 0 6px;
 }
 .tag.tag-add {
   border-style: dashed;
@@ -479,12 +474,82 @@
 }
 .calc-tags {
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
   padding: 8px 16px;
   border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.calc-tag {
+.calc-tags .tag-chip {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.calc-photo {
+  position: relative;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.calc-photo-open {
+  display: block;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.calc-photo-open img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.calc-photo .icon-button {
+  position: absolute;
+  top: 2px;
+  left: 56px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--sheet);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+}
+.calc-top {
+  margin: 0 -16px;
+  padding: 0 16px;
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.photo-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.photo-menu .row {
+  min-height: 56px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.photo-viewer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.photo-viewer img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.photo-viewer .icon-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.tag-chip {
   padding: 3px 8px;
   border: 1px solid var(--line);
   border-radius: 9px;

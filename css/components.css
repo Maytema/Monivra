@@ -1203,7 +1203,9 @@
 }
 .overlay:has(.calc-shell) .panel {
   max-height: calc(100dvh - 36px);
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .overlay:has(.ops-compact-editor) .panel {
   max-height: calc(100dvh - 76px);

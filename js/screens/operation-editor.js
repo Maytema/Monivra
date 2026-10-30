@@ -428,7 +428,7 @@ function accountCalculatorView(p) {
     "0",
     ".",
   ];
-  return `<div class="calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="calc-date">${iconButtonHtml(
+  return `<div class="calc-shell ${p.compact ? "ops-compact-editor" : ""}"><div class="calc-top"><div class="calc-date">${iconButtonHtml(
     "left",
     "Previous day",
     () => {
@@ -509,7 +509,18 @@ function accountCalculatorView(p) {
       ),
   )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${
     d.tags?.length
-      ? `<div class="calc-tags">${d.tags.map((x) => `<span class="calc-tag">${escapeHtml(x)}</span>`).join("")}</div>`
+      ? `<div class="calc-tags">${d.tags.map((x) => `<span class="tag-chip">${escapeHtml(x)}</span>`).join("")}</div>`
+      : ""
+  }${
+    d.photo
+      ? `<div class="calc-photo">${buttonHtml(`<img alt="" src="${escapeHtml(d.photo)}">`, () => photoViewer(d.photo), "calc-photo-open", 'aria-label="Open photo"')}${iconButtonHtml(
+          "close",
+          "Remove photo",
+          () => {
+            d.photo = null;
+            render();
+          },
+        )}</div>`
       : ""
   }</div>${feeBlockHtml(
     d,
@@ -518,7 +529,7 @@ function accountCalculatorView(p) {
     dual ? secondary.currency : currency,
     dual ? sourceToReceive : (n) => n,
     render,
-  )}${
+  )}</div>${
     p.compact
       ? `<div class="ops-compact-actions">${buttonHtml(
           iconSvg("trash", 28) + "<span>Delete</span>",
@@ -705,19 +716,21 @@ function manageTags(chosen) {
     "Manage tags",
   );
 }
-// Menu for attaching or removing a photo.
+// Menu for attaching a photo (a new one replaces the old one).
 function photoMenu(d) {
   openSheet(
     () =>
-      `<h2>${translate("Add photo")}</h2>${menuRowHtml("Take a photo", "camera", () => choosePhoto(d, true))}${menuRowHtml("Choose from gallery", "image", () => choosePhoto(d, false))}${
-        d.photo
-          ? menuRowHtml("Delete photo", "trash", () => {
-              d.photo = null;
-              closeLayers();
-            })
-          : ""
-      }<p class="footnote">DEMO: camera availability depends on the browser. Images are stored locally with the operation.</p>`,
+      `<h2>${translate("Add photo")}</h2><div class="photo-menu">${menuRowHtml("Take a photo", "camera", () => choosePhoto(d, true))}${menuRowHtml("Choose from gallery", "image", () => choosePhoto(d, false))}</div>`,
     "Add photo",
+  );
+}
+// Full-screen view of an attached photo.
+export function photoViewer(src) {
+  openSheet(
+    () =>
+      `<div class="photo-viewer">${iconButtonHtml("close", "Close", () => closeLayers())}<img alt="Photo" src="${escapeHtml(src)}"></div>`,
+    "Photo",
+    "full",
   );
 }
 // Open the file chooser for an operation photo.
