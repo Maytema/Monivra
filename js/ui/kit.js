@@ -693,11 +693,12 @@ export function amountPicker(title, value, fn, allowNegative = false, currency =
   );
 }
 // Digit keypad shared by the number sheet and the docked keypad: the digits and a backspace
-// in four columns, the tall confirm key at the right, the zero as wide as the digits.
-function digitPadHtml(press, confirm, decimal) {
+// in four columns, the tall confirm key at the right, the zero filling the last row
+// (next to the dot when decimals are allowed; the dot is off once the number has one).
+function digitPadHtml(press, confirm, decimal, text = "") {
   const digits = keypadDigits();
   const digit = (i) => buttonHtml(digits[i], () => press(digits[i]), "key");
-  return `<div class="keypad digit-pad">${digit(0)}${digit(1)}${digit(2)}${buttonHtml(
+  return `<div class="keypad digit-pad ${decimal ? "has-dot" : ""}">${digit(0)}${digit(1)}${digit(2)}${buttonHtml(
     iconSvg("backspace", 26),
     () => press("⌫"),
     "key",
@@ -707,8 +708,8 @@ function digitPadHtml(press, confirm, decimal) {
     confirm,
     "key ok",
     `aria-label="${translate("Save")}"`,
-  )}${digit(6)}${digit(7)}${digit(8)}${buttonHtml("0", () => press("0"), `key ${decimal ? "" : "zero-wide"}`)}${
-    decimal ? buttonHtml(".", () => press("."), "key") : ""
+  )}${digit(6)}${digit(7)}${digit(8)}${buttonHtml("0", () => press("0"), "key zero-wide")}${
+    decimal ? buttonHtml(".", () => press("."), "key", text.includes(".") ? "disabled" : "") : ""
   }</div>`;
 }
 // The text after a key of the digit keypad; `maxLength` limits the digits.
@@ -737,6 +738,7 @@ export function numberPicker(title, value, fn, options = {}) {
           if (fn(text) !== false) closeLayers();
         },
         options.decimal,
+        text,
       )}`,
     title,
   );
@@ -784,6 +786,7 @@ export function numpadDockHtml() {
       render();
     },
     pad.options.decimal,
+    pad.text,
   )}</div>`;
 }
 
@@ -816,12 +819,13 @@ function calculatorKeys(get, set, takeFresh, done) {
     pending ? () => press("=") : done,
     "ok",
     `aria-label="${translate(pending ? "Calculate" : "Save")}"`,
-  )}${op("−")}${digit(6)}${digit(7)}${digit(8)}${op("+")}${key("0", () => press("0"), "calc-zero")}${key(".", () => press("."))}</div>`;
+  )}${op("−")}${digit(6)}${digit(7)}${digit(8)}${op("+")}${key("0", () => press("0"), "calc-zero")}${key(".", () => press("."), "", /\.\d*$/.test(get()) ? "disabled" : "")}</div>`;
 }
 
 /* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
-  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 22h50v62H30z"/><path class="empty-curl" d="M72 12h14a6 6 0 0 1 0 12H72a6 6 0 0 1 0-12z"/><path class="empty-curl" d="M24 84h46a7 7 0 0 1 0 14H24a7 7 0 0 1 0-14z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 36h26"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 48h18"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 60h24"/><path class="empty-line" style="--i:3" pathLength="1" d="M38 72h14"/><g class="empty-search"><circle class="empty-lens" cx="78" cy="62" r="18"/><path class="empty-handle" d="m91 75 11 11"/><path class="empty-cross" d="m72 56 12 12m0-12-12 12"/></g></svg>`,
+  // One sheet of paper rolled up at the top and the bottom, with a lens that finds nothing.
+  operations: `<svg class="empty-art" viewBox="-6 -6 342 342" aria-hidden="true"><g class="empty-paper"><path class="empty-edge" d="M263 6H96A48 48 0 0 0 48 54V128M48 138V143M48 171V270M266 67V262C266 300 252 328 238 328"/><path class="empty-roll" d="M263 6h40a25 25 0 0 1 25 25V67H263zM7 270H188C188 305 206 328 238 328H37A30 30 0 0 1 7 298z"/></g><path class="empty-line" style="--i:0" pathLength="1" d="M89 65H235"/><path class="empty-line" style="--i:1" pathLength="1" d="M89 115H208"/><path class="empty-line" style="--i:2" pathLength="1" d="M89 168H152"/><path class="empty-line" style="--i:3" pathLength="1" d="M89 220H152"/><g class="empty-search"><circle class="empty-lens" cx="259" cy="152" r="62"/><path class="empty-handle" d="m303 197 24 28"/><path class="empty-cross" d="m237 130 44 44m0-44-44 44"/></g></svg>`,
   statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M12 52C40 54 70 30 106 4L93.0 4.9 106 4 101.1 16.0"/></svg>`,
 };
 // When each illustration was first shown (ms); the play class lasts while its animation runs.

@@ -827,15 +827,22 @@
   color: #ffffff;
 }
 /* Subscription: the heading sits in the content, the confirm button stays pinned */
+.sub-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0px -8px 12px;
+}
 .sub-title {
-  margin: 4px 0px 16px;
-  font-size: 21px;
-  font-weight: 500;
+  flex: 1 1 0%;
+  margin: 0px 42px 0px 0px;
+  font-size: 19px;
+  font-weight: 400;
   line-height: 1.25;
   text-align: center;
 }
 .subscription {
-  padding: 8px 20px 24px;
+  padding: 14px 20px 24px;
 }
 .sub-features {
   padding: 0px 4px;

@@ -68,6 +68,8 @@ export function startup() {
   const HOLD_MOVE_TOLERANCE_PX = 15;
   let holdStart = null;
   document.addEventListener("pointerdown", (e) => {
+    // A new touch starts afresh: the click that ended a long press may never have come.
+    skipClick = false;
     clearTimeout(heldTimer);
     const target = e.target.closest("[data-category]");
     if (uiState.tab === "operations" || !target || uiState.pages.length) return;

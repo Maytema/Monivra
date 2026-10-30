@@ -228,7 +228,7 @@ function swipeFinish(s, commit) {
     return;
   }
   const width = s.width || innerWidth;
-  const from = new DOMMatrix(getComputedStyle(s.track).transform).m41;
+  const from = new window.DOMMatrix(getComputedStyle(s.track).transform).m41;
   const to = commit ? (s.direction === 1 ? -width : 0) : s.direction === 1 ? 0 : -width;
   const dist = Math.abs(to - from),
     duration = reduce ? 0 : Math.max(120, Math.min(280, (dist / width) * 230 + 90));

@@ -619,6 +619,12 @@
 .digit-pad .zero-wide {
   grid-column: span 3;
 }
+.digit-pad.has-dot .zero-wide {
+  grid-column: span 2;
+}
+.key:disabled {
+  opacity: 0.45;
+}
 .numpad-dock {
   position: absolute;
   left: 0px;

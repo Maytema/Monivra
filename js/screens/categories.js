@@ -57,7 +57,7 @@ export function orderView(kind) {
   }
   return (
     pageHeader("Change order") +
-    `<div class="content">${list.map((a, i) => `<div class="row">${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${iconButtonHtml("up", "Move up", () => move(a.id, -1))}${iconButtonHtml("down", "Move down", () => move(a.id, 1))}</div>`).join("")}${buttonHtml("Complete", goBack, "primary")}</div>`
+    `<div class="content">${list.map((a) => `<div class="row">${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${iconButtonHtml("up", "Move up", () => move(a.id, -1))}${iconButtonHtml("down", "Move down", () => move(a.id, 1))}</div>`).join("")}${buttonHtml("Complete", goBack, "primary")}</div>`
   );
 }
 // Expense/income tabs shared by categories and statistics.

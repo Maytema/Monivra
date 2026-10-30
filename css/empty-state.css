@@ -23,32 +23,33 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.empty-paper {
-  fill: color-mix(in srgb, var(--muted) 12%, var(--bg, #fff));
+.empty-edge {
   stroke: var(--muted);
-  stroke-width: 3;
+  stroke-width: 7;
 }
-.empty-curl {
-  fill: color-mix(in srgb, var(--muted) 22%, var(--bg, #fff));
-  stroke: var(--muted);
-  stroke-width: 3;
+.empty-roll {
+  fill: var(--muted);
+  stroke: none;
 }
 .empty-line,
 .empty-handle {
-  stroke: var(--muted);
-  stroke-width: 3;
+  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg, #fff));
+  stroke-width: 7;
+}
+.empty-handle {
+  stroke-width: 12;
 }
 .empty-search {
   transform-box: fill-box;
 }
 .empty-lens {
   fill: var(--bg, #fff);
-  stroke: var(--muted);
-  stroke-width: 4;
+  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg, #fff));
+  stroke-width: 7;
 }
 .empty-cross {
   stroke: var(--accent);
-  stroke-width: 3.5;
+  stroke-width: 7;
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -92,16 +93,12 @@
   animation-delay: calc(0.5s + var(--elapsed, 0ms));
 }
 [data-play] .empty-paper {
-  animation: empty-fade 0.4s ease-out backwards;
+  animation: empty-fade 0.5s ease-out backwards;
   animation-delay: var(--elapsed, 0ms);
 }
 [data-play] .empty-line {
   animation: empty-draw 0.4s ease-out backwards;
   animation-delay: calc(0.3s + var(--i) * 0.25s + var(--elapsed, 0ms));
-}
-[data-play] .empty-curl {
-  animation: empty-fade 0.4s ease-out backwards;
-  animation-delay: var(--elapsed, 0ms);
 }
 [data-play] .empty-search {
   animation: empty-scan 2.6s ease-in-out backwards;
@@ -131,20 +128,20 @@
 @keyframes empty-scan {
   0% {
     opacity: 0;
-    transform: translate(-30px, -30px);
+    transform: translate(-120px, -90px);
   }
   12% {
     opacity: 1;
-    transform: translate(-30px, -26px);
+    transform: translate(-110px, -90px);
   }
   32% {
-    transform: translate(-6px, -26px);
+    transform: translate(-30px, -90px);
   }
   50% {
-    transform: translate(-30px, -12px);
+    transform: translate(-110px, -40px);
   }
   70% {
-    transform: translate(-6px, -12px);
+    transform: translate(-30px, -40px);
   }
   100% {
     transform: translate(0px, 0px);

@@ -21,7 +21,14 @@ import {
   pageHeader,
   showInfo,
 } from "../ui/kit.js";
-import { buttonHtml, menuRowHtml, textFieldHtml, toast, toggleRowHtml } from "../ui/primitives.js";
+import {
+  buttonHtml,
+  iconButtonHtml,
+  menuRowHtml,
+  textFieldHtml,
+  toast,
+  toggleRowHtml,
+} from "../ui/primitives.js";
 
 // More tab: menu with settings, data and info pages.
 export function moreView() {
@@ -218,9 +225,7 @@ export function settingsPage(kind) {
         ).join("");
       break;
   }
-  return kind === "subscription"
-    ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div></div>`
-    : pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
+  return pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
 }
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
@@ -277,49 +282,38 @@ const pinDotsHtml = (size, typed, failed) =>
 // PIN lock screen: it unlocks as soon as the last digit is typed.
 export function lockView() {
   const size = appData.settings.pin.length;
-  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${[
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "C",
-    "0",
-    "⌫",
-  ]
-    .map((k) =>
-      k
-        ? buttonHtml(
-            k === "⌫" ? iconSvg("backspace", 26) : k,
-            () => {
-              pinFailed = false;
-              if (k === "C") setPinEntry("");
-              else if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
-              else if (pinEntry.length < size) setPinEntry(pinEntry + k);
-              if (pinEntry.length === size) {
-                if (pinEntry === appData.settings.pin) setLocked(false);
-                else {
-                  pinFailed = true;
-                  toast("Incorrect PIN");
-                }
-                setPinEntry("");
-              }
-              render();
-            },
-            "key",
-            k === "⌫"
-              ? `aria-label="${translate("Backspace")}"`
-              : k === "C"
-                ? `aria-label="${translate("Clear amount")}"`
-                : "",
-          )
-        : "<span></span>",
-    )
-    .join("")}</div><p class="footnote">DEMO interface lock</p></div></div>`;
+  const press = (k) => {
+    pinFailed = false;
+    if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
+    else if (pinEntry.length < size) setPinEntry(pinEntry + k);
+    if (pinEntry.length === size) {
+      if (pinEntry === appData.settings.pin) setLocked(false);
+      else {
+        pinFailed = true;
+        toast("Incorrect PIN");
+      }
+      setPinEntry("");
+    }
+    render();
+  };
+  const digit = (k) => buttonHtml(k, () => press(k), "key");
+  // The fingerprint key stands left of the zero only while biometrics are switched on.
+  const biometrics = appData.settings.biometrics
+    ? buttonHtml(
+        iconSvg("fingerprint", 34),
+        () => toast("Browser biometrics are not connected in this preview"),
+        "key plain",
+        `aria-label="${translate("Biometrics")}"`,
+      )
+    : "<span></span>";
+  const backspace = buttonHtml(
+    iconSvg("backspace", 30),
+    () => press("⌫"),
+    "key plain",
+    `aria-label="${translate("Backspace")}"`,
+  );
+  const keys = [..."123456789"].map(digit).join("") + biometrics + digit("0") + backspace;
+  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div><p class="footnote">DEMO interface lock</p></div></div>`;
 }
 // Info pages: profile, subscription, support, videos, about, terms and similar.
 export function simplePage(kind) {
@@ -354,7 +348,7 @@ export function simplePage(kind) {
       "Backup and restore data",
       "No ads",
     ];
-    body = `<div class="subscription"><h2 class="sub-title">${translate("Use the full potential of the application!")}</h2><div class="sub-plans">${plans
+    body = `<div class="subscription"><div class="sub-head">${iconButtonHtml("back", "Back", goBack)}<h2 class="sub-title">${translate("Use the full potential of the application!")}</h2></div><div class="sub-plans">${plans
       .map(([key, name, price, detail, tag]) =>
         buttonHtml(
           `<span class="plan-left"><strong>${key === "Lifetime" ? "Lifetime access" : name}</strong>${tag && key === "Annually" ? `<em>${tag}</em>` : ""}<small>${detail}</small>${key === "Lifetime" ? `<small>All future features are included at no additional cost</small>` : ""}</span><span class="plan-price">${price}</span>${plan === key ? `<span class="plan-check">${iconSvg("check", 13)}</span>` : ""}`,
@@ -537,7 +531,8 @@ export function simplePage(kind) {
     title = "Information";
     body = "<p>Information is not available in this preview.</p>";
   }
+  // A page with a pinned footer has no top bar: the back arrow and heading scroll with the content.
   return footer
-    ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div>${footer}</div>`
+    ? `<div class="sub-screen"><div class="sub-scroll">${body}</div>${footer}</div>`
     : pageHeader(title) + `<div class="content">${body}</div>`;
 }

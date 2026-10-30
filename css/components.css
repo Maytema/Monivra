@@ -49,20 +49,6 @@
 .overlay.sheet:has([data-add-chooser]) .panel > h2:not(.add-heading) {
   display: none;
 }
-.sub-screen .topbar h1 {
-  white-space: normal;
-  line-height: 1.2;
-  margin: 0px auto;
-  font-weight: 400;
-  text-align: center;
-  max-width: 270px;
-  font-size: 19px;
-}
-@media (max-width: 360px) {
-  .sub-screen .topbar h1 {
-    font-size: 18px;
-  }
-}
 .data-menu > .row svg {
   color: var(--ink-soft);
 }
@@ -311,23 +297,6 @@
   padding: 8px 10px;
   flex: 0 0 auto;
   gap: 8px;
-}
-.sub-screen .topbar {
-  flex: 0 0 66px;
-  display: flex;
-  border: 0px;
-  box-shadow: none;
-  flex-basis: auto;
-  flex-shrink: 0;
-  padding: 13px 16px 10px;
-  align-items: center;
-  padding-top: 15px;
-  min-height: 76px;
-}
-@media (max-height: 650px) {
-  .sub-screen .topbar {
-    min-height: 52px;
-  }
 }
 .topbar .spacer {
   width: 42px;
@@ -1134,6 +1103,14 @@
   padding: 10px 16px 23px;
   overscroll-behavior: contain;
 }
+/* Rows inside a sheet are tighter, and the last one has no divider that suggests more below */
+.overlay .panel > .row {
+  min-height: 56px;
+  padding: 12px 9px;
+}
+.overlay .panel > .row:last-child {
+  border-bottom: 0px;
+}
 .overlay.dialog .panel {
   border-radius: 28px;
   background: var(--dialog);
@@ -1284,6 +1261,10 @@
 }
 .key:active {
   background: var(--soft);
+}
+/* A key drawn as a bare icon (fingerprint, backspace on the lock screen) */
+.key.plain {
+  background: transparent;
 }
 @media (max-width: 359px) {
   .key {
