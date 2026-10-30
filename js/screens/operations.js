@@ -329,7 +329,7 @@ function filterAccountSelect(selected, done) {
           const items = appData.accounts.filter(predicate),
             ids = items.map((a) => a.id);
           if (!items.length) return "";
-          return `<div class="filter-group"><div class="filter-group-head"><button type="button" class="filter-group-check" aria-label="Toggle all ${name}" data-action="${registerAction(
+          return `<div class="filter-group"><div class="filter-group-head"><button type="button" class="filter-group-check" aria-label="${translateWith("Toggle all {name}", { name: translate(name) })}" data-action="${registerAction(
             () => {
               const on = checked(ids);
               ids.forEach((id) => (on ? values.delete(id) : values.add(id)));
@@ -388,12 +388,12 @@ function filterCategorySelect(selected, done) {
         .map((type) => {
           const group = appData.categories.filter((c) => c.type === type),
             groupIds = group.map((c) => c.id);
-          return `<div class="filter-group"><div class="filter-group-head"><button class="filter-expand" aria-label="Expand ${type}" data-action="${registerAction(
+          return `<div class="filter-group"><div class="filter-group-head"><button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(
             () => {
               expanded.has(type) ? expanded.delete(type) : expanded.add(type);
               render();
             },
-          )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="filter-check-action" aria-label="Select ${type}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
+          )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
             expanded.has(type)
               ? group
                   .filter((c) => !c.parent)
@@ -403,14 +403,14 @@ function filterCategorySelect(selected, done) {
                       open = parentExpanded.has(c.id);
                     return `<div class="filter-parent-row">${
                       children.length
-                        ? `<button class="filter-expand" aria-label="Expand ${escapeHtml(c.name)}" data-action="${registerAction(
+                        ? `<button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(
                             () => {
                               open ? parentExpanded.delete(c.id) : parentExpanded.add(c.id);
                               render();
                             },
                           )}">${iconSvg(open ? "down" : "right", 18)}</button>`
                         : '<span class="filter-expand-placeholder"></span>'
-                    }${badgeHtml(c, true)}<span class="filter-label">${escapeHtml(c.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(c.name)}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="filter-subcategories">${children.map((x) => `<div class="filter-child-row"><span class="filter-label">${escapeHtml(x.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="checkbox ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
+                    }${badgeHtml(c, true)}<span class="filter-label">${escapeHtml(c.name)}</span><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="filter-subcategories">${children.map((x) => `<div class="filter-child-row"><span class="filter-label">${escapeHtml(x.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="checkbox ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
                   })
                   .join("")
               : ""

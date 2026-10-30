@@ -755,4 +755,27 @@ export const russianStrings = {
   "Enter the title": "Введите название",
   "Previous month": "Предыдущий месяц",
   "Next month": "Следующий месяц",
+  "Toggle all {name}": "Выбрать или снять все: {name}",
+  "Expand {name}": "Развернуть: {name}",
+  "Select {name}": "Выбрать: {name}",
+  Clear: "Очистить",
+  "Budget amount": "Сумма бюджета",
+  "No remote account exists. You can manage local data under More → Data.":
+    "Удалённого аккаунта нет. Локальными данными можно управлять в разделе «Ещё» → «Данные».",
+  "This offline beta is not connected to an account.":
+    "Эта автономная бета не подключена к аккаунту.",
+  "DEMO PIN only hides the interface. Local data is not encrypted. PIN recovery: More → Demo and reset after exporting data, or clear this page’s browser storage.":
+    "PIN-код только скрывает интерфейс, локальные данные не шифруются. Если забыли PIN: сохраните данные, затем «Ещё» → «Демо и сброс», либо очистите хранилище браузера для этой страницы.",
+  "DEMO: no notifications run after this page is closed.":
+    "Уведомления не работают, когда страница закрыта.",
+  "DEMO: local files and backups remain readable. This is not a security boundary.":
+    "Локальные файлы и копии остаются читаемыми. Это не защита данных.",
+  "Back to Support": "Назад в поддержку",
+  Message: "Сообщение",
+  "Describe your message": "Опишите ваше сообщение",
+  "Describe what happened and how to reproduce it.": "Опишите, что произошло и как это повторить.",
+  "Write your message or feedback.": "Напишите сообщение или отзыв.",
+  "Importing data may change your existing records. Export a backup first.":
+    "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
+  "Export a local file from this closed beta.": "Сохраните локальный файл из этой закрытой беты.",
 };
