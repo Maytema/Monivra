@@ -483,6 +483,17 @@ function accountCalculatorView(p) {
           render();
         })}</div>`
       : ""
+  }<div class="calc-extras">${
+    d.comment
+      ? `<div class="calc-comment"><span>${escapeHtml(d.comment)}</span>${iconButtonHtml(
+          "close",
+          "Clear comment",
+          () => {
+            d.comment = "";
+            render();
+          },
+        )}</div>`
+      : ""
   }<div class="calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
     "comment",
     "Comment",
@@ -496,7 +507,11 @@ function accountCalculatorView(p) {
         },
         "Comment",
       ),
-  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${d.comment ? `<p class="calc-note">${escapeHtml(d.comment)}</p>` : ""}${d.tags?.length ? `<div class="tag-cloud">${d.tags.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join("")}</div>` : ""}${feeBlockHtml(
+  )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${
+    d.tags?.length
+      ? `<div class="calc-tags">${d.tags.map((x) => `<span class="calc-tag">${escapeHtml(x)}</span>`).join("")}</div>`
+      : ""
+  }</div>${feeBlockHtml(
     d,
     enteredAmount(),
     currency,

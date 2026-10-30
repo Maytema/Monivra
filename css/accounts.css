@@ -4,12 +4,6 @@
   width: 28px;
   height: 28px;
 }
-.account-favorite.is-favorite svg {
-  fill: currentcolor;
-}
-.account-detail-head .account-favorite svg {
-  stroke: var(--accent-ink);
-}
 .account-editor-reference .account-editor-bottom button {
   margin: 0px;
   min-height: 45px;
@@ -121,78 +115,6 @@
   padding-top: 12px;
   padding-bottom: 100px;
 }
-.account-detail-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 12px 10px 22px;
-}
-.account-detail-label {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 9px;
-}
-.account-detail-money {
-  font-size: 18px;
-  margin-top: 2px;
-}
-.account-favorite {
-  border: 0px;
-  background: transparent;
-  padding: 6px;
-  align-self: flex-start;
-  color: var(--accent-ink);
-}
-.account-actions-six {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0px, 1fr));
-  gap: 9px;
-  padding: 0px 6px 18px;
-}
-.account-action-tile {
-  border: 0px;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  font-size: 11px;
-  min-height: 77px;
-  line-height: 1.15;
-  text-align: center;
-  padding: 3px 0px;
-}
-.account-action-icon {
-  width: 46px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
-  color: rgb(171, 57, 194);
-}
-.account-actions-six .account-action-tile:nth-child(2) .account-action-icon {
-  background: rgb(240, 232, 242);
-  color: rgb(121, 113, 139);
-}
-.account-actions-six .account-action-tile:nth-child(3) .account-action-icon {
-  background: rgb(226, 244, 250);
-  color: rgb(52, 165, 197);
-}
-.account-actions-six .account-action-tile:nth-child(4) .account-action-icon {
-  background: rgb(223, 248, 237);
-  color: rgb(64, 183, 139);
-}
-.account-actions-six .account-action-tile:nth-child(5) .account-action-icon {
-  background: rgb(249, 241, 217);
-  color: rgb(189, 157, 69);
-}
-.account-actions-six .account-action-tile:nth-child(6) .account-action-icon {
-  background: rgb(249, 228, 237);
-  color: rgb(200, 84, 140);
-}
 .account-editor-bottom {
   display: flex;
   flex-direction: column;
@@ -218,9 +140,6 @@
   background: var(--bg);
   border-radius: 3px;
   padding: 0px 2px;
-}
-.account-detail-head .account-favorite {
-  margin-left: auto;
 }
 .account-editor-reference {
   padding-top: 13px;
@@ -384,20 +303,20 @@
 .account-type-choices {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 0px 2px 14px;
+  gap: 14px;
+  padding: 4px 2px 14px;
 }
 .account-type-choice {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
-  padding: 11px;
+  padding: 16px;
   border: 1px solid rgb(227, 220, 230);
-  border-radius: 13px;
+  border-radius: 16px;
   background: var(--key);
   text-align: left;
-  min-height: 81px;
+  min-height: 96px;
 }
 .goal-pct-main {
   font-size: 1em;
@@ -415,13 +334,26 @@
   margin-left: 1px;
 }
 .type-icon {
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
-  color: var(--accent-ink);
+  border-radius: 16px;
+  color: var(--type);
+  background: color-mix(in srgb, var(--type) 15%, transparent);
   flex: 0 0 auto;
+}
+.type-text strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+}
+.type-text small {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink-soft);
 }
 .type-text {
   flex: 1 1 0%;
@@ -491,4 +423,72 @@
   border: 0;
   font: inherit;
   padding: 6px 0;
+}
+
+/* Account action sheet: balance card and six action tiles */
+.account-detail-head {
+  margin: 8px 4px 22px;
+  padding: 16px 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--key);
+  text-align: center;
+}
+.account-detail-top {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+.account-detail-top strong {
+  flex: 1 1 0%;
+  min-width: 0;
+  font-size: 24px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.account-favorite {
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  color: var(--accent-ink);
+}
+.account-favorite.is-favorite svg {
+  fill: currentcolor;
+}
+.account-detail-label {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.account-detail-money {
+  font-size: 28px;
+  margin: 2px 0 8px;
+}
+.account-actions-six {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 8px;
+  padding: 0 4px 22px;
+}
+.account-action-tile {
+  border: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
+}
+.account-action-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 18%, transparent);
 }

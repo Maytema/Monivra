@@ -10,7 +10,7 @@ import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
-import { accountEditView, accountsView } from "../screens/accounts.js";
+import { accountEditView, accountTypeView, accountsView } from "../screens/accounts.js";
 import {
   categoriesView,
   categoryEditView,
@@ -53,6 +53,7 @@ function navigationBar() {
 // Full-screen pages that replace the root tab, by page kind.
 const PAGE_VIEWS = {
   accountEdit: accountEditView,
+  accountType: accountTypeView,
   accountOrder: () => orderView("accounts"),
   categoryOrder: () => orderView("categories"),
   categoryEdit: categoryEditView,

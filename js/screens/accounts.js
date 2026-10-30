@@ -232,35 +232,38 @@ function startFromAccount(options) {
 export function accountActions(a) {
   const n = accountBalance(a.id),
     available = a.type === "Regular" && a.limit > 0;
-  const act = (icon, label, fn) =>
+  const act = (icon, label, tone, fn) =>
     buttonHtml(
-      `<span class="account-action-icon">${iconSvg(icon, 23)}</span><span>${translate(label)}</span>`,
+      `<span class="account-action-icon" style="--tone:${tone}">${iconSvg(icon, 26)}</span><span>${translate(label)}</span>`,
       fn,
       "account-action-tile",
     );
+  const balance = (label, amount) =>
+    `<div class="account-detail-label">${translate(label)}</div><div class="account-detail-money">${moneySpanHtml(amount, a.currency, false, true)}</div>`;
   openSheet(
     () =>
-      `<div class="account-detail-head">${badgeHtml(a)}<div class="grow"><strong>${escapeHtml(a.name)}</strong><div class="account-detail-label">${translate("Current balance")}</div><div class="account-detail-money">${moneySpanHtml(n, a.currency, false, true)}</div>${available ? `<div class="account-detail-label">${translate("Available balance")}</div><div class="account-detail-money">${moneySpanHtml(n + a.limit, a.currency, false, true)}</div>` : ""}</div>${buttonHtml(
-        iconSvg("star", 23),
+      `<div class="account-detail-head"><div class="account-detail-top">${badgeHtml(a)}<strong>${escapeHtml(a.name)}</strong>${buttonHtml(
+        iconSvg("star", 26),
         () => {
           toggleFavoriteAccount(a.id);
           render();
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),
         'aria-label="Favorite"',
-      )}</div><div class="account-actions-six" role="group" aria-label="Account actions">${act("edit", "Edit", () => editAccount(a))}${act(
+      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}</div><div class="account-actions-six" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
         "archive",
         a.archived ? "Return from archive" : "Move to archive",
+        "#7d7886",
         () => {
           a.archived = !a.archived;
           save();
           closeLayers();
         },
-      )}${act("receipt", "Operations", () => {
+      )}${act("receipt", "Operations", "#1f8fe0", () => {
         uiState.filters.accounts = [a.id];
         uiState.period = { mode: "all", anchor: TODAY };
         goHome("operations");
-      })}${act("income", "Top up", () => startFromAccount({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", () => startFromAccount({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", () => startFromAccount({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
+      })}${act("income", "Top up", "#22b573", () => startFromAccount({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", "#f2a313", () => startFromAccount({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", "#e5384f", () => startFromAccount({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
     a.name,
   );
 }
@@ -296,8 +299,7 @@ export function editAccount(a) {
   d.counterpart = appData.accounts.find(
     (x) => !x.archived && x.id !== d.id && x.type === "Regular",
   )?.id;
-  openPage("accountEdit", { draft: d, editing: !!a });
-  if (!a) accountTypeReferenceSheet(d);
+  openPage(a ? "accountEdit" : "accountType", { draft: d, editing: !!a });
 }
 // Validate and store the account being edited.
 export function saveAccount(p) {
@@ -385,46 +387,60 @@ export function saveAccount(p) {
   }
   finishFlow("Account saved");
 }
-// Explanation of the Regular / Savings / Debt account types.
-function accountTypeReferenceSheet(d) {
-  const types = [
-    [
-      "Regular",
-      "Card, card or a bank account. For everyday income and expenses.",
-      "card",
-      "#e8efff",
-    ],
-    [
-      "Savings",
-      "Put money aside, with or without a goal — for a dream, a big purchase or a buffer for future events.",
-      "savings",
-      "#dff9ee",
-    ],
-    [
-      "Debt",
-      "Money you borrowed or lent. Track who owes whom and how debt repayment is progressing.",
-      "receipt",
-      "#ffebdf",
-    ],
-  ];
+// Regular / Savings / Debt: title, explanation, icon and its color.
+const ACCOUNT_TYPES = [
+  ["Regular", "Card, card or a bank account. For everyday income and expenses.", "card", "#3f7ff0"],
+  [
+    "Savings",
+    "Put money aside, with or without a goal — for a dream, a big purchase or a buffer for future events.",
+    "pig",
+    "#25b57a",
+  ],
+  [
+    "Debt",
+    "Money you borrowed or lent. Track who owes whom and how debt repayment is progressing.",
+    "document",
+    "#f2812f",
+  ],
+];
+// Cards of the account types; `pick(type)` runs for the chosen one.
+const accountTypeCards = (pick) =>
+  `<div class="account-type-choices">${ACCOUNT_TYPES.map(([v, desc, icon, color]) =>
+    buttonHtml(
+      `<span class="type-icon" style="--type:${color}">${iconSvg(icon, 28)}</span><span class="type-text"><strong>${translate(v)}</strong><small>${translate(desc)}</small></span><span class="type-chevron">›</span>`,
+      () => pick(v),
+      "account-type-choice",
+    ),
+  ).join("")}</div>`;
+// Give the draft the chosen type.
+function setAccountType(d, type) {
+  d.type = type;
+  if (type === "Debt" && !d.debt) d.debt = "Owe me";
+}
+// Sheet for changing the type of the account being edited.
+function accountTypeSheet(d) {
   openSheet(
     () =>
-      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div><div class="account-type-choices">${types
-        .map(([v, desc, icon, bg]) =>
-          buttonHtml(
-            `<span class="type-icon" style="background:${bg}">${iconSvg(icon, 23)}</span><span class="type-text"><strong>${translate(v)}</strong><small>${desc}</small></span><span class="type-chevron">›</span>`,
-            () => {
-              closeLayers();
-              d.type = v;
-              if (v === "Debt" && !d.debt) d.debt = "Owe me";
-              render();
-            },
-            "account-type-choice",
-          ),
-        )
-        .join("")}</div>`,
+      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div>${accountTypeCards(
+        (type) => {
+          closeLayers();
+          setAccountType(d, type);
+          render();
+        },
+      )}`,
     "Account type",
     "full",
+  );
+}
+// First step of a new account: choose its type (back leaves without creating anything).
+export function accountTypeView(p) {
+  return (
+    pageHeader("New account") +
+    `<div class="content">${accountTypeCards((type) => {
+      setAccountType(p.draft, type);
+      uiState.pages.pop();
+      openPage("accountEdit", { draft: p.draft, editing: false });
+    })}</div>`
   );
 }
 // Account editor form.
@@ -436,7 +452,7 @@ export function accountEditView(p) {
     current = p.editing;
   return (
     pageHeader(current ? "Change account" : "New account") +
-    `<div class="content account-editor-content account-editor-reference"><div class="fields">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter a name")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${textFieldHtml("Description", d.description, (v) => (d.description = v))}${fieldButtonHtml("Account type", translate(d.type), () => accountTypeReferenceSheet(d))}${
+    `<div class="content account-editor-content account-editor-reference"><div class="fields">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter a name")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${textFieldHtml("Description", d.description, (v) => (d.description = v))}${fieldButtonHtml("Account type", translate(d.type), () => accountTypeSheet(d))}${
       debt
         ? fieldButtonHtml("Type of debt", translate(d.debt), () =>
             optionSheet("Type of debt", ["Owe me", "I owe"], d.debt, (v) => {

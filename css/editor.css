@@ -97,23 +97,6 @@
 .overlay:has(.calc-shell:not(.ops-compact-editor)) .panel {
   padding-bottom: 8px;
 }
-.tag-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 9px 0px;
-}
-.ops-compact-editor .tag-cloud {
-  display: flex;
-  max-height: 34px;
-  overflow: hidden;
-  margin: 3px 10px;
-  flex-wrap: nowrap;
-}
-.ops-compact-editor .tag-cloud .tag {
-  white-space: nowrap;
-  font-size: 11px;
-}
 .mode-indicator.is-active {
   background: rgb(36, 184, 122);
   box-shadow: rgba(36, 184, 122, 0.32) 0px 0px 5px;
@@ -157,11 +140,6 @@
   justify-content: center;
   min-height: 76px;
   gap: 6px;
-}
-.calc-note {
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
 }
 .calc-key {
   background: var(--key);
@@ -237,9 +215,7 @@
   justify-content: space-around;
   align-items: center;
   min-height: 51px;
-  margin: 0px -16px;
-  border-top: 1px solid rgb(216, 210, 223);
-  border-bottom: 1px solid rgb(216, 210, 223);
+  border-bottom: 1px solid var(--line);
 }
 .calc-keypad {
   margin-top: 8px;
@@ -312,14 +288,6 @@
   padding: 3px 0px;
   flex-shrink: 0;
 }
-.ops-compact-editor .calc-note {
-  max-height: 28px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 4px 10px;
-  font-size: 12px;
-}
 .calc-toggle {
   position: relative;
   display: flex;
@@ -345,7 +313,6 @@
   padding: 8px;
 }
 .ops-compact-editor .calc-attachments {
-  margin: 0px;
   flex-shrink: 0;
   min-height: 46px;
 }
@@ -487,4 +454,46 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+/* Comment, attachment/comment/tag buttons and tags under the amount, separated by lines */
+.calc-extras {
+  margin: 0 -16px;
+  border-top: 1px solid var(--line);
+}
+.ops-compact-editor .calc-extras {
+  margin: 0;
+  flex-shrink: 0;
+}
+.calc-comment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 8px 0 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 17px;
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+.calc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.calc-tag {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 0px;
 }
