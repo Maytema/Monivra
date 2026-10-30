@@ -99,7 +99,7 @@
   stroke-width: 2.15;
 }
 .currency-sheet-search input::placeholder {
-  color: rgb(151, 145, 156);
+  color: var(--muted);
 }
 #base:has(+ .overlay) {
   pointer-events: none;
@@ -558,10 +558,10 @@
   text-align: right;
 }
 .pos {
-  color: var(--positive);
+  color: var(--positive-ink);
 }
 .neg {
-  color: var(--negative);
+  color: var(--negative-ink);
 }
 .muted {
   color: var(--muted);
@@ -869,7 +869,7 @@
   font-size: 11px;
   line-height: 1.3;
   margin-top: 4px;
-  color: rgb(137, 131, 140);
+  color: var(--muted);
   font-weight: 400;
 }
 .fields {
@@ -1374,6 +1374,8 @@
   --bg: color-mix(in srgb, var(--accent) 4%, #1e1a21);
   --ink: #f4eaf6;
   --muted: #b8aebd;
+  --positive-ink: #58cba5;
+  --negative-ink: #df80a3;
   --ink-soft: #d3c8d7;
   --line: #4d4052;
   --sheet: color-mix(in srgb, var(--accent) 13%, #211d25);

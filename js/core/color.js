@@ -24,6 +24,10 @@ export function contrast(a, b) {
   return (x + 0.05) / (y + 0.05);
 }
 
+// Mix of two colors; `share` of the first one (0–1).
+export const mix = (first, second, share) =>
+  toHex(channels(first).map((v, i) => v * share + channels(second)[i] * (1 - share)));
+
 // Black or white text, whichever reads better on the given background.
 export const textOn = (background) =>
   contrast(background, "#ffffff") >= 4.5 ? "#ffffff" : "#1d1b20";

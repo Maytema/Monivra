@@ -149,7 +149,7 @@
   border: 1px solid rgb(235, 230, 240);
   min-height: 46px;
   border-radius: 10px;
-  color: rgb(138, 131, 147);
+  color: var(--muted);
 }
 .cat-manage-grid {
   display: grid;
@@ -199,7 +199,7 @@
 .cat-archive-heading {
   border-top: 1px solid var(--line);
   padding-top: 15px;
-  color: rgb(139, 131, 144);
+  color: var(--muted);
   margin-top: 13px;
   margin-bottom: 0px;
 }

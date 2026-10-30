@@ -312,7 +312,7 @@
 .accounts-content .account-row .goal-info {
   font-size: 12px;
   line-height: 1.7;
-  color: rgb(196, 190, 200);
+  color: var(--muted);
   padding-right: 10px;
 }
 .accounts-content .account-row .goal-strip {
@@ -342,7 +342,7 @@
   display: block;
   margin: 24px auto 0px;
   padding: 12px;
-  color: rgb(119, 113, 124);
+  color: var(--muted);
   font-size: 13px;
 }
 @media (max-width: 360px) {
@@ -376,7 +376,7 @@
 }
 .account-available {
   display: block;
-  color: rgb(115, 113, 128);
+  color: var(--muted);
   font-size: 12px;
   margin-top: 2px;
   font-weight: 400;
@@ -429,7 +429,7 @@
 }
 .type-chevron {
   font-size: 26px;
-  color: rgb(132, 123, 137);
+  color: var(--muted);
 }
 .ops-hero-search {
   position: absolute;

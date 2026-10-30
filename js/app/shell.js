@@ -2,7 +2,7 @@
 import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
 import { initAccountDrag } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
-import { readableOver, textOn } from "../core/color.js";
+import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
@@ -121,7 +121,8 @@ function applyAppearance() {
   root.classList.toggle("dark", dark);
   // Text colors derived from the accent so that every accent stays readable.
   const accent = appData.settings.accent;
-  const background = dark ? "#1e1a21" : "#ffffff";
+  // The most tinted surface (selected tab, chip, key) is the hardest one to read on.
+  const background = dark ? mix(accent, "#2b2630", 0.32) : mix(accent, "#ffffff", 0.18);
   root.style.setProperty("--accent", accent);
   root.style.setProperty("--on-accent", textOn(accent));
   root.style.setProperty("--accent-ink", readableOver(accent, background));

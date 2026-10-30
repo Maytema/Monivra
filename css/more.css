@@ -57,7 +57,7 @@
 }
 .plan-left small {
   font-size: 12px;
-  color: rgb(121, 116, 125);
+  color: var(--muted);
   line-height: 1.35;
   max-width: 235px;
 }
@@ -153,7 +153,7 @@
   display: block;
   font-size: 11px;
   line-height: 1.35;
-  color: rgb(112, 107, 116);
+  color: var(--muted);
   margin-top: 3px;
 }
 .account-type-header h2 {
@@ -166,7 +166,7 @@
   display: block;
   margin-top: 4px;
   font-size: 12px;
-  color: rgb(142, 137, 146);
+  color: var(--muted);
 }
 .cat-sub-chip-button span {
   flex: 1 1 0%;
@@ -192,7 +192,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgb(170, 165, 180);
+  color: var(--muted);
   font-weight: 500;
   height: 32px;
   border-radius: 6px;
@@ -201,7 +201,7 @@
 }
 .cat-sub-chip-button svg {
   flex: 0 0 auto;
-  color: rgb(128, 123, 134);
+  color: var(--muted);
 }
 .cat-sub-modal-buttons button {
   padding: 10px 18px;
@@ -315,7 +315,7 @@
   text-overflow: ellipsis;
 }
 .sync {
-  color: var(--muted);
+  color: var(--ink-soft);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   border: 0px;
@@ -387,7 +387,7 @@
   display: flex;
   align-items: center;
   border-bottom: 1px solid rgb(201, 196, 204);
-  color: rgb(150, 144, 153);
+  color: var(--muted);
   height: 41px;
   min-height: 41px;
   padding: 0px 18px;
@@ -418,7 +418,7 @@
   padding: 22px 0px 24px;
   text-align: center;
   font-size: 14px;
-  color: rgb(119, 114, 123);
+  color: var(--muted);
   letter-spacing: 0.1px;
 }
 .more-menu-item {
@@ -448,7 +448,7 @@
 }
 .sub-disclosure {
   font-size: 11px;
-  color: rgb(133, 128, 139);
+  color: var(--muted);
   margin-top: 17px;
   line-height: 1.45;
 }
@@ -657,7 +657,7 @@
 }
 .profile-label {
   font-size: 12px;
-  color: rgb(130, 123, 132);
+  color: var(--muted);
   margin: 16px 0px 6px;
 }
 .profile-value {
@@ -718,7 +718,7 @@
   padding: 2px 15px 22px;
 }
 .test-button {
-  color: rgb(116, 107, 128);
+  color: var(--muted);
   font-size: 12px;
   padding: 9px 12px;
   text-decoration: underline;
@@ -737,7 +737,7 @@
 }
 .help-intro {
   padding: 20px 22px 16px;
-  color: rgb(119, 119, 119);
+  color: var(--muted);
   font-size: 14px;
 }
 .guide,
@@ -763,7 +763,7 @@
 }
 .guide-note,
 .muted-text {
-  color: rgb(138, 135, 145);
+  color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
 }

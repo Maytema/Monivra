@@ -3,7 +3,7 @@
 :root {
   --bg: color-mix(in srgb, var(--accent) 2%, #ffffff);
   --ink: #252127;
-  --muted: #8c858e;
+  --muted: #6f6873;
   --ink-soft: #5d5360;
   --line: #e4dde4;
   --accent: #a000b8;
@@ -16,6 +16,9 @@
   --key: color-mix(in srgb, var(--accent) 1.5%, #ffffff);
   --positive: #45bd96;
   --negative: #ce3c71;
+  /* Same hues as text: darker so that amounts stay readable on light surfaces */
+  --positive-ink: #2a7a60;
+  --negative-ink: #b93666;
   --nav: color-mix(in srgb, var(--accent) 9%, #ffffff);
   --tint: color-mix(in srgb, var(--accent) 18%, #ffffff);
   color-scheme: light;
