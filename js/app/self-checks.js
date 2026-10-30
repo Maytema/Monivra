@@ -35,6 +35,29 @@ export function runSelfChecks() {
     }
   });
   test("Stored schema", () => isValidData(appData));
+  test("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
+    const a = appData.accounts.find((x) => x.include && !x.archived && x.currency !== "USD");
+    if (!a) return true;
+    const amount = accountBalance(a.id),
+      totalBefore = overallBalance(),
+      currency = a.currency;
+    try {
+      a.currency = "USD";
+      const sameAmount = accountBalance(a.id) === amount,
+        expected =
+          totalBefore -
+          convertCurrency(amount, currency, appData.settings.currency) +
+          convertCurrency(amount, "USD", appData.settings.currency);
+      return sameAmount && overallBalance() === expected;
+    } finally {
+      a.currency = currency;
+    }
+  });
+  test("Cross-currency amounts convert both ways within one minor unit", () => {
+    const usd = 12345;
+    const back = convertCurrency(convertCurrency(usd, "USD", "KGS"), "KGS", "USD");
+    return Math.abs(back - usd) <= 1;
+  });
   test("Income edit updates account and overall totals", () => {
     const a = appData.accounts.find((x) => x.include && !x.archived);
     if (!a) return true;

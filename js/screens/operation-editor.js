@@ -519,7 +519,7 @@ function accountCalculatorView(p) {
     render();
   })}</div><div class="calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${
     dual
-      ? `<div class="calc-number dual-number ${p.currencySide === "send" ? "dual-active" : ""}" data-side="send">${buttonHtml(
+      ? `<div class="calc-number dual-number ${p.currencySide === "send" ? "dual-active" : ""}" data-side="send" style="--tint:${escapeHtml(primary.color || "")}">${buttonHtml(
           escapeHtml(
             p.currencySide === "send" ? currentExpr() : calcMode ? p.scratchExpr : d.expr,
           ) +
@@ -533,7 +533,7 @@ function accountCalculatorView(p) {
           },
           "dual-value",
           `aria-label="Edit amount in ${escapeHtml(primary.currency)}" aria-pressed="${p.currencySide === "send"}"`,
-        )}</div><div class="calc-number dual-number dual-receive ${p.currencySide === "receive" ? "dual-active" : ""}">${buttonHtml(
+        )}</div><div class="calc-number dual-number dual-receive ${p.currencySide === "receive" ? "dual-active" : ""}" style="--tint:${escapeHtml(secondary.color || "")}">${buttonHtml(
           escapeHtml(p.currencySide === "receive" ? currentExpr() : receiveExpression()) +
             " " +
             escapeHtml(secondary.currency),
@@ -545,7 +545,7 @@ function accountCalculatorView(p) {
           },
           "dual-value",
           `aria-label="Edit amount in ${escapeHtml(secondary.currency)}" aria-pressed="${p.currencySide === "receive"}"`,
-        )}</div><div class="calc-rate dual-rate dual-rate-line">1 ${escapeHtml(primary.currency)} = ${(currencyRate(primary.currency) / currencyRate(secondary.currency)).toFixed(4)} ${escapeHtml(secondary.currency)} · ${p.currencySide === "receive" ? "Edit second currency" : "Edit first currency"}</div>`
+        )}</div>`
       : `<div class="calc-number single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${escapeHtml(currentExpr())}" data-input="${registerInput((v) => assignExpr(v))}"><span>${escapeHtml(currency)}</span></div>`
   }${
     p.compact

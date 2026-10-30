@@ -31,10 +31,6 @@
   flex: 1 1 0%;
   padding: 7px 4px;
 }
-.ops-compact-editor .calc-number input,
-.ops-compact-editor .calc-number .dual-value {
-  font-size: 34px;
-}
 .ops-compact-editor .ops-compact-actions button {
   font-size: 13px;
   gap: 5px;
@@ -247,7 +243,6 @@
   min-height: 52px;
   gap: 7px;
 }
-.calc-rate,
 .calc-note {
   font-size: 11px;
   color: var(--muted);
@@ -403,15 +398,6 @@
   padding: 0px 0px 10px;
   position: relative;
 }
-.calc-number,
-.calc-number.dual-number,
-.calc-number.dual-number.dual-receive {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-sizing: border-box;
-}
 .calc-key.calc-toggle {
   font-size: 20px;
   position: relative;
@@ -433,10 +419,6 @@
   min-height: 78px;
   margin: 0px;
   padding: 9px 0px;
-}
-.ops-compact-editor .calc-rate {
-  font-size: 11px;
-  padding: 0px 8px;
 }
 .ops-compact-editor .calc-note {
   max-height: 28px;
@@ -480,108 +462,44 @@
     min-height: 60px;
   }
 }
-.calc-number.dual-number.dual-receive {
-  background: rgb(251, 227, 247);
-}
-.dual-number.dual-active {
-  box-shadow: rgb(178, 164, 228) 0px 0px 0px 2px inset;
-}
-.calc-rate.dual-rate {
-  padding: 6px 10px;
-  font-size: 12px;
-}
-.dual-value {
-  border: 0px;
-  background: transparent;
-  font-size: 27px;
-  color: rgb(36, 35, 43);
-  max-width: 100%;
-  padding: 10px;
-  cursor: pointer;
-}
-.calc-number.dual-number {
-  display: flex;
-  justify-content: center;
-  background: rgb(231, 229, 241);
-  border-bottom: 1px solid rgb(207, 203, 217);
-  min-height: 66px;
-  margin: 0px -16px;
-  border-radius: 0px;
-  border: 0px;
-  box-shadow: none;
-}
-.dual-rate-line {
-  text-align: center;
-  opacity: 0.65;
-  font-size: 10px;
-  padding: 3px 8px;
-}
-.dual-number.dual-active .dual-value {
-  font-weight: 650;
-}
-.calc-number .dual-value {
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0px;
-  padding: 10px 18px;
-}
-.calc-number.dual-number.dual-active {
-  background: rgb(237, 240, 250);
-  box-shadow: none;
-}
-.calc-number.dual-number.dual-receive.dual-active {
-  background: rgb(247, 236, 247);
-  box-shadow: none;
-}
-.calc-number.dual-number .dual-value {
-  font-weight: 400;
-  text-align: center;
-  justify-content: center;
-}
-.calc-number.dual-number.dual-active .dual-value {
-  font-weight: 500;
-}
-.calc-number.dual-number,
-.calc-number.dual-number.dual-receive {
-  border-radius: 0px;
-  transition: background 0.16s;
-  background: rgb(255, 250, 254);
-  box-shadow: none;
-  border: 0px;
-  border-bottom: 1px solid rgb(211, 207, 217);
-}
-.calc-number.dual-number.dual-active,
-.calc-number.dual-number.dual-receive.dual-active {
-  background: rgb(248, 230, 244);
-  border: 0px;
-  box-shadow: none;
-}
-.dual-number .dual-value {
-  min-height: 65px;
-  font-weight: 500;
-  width: 100%;
-  text-align: center;
-}
-.ops-compact-editor .dual-number {
-  min-height: 63px;
-}
 .ops-compact-editor .calc-number {
   flex-shrink: 0;
   min-height: 56px;
   padding: 3px 0px;
 }
-.ops-compact-editor .dual-number {
-  min-height: 53px;
-}
 @media (max-height: 740px) {
   .ops-compact-editor .calc-number {
     min-height: 48px;
   }
+}
+/* Cross-currency operation: sender amount above receiver amount, the active one tinted. */
+.calc-number.dual-number {
+  min-height: 56px;
+  margin: 0 -16px;
+  border-bottom: 1px solid rgb(211, 207, 217);
+  transition: background 0.16s;
+}
+.calc-number.dual-number.dual-active {
+  background: color-mix(in srgb, var(--tint, rgb(178, 164, 228)) 24%, transparent);
+}
+.dual-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 18px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 27px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.ops-compact-editor .calc-number input,
+.ops-compact-editor .calc-number .dual-value {
+  font-size: 34px;
 }
 .ops-tap-to-edit {
   text-align: center;
