@@ -3,10 +3,18 @@ import { runSelfChecks } from "./self-checks.js";
 import { render } from "./shell.js";
 import { startup } from "./startup.js";
 import { TODAY } from "../core/constants.js";
-import { appData, setAppData, setLocked, setUiState, uiState } from "../core/state.js";
+import {
+  appData,
+  setAppData,
+  setFirstLaunch,
+  setLocked,
+  setUiState,
+  uiState,
+} from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
+import { createEmptyData } from "../data/defaults.js";
 import { csvText, handleImport, parseCSV, prepareCSV } from "../data/import-export.js";
-import { createEmptyData, createSeedData } from "../data/seed.js";
+import { createSampleData } from "../data/sample.js";
 import { isValidData, save } from "../data/storage.js";
 import {
   accountBalance,
@@ -71,7 +79,7 @@ if (isTestMode()) {
     setData: (x) => {
       setAppData(x);
     },
-    seed: createSeedData,
+    sample: createSampleData,
     emptyData: createEmptyData,
     validData: isValidData,
     calculate: evaluateExpression,
@@ -132,7 +140,8 @@ if (isTestMode()) {
     invoke: (id) => actionHandlers[id]?.(),
     input: (id, value) => inputHandlers[id]?.(value),
     reset: () => {
-      setAppData(createSeedData());
+      setAppData(createSampleData());
+      setFirstLaunch(false);
       setUiState({
         tab: "accounts",
         accountTab: "Accounts",

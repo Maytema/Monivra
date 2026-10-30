@@ -1,7 +1,8 @@
-/* Demo data and empty data factory */
+/* Sample dataset for testing: example accounts, categories and a month of operations */
+import { createEmptyData } from "./defaults.js";
 
-// Demo dataset installed on the very first launch.
-export function createSeedData() {
+// Installed only on request from More > Data > Test data.
+export function createSampleData() {
   const accounts = [
     ["Wallet", "Regular", 1846700, "card", "#5067d7"],
     ["Personal", "Regular", 120000, "cash", "#24b5d1"],
@@ -124,75 +125,5 @@ export function createSeedData() {
         s + (o.to === a.id ? (o.receive ?? o.amount) : 0) - (o.from === a.id ? o.amount : 0),
       0,
     );
-  return {
-    schema: 1,
-    accounts,
-    categories,
-    ops,
-    tags: [],
-    scheduled: [],
-    budgets: [],
-    backups: [],
-    settings: {
-      accent: "#a000b8",
-      theme: "light",
-      language: "en",
-      currency: "KGS",
-      groupDigits: true,
-      decimal: false,
-      hideCents: true,
-      currencyFirst: false,
-      dateFormat: "month",
-      monthStart: 1,
-      weekStart: 0,
-      navLabels: "always",
-      bigAccounts: false,
-      oneColumn: false,
-      onePicker: false,
-      subcategories: true,
-      reverseKeys: false,
-      opening: true,
-      notifications: false,
-      periodic: false,
-      notificationTime: "20:00",
-      notificationFrequency: "Every day",
-      pin: false,
-      biometrics: false,
-      relock: false,
-      lockDelay: 0,
-      hidePreview: false,
-      hiddenValues: "Hide all",
-      autoBackup: false,
-      autoRates: false,
-      stats: ["flow", "scheduled", "bar", "average", "donut", "categories", "tags"],
-    },
-    rates: {
-      KGS: 1,
-      USD: 87.5,
-      EUR: 98,
-      RUB: 1.05,
-      TJS: 8.2,
-      KZT: 0.18,
-      CNY: 12.2,
-      GBP: 117,
-      AUD: 57,
-      CAD: 63,
-      JPY: 0.59,
-      CHF: 105,
-    },
-  };
-}
-// Empty dataset with default settings.
-export function createEmptyData() {
-  const x = createSeedData();
-  return {
-    ...x,
-    accounts: [],
-    categories: [],
-    ops: [],
-    scheduled: [],
-    budgets: [],
-    tags: [],
-    backups: [],
-  };
+  return { ...createEmptyData(), accounts, categories, ops };
 }

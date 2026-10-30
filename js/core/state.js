@@ -1,22 +1,27 @@
 /* Application state: persistent data (appData) and UI state (uiState) */
 import { STORAGE_KEY, TODAY } from "./constants.js";
-import { createEmptyData, createSeedData } from "../data/seed.js";
+import { createEmptyData } from "../data/defaults.js";
 import { isValidData } from "../data/storage.js";
 
-// Install editable demonstration data only on the very first launch.
-// Existing datasets (including deliberately emptied ones) are never reseeded.
+// Nothing is installed on the first launch: the welcome screen asks whether to start
+// empty or with a basic set. Stored datasets are never replaced.
 export let appData;
+export let firstLaunch = false;
 try {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === null) {
-    appData = createSeedData();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    appData = createEmptyData();
+    firstLaunch = true;
   } else {
     appData = JSON.parse(stored);
     if (!isValidData(appData)) appData = createEmptyData();
   }
 } catch {
   appData = createEmptyData();
+}
+// The welcome screen disappears once a start option has been chosen.
+export function setFirstLaunch(value) {
+  firstLaunch = value;
 }
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export let uiState = {

@@ -12,7 +12,7 @@ import {
 } from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
-import { createSeedData } from "../data/seed.js";
+import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup, formatMoney, parseDate } from "../domain/finance.js";
 import { LANGUAGES, currentLocale, translate } from "../i18n/index.js";
@@ -551,7 +551,7 @@ export function simplePage(kind) {
               confirmAction(
                 "Replace current local records with editable sample data? You can cancel without downloading anything.",
                 () => {
-                  setAppData(createSeedData());
+                  setAppData(createSampleData());
                   save();
                   goHome("accounts");
                   toast("Sample data installed");
@@ -569,7 +569,7 @@ export function simplePage(kind) {
                 () => {
                   if (appData.accounts.length || appData.categories.length || appData.ops.length)
                     return toast("Database is not empty");
-                  const initial = createSeedData();
+                  const initial = createSampleData();
                   appData.accounts = initial.accounts;
                   appData.categories = initial.categories;
                   appData.ops = initial.ops;
@@ -593,7 +593,7 @@ export function simplePage(kind) {
         confirmAction(
           "Replace all current local data with the initial demo?",
           () => {
-            setAppData({ ...createSeedData(), backups: appData.backups });
+            setAppData({ ...createSampleData(), backups: appData.backups });
             uiState.filters = {
               accounts: null,
               categories: null,

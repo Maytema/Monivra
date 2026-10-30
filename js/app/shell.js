@@ -3,7 +3,7 @@ import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
 import { initAccountDrag } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, locked, uiState } from "../core/state.js";
+import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
@@ -19,6 +19,7 @@ import { lockView, moreView, settingsPage, settingsView, simplePage } from "../s
 import { operationsFab, operationsView } from "../screens/operations.js";
 import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
 import { statisticsView } from "../screens/statistics.js";
+import { welcomeView } from "../screens/welcome.js";
 import { goHome } from "../ui/kit.js";
 import {
   buttonHtml,
@@ -88,6 +89,7 @@ function pageView(page) {
 // HTML of the whole screen: current root tab or the top page, plus layers.
 export function rootView() {
   if (locked) return lockView();
+  if (firstLaunch) return welcomeView();
   const page = uiState.pages.at(-1);
   if (page) return pageView(page);
   let html = (TAB_VIEWS[uiState.tab] || accountsView)();

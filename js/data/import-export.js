@@ -3,7 +3,7 @@ import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, newId } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
-import { createEmptyData } from "./seed.js";
+import { createEmptyData } from "./defaults.js";
 import { isValidData, save } from "./storage.js";
 import {
   accountById,
