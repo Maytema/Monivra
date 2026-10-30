@@ -522,11 +522,12 @@
 }
 .account-row .money {
   font-size: 18px;
+  white-space: nowrap;
 }
 .sum-tabs .money {
   display: block;
-  font-size: 19px;
-  margin-top: 5px;
+  font-size: 21px;
+  margin-top: 7px;
 }
 .cat-tile .money {
   font-size: 14px;
@@ -535,7 +536,7 @@
 }
 .opening .money {
   display: block;
-  font-size: 16px;
+  font-size: 17px;
   margin-top: 4px;
 }
 .sheet-account .total .money {
@@ -551,21 +552,10 @@
     font-size: 15px;
   }
 }
-.account-row .money {
-  font-size: 18px;
-  white-space: nowrap;
-}
 .section-label .money {
   font-size: 19px;
   margin-left: auto;
   text-align: right;
-}
-.sum-tabs .money {
-  font-size: 21px;
-  margin-top: 7px;
-}
-.cat-tile .money {
-  font-size: 14px;
 }
 .pos {
   color: var(--positive);
@@ -593,10 +583,18 @@
 .account-row .name {
   font-size: 17px;
   margin-bottom: 5px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .cat-tile .name {
   font-size: 14px;
   margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .account-row .name,
 .cat-tile .name,
@@ -609,28 +607,8 @@
   margin-top: 8px;
   font-size: 21px;
 }
-.opening .money {
-  display: block;
-  font-size: 17px;
-}
 .stats-category .money {
   font-size: 15px;
-}
-.account-row .name {
-  font-size: 17px;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
-.cat-tile .name {
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.account-row .name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .cat-manage-tile .name {
   display: block;
@@ -845,17 +823,6 @@
     padding: 17px;
   }
 }
-.calc-pickers .field {
-  margin: 0px;
-  padding: 13px 11px;
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--line));
-  border-radius: 16px;
-}
-.calc-pickers .field-label {
-  margin-bottom: 10px;
-  font-size: 14px;
-}
 .panel .field {
   margin-bottom: 14px;
   padding: 16px;
@@ -867,13 +834,6 @@
   min-height: 70px;
   border-radius: 16px;
 }
-.operation-form .fields .field {
-  margin-bottom: 12px;
-  padding: 16px 18px;
-}
-.operation-form .fields .field-label {
-  margin-bottom: 8px;
-}
 .account-editor-reference .field-label {
   font-size: 13px;
   font-weight: 550;
@@ -882,10 +842,6 @@
 .field .value {
   color: var(--accent);
   font-size: 15px;
-}
-.calc-pickers .value {
-  color: var(--ink);
-  font-size: 16px;
 }
 .account-editor-reference .field .value {
   font-size: 13px;
@@ -915,9 +871,6 @@
   margin-top: 4px;
   color: rgb(137, 131, 140);
   font-weight: 400;
-}
-.operation-form .fields {
-  padding-top: 8px;
 }
 .fields {
   padding-top: 18px;
@@ -1324,7 +1277,7 @@
   background: var(--key);
   text-align: center;
   height: 61px;
-  font-size: 27px;
+  font-size: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1336,13 +1289,6 @@
   .key {
     height: 52px;
   }
-}
-.key {
-  height: 61px;
-  font-size: 28px;
-}
-.operation-form .keypad .key:nth-child(10) {
-  font-size: 26px;
 }
 @media (max-width: 359px) {
   .key {

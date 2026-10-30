@@ -123,9 +123,10 @@
   opacity: 0.5;
 }
 .cat-sub-heading {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  margin: 0px 0px 7px;
 }
 .cat-scheduled {
   padding: 12px;
@@ -246,12 +247,6 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-.cat-sub-heading {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0px 0px 7px;
 }
 .cat-sub-chip-button {
   display: flex;

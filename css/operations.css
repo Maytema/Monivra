@@ -47,18 +47,6 @@
   display: block;
   margin: 0px auto 8px;
 }
-.searchbar input {
-  min-width: 0px;
-}
-.calc-amount input {
-  border: 0px;
-  padding: 0px;
-  font-size: 34px;
-  text-align: right;
-  min-width: 0px;
-  width: 60%;
-  max-width: 240px;
-}
 .filter-picker-head span {
   font-size: 13px;
   color: var(--muted, #888);
@@ -69,6 +57,10 @@
 }
 .ops-hero-search input {
   min-width: 0px;
+  font-size: 16px;
+  border: 0px;
+  background: transparent;
+  padding: 8px;
 }
 .account-tabs > button {
   flex: 1 1 0%;
@@ -87,20 +79,15 @@
   width: auto;
   flex: 0 1 auto;
   min-width: 1ch;
-  max-width: 82%;
+  max-width: 75%;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 .dual-number input {
   max-width: 65%;
   width: 50%;
   text-align: center;
   font-size: 27px;
-}
-.calc-number input {
-  min-width: 1ch;
-  max-width: 75%;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
 }
 .cat-sub-chip-button span {
   min-width: 0px;
@@ -122,13 +109,6 @@
   border: 0px;
   outline: 0px;
   padding: 0px;
-}
-.ops-hero-search input {
-  min-width: 0px;
-  font-size: 16px;
-  border: 0px;
-  background: transparent;
-  padding: 8px;
 }
 .op-row.selected .ops-select-icon svg {
   width: 24px;
@@ -163,6 +143,7 @@
 .add-item .badge {
   width: 45px;
   height: 45px;
+  flex: 0 0 auto;
 }
 .calc-tile .badge {
   flex: 0 0 auto;
@@ -198,9 +179,6 @@
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
-}
-.add-item .badge {
-  flex: 0 0 auto;
 }
 #base:has(.ops-selection-header) .navbar {
   display: none;
@@ -291,11 +269,6 @@
   display: flex;
   align-items: center;
   gap: 5px;
-}
-.searchbar {
-  display: flex;
-  margin: 4px 16px 12px;
-  align-items: center;
 }
 .filters-title {
   font-size: 25px;
@@ -582,14 +555,6 @@
   height: 66px;
   padding: 0px 13px;
 }
-.checkbox.partial {
-  background: rgb(41, 81, 245);
-  border-color: rgb(41, 81, 245);
-  color: white;
-  font-size: 17px;
-  font-weight: 700;
-}
-
 /* Bulk edit rows: title, chosen value and a cross to clear it */
 .bulk-row {
   display: flex;

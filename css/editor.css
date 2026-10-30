@@ -1,12 +1,5 @@
 /* Operation editor: calculator, counterparty and account pickers.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
-.calc-amount input:focus {
-  border: 0px;
-  padding: 0px;
-}
-.calc-amount span {
-  font-size: 29px;
-}
 .calc-tile-value > span:last-child {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -81,11 +74,6 @@
     padding-right: 12px;
   }
 }
-.calc-pickers .badge {
-  width: 24px;
-  height: 24px;
-  background: none;
-}
 @media (max-width: 359px) {
   .cat-tile .badge {
     width: 35px;
@@ -106,58 +94,8 @@
 .secondary {
   background: var(--soft);
 }
-.operation-form .calc-tools .text-button {
-  font-size: 13px;
-  padding: 8px;
-}
 .overlay:has(.calc-shell:not(.ops-compact-editor)) .panel {
   padding-bottom: 8px;
-}
-.calc-amount:focus {
-  border: 0px;
-  padding: 22px 4px;
-  outline: 0px;
-}
-.calc-hint {
-  text-align: center;
-  font-size: 12px;
-  margin: 0px 0px 17px;
-}
-.calc-tools {
-  display: flex;
-  justify-content: space-around;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 4px 0px;
-  margin: 10px -16px;
-}
-.operation-form .calc-tools {
-  margin: 6px -16px;
-}
-.calc-pickers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 14px;
-}
-.calc-amount {
-  text-align: center;
-  width: 100%;
-  border-width: medium;
-  border-style: none;
-  border-color: currentcolor;
-  border-image: none;
-  background: none;
-  line-height: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 24px 0px 14px;
-  font-size: 30px;
-}
-.operation-form .keypad {
-  margin-top: 8px;
 }
 .tag-cloud {
   display: flex;
@@ -175,23 +113,6 @@
 .ops-compact-editor .tag-cloud .tag {
   white-space: nowrap;
   font-size: 11px;
-}
-.dots {
-  text-align: center;
-  font-size: 26px;
-  letter-spacing: 12px;
-  margin: 30px 0px;
-}
-.preview-photo {
-  max-height: 140px;
-  max-width: 100%;
-  border-radius: 10px;
-  display: block;
-  margin: auto;
-}
-.operation-form {
-  overflow: visible;
-  padding: 0px 0px 8px;
 }
 .mode-indicator.is-active {
   background: rgb(36, 184, 122);
@@ -219,22 +140,23 @@
 }
 .calc-tile {
   border: 1px solid rgb(222, 212, 231);
-  background: rgb(247, 240, 250);
-  border-radius: 9px;
-  min-height: 56px;
-  padding: 7px 8px;
+  background: rgb(234, 231, 255);
+  border-radius: 17px;
+  min-height: 80px;
+  padding: 12px 11px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 11px;
   min-width: 0px;
   text-align: left;
+  border-color: rgb(130, 125, 243);
 }
 .calc-number {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  gap: 7px;
+  min-height: 76px;
+  gap: 6px;
 }
 .calc-note {
   font-size: 11px;
@@ -242,14 +164,15 @@
   text-align: center;
 }
 .calc-key {
-  background: rgb(255, 250, 254);
-  border-radius: 5px;
+  background: rgb(255, 251, 255);
+  border-radius: 15px;
   text-align: center;
-  font-size: 21px;
-  height: 45px;
+  font-size: 29px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 54px;
 }
 .calc-key:active {
   background: rgb(240, 229, 244);
@@ -258,8 +181,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 18px;
+  color: rgb(41, 37, 45);
 }
 @media (max-height: 710px) {
   .calc-key {
@@ -292,14 +215,6 @@
   gap: 9px;
   margin: 5px 0px 10px;
 }
-.calc-tile {
-  min-height: 80px;
-  border-radius: 17px;
-  padding: 12px 11px;
-  gap: 11px;
-  background: rgb(234, 231, 255);
-  border-color: rgb(130, 125, 243);
-}
 .calc-tile:nth-child(2) {
   background: rgb(240, 227, 251);
   border-color: rgb(180, 121, 240);
@@ -316,12 +231,6 @@
   white-space: nowrap;
   font-size: 18px;
   gap: 9px;
-}
-.calc-number {
-  min-height: 76px;
-  display: flex;
-  justify-content: center;
-  gap: 6px;
 }
 .calc-attachments {
   display: flex;
@@ -340,22 +249,11 @@
   gap: 8px;
   margin: 9px -10px 0px;
 }
-.calc-key {
-  height: auto;
-  min-height: 54px;
-  border-radius: 15px;
-  font-size: 29px;
-  background: rgb(255, 251, 255);
-}
 .calc-confirm {
   height: auto;
   grid-area: 3 / 5 / span 2;
   background: rgb(222, 219, 253);
   color: rgb(37, 36, 94);
-}
-.calc-currency {
-  font-size: 18px;
-  color: rgb(41, 37, 45);
 }
 .calc-delete {
   font-size: 25px;
@@ -409,9 +307,10 @@
   max-height: 43dvh;
 }
 .ops-compact-editor .calc-number {
-  min-height: 78px;
+  min-height: 56px;
   margin: 0px;
-  padding: 9px 0px;
+  padding: 3px 0px;
+  flex-shrink: 0;
 }
 .ops-compact-editor .calc-note {
   max-height: 28px;
@@ -454,11 +353,6 @@
   .ops-compact-editor .calc-tile {
     min-height: 60px;
   }
-}
-.ops-compact-editor .calc-number {
-  flex-shrink: 0;
-  min-height: 56px;
-  padding: 3px 0px;
 }
 @media (max-height: 740px) {
   .ops-compact-editor .calc-number {
@@ -538,7 +432,6 @@
 .single-tappable {
   cursor: pointer;
 }
-
 /* Tax and commission chips with the result line */
 .fee-block {
   display: grid;
@@ -570,7 +463,6 @@
   justify-content: space-between;
   font-size: 15px;
 }
-
 /* Calculator key: glyph, with a bar that lights up while arithmetic is on */
 .calc-toggle svg {
   color: rgb(99, 72, 143);
@@ -585,7 +477,6 @@
   color: rgb(20, 140, 92);
   transform: scale(1.08);
 }
-
 /* Tag chips in the picker; the last one adds a new tag */
 .tag-picker {
   margin: 12px 0;

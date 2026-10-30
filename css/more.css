@@ -29,10 +29,10 @@
   color: var(--positive);
 }
 .more-menu-item svg {
-  width: 23px;
-  height: 23px;
-  color: rgb(83, 81, 90);
-  stroke-width: 2.5;
+  width: 22px;
+  height: 22px;
+  color: rgb(76, 74, 81);
+  stroke-width: 2.25;
 }
 .account-tabs button {
   height: 54px;
@@ -52,20 +52,14 @@
 .more-empty svg {
   color: rgb(177, 142, 184);
 }
-.more-menu-item svg {
-  width: 22px;
-  height: 22px;
-  stroke-width: 2.25;
-  color: rgb(76, 74, 81);
-}
 .more-menu-item span {
   line-height: 1.2;
 }
 .plan-left small {
-  font-size: 11px;
+  font-size: 12px;
   color: rgb(121, 116, 125);
   line-height: 1.35;
-  max-width: 210px;
+  max-width: 235px;
 }
 .plan-left em {
   position: absolute;
@@ -98,11 +92,6 @@
 .plan-left strong {
   font-weight: 600;
   font-size: 14px;
-}
-.plan-left small {
-  font-size: 12px;
-  line-height: 1.35;
-  max-width: 235px;
 }
 .info-card h2 {
   font-size: 23px;
@@ -177,6 +166,7 @@
   display: block;
   margin-top: 4px;
   font-size: 12px;
+  color: rgb(142, 137, 146);
 }
 .cat-sub-chip-button span {
   flex: 1 1 0%;
@@ -193,8 +183,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 30px;
-  min-height: 50px;
+  border-radius: 28px;
+  min-height: 47px;
 }
 .cat-manage-tabs button {
   flex: 1 1 0%;
@@ -203,14 +193,11 @@
   align-items: center;
   justify-content: center;
   color: rgb(170, 165, 180);
-  font-weight: 400;
-  height: 34px;
-  border-radius: 7px;
+  font-weight: 500;
+  height: 32px;
+  border-radius: 6px;
   background: transparent;
   font-size: 13px;
-}
-.cat-manage-tile small {
-  color: rgb(142, 137, 146);
 }
 .cat-sub-chip-button svg {
   flex: 0 0 auto;
@@ -221,16 +208,6 @@
   min-width: 76px;
   border-radius: 22px;
 }
-.cat-manage-tabs button {
-  height: 32px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 6px;
-}
-.cat-editor-actions button {
-  min-height: 47px;
-  border-radius: 28px;
-}
 .customize-customize h2 {
   text-align: center;
   font-weight: 400;
@@ -238,19 +215,16 @@
   margin: 17px 0px 18px;
 }
 .customize-settings h2 {
-  font-size: 23px;
+  font-size: 21px;
   font-weight: 400;
   line-height: 1.2;
   margin: 0px 0px 20px;
+  margin-bottom: 11px;
 }
 .picker-head h2 {
   font-size: 23px;
   font-weight: 400;
   margin: 0px;
-}
-.customize-settings h2 {
-  font-size: 21px;
-  margin-bottom: 11px;
 }
 .customize-settings p {
   margin: 0px 0px 20px;
@@ -498,9 +472,9 @@
   position: relative;
   flex: 0 0 auto;
   margin-top: 0px;
-  padding: 10px 16px max(12px, env(safe-area-inset-bottom));
+  padding: 11px 21px max(15px, env(safe-area-inset-bottom));
   background: rgb(255, 251, 255);
-  border-top: 1px solid rgb(240, 234, 240);
+  border-top: 1px solid rgb(236, 230, 237);
 }
 @media (max-height: 650px) {
   .sub-bottom {
@@ -517,10 +491,6 @@
   overscroll-behavior: contain;
   padding-bottom: 0px;
   overflow-x: hidden;
-}
-.sub-bottom {
-  padding: 11px 21px max(15px, env(safe-area-inset-bottom));
-  border-top: 1px solid rgb(236, 230, 237);
 }
 @media (max-width: 360px) {
   .sub-bottom {
