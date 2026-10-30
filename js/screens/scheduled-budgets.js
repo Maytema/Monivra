@@ -231,10 +231,15 @@ export function scheduledView() {
   return (
     pageHeader(
       "Scheduled payments",
-      iconButtonHtml("sort", "Sort scheduled payments", () => {
-        uiState.scheduleDesc = !uiState.scheduleDesc;
-        render();
-      }),
+      iconButtonHtml(
+        uiState.scheduleDesc ? "sortReverse" : "sort",
+        uiState.scheduleDesc ? "Latest payments first" : "Nearest payments first",
+        () => {
+          uiState.scheduleDesc = !uiState.scheduleDesc;
+          render();
+          toast(uiState.scheduleDesc ? "Latest payments first" : "Nearest payments first");
+        },
+      ),
     ) +
     `<div class="content">${
       dates.length
@@ -360,10 +365,16 @@ export function budgetView(p) {
         render();
       }),
     )}${fieldButtonHtml("Budget amount", formatMoney(b.amount, b.currency), () =>
-      amountPicker("Budget amount", b.amount, (v) => {
-        b.amount = v;
-        render();
-      }),
+      amountPicker(
+        "Budget amount",
+        b.amount,
+        (v) => {
+          b.amount = v;
+          render();
+        },
+        false,
+        b.currency,
+      ),
     )}</div>${buttonHtml(
       b.id ? "Save" : "Create",
       () => {

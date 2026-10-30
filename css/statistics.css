@@ -111,3 +111,30 @@
   font-size: 14px;
   margin-top: 16px;
 }
+/* Tags block: a heading and one line per tag */
+.stats-card[data-stat="tags"] h3 {
+  margin-bottom: 6px;
+  font-size: 17px;
+  font-weight: 500;
+}
+.stats-tag {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 2px;
+  text-align: left;
+}
+.stats-tag + .stats-tag {
+  border-top: 1px solid var(--line);
+}
+.stats-tag svg {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+.stats-tag .grow {
+  min-width: 0px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -474,6 +474,7 @@ export function accountEditView(p) {
             render();
           },
           !debt,
+          d.currency,
         ),
     )}${
       debt && current
@@ -489,25 +490,38 @@ export function accountEditView(p) {
                   render();
                 },
                 false,
+                d.currency,
               ),
           )
         : ""
     }${
       regular
         ? fieldButtonHtml("Credit limit", formatMoney(d.limit, d.currency), () =>
-            amountPicker("Credit limit", d.limit, (v) => {
-              d.limit = v;
-              render();
-            }),
+            amountPicker(
+              "Credit limit",
+              d.limit,
+              (v) => {
+                d.limit = v;
+                render();
+              },
+              false,
+              d.currency,
+            ),
           )
         : ""
     }${
       savings
         ? fieldButtonHtml("Goal", formatMoney(d.goal, d.currency), () =>
-            amountPicker("Goal", d.goal, (v) => {
-              d.goal = v;
-              render();
-            }),
+            amountPicker(
+              "Goal",
+              d.goal,
+              (v) => {
+                d.goal = v;
+                render();
+              },
+              false,
+              d.currency,
+            ),
           )
         : ""
     }${

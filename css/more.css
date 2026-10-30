@@ -325,9 +325,63 @@
   vertical-align: middle;
 }
 .pin-dots {
-  font-size: 28px;
-  letter-spacing: 9px;
-  height: 60px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  height: 44px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.pin-dots span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  box-sizing: border-box;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.pin-dots span.filled {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent);
+  animation: pin-pop 0.2s ease-out;
+}
+.pin-dots.failed {
+  animation: pin-shake 0.35s;
+}
+.pin-dots.failed span {
+  border-color: var(--negative);
+}
+@keyframes pin-pop {
+  from {
+    transform: scale(0.6);
+  }
+}
+@keyframes pin-shake {
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+.pin-length {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.pin-length button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  background: var(--key);
+}
+.pin-length .active {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .more-menu-item:active {
   background: var(--sheet);

@@ -1,5 +1,5 @@
 /* App shell: navigation, root view, rendering */
-import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
+import { bindTabSwipe, mountSwipeChrome } from "./chrome.js";
 import { initColorWheel } from "./color-wheel.js";
 import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
@@ -172,7 +172,7 @@ export function render(top = false) {
     x.scrollTop = filterScrolls[i] || 0;
   });
   mountSwipeChrome();
-  bindAddChooserSwipe();
+  bindTabSwipe();
   animateBalance(balanceBefore, previousBalance);
   // Restore focus (and caret) of the field that was being edited.
   if (focusLabel) {

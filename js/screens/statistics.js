@@ -1,6 +1,6 @@
 /* Statistics screens and charts */
 import { render } from "../app/shell.js";
-import { TODAY, escapeHtml } from "../core/constants.js";
+import { TODAY, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -28,13 +28,7 @@ import {
   periodBar,
   swipePane,
 } from "../ui/kit.js";
-import {
-  badgeHtml,
-  buttonHtml,
-  menuRowHtml,
-  registerAction,
-  toggleRowHtml,
-} from "../ui/primitives.js";
+import { badgeHtml, buttonHtml, registerAction, toggleRowHtml } from "../ui/primitives.js";
 
 // Category totals for the statistics screen.
 function statsGroups(type = uiState.catType) {
@@ -141,23 +135,31 @@ export function statisticsView() {
     donut: () => `<section class="stats-card" data-stat="donut">${donut(groups)}</section>`,
     categories: () =>
       `<section class="stats-card" data-stat="categories">${groups.map((g) => buttonHtml(`${badgeHtml(g, true)}<span class="grow"><span>${escapeHtml(g.name)}</span><span class="bar-track"><span style="width:${total ? (g.total / total) * 100 : 0}%;background:${g.color}"></span></span></span><span class="right"><span class="money ${uiState.catType === "expense" ? "neg" : "pos"}">${formatMoney(g.total)}</span><small>${total ? ((g.total / total) * 100).toFixed(1) : 0}%</small></span>`, () => statsDetail(g.id), "stats-category")).join("")}${!groups.length ? `<div class="empty">${translate("Empty")}</div>` : ""}</section>`,
-    tags: () =>
-      `<section class="stats-card" data-stat="tags"><div class="section-label">${translate("Tags")}</div>${appData.tags
-        .map((tag) => {
-          let n = reportRows()
-            .filter((o) => o.reportType === uiState.catType && o.tags?.includes(tag))
-            .reduce((s, o) => s + o.reportAmount, 0);
-          return menuRowHtml(
-            escapeHtml(tag),
-            "tag",
+    tags: () => {
+      // Only tags that appear in the shown operations, the largest first.
+      const rows = reportRows().filter((o) => o.reportType === uiState.catType);
+      const used = appData.tags
+        .map((tag) => ({
+          tag,
+          total: rows.filter((o) => o.tags?.includes(tag)).reduce((s, o) => s + o.reportAmount, 0),
+          used: rows.some((o) => o.tags?.includes(tag)),
+        }))
+        .filter((x) => x.used)
+        .sort((x, y) => y.total - x.total);
+      if (!used.length) return "";
+      return `<section class="stats-card" data-stat="tags"><h3>${translate("Tags")}</h3>${used
+        .map(({ tag, total }) =>
+          buttonHtml(
+            `${iconSvg("tag", 20)}<span class="grow">${escapeHtml(tag)}</span><span class="money ${uiState.catType === "expense" ? "neg" : "pos"}">${formatMoney(total)}</span>`,
             () => {
               uiState.filters.tags = [tag];
               goHome("operations");
             },
-            formatMoney(n),
-          );
-        })
-        .join("")}</section>`,
+            "stats-tag",
+          ),
+        )
+        .join("")}</section>`;
+    },
   };
   if (!visibleOperations().length && !filterActive())
     return (

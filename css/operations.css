@@ -637,3 +637,43 @@
   font-size: 13px;
   text-align: right;
 }
+.add-item-text strong,
+.add-item-text small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Filters sheet: compact so that all five fields fit without scrolling */
+.filter-fields {
+  gap: 8px;
+  padding-bottom: 12px;
+}
+.filter-fields .field {
+  margin: 0px;
+  padding: 10px 14px;
+}
+.filter-fields .field-label {
+  margin-bottom: 2px;
+  font-size: 14px;
+}
+.filter-fields .value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.filter-main-actions {
+  gap: 8px;
+  margin-top: 0px;
+}
+.filter-main-actions button {
+  min-height: 46px;
+}
+.filters-title {
+  margin: 0px 0px 4px;
+}
+.filters-note {
+  padding: 0px 4px 10px;
+  font-size: 12.5px;
+}

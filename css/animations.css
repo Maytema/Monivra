@@ -19,3 +19,29 @@
     transform: translate3d(0px, 0px, 0px);
   }
 }
+/* Profile avatar: the particles circle slowly around it */
+.orbit-ring,
+.orbit-particles {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: orbit-turn 60s linear infinite;
+}
+.orbit-particles.slow {
+  animation-duration: 90s;
+  animation-direction: reverse;
+}
+.orbit-ring {
+  animation-duration: 120s;
+  animation-direction: reverse;
+}
+@keyframes orbit-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring,
+  .orbit-particles {
+    animation: none;
+  }
+}

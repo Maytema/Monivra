@@ -249,10 +249,9 @@ export function periodPicker() {
               (intervalNote(mode) ? `<small>${intervalNote(mode)}</small>` : ""),
             () => {
               if (mode === "range") {
-                let [a, b] = periodBounds();
-                if (a.startsWith("0000")) a = TODAY;
-                if (b.startsWith("9999")) b = TODAY;
-                rangeCalendar(a, b, (from, to) => {
+                // A period that is already a range is shown, otherwise both ends are still empty.
+                const [a, b] = uiState.period.mode === "range" ? periodBounds() : [null, null];
+                rangeDialog(a, b, (from, to) => {
                   uiState.period = { mode, from, to, anchor: from };
                   closeLayers();
                 });
@@ -296,9 +295,9 @@ const weekdayLetters = () => {
     ),
   );
 };
-// Month grid shared by the date and the range pickers: `view.month` is the shown month,
-// `classOf(date)` marks the days, `pick(date)` handles a tap.
-function monthGridHtml(view, classOf, pick) {
+// Month grid of the calendar dialog; `view.month` is the shown month. The title opens a grid
+// of years, the arrows move by a month, `pick(date)` handles a tap on a day.
+function monthGridHtml(view, chosen, pick) {
   const first = parseDate(view.month + "-01"),
     lead = (first.getUTCDay() - Number(appData.settings.weekStart) + 7) % 7,
     days = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
@@ -307,26 +306,52 @@ function monthGridHtml(view, classOf, pick) {
     view.month = toIsoDate(first).slice(0, 7);
     render();
   };
-  return `<div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1))}<strong>${escapeHtml(monthTitle(view.month))}</strong>${iconButtonHtml("right", "Next month", () => move(1))}</div><div class="calendar">${weekdayLetters()
+  const year = first.getUTCFullYear();
+  const title = buttonHtml(
+    `${escapeHtml(monthTitle(view.month))}<span class="calendar-caret ${view.years ? "open" : ""}">${iconSvg("down", 16)}</span>`,
+    () => {
+      view.years = !view.years;
+      render();
+    },
+    "calendar-title",
+  );
+  const head = view.years
+    ? `<div class="calendar-head">${title}</div>`
+    : `<div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1))}${title}${iconButtonHtml("right", "Next month", () => move(1))}</div>`;
+  if (view.years)
+    return `${head}<div class="calendar-years">${Array.from({ length: 21 }, (_, i) => year - 10 + i)
+      .map((y) =>
+        buttonHtml(
+          String(y),
+          () => {
+            view.month = `${y}${view.month.slice(4)}`;
+            view.years = false;
+            render();
+          },
+          y === year ? "active" : "",
+        ),
+      )
+      .join("")}</div>`;
+  return `${head}<div class="calendar">${weekdayLetters()
     .map((x) => `<small>${escapeHtml(x)}</small>`)
     .join("")}${"<span></span>".repeat(lead)}${Array.from({ length: days }, (_, i) => {
     const date = `${view.month}-${String(i + 1).padStart(2, "0")}`;
     return buttonHtml(
       String(i + 1),
       () => pick(date),
-      `calendar-day ${date === TODAY ? "today" : ""} ${classOf(date)}`,
+      `calendar-day ${date === TODAY ? "today" : ""} ${date === chosen ? "active" : ""}`,
     );
   }).join("")}</div>`;
 }
 // Calendar dialog for picking a date.
 export function calendar(value, done) {
   let chosen = value;
-  const view = { month: value.slice(0, 7) };
+  const view = { month: value.slice(0, 7), years: false };
   openSheet(
     () =>
       `<small class="calendar-caption">${translate("Select date")}</small><h2>${escapeHtml(dateLabel(chosen))}</h2>${monthGridHtml(
         view,
-        (date) => (date === chosen ? "active" : ""),
+        chosen,
         (date) => {
           chosen = date;
           render();
@@ -336,6 +361,7 @@ export function calendar(value, done) {
         () => {
           chosen = TODAY;
           view.month = TODAY.slice(0, 7);
+          view.years = false;
           render();
         },
         "text-button calendar-today",
@@ -351,49 +377,28 @@ export function calendar(value, done) {
     "dialog",
   );
 }
-// Calendar dialog for picking a period: the two tiles show the ends, the calendar sets the
-// one that is marked, then moves on to the other.
-export function rangeCalendar(from, to, done) {
-  let side = "from";
-  const view = { month: from.slice(0, 7) };
-  const pick = (date) => {
-    if (side === "from") {
-      from = date;
-      if (to < from) to = from;
-      side = "to";
-    } else if (date < from) from = date;
-    else to = date;
-    render();
-  };
-  const tile = (key, label, date) =>
+// Dialog for a period: two tiles open the calendar for the first and the last day.
+export function rangeDialog(from, to, done) {
+  const tile = (label, date, set) =>
     buttonHtml(
-      `<small>${translate(label)}</small><strong>${escapeHtml(dateLabel(date, true))}</strong>`,
-      () => {
-        side = key;
-        view.month = date.slice(0, 7);
-        render();
-      },
-      `range-tile ${side === key ? "active" : ""}`,
+      `${iconSvg("calendar", 28)}<small>${translate(label)}</small><strong>${date ? escapeHtml(dateLabel(date, true)) : translate("Select date")}</strong>`,
+      () =>
+        calendar(date || TODAY, (picked) => {
+          set(picked);
+          render();
+        }),
+      `range-tile ${date ? "chosen" : ""}`,
     );
   openSheet(
     () =>
-      `<h2>${translate("Select range")}</h2><div class="range-tiles">${tile("from", "From", from)}${tile("to", "To", to)}</div>${monthGridHtml(
-        view,
-        (date) =>
-          [
-            date === from ? "range-start" : "",
-            date === to ? "range-end" : "",
-            date > from && date < to ? "in-range" : "",
-            from === to && date === from ? "range-single" : "",
-          ].join(" "),
-        pick,
-      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+      `<h2>${translate("Select range")}</h2><div class="range-tiles">${tile("From", from, (d) => (from = d))}${tile("To", to, (d) => (to = d))}</div><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "OK",
         () => {
           closeLayers();
-          done(from, to);
+          done(...[from, to].sort());
         },
         "primary",
+        from && to ? "" : "disabled",
       )}</div>`,
     "Select range",
     "dialog",
@@ -653,14 +658,25 @@ export function iconPicker(obj) {
     "dialog",
   );
 }
-// Sheet with a calculator keypad for entering an amount.
-export function amountPicker(title, value, fn, allowNegative = false) {
+// Sheet with a calculator keypad for entering an amount: the typed expression is shown
+// at the top, "=" replaces the check mark while an operation is waiting to be calculated.
+export function amountPicker(title, value, fn, allowNegative = false, currency = "") {
   let expr = String(value / 100);
+  // The first digit typed over a shown value starts a new number; an operator continues it.
+  let fresh = value !== 0;
+  const unit = currency || appData.settings.currency;
   openSheet(
     () =>
-      `<h2>${translate(title)}</h2><input type="text" inputmode="none" aria-label="Amount" value="${escapeHtml(expr)}" data-input="${registerInput((v) => (expr = v))}">${calculatorKeys(
+      `<div class="calc-readout" aria-live="polite" aria-label="${translate("Amount")}">${escapeHtml(
+        expr.replace(/[\d.]+/g, (n) => `${n} ${unit}`).replace(/[÷×−+]/g, " $& "),
+      )}</div>${calculatorKeys(
         () => expr,
         (v) => (expr = v),
+        () => {
+          const was = fresh;
+          fresh = false;
+          return was;
+        },
         () => {
           try {
             let n = evaluateExpression(expr);
@@ -677,13 +693,18 @@ export function amountPicker(title, value, fn, allowNegative = false) {
 }
 // Sheet with a digit keypad for a plain number (a day, a count, a percent, a PIN).
 // `fn` gets the typed text; returning false keeps the sheet open.
-export function numberPicker(title, value, fn, { decimal = false, mask = false } = {}) {
+export function numberPicker(
+  title,
+  value,
+  fn,
+  { decimal = false, mask = false, maxLength = 12 } = {},
+) {
   let text = value === null || value === undefined ? "" : String(value);
   const press = (k) => {
     if (k === "⌫") text = text.slice(0, -1);
     else if (k === "C") text = "";
     else if (k === "." && (!decimal || text.includes("."))) return;
-    else if (text.length < 12) text += k === "." && !text ? "0." : k;
+    else if (text.length < maxLength) text += k === "." && !text ? "0." : k;
     render();
   };
   const keys = [...keypadDigits(), "C", "0", decimal ? "." : ""];
@@ -721,42 +742,46 @@ export const numberFieldHtml = (label, value, fn, options = {}) =>
     () => numberPicker(label, value, fn, options),
   );
 
-// Calculator keypad shared by all amount inputs.
-function calculatorKeys(get, set, done) {
-  const nums = keypadDigits();
+// Calculator keypad shared by all amount inputs. The operators stand in the first column,
+// the digits in the middle, the backspace and the tall confirm key at the right.
+function calculatorKeys(get, set, takeFresh, done) {
   const press = (k) => {
     try {
-      set(typeKey(get(), k));
+      const startsNumber = takeFresh() && /^[\d.]$/.test(k);
+      set(typeKey(get(), k, startsNumber));
     } catch (e) {
       toast(e.message);
     }
     render();
   };
-  const cells = [
-    "÷",
-    ...nums.slice(0, 3),
-    "⌫",
-    "×",
-    ...nums.slice(3, 6),
-    "…",
-    "−",
-    ...nums.slice(6, 9),
-    "+",
-    "C",
-    "0",
-    ".",
-  ];
-  return `<div class="keypad">${cells.map((k) => buttonHtml(k, k === "…" ? () => optionSheet("Calculator", ["Calculate", "Clear"], null, (v) => press(v === "Clear" ? "C" : "=")) : () => press(k), "key", `aria-label="${k === "⌫" ? "Backspace" : k === "C" ? "Clear amount" : k}"`)).join("")}${buttonHtml(iconSvg("check", 30), done, "key ok", `aria-label="${translate("Save")}"`)}</div>`;
+  const digits = keypadDigits();
+  const pending = /\d[÷×−+]/.test(get());
+  const key = (label, fn, cls = "", attrs = "") =>
+    buttonHtml(label, fn, `key ${cls}`.trim(), attrs);
+  const digit = (i) => key(digits[i], () => press(digits[i]));
+  const op = (symbol) => key(symbol, () => press(symbol), "calc-op");
+  // Placed row by row; the confirm key spans the three lower rows of the last column.
+  return `<div class="keypad calc-pad">${op("÷")}${digit(0)}${digit(1)}${digit(2)}${key(
+    iconSvg("backspace", 26),
+    () => press("⌫"),
+    "",
+    `aria-label="${translate("Backspace")}"`,
+  )}${op("×")}${digit(3)}${digit(4)}${digit(5)}${key(
+    pending ? "=" : iconSvg("check", 30),
+    pending ? () => press("=") : done,
+    "ok",
+    `aria-label="${translate(pending ? "Calculate" : "Save")}"`,
+  )}${op("−")}${digit(6)}${digit(7)}${digit(8)}${op("+")}${key("0", () => press("0"), "calc-zero")}${key(".", () => press("."))}</div>`;
 }
 
 /* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
-  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M28 14h50v84l-8.3-7-8.4 7-8.3-7-8.3 7-8.4-7-8.3 7z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 34h30"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 50h24"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 66h18"/><g class="empty-search"><circle class="empty-lens" cx="82" cy="76" r="20"/><path class="empty-handle" d="m96 90 12 12"/><path class="empty-cross" d="m76 70 12 12m0-12-12 12"/></g></svg>`,
-  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M16 64 106 4 93 4.4 106 4 100.6 15.8"/></svg>`,
+  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 20h50v66H30z"/><path class="empty-roll" d="M72 12h12a6 6 0 0 1 6 6v6a8 8 0 0 1-8 8h-10zM22 86h48a9 9 0 0 1 0 18H31a9 9 0 0 1-9-9z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 34h26"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 46h18"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 58h24"/><path class="empty-line" style="--i:3" pathLength="1" d="M38 70h14"/><g class="empty-search"><circle class="empty-lens" cx="78" cy="62" r="18"/><path class="empty-handle" d="m91 75 11 11"/><path class="empty-cross" d="M72 62h12M78 56v12"/></g></svg>`,
+  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M14 66C46 62 80 44 106 8L94 12.9 106 8 105.1 21"/></svg>`,
 };
 // When each illustration was first shown (ms); the play class lasts while its animation runs.
 const firstShown = {};
-const PLAY_MS = 2200;
+const PLAY_MS = 2400;
 // Empty-state block; `kind` is "operations" or "statistics".
 export function emptyStateHtml(kind, title, hint) {
   firstShown[kind] ??= performance.now();

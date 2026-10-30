@@ -588,3 +588,22 @@
   grid-row: 2 / span 3;
   height: auto;
 }
+/* Amount sheet: the typed expression and a calculator keypad */
+.calc-readout {
+  padding: 8px 4px 18px;
+  font-size: 32px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.calc-pad .ok {
+  grid-area: auto / auto / span 3;
+  height: auto;
+  font-size: 28px;
+}
+.calc-pad .calc-zero {
+  grid-column: span 2;
+}
+.calc-pad .calc-op {
+  font-size: 24px;
+}

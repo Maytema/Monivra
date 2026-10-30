@@ -6,9 +6,9 @@ import { isTestMode } from "../core/test-mode.js";
 import { csvText, prepareCSV } from "./csv.js";
 import { createEmptyData } from "./defaults.js";
 import { printReport } from "./report.js";
-import { isValidData, save } from "./storage.js";
+import { findDataProblem, save } from "./storage.js";
 import { dataSnapshot } from "../domain/finance.js";
-import { translateWith } from "../i18n/index.js";
+import { translate, translateWith } from "../i18n/index.js";
 import {
   closeLayers,
   confirmAction,
@@ -129,6 +129,25 @@ export function dataView() {
     })}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
   );
 }
+// The reason of a damaged backup as one short sentence for the person.
+function describeProblem({ what, number, reason }) {
+  const text = translate(reason);
+  if (what === "File") return text.charAt(0).toUpperCase() + text.slice(1);
+  return `${translate(what)} ${number || ""}`.trim() + ": " + text;
+}
+// Read a JSON backup; a damaged or foreign file is explained and refused.
+function parseBackup(text) {
+  if (!text.trim()) throw Error(translate("The file is empty."));
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw Error(translate("The file is damaged or is not a JSON file."));
+  }
+  const found = findDataProblem(data);
+  if (found) throw Error(describeProblem(found));
+  return data;
+}
 // Apply a selected import file after confirmation.
 export function handleImport(text) {
   if (importKind === "csv") {
@@ -154,11 +173,7 @@ export function handleImport(text) {
       "Apply",
     );
   } else {
-    const data = JSON.parse(text);
-    if (!isValidData(data))
-      throw Error(
-        "The selected JSON does not match the Monivra backup format. Check the file and try again.",
-      );
+    const data = parseBackup(text);
     confirmAction(
       translateWith(
         "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?",

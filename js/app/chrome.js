@@ -65,30 +65,31 @@ export function mountSwipeChrome() {
   bindFabCollapse(pane);
 }
 
-// Horizontal swipe on the "add operation" chooser switches its tabs.
-export function bindAddChooserSwipe() {
-  const root = document.querySelector("[data-add-chooser]");
-  if (!root) return;
-  let startX = 0;
-  let startY = 0;
-  root.addEventListener(
-    "touchstart",
-    (e) => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    },
-    { passive: true },
-  );
-  root.addEventListener(
-    "touchend",
-    (e) => {
-      const dx = e.changedTouches[0].clientX - startX;
-      const dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-      const tabs = [...root.querySelectorAll(".add-tab")];
-      const current = tabs.findIndex((t) => t.classList.contains("active"));
-      tabs[current + (dx < 0 ? 1 : -1)]?.click();
-    },
-    { passive: true },
-  );
+// Horizontal swipe in a sheet with a strip of tabs (the "add operation" chooser and the
+// category picker) switches the tabs.
+export function bindTabSwipe() {
+  for (const root of document.querySelectorAll(".panel:has(.add-tabs, .counterparty-tabs)")) {
+    let startX = 0;
+    let startY = 0;
+    root.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      },
+      { passive: true },
+    );
+    root.addEventListener(
+      "touchend",
+      (e) => {
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        if (Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        const tabs = [...root.querySelectorAll(".add-tab, .counterparty-tabs button")];
+        const current = tabs.findIndex((t) => t.classList.contains("active"));
+        tabs[current + (dx < 0 ? 1 : -1)]?.click();
+      },
+      { passive: true },
+    );
+  }
 }

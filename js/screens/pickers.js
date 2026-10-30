@@ -42,7 +42,7 @@ export function categoryTilesHtml(type, chosenId, onPick, extraClass = "") {
     .filter((c) => !c.archived && c.type === type)
     .map((c) =>
       buttonHtml(
-        `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>${c.id === chosenId ? iconSvg("check", 16) : ""}`,
+        `${badgeHtml(c)}<span class="grow"><span class="name">${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span></span>${c.id === chosenId ? iconSvg("check", 16) : ""}`,
         () => onPick(c),
         "cat-tile",
       ),

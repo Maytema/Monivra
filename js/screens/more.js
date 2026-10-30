@@ -7,7 +7,7 @@ import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
-import { currencyName, translate } from "../i18n/index.js";
+import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { setting, settingOptions, switchSetting } from "./settings.js";
 import {
   closeLayers,
@@ -222,20 +222,39 @@ export function settingsPage(kind) {
     ? `<div class="sub-screen">${pageHeader(title)}<div class="sub-scroll">${body}</div></div>`
     : pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
 }
+// PIN lengths that can be chosen.
+const PIN_LENGTHS = [4, 6];
 // Set or remove the PIN.
 export function pinSetup(remove) {
-  let first = "",
+  let length = PIN_LENGTHS[0],
+    first = "",
     second = "";
   openSheet(
-    () =>
-      `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${numberFieldHtml(
+    () => {
+      const size = remove ? appData.settings.pin.length : length;
+      return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${
+        remove
+          ? ""
+          : `<div class="pin-length">${PIN_LENGTHS.map((n) =>
+              buttonHtml(
+                translateCount("{n} digit", "{n} digits", n),
+                () => {
+                  length = n;
+                  first = first.slice(0, n);
+                  second = second.slice(0, n);
+                  render();
+                },
+                length === n ? "active" : "",
+              ),
+            ).join("")}</div>`
+      }${numberFieldHtml(
         remove ? "Current PIN" : "New PIN",
         first,
         (v) => {
           first = v;
           render();
         },
-        { mask: true },
+        { mask: true, maxLength: size },
       )}${
         !remove
           ? numberFieldHtml(
@@ -245,7 +264,7 @@ export function pinSetup(remove) {
                 second = v;
                 render();
               },
-              { mask: true },
+              { mask: true, maxLength: size },
             )
           : ""
       }<p class="footnote">DEMO interface lock. This does not encrypt data.</p>${buttonHtml(
@@ -255,7 +274,8 @@ export function pinSetup(remove) {
             if (first !== appData.settings.pin) return toast("Incorrect PIN");
             appData.settings.pin = false;
           } else {
-            if (!/^\d{4,8}$/.test(first)) return toast("Use 4–8 digits");
+            if (first.length !== length)
+              return toast(translateWith("Enter {n} digits", { n: length }));
             if (first !== second) return toast("PINs do not match");
             appData.settings.pin = first;
           }
@@ -263,14 +283,24 @@ export function pinSetup(remove) {
           closeLayers();
         },
         "primary",
-      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`;
+    },
     "PIN",
     "dialog",
   );
 }
-// PIN lock screen.
+// True right after a wrong PIN, until the next key: the dots shake.
+let pinFailed = false;
+// The row of dots on the lock screen: empty rings that fill up as digits are typed.
+const pinDotsHtml = (size, typed, failed) =>
+  `<div class="pin-dots ${failed ? "failed" : ""}" role="img" aria-label="${translateWith("{typed} of {size} digits", { typed, size })}">${Array.from(
+    { length: size },
+    (_, i) => `<span class="${i < typed ? "filled" : ""}"></span>`,
+  ).join("")}</div>`;
+// PIN lock screen: it unlocks as soon as the last digit is typed.
 export function lockView() {
-  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2><div class="pin-dots">${"●".repeat(pinEntry.length) || "○ ○ ○ ○"}</div><div class="keypad">${[
+  const size = appData.settings.pin.length;
+  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${[
     "1",
     "2",
     "3",
@@ -280,28 +310,32 @@ export function lockView() {
     "7",
     "8",
     "9",
-    "⌫",
+    "",
     "0",
-    "✓",
+    "⌫",
   ]
     .map((k) =>
-      buttonHtml(
-        k,
-        () => {
-          if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
-          else if (k === "✓") {
-            if (pinEntry === appData.settings.pin) {
-              setLocked(false);
-              setPinEntry("");
-            } else {
-              setPinEntry("");
-              toast("Incorrect PIN");
-            }
-          } else if (pinEntry.length < 8) setPinEntry(pinEntry + k);
-          render();
-        },
-        "key",
-      ),
+      k
+        ? buttonHtml(
+            k === "⌫" ? iconSvg("backspace", 26) : k,
+            () => {
+              pinFailed = false;
+              if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
+              else if (pinEntry.length < size) setPinEntry(pinEntry + k);
+              if (pinEntry.length === size) {
+                if (pinEntry === appData.settings.pin) setLocked(false);
+                else {
+                  pinFailed = true;
+                  toast("Incorrect PIN");
+                }
+                setPinEntry("");
+              }
+              render();
+            },
+            "key",
+            k === "⌫" ? `aria-label="${translate("Backspace")}"` : "",
+          )
+        : "<span></span>",
     )
     .join("")}</div><p class="footnote">DEMO interface lock</p></div></div>`;
 }
@@ -311,7 +345,7 @@ export function simplePage(kind) {
     body = "";
   if (kind === "profile") {
     title = "Profile";
-    body = `<div class="profile"><div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
+    body = `<div class="profile"><div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle class="orbit-ring" cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g class="orbit-particles" fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/><circle cx="150" cy="30" r="1.8"/><circle cx="44" cy="164" r="2"/></g><g class="orbit-particles slow" fill="#8bbcc1"><circle cx="100" cy="188" r="2.2"/><circle cx="31" cy="52" r="1.6"/><circle cx="182" cy="140" r="1.8"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
   } else if (kind === "subscription") {
     title = "Use the full potential of the application!";
     const plan = uiState.morePlan || "Lifetime";

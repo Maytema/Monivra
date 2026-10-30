@@ -8,10 +8,6 @@
   justify-content: space-between;
   margin: 12px 0px 8px;
 }
-.calendar-head strong {
-  font-size: 17px;
-  font-weight: 600;
-}
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -34,48 +30,77 @@
 .calendar-day.today {
   box-shadow: inset 0 0 0 1.5px var(--accent);
 }
-.calendar-day.active,
-.calendar-day.range-start,
-.calendar-day.range-end {
+.calendar-day.active {
   color: var(--on-accent);
   background: var(--accent);
-}
-.calendar-day.in-range {
-  background: var(--soft);
-  border-radius: 0px;
-}
-.calendar-day.range-start:not(.range-single) {
-  border-radius: 50% 0px 0px 50%;
-}
-.calendar-day.range-end:not(.range-single) {
-  border-radius: 0px 50% 50% 0px;
 }
 .range-tiles {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 8px 0px 4px;
+  gap: 12px;
+  margin: 12px 0px 20px;
 }
 .range-tile {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 2px;
-  padding: 10px 14px;
-  border-radius: 16px;
-  border: 1.5px solid var(--line);
-  text-align: left;
+  padding: 16px 8px 14px;
+  border-radius: 18px;
+  background: var(--key);
+  text-align: center;
+}
+.range-tile svg {
+  color: var(--accent);
+  margin-bottom: 6px;
 }
 .range-tile small {
   color: var(--muted);
 }
 .range-tile strong {
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.range-tile.chosen {
+  background: var(--soft);
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+}
+.dialog-actions button:disabled {
+  opacity: 0.4;
+}
+.calendar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 17px;
   font-weight: 600;
 }
-.range-tile.active {
-  border-color: var(--accent);
-  background: var(--soft);
+.calendar-caret {
+  display: inline-flex;
+  transition: transform 0.2s;
+}
+.calendar-caret.open {
+  transform: rotate(180deg);
+}
+.calendar-years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  max-height: 252px;
+  overflow-y: auto;
+  padding: 4px 0px;
+}
+.calendar-years button {
+  padding: 11px 0px;
+  border-radius: 20px;
+  font-size: 15px;
+  text-align: center;
+}
+.calendar-years .active {
+  background: var(--accent);
+  color: var(--on-accent);
 }
 .dialog-actions .calendar-today {
   margin-right: auto;
