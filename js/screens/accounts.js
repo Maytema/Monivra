@@ -11,7 +11,12 @@ import {
   moneySpanHtml,
   overallBalance,
 } from "../domain/finance.js";
-import { deleteAccount, putOperation, validateOp } from "../domain/operations.js";
+import {
+  deleteAccount,
+  putOperation,
+  toggleFavoriteAccount,
+  validateOp,
+} from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker } from "./categories.js";
 import { operationStart } from "./operation-editor.js";
@@ -236,8 +241,7 @@ export function accountActions(a) {
       `<div class="account-detail-head">${badgeHtml(a)}<div class="grow"><strong>${escapeHtml(a.name)}</strong><div class="account-detail-label">${translate("Current balance")}</div><div class="account-detail-money">${moneySpanHtml(n, a.currency, false, true)}</div>${available ? `<div class="account-detail-label">${translate("Available balance")}</div><div class="account-detail-money">${moneySpanHtml(n + a.limit, a.currency, false, true)}</div>` : ""}</div>${buttonHtml(
         iconSvg("star", 23),
         () => {
-          a.favorite = !a.favorite;
-          save();
+          toggleFavoriteAccount(a.id);
           render();
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),

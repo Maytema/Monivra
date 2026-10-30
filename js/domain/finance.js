@@ -7,6 +7,14 @@ import { currentLocale, translate } from "../i18n/index.js";
 // Find an account by id.
 export const accountById = (id) => appData.accounts.find((a) => a.id === id);
 // Find a category by id.
+// Account used by default in new operations: the favorite one, otherwise the
+// first regular account of the list (the order is set by dragging).
+export function defaultAccountId(excludedId = null) {
+  const usable = appData.accounts.filter((a) => !a.archived && a.id !== excludedId);
+  const preferred =
+    usable.find((a) => a.favorite) || usable.find((a) => a.type === "Regular") || usable[0];
+  return preferred?.id ?? null;
+}
 export const categoryById = (id) => appData.categories.find((c) => c.id === id);
 // Current balance of an account: opening balance plus incoming minus outgoing operations.
 export const accountBalance = (id) => {

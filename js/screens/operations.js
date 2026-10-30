@@ -9,6 +9,7 @@ import {
   categoryById,
   convertCurrency,
   dateLabel,
+  defaultAccountId,
   formatMoney,
   moneySpanHtml,
   parseDate,
@@ -191,26 +192,11 @@ function operationsAddMenu() {
   const choose = (item) => {
     const dir = state.direction;
     closeLayers();
-    const accounts = appData.accounts.filter((a) => !a.archived);
-    const preferred = accounts.find((a) => a.type === "Regular") || accounts[0];
     if (dir === "expense")
-      operationStart({
-        type: "expense",
-        category: item.id,
-        from: preferred?.id,
-      });
+      operationStart({ type: "expense", category: item.id, from: defaultAccountId() });
     else if (dir === "income")
-      operationStart({
-        type: "income",
-        category: item.id,
-        to: preferred?.id,
-      });
-    else
-      operationStart({
-        type: "transfer",
-        from: item.id,
-        to: accounts.find((a) => a.id !== item.id)?.id,
-      });
+      operationStart({ type: "income", category: item.id, to: defaultAccountId() });
+    else operationStart({ type: "transfer", from: item.id, to: defaultAccountId(item.id) });
   };
   const view = () => {
     const dir = state.direction;

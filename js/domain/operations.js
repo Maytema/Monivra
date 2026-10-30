@@ -63,6 +63,12 @@ export function putOperation(d, schedule = false) {
   return d;
 }
 // Delete an operation or a scheduled payment.
+// Mark one account as the favorite; there is only ever one.
+export function toggleFavoriteAccount(id) {
+  const wasFavorite = appData.accounts.find((a) => a.id === id)?.favorite;
+  appData.accounts.forEach((a) => (a.favorite = !wasFavorite && a.id === id));
+  save();
+}
 export function deleteOperation(id, scheduled = false) {
   let key = scheduled ? "scheduled" : "ops";
   appData[key] = appData[key].filter((o) => o.id !== id);

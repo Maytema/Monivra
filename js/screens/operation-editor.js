@@ -11,6 +11,7 @@ import {
   convertCurrency,
   currencyRate,
   dateLabel,
+  defaultAccountId,
   evaluateExpression,
   moneySpanHtml,
   parseDate,
@@ -44,11 +45,45 @@ import {
   toast,
 } from "../ui/primitives.js";
 
+/* The left block is where money comes from, the right block where it goes.
+   A category can only be a source (income) or a target (expense), never both,
+   so choosing one on a side puts an account on the opposite side. */
+// Put a category on the left (incoming) or right side of the operation.
+function chooseCategorySide(d, incoming, categoryId) {
+  d.category = categoryId;
+  d.type = incoming ? "income" : "expense";
+  if (incoming) {
+    d.from = null;
+    d.to = d.to || defaultAccountId();
+  } else {
+    d.to = null;
+    d.from = d.from || defaultAccountId();
+  }
+}
+// Put an account on the left or right side; the other side must be an account too.
+function chooseAccountSide(d, incoming, accountId) {
+  const other = incoming ? d.to : d.from;
+  d.type = "transfer";
+  d.category = null;
+  d.from = incoming
+    ? accountId
+    : other && other !== accountId
+      ? other
+      : defaultAccountId(accountId);
+  d.to = incoming
+    ? other && other !== accountId
+      ? other
+      : defaultAccountId(accountId)
+    : accountId;
+}
+
 /* Counterparty picker: choose a category or an account from the same sheet. */
 // Choose a category or an account from the same sheet.
 function counterpartyPicker(direction, d, onChosen = null) {
   const incoming = direction === "from";
-  let active = incoming ? "category" : "category";
+  // Open on the tab that matches what the block currently holds.
+  const holdsCategory = d.type === (incoming ? "income" : "expense");
+  let active = holdsCategory ? "category" : "account";
   const catType = incoming ? "income" : "expense";
   const title = incoming ? "Take from" : "Add to";
   const tabName = incoming ? "Incomes" : "Expenses";
@@ -78,15 +113,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
                 buttonHtml(
                   `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>`,
                   () => {
-                    if (incoming) {
-                      d.type = "income";
-                      d.from = null;
-                      d.category = c.id;
-                    } else {
-                      d.type = "expense";
-                      d.to = null;
-                      d.category = c.id;
-                    }
+                    chooseCategorySide(d, incoming, c.id);
                     closeLayers();
                     if (onChosen) onChosen();
                     else render();
@@ -101,10 +128,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
                 buttonHtml(
                   `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
                   () => {
-                    d.type = "transfer";
-                    d.category = null;
-                    if (incoming) d.from = a.id;
-                    else d.to = a.id;
+                    chooseAccountSide(d, incoming, a.id);
                     closeLayers();
                     if (onChosen) onChosen();
                     else render();
@@ -118,10 +142,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
                 buttonHtml(
                   `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
                   () => {
-                    d.type = "transfer";
-                    d.category = null;
-                    if (incoming) d.from = a.id;
-                    else d.to = a.id;
+                    chooseAccountSide(d, incoming, a.id);
                     closeLayers();
                     if (onChosen) onChosen();
                     else render();
@@ -329,15 +350,9 @@ function accountCalculatorView(p) {
           else d.from = id;
           render();
         })
-      : isTransfer
-        ? transferDestinationPicker(d, null, "from")
-        : counterpartyPicker("from", d);
+      : counterpartyPicker("from", d);
   const chooseTarget = () =>
-    isAdjustment
-      ? toast("Adjustment is a balance correction")
-      : isTransfer
-        ? transferDestinationPicker(d, null, "to")
-        : counterpartyPicker("to", d);
+    isAdjustment ? toast("Adjustment is a balance correction") : counterpartyPicker("to", d);
   const calcMode = !!p.scratchMode;
   const primary = from || to,
     secondary = isAdjustment ? null : isTransfer ? to : c;
