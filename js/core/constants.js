@@ -43,6 +43,7 @@ export const ICONS = {
   wifi: "M2 7a17 17 0 0 1 20 0M5 11a12 12 0 0 1 14 0m-11 4a7 7 0 0 1 8 0m-5 4h2",
   receipt:
     "M4 2l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v20l-2-2-2 2-2-2-2 2-2-2-2 2-2-2-2 2zM7 7h10M7 11h10M7 15h10",
+  percent: "M19 5 5 19M7 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm10 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
   categories: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   stats: "M3 3h18v18H3zm5 13v-4m4 4V7m4 9v-6",
   more: "M12 5h.1M12 12h.1M12 19h.1",
@@ -101,7 +102,7 @@ export const ICONS = {
 };
 // Render an icon from ICONS as an <svg> string.
 // Release stamp shown in More, so it is easy to see which version is open.
-export const APP_BUILD = "2026-10-30.2";
+export const APP_BUILD = "2026-10-30.3";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Supported currencies: code, name, default rate and symbol.

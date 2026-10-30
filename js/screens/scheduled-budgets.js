@@ -247,7 +247,7 @@ export function budgetsView() {
               );
             })
             .join("")
-        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">Create a budget to track your expenses</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
     }</div>${appData.budgets.length ? buttonHtml(iconSvg("plus", 26), () => editBudget(), "fab no-nav", `aria-label="Create a budget"`) : ""}`
   );
 }

@@ -269,17 +269,12 @@ export function operationDetails(o, scheduled = false) {
         scheduled
           ? `<p>${recurLabel(o.recur)}</p><div class="action-grid two">${buttonHtml(
               iconSvg("plus") + translate("Add now"),
-              () =>
-                confirmAction(
-                  "Add this scheduled payment now?",
-                  () => {
-                    processScheduled(o.id, true);
-                    uiState.layers = [];
-                    render();
-                  },
-                  false,
-                  "Add now",
-                ),
+              () => {
+                processScheduled(o.id, true);
+                uiState.layers = [];
+                render();
+                toast("Payment added");
+              },
             )}${buttonHtml(iconSvg("right") + translate("Skip"), () =>
               confirmAction(
                 "Skip this occurrence?",

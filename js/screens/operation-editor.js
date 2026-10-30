@@ -20,6 +20,7 @@ import {
 import { deleteOperation, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
+import { feeDialog, feeLabel } from "./fees.js";
 import { recurLabel } from "./operations.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
 import {
@@ -314,7 +315,7 @@ export function commitOperation(p) {
       save();
       render();
       toast("Operation saved");
-    } else finishFlow(p.scheduled ? "Scheduled payment saved" : "Operation saved");
+    } else finishFlow(p.scheduled ? "Payment scheduled" : "Operation saved");
   } catch (e) {
     toast(e.message);
   }
@@ -478,7 +479,7 @@ function accountCalculatorView(p) {
             render();
           },
           "Use full sender account balance",
-        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => toast("Tax settings are not yet verified"))}${menuRowHtml("Commission", "percent", () => toast("Commission settings are not yet verified"))}`,
+        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", "Add tax", render), feeLabel(d.tax))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", "Add commission", render), feeLabel(d.commission))}`,
       "Additionally",
     );
   const nums3 = appData.settings.reverseKeys
@@ -853,7 +854,7 @@ function manageTags(chosen) {
 function photoMenu(d) {
   openSheet(
     () =>
-      `<h2>${translate("Photo")}</h2>${menuRowHtml("Camera", "camera", () => choosePhoto(d, true))}${menuRowHtml("Gallery", "image", () => choosePhoto(d, false))}${
+      `<h2>${translate("Add photo")}</h2>${menuRowHtml("Take a photo", "camera", () => choosePhoto(d, true))}${menuRowHtml("Choose from gallery", "image", () => choosePhoto(d, false))}${
         d.photo
           ? menuRowHtml("Delete photo", "trash", () => {
               d.photo = null;
@@ -861,7 +862,7 @@ function photoMenu(d) {
             })
           : ""
       }<p class="footnote">DEMO: camera availability depends on the browser. Images are stored locally with the operation.</p>`,
-    "Photo",
+    "Add photo",
   );
 }
 // Open the file chooser for an operation photo.
