@@ -448,19 +448,28 @@
   gap: 4px;
   border-bottom: 1px solid rgb(169, 161, 170);
 }
-/* Dragging an account row to reorder */
-.account-row[data-account] {
+/* Dragging an item to reorder: rows, sub-category chips and category tiles */
+:is(.account-row, .cat-sub-chip, .cat-manage-tile)[data-account],
+:is(.account-row, .cat-sub-chip, .cat-manage-tile)[data-sub],
+:is(.account-row, .cat-sub-chip, .cat-manage-tile)[data-category] {
   user-select: none;
   -webkit-touch-callout: none;
 }
-.account-row.is-shifting {
+.is-shifting {
   transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.account-row.is-dragged {
+.is-dragged {
+  position: relative;
   z-index: 3;
+  transition: none;
   border-color: var(--accent);
   outline: 1px solid var(--accent);
   box-shadow: none;
+}
+/* The lifted item may leave the box of its group while it is carried */
+.is-sorting,
+.account-group:has(.is-dragged) {
+  overflow: visible;
 }
 .hint-banner {
   display: flex;

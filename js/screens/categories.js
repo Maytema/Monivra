@@ -354,18 +354,15 @@ function categoryTypePicker(d) {
     "Select type",
   );
 }
-// Category editor form.
-export function categoryEditView(p) {
-  const d = p.draft,
-    children = d.id ? appData.categories.filter((c) => c.parent === d.id) : [];
-  const active = children.filter((c) => !c.archived),
-    archived = children.filter((c) => c.archived);
-  const planned = (id) => (p.subActions || []).find((x) => x.id === id);
-  const chip = (c) =>
-    `<div class="cat-sub-chip">${buttonHtml(
-      `<span class="cat-sub-row-name">${escapeHtml(c.name)}</span>${iconSvg("right", 19)}`,
-      () => {
-        if ((p.newSubcategories || []).some((x) => x.id === c.id))
+// Action sheet for a sub-category that is not saved yet: rename or delete it.
+function newSubMenu(p, c) {
+  openSheet(
+    () =>
+      `<div class="submenu-title">${escapeHtml(c.name)}</div><div class="cat-sub-actions">${menuRowHtml(
+        "Edit",
+        "edit",
+        () => {
+          closeLayers();
           promptText(
             "Subcategory",
             c.name,
@@ -375,6 +372,26 @@ export function categoryEditView(p) {
             },
             "Title",
           );
+        },
+      )}${menuRowHtml("Delete", "trash", () => {
+        p.newSubcategories = p.newSubcategories.filter((x) => x.id !== c.id);
+        closeLayers();
+      })}</div>`,
+    "Subcategory actions",
+  );
+}
+// Category editor form.
+export function categoryEditView(p) {
+  const d = p.draft,
+    children = d.id ? appData.categories.filter((c) => c.parent === d.id) : [];
+  const active = children.filter((c) => !c.archived),
+    archived = children.filter((c) => c.archived);
+  const planned = (id) => (p.subActions || []).find((x) => x.id === id);
+  const chip = (c) =>
+    `<div class="cat-sub-chip" data-sub="${escapeHtml(c.id)}">${buttonHtml(
+      `<span class="cat-sub-row-name">${escapeHtml(c.name)}</span>${iconSvg("right", 19)}`,
+      () => {
+        if ((p.newSubcategories || []).some((x) => x.id === c.id)) newSubMenu(p, c);
         else categorySubMenu(p, c.id);
       },
       "cat-sub-chip-button",
@@ -389,7 +406,7 @@ export function categoryEditView(p) {
           d.currency = v;
           render();
         }),
-    )}<div class="cat-sub-section"><div class="cat-sub-heading">${translate("Subcategories")}</div>${active.map(chip).join("")}${buttonHtml(
+    )}<div class="cat-sub-section"><div class="cat-sub-heading">${translate("Subcategories")}</div>${[...active, ...(p.newSubcategories || [])].map(chip).join("")}${buttonHtml(
       translate("Add subcategory"),
       () => {
         openSheet(
@@ -407,7 +424,7 @@ export function categoryEditView(p) {
                   name,
                   type: d.type,
                   parent: d.id,
-                  icon: "circle",
+                  icon: d.icon,
                   color: d.color,
                   currency: d.currency,
                   archived: false,
@@ -490,7 +507,7 @@ export function categoryManageView() {
   return (
     pageHeader("Change categories") +
     manageCategoryTabs() +
-    `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${formatMoney(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile")).join("")}</div>${
+    `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${formatMoney(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile", `data-category="${escapeHtml(c.id)}"`)).join("")}</div>${
       archived.length
         ? `<div class="cat-manage-archive">${buttonHtml(
             `Archive (${archived.length}) ${iconSvg(uiState.manageArchive ? "chevronUp" : "chevronDown", 17)}`,

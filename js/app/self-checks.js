@@ -14,7 +14,7 @@ import {
   reportRows,
 } from "../domain/finance.js";
 import { typeKey } from "../domain/keypad.js";
-import { nextDate, reorderedAccounts, validateOp } from "../domain/operations.js";
+import { nextDate, reorderedList, validateOp } from "../domain/operations.js";
 
 // Built-in regression checks on sample data; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
 export function runSelfChecks() {
@@ -285,7 +285,7 @@ function checkAll() {
   test("Reordering a group of accounts keeps the other groups in place", () => {
     const list = ["a", "b", "c", "d", "e"].map((id) => ({ id }));
     return (
-      reorderedAccounts(list, ["c", "a", "e"])
+      reorderedList(list, ["c", "a", "e"])
         .map((x) => x.id)
         .join("") === "cbade"
     );

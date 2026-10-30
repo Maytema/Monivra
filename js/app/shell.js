@@ -1,6 +1,6 @@
 /* App shell: navigation, root view, rendering */
 import { bindAddChooserSwipe, mountSwipeChrome } from "./chrome.js";
-import { initAccountDrag } from "./drag-reorder.js";
+import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
@@ -157,7 +157,7 @@ export function render(top = false) {
   const selectionEnd = focused?.selectionEnd;
   app.innerHTML = html;
   initOperationLongPress();
-  initAccountDrag();
+  initDragReorder();
   applyAppearance();
   // Restore scroll positions.
   const content = app.querySelector(".content");
