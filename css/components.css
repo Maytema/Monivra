@@ -29,9 +29,6 @@
 .navbar.labels-selected button:not(.active) span:last-child {
   visibility: hidden;
 }
-.calendar small {
-  padding: 8px 0px;
-}
 .interval-grid button:first-child {
   grid-column: span 2;
 }
@@ -409,10 +406,6 @@
   background: var(--soft);
   border-color: var(--accent);
   color: var(--accent-ink);
-}
-.calendar .active {
-  color: var(--on-accent);
-  background: var(--accent);
 }
 .chip.active {
   background: var(--accent);
@@ -1315,21 +1308,6 @@
   padding: 8px 12px;
   border-radius: 16px;
   font-size: 13px;
-}
-.calendar-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 15px 0px;
-}
-.calendar {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  gap: 4px;
-}
-.calendar .today {
-  outline: 1px solid var(--accent);
 }
 .interval-grid {
   display: grid;

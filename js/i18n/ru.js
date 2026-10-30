@@ -576,7 +576,6 @@ export const russianStrings = {
   "Signed in via": "Вход через",
   "Skip this occurrence?": "Пропустить этот платёж?",
   "Sort scheduled payments": "Сортировка плановых платежей",
-  "Start date must not follow end date": "Дата начала не может быть позже даты окончания",
   "Statistics order": "Порядок статистики",
   "Subcategory actions": "Действия с подкатегорией",
   "Subcategory name": "Название подкатегории",

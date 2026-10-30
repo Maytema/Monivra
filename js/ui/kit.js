@@ -25,16 +25,9 @@ import {
   toIsoDate,
 } from "../domain/finance.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
-import { currencyName, translate } from "../i18n/index.js";
+import { currencyName, currentLocale, translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
-import {
-  buttonHtml,
-  fieldButtonHtml,
-  iconButtonHtml,
-  registerInput,
-  textFieldHtml,
-  toast,
-} from "./primitives.js";
+import { buttonHtml, fieldButtonHtml, iconButtonHtml, registerInput, toast } from "./primitives.js";
 
 // Wrap the part of a root screen that slides when swiping between tabs or periods.
 export function swipePane(html) {
@@ -259,20 +252,10 @@ export function periodPicker() {
                 let [a, b] = periodBounds();
                 if (a.startsWith("0000")) a = TODAY;
                 if (b.startsWith("9999")) b = TODAY;
-                openSheet(
-                  () =>
-                    `<h2>${translate("Select range")}</h2>${textFieldHtml("From", a, (v) => (a = v), "", "date")}${textFieldHtml("To", b, (v) => (b = v), "", "date")}${buttonHtml(
-                      "OK",
-                      () => {
-                        if (a > b) return toast("Start date must not follow end date");
-                        uiState.period = { mode, from: a, to: b, anchor: a };
-                        closeLayers(2);
-                      },
-                      "primary",
-                    )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
-                  "Select range",
-                  "dialog",
-                );
+                rangeCalendar(a, b, (from, to) => {
+                  uiState.period = { mode, from, to, anchor: from };
+                  closeLayers();
+                });
               } else if (mode === "day")
                 calendar(uiState.period.anchor, (s) => {
                   uiState.period = { mode: "day", anchor: s };
@@ -294,50 +277,125 @@ export function periodPicker() {
     "dialog",
   );
 }
-// Calendar sheet for picking a date.
+// Month names and weekday letters in the language of the interface.
+const monthTitle = (month) => {
+  const title = parseDate(month + "-01").toLocaleDateString(currentLocale(), {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return title.charAt(0).toUpperCase() + title.slice(1);
+};
+const weekdayLetters = () => {
+  const first = Number(appData.settings.weekStart);
+  // 2026-11-01 is a Sunday.
+  return Array.from({ length: 7 }, (_, i) =>
+    parseDate(`2026-11-${String(1 + ((first + i) % 7)).padStart(2, "0")}`).toLocaleDateString(
+      currentLocale(),
+      { weekday: "short", timeZone: "UTC" },
+    ),
+  );
+};
+// Month grid shared by the date and the range pickers: `view.month` is the shown month,
+// `classOf(date)` marks the days, `pick(date)` handles a tap.
+function monthGridHtml(view, classOf, pick) {
+  const first = parseDate(view.month + "-01"),
+    lead = (first.getUTCDay() - Number(appData.settings.weekStart) + 7) % 7,
+    days = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
+  const move = (n) => {
+    first.setUTCMonth(first.getUTCMonth() + n);
+    view.month = toIsoDate(first).slice(0, 7);
+    render();
+  };
+  return `<div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1))}<strong>${escapeHtml(monthTitle(view.month))}</strong>${iconButtonHtml("right", "Next month", () => move(1))}</div><div class="calendar">${weekdayLetters()
+    .map((x) => `<small>${escapeHtml(x)}</small>`)
+    .join("")}${"<span></span>".repeat(lead)}${Array.from({ length: days }, (_, i) => {
+    const date = `${view.month}-${String(i + 1).padStart(2, "0")}`;
+    return buttonHtml(
+      String(i + 1),
+      () => pick(date),
+      `calendar-day ${date === TODAY ? "today" : ""} ${classOf(date)}`,
+    );
+  }).join("")}</div>`;
+}
+// Calendar dialog for picking a date.
 export function calendar(value, done) {
-  let chosen = value,
-    month = value.slice(0, 7);
+  let chosen = value;
+  const view = { month: value.slice(0, 7) };
   openSheet(
-    () => {
-      const d = parseDate(month + "-01"),
-        start = d.getUTCDay(),
-        days = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
-      const move = (n) => {
-        d.setUTCMonth(d.getUTCMonth() + n);
-        month = toIsoDate(d).slice(0, 7);
-        render();
-      };
-      return `<small>${translate("Select date")}</small><h2>${escapeHtml(dateLabel(chosen))}</h2><input type="date" aria-label="Date" value="${chosen}" data-input="${registerInput(
-        (v) => {
-          if (v) chosen = v;
+    () =>
+      `<small class="calendar-caption">${translate("Select date")}</small><h2>${escapeHtml(dateLabel(chosen))}</h2>${monthGridHtml(
+        view,
+        (date) => (date === chosen ? "active" : ""),
+        (date) => {
+          chosen = date;
+          render();
         },
-      )}"><div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1))}<span>${month}</span>${iconButtonHtml("right", "Next month", () => move(1))}</div><div class="calendar">${["S", "M", "T", "W", "T", "F", "S"].map((x) => `<small>${x}</small>`).join("")}${"<span></span>".repeat(start)}${Array.from(
-        { length: days },
-        (_, i) => {
-          let s = month + "-" + String(i + 1).padStart(2, "0");
-          return buttonHtml(
-            String(i + 1),
-            () => {
-              chosen = s;
-              render();
-            },
-            `${s === chosen ? "active" : s === TODAY ? "today" : ""}`,
-          );
+      )}<div class="dialog-actions">${buttonHtml(
+        "Today",
+        () => {
+          chosen = TODAY;
+          view.month = TODAY.slice(0, 7);
+          render();
         },
-      ).join(
-        "",
-      )}</div><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        "text-button calendar-today",
+      )}${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "OK",
         () => {
-          if (!chosen) return;
           closeLayers();
           done(chosen);
         },
         "primary",
-      )}</div>`;
-    },
+      )}</div>`,
     "Select date",
+    "dialog",
+  );
+}
+// Calendar dialog for picking a period: the two tiles show the ends, the calendar sets the
+// one that is marked, then moves on to the other.
+export function rangeCalendar(from, to, done) {
+  let side = "from";
+  const view = { month: from.slice(0, 7) };
+  const pick = (date) => {
+    if (side === "from") {
+      from = date;
+      if (to < from) to = from;
+      side = "to";
+    } else if (date < from) from = date;
+    else to = date;
+    render();
+  };
+  const tile = (key, label, date) =>
+    buttonHtml(
+      `<small>${translate(label)}</small><strong>${escapeHtml(dateLabel(date, true))}</strong>`,
+      () => {
+        side = key;
+        view.month = date.slice(0, 7);
+        render();
+      },
+      `range-tile ${side === key ? "active" : ""}`,
+    );
+  openSheet(
+    () =>
+      `<h2>${translate("Select range")}</h2><div class="range-tiles">${tile("from", "From", from)}${tile("to", "To", to)}</div>${monthGridHtml(
+        view,
+        (date) =>
+          [
+            date === from ? "range-start" : "",
+            date === to ? "range-end" : "",
+            date > from && date < to ? "in-range" : "",
+            from === to && date === from ? "range-single" : "",
+          ].join(" "),
+        pick,
+      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        "OK",
+        () => {
+          closeLayers();
+          done(from, to);
+        },
+        "primary",
+      )}</div>`,
+    "Select range",
     "dialog",
   );
 }
@@ -693,12 +751,12 @@ function calculatorKeys(get, set, done) {
 
 /* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
-  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 22h46a8 8 0 0 1 8 8v52a8 8 0 0 0 8 8H38a8 8 0 0 1-8-8z"/><path class="empty-lines" d="M42 40h30M42 54h22M42 68h14"/><circle class="empty-lens" cx="78" cy="70" r="20"/><path class="empty-handle" d="m92 85 14 14"/><path class="empty-cross" d="m72 64 12 12m0-12-12 12"/></svg>`,
-  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="82" width="12" height="18" rx="4"/><rect class="bar" style="--i:1" x="28" y="72" width="12" height="28" rx="4"/><rect class="bar" style="--i:2" x="46" y="60" width="12" height="40" rx="4"/><rect class="bar" style="--i:3" x="64" y="48" width="12" height="52" rx="4"/><rect class="bar" style="--i:4" x="82" y="36" width="12" height="64" rx="4"/><rect class="bar" style="--i:5" x="100" y="22" width="12" height="78" rx="4"/><path class="empty-arrow" pathLength="1" d="M10 58C40 50 80 22 108 9"/><path class="empty-head" d="M96 9l13-2-4 13"/></svg>`,
+  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M28 14h50v84l-8.3-7-8.4 7-8.3-7-8.3 7-8.4-7-8.3 7z"/><path class="empty-line" style="--i:0" pathLength="1" d="M38 34h30"/><path class="empty-line" style="--i:1" pathLength="1" d="M38 50h24"/><path class="empty-line" style="--i:2" pathLength="1" d="M38 66h18"/><g class="empty-search"><circle class="empty-lens" cx="82" cy="76" r="20"/><path class="empty-handle" d="m96 90 12 12"/><path class="empty-cross" d="m76 70 12 12m0-12-12 12"/></g></svg>`,
+  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M16 64 106 4 93 4.4 106 4 100.6 15.8"/></svg>`,
 };
 // When each illustration was first shown (ms); the play class lasts while its animation runs.
 const firstShown = {};
-const PLAY_MS = 2600;
+const PLAY_MS = 2200;
 // Empty-state block; `kind` is "operations" or "statistics".
 export function emptyStateHtml(kind, title, hint) {
   firstShown[kind] ??= performance.now();
