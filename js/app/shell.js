@@ -18,7 +18,7 @@ import {
   orderView,
 } from "../screens/categories.js";
 import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
-import { operationsFab, operationsView } from "../screens/operations.js";
+import { filteredView, operationsFab, operationsView } from "../screens/operations.js";
 import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
@@ -54,6 +54,7 @@ function navigationBar() {
 const PAGE_VIEWS = {
   accountEdit: accountEditView,
   accountType: accountTypeView,
+  filtered: filteredView,
   accountOrder: () => orderView("accounts"),
   categoryOrder: () => orderView("categories"),
   categoryEdit: categoryEditView,

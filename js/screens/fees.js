@@ -3,8 +3,8 @@ import { render } from "../app/shell.js";
 import { applyFees, feeOfKind, setFee } from "../domain/fees.js";
 import { formatMoney } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
-import { closeLayers, openSheet } from "../ui/kit.js";
-import { buttonHtml, iconButtonHtml, textFieldHtml, toggleRowHtml } from "../ui/primitives.js";
+import { closeLayers, numberFieldHtml, openSheet } from "../ui/kit.js";
+import { buttonHtml, iconButtonHtml, toggleRowHtml } from "../ui/primitives.js";
 
 const KIND_TITLES = { tax: "Add tax", commission: "Add commission" };
 
@@ -30,13 +30,25 @@ export function feeDialog(op, kind, onDone) {
   };
   openSheet(
     () =>
-      `<h2>${translate(KIND_TITLES[kind])}</h2>${textFieldHtml("Percent", draft.percent, (v) => {
-        draft.percent = v;
-        draft.value = "";
-      })}<p class="dialog-or">${translate("Or")}</p>${textFieldHtml("Value", draft.value, (v) => {
-        draft.value = v;
-        draft.percent = "";
-      })}${toggleRowHtml("Subtract from operation", !draft.add, () => {
+      `<h2>${translate(KIND_TITLES[kind])}</h2>${numberFieldHtml(
+        "Percent",
+        draft.percent,
+        (v) => {
+          draft.percent = v;
+          draft.value = "";
+          render();
+        },
+        { decimal: true },
+      )}<p class="dialog-or">${translate("Or")}</p>${numberFieldHtml(
+        "Value",
+        draft.value,
+        (v) => {
+          draft.value = v;
+          draft.percent = "";
+          render();
+        },
+        { decimal: true },
+      )}${toggleRowHtml("Subtract from operation", !draft.add, () => {
         draft.add = false;
         render();
       })}${toggleRowHtml("Add to operation", draft.add, () => {

@@ -1,12 +1,14 @@
 /* Operations list, filters, details, bulk actions */
 import { render } from "../app/shell.js";
 import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, uiState } from "../core/state.js";
+import { appData, emptyFilters, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
   accountBalance,
   accountById,
   categoryById,
+  categoryCount,
+  categoryTotal,
   convertCurrency,
   dateLabel,
   defaultAccountId,
@@ -26,7 +28,9 @@ import {
   closeLayers,
   confirmAction,
   emptyStateHtml,
+  openPage,
   openSheet,
+  pageHeader,
   periodBar,
   promptText,
   swipePane,
@@ -46,7 +50,7 @@ export function opRow(o, scheduled = false) {
     c = categoryById(o.category),
     selected = uiState.selected.includes(o.id);
   return buttonHtml(
-    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${o.type === "expense" || (o.type === "adjustment" && o.from) ? "neg" : o.type === "income" || (o.type === "adjustment" && o.to) ? "pos" : ""}">${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(o.amount, a?.currency)}</span>`,
+    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${o.type === "expense" || (o.type === "adjustment" && o.from) ? "neg" : o.type === "income" || (o.type === "adjustment" && o.to) ? "pos" : ""}">${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(o.amount, a?.currency)}</span>`,
     () => {
       if (uiState.selection) {
         uiState.selected = selected
@@ -161,19 +165,24 @@ export function operationsFab() {
     `aria-label="Add operation"`,
   );
 }
+// Strip under the period bar while filters are on: tap the text to change them, the red button clears them.
+export function filteredBannerHtml() {
+  return `<div class="filtered-banner">${iconSvg("info", 20)}${buttonHtml("Filtered data", filters, "filtered-text")}${iconButtonHtml(
+    "filterOff",
+    "Clear filters",
+    () => {
+      uiState.filters = emptyFilters();
+      render();
+    },
+  )}</div>`;
+}
 // Hint shown under the empty-state title.
 const EMPTY_HINT = "Start adding expenses or income and the data will appear";
 // Operations tab.
 export function operationsView() {
   const ops = visibleOperations();
   const dates = [...new Set(ops.map((o) => o.date))];
-  const banner = filterActive()
-    ? buttonHtml(
-        translate("Filtered data") + " " + iconSvg("filter", 15),
-        filters,
-        "filtered-banner",
-      )
-    : "";
+  const banner = filterActive() ? filteredBannerHtml() : "";
   const summary =
     appData.settings.opening && ops.length > 0 && !filterActive() ? balanceSummary() : "";
   const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
@@ -181,6 +190,26 @@ export function operationsView() {
   const pane = periodBar() + banner + list;
   if (uiState.selection) return swipePane(selectionHeader(ops) + pane + selectionActions());
   return hero() + swipePane(pane);
+}
+
+// Operations of one filter (a category, say) on a page of their own; going back restores the list as it was.
+export function openFilteredOperations(filter, period = uiState.period) {
+  const before = { filters: uiState.filters, period: uiState.period };
+  uiState.filters = { ...emptyFilters(), ...filter };
+  uiState.period = period;
+  openPage("filtered", { restore: () => Object.assign(uiState, before) });
+}
+// Page with the filtered operations; a single category gets a card with its figures.
+export function filteredView() {
+  const ops = visibleOperations();
+  const dates = [...new Set(ops.map((o) => o.date))];
+  const [id] = uiState.filters.categories?.length === 1 ? uiState.filters.categories : [];
+  const c = categoryById(id);
+  const card = c
+    ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotal(c.id), c.currency)}</span></div></div>`
+    : "";
+  const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
+  return `${pageHeader("Filtered")}${periodBar()}<div class="content">${card}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>${operationsFab()}`;
 }
 
 // Chooser opened by the + button on the operations tab.
@@ -503,13 +532,7 @@ export function filters() {
       )}${buttonHtml(
         "Reset all",
         () => {
-          f = {
-            accounts: null,
-            categories: null,
-            types: null,
-            tags: null,
-            comment: "",
-          };
+          f = emptyFilters();
           uiState.filters = deepClone(f);
           closeLayers();
           render();

@@ -16,6 +16,7 @@ import { deleteCategory, moveCategory } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
+import { openFilteredOperations } from "./operations.js";
 import {
   actionTileHtml,
   closeLayers,
@@ -23,7 +24,6 @@ import {
   currencyPicker,
   finishFlow,
   goBack,
-  goHome,
   iconPicker,
   openPage,
   openSheet,
@@ -120,8 +120,9 @@ export function categoriesView() {
     )
   );
 }
-// Action sheet shown on a long press of a category: figures for the period and two actions.
-export function categoryActions(c) {
+// Action sheet shown on a long press of a category: figures for the period and two actions;
+// "Operations" lists the category over `period` (all time by default).
+export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
   const share = Math.round(categoryShare(c.id) * 100),
     count = categoryCount(c.id);
   openSheet(
@@ -130,11 +131,7 @@ export function categoryActions(c) {
         "receipt",
         "Operations",
         "#1f8fe0",
-        () => {
-          uiState.filters.categories = [c.id];
-          uiState.period = { mode: "all", anchor: TODAY };
-          goHome("operations");
-        },
+        () => openFilteredOperations({ categories: [c.id] }, period),
       )}</div>${
         appData.settings.subcategories
           ? appData.categories

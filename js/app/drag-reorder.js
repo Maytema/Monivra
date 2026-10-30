@@ -3,6 +3,7 @@ import { render } from "./shell.js";
 import { cancelSwipe } from "./swipe.js";
 import { uiState } from "../core/state.js";
 import { reorderAccounts, reorderCategories } from "../domain/operations.js";
+import { reorderStatsBlocks } from "../screens/statistics.js";
 
 const HOLD_MS = 380;
 const MOVE_TOLERANCE_PX = 10;
@@ -40,6 +41,12 @@ const LISTS = [
       !uiState.layers.length &&
       !item.classList.contains("cat-is-archived"),
     commit: reorderCategories,
+  },
+  {
+    item: ".stats-setting[data-stat-block]",
+    id: "statBlock",
+    allowed: () => uiState.layers.length > 0,
+    commit: reorderStatsBlocks,
   },
 ];
 

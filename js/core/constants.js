@@ -68,6 +68,7 @@ export const ICONS = {
   copy: "M7 3h14v15H7zm-4 4v15h14",
   calendar: "M3 5h18v17H3zm4-3v6m10-6v6M3 10h18m-14 5h3m4 0h3",
   filter: "M3 4h18l-7 8v9l-4-2v-7z",
+  filterOff: "M3 4h18l-7 8v9l-4-2v-7zM4 3l16 18",
   search: "M17 17l5 5M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16z",
   comment: "M3 4h18v14H9l-6 4zm4 5h10m-10 4h10",
   tag: "M3 3h9l10 10-9 9L3 12zm4 4h.1",

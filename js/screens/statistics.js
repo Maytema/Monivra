@@ -1,6 +1,6 @@
 /* Statistics screens and charts */
 import { render } from "../app/shell.js";
-import { TODAY, escapeHtml, iconSvg } from "../core/constants.js";
+import { TODAY, escapeHtml } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -17,8 +17,8 @@ import {
 } from "../domain/finance.js";
 import { translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
-import { sumTabs } from "./categories.js";
-import { filterActive, filters } from "./operations.js";
+import { categoryActions, sumTabs } from "./categories.js";
+import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations.js";
 import {
   closeLayers,
   emptyStateHtml,
@@ -31,7 +31,6 @@ import {
 import {
   badgeHtml,
   buttonHtml,
-  iconButtonHtml,
   menuRowHtml,
   registerAction,
   toggleRowHtml,
@@ -64,8 +63,9 @@ function statsGroups(type = uiState.catType) {
 }
 // Open the operations list filtered by a category.
 function statsDetail(id) {
-  uiState.filters.categories = [id];
-  goHome("operations");
+  const c = categoryById(id);
+  if (c) categoryActions(c, uiState.period);
+  else openFilteredOperations({ categories: [id] });
 }
 // Bar chart.
 function chartBars() {
@@ -172,69 +172,52 @@ export function statisticsView() {
     swipePane(
       periodBar() +
         sumTabs() +
-        `${filterActive() ? buttonHtml(translate("Filtered data") + " " + iconSvg("filter", 15), filters, "filtered-banner") : ""}<div class="content">${appData.settings.stats.map((k) => blocks[k]?.() || "").join("")}${buttonHtml(iconSvg("gear", 20) + " Statistics settings", statsSettings, "text-button")}</div>`,
+        `${filterActive() ? filteredBannerHtml() : ""}<div class="content">${appData.settings.stats.map((k) => blocks[k]?.() || "").join("")}</div>`,
     )
   );
 }
 
 // Statistics settings sheet.
+// Blocks of the statistics screen, in the order they are offered by default.
+const STATS_BLOCKS = [
+  ["flow", "Cash flow"],
+  ["scheduled", "Scheduled payments"],
+  ["bar", "Charts"],
+  ["average", "Average values"],
+  ["donut", "Diagram"],
+  ["categories", "Categories"],
+  ["tags", "Tags"],
+];
+// Which blocks the statistics screen shows and in what order: switch them on and off here,
+// hold a row and drag it to move the block.
 export function statsSettings() {
-  openSheet(
-    () =>
-      `<h2>${translate("Statistics")}</h2>${menuRowHtml("Order of statistics blocks", "sort", statsOrder)}${[
-        ["flow", "Cash flow"],
-        ["scheduled", "Scheduled payments"],
-        ["bar", "Charts"],
-        ["average", "Average values"],
-        ["donut", "Diagram"],
-        ["categories", "Categories"],
-        ["tags", "Tags"],
-      ]
-        .map(([id, label]) =>
-          toggleRowHtml(label, appData.settings.stats.includes(id), () => {
-            appData.settings.stats = appData.settings.stats.includes(id)
-              ? appData.settings.stats.filter((x) => x !== id)
-              : [...appData.settings.stats, id];
-            save();
-            render();
-          }),
-        )
-        .join("")}${buttonHtml("Complete", () => closeLayers(), "primary")}`,
-    "Statistics",
-  );
+  openSheet(() => {
+    const shown = appData.settings.stats;
+    const names = new Map(STATS_BLOCKS);
+    const ordered = [
+      ...shown,
+      ...STATS_BLOCKS.map(([id]) => id).filter((id) => !shown.includes(id)),
+    ];
+    return `<h2>${translate("Statistics")}</h2><p class="footnote">${translate("Hold a row and drag it to change the order.")}</p><div class="stats-settings">${ordered
+      .map(
+        (id) =>
+          `<div class="stats-setting" data-stat-block="${id}">${toggleRowHtml(
+            names.get(id),
+            shown.includes(id),
+            () => {
+              appData.settings.stats = shown.includes(id)
+                ? shown.filter((x) => x !== id)
+                : [...shown, id];
+              save();
+              render();
+            },
+          )}</div>`,
+      )
+      .join("")}</div>${buttonHtml("Complete", () => closeLayers(), "primary")}`;
+  }, "Statistics");
 }
-// Reorder statistics blocks.
-function statsOrder() {
-  openSheet(
-    () =>
-      `<h2>Order of statistics blocks</h2>${appData.settings.stats
-        .map(
-          (id, i) =>
-            `<div class="row"><span class="grow">${escapeHtml({ flow: "Cash flow", scheduled: "Scheduled amounts", bar: "Bar chart", average: "Average values", donut: "Donut chart", categories: "Categories", tags: "Tags" }[id] || id)}</span>${iconButtonHtml(
-              "up",
-              "Move up",
-              () => {
-                if (i > 0) {
-                  [appData.settings.stats[i - 1], appData.settings.stats[i]] = [
-                    appData.settings.stats[i],
-                    appData.settings.stats[i - 1],
-                  ];
-                  save();
-                  render();
-                }
-              },
-            )}${iconButtonHtml("down", "Move down", () => {
-              if (i < appData.settings.stats.length - 1) {
-                [appData.settings.stats[i + 1], appData.settings.stats[i]] = [
-                  appData.settings.stats[i],
-                  appData.settings.stats[i + 1],
-                ];
-                save();
-                render();
-              }
-            })}</div>`,
-        )
-        .join("")}${buttonHtml("Complete", () => closeLayers(), "primary")}`,
-    "Statistics order",
-  );
+// Keep the order of the dragged rows for the blocks that are switched on.
+export function reorderStatsBlocks(ids) {
+  appData.settings.stats = ids.filter((id) => appData.settings.stats.includes(id));
+  save();
 }

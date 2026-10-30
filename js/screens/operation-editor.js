@@ -25,6 +25,7 @@ import {
   calendar,
   closeLayers,
   confirmAction,
+  currencyPicker,
   openSheet,
   popupMenu,
   promptText,
@@ -154,7 +155,11 @@ export function operationStart(options = {}, scheduled = false) {
     reminder: null,
     ...deepClone(options),
   };
-  d.expr = String((d.amount || 0) / 100);
+  // An amount that was typed in another currency is edited as it was entered.
+  if (d.foreign) {
+    d.entryCurrency = d.foreign.currency;
+    d.expr = String(d.foreign.amount / 100);
+  } else d.expr = String((d.amount || 0) / 100);
   d.fresh = !d.id;
   const p = {
     draft: d,
@@ -224,7 +229,17 @@ export function operationStart(options = {}, scheduled = false) {
   openEditor();
 }
 
-// Validate and store the operation being edited.
+// An amount typed in another currency is kept as entered and converted to the account's currency.
+function applyEntryCurrency(d) {
+  const account = accountById(d.type === "income" ? d.to : d.from);
+  const entry = d.entryCurrency;
+  delete d.entryCurrency;
+  delete d.foreign;
+  if (!entry || !account || entry === account.currency) return;
+  d.foreign = { currency: entry, amount: d.amount };
+  d.amount = convertCurrency(d.amount, entry, account.currency);
+}
+// Save the operation of the open editor.
 export function commitOperation(p) {
   try {
     if (!p.scratchMode && /[+×÷−*/]/.test(String(p.draft.expr).replace(/^-/, "")))
@@ -236,6 +251,7 @@ export function commitOperation(p) {
     if (!["transfer", "adjustment"].includes(p.draft.type) && !p.draft.category)
       throw Error("Select a category");
     p.draft.amount = evaluateExpression(p.draft.expr);
+    applyEntryCurrency(p.draft);
     delete p.draft.accountAction;
     putOperation(p.draft, p.scheduled);
     uiState.layers = [];
@@ -263,7 +279,7 @@ function accountCalculatorView(p) {
         : d.type === "income"
           ? to
           : c;
-  const currency = (from || to)?.currency || appData.settings.currency;
+  const accountCurrency = (from || to)?.currency || appData.settings.currency;
   const tile = (label, item, fn) =>
     buttonHtml(
       `<span class="calc-tile-caption">${translate(label)}</span><span class="calc-tile-value">${item ? badgeHtml(item, true) + `<span>${escapeHtml(item.name)}</span>` : `<span>${translate("Not selected")}</span>`}</span>`,
@@ -284,6 +300,9 @@ function accountCalculatorView(p) {
   const primary = from || to,
     secondary = isAdjustment ? null : isTransfer ? to : c;
   const dual = !!(primary && secondary && primary.currency !== secondary.currency);
+  // The amount can be typed in another currency; it is converted to the account's one on saving.
+  const canPickCurrency = !dual && (d.type === "income" || d.type === "expense");
+  const currency = (canPickCurrency && d.entryCurrency) || accountCurrency;
   if (p.currencySide !== "receive") p.currencySide = "send";
   const sourceToReceive = (v) => convertCurrency(v, primary.currency, secondary.currency);
   const receiveToSource = (v) => convertCurrency(v, secondary.currency, primary.currency);
@@ -527,8 +546,8 @@ function accountCalculatorView(p) {
   }</div>${feeBlockHtml(
     d,
     enteredAmount(),
-    currency,
-    dual ? secondary.currency : currency,
+    accountCurrency,
+    dual ? secondary.currency : accountCurrency,
     dual ? sourceToReceive : (n) => n,
     render,
   )}</div>${
@@ -590,7 +609,18 @@ function accountCalculatorView(p) {
                   `aria-label="${calcMode ? (p.scratchReady ? "Save operation with calculated result" : "Calculate equals without saving") : "Save operation"}"`,
                 )
               : k === "currency"
-                ? `<div class="calc-currency calc-key">${escapeHtml(currency)}</div>`
+                ? canPickCurrency
+                  ? buttonHtml(
+                      escapeHtml(currency),
+                      () =>
+                        currencyPicker(currency, (id) => {
+                          d.entryCurrency = id === accountCurrency ? undefined : id;
+                          render();
+                        }),
+                      "calc-currency calc-key",
+                      `aria-label="${translate("Currency")}"`,
+                    )
+                  : `<div class="calc-currency calc-key">${escapeHtml(currency)}</div>`
                 : k === "mode"
                   ? buttonHtml(
                       iconSvg("calculator", 26) +

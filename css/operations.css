@@ -4,11 +4,6 @@
   width: 18px;
   height: 18px;
 }
-.filtered-banner button {
-  background: var(--soft);
-  padding: 8px 16px;
-  border-radius: 0px 8px 8px 0px;
-}
 .chip svg {
   color: var(--c);
   width: 22px;
@@ -265,16 +260,31 @@
 }
 .filtered-banner {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid var(--accent);
-  border-radius: 9px;
-  padding-left: 9px;
-  font-size: 12px;
-  margin-top: 7px;
+  align-items: stretch;
   margin: 4px 16px 10px;
-  min-height: 35px;
-  padding: 8px;
+  min-height: 40px;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 13px;
+}
+.filtered-banner > svg {
+  align-self: center;
+  flex: none;
+  margin-inline: 12px 8px;
+  color: var(--accent-ink);
+}
+.filtered-banner .filtered-text {
+  flex: 1;
+  text-align: left;
+}
+.filtered-banner .icon-button {
+  flex: none;
+  width: 56px;
+  height: auto;
+  border-radius: 0;
+  color: var(--negative);
+  background: color-mix(in srgb, var(--negative) 14%, var(--bg));
 }
 .toolbar {
   display: flex;
@@ -601,4 +611,36 @@
 }
 .tag.tag-clear {
   color: var(--negative-ink);
+}
+.filtered-card {
+  margin: 4px 0 14px;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.filtered-card-title {
+  display: block;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.filtered-card-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.filtered-card-body small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+}
+.filtered-card-body .money {
+  font-weight: 600;
+}
+.op-foreign {
+  display: block;
+  color: inherit;
+  font-size: 13px;
+  text-align: right;
 }

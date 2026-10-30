@@ -27,7 +27,14 @@ import {
 import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { currencyName, translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
-import { buttonHtml, iconButtonHtml, registerInput, textFieldHtml, toast } from "./primitives.js";
+import {
+  buttonHtml,
+  fieldButtonHtml,
+  iconButtonHtml,
+  registerInput,
+  textFieldHtml,
+  toast,
+} from "./primitives.js";
 
 // Wrap the part of a root screen that slides when swiping between tabs or periods.
 export function swipePane(html) {
@@ -53,7 +60,7 @@ export function closeLayers(n = 1) {
 export function goBack() {
   if (locked) return;
   if (uiState.layers.length) uiState.layers.pop();
-  else if (uiState.pages.length) uiState.pages.pop();
+  else if (uiState.pages.length) uiState.pages.pop().restore?.();
   else if (uiState.selection) {
     uiState.selection = false;
     uiState.selected = [];
@@ -65,7 +72,7 @@ export function goBack() {
 // Reset all pages and layers and show a root tab.
 export function goHome(tab) {
   uiState.tab = tab;
-  uiState.pages = [];
+  while (uiState.pages.length) uiState.pages.pop().restore?.();
   uiState.layers = [];
   uiState.selection = false;
   uiState.selected = [];
@@ -208,18 +215,16 @@ function shiftPeriod(n) {
 }
 // Dialog for the day on which a month starts (payday instead of the 1st).
 export function monthStartDialog(onDone) {
-  promptText(
-    "Month starts on",
-    String(appData.settings.monthStart),
-    (v) => {
-      const n = Number(v);
-      if (!Number.isInteger(n) || n < 1 || n > 31) return toast("Use a day from 1 to 31");
-      appData.settings.monthStart = n;
-      save();
-      onDone();
-    },
-    "Day",
-  );
+  numberPicker("Month starts on", appData.settings.monthStart, (v) => {
+    const n = Number(v);
+    if (!Number.isInteger(n) || n < 1 || n > 31) {
+      toast("Use a day from 1 to 31");
+      return false;
+    }
+    appData.settings.monthStart = n;
+    save();
+    onDone();
+  });
 }
 // Small caption of an interval tile: the range it would select right now.
 function intervalNote(mode) {
@@ -595,7 +600,7 @@ export function amountPicker(title, value, fn, allowNegative = false) {
   let expr = String(value / 100);
   openSheet(
     () =>
-      `<h2>${translate(title)}</h2><input type="text" inputmode="decimal" aria-label="Amount" value="${escapeHtml(expr)}" data-input="${registerInput((v) => (expr = v))}">${calculatorKeys(
+      `<h2>${translate(title)}</h2><input type="text" inputmode="none" aria-label="Amount" value="${escapeHtml(expr)}" data-input="${registerInput((v) => (expr = v))}">${calculatorKeys(
         () => expr,
         (v) => (expr = v),
         () => {
@@ -612,6 +617,52 @@ export function amountPicker(title, value, fn, allowNegative = false) {
     title,
   );
 }
+// Sheet with a digit keypad for a plain number (a day, a count, a percent, a PIN).
+// `fn` gets the typed text; returning false keeps the sheet open.
+export function numberPicker(title, value, fn, { decimal = false, mask = false } = {}) {
+  let text = value === null || value === undefined ? "" : String(value);
+  const press = (k) => {
+    if (k === "⌫") text = text.slice(0, -1);
+    else if (k === "C") text = "";
+    else if (k === "." && (!decimal || text.includes("."))) return;
+    else if (text.length < 12) text += k === "." && !text ? "0." : k;
+    render();
+  };
+  const keys = [...keypadDigits(), "C", "0", decimal ? "." : ""];
+  openSheet(
+    () =>
+      `<h2>${translate(title)}</h2><div class="number-display" aria-live="polite">${escapeHtml(mask ? "•".repeat(text.length) : text) || "&nbsp;"}</div><div class="numpad">${keys
+        .map((k) =>
+          k
+            ? buttonHtml(
+                k,
+                () => press(k),
+                "key",
+                `aria-label="${k === "C" ? translate("Clear amount") : k}"`,
+              )
+            : "<span></span>",
+        )
+        .join(
+          "",
+        )}${buttonHtml(iconSvg("backspace", 26), () => press("⌫"), "key", `aria-label="${translate("Backspace")}"`)}${buttonHtml(
+        iconSvg("check", 30),
+        () => {
+          if (fn(text) !== false) closeLayers();
+        },
+        "key ok",
+        `aria-label="${translate("Save")}"`,
+      )}</div>`,
+    title,
+  );
+}
+// Form field that shows a number and opens the digit keypad when tapped.
+export const numberFieldHtml = (label, value, fn, options = {}) =>
+  fieldButtonHtml(
+    label,
+    escapeHtml(options.mask ? "•".repeat(String(value).length) : value === "" ? "—" : value),
+    () => numberPicker(label, value, fn, options),
+  );
+
 // Calculator keypad shared by all amount inputs.
 function calculatorKeys(get, set, done) {
   const nums = keypadDigits();

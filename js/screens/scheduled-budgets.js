@@ -19,6 +19,7 @@ import {
   confirmAction,
   currencyPicker,
   finishFlow,
+  numberFieldHtml,
   openPage,
   openSheet,
   optionSheet,
@@ -53,9 +54,10 @@ export function recurrence(d) {
             "schedule-unit-btn " + (r.unit === unit ? "chosen" : ""),
           ),
         )
-        .join(
-          "",
-        )}</div>${textFieldHtml("Repeat every", r.every, (v) => (r.every = Number(v)), "", "number")}${
+        .join("")}</div>${numberFieldHtml("Repeat every", r.every, (v) => {
+        r.every = Math.max(1, Number(v) || 1);
+        render();
+      })}${
         r.unit === "Weeks"
           ? `<div class="schedule-subtitle">Days of the week</div><div class="schedule-week">${[
               "S",
@@ -95,7 +97,14 @@ export function recurrence(d) {
           render();
         },
         "schedule-choice " + (limited ? "chosen" : ""),
-      )}</div>${limited ? textFieldHtml("Repetitions", r.remaining, (v) => (r.remaining = Number(v)), "", "number") : ""}<div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
+      )}</div>${
+        limited
+          ? numberFieldHtml("Repetitions", r.remaining, (v) => {
+              r.remaining = Math.max(1, Number(v) || 1);
+              render();
+            })
+          : ""
+      }<div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Save",
         () => {
           if (!Number.isInteger(r.every) || r.every < 1 || r.every > 365)

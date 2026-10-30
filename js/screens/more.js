@@ -14,10 +14,11 @@ import {
   confirmAction,
   goBack,
   goHome,
+  numberFieldHtml,
+  numberPicker,
   openPage,
   openSheet,
   pageHeader,
-  promptText,
   showInfo,
 } from "../ui/kit.js";
 import { buttonHtml, menuRowHtml, textFieldHtml, toast, toggleRowHtml } from "../ui/primitives.js";
@@ -192,18 +193,24 @@ export function settingsPage(kind) {
             `${id} → KGS`,
             "globe",
             () =>
-              promptText(
+              numberPicker(
                 "Exchange rate",
                 String(appData.rates[id]),
                 (v) => {
-                  let n = Number(v);
-                  if (!Number.isFinite(n) || n <= 0) return toast("Use a positive number");
-                  if (id === "KGS" && n !== 1) return toast("KGS is the base currency (1)");
+                  const n = Number(v);
+                  if (!Number.isFinite(n) || n <= 0) {
+                    toast("Use a positive number");
+                    return false;
+                  }
+                  if (id === "KGS" && n !== 1) {
+                    toast("KGS is the base currency (1)");
+                    return false;
+                  }
                   appData.rates[id] = n;
                   save();
                   render();
                 },
-                "1 " + id + " in KGS",
+                { decimal: true },
               ),
             currencyName(id, name),
             String(appData.rates[id]),
@@ -221,7 +228,27 @@ export function pinSetup(remove) {
     second = "";
   openSheet(
     () =>
-      `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${textFieldHtml(remove ? "Current PIN" : "New PIN", first, (v) => (first = v), "4–8 digits", "password")}${!remove ? textFieldHtml("Confirm PIN", second, (v) => (second = v), "", "password") : ""}<p class="footnote">DEMO interface lock. This does not encrypt data.</p>${buttonHtml(
+      `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${numberFieldHtml(
+        remove ? "Current PIN" : "New PIN",
+        first,
+        (v) => {
+          first = v;
+          render();
+        },
+        { mask: true },
+      )}${
+        !remove
+          ? numberFieldHtml(
+              "Confirm PIN",
+              second,
+              (v) => {
+                second = v;
+                render();
+              },
+              { mask: true },
+            )
+          : ""
+      }<p class="footnote">DEMO interface lock. This does not encrypt data.</p>${buttonHtml(
         "Save",
         () => {
           if (remove) {

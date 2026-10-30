@@ -717,7 +717,6 @@ export const russianStrings = {
   "Choose an account": "Выберите счёт",
   Tax: "Налог",
   "Based on {n} days": "За период: {n} дн.",
-  "Statistics settings": "Настройки статистики",
   "Available: {amount}": "Доступно: {amount}",
   "Available balance": "Доступный остаток",
   "Income and expense chart": "График доходов и расходов",
@@ -778,4 +777,13 @@ export const russianStrings = {
   "Importing data may change your existing records. Export a backup first.":
     "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
   "Export a local file from this closed beta.": "Сохраните локальный файл из этой закрытой беты.",
+  Filtered: "Фильтр",
+  "Sum of operations for the period": "Сумма операций за период",
+  "Operations: {n}": "Операций: {n}",
+  "Clear filters": "Сбросить фильтры",
+  "Hold a row and drag it to change the order.":
+    "Удерживайте строку и перетащите, чтобы изменить порядок.",
+  Diagram: "Диаграмма",
+  Charts: "Графики",
+  Currency: "Валюта",
 };

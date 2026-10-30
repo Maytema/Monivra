@@ -25,6 +25,14 @@ try {
 export function setFirstLaunch(value) {
   firstLaunch = value;
 }
+// Filters of the operations list with nothing selected.
+export const emptyFilters = () => ({
+  accounts: null,
+  categories: null,
+  types: null,
+  tags: null,
+  comment: "",
+});
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export let uiState = {
   tab: "accounts",
@@ -36,13 +44,7 @@ export let uiState = {
   selected: [],
   selection: false,
   search: false,
-  filters: {
-    accounts: null,
-    categories: null,
-    types: null,
-    tags: null,
-    comment: "",
-  },
+  filters: emptyFilters(),
   donut: null,
   pages: [],
   layers: [],
