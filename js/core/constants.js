@@ -46,6 +46,7 @@ export const ICONS = {
   categories: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z",
   stats: "M3 3h18v18H3zm5 13v-4m4 4V7m4 9v-6",
   more: "M12 5h.1M12 12h.1M12 19h.1",
+  apps: "M6 6h.1M12 6h.1M18 6h.1M6 12h.1M12 12h.1M18 12h.1M6 18h.1M12 18h.1M18 18h.1",
   plus: "M12 4v16M4 12h16",
   back: "m14 5-7 7 7 7M7 12h14",
   left: "m15 5-7 7 7 7",
@@ -100,7 +101,7 @@ export const ICONS = {
 };
 // Render an icon from ICONS as an <svg> string.
 export const iconSvg = (name, size = 24) =>
-  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
+  `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Supported currencies: code, name, default rate and symbol.
 export const CURRENCIES = [
   ["KGS", "Kyrgyzstani Som"],

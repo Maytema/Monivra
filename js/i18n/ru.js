@@ -1,6 +1,9 @@
 /* Russian UI strings; keys are the English texts */
 
 export const russianStrings = {
+  "Start adding expenses or income and the data will appear":
+    "Начните добавлять расходы или доходы, и здесь появятся данные",
+  "Statistics would be here": "Здесь будет статистика",
   Accounts: "Счета",
   Categories: "Категории",
   Operations: "Операции",

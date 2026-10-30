@@ -1,0 +1,97 @@
+/* Empty states of the operations and statistics screens */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 32px 24px;
+  text-align: center;
+}
+.empty-state h3 {
+  margin: 12px 0 8px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.empty-art {
+  width: 160px;
+  height: 160px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.empty-paper {
+  fill: color-mix(in srgb, var(--muted) 18%, transparent);
+  stroke: var(--muted);
+  stroke-width: 3;
+}
+.empty-lines,
+.empty-handle {
+  stroke: var(--muted);
+  stroke-width: 3;
+}
+.empty-lens {
+  fill: var(--bg, #fff);
+  stroke: var(--muted);
+  stroke-width: 4;
+}
+.empty-cross {
+  stroke: var(--accent);
+  stroke-width: 4;
+  transform-origin: 78px 70px;
+  animation: empty-cross 2.4s ease-in-out infinite;
+}
+@keyframes empty-cross {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.empty-art .bar {
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: empty-bar 2.4s ease-in-out infinite;
+}
+.empty-art .bar-1 {
+  fill: #f5a623;
+}
+.empty-art .bar-2 {
+  fill: #8bd23f;
+  animation-delay: 0.15s;
+}
+.empty-art .bar-3 {
+  fill: #19b8a6;
+  animation-delay: 0.3s;
+}
+.empty-art .bar-4 {
+  fill: #4a6cf7;
+  animation-delay: 0.45s;
+}
+.empty-arrow {
+  stroke: #2ecc71;
+  stroke-width: 4;
+}
+@keyframes empty-bar {
+  0%,
+  100% {
+    transform: scaleY(0.85);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .empty-cross,
+  .empty-art .bar {
+    animation: none;
+  }
+}

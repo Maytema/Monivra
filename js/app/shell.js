@@ -34,7 +34,7 @@ function navigationBar() {
     ["categories", "categories", "Categories"],
     ["operations", "receipt", "Operations"],
     ["statistics", "stats", "Statistics"],
-    ["more", "more", "More"],
+    ["more", "apps", "More"],
   ]
     .map(([id, icon, label]) =>
       buttonHtml(

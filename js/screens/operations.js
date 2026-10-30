@@ -25,6 +25,7 @@ import {
   calendar,
   closeLayers,
   confirmAction,
+  emptyStateHtml,
   openSheet,
   periodBar,
   promptText,
@@ -161,6 +162,8 @@ export function operationsFab() {
     `aria-label="Add operation"`,
   );
 }
+// Hint shown under the empty-state title.
+const EMPTY_HINT = "Start adding expenses or income and the data will appear";
 // Operations tab.
 export function operationsView() {
   const ops = visibleOperations();
@@ -174,9 +177,7 @@ export function operationsView() {
     : "";
   const summary =
     appData.settings.opening && ops.length > 0 && !filterActive() ? balanceSummary() : "";
-  const empty = ops.length
-    ? ""
-    : `<div class="empty">${iconSvg("receipt", 46)}<p>${translate("Empty")}</p></div>`;
+  const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
   const list = `<div class="content">${summary}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`;
   const pane = periodBar() + banner + list;
   if (uiState.selection) return swipePane(selectionHeader(ops) + pane + selectionActions());

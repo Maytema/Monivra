@@ -13,12 +13,21 @@ import {
   periodBounds,
   reportRows,
   totalByType,
+  visibleOperations,
 } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { sumTabs } from "./categories.js";
 import { filterActive, filters } from "./operations.js";
-import { closeLayers, goHome, openPage, openSheet, periodBar, swipePane } from "../ui/kit.js";
+import {
+  closeLayers,
+  emptyStateHtml,
+  goHome,
+  openPage,
+  openSheet,
+  periodBar,
+  swipePane,
+} from "../ui/kit.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -150,6 +159,14 @@ export function statisticsView() {
         })
         .join("")}</section>`,
   };
+  if (!visibleOperations().length && !filterActive())
+    return (
+      hero() +
+      swipePane(
+        periodBar() +
+          `<div class="content">${emptyStateHtml("statistics", "Statistics would be here", "Start adding expenses or income and the data will appear")}</div>`,
+      )
+    );
   return (
     hero() +
     swipePane(

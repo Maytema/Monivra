@@ -620,3 +620,13 @@ export function calculatorKeys(get, set, done) {
   ];
   return `<div class="keypad">${cells.map((k) => buttonHtml(k, k === "…" ? () => optionSheet("Calculator", ["Calculate", "Clear"], null, (v) => press(v === "Clear" ? "C" : "=")) : () => press(k), "key", `aria-label="${k === "⌫" ? "Backspace" : k === "C" ? "Clear amount" : k}"`)).join("")}${buttonHtml(iconSvg("check", 30), done, "key ok", `aria-label="${translate("Save")}"`)}</div>`;
 }
+
+/* Empty states: a small animated illustration with a title and a hint. */
+const EMPTY_ILLUSTRATIONS = {
+  operations: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><path class="empty-paper" d="M30 22h46a8 8 0 0 1 8 8v52a8 8 0 0 0 8 8H38a8 8 0 0 1-8-8z"/><path class="empty-lines" d="M42 40h30M42 54h22M42 68h14"/><circle class="empty-lens" cx="78" cy="70" r="20"/><path class="empty-handle" d="m92 85 14 14"/><path class="empty-cross" d="m72 64 12 12m0-12-12 12"/></svg>`,
+  statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar bar-1" x="20" y="74" width="14" height="26" rx="4"/><rect class="bar bar-2" x="40" y="62" width="14" height="38" rx="4"/><rect class="bar bar-3" x="60" y="48" width="14" height="52" rx="4"/><rect class="bar bar-4" x="80" y="30" width="14" height="70" rx="4"/><path class="empty-arrow" d="M16 58 46 40l18 8 40-28m0 0H88m16 0v16"/></svg>`,
+};
+// Empty-state block; `kind` is "operations" or "statistics".
+export function emptyStateHtml(kind, title, hint) {
+  return `<div class="empty-state">${EMPTY_ILLUSTRATIONS[kind]}<h3>${translate(title)}</h3><p>${translate(hint)}</p></div>`;
+}
