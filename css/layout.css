@@ -162,6 +162,10 @@
   overscroll-behavior: contain;
 }
 .add-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   font-weight: 500;
   border-bottom-width: 3px;
   flex: 1 1 0%;

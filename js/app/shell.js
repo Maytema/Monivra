@@ -122,7 +122,7 @@ function applyAppearance() {
   // Text colors derived from the accent so that every accent stays readable.
   const accent = appData.settings.accent;
   // The most tinted surface (selected tab, chip, key) is the hardest one to read on.
-  const background = dark ? mix(accent, "#2b2630", 0.32) : mix(accent, "#ffffff", 0.18);
+  const background = dark ? mix(accent, "#2a272e", 0.32) : mix(accent, "#ffffff", 0.18);
   root.style.setProperty("--accent", accent);
   root.style.setProperty("--on-accent", textOn(accent));
   root.style.setProperty("--accent-ink", readableOver(accent, background));

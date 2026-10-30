@@ -1027,7 +1027,7 @@
   background: var(--key);
 }
 .counterparty-accounts .row {
-  min-height: 62px;
+  min-height: 56px;
 }
 .row .title {
   font-size: 16px;
@@ -1371,19 +1371,19 @@
   translate: 0px;
 }
 .dark {
-  --bg: color-mix(in srgb, var(--accent) 4%, #1e1a21);
-  --ink: #f4eaf6;
-  --muted: #b8aebd;
+  --bg: #151417;
+  --ink: #ececf0;
+  --muted: #aeaab4;
   --positive-ink: #58cba5;
   --negative-ink: #df80a3;
-  --ink-soft: #d3c8d7;
-  --line: #4d4052;
-  --sheet: color-mix(in srgb, var(--accent) 13%, #211d25);
-  --dialog: color-mix(in srgb, var(--accent) 15%, #2a252e);
-  --nav: color-mix(in srgb, var(--accent) 11%, #211d25);
-  --key: color-mix(in srgb, var(--accent) 17%, #2b2630);
-  --soft: color-mix(in srgb, var(--accent) 24%, #2b2630);
-  --tint: color-mix(in srgb, var(--accent) 32%, #2b2630);
+  --ink-soft: #cfccd5;
+  --line: #3e3b44;
+  --sheet: #1f1d22;
+  --dialog: #2b2830;
+  --nav: #1f1d22;
+  --key: #2a272e;
+  --soft: color-mix(in srgb, var(--accent) 24%, #2a272e);
+  --tint: color-mix(in srgb, var(--accent) 32%, #2a272e);
   color-scheme: dark;
 }
 .right {
