@@ -24,11 +24,30 @@ function currentLanguage() {
 export const currentLocale = () => currentLanguage().locale;
 
 // Translate a UI string; falls back to the English text.
-export const translate = (text) => currentLanguage().strings[text] || text;
+export const translate = (text) => {
+  const value = currentLanguage().strings[text];
+  return typeof value === "string" ? value : text;
+};
 
 // Translate a string with {name} placeholders and fill them in.
 export const translateWith = (text, values) =>
   translate(text).replace(/\{(\w+)\}/g, (match, name) => values[name] ?? match);
+
+const PLURAL_FORMS = ["one", "few", "many", "other"];
+
+// Text with a count that agrees with the number: English has `one` and `other` forms,
+// other languages list their forms under the English `other` text, in plural-category order.
+export function translateCount(one, other, n) {
+  const { strings, locale } = currentLanguage();
+  const forms = strings[other];
+  const form = new Intl.PluralRules(locale).select(n);
+  const text = Array.isArray(forms)
+    ? forms[Math.min(PLURAL_FORMS.indexOf(form), forms.length - 1)]
+    : n === 1
+      ? one
+      : other;
+  return text.replace("{n}", n);
+}
 
 const ENTITIES = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'" };
 const decode = (text) => text.replace(/&(?:amp|lt|gt|quot|#39);/g, (e) => ENTITIES[e]);

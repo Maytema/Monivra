@@ -17,7 +17,7 @@ import {
   visibleOperations,
 } from "../domain/finance.js";
 import { validateOp } from "../domain/operations.js";
-import { currentLocale, translate, translateWith } from "../i18n/index.js";
+import { currentLocale, translate, translateCount, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { opTitle, operationStart } from "./operation-editor.js";
 import { accountPicker, categoryPicker } from "./pickers.js";
@@ -324,7 +324,7 @@ function filterAccountSelect(selected, done) {
   const expanded = new Set(groups.map((g) => g[0]));
   openSheet(
     () =>
-      `<div class="filter-picker-head"><h2>Accounts</h2><span>${values.size} selected</span></div><div class="filter-scroll">${groups
+      `<div class="filter-picker-head"><h2>Accounts</h2><span>${translateWith("{n} selected", { n: values.size })}</span></div><div class="filter-scroll">${groups
         .map(([name, predicate]) => {
           const items = appData.accounts.filter(predicate),
             ids = items.map((a) => a.id);
@@ -432,12 +432,13 @@ function filterCategorySelect(selected, done) {
 // Filters sheet (accounts, categories, types, tags, comment).
 export function filters() {
   let f = deepClone(uiState.filters);
-  const count = (v, all) => (v ? `${v.length} ${all}` : null);
+  const count = (v, one, other) => (v ? translateCount(one, other, v.length) : null);
+  const typeNames = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
   openSheet(
     () =>
       `<h2 class="filters-title">Filters</h2><p class="filters-note">Archived accounts and categories are included in the selection.</p><div class="filter-fields">${fieldButtonHtml(
         "Accounts",
-        count(f.accounts, "accounts") || "All accounts",
+        count(f.accounts, "{n} account", "{n} accounts") || "All accounts",
         () =>
           filterAccountSelect(f.accounts, (v) => {
             f.accounts = v;
@@ -445,7 +446,8 @@ export function filters() {
           }),
       )}${fieldButtonHtml(
         "Categories",
-        count(f.categories, "categories") || "All categories (All subcategories)",
+        count(f.categories, "{n} category", "{n} categories") ||
+          "All categories (All subcategories)",
         () =>
           filterCategorySelect(f.categories, (v) => {
             f.categories = v;
@@ -453,7 +455,9 @@ export function filters() {
           }),
       )}${fieldButtonHtml(
         "Type",
-        f.types ? f.types.map(escapeHtml).join(", ") : "All types of operations",
+        f.types
+          ? f.types.map((t) => translate(typeNames[t])).join(", ")
+          : "All types of operations",
         () =>
           multiSelect(
             "Type",
@@ -767,7 +771,28 @@ export function bulkEdit() {
 }
 // Text describing a recurrence rule.
 export function recurLabel(r) {
-  return r
-    ? `Every ${r.every} ${r.unit.toLowerCase()}${r.unit === "Weeks" && r.days?.length ? " · " + r.days.map((n) => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][n]).join(", ") : ""}${r.remaining !== null ? " · " + r.remaining + " times" : ""}`
-    : translate("One time");
+  if (!r) return translate("One time");
+  const every = {
+    Days: ["Every day", "Every {n} days"],
+    Weeks: ["Every week", "Every {n} weeks"],
+    Months: ["Every month", "Every {n} months"],
+    Years: ["Every year", "Every {n} years"],
+  }[r.unit];
+  const weekdays =
+    r.unit === "Weeks" && r.days?.length
+      ? " · " + r.days.map((n) => weekdayName(n)).join(", ")
+      : "";
+  const times =
+    r.remaining !== null ? " · " + translateCount("{n} time", "{n} times", r.remaining) : "";
+  return (
+    (r.every === 1 ? translate(every[0]) : translateCount(every[0], every[1], r.every)) +
+    weekdays +
+    times
+  );
 }
+// Short weekday name (0 is Sunday) in the interface language.
+const weekdayName = (n) =>
+  new Date(Date.UTC(2024, 0, 7 + n)).toLocaleDateString(currentLocale(), {
+    weekday: "short",
+    timeZone: "UTC",
+  });

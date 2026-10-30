@@ -17,7 +17,7 @@ import {
   toggleFavoriteAccount,
   validateOp,
 } from "../domain/operations.js";
-import { currencyName, translate } from "../i18n/index.js";
+import { currencyName, translate, translateWith } from "../i18n/index.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
@@ -121,7 +121,7 @@ function accountLine(a) {
     goal = a.type === "Savings" && a.goal > 0;
   const percent = goal ? savingsPercent(n, a.goal) : 0;
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">Available: ${formatMoney(n + a.limit, a.currency)}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
     () => accountActions(a),
     "account-row " +
       (a.type === "Debt" && accountBalance(a.id) === 0 ? "debt-completed " : "") +

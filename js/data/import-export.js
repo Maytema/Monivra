@@ -1,21 +1,14 @@
 /* Import and export (JSON, CSV) */
 import { render } from "../app/shell.js";
-import { deepClone, escapeHtml } from "../core/constants.js";
+import { deepClone } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { csvText, prepareCSV } from "./csv.js";
 import { createEmptyData } from "./defaults.js";
+import { printReport } from "./report.js";
 import { isValidData, save } from "./storage.js";
-import {
-  accountById,
-  dataSnapshot,
-  formatMoney,
-  periodTitle,
-  totalByType,
-  visibleOperations,
-} from "../domain/finance.js";
-import { translate, translateMarkup, translateWith } from "../i18n/index.js";
-import { opTitle } from "../screens/operation-editor.js";
+import { dataSnapshot } from "../domain/finance.js";
+import { translateWith } from "../i18n/index.js";
 import {
   closeLayers,
   confirmAction,
@@ -135,23 +128,6 @@ export function dataView() {
       });
     })}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
   );
-}
-// Open the printable report.
-function printReport() {
-  const out = translateMarkup(
-    `<h1>Monivra · ${translate("Report")}</h1><p>${escapeHtml(periodTitle())}</p><p>${translate("Income")}: ${formatMoney(totalByType("income"))} · ${translate("Expenses")}: ${formatMoney(totalByType("expense"))}</p><table><thead><tr><th>Date</th><th>Type / category</th><th>Account</th><th>Amount</th></tr></thead><tbody>${visibleOperations()
-      .map(
-        (o) =>
-          `<tr><td>${escapeHtml(o.date)}</td><td>${escapeHtml(opTitle(o))}</td><td>${escapeHtml(accountById(o.from || o.to)?.name)}</td><td>${formatMoney(o.amount, accountById(o.from || o.to)?.currency)}</td></tr>`,
-      )
-      .join("")}</tbody></table>`,
-  );
-  if (isTestMode()) {
-    window.__print = out;
-    return;
-  }
-  document.getElementById("printout").innerHTML = out;
-  window.print();
 }
 // Apply a selected import file after confirmation.
 export function handleImport(text) {

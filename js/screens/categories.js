@@ -13,7 +13,7 @@ import {
   totalByType,
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/operations.js";
-import { currencyName, translate, translateWith } from "../i18n/index.js";
+import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
 import {
@@ -126,7 +126,7 @@ export function categoryActions(c) {
     count = categoryCount(c.id);
   openSheet(
     () =>
-      `<div class="category-sheet-head">${badgeHtml(c)}<strong>${escapeHtml(c.name)}</strong></div><div class="category-sheet-stats"><span>${count} ${translate(count === 1 ? "operation" : "operations")}</span><span>${formatMoney(categoryTotal(c.id), c.currency)}</span></div><div class="category-share"><span class="category-share-bar"><i style="width:${share}%;background:${escapeHtml(c.color)}"></i></span><span>${share} %</span></div><div class="sheet-actions" style="--cols:2" role="group" aria-label="Category actions">${actionTileHtml("edit", "Edit", "#c04fd8", () => editCategory(c))}${actionTileHtml(
+      `<div class="category-sheet-head">${badgeHtml(c)}<strong>${escapeHtml(c.name)}</strong></div><div class="category-sheet-stats"><span>${translateCount("{n} operation", "{n} operations", count)}</span><span>${formatMoney(categoryTotal(c.id), c.currency)}</span></div><div class="category-share"><span class="category-share-bar"><i style="width:${share}%;background:${escapeHtml(c.color)}"></i></span><span>${share} %</span></div><div class="sheet-actions" style="--cols:2" role="group" aria-label="Category actions">${actionTileHtml("edit", "Edit", "#c04fd8", () => editCategory(c))}${actionTileHtml(
         "receipt",
         "Operations",
         "#1f8fe0",

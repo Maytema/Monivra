@@ -17,7 +17,7 @@ import {
 } from "../domain/finance.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { deleteOperation, processScheduled, putOperation } from "../domain/operations.js";
-import { translate } from "../i18n/index.js";
+import { translate, translateWith } from "../i18n/index.js";
 import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
 import { accountCardsHtml, accountPicker, categoryPicker, categoryTilesHtml } from "./pickers.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
@@ -463,7 +463,7 @@ function accountCalculatorView(p) {
             render();
           },
           "dual-value",
-          `aria-label="Edit amount in ${escapeHtml(primary.currency)}" aria-pressed="${p.currencySide === "send"}"`,
+          `aria-label="${translateWith("Edit amount in {currency}", { currency: escapeHtml(primary.currency) })}" aria-pressed="${p.currencySide === "send"}"`,
         )}</div><div class="calc-number dual-number dual-receive ${p.currencySide === "receive" ? "dual-active" : ""}" style="--tint:${escapeHtml(secondary.color || "")}">${buttonHtml(
           escapeHtml(p.currencySide === "receive" ? currentExpr() : receiveExpression()) +
             " " +
@@ -475,7 +475,7 @@ function accountCalculatorView(p) {
             render();
           },
           "dual-value",
-          `aria-label="Edit amount in ${escapeHtml(secondary.currency)}" aria-pressed="${p.currencySide === "receive"}"`,
+          `aria-label="${translateWith("Edit amount in {currency}", { currency: escapeHtml(secondary.currency) })}" aria-pressed="${p.currencySide === "receive"}"`,
         )}</div>`
       : `<div class="calc-number single-tappable" role="button" tabindex="0" onclick="this.closest('.overlay').querySelector('.ops-tap-to-edit button')?.click()"><input style="width:${Math.max(1, String(currentExpr()).length)}ch" aria-label="${calcMode ? "Calculator expression" : "Amount"}" inputmode="none" readonly value="${escapeHtml(currentExpr())}" data-input="${registerInput((v) => assignExpr(v))}"><span>${escapeHtml(currency)}</span></div>`
   }${

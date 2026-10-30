@@ -49,9 +49,47 @@
   }
   #printout td,
   #printout th {
-    padding: 8px;
+    padding: 6px 8px;
     border-bottom: 1px solid rgb(204, 204, 204);
     text-align: left;
+    vertical-align: top;
+  }
+  #printout thead {
+    display: table-header-group;
+  }
+  #printout tr {
+    break-inside: avoid;
+  }
+  #printout .period {
+    margin: 0 0 14px;
+    color: rgb(90, 90, 90);
+  }
+  #printout .totals {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 18px;
+  }
+  #printout .totals b {
+    display: block;
+    margin-top: 3px;
+    font-size: 16px;
+  }
+  #printout .date {
+    white-space: nowrap;
+  }
+  #printout td small {
+    display: block;
+    color: rgb(110, 110, 110);
+  }
+  #printout .amount {
+    text-align: right;
+    white-space: nowrap;
+  }
+  #printout .in {
+    color: rgb(27, 122, 75);
+  }
+  #printout .out {
+    color: rgb(179, 38, 30);
   }
 }
 #base > .navbar .navicon svg,

@@ -10,7 +10,7 @@ import {
   formatMoney,
   periodBounds,
 } from "../domain/finance.js";
-import { translate } from "../i18n/index.js";
+import { translate, translateCount } from "../i18n/index.js";
 import { multiSelect, opRow, operationsAddMenu, recurLabel } from "./operations.js";
 import {
   amountPicker,
@@ -281,7 +281,7 @@ export function budgetsView() {
               let used = budgetSpend(b),
                 pct = b.amount ? (used / b.amount) * 100 : 0;
               return buttonHtml(
-                `<div style="display:flex;align-items:center;gap:12px"><span class="badge small">${iconSvg("budget")}</span><div class="grow"><strong>${escapeHtml(b.name)}</strong><div class="muted" style="font-size:12px;margin-top:5px">${b.categories ? b.categories.length + " categories" : "Entire expenses"}</div></div>${iconSvg("right", 18)}</div><div class="stats-halves" style="margin-top:19px"><span>${formatMoney(used, b.currency)} <small>spent</small></span><span>${formatMoney(b.amount, b.currency)} <small>limit</small></span></div><div class="bar-track"><span style="width:${Math.min(100, pct)}%;background:${pct > 100 ? "var(--negative)" : "var(--accent)"}"></span></div><small>${Math.round(pct)}% · ${translate(b.period === "week" ? "Weekly" : b.period === "day" ? "Daily" : b.period === "year" ? "Yearly" : "Monthly")}</small>`,
+                `<div style="display:flex;align-items:center;gap:12px"><span class="badge small">${iconSvg("budget")}</span><div class="grow"><strong>${escapeHtml(b.name)}</strong><div class="muted" style="font-size:12px;margin-top:5px">${b.categories ? translateCount("{n} category", "{n} categories", b.categories.length) : translate("Entire expenses")}</div></div>${iconSvg("right", 18)}</div><div class="stats-halves" style="margin-top:19px"><span>${formatMoney(used, b.currency)} <small>spent</small></span><span>${formatMoney(b.amount, b.currency)} <small>limit</small></span></div><div class="bar-track"><span style="width:${Math.min(100, pct)}%;background:${pct > 100 ? "var(--negative)" : "var(--accent)"}"></span></div><small>${Math.round(pct)}% · ${translate(b.period === "week" ? "Weekly" : b.period === "day" ? "Daily" : b.period === "year" ? "Yearly" : "Monthly")}</small>`,
                 () => editBudget(b),
                 "card budget-card",
               );

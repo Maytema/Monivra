@@ -521,7 +521,7 @@ export function iconPicker(obj) {
       )}</div>`;
     openSheet(
       () =>
-        `<div class="picker-settings"><h2>${isColor ? "Colors" : "Icon"} list customization</h2><p>With this setting, you can exclude ${isColor ? "colors" : "icons"} selected for current accounts and categories from the ${isColor ? "colors" : "icons"} list.</p><div class="picker-setting-rows">${row("Exclude selected in accounts", keys[0])}${row("Exclude selected in categories", keys[1])}</div><div class="picker-setting-buttons">${buttonHtml("Cancel", () => closeLayers(), "customize-cancel")}${buttonHtml(
+        `<div class="picker-settings"><h2>${translate(isColor ? "Colors list customization" : "Icon list customization")}</h2><p>${translate(isColor ? "With this setting, you can exclude colors selected for current accounts and categories from the colors list." : "With this setting, you can exclude icons selected for current accounts and categories from the icons list.")}</p><div class="picker-setting-rows">${row("Exclude selected in accounts", keys[0])}${row("Exclude selected in categories", keys[1])}</div><div class="picker-setting-buttons">${buttonHtml("Cancel", () => closeLayers(), "customize-cancel")}${buttonHtml(
           "Complete",
           () => {
             appData.settings[isColor ? "colorPickerExclusions" : "iconPickerExclusions"] = working;
