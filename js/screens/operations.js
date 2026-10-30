@@ -19,8 +19,8 @@ import {
 import { validateOp } from "../domain/operations.js";
 import { currentLocale, translate } from "../i18n/index.js";
 import { hero } from "./accounts.js";
-import { accountPicker, categoryPicker } from "./categories.js";
 import { opTitle, operationStart } from "./operation-editor.js";
+import { accountPicker, categoryPicker } from "./pickers.js";
 import {
   calendar,
   closeLayers,

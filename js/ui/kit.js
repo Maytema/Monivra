@@ -653,3 +653,19 @@ const EMPTY_ILLUSTRATIONS = {
 export function emptyStateHtml(kind, title, hint) {
   return `<div class="empty-state">${EMPTY_ILLUSTRATIONS[kind]}<h3>${translate(title)}</h3><p>${translate(hint)}</p></div>`;
 }
+
+// Strip of tabs: `tabs` are [id, label] pairs; `onChange(id)` runs before the redraw.
+export function tabsHtml(tabs, active, onChange, className = "tabs") {
+  return `<div class="${className}">${tabs
+    .map(([id, label]) =>
+      buttonHtml(
+        translate(label),
+        () => {
+          onChange(id);
+          render();
+        },
+        active === id ? "active" : "",
+      ),
+    )
+    .join("")}</div>`;
+}

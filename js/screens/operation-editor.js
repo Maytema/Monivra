@@ -12,17 +12,23 @@ import {
   dateLabel,
   defaultAccountId,
   evaluateExpression,
-  moneySpanHtml,
   parseDate,
   toIsoDate,
 } from "../domain/finance.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { deleteOperation, processScheduled, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
-import { accountPicker, categoryPicker } from "./categories.js";
 import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
+import { accountCardsHtml, accountPicker, categoryPicker, categoryTilesHtml } from "./pickers.js";
 import { recurrence, reminder } from "./scheduled-budgets.js";
-import { calendar, closeLayers, confirmAction, openSheet, promptText } from "../ui/kit.js";
+import {
+  calendar,
+  closeLayers,
+  confirmAction,
+  openSheet,
+  promptText,
+  tabsHtml,
+} from "../ui/kit.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -64,131 +70,70 @@ function chooseAccountSide(d, incoming, accountId) {
     : accountId;
 }
 
-/* Counterparty picker: choose a category or an account from the same sheet. */
 // Choose a category or an account from the same sheet.
 function counterpartyPicker(direction, d, onChosen = null) {
   const incoming = direction === "from";
   // Open on the tab that matches what the block currently holds.
-  const holdsCategory = d.type === (incoming ? "income" : "expense");
-  let active = holdsCategory ? "category" : "account";
-  const catType = incoming ? "income" : "expense";
+  let active = d.type === (incoming ? "income" : "expense") ? "category" : "account";
   const title = incoming ? "Take from" : "Add to";
-  const tabName = incoming ? "Incomes" : "Expenses";
-  const eligible = () =>
-    appData.accounts.filter((a) => !a.archived && a.id !== (incoming ? d.to : d.from));
+  const done = () => {
+    closeLayers();
+    if (onChosen) onChosen();
+    else render();
+  };
   openSheet(
     () =>
-      `<h2 class="counterparty-title">${translate(title)}</h2><div class="tabs counterparty-tabs">${buttonHtml(
-        translate(tabName),
-        () => {
-          active = "category";
-          render();
-        },
-        active === "category" ? "active" : "",
-      )}${buttonHtml(
-        translate("Accounts"),
-        () => {
-          active = "account";
-          render();
-        },
-        active === "account" ? "active" : "",
-      )}</div>${
+      `<h2 class="counterparty-title">${translate(title)}</h2>${tabsHtml(
+        [
+          ["category", incoming ? "Incomes" : "Expenses"],
+          ["account", "Accounts"],
+        ],
+        active,
+        (id) => (active = id),
+        "tabs counterparty-tabs",
+      )}${
         active === "category"
-          ? `<div class="grid ${appData.settings.onePicker ? "one" : ""} counterparty-categories">${appData.categories
-              .filter((c) => !c.archived && c.type === catType)
-              .map((c) =>
-                buttonHtml(
-                  `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>`,
-                  () => {
-                    chooseCategorySide(d, incoming, c.id);
-                    closeLayers();
-                    if (onChosen) onChosen();
-                    else render();
-                  },
-                  "cat-tile",
-                ),
-              )
-              .join("")}</div>`
-          : `<div class="counterparty-accounts">${eligible().filter((a) => a.type !== "Savings").length ? `<div class="picker-group-title">${translate("Accounts")}</div>` : ""}${eligible()
-              .filter((a) => a.type !== "Savings")
-              .map((a) =>
-                buttonHtml(
-                  `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
-                  () => {
-                    chooseAccountSide(d, incoming, a.id);
-                    closeLayers();
-                    if (onChosen) onChosen();
-                    else render();
-                  },
-                  "row",
-                ),
-              )
-              .join("")}<div class="picker-group-title">${translate("Savings")}</div>${eligible()
-              .filter((a) => a.type === "Savings")
-              .map((a) =>
-                buttonHtml(
-                  `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}`,
-                  () => {
-                    chooseAccountSide(d, incoming, a.id);
-                    closeLayers();
-                    if (onChosen) onChosen();
-                    else render();
-                  },
-                  "row",
-                ),
-              )
-              .join(
-                "",
-              )}${!eligible().length ? '<p class="footnote">No available accounts</p>' : ""}</div>`
+          ? categoryTilesHtml(
+              incoming ? "income" : "expense",
+              null,
+              (c) => {
+                chooseCategorySide(d, incoming, c.id);
+                done();
+              },
+              "counterparty-categories",
+            )
+          : `<div class="counterparty-accounts">${accountCardsHtml(
+              appData.accounts.filter((a) => !a.archived && a.id !== (incoming ? d.to : d.from)),
+              null,
+              (a) => {
+                chooseAccountSide(d, incoming, a.id);
+                done();
+              },
+            )}</div>`
       }`,
     title,
   );
 }
 
-/* Transfers use a dedicated destination-account selector,
-   not the mixed expenses/accounts counterparty picker. */
-// Choose the destination account of a transfer.
+// Choose the destination (or source) account of a transfer.
 function transferDestinationPicker(d, onChosen = null, side = "to") {
   const excluded = side === "to" ? d.from : d.to;
+  const title = side === "from" ? "From account" : "To account";
   openSheet(
-    () => {
-      const available = appData.accounts.filter((a) => !a.archived && a.id !== excluded);
-      const groups = [
-        ["Regular", "Accounts"],
-        ["Savings", "Savings"],
-        ["I owe", "I owe"],
-        ["Owe me", "Owe me"],
-      ];
-      return `<h2 class="counterparty-title">${side === "from" ? "From account" : "To account"}</h2><div class="counterparty-accounts">${groups
-        .map(([kind, label]) => {
-          const rows = available.filter((a) =>
-            kind === "Regular" || kind === "Savings"
-              ? a.type === kind
-              : a.type === "Debt" && a.debt === kind,
-          );
-          if (!rows.length) return "";
-          return `<div class="picker-group-title">${translate(label)}</div>${rows
-            .map((a) =>
-              buttonHtml(
-                `${badgeHtml(a, true)}<span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}</span>`,
-                () => {
-                  d.type = "transfer";
-                  d.category = null;
-                  d[side] = a.id;
-                  closeLayers();
-                  if (onChosen) onChosen();
-                  else render();
-                },
-                "row account-row",
-              ),
-            )
-            .join("")}`;
-        })
-        .join(
-          "",
-        )}${!available.length ? '<p class="footnote">No available accounts</p>' : ""}</div>`;
-    },
-    side === "from" ? "From account" : "To account",
+    () =>
+      `<h2 class="counterparty-title">${translate(title)}</h2><div class="counterparty-accounts">${accountCardsHtml(
+        appData.accounts.filter((a) => !a.archived && a.id !== excluded),
+        null,
+        (a) => {
+          d.type = "transfer";
+          d.category = null;
+          d[side] = a.id;
+          closeLayers();
+          if (onChosen) onChosen();
+          else render();
+        },
+      )}</div>`,
+    title,
   );
 }
 // Open the operation editor with a fresh draft.

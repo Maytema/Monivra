@@ -4,12 +4,10 @@ import { CURRENCIES, deepClone, escapeHtml, iconSvg, newId } from "../core/const
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
-  accountBalance,
   categoryById,
   categoryTotal,
   convertCurrency,
   formatMoney,
-  moneySpanHtml,
   totalByType,
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/operations.js";
@@ -30,6 +28,7 @@ import {
   periodBar,
   promptText,
   swipePane,
+  tabsHtml,
 } from "../ui/kit.js";
 import {
   badgeHtml,
@@ -467,19 +466,18 @@ export function categoryEditView(p) {
 }
 // Expense/income tabs on the manage-categories page.
 function manageCategoryTabs() {
-  return `<div class="cat-manage-tabs">${["expense", "income"]
-    .map((type) =>
-      buttonHtml(
-        translate(type === "expense" ? "Expenses" : "Incomes"),
-        () => {
-          uiState.catType = type;
-          uiState.manageArchive = false;
-          render();
-        },
-        uiState.catType === type ? "active" : "",
-      ),
-    )
-    .join("")}</div>`;
+  return tabsHtml(
+    [
+      ["expense", "Expenses"],
+      ["income", "Incomes"],
+    ],
+    uiState.catType,
+    (type) => {
+      uiState.catType = type;
+      uiState.manageArchive = false;
+    },
+    "cat-manage-tabs",
+  );
 }
 // Manage-categories page (reorder, archive).
 export function categoryManageView() {
@@ -504,61 +502,5 @@ export function categoryManageView() {
           )}${uiState.manageArchive ? `<div class="cat-manage-grid">${archived.map((c) => buttonHtml(`${badgeHtml(c)}<span>${escapeHtml(c.name)}</span>`, () => editCategory(c), "cat-manage-tile cat-is-archived")).join("")}</div>` : ""}</div>`
         : ""
     }</div>`
-  );
-}
-// Sheet for choosing an account.
-export function accountPicker(value, fn, exclude = null) {
-  openSheet(() => {
-    const list = appData.accounts.filter((a) => !a.archived && a.id !== exclude);
-    return `<h2>${translate("Account")}</h2>${
-      list.length
-        ? list
-            .map((a) =>
-              buttonHtml(
-                `${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}${value === a.id ? iconSvg("check", 18) : ""}`,
-                () => {
-                  closeLayers();
-                  fn(a.id);
-                },
-                "row",
-              ),
-            )
-            .join("")
-        : '<p class="footnote">No available accounts</p>'
-    }${buttonHtml("Cancel", () => closeLayers(), "outline")}`;
-  }, "Account");
-}
-// Sheet for choosing a category.
-export function categoryPicker(type, value, fn) {
-  let active = type;
-  openSheet(
-    () =>
-      `<h2>${translate("Category")}</h2><div class="tabs">${["expense", "income"]
-        .map((x) =>
-          buttonHtml(
-            translate(x === "expense" ? "Expenses" : "Incomes"),
-            () => {
-              active = x;
-              render();
-            },
-            active === x ? "active" : "",
-          ),
-        )
-        .join(
-          "",
-        )}</div><div class="grid ${appData.settings.onePicker ? "one" : ""}">${appData.categories
-        .filter((c) => !c.archived && c.type === active)
-        .map((c) =>
-          buttonHtml(
-            `${badgeHtml(c)}<span>${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span>${c.id === value ? iconSvg("check", 16) : ""}`,
-            () => {
-              closeLayers();
-              fn(c.id);
-            },
-            "cat-tile",
-          ),
-        )
-        .join("")}</div>`,
-    "Category",
   );
 }

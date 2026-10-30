@@ -39,16 +39,11 @@ import {
   validateOp,
 } from "../domain/operations.js";
 import { accountActions, editAccount, saveAccount } from "../screens/accounts.js";
-import {
-  accountPicker,
-  categoryActions,
-  categoryPicker,
-  editCategory,
-  saveCategory,
-} from "../screens/categories.js";
+import { categoryActions, editCategory, saveCategory } from "../screens/categories.js";
 import { pinSetup } from "../screens/more.js";
 import { commitOperation, operationStart, tagsPicker } from "../screens/operation-editor.js";
 import { bulkEdit, filters } from "../screens/operations.js";
+import { accountPicker, categoryPicker } from "../screens/pickers.js";
 import { budgetSpend, editBudget, recurrence, reminder } from "../screens/scheduled-budgets.js";
 import { statsSettings } from "../screens/statistics.js";
 import {

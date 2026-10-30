@@ -18,9 +18,9 @@ import {
   validateOp,
 } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
-import { accountPicker } from "./categories.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
+import { accountPicker } from "./pickers.js";
 import { hintHtml } from "../ui/hint.js";
 import {
   amountPicker,
@@ -36,6 +36,7 @@ import {
   optionSheet,
   pageHeader,
   swipePane,
+  tabsHtml,
 } from "../ui/kit.js";
 import {
   badgeHtml,
@@ -164,18 +165,12 @@ export function accountsView() {
   if (!body) body = `<div class="empty">${translate("Empty")}</div>`;
   return (
     hero() +
-    `<div class="tabs account-tabs">${tabs
-      .map((x) =>
-        buttonHtml(
-          translate(x),
-          () => {
-            uiState.accountTab = x;
-            render();
-          },
-          uiState.accountTab === x ? "active" : "",
-        ),
-      )
-      .join("")}</div>` +
+    tabsHtml(
+      tabs.map((x) => [x, x]),
+      uiState.accountTab,
+      (x) => (uiState.accountTab = x),
+      "tabs account-tabs",
+    ) +
     swipePane(
       `<div class="content accounts-content">${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${
         archived.length
