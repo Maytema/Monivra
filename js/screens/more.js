@@ -66,16 +66,7 @@ export function settingsPage(kind) {
       body =
         switchSetting("Notifications", "notifications") +
         switchSetting("Periodic reminders", "periodic") +
-        textFieldHtml(
-          "Time",
-          appData.settings.notificationTime,
-          (v) => {
-            appData.settings.notificationTime = v;
-            save();
-          },
-          "",
-          "time",
-        ) +
+        menuRowHtml("Time", null, () => timeDialog(), appData.settings.notificationTime) +
         settingOptions("Frequency", "notificationFrequency", [
           "Every day",
           "Weekdays",
@@ -225,7 +216,29 @@ export function settingsPage(kind) {
         ).join("");
       break;
   }
-  return pageHeader(title) + `<div class="content"><div class="fields">${body}</div></div>`;
+  return pageHeader(title) + `<div class="content flush">${body}</div>`;
+}
+// Reminder time: the hours and the minutes are typed on the keypad docked below.
+function timeDialog() {
+  const [hours, minutes] = appData.settings.notificationTime.split(":");
+  let h = hours,
+    m = minutes;
+  openSheet(
+    () =>
+      `<h2>${translate("Time")}</h2><div class="time-fields">${numberFieldHtml("Hours", h, (v) => (h = v), { maxLength: 2 })}${numberFieldHtml("Minutes", m, (v) => (m = v), { maxLength: 2 })}</div><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        "Save",
+        () => {
+          if (!(Number(h) <= 23 && Number(m) <= 59 && h !== "" && m !== ""))
+            return toast("Enter a valid time");
+          appData.settings.notificationTime = `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+          save();
+          closeLayers();
+        },
+        "primary",
+      )}</div>`,
+    "Time",
+    "dialog",
+  );
 }
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];

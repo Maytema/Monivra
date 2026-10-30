@@ -670,3 +670,13 @@
 #app.has-dock .overlay .footnote {
   display: none;
 }
+
+/* Hours and minutes side by side */
+.time-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.time-fields .field {
+  margin: 0px;
+}

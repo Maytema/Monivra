@@ -256,7 +256,7 @@ export function operationsAddMenu(extra = {}, scheduled = false) {
       )
       .join(
         "",
-      )}</div><div class="add-grid">${items.map((item) => buttonHtml(`${badgeHtml(item)}<span class="add-item-text"><strong>${escapeHtml(item.name)}</strong><small>${formatMoney(dir === "accounts" ? accountBalance(item.id) : appData.ops.filter((o) => o.category === item.id).reduce((n, o) => n + o.amount, 0), item.currency || appData.settings.currency)}</small></span>`, () => choose(item), "add-item")).join("")}</div></div>`;
+      )}</div><div class="add-grid">${items.map((item) => buttonHtml(`${badgeHtml(item)}<span class="add-item-text"><strong>${escapeHtml(item.name)}</strong><small>${formatMoney(dir === "accounts" ? accountBalance(item.id) : appData.ops.filter((o) => o.category === item.id || categoryById(o.category)?.parent === item.id).reduce((n, o) => n + o.amount, 0), item.currency || appData.settings.currency)}</small></span>`, () => choose(item), "add-item")).join("")}</div></div>`;
   };
   openSheet(view, "Add an operation");
   // Event delegation survives redraws of the sheet's inner content.

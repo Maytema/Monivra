@@ -195,6 +195,10 @@
     translate 0.18s;
   translate: 0px 6px;
 }
+/* Above the bottom navigation bar instead of over its labels */
+body:has(.navbar) #toast {
+  bottom: 96px;
+}
 @media (prefers-reduced-motion: reduce) {
   #toast {
     transition: none;

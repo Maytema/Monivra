@@ -15,7 +15,7 @@ import {
   totalByType,
   visibleOperations,
 } from "../domain/finance.js";
-import { translate, translateWith } from "../i18n/index.js";
+import { currentLocale, translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { categoryActions, sumTabs } from "./categories.js";
 import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations.js";
@@ -61,6 +61,10 @@ function statsDetail(id) {
   if (c) categoryActions(c, uiState.period);
   else openFilteredOperations({ categories: [id] });
 }
+// Short date for the chart axis: "1 Oct" / "1 окт.".
+function axisDate(date) {
+  return parseDate(date).toLocaleDateString(currentLocale(), { day: "numeric", month: "short" });
+}
 // Bar chart.
 function chartBars() {
   const [a, b] = periodBounds();
@@ -83,7 +87,7 @@ function chartBars() {
   }
   const max = Math.max(1, ...(uiState.catType === "income" ? inc : exp)),
     w = 320 / bins;
-  return `<svg class="chart" viewBox="0 0 340 144" role="img" aria-label="Income and expense chart"><path d="M10 124H334" stroke="var(--line)"/>${inc.map((n, i) => `<rect opacity="${uiState.catType === "income" ? 1 : 0}" x="${10 + i * w}" y="${124 - (n / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(n / max) * 105}" rx="1" fill="var(--positive)"/><rect opacity="${uiState.catType === "expense" ? 1 : 0}" x="${10 + i * w + w * 0.4}" y="${124 - (exp[i] / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(exp[i] / max) * 105}" rx="1" fill="var(--negative)"/>`).join("")}<text x="10" y="141" fill="var(--muted)" font-size="10">${escapeHtml(start)}</text><text x="267" y="141" fill="var(--muted)" font-size="10">${escapeHtml(end)}</text></svg>`;
+  return `<svg class="chart" viewBox="0 0 340 144" role="img" aria-label="Income and expense chart"><path d="M10 124H334" stroke="var(--line)"/>${inc.map((n, i) => `<rect opacity="${uiState.catType === "income" ? 1 : 0}" x="${10 + i * w}" y="${124 - (n / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(n / max) * 105}" rx="1" fill="var(--positive)"/><rect opacity="${uiState.catType === "expense" ? 1 : 0}" x="${10 + i * w + w * 0.4}" y="${124 - (exp[i] / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(exp[i] / max) * 105}" rx="1" fill="var(--negative)"/>`).join("")}<text x="10" y="141" fill="var(--muted)" font-size="10">${escapeHtml(axisDate(start))}</text><text x="334" y="141" fill="var(--muted)" font-size="10" text-anchor="end">${escapeHtml(axisDate(end))}</text></svg>`;
 }
 // Donut chart.
 function donut(groups) {
@@ -104,7 +108,7 @@ function donut(groups) {
     })
     .join(
       "",
-    )}</svg><div class="donut-center"><small>${escapeHtml(groups.find((g) => g.id === uiState.donut)?.name || translate("Not selected"))}</small><strong>${uiState.donut ? (total ? Math.round(((groups.find((g) => g.id === uiState.donut)?.total || 0) / total) * 100) : 0) + "%" : "$"}</strong>${uiState.donut ? buttonHtml("Operations", () => statsDetail(uiState.donut), "text-button") : ""}</div></div>`;
+    )}</svg><div class="donut-center"><small>${escapeHtml(groups.find((g) => g.id === uiState.donut)?.name || translate("Not selected"))}</small><strong>${uiState.donut ? (total ? Math.round(((groups.find((g) => g.id === uiState.donut)?.total || 0) / total) * 100) : 0) + "%" : formatMoney(total)}</strong>${uiState.donut ? buttonHtml("Operations", () => statsDetail(uiState.donut), "text-button") : ""}</div></div>`;
 }
 // Statistics tab.
 export function statisticsView() {
