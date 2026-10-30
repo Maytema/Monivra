@@ -26,6 +26,7 @@ import {
   closeLayers,
   confirmAction,
   openSheet,
+  popupMenu,
   promptText,
   tabsHtml,
 } from "../ui/kit.js";
@@ -34,6 +35,7 @@ import {
   buttonHtml,
   iconButtonHtml,
   menuRowHtml,
+  registerAction,
   registerInput,
   toast,
 } from "../ui/primitives.js";
@@ -646,15 +648,17 @@ export function tagsPicker(d) {
               render();
             },
             "tag " + (chosen.includes(tag) ? "active" : ""),
+            `data-hold="${registerAction((chip) =>
+              popupMenu(chip, [
+                ["Edit", () => renameTag(tag, chosen)],
+                ["Delete", () => deleteTag(tag, chosen)],
+              ]),
+            )}"`,
           ),
         )
         .join(
           "",
-        )}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, addTag, "tag tag-add")}</div>${
-        appData.tags.length
-          ? buttonHtml("Manage tags", () => manageTags(chosen), "text-button")
-          : ""
-      }${buttonHtml(
+        )}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, addTag, "tag tag-add")}</div>${buttonHtml(
         "Complete",
         () => {
           d.tags = chosen.filter((v) => appData.tags.includes(v));
@@ -666,54 +670,41 @@ export function tagsPicker(d) {
     "Select tags",
   );
 }
-// Sheet for adding, renaming and removing tags.
-function manageTags(chosen) {
-  openSheet(
-    () =>
-      `<h2>Manage tags</h2>${appData.tags
-        .map(
-          (tag) =>
-            `<div class="row"><span class="grow">${escapeHtml(tag)}</span>${iconButtonHtml(
-              "edit",
-              "Rename " + tag,
-              () =>
-                promptText(
-                  "Rename tag",
-                  tag,
-                  (v) => {
-                    v = v.trim();
-                    if (!v) return toast("Enter a tag");
-                    if (v !== tag && appData.tags.includes(v)) return toast("Tag already exists");
-                    appData.tags = appData.tags.map((t) => (t === tag ? v : t));
-                    for (const key of ["ops", "scheduled"])
-                      for (const o of appData[key])
-                        o.tags = (o.tags || []).map((t) => (t === tag ? v : t));
-                    const i = chosen.indexOf(tag);
-                    if (i >= 0) chosen[i] = v;
-                    save();
-                    render();
-                  },
-                  "Name",
-                ),
-            )}${iconButtonHtml("trash", "Delete " + tag, () =>
-              confirmAction(
-                "Remove this tag from all operations?",
-                () => {
-                  appData.tags = appData.tags.filter((t) => t !== tag);
-                  for (const key of ["ops", "scheduled"])
-                    for (const o of appData[key]) o.tags = (o.tags || []).filter((t) => t !== tag);
-                  let i = chosen.indexOf(tag);
-                  if (i >= 0) chosen.splice(i, 1);
-                  save();
-                  render();
-                },
-                true,
-                "Delete",
-              ),
-            )}</div>`,
-        )
-        .join("")}${buttonHtml("Complete", () => closeLayers(), "primary")}`,
-    "Manage tags",
+// Rename a tag everywhere (`chosen` is the selection of the open picker).
+function renameTag(tag, chosen) {
+  promptText(
+    "Rename tag",
+    tag,
+    (v) => {
+      v = v.trim();
+      if (!v) return toast("Enter a tag");
+      if (v !== tag && appData.tags.includes(v)) return toast("Tag already exists");
+      appData.tags = appData.tags.map((t) => (t === tag ? v : t));
+      for (const key of ["ops", "scheduled"])
+        for (const o of appData[key]) o.tags = (o.tags || []).map((t) => (t === tag ? v : t));
+      const i = chosen.indexOf(tag);
+      if (i >= 0) chosen[i] = v;
+      save();
+      render();
+    },
+    "Name",
+  );
+}
+// Remove a tag from the list and from all operations.
+function deleteTag(tag, chosen) {
+  confirmAction(
+    "Remove this tag from all operations?",
+    () => {
+      appData.tags = appData.tags.filter((t) => t !== tag);
+      for (const key of ["ops", "scheduled"])
+        for (const o of appData[key]) o.tags = (o.tags || []).filter((t) => t !== tag);
+      const i = chosen.indexOf(tag);
+      if (i >= 0) chosen.splice(i, 1);
+      save();
+      render();
+    },
+    true,
+    "Delete",
   );
 }
 // Menu for attaching a photo (a new one replaces the old one).

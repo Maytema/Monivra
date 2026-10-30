@@ -539,11 +539,6 @@
   font-size: 17px;
   margin-top: 4px;
 }
-.sheet-account .total .money {
-  display: block;
-  font-size: 23px;
-  margin-top: 9px;
-}
 .stats-card .money {
   font-size: 20px;
 }
@@ -602,11 +597,6 @@
 .cat-tile .money {
   display: block;
 }
-.sheet-account .money {
-  display: block;
-  margin-top: 8px;
-  font-size: 21px;
-}
 .stats-category .money {
   font-size: 15px;
 }
@@ -636,10 +626,6 @@
   width: 38px;
   height: 38px;
   border-radius: 8px;
-}
-.action-grid .badge {
-  width: 54px;
-  height: 54px;
 }
 .cat-tile .badge {
   width: 44px;
@@ -1042,8 +1028,13 @@
   margin-top: 6px;
   line-height: 1.35;
 }
+.content.flush > .row {
+  padding-inline: 18px;
+}
 .row .chevron {
-  color: var(--accent-ink);
+  display: flex;
+  margin-right: 10px;
+  color: var(--ink-soft);
 }
 .op-row:not(.selected) {
   background: transparent;
@@ -1113,6 +1104,30 @@
   align-items: flex-end;
   justify-content: center;
   z-index: 10;
+}
+.overlay.popup,
+.overlay ~ .overlay.popup {
+  background: transparent;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.overlay.popup .panel {
+  position: absolute;
+  left: clamp(8px, var(--x), calc(100% - 208px));
+  top: var(--y);
+  width: 200px;
+  padding: 8px 0;
+  border-radius: 14px;
+  background: var(--sheet);
+  box-shadow: 0 4px 18px rgb(0 0 0 / 28%);
+}
+.popup-item {
+  display: block;
+  width: 100%;
+  height: 48px;
+  padding: 0 20px;
+  text-align: left;
+  font-size: 17px;
 }
 .overlay ~ .overlay {
   background: rgba(0, 0, 0, 0.2);
@@ -1248,18 +1263,11 @@
 .overlay.sheet:has(.picker-color-picker) .handle {
   display: none;
 }
-.action-grid.two {
-  grid-template-columns: 1fr 1fr;
-}
 .overlay.sheet:has(.picker-icon-picker),
 .overlay.sheet:has(.picker-color-picker) {
   align-items: stretch;
   padding: 0px;
   background: var(--bg);
-}
-.sheet-account .total {
-  text-align: center;
-  padding-top: 18px;
 }
 .keypad {
   display: grid;

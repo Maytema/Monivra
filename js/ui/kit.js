@@ -40,8 +40,8 @@ export function openPage(kind, params = {}) {
   render(true);
 }
 // Open a bottom sheet or dialog layer.
-export function openSheet(fn, title = "", kind = "sheet") {
-  uiState.layers.push({ fn, title, kind, id: newId() });
+export function openSheet(fn, title = "", kind = "sheet", anchor = null) {
+  uiState.layers.push({ fn, title, kind, anchor, id: newId() });
   render();
 }
 // Close the top n sheet/dialog layers.
@@ -152,6 +152,39 @@ export function optionSheet(title, options, value, fn) {
 export function pageHeader(title, extra = "") {
   return `<div class="topbar">${iconButtonHtml("back", "Back", goBack)}<h1>${translate(title)}</h1>${extra || '<span class="spacer"></span>'}</div>`;
 }
+// Small menu next to an element (a long press on a chip, say); `items` are [label, handler].
+export function popupMenu(element, items) {
+  const box = document.getElementById("app").getBoundingClientRect(),
+    at = element.getBoundingClientRect();
+  const height = items.length * 48 + 16;
+  // Below the element when there is room, otherwise above it.
+  const below = at.bottom + height + 8 < box.bottom;
+  openSheet(
+    () =>
+      items
+        .map(([label, fn]) =>
+          buttonHtml(
+            label,
+            () => {
+              closeLayers();
+              fn();
+            },
+            "popup-item",
+          ),
+        )
+        .join(""),
+    "Menu",
+    "popup",
+    { x: at.left - box.left, y: (below ? at.bottom + 4 : at.top - height - 4) - box.top },
+  );
+}
+// Round-cornered tile with a colored icon and a caption, for the action sheets.
+export const actionTileHtml = (icon, label, tone, fn) =>
+  buttonHtml(
+    `<span class="sheet-action-icon" style="--tone:${tone}">${iconSvg(icon, 26)}</span><span>${translate(label)}</span>`,
+    fn,
+    "sheet-action",
+  );
 // Period selector bar with previous/next arrows.
 export function periodBar() {
   return `<div class="period">${iconButtonHtml("left", "Previous period", () => shiftPeriod(-1))}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), periodPicker, "label")}${iconButtonHtml("right", "Next period", () => shiftPeriod(1))}</div>`;

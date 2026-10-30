@@ -63,8 +63,8 @@ textarea,
 select {
   background: transparent;
   border: 1px solid rgb(141, 131, 143);
-  border-radius: 4px;
-  padding: 13px 14px;
+  border-radius: 14px;
+  padding: 13px 16px;
   outline: none;
   width: 100%;
   accent-color: var(--accent);
@@ -72,10 +72,11 @@ select {
 input:focus,
 textarea:focus {
   border: 2px solid var(--accent);
-  padding: 12px 13px;
+  padding: 12px 15px;
 }
 input[type="checkbox"],
 input[type="radio"] {
+  border-radius: 6px;
   width: 20px;
   height: 20px;
   padding: 0px;

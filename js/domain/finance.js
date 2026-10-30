@@ -204,10 +204,19 @@ export const totalByType = (type, ops) =>
     .filter((o) => o.reportType === type)
     .reduce((s, o) => s + o.reportAmount, 0);
 // Sum of operations in a category, including its sub-categories.
-export const categoryTotal = (id) =>
-  reportRows()
-    .filter((o) => o.category === id || categoryById(o.category)?.parent === id)
+const categoryRows = (id) =>
+  reportRows().filter((o) => o.category === id || categoryById(o.category)?.parent === id);
+export const categoryTotal = (id) => categoryRows(id).reduce((s, o) => s + o.reportAmount, 0);
+// Number of operations of a category (with its subcategories) in the report period.
+export const categoryCount = (id) => categoryRows(id).length;
+// Share (0–1) of a category in all operations of its type in the report period.
+export function categoryShare(id) {
+  const type = categoryById(id)?.type;
+  const all = reportRows()
+    .filter((o) => o.reportType === type)
     .reduce((s, o) => s + o.reportAmount, 0);
+  return all ? categoryTotal(id) / all : 0;
+}
 // Evaluate a calculator expression (+ − × ÷) and return the result in minor units.
 export function evaluateExpression(expr) {
   const clean = String(expr)

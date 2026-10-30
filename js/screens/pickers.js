@@ -1,7 +1,7 @@
 /* Pickers for accounts and categories: one list design for every place that asks for them */
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData } from "../core/state.js";
-import { accountBalance, moneySpanHtml } from "../domain/finance.js";
+import { accountBalance, convertCurrency, moneySpanHtml } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 import { closeLayers, openSheet, tabsHtml } from "../ui/kit.js";
 import { badgeHtml, buttonHtml } from "../ui/primitives.js";
@@ -20,7 +20,11 @@ export function accountCardsHtml(accounts, chosenId, onPick) {
   return ACCOUNT_GROUPS.map(([label, belongs]) => {
     const rows = accounts.filter(belongs);
     if (!rows.length) return "";
-    return `<div class="picker-group-title">${translate(label)}</div>${rows
+    const total = rows.reduce(
+      (n, a) => n + convertCurrency(accountBalance(a.id), a.currency, appData.settings.currency),
+      0,
+    );
+    return `<div class="picker-group-title"><span>${translate(label)}</span>${moneySpanHtml(total, appData.settings.currency, false, true)}</div>${rows
       .map((a) =>
         buttonHtml(
           `${badgeHtml(a, true)}<span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(accountBalance(a.id), a.currency, false, true)}</span>${chosenId === a.id ? iconSvg("check", 18) : ""}`,

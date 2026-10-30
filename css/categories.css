@@ -19,14 +19,6 @@
   min-width: 0px;
   min-height: 56px;
 }
-.action-grid button {
-  font-size: 13px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 8px;
-}
 .chip small {
   color: var(--ink);
   font-size: 12px;
@@ -309,24 +301,10 @@
 .cat-sub-actions .row {
   min-height: 44px;
 }
-.action-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px 8px;
-  padding: 14px 0px;
-}
 .two {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9px;
-}
-.sheet-account {
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 .chip {
   border: 1px solid color-mix(in srgb, var(--c, #6c61cc) 65%, var(--line));

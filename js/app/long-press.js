@@ -1,6 +1,7 @@
-/* Long press on an operation row starts selection mode. */
+/* Long press: an operation row starts selection mode; an element with data-hold runs its handler. */
 import { render } from "./shell.js";
 import { uiState } from "../core/state.js";
+import { actionHandlers } from "../ui/primitives.js";
 
 const LONG_PRESS_MS = 420;
 const MOVE_TOLERANCE_PX = 15;
@@ -18,38 +19,43 @@ export function initOperationLongPress() {
     press = null;
   };
   const startSelection = (id) => {
-    longPressJustHappened = true;
-    if (navigator.vibrate)
-      try {
-        navigator.vibrate(22);
-      } catch {
-        // vibration is optional
-      }
     uiState.selection = true;
     uiState.selected = [id];
     render();
-    setTimeout(() => {
-      longPressJustHappened = false;
-    }, 950);
+  };
+  // What a long press on the touched element does, or null when nothing.
+  const holdAction = (target) => {
+    const held = target.closest("[data-hold]");
+    if (held) return () => actionHandlers[held.dataset.hold]?.(held);
+    const row = target.closest(".op-row[data-operation]");
+    const blocked =
+      uiState.tab !== "operations" ||
+      uiState.selection ||
+      uiState.layers.length ||
+      uiState.pages.length;
+    return row && !blocked ? () => startSelection(row.dataset.operation) : null;
   };
   app.addEventListener(
     "pointerdown",
     (e) => {
-      const row = e.target.closest(".op-row[data-operation]");
-      const blocked =
-        uiState.tab !== "operations" ||
-        uiState.selection ||
-        uiState.layers.length ||
-        uiState.pages.length;
-      if (!row || blocked) return;
+      const action = holdAction(e.target);
+      if (!action) return;
       cancel();
-      const id = row.dataset.operation;
       press = {
         x: e.clientX,
         y: e.clientY,
         pointer: e.pointerId,
         timer: setTimeout(() => {
-          if (press) startSelection(id);
+          if (!press) return;
+          longPressJustHappened = true;
+          setTimeout(() => (longPressJustHappened = false), 950);
+          if (navigator.vibrate)
+            try {
+              navigator.vibrate(22);
+            } catch {
+              // vibration is optional
+            }
+          action();
         }, LONG_PRESS_MS),
       };
     },
@@ -66,13 +72,13 @@ export function initOperationLongPress() {
   for (const type of ["pointerup", "pointercancel", "lostpointercapture"])
     app.addEventListener(type, cancel, { passive: true });
   app.addEventListener("contextmenu", (e) => {
-    if (e.target.closest(".op-row[data-operation]")) e.preventDefault();
+    if (holdAction(e.target)) e.preventDefault();
   });
   // Swallow the click that follows a long press.
   app.addEventListener(
     "click",
     (e) => {
-      if (longPressJustHappened && e.target.closest(".op-row")) {
+      if (longPressJustHappened && e.target.closest(".op-row, [data-hold]")) {
         e.stopImmediatePropagation();
         e.preventDefault();
         longPressJustHappened = false;

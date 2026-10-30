@@ -1,10 +1,12 @@
 /* Categories screens */
 import { render } from "../app/shell.js";
-import { CURRENCIES, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
   categoryById,
+  categoryCount,
+  categoryShare,
   categoryTotal,
   convertCurrency,
   formatMoney,
@@ -15,6 +17,7 @@ import { translate } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
 import {
+  actionTileHtml,
   closeLayers,
   confirmAction,
   currencyPicker,
@@ -117,14 +120,19 @@ export function categoriesView() {
     )
   );
 }
-// Action sheet shown when a category is tapped.
+// Action sheet shown on a long press of a category: figures for the period and two actions.
 export function categoryActions(c) {
+  const share = Math.round(categoryShare(c.id) * 100),
+    count = categoryCount(c.id);
   openSheet(
     () =>
-      `<div class="sheet-account">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><div>${formatMoney(categoryTotal(c.id), c.currency)}</div></div>${iconButtonHtml("edit", "Edit", () => editCategory(c))}</div><div class="action-grid two">${buttonHtml(iconSvg("plus") + translate("Add an operation"), () => operationStart({ type: c.type, category: c.id }))}${buttonHtml(
-        iconSvg("receipt") + translate("Operations"),
+      `<div class="category-sheet-head">${badgeHtml(c)}<strong>${escapeHtml(c.name)}</strong></div><div class="category-sheet-stats"><span>${count} ${translate(count === 1 ? "operation" : "operations")}</span><span>${formatMoney(categoryTotal(c.id), c.currency)}</span></div><div class="category-share"><span class="category-share-bar"><i style="width:${share}%;background:${escapeHtml(c.color)}"></i></span><span>${share} %</span></div><div class="sheet-actions" style="--cols:2" role="group" aria-label="Category actions">${actionTileHtml("edit", "Edit", "#c04fd8", () => editCategory(c))}${actionTileHtml(
+        "receipt",
+        "Operations",
+        "#1f8fe0",
         () => {
           uiState.filters.categories = [c.id];
+          uiState.period = { mode: "all", anchor: TODAY };
           goHome("operations");
         },
       )}</div>${
@@ -141,7 +149,7 @@ export function categoryActions(c) {
               )
               .join("")
           : ""
-      }${!c.parent ? menuRowHtml("Add subcategory", "plus", () => editCategory(null, c.id)) : ""}${menuRowHtml("Edit", "edit", () => editCategory(c))}`,
+      }`,
     c.name,
   );
 }

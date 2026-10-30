@@ -283,4 +283,7 @@ export const russianStrings = {
   Travel: "Путешествия",
   "Color wheel": "Цветовой круг",
   "Color code": "Код цвета",
+  operation: "операция",
+  operations: "операций",
+  "Category actions": "Действия с категорией",
 };

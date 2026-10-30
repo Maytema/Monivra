@@ -102,7 +102,8 @@ function layersHtml() {
     .map((layer, i) => {
       const covered = i < uiState.layers.length - 1 ? 'inert aria-hidden="true"' : "";
       const handle = layer.kind === "sheet" ? '<div class="handle"></div>' : "";
-      return `<div class="overlay ${layer.kind}" data-layer="${i}" style="z-index:${10 + i * 2}" ${covered}><section class="panel" role="dialog" aria-modal="true" aria-label="${escapeHtml(translate(layer.title))}">${handle}${layer.fn()}</section></div>`;
+      const anchor = layer.anchor ? `;--x:${layer.anchor.x}px;--y:${layer.anchor.y}px` : "";
+      return `<div class="overlay ${layer.kind}" data-layer="${i}" style="z-index:${10 + i * 2}${anchor}" ${covered}><section class="panel" role="dialog" aria-modal="true" aria-label="${escapeHtml(translate(layer.title))}">${handle}${layer.fn()}</section></div>`;
     })
     .join("");
 }

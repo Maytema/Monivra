@@ -23,6 +23,7 @@ import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
 import { hintHtml } from "../ui/hint.js";
 import {
+  actionTileHtml,
   amountPicker,
   closeLayers,
   confirmAction,
@@ -232,12 +233,7 @@ function startFromAccount(options) {
 export function accountActions(a) {
   const n = accountBalance(a.id),
     available = a.type === "Regular" && a.limit > 0;
-  const act = (icon, label, tone, fn) =>
-    buttonHtml(
-      `<span class="account-action-icon" style="--tone:${tone}">${iconSvg(icon, 26)}</span><span>${translate(label)}</span>`,
-      fn,
-      "account-action-tile",
-    );
+  const act = actionTileHtml;
   const balance = (label, amount) =>
     `<div class="account-detail-label">${translate(label)}</div><div class="account-detail-money">${moneySpanHtml(amount, a.currency, false, true)}</div>`;
   openSheet(
@@ -250,7 +246,7 @@ export function accountActions(a) {
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),
         'aria-label="Favorite"',
-      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}</div><div class="account-actions-six" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
+      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
         "archive",
         a.archived ? "Return from archive" : "Move to archive",
         "#7d7886",

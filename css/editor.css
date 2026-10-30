@@ -116,10 +116,17 @@
   padding: 0px 14px 16px;
 }
 .picker-group-title {
-  font-size: 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 22px 6px 10px;
+  font-size: 15px;
   font-weight: 500;
-  padding: 12px 12px 6px;
-  color: var(--ink);
+  color: var(--ink-soft);
+}
+.picker-group-title:first-child {
+  padding-top: 6px;
 }
 .calc-tile {
   border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--line));

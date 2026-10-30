@@ -425,7 +425,7 @@
   padding: 6px 0;
 }
 
-/* Account action sheet: balance card and six action tiles */
+/* Action sheets of accounts and categories: header card and round action tiles */
 .account-detail-head {
   margin: 8px 4px 22px;
   padding: 16px 16px 18px;
@@ -465,13 +465,13 @@
   font-size: 28px;
   margin: 2px 0 8px;
 }
-.account-actions-six {
+.sheet-actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
   gap: 22px 8px;
   padding: 0 4px 22px;
 }
-.account-action-tile {
+.sheet-action {
   border: 0;
   background: transparent;
   display: flex;
@@ -482,7 +482,7 @@
   line-height: 1.2;
   text-align: center;
 }
-.account-action-icon {
+.sheet-action-icon {
   width: 56px;
   height: 56px;
   display: flex;
@@ -491,4 +491,41 @@
   border-radius: 14px;
   color: var(--tone);
   background: color-mix(in srgb, var(--tone) 18%, transparent);
+}
+
+.category-sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 4px 20px;
+}
+.category-sheet-head strong {
+  font-size: 24px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.category-sheet-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px 8px;
+  font-size: 20px;
+}
+.category-share {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 4px 26px;
+  font-size: 18px;
+}
+.category-share-bar {
+  flex: 1 1 0%;
+  height: 20px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  overflow: hidden;
+}
+.category-share-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 10px;
 }
