@@ -41,6 +41,7 @@
 }
 .empty-search {
   transform-box: fill-box;
+  transform-origin: center;
 }
 .empty-lens {
   fill: var(--bg, #fff);
@@ -101,12 +102,12 @@
   animation-delay: calc(0.3s + var(--i) * 0.25s + var(--elapsed, 0ms));
 }
 [data-play] .empty-search {
-  animation: empty-scan 2.6s ease-in-out backwards;
+  animation: empty-scan 3.4s ease-in-out backwards;
   animation-delay: calc(0.9s + var(--elapsed, 0ms));
 }
 [data-play] .empty-cross {
   animation: empty-found-nothing 0.4s ease-out backwards;
-  animation-delay: calc(3.1s + var(--elapsed, 0ms));
+  animation-delay: calc(4.4s + var(--elapsed, 0ms));
 }
 @keyframes empty-bar {
   from {
@@ -124,27 +125,50 @@
     stroke-dashoffset: 1;
   }
 }
-/* The lens fades in, goes over the paper line by line and finds nothing. */
+/* The lens drifts in, stops at a few spots like a person checking the paper (first line, the middle, the last line),
+   hovers with small corrections at each, then comes back to rest over the paper's corner. */
 @keyframes empty-scan {
   0% {
     opacity: 0;
-    transform: translate(-120px, -90px);
+    transform: translate(60px, -120px) rotate(6deg);
   }
-  12% {
+  9% {
     opacity: 1;
-    transform: translate(-110px, -90px);
+    transform: translate(40px, -98px) rotate(3deg);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.4, 1);
   }
-  32% {
-    transform: translate(-30px, -90px);
+  21% {
+    transform: translate(-58px, -84px) rotate(-3deg);
+  }
+  25% {
+    transform: translate(-64px, -79px) rotate(-2deg);
+  }
+  29% {
+    transform: translate(-71px, -85px) rotate(-4deg);
+    animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
+  }
+  41% {
+    transform: translate(-136px, 8px) rotate(2deg);
+  }
+  45% {
+    transform: translate(-141px, 15px) rotate(3deg);
   }
   50% {
-    transform: translate(-110px, -40px);
+    transform: translate(-131px, 11px) rotate(1deg);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1);
   }
-  70% {
-    transform: translate(-30px, -40px);
+  62% {
+    transform: translate(-146px, 76px) rotate(-3deg);
+  }
+  68% {
+    transform: translate(-139px, 82px) rotate(-1deg);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1);
+  }
+  86% {
+    transform: translate(9px, -6px) rotate(2deg);
   }
   100% {
-    transform: translate(0px, 0px);
+    transform: translate(0, 0) rotate(0deg);
   }
 }
 @keyframes empty-found-nothing {

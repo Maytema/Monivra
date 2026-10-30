@@ -139,7 +139,22 @@ export function periodTitle(period = uiState.period) {
     });
   if (period.mode === "year") return a.slice(0, 4);
   if (period.mode === "day") return dateLabel(a);
-  return dateLabel(a, true) + " – " + dateLabel(b, true);
+  return rangeLabel(a, b);
+}
+// Compact "26 Oct – 1 Nov" form that fits the period bar; the year appears only outside the current one.
+function rangeLabel(a, b) {
+  const thisYear = String(new Date().getFullYear());
+  const withYear = a.slice(0, 4) !== thisYear || b.slice(0, 4) !== thisYear;
+  if (appData.settings.dateFormat === "iso") {
+    const cut = (s) => (withYear ? s : s.slice(5));
+    return cut(a) + " – " + cut(b);
+  }
+  return new Intl.DateTimeFormat(dateLocale(), {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short",
+    ...(withYear ? { year: "numeric" } : {}),
+  }).formatRange(parseDate(a), parseDate(b));
 }
 // Does an operation pass the active filters?
 export function operationMatchesFilters(o, f = uiState.filters) {

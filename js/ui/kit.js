@@ -224,10 +224,6 @@ export function monthStartDialog(onDone) {
 function intervalNote(mode) {
   if (!["week", "today", "year", "month"].includes(mode)) return "";
   const period = { mode: mode === "today" ? "day" : mode, anchor: TODAY };
-  const [from, to] = periodBounds(period);
-  // A week inside one month reads "October 25 - 31".
-  if (mode === "week" && from.slice(0, 7) === to.slice(0, 7))
-    return `${dateLabel(from, true)} - ${Number(to.slice(8))}`;
   return periodTitle(period);
 }
 // Sheet for choosing the period mode and range.
@@ -825,7 +821,7 @@ function calculatorKeys(get, set, takeFresh, done) {
 /* Empty states: a small illustration with a title and a hint; it plays once, the first time it is shown. */
 const EMPTY_ILLUSTRATIONS = {
   // One sheet of paper rolled up at the top and the bottom, with a lens that finds nothing.
-  operations: `<svg class="empty-art" viewBox="-6 -6 342 342" aria-hidden="true"><g class="empty-paper"><path class="empty-edge" d="M263 6H96A48 48 0 0 0 48 54V128M48 138V143M48 171V270M266 67V262C266 300 252 328 238 328"/><path class="empty-roll" d="M263 6h40a25 25 0 0 1 25 25V67H263zM7 270H188C188 305 206 328 238 328H37A30 30 0 0 1 7 298z"/></g><path class="empty-line" style="--i:0" pathLength="1" d="M89 65H235"/><path class="empty-line" style="--i:1" pathLength="1" d="M89 115H208"/><path class="empty-line" style="--i:2" pathLength="1" d="M89 168H152"/><path class="empty-line" style="--i:3" pathLength="1" d="M89 220H152"/><g class="empty-search"><circle class="empty-lens" cx="259" cy="152" r="62"/><path class="empty-handle" d="m303 197 24 28"/><path class="empty-cross" d="m237 130 44 44m0-44-44 44"/></g></svg>`,
+  operations: `<svg class="empty-art" viewBox="-6 -6 342 342" aria-hidden="true"><g class="empty-paper"><path class="empty-edge" d="M270 6H96A48 48 0 0 0 48 54V128M48 149V150M48 170V275M266 40V262C266 300 252 328 238 328H200"/><path class="empty-roll" d="M262 2.5h41a25.5 25.5 0 0 1 25.5 25.5V67H262zM7 270H188C188 305 204 331.5 240 331.5H37A30 30 0 0 1 7 301.5z"/></g><path class="empty-line" style="--i:0" pathLength="1" d="M89 65H235"/><path class="empty-line" style="--i:1" pathLength="1" d="M89 115H208"/><path class="empty-line" style="--i:2" pathLength="1" d="M89 168H152"/><path class="empty-line" style="--i:3" pathLength="1" d="M89 220H152"/><g class="empty-search"><circle class="empty-lens" cx="259" cy="152" r="62"/><path class="empty-handle" d="m303 197 24 28"/><path class="empty-cross" d="m237 130 44 44m0-44-44 44"/></g></svg>`,
   statistics: `<svg class="empty-art" viewBox="0 0 120 120" aria-hidden="true"><rect class="bar" style="--i:0" x="10" y="80" width="12" height="20" rx="4"/><rect class="bar" style="--i:1" x="28" y="68" width="12" height="32" rx="4"/><rect class="bar" style="--i:2" x="46" y="56" width="12" height="44" rx="4"/><rect class="bar" style="--i:3" x="64" y="44" width="12" height="56" rx="4"/><rect class="bar" style="--i:4" x="82" y="32" width="12" height="68" rx="4"/><rect class="bar" style="--i:5" x="100" y="20" width="12" height="80" rx="4"/><path class="empty-arrow" pathLength="1" d="M12 52C40 54 70 30 106 4L93.0 4.9 106 4 101.1 16.0"/></svg>`,
 };
 // When each illustration was first shown (ms); the play class lasts while its animation runs.
