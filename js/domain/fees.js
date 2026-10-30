@@ -1,7 +1,7 @@
 /* Tax and commission: percent or fixed fees applied one after another to an amount */
 
 // Size of one fee in minor units (fractions kept), taken from the amount it is applied to.
-export function feeSize(fee, base) {
+function feeSize(fee, base) {
   return fee.percent > 0 ? (base * fee.percent) / 100 : fee.value * 100;
 }
 

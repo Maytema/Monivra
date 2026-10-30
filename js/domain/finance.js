@@ -30,7 +30,7 @@ export const accountBalance = (id) => {
     : 0;
 };
 // Exchange rate of a currency relative to the base currency.
-export const currencyRate = (c) => appData.rates[c] || 1;
+const currencyRate = (c) => appData.rates[c] || 1;
 
 // Convert a minor-unit amount between currencies.
 export const convertCurrency = (n, from, to) =>

@@ -16,6 +16,7 @@ import {
   parseDate,
   toIsoDate,
 } from "../domain/finance.js";
+import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { deleteOperation, processScheduled, putOperation } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { accountPicker, categoryPicker } from "./categories.js";
@@ -214,7 +215,7 @@ export function operationStart(options = {}, scheduled = false) {
     editing: !!d.id,
     compact: !!d.id,
   };
-  const openEditor = () => openSheet(() => operationView(p), "Add an operation");
+  const openEditor = () => openSheet(() => accountCalculatorView(p), "Add an operation");
   // An account-action choice is a separate state. No calculator layer exists
   // until a counterparty has actually been selected.
   if (!d.id && d.accountAction) {
@@ -415,11 +416,10 @@ function accountCalculatorView(p) {
       toast("Double-tap the calculator key to enable calculations");
       return;
     }
-    if (k === "⌫") assignExpr(String(currentExpr()).slice(0, -1) || "0");
-    else if (k === "C") assignExpr("0");
+    if (k === "⌫" || k === "C") assignExpr(typeKey(currentExpr(), k));
     else if (k === "=") {
       try {
-        const result = String(evaluateExpression(currentExpr()) / 100);
+        const result = typeKey(currentExpr(), k);
         if (dual && p.currencySide === "receive") {
           setReceiveExpr(result);
         } else {
@@ -432,11 +432,9 @@ function accountCalculatorView(p) {
         return;
       }
     } else {
-      const old = String(currentExpr());
       // After a computed result, a digit starts a new calculation; an operator continues it.
       const startNew = calcMode && p.scratchReady && /[0-9.]/.test(k);
-      const base = startNew ? "0" : old;
-      assignExpr((base === "0" && /[0-9]/.test(k) ? "" : base) + k);
+      assignExpr(typeKey(currentExpr(), k, startNew));
     }
     render();
   };
@@ -469,9 +467,7 @@ function accountCalculatorView(p) {
         )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", render), feeLabel(d, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", render), feeLabel(d, "commission"))}`,
       "Additionally",
     );
-  const nums3 = appData.settings.reverseKeys
-    ? ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    : ["7", "8", "9", "4", "5", "6", "1", "2", "3"];
+  const nums3 = keypadDigits();
   const grid = [
     "÷",
     ...nums3.slice(0, 3),
@@ -650,10 +646,6 @@ function accountCalculatorView(p) {
           )
           .join("")}</div>`
   }</div>`;
-}
-// Operation editor: one calculator form for every entry point (new, edit, scheduled).
-export function operationView(p) {
-  return accountCalculatorView(p);
 }
 // Sheet for choosing tags of an operation: several can be picked, "+ Add" creates a new one.
 export function tagsPicker(d) {

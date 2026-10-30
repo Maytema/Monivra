@@ -175,7 +175,7 @@ export function reminder(d) {
   );
 }
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
-export function scheduledCreate() {
+function scheduledCreate() {
   const setup = { date: TODAY, recur: null, reminder: null };
   const tiles = () =>
     openSheet(

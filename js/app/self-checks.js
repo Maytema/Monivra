@@ -13,6 +13,7 @@ import {
   overallBalance,
   reportRows,
 } from "../domain/finance.js";
+import { typeKey } from "../domain/keypad.js";
 import { nextDate, reorderedAccounts, validateOp } from "../domain/operations.js";
 
 // Built-in regression checks on sample data; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
@@ -42,6 +43,10 @@ function checkAll() {
   };
   test("Arithmetic precedence", () => evaluateExpression("12+3×4") === 2400);
   test("Decimal accuracy", () => evaluateExpression("0.1+0.2") === 30);
+  test("Keypad editing", () => {
+    const typed = ["7", "+", "⌫", "⌫"].reduce((expr, k) => typeKey(expr, k), "0");
+    return typed === "0" && typeKey("0", ".") === "0." && typeKey("12", "5", true) === "5";
+  });
   test("Reject division by zero", () => {
     try {
       evaluateExpression("1/0");

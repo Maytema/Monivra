@@ -21,6 +21,7 @@ import {
   periodTitle,
   toIsoDate,
 } from "../domain/finance.js";
+import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
 import { buttonHtml, iconButtonHtml, registerInput, textFieldHtml, toast } from "./primitives.js";
@@ -616,20 +617,14 @@ export function amountPicker(title, value, fn, allowNegative = false) {
   );
 }
 // Calculator keypad shared by all amount inputs.
-export function calculatorKeys(get, set, done) {
-  let nums = appData.settings.reverseKeys
-    ? ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    : ["7", "8", "9", "4", "5", "6", "1", "2", "3"];
+function calculatorKeys(get, set, done) {
+  const nums = keypadDigits();
   const press = (k) => {
-    if (k === "⌫") set(get().slice(0, -1) || "0");
-    else if (k === "C") set("0");
-    else if (k === "=") {
-      try {
-        set(String(evaluateExpression(get()) / 100));
-      } catch (e) {
-        toast(e.message);
-      }
-    } else set((get() === "0" && /[\d.]/.test(k) ? (k === "." ? "0" : "") : get()) + k);
+    try {
+      set(typeKey(get(), k));
+    } catch (e) {
+      toast(e.message);
+    }
     render();
   };
   const cells = [
