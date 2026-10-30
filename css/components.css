@@ -5,7 +5,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .topbar h1 {
-  font-size: 21px;
+  font-size: clamp(17px, 5.4vw, 21px);
   font-weight: 400;
   margin: 0px;
   text-align: center;
@@ -318,10 +318,17 @@
   padding-inline: 55px;
   box-sizing: border-box;
 }
+@media (max-width: 340px) {
+  .swipe-pane .period,
+  .pager-viewport .period {
+    padding-inline: 40px;
+  }
+}
 .pager-viewport .period {
   overflow: hidden;
   padding-inline: 55px;
 }
+
 .period .label {
   flex: 1 1 0%;
   text-align: center;
@@ -1842,6 +1849,8 @@
 .currency-sheet-close {
   display: grid;
   place-items: center;
+  min-width: 44px;
+  min-height: 44px;
 }
 .currency-sheet-search {
   height: 75px;
@@ -1856,6 +1865,8 @@
   display: grid;
   place-items: center;
   flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
 }
 .currency-sheet-scroll {
   overflow-y: auto;

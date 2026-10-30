@@ -130,9 +130,21 @@ export function dataView() {
   );
 }
 // The reason of a damaged backup as one short sentence for the person.
+// Headings of the backup sections, as the person sees them elsewhere in the app.
+const SECTION_NAMES = {
+  accounts: "Accounts",
+  categories: "Categories",
+  ops: "Operations",
+  tags: "Tags",
+  scheduled: "Scheduled payments",
+  budgets: "Budgets",
+  backups: "Backups",
+};
 function describeProblem({ what, number, reason }) {
   const text = translate(reason);
   if (what === "File") return text.charAt(0).toUpperCase() + text.slice(1);
+  if (SECTION_NAMES[number])
+    return `${translate(what)} «${translate(SECTION_NAMES[number])}»: ${text}`;
   return `${translate(what)} ${number || ""}`.trim() + ": " + text;
 }
 // Read a JSON backup; a damaged or foreign file is explained and refused.

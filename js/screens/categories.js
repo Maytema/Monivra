@@ -400,7 +400,7 @@ export function categoryEditView(p) {
         else categorySubMenu(p, c.id);
       },
       "cat-sub-chip-button",
-    )}${planned(c.id) ? `<small>→ ${escapeHtml({ moveSub: "Move to " + (categoryById(planned(c.id).target)?.name || ""), mergeSub: "Merge into " + (categoryById(planned(c.id).target)?.name || ""), promoteSub: "Make a category", archiveSub: "Move to archive", restoreSub: "Return from archive", deleteSub: "Delete" }[planned(c.id).mode] || "")}</small>` : ""}</div>`;
+    )}${planned(c.id) ? `<small>→ ${escapeHtml({ moveSub: translateWith("Move to {name}", { name: categoryById(planned(c.id).target)?.name || "" }), mergeSub: translateWith("Merge into {name}", { name: categoryById(planned(c.id).target)?.name || "" }), promoteSub: "Make a category", archiveSub: "Move to archive", restoreSub: "Return from archive", deleteSub: "Delete" }[planned(c.id).mode] || "")}</small>` : ""}</div>`;
   return (
     pageHeader(p.editing ? "Change category" : "New category") +
     `<div class="content cat-editor-content"><div class="cat-edit-form">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter the title")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${fieldButtonHtml("Type", (d.type === "expense" ? '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>' : '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>') + " " + translate(d.type === "expense" ? "Expenses" : "Incomes"), () => categoryTypePicker(d))}${fieldButtonHtml(
@@ -446,7 +446,7 @@ export function categoryEditView(p) {
       "cat-add-sub",
     )}${archived.length ? `<div class="cat-sub-heading cat-archive-heading">Archive</div>${archived.map(chip).join("")}` : ""}</div></div>${
       p.pending
-        ? `<div class="cat-scheduled">→ ${escapeHtml(p.pending.mode === "nest" ? "Nest into " + (categoryById(p.pending.target)?.name || "") : "Move into " + (categoryById(p.pending.target)?.name || ""))}${buttonHtml(
+        ? `<div class="cat-scheduled">→ ${escapeHtml(translateWith(p.pending.mode === "nest" ? "Nest into {name}" : "Move into {name}", { name: categoryById(p.pending.target)?.name || "" }))}${buttonHtml(
             "Cancel",
             () => {
               p.pending = null;

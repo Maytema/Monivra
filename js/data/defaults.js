@@ -31,7 +31,7 @@ export function createEmptyData() {
       currencyFirst: false,
       dateFormat: "month",
       monthStart: 1,
-      weekStart: 0,
+      weekStart: browserLanguage() === "ru" ? 1 : 0,
       navLabels: "always",
       bigAccounts: false,
       oneColumn: false,
