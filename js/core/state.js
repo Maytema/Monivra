@@ -39,7 +39,7 @@ export let uiState = {
   accountTab: "Accounts",
   catType: "expense",
   period: { mode: "month", anchor: TODAY },
-  archive: false,
+  openFolders: {},
   manageArchive: false,
   selected: [],
   selection: false,

@@ -612,8 +612,7 @@ export const russianStrings = {
   "Operations (CSV)": "Операции (CSV)",
   "Order of statistics blocks": "Порядок блоков статистики",
   "Other currencies": "Другие валюты",
-  "Owe me - Completed": "Мне должны — завершено",
-  "I owe - Completed": "Я должен — завершено",
+  Completed: "Завершённые",
   "PIN code": "PIN-код",
   "Payments, cloud sync and support messaging are not active in this beta.":
     "Платежи, облачная синхронизация и обращения в поддержку в этой бете не работают.",

@@ -124,16 +124,20 @@ let wasFinished = new Map();
 const celebratingUntil = new Map();
 const isFinished = (a) => {
   const p = accountProgress(a);
-  return !!p && p.kind !== "limit" && p.left <= 0;
+  return a.type === "Debt" ? accountBalance(a.id) === 0 : !!p && p.kind === "goal" && p.left <= 0;
 };
+// Finished accounts wait in the "Completed" folder; one that is celebrating stays in the list.
+const isCompleted = (a) => isFinished(a) && !((celebratingUntil.get(a.id) || 0) > Date.now());
 // Remember which accounts are finished; an account that just turned finished starts celebrating.
 function trackFinished() {
   const now = Date.now(),
     next = new Map();
   for (const a of appData.accounts) {
     const finished = isFinished(a);
-    if (finished && wasFinished.get(a.id) === false)
+    if (finished && wasFinished.get(a.id) === false) {
       celebratingUntil.set(a.id, now + CELEBRATION_MS);
+      setTimeout(render, CELEBRATION_MS + 50);
+    }
     next.set(a.id, finished);
   }
   wasFinished = next;
@@ -155,7 +159,7 @@ function accountLine(a) {
     progress = accountProgress(a),
     celebrate = (celebratingUntil.get(a.id) || 0) > Date.now();
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${celebrate ? confettiHtml() : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="account-top"><span class="name">${escapeHtml(a.name)}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span></span>${celebrate ? confettiHtml() : ""}`,
     () => accountActions(a),
     "account-row " + (appData.settings.bigAccounts ? "big " : "") + (celebrate ? "celebrate" : ""),
     `data-account="${a.id}"`,
@@ -173,19 +177,16 @@ export function accountsView() {
     uiState.accountTab === "Debts"
       ? live.filter((a) => a.type === "Debt")
       : live.filter((a) => a.type !== "Debt");
-  const groups =
-    uiState.accountTab === "Debts"
-      ? ["Owe me", "I owe", "Owe me - Completed", "I owe - Completed"]
-      : ["Regular", "Savings"];
+  const completed = list.filter(isCompleted),
+    open = list.filter((a) => !isCompleted(a));
+  const groups = uiState.accountTab === "Debts" ? ["Owe me", "I owe"] : ["Regular", "Savings"];
   let body =
     uiState.accountTab === "Total"
       ? accountTotals(live)
       : groups
           .map((type) => {
-            const rows = list.filter((a) =>
-              a.type === "Debt"
-                ? type === debtDirection(a) + (accountBalance(a.id) === 0 ? " - Completed" : "")
-                : a.type === type,
+            const rows = open.filter((a) =>
+              a.type === "Debt" ? type === debtDirection(a) : a.type === type,
             );
             if (!rows.length && type !== "Savings") return "";
             const total = rows.reduce(
@@ -196,7 +197,29 @@ export function accountsView() {
             return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type)}</span>${moneySpanHtml(total, appData.settings.currency, false, true)}</div>${rows.length ? `<div class="account-group">${rows.map(accountLine).join("")}</div>` : ""}`;
           })
           .join("");
-  if (!body) body = `<div class="empty">${translate("Empty")}</div>`;
+  if (!body && !completed.length) body = `<div class="empty">${translate("Empty")}</div>`;
+  // A folder row that unfolds a list of accounts: the archive or the finished goals and debts.
+  const folder = (title, icon, items, key) => {
+    const unfolded = !!uiState.openFolders[key];
+    if (!items.length) return "";
+    return (
+      buttonHtml(
+        `${iconSvg(icon, 18)} ${translate(title)} (${items.length}) ${iconSvg(unfolded ? "up" : "down", 14)}`,
+        () => {
+          uiState.openFolders = { ...uiState.openFolders, [key]: !unfolded };
+          render();
+        },
+        "accounts-archive-toggle",
+      ) +
+      (unfolded
+        ? `<div class="account-group archived-accounts">${items.map(accountLine).join("")}</div>`
+        : "")
+    );
+  };
+  const completedFolder =
+    uiState.accountTab === "Total"
+      ? ""
+      : folder("Completed", "check", completed, "completed-" + uiState.accountTab);
   return (
     hero() +
     tabsHtml(
@@ -206,18 +229,7 @@ export function accountsView() {
       "tabs account-tabs",
     ) +
     swipePane(
-      `<div class="content accounts-content">${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${
-        archived.length
-          ? buttonHtml(
-              `${iconSvg("archive", 18)} ${translate("Archive")} ${iconSvg(uiState.archive ? "up" : "down", 14)}`,
-              () => {
-                uiState.archive = !uiState.archive;
-                render();
-              },
-              "accounts-archive-toggle",
-            )
-          : ""
-      }${uiState.archive && archived.length ? `<div class="account-group archived-accounts">${archived.map(accountLine).join("")}</div>` : ""}</div>`,
+      `<div class="content accounts-content">${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${completedFolder}${folder("Archive", "archive", archived, "archive")}</div>`,
     )
   );
 }
@@ -378,7 +390,7 @@ function currencyChangeDialog(a, currency, done) {
   };
   openSheet(
     () =>
-      `<h2>${translate("Change account currency")}</h2><p>${translateWith("The account has a balance or operations. Convert all its amounts from {from} to {to} at the current rate, or keep the numbers and only change the currency?", { from: a.currency, to: currency })}</p>${buttonHtml("Convert at the current rate", pick(true), "primary")}${buttonHtml("Keep the numbers", pick(false), "outline")}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+      `<h2>${translate("Change account currency")}</h2><p>${translateWith("The account has a balance or operations. Convert all its amounts from {from} to {to} at the current rate, or keep the numbers and only change the currency?", { from: a.currency, to: currency })}</p>${buttonHtml("Keep the numbers", pick(false), "primary")}${buttonHtml("Convert at the current rate", pick(true), "outline")}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
     "Change account currency",
     "dialog",
   );

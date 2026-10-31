@@ -354,11 +354,22 @@
 .account-favorite.is-favorite {
   color: var(--accent-ink);
 }
+.account-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.account-top .name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .account-available {
-  display: block;
+  flex: 0 0 auto;
   color: var(--muted);
   font-size: 12px;
-  margin-top: 2px;
   font-weight: 400;
 }
 .account-type-choices {
