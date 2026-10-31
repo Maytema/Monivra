@@ -91,10 +91,28 @@ export const russianStrings = {
   "Account currency": "Валюта счёта",
   "Category currency": "Валюта категории",
   "Change account currency": "Смена валюты счёта",
-  "The account has a balance or operations. Convert all its amounts from {from} to {to} at the current rate, or keep the numbers and only change the currency?":
-    "У счёта есть остаток или операции. Пересчитать все суммы из {from} в {to} по текущему курсу или оставить числа как есть и только сменить валюту?",
-  "Convert at the current rate": "Пересчитать по курсу",
-  "Keep the numbers": "Оставить числа",
+  "Rate today: 1 {from} = {rate} {to}": "Курс сегодня: 1 {from} = {rate} {to}",
+  "Balance: {before} → {after}": "Баланс: {before} → {after}",
+  "{operations}: {before} → {after}": "{operations}: {before} → {after}",
+  "{n} operations taken": ["Списана {n} операция", "Списано {n} операции", "Списано {n} операций"],
+  "{name}: received {amount}": "{name}: получено {amount}",
+  "Change currency": "Сменить валюту",
+  "Convert everything at the current rate": "Пересчитать всё по текущему курсу",
+  "Convert everything: balance {after}": "Если пересчитать всё: баланс {after}",
+  "Important: how this works": "Важно: как это работает",
+  "Operations that took money from this account (expenses and transfers out) are recalculated at the rate above. The old amount stays under the operation as “was”.":
+    "Операции, которыми деньги списывались с этого счёта (расходы и переводы с него), пересчитываются по курсу выше. Прежняя сумма остаётся под операцией как «было».",
+  "A transfer out also changes what the other account received, so that account’s balance changes too.":
+    "Перевод со счёта меняет и сумму, которую получил другой счёт, поэтому остаток того счёта тоже меняется.",
+  "Income, transfers in, balance corrections and the opening balance keep their numbers and only get the new currency. That is why the balance can differ from the old one.":
+    "Доходы, переводы на счёт, корректировки остатка и начальный остаток сохраняют свои числа и лишь получают новую валюту. Поэтому остаток может отличаться от прежнего.",
+  "Category totals and statistics follow the new amounts.":
+    "Суммы категорий и статистика следуют за новыми суммами.",
+  "Changing the currency back recalculates the same operations again; the numbers return with small rounding differences.":
+    "Если вернуть прежнюю валюту, те же операции пересчитаются обратно; числа вернутся с небольшой погрешностью округления.",
+  "“Convert everything” converts every amount, so the balance is the old balance at the current rate.":
+    "«Пересчитать всё» переводит каждую сумму, поэтому баланс равен прежнему по текущему курсу.",
+  "was {amount}": "было {amount}",
   "Type of debt": "Тип долга",
   "Amount of debt": "Сумма долга",
   "Include in overall balance": "Включать в общий баланс",

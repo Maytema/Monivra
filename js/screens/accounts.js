@@ -16,12 +16,13 @@ import {
 import {
   accountHasRecords,
   changeAccountCurrency,
+  planCurrencyChange,
   deleteAccount,
   putOperation,
   toggleFavoriteAccount,
   validateOp,
 } from "../domain/operations.js";
-import { currencyName, translate, translateWith } from "../i18n/index.js";
+import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
@@ -379,31 +380,89 @@ export function saveAccount(p) {
   }
   const existing = accountById(d.id);
   if (existing && existing.currency !== d.currency && accountHasRecords(existing))
-    return currencyChangeDialog(existing, d.currency, (convert) => storeAccount(d, convert));
-  storeAccount(d, false);
+    return currencyChangeDialog(existing, d.currency, (mode) => storeAccount(d, mode));
+  storeAccount(d, "spent");
 }
-// Ask whether the amounts of an account follow when its currency changes.
+// Ask how an account changes its currency: recalculate what was spent (default) or convert all.
+// The sheet shows what each choice does to this account and to the accounts it sent money to.
 function currencyChangeDialog(a, currency, done) {
-  const pick = (convert) => () => {
+  let explain = false;
+  const money = (n, code) => formatMoney(n, code);
+  // The rate is quoted for one unit of the more valuable currency.
+  const ratio = appData.rates[a.currency] / appData.rates[currency],
+    quoted = ratio >= 1 ? [a.currency, currency, ratio] : [currency, a.currency, 1 / ratio];
+  const pick = (mode) => () => {
     closeLayers();
-    done(convert);
+    done(mode);
   };
+  const lines = (plan) => {
+    const rows = [
+      translateWith("Balance: {before} → {after}", {
+        before: money(plan.before, a.currency),
+        after: money(plan.after, currency),
+      }),
+    ];
+    if (plan.spentBefore !== plan.spentAfter)
+      rows.push(
+        translateWith("{operations}: {before} → {after}", {
+          operations: translateCount("{n} operation taken", "{n} operations taken", plan.taken),
+          before: money(plan.spentBefore, a.currency),
+          after: money(plan.spentAfter, currency),
+        }),
+      );
+    for (const [id, delta] of plan.others) {
+      const other = accountById(id);
+      rows.push(
+        translateWith("{name}: received {amount}", {
+          name: other.name,
+          amount: (delta > 0 ? "+" : "") + money(delta, other.currency),
+        }),
+      );
+    }
+    return `<ul class="currency-change-list">${rows.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>`;
+  };
+  const explanation = [
+    "Operations that took money from this account (expenses and transfers out) are recalculated at the rate above. The old amount stays under the operation as “was”.",
+    "A transfer out also changes what the other account received, so that account’s balance changes too.",
+    "Income, transfers in, balance corrections and the opening balance keep their numbers and only get the new currency. That is why the balance can differ from the old one.",
+    "Category totals and statistics follow the new amounts.",
+    "Changing the currency back recalculates the same operations again; the numbers return with small rounding differences.",
+    "“Convert everything” converts every amount, so the balance is the old balance at the current rate.",
+  ];
   openSheet(
-    () =>
-      `<h2>${translate("Change account currency")}</h2><p>${translateWith("The account has a balance or operations. Convert all its amounts from {from} to {to} at the current rate, or keep the numbers and only change the currency?", { from: a.currency, to: currency })}</p>${buttonHtml("Keep the numbers", pick(false), "primary")}${buttonHtml("Convert at the current rate", pick(true), "outline")}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+    () => {
+      const spent = planCurrencyChange(a.id, currency, "spent"),
+        all = planCurrencyChange(a.id, currency, "all");
+      return `<h2>${translate("Change account currency")}</h2><p class="currency-change-rate">${translateWith(
+        "Rate today: 1 {from} = {rate} {to}",
+        { from: quoted[0], rate: Number(quoted[2].toPrecision(6)), to: quoted[1] },
+      )}</p>${lines(spent)}${buttonHtml("Change currency", pick("spent"), "primary")}${buttonHtml("Convert everything at the current rate", pick("all"), "outline")}<p class="hint currency-change-hint">${translateWith(
+        "Convert everything: balance {after}",
+        { after: money(all.after, currency) },
+      )}</p>${buttonHtml(
+        `${iconSvg("info", 20)}<span>${translate("Important: how this works")}</span>`,
+        () => {
+          explain = !explain;
+          render();
+        },
+        "currency-change-info",
+        `aria-expanded="${explain}"`,
+      )}${explain ? `<div class="currency-change-explain">${explanation.map((t) => `<p>${translate(t)}</p>`).join("")}</div>` : ""}${buttonHtml("Cancel", () => closeLayers(), "outline")}`;
+    },
     "Change account currency",
     "dialog",
   );
 }
-// Store the validated draft; `convert` tells whether a currency change converts the amounts.
-function storeAccount(d, convert) {
+// Store the validated draft; `mode` is how a currency change treats the operations (see
+// `changeAccountCurrency`).
+function storeAccount(d, mode) {
   let old = accountById(d.id);
   if (old && old.currency !== d.currency) {
     // Fields the user did not touch follow the conversion; edited ones are taken as typed.
     const keys = ["balance", "goal", "limit", "totalDebt"],
       read = (a) => ({ ...a, balance: accountBalance(a.id) }),
       before = read(old);
-    changeAccountCurrency(old.id, d.currency, convert);
+    changeAccountCurrency(old.id, d.currency, mode);
     const after = read(old);
     for (const key of keys) if (d[key] === before[key]) d[key] = after[key];
   }

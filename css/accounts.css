@@ -610,3 +610,37 @@
   height: 100%;
   border-radius: 10px;
 }
+.currency-change-rate {
+  text-align: center;
+  color: var(--muted);
+  margin: 0px 0px 10px;
+}
+.currency-change-list {
+  margin: 0px 0px 12px;
+  padding: 12px 16px 12px 32px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg));
+  font-size: 15px;
+  line-height: 1.5;
+}
+.currency-change-hint {
+  margin: 0px 0px 8px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+.currency-change-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  color: var(--accent-ink);
+  font-size: 15px;
+}
+.currency-change-explain p {
+  margin: 0px 0px 8px;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: left;
+}

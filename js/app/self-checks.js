@@ -24,6 +24,7 @@ import {
 import { typeKey } from "../domain/keypad.js";
 import {
   changeAccountCurrency,
+  planCurrencyChange,
   changeMainCurrency,
   deleteCategory,
   nextDate,
@@ -481,24 +482,60 @@ function checkAll() {
         appData.budgets[0].categories.join() === "__c2"
       );
     }));
-  test("Changing an account currency converts the amounts or keeps the numbers", () =>
+  test("Currency change recalculates only what was spent, as the original does", () =>
     onCopy(() => {
       appData.ops = [];
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
+      const good = addAccount({ opening: 0 }),
+        card = addAccount({ opening: 0 }),
+        other = addAccount({ opening: 0 });
+      const op = (type, from, to, amount) =>
+        appData.ops.push({
+          id: "__o" + appData.ops.length,
+          type,
+          from: from?.id ?? null,
+          to: to?.id ?? null,
+          amount,
+          receive: type === "transfer" ? amount : undefined,
+          date: TODAY,
+          tags: [],
+          comment: "",
+        });
+      op("adjustment", null, good, 100000);
+      op("transfer", good, card, 50000);
+      op("expense", good, null, 20000);
+      op("transfer", other, good, 10000);
+      const plan = planCurrencyChange(good.id, "USD", "spent");
+      changeAccountCurrency(good.id, "USD", "spent");
+      return (
+        accountBalance(good.id) === 109300 &&
+        plan.after === 109300 &&
+        plan.others.get(card.id) === -49500 &&
+        accountBalance(card.id) === 500 &&
+        appData.ops[0].amount === 100000 &&
+        appData.ops[3].receive === 10000 &&
+        appData.ops[1].recalculated.amount === 50000
+      );
+    }));
+  test("Converting everything keeps the balance at the current rate; changing back restores", () =>
+    onCopy(() => {
+      appData.ops = [];
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
       const cash = addAccount({ opening: 100000 }),
         usd = addAccount({ currency: "USD", opening: 10000 });
       transfer(cash, usd, 87500);
       appData.ops.at(-1).receive = 1000;
-      const balance = accountBalance(usd.id);
-      changeAccountCurrency(usd.id, "EUR", false);
-      const kept = accountBalance(usd.id) === balance && accountById(usd.id).currency === "EUR";
-      changeAccountCurrency(usd.id, "USD", false);
-      changeAccountCurrency(usd.id, "EUR", true);
-      return (
-        kept &&
+      const plan = planCurrencyChange(usd.id, "EUR", "all");
+      changeAccountCurrency(usd.id, "EUR", "all");
+      const converted =
         accountById(usd.id).opening === convertCurrency(10000, "USD", "EUR") &&
         appData.ops.at(-1).receive === convertCurrency(1000, "USD", "EUR") &&
-        accountBalance(cash.id) === 100000 - 87500
-      );
+        plan.after === accountBalance(usd.id) &&
+        accountBalance(cash.id) === 100000 - 87500;
+      changeAccountCurrency(usd.id, "USD", "spent");
+      return converted && accountById(usd.id).currency === "USD";
     }));
   test("Main currency change carries categories and budget limits along", () =>
     onCopy(() => {
