@@ -50,7 +50,6 @@ import { statsSettings } from "../screens/statistics.js";
 import {
   amountPicker,
   closeLayers,
-  currencyPicker,
   goBack,
   goHome,
   iconPicker,
@@ -59,6 +58,7 @@ import {
   periodPicker,
   showInfo,
 } from "../ui/kit.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 import { actionHandlers, inputHandlers } from "../ui/primitives.js";
 
 window.Monivra = {

@@ -1,5 +1,6 @@
 /* Default data: settings, rates and the two ways to begin (empty or a basic set) */
 import { newId } from "../core/constants.js";
+import { defaultRates } from "./currencies.js";
 import { isSupportedLanguage, translate } from "../i18n/index.js";
 
 // Interface language of a new dataset: the browser language when supported.
@@ -51,23 +52,21 @@ export function createEmptyData() {
       hiddenValues: "Hide all",
       autoBackup: false,
       autoRates: false,
+      fixedRates: [],
+      currencySort: "groups",
       stats: ["flow", "scheduled", "bar", "average", "donut", "categories", "tags"],
     },
-    rates: {
-      KGS: 1,
-      USD: 87.5,
-      EUR: 98,
-      RUB: 1.05,
-      TJS: 8.2,
-      KZT: 0.18,
-      CNY: 12.2,
-      GBP: 117,
-      AUD: 57,
-      CAD: 63,
-      JPY: 0.59,
-      CHF: 105,
-    },
+    rates: defaultRates(),
   };
+}
+
+// Data of an older version or a file gets everything newer versions added: missing settings
+// and the rates of currencies it did not know. Values already present are kept.
+export function completeData(data) {
+  const fresh = createEmptyData();
+  data.settings = { ...fresh.settings, ...data.settings };
+  data.rates = { ...fresh.rates, ...data.rates };
+  return data;
 }
 
 const STARTER_ACCOUNTS = [

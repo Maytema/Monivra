@@ -758,7 +758,6 @@ export const russianStrings = {
   "Consider transfers from this account as incomes": "Считать переводы с этого счёта доходами",
   "Show this account among income categories": "Показывать этот счёт среди категорий доходов",
   "Close currency selection": "Закрыть выбор валюты",
-  "Title or code": "Название или код",
   "Clear search": "Очистить поиск",
   "Create a new category": "Создать новую категорию",
   "All categories (All subcategories)": "Все категории (все подкатегории)",
@@ -930,4 +929,17 @@ export const russianStrings = {
   Diagram: "Диаграмма",
   Charts: "Графики",
   Currency: "Валюта",
+  "Code, name or country": "Код, название или страна",
+  "No currencies found": "Валюты не найдены",
+  "Used first": "Сначала нужные",
+  "By name": "По названию",
+  "By code": "По коду",
+  Order: "Порядок",
+  "Do not update automatically": "Не обновлять автоматически",
+  "Tick a currency to keep its rate out of the automatic update. An edited rate is ticked automatically.":
+    "Отметьте валюту, чтобы её курс не менялся при автообновлении. Изменённый курс отмечается сам.",
+  "Restore example rates": "Вернуть примерные курсы",
+  "Every rate returns to its example value and the ticks are cleared.":
+    "Все курсы вернутся к примерным значениям, отметки будут сняты.",
+  "Rates restored": "Курсы восстановлены",
 };

@@ -1926,3 +1926,29 @@
   color: var(--muted);
   font-size: 13px;
 }
+.currency-sheet-name small {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.currency-sort {
+  display: flex;
+  gap: 8px;
+  padding: 10px 17px 6px;
+  flex: 0 0 auto;
+}
+.currency-sort-option {
+  flex: 1 1 0%;
+  min-height: 40px;
+  padding: 0px 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+.currency-sort-option.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}

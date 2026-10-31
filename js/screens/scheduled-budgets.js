@@ -17,7 +17,6 @@ import {
   calendar,
   closeLayers,
   confirmAction,
-  currencyPicker,
   finishFlow,
   numberFieldHtml,
   openPage,
@@ -26,6 +25,7 @@ import {
   pageHeader,
   periodBar,
 } from "../ui/kit.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 import {
   buttonHtml,
   fieldButtonHtml,

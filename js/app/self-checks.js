@@ -3,8 +3,11 @@ import { rootView } from "./shell.js";
 import { TODAY, deepClone } from "../core/constants.js";
 import { appData, firstLaunch, setAppData, setFirstLaunch, uiState } from "../core/state.js";
 import { parseCSV } from "../data/csv.js";
+import { CURRENCIES, defaultRates } from "../data/currencies.js";
+import { completeData } from "../data/defaults.js";
 import { createSampleData } from "../data/sample.js";
 import { isValidData } from "../data/storage.js";
+import { searchCurrencies } from "../domain/currency-search.js";
 import { applyFees } from "../domain/fees.js";
 import {
   accountBalance,
@@ -547,5 +550,31 @@ function checkAll() {
     parseCSV(
       'type,date,amount,currency,from,to,category,comment\nexpense,2026-10-12,1,KGS,Wallet,,Food,"a,b"',
     )[0].comment === "a,b");
+  test("Every currency has a positive fixed rate", () => {
+    const rates = defaultRates();
+    return CURRENCIES.length > 100 && CURRENCIES.every((c) => rates[c.code] > 0) && rates.KGS === 1;
+  });
+  test("Older data gets rates of new currencies and keeps its own", () => {
+    const old = { settings: {}, rates: { KGS: 1, USD: 90 } };
+    completeData(old);
+    return (
+      old.rates.USD === 90 &&
+      old.rates.JPY > 0 &&
+      old.rates.PLN > 0 &&
+      old.settings.fixedRates.length === 0
+    );
+  });
+  test("Currency search narrows by code and country as letters are typed", () => {
+    const one = searchCurrencies("k"),
+      two = searchCurrencies("kg");
+    return (
+      searchCurrencies("")[0] !== undefined &&
+      two[0] === "KGS" &&
+      two.length < one.length &&
+      one.includes("KGS") &&
+      searchCurrencies("japan")[0] === "JPY" &&
+      searchCurrencies("zzzz").length === 0
+    );
+  });
   return results;
 }

@@ -4,7 +4,7 @@ import { deepClone } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { csvText, prepareCSV } from "./csv.js";
-import { createEmptyData } from "./defaults.js";
+import { completeData, createEmptyData } from "./defaults.js";
 import { printReport } from "./report.js";
 import { findDataProblem, save } from "./storage.js";
 import { dataSnapshot } from "../domain/finance.js";
@@ -202,7 +202,7 @@ export function handleImport(text) {
       ),
       () => {
         const backups = deepClone(appData.backups);
-        setAppData(deepClone(data));
+        setAppData(completeData(deepClone(data)));
         appData.backups = backups;
         uiState.filters = {
           accounts: null,

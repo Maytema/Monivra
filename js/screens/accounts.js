@@ -31,7 +31,6 @@ import {
   amountPicker,
   closeLayers,
   confirmAction,
-  currencyPicker,
   finishFlow,
   goBack,
   goHome,
@@ -43,6 +42,7 @@ import {
   swipePane,
   tabsHtml,
 } from "../ui/kit.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 import {
   badgeHtml,
   buttonHtml,

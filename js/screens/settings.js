@@ -9,13 +9,13 @@ import { LANGUAGES, translate } from "../i18n/index.js";
 import { statsSettings } from "./statistics.js";
 import {
   closeLayers,
-  currencyPicker,
   monthStartDialog,
   openPage,
   openSheet,
   optionSheet,
   pageHeader,
 } from "../ui/kit.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 import { buttonHtml, menuRowHtml, toggleRowHtml } from "../ui/primitives.js";
 
 // Change a setting, persist it and re-render.

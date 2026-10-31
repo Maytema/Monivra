@@ -278,21 +278,6 @@ export const ICON_GROUPS = [
 export const APP_BUILD = "2026-10-30.6";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
-// Supported currencies: code, name, default rate and symbol.
-export const CURRENCIES = [
-  ["KGS", "Kyrgyzstani Som"],
-  ["USD", "US Dollar"],
-  ["EUR", "Euro"],
-  ["RUB", "Russian Ruble"],
-  ["TJS", "Tajik Somoni"],
-  ["KZT", "Kazakhstani Tenge"],
-  ["CNY", "Chinese Yuan"],
-  ["GBP", "British Pound"],
-  ["AUD", "Australian Dollar"],
-  ["CAD", "Canadian Dollar"],
-  ["JPY", "Japanese Yen"],
-  ["CHF", "Swiss Franc"],
-];
 // Colors of the application theme (4 × 4 as on the color theme page).
 export const THEME_COLORS = [
   "#c10000",

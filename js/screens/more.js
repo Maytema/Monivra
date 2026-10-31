@@ -1,21 +1,21 @@
 /* More tab, settings and info pages */
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
-import { APP_BUILD, CURRENCIES, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import { APP_BUILD, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
-import { currencyName, translate, translateWith } from "../i18n/index.js";
-import { setting, settingOptions, switchSetting } from "./settings.js";
+import { translate, translateWith } from "../i18n/index.js";
+import { ratesBody } from "./rates.js";
+import { settingOptions, switchSetting } from "./settings.js";
 import {
   closeLayers,
   confirmAction,
   goBack,
   goHome,
   numberFieldHtml,
-  numberPicker,
   openPage,
   openSheet,
   pageHeader,
@@ -178,42 +178,7 @@ export function settingsPage(kind) {
       break;
     case "rates":
       title = "Exchange rates";
-      body =
-        `<p class="demo-note">DEMO · Fixed example rates, editable locally. No market data.</p>` +
-        toggleRowHtml("Automatic rates", appData.settings.autoRates, () => {
-          setting("autoRates", !appData.settings.autoRates);
-          showInfo(
-            "DEMO: automatic exchange-rate updates need a network service. Values below stay unchanged.",
-          );
-        }) +
-        CURRENCIES.map(([id, name]) =>
-          menuRowHtml(
-            `${id} → KGS`,
-            "globe",
-            () =>
-              numberPicker(
-                "Exchange rate",
-                String(appData.rates[id]),
-                (v) => {
-                  const n = Number(v);
-                  if (!Number.isFinite(n) || n <= 0) {
-                    toast("Use a positive number");
-                    return false;
-                  }
-                  if (id === "KGS" && n !== 1) {
-                    toast("KGS is the base currency (1)");
-                    return false;
-                  }
-                  appData.rates[id] = n;
-                  save();
-                  render();
-                },
-                { decimal: true },
-              ),
-            currencyName(id, name),
-            String(appData.rates[id]),
-          ),
-        ).join("");
+      body = ratesBody();
       break;
   }
   return pageHeader(title) + `<div class="content flush">${body}</div>`;

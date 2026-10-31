@@ -1,6 +1,6 @@
 /* Application state: persistent data (appData) and UI state (uiState) */
 import { STORAGE_KEY, TODAY } from "./constants.js";
-import { createEmptyData } from "../data/defaults.js";
+import { completeData, createEmptyData } from "../data/defaults.js";
 import { isValidData } from "../data/storage.js";
 
 // Nothing is installed on the first launch: the welcome screen asks whether to start
@@ -15,8 +15,7 @@ try {
   } else {
     appData = JSON.parse(stored);
     if (!isValidData(appData)) appData = createEmptyData();
-    // Settings added by newer versions get their defaults.
-    appData.settings = { ...createEmptyData().settings, ...appData.settings };
+    completeData(appData);
   }
 } catch {
   appData = createEmptyData();

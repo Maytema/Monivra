@@ -3,7 +3,6 @@ import { wheelHtml, wheelValues } from "../app/color-wheel.js";
 import { render } from "../app/shell.js";
 import { isHex, shadesOf } from "../core/color.js";
 import {
-  CURRENCIES,
   ICON_GROUPS,
   PALETTE,
   QUICK_COLORS,
@@ -25,7 +24,7 @@ import {
   toIsoDate,
 } from "../domain/finance.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
-import { currencyName, currentLocale, translate } from "../i18n/index.js";
+import { currentLocale, translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
 import { buttonHtml, iconButtonHtml, registerInput, toast } from "./primitives.js";
 
@@ -402,84 +401,6 @@ export function rangeDialog(from, to, done) {
       )}</div>`,
     "Select range",
     "dialog",
-  );
-}
-// Sheet for choosing a currency with search.
-export function currencyPicker(value, fn) {
-  let q = "";
-  const majors = ["AUD", "GBP", "CAD", "CNY", "EUR", "JPY", "CHF", "USD"];
-  const symbols = {
-    KGS: "KGS",
-    USD: "$",
-    EUR: "€",
-    RUB: "₽",
-    TJS: "TJS",
-    KZT: "₸",
-    CNY: "CN¥",
-    GBP: "£",
-    AUD: "A$",
-    CAD: "CA$",
-    JPY: "¥",
-    CHF: "CHF",
-  };
-  const used = () =>
-    new Set([
-      appData.settings.currency,
-      ...appData.accounts.map((a) => a.currency),
-      ...appData.categories.map((c) => c.currency),
-    ]);
-  openSheet(
-    () => {
-      const matches = CURRENCIES.map(([id, english]) => [
-        id,
-        currencyName(id, english),
-        english,
-      ]).filter(([id, name, english]) =>
-        (id + " " + name + " " + english).toLowerCase().includes(q.toLowerCase()),
-      );
-      const selected = used();
-      const groups = [
-        ["Currencies used", matches.filter(([id]) => selected.has(id))],
-        ["Major currencies", matches.filter(([id]) => majors.includes(id))],
-        ["Other currencies", matches.filter(([id]) => !selected.has(id) && !majors.includes(id))],
-      ];
-      return `<div class="currency-sheet"><div class="currency-sheet-head">${buttonHtml(iconSvg("close", 27), () => closeLayers(), "currency-sheet-close", 'aria-label="Close currency selection"')}<h2>Select currency</h2><span></span></div><div class="currency-sheet-search"><span>${iconSvg("search", 23)}</span><input aria-label="Title or code" placeholder="Title or code" value="${escapeHtml(q)}" data-input="${registerInput(
-        (v) => {
-          q = v;
-          render();
-        },
-      )}">${buttonHtml(
-        iconSvg("close", 23),
-        () => {
-          q = "";
-          render();
-        },
-        "currency-sheet-clear",
-        'aria-label="Clear search"',
-      )}</div><div class="currency-sheet-scroll">${groups
-        .map(([label, items]) =>
-          items.length
-            ? `<h3>${label}</h3>${items
-                .map(([id, name]) =>
-                  buttonHtml(
-                    `<span class="currency-sheet-radio ${value === id ? "selected" : ""}"></span><span class="currency-sheet-name">${escapeHtml(name)}</span><span class="currency-sheet-symbol">${escapeHtml(symbols[id] || id)}</span>`,
-                    () => {
-                      closeLayers();
-                      fn(id);
-                    },
-                    "currency-sheet-row",
-                    `aria-label="${escapeHtml(name)} ${escapeHtml(id)}"`,
-                  ),
-                )
-                .join("")}`
-            : "",
-        )
-        .join(
-          "",
-        )}${!matches.length ? '<div class="empty">No currencies found</div>' : ""}</div></div>`;
-    },
-    "Select currency",
-    "full",
   );
 }
 // Sheet for choosing an icon and color for an account or category.

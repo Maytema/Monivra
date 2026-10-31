@@ -854,3 +854,58 @@
   display: grid;
   gap: 8px;
 }
+.rates-legend {
+  margin: 0px;
+  padding: 6px 17px 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.rates-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0px 17px 8px;
+  padding: 0px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.rates-search input {
+  flex: 1 1 0%;
+  min-width: 0px;
+  min-height: 46px;
+  border: 0px;
+  background: transparent;
+  font-size: 16px;
+}
+.rate-row {
+  display: flex;
+  align-items: center;
+}
+.rate-edit {
+  flex: 1 1 0%;
+  display: flex;
+  min-width: 0px;
+  padding: 10px 17px;
+  min-height: 60px;
+  text-align: left;
+}
+.rate-edit .sub {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+.rate-fixed {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  min-width: 56px;
+  min-height: 56px;
+}
+.rate-fixed .checkbox {
+  width: 23px;
+  box-sizing: border-box;
+}
+.content.flush > .demo-note {
+  padding: 10px 17px;
+}
