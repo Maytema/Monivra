@@ -8,6 +8,7 @@ import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
 import { translate, translateWith } from "../i18n/index.js";
+import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { GUIDES } from "./guides.js";
 import { ratesBody } from "./rates.js";
 import { settingOptions, switchSetting } from "./settings.js";
@@ -21,7 +22,6 @@ import {
   openSheet,
   pageHeader,
   showInfo,
-  timePicker,
 } from "../ui/kit.js";
 import {
   buttonHtml,
@@ -68,7 +68,12 @@ export function settingsPage(kind) {
       body =
         switchSetting("Notifications", "notifications") +
         switchSetting("Periodic reminders", "periodic") +
-        menuRowHtml("Time", null, () => timeDialog(), appData.settings.notificationTime) +
+        menuRowHtml(
+          "Time",
+          null,
+          () => timeDialog(),
+          timeLabel(appData.settings.notificationTime),
+        ) +
         settingOptions("Frequency", "notificationFrequency", [
           "Every day",
           "Weekdays",

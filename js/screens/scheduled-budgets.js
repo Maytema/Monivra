@@ -7,11 +7,20 @@ import {
   convertCurrency,
   dateLabel,
   formatMoney,
+  parseDate,
   periodBounds,
   reportRows,
 } from "../domain/finance.js";
-import { translate, translateCount } from "../i18n/index.js";
-import { multiSelect, opRow, operationsAddMenu, recurLabel, remainingLabel } from "./operations.js";
+import { translate } from "../i18n/index.js";
+import { feeLinesHtml } from "./fees.js";
+import {
+  multiSelect,
+  opRow,
+  operationsAddMenu,
+  recurLabel,
+  remainingLabel,
+  weekdayName,
+} from "./operations.js";
 import { recurrence, reminder, reminderLabel } from "./recurrence.js";
 import {
   amountPicker,
@@ -28,6 +37,8 @@ import {
 import { currencyPicker } from "../ui/currency-picker.js";
 import {
   buttonHtml,
+  badgeHtml,
+  fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
   menuRowHtml,
@@ -35,9 +46,22 @@ import {
   toast,
 } from "../ui/primitives.js";
 
-// Caption under a scheduled row: the repeat rule (or the plain date) and the reminder.
-const scheduleCaption = (o) =>
-  `<div class="recur-caption">${iconSvg(o.recur ? "repeat" : "calendar", 14)} ${escapeHtml(recurLabel(o.recur) + (o.recur ? remainingLabel(o.recur) : ""))}${o.reminder ? ` · ${iconSvg("bell", 14)} ${escapeHtml(reminderLabel(o.reminder))}` : ""}</div>`;
+// What goes under a scheduled row: fees with the net amount, the repeat rule and the reminder.
+function scheduleDetails(o) {
+  const line = (icon, text) =>
+    `<div class="detail-line">${icon}<span>${escapeHtml(text)}</span></div>`;
+  const rule = [
+    o.recur ? line(iconSvg("repeat", 18), recurLabel(o.recur) + remainingLabel(o.recur)) : "",
+    o.reminder ? line(iconSvg("bell", 18), reminderLabel(o.reminder)) : "",
+  ].join("");
+  return (
+    (o.fees?.length ? feeLinesHtml(o) : "") +
+    (rule ? `<div class="detail-lines accent-lines">${rule}</div>` : "")
+  );
+}
+// Day title of the list: the date and the day of the week.
+const dayTitle = (date) =>
+  `${dateLabel(date)}, ${weekdayName(parseDate(date).getUTCDay(), "long")}`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
   const setup = { date: TODAY, recur: null, reminder: null };
@@ -100,14 +124,17 @@ export function scheduledView() {
         ? dates
             .map(
               (date) =>
-                `<p class="scheduled-date">${escapeHtml(dateLabel(date))}</p>${sorted
+                `<p class="scheduled-date">${escapeHtml(dayTitle(date))}</p>${sorted
                   .filter((o) => o.date === date)
-                  .map((o) => opRow(o, true) + scheduleCaption(o))
+                  .map(
+                    (o) =>
+                      `<div class="scheduled-item">${opRow(o, true)}${scheduleDetails(o)}</div>`,
+                  )
                   .join("")}`,
             )
             .join("")
         : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", scheduledCreate, "primary")}</div>`
-    }</div>${dates.length ? buttonHtml(iconSvg("plus", 26), scheduledCreate, "fab no-nav", `aria-label="Add scheduled payment"`) : ""}`
+    }</div>${dates.length ? fabHtml("Add", scheduledCreate, "no-nav") : ""}`
   );
 }
 
@@ -133,29 +160,32 @@ export function budgetSpend(b) {
       0,
     );
 }
+// Names of the budget periods.
+const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
 // Budgets list page.
 export function budgetsView() {
   return (
-    pageHeader(
-      "Budgets",
-      iconButtonHtml("plus", "Create a budget", () => editBudget()),
-    ) +
+    pageHeader("Budgets") +
     periodBar() +
     `<div class="content">${
       appData.budgets.length
         ? appData.budgets
             .map((b) => {
-              let used = budgetSpend(b),
-                pct = b.amount ? (used / b.amount) * 100 : 0;
+              const used = budgetSpend(b),
+                share = b.amount ? Math.min(100, (used / b.amount) * 100) : 0,
+                left = b.amount - used;
+              const scope = b.categories
+                ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
+                : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
               return buttonHtml(
-                `<div style="display:flex;align-items:center;gap:12px"><span class="badge small">${iconSvg("budget")}</span><div class="grow"><strong>${escapeHtml(b.name)}</strong><div class="muted" style="font-size:12px;margin-top:5px">${b.categories ? translateCount("{n} category", "{n} categories", b.categories.length) : translate("Entire expenses")}</div></div>${iconSvg("right", 18)}</div><div class="stats-halves" style="margin-top:19px"><span>${formatMoney(used, b.currency)} <small>spent</small></span><span>${formatMoney(b.amount, b.currency)} <small>limit</small></span></div><div class="bar-track"><span style="width:${Math.min(100, pct)}%;background:${pct > 100 ? "var(--negative)" : "var(--accent)"}"></span></div><small>${Math.round(pct)}% · ${translate(b.period === "week" ? "Weekly" : b.period === "day" ? "Daily" : b.period === "year" ? "Yearly" : "Monthly")}</small>`,
+                `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="bar-track"><span style="width:${share}%"></span></span><span class="budget-foot"><span class="muted">${translate(BUDGET_PERIODS[b.period])}</span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span></span>`,
                 () => editBudget(b),
                 "card budget-card",
               );
             })
             .join("")
         : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
-    }</div>${appData.budgets.length ? buttonHtml(iconSvg("plus", 26), () => editBudget(), "fab no-nav", `aria-label="Create a budget"`) : ""}`
+    }</div>${appData.budgets.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
   );
 }
 
@@ -181,7 +211,7 @@ export function budgetView(p) {
     pageHeader(b.id ? "Edit budget" : "Create a budget") +
     `<div class="content"><div class="fields">${!b.id ? textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter a name") : ""}${fieldButtonHtml(
       "Time period",
-      translate({ day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" }[b.period]),
+      translate(BUDGET_PERIODS[b.period]),
       () =>
         optionSheet(
           "Time period",

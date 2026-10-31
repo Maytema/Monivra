@@ -587,10 +587,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--line);
+  border: 2px solid var(--accent);
   border-radius: 16px;
   font-size: 32px;
   letter-spacing: 1px;
+}
+/* The caret shows that the keys type into this field */
+.number-display::after {
+  content: "";
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  background: var(--accent);
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .number-display::after {
+    animation: none;
+  }
 }
 /* Amount sheet: the typed expression and a calculator keypad */
 .calc-readout {
@@ -633,11 +652,3 @@
   color: var(--muted);
 }
 /* Hours and minutes side by side */
-.time-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.time-fields .field {
-  margin: 0px;
-}

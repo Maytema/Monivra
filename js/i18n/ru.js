@@ -325,7 +325,6 @@ export const russianStrings = {
   "Accounts and categories": "Счета и категории",
   "Accounts, categories, operations, statistics and settings are being tested. Some features are demonstrations and may change before launch.":
     "Счета, категории, операции, статистика и настройки проходят проверку. Часть возможностей показана для примера и может измениться до выхода.",
-  "Add scheduled payment": "Добавить плановый платёж",
   "Additional questions": "Дополнительные вопросы",
   Additionally: "Дополнительно",
   Adjustment: "Корректировка",
@@ -435,8 +434,6 @@ export const russianStrings = {
   "Never show": "Никогда не показывать",
   "Exclude selected in accounts": "Исключить выбранные счета",
   "Exclude selected in categories": "Исключить выбранные категории",
-  Hours: "Часы",
-  Minutes: "Минуты",
   "Enter a valid time": "Введите корректное время",
   Biometrics: "Биометрия",
   Business: "Бизнес",
@@ -705,7 +702,6 @@ export const russianStrings = {
   "Previous period": "Предыдущий период",
   "Next period": "Следующий период",
   "Operation search": "Поиск операций",
-  "Add operation": "Добавить операцию",
   Pro: "Pro",
   "Include the account value in the total at the top of the application":
     "Учитывать сумму счёта в общем балансе вверху приложения",
@@ -788,6 +784,22 @@ export const russianStrings = {
     "Значение 0 можно использовать только для дней, но не для месяцев, недель или лет!",
   "The value 0 days means the reminder will be set on the same day as the scheduled payment.":
     "Значение 0 дней означает, что напоминание сработает в день запланированного платежа.",
+  Hour: "Час",
+  Minute: "Минута",
+  Dial: "Циферблат",
+  "Important information about setting a reminder": "Важная информация об установке напоминания",
+  "1) The reminder must not be set earlier than the current time, otherwise it will be shown immediately when it is set!":
+    "1) Напоминание нельзя установить на время раньше текущего, иначе оно будет показано сразу после установки!",
+  "For example: it is 6 pm now, you schedule a payment for tomorrow and set a reminder for it 1 day before at 3 pm. This time for the reminder would be 3 hours before the current time, which means the notification will be shown immediately when it is set.":
+    "Например: сейчас 18:00, вы планируете платёж на завтра и ставите напоминание за 1 день до него в 15:00. Это время было бы на 3 часа раньше текущего, поэтому уведомление будет показано сразу после установки.",
+  "2) The reminder must be set within the time frame between periodic payments, otherwise it will be shown immediately when it is set!":
+    "2) Напоминание нужно устанавливать в пределах промежутка между повторяющимися платежами, иначе оно будет показано сразу после установки!",
+  "For example: you set a scheduled payment to repeat once a week, but set a payment reminder a month before the payment, which means that the notification will be shown immediately after it is set and will repeat once a month, not once a week.":
+    "Например: вы запланировали платёж с повтором раз в неделю, но поставили напоминание за месяц до платежа. Тогда уведомление будет показано сразу после установки и будет повторяться раз в месяц, а не раз в неделю.",
+  "3) Be careful when setting a reminder by day when you want to set a reminder a month or a year before the payment!":
+    "3) Будьте внимательны, когда ставите напоминание в днях, а хотите, чтобы оно сработало за месяц или за год до платежа!",
+  "For example: you want to set a reminder a month before the payment, but instead of setting the period a month before, you set it 30 days before. In this case, some months can be either 28 days or 31 and the reminder will not be on the day you expected. If you want to set a reminder a month before, you should set it exactly a month before, without using days. The same is true for setting a reminder a year or years before.":
+    "Например: вы хотите напоминание за месяц до платежа, но вместо месяца указываете 30 дней. В некоторых месяцах 28 или 31 день, и напоминание придёт не в тот день, которого вы ждали. Чтобы напомнить за месяц, указывайте именно месяц, а не дни. То же верно для напоминания за год или несколько лет.",
   Decrease: "Уменьшить",
   Increase: "Увеличить",
   "{n} categories": ["{n} категория", "{n} категории", "{n} категорий"],
@@ -840,7 +852,6 @@ export const russianStrings = {
   "a category is not found": "категория не найдена",
   Operation: "Операция",
   "Scheduled payment": "Плановый платёж",
-  Budget: "Бюджет",
   "Incorrect PIN": "Неверный PIN",
   "PINs do not match": "PIN-коды не совпадают",
   "Set PIN": "Установить PIN",

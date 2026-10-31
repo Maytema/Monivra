@@ -45,9 +45,9 @@ function mountPeriodArrows(base, pane) {
 }
 
 // Shrink the floating "Add" button into a round button once the list is scrolled.
-function bindFabCollapse(pane) {
-  const fab = document.querySelector("#base > .fab");
-  const content = pane.querySelector(".content");
+function bindFabCollapse(base) {
+  const fab = base.querySelector(":scope > .fab-add");
+  const content = base.querySelector(".content");
   if (!fab || !content) return;
   const update = () => fab.classList.toggle("is-collapsed", content.scrollTop > 35);
   content.addEventListener("scroll", update, { passive: true });
@@ -56,13 +56,13 @@ function bindFabCollapse(pane) {
 
 // Build the fixed chrome after every render of a root screen.
 export function mountSwipeChrome() {
-  if (uiState.pages.length || uiState.layers.length) return;
   const base = document.getElementById("base");
+  if (base) bindFabCollapse(base);
+  if (uiState.pages.length || uiState.layers.length) return;
   const pane = base?.querySelector(".swipe-pane");
   if (!pane) return;
   mountTabUnderline(base);
   mountPeriodArrows(base, pane);
-  bindFabCollapse(pane);
 }
 
 // Horizontal swipe in a sheet with a strip of tabs (the "add operation" chooser and the

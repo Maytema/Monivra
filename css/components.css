@@ -519,8 +519,8 @@
 .pager-viewport .period-arrows {
   display: none;
 }
-.fab.no-nav {
-  bottom: 20px;
+#base > .fab.no-nav {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
 }
 .card {
   border: 1px solid var(--line);

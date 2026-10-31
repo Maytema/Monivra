@@ -1,7 +1,8 @@
 /* Tax and commission: menu labels, edit dialog, chips under the calculator */
 import { render } from "../app/shell.js";
+import { escapeHtml, iconSvg } from "../core/constants.js";
 import { applyFees, feeOfKind, setFee } from "../domain/fees.js";
-import { formatMoney } from "../domain/finance.js";
+import { accountById, formatMoney } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 import { closeLayers, numberFieldHtml, openSheet } from "../ui/kit.js";
 import { buttonHtml, iconButtonHtml, toggleRowHtml } from "../ui/primitives.js";
@@ -12,6 +13,31 @@ const KIND_TITLES = { tax: "Add tax", commission: "Add commission" };
 function feeSizeLabel(fee) {
   const size = fee.percent > 0 ? fee.percent + " %" : String(fee.value);
   return (fee.add ? "+" : "−") + size;
+}
+
+// Name of a fee with its size: "Tax (−1.5 %)".
+export const feeTitle = (fee) =>
+  `${translate(fee.kind === "tax" ? "Tax" : "Commission")} (${feeSizeLabel(fee)})`;
+
+// Lines under an operation with fees: every fee, then what is left for the account.
+export function feeLinesHtml(op) {
+  const { steps, net } = applyFees(op.amount, op.fees);
+  const account = accountById(op.from || op.to);
+  const currency = account?.currency;
+  const line = (icon, title, amount, tone = "") =>
+    `<div class="detail-line">${icon}<span class="grow">${title}</span><span class="${tone}">${formatMoney(amount, currency)}</span></div>`;
+  return `<div class="detail-lines fee-lines">${steps
+    .map(({ fee, delta }) =>
+      line(
+        iconSvg("link", 18),
+        escapeHtml(feeTitle(fee)),
+        Math.abs(delta),
+        delta < 0 ? "neg" : "pos",
+      ),
+    )
+    .join(
+      "",
+    )}${line(iconSvg(account?.icon || "wallet", 18), translate("Operation"), net, "muted")}</div>`;
 }
 
 // Short description shown under the menu row; "Turned off" when nothing is set.

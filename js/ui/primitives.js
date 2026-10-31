@@ -55,6 +55,14 @@ export const stepperHtml = (label, shown, step, edit) =>
 // Outlined button that shows the current choice of a list and opens the list.
 export const dropdownHtml = (shown, fn) =>
   buttonHtml(`<span>${translate(shown)}</span>${iconSvg("down", 20)}`, fn, "dropdown");
+// Floating "Add" button: the label folds away when the list under it is scrolled.
+export const fabHtml = (label, fn, extra = "") =>
+  buttonHtml(
+    iconSvg("plus", 26) + `<span class="fab-label"><span>${translate(label)}</span></span>`,
+    fn,
+    "fab fab-add " + extra,
+    `aria-label="${escapeHtml(translate(label))}"`,
+  );
 // Switch row (label, optional hint, on/off toggle).
 export const toggleRowHtml = (label, on, fn, hint = "") =>
   buttonHtml(

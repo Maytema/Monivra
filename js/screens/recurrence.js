@@ -1,12 +1,16 @@
 /* Dialogs of a scheduled payment: how it repeats and when it reminds */
 import { render } from "../app/shell.js";
 import { deepClone, MAX_INTERVAL } from "../core/constants.js";
-import { translateCount, translateWith } from "../i18n/index.js";
-import { closeLayers, numberPicker, openSheet, optionSheet, timePicker } from "../ui/kit.js";
+import { translate, translateCount, translateWith } from "../i18n/index.js";
+import { closeLayers, numberPicker, openSheet, optionSheet } from "../ui/kit.js";
+import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { buttonHtml, dropdownHtml, fieldButtonHtml, stepperHtml, toast } from "../ui/primitives.js";
 import { weekdayName } from "./operations.js";
 
 const UNITS = ["Days", "Weeks", "Months", "Years"];
+// The unit in the singular, as the list shows it after the number one.
+const SINGULAR = { Days: "Day", Weeks: "Week", Months: "Month", Years: "Year" };
+const unitName = (unit, n) => (n === 1 ? SINGULAR[unit] : unit);
 // Digits that fit into a number of a schedule.
 const DIGITS = { maxLength: 4 };
 // A count kept within the limits the saved data allows.
@@ -24,7 +28,7 @@ const interval = (n, unit) =>
 export const reminderLabel = (r) =>
   translateWith("{interval} before at {time}", {
     interval: interval(r.before, r.unit),
-    time: r.time,
+    time: timeLabel(r.time),
   });
 
 // Choice of the unit of time; `weekdays` tells that weeks can be narrowed to days of the week.
@@ -80,7 +84,7 @@ export function recurrence(d) {
             },
             DIGITS,
           ),
-      )}${dropdownHtml(r.unit, () =>
+      )}${dropdownHtml(unitName(r.unit, r.every), () =>
         unitDialog(
           r.unit,
           (unit) => {
@@ -132,6 +136,34 @@ function errorDialog(title, lines) {
   );
 }
 
+// The rules a reminder follows, with an example for each; the text of the information dialog.
+const REMINDER_RULES = [
+  [
+    "1) The reminder must not be set earlier than the current time, otherwise it will be shown immediately when it is set!",
+    "For example: it is 6 pm now, you schedule a payment for tomorrow and set a reminder for it 1 day before at 3 pm. This time for the reminder would be 3 hours before the current time, which means the notification will be shown immediately when it is set.",
+  ],
+  [
+    "2) The reminder must be set within the time frame between periodic payments, otherwise it will be shown immediately when it is set!",
+    "For example: you set a scheduled payment to repeat once a week, but set a payment reminder a month before the payment, which means that the notification will be shown immediately after it is set and will repeat once a month, not once a week.",
+  ],
+  [
+    "3) Be careful when setting a reminder by day when you want to set a reminder a month or a year before the payment!",
+    "For example: you want to set a reminder a month before the payment, but instead of setting the period a month before, you set it 30 days before. In this case, some months can be either 28 days or 31 and the reminder will not be on the day you expected. If you want to set a reminder a month before, you should set it exactly a month before, without using days. The same is true for setting a reminder a year or years before.",
+  ],
+];
+// Dialog that explains how a reminder behaves.
+const reminderInfo = () =>
+  openSheet(
+    () =>
+      `<h2>Important information about setting a reminder</h2><div class="dialog-body">${REMINDER_RULES.flat()
+        .map((text) => `<p>${translate(text)}</p>`)
+        .join(
+          "",
+        )}</div><div class="dialog-actions">${buttonHtml("OK", () => closeLayers(), "text-button")}</div>`,
+    "Important information about setting a reminder",
+    "dialog",
+  );
+
 // When a payment reminds: some days, weeks, months or years before it, at a time of day.
 export function reminder(d) {
   const r = deepClone(d.reminder || { before: 0, unit: "Days", time: "09:00" });
@@ -153,17 +185,17 @@ export function reminder(d) {
             },
             DIGITS,
           ),
-      )}${dropdownHtml(r.unit, () =>
+      )}${dropdownHtml(unitName(r.unit, r.before), () =>
         unitDialog(r.unit, (unit) => {
           r.unit = unit;
           render();
         }),
-      )}${fieldButtonHtml("At", r.time, () =>
+      )}${fieldButtonHtml("At", timeLabel(r.time), () =>
         timePicker(r.time, (time) => {
           r.time = time;
           render();
         }),
-      )}${actionsHtml(
+      )}${buttonHtml("Important information about setting a reminder", reminderInfo, "outline")}${actionsHtml(
         () => {
           d.reminder = null;
           closeLayers();

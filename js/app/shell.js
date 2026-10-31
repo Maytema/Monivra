@@ -1,5 +1,6 @@
 /* App shell: navigation, root view, rendering */
 import { bindTabSwipe, mountSwipeChrome } from "./chrome.js";
+import { initClockDial } from "./clock-dial.js";
 import { initColorWheel } from "./color-wheel.js";
 import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
@@ -163,6 +164,7 @@ export function render(top = false) {
   initOperationLongPress();
   initDragReorder();
   initColorWheel();
+  initClockDial();
   applyAppearance();
   // Restore scroll positions.
   const content = app.querySelector(".content");

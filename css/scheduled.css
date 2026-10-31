@@ -1,24 +1,8 @@
 /* Scheduled payments and budgets.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
-.stats-halves > div {
-  flex: 1 1 0%;
-}
-.stats-halves small {
-  display: block;
-  margin-bottom: 7px;
-}
 .right small {
   display: block;
   margin-top: 4px;
-}
-.bar-track > span {
-  display: block;
-  height: 100%;
-  border-radius: 10px;
-}
-.budget-card small {
-  display: block;
-  margin-top: 12px;
 }
 .add-item small {
   font-size: 13px;
@@ -83,47 +67,6 @@
   align-items: center;
   justify-content: space-between;
 }
-.stats-halves {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  text-align: center;
-  padding: 12px;
-}
-.bar-track {
-  height: 7px;
-  background: var(--soft);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 7px;
-  display: block;
-}
-.budget-card .bar-track {
-  margin: 15px 0px 10px;
-}
-.budget-card {
-  width: 100%;
-  padding: 15px 17px;
-}
-.scheduled-date {
-  text-align: center;
-  font-size: 14px;
-  margin-top: 20px;
-  margin: 17px 0px 9px;
-  padding: 14px 16px 0px;
-  font-weight: 500;
-}
-.recur-caption {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin: -4px 0px 12px 64px;
-  padding-left: 64px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: -7px;
-  margin-bottom: 12px;
-}
 .more-empty {
   text-align: center;
   max-width: 440px;
@@ -146,4 +89,98 @@
   background: var(--nav);
   font-weight: 500;
   text-align: center;
+}
+.scheduled-date {
+  margin: 20px 16px 8px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+/* Under a scheduled row: fees and the repeat rule, lined up with the text of the row */
+.scheduled-item {
+  margin-bottom: 8px;
+}
+.detail-lines {
+  margin: -4px 0px 8px 64px;
+  font-size: 14px;
+}
+.fee-lines {
+  padding: 6px 0px;
+  border-block: 1px solid var(--line);
+}
+.detail-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0px;
+}
+.accent-lines {
+  color: var(--accent-ink);
+}
+/* Budgets list */
+.budget-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+}
+.budget-title {
+  font-size: 18px;
+}
+.budget-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.budget-categories .badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.budget-categories .badge svg {
+  width: 18px;
+  height: 18px;
+}
+.budget-scope,
+.budget-sum {
+  font-size: 14px;
+}
+.bar-track {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--tint);
+  overflow: hidden;
+}
+.bar-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  background: var(--accent);
+}
+.budget-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.budget-left {
+  font-size: 17px;
+  color: var(--accent-ink);
+}
+.budget-left.neg {
+  color: var(--negative);
+}
+/* A dialog with long text: the text scrolls, the buttons stay in view */
+.overlay.dialog .panel:has(.dialog-body) {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 40px);
+}
+.dialog-body {
+  min-height: 0px;
+  overflow-y: auto;
 }

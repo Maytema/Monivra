@@ -365,7 +365,7 @@ export function calendar(value, done) {
   const view = { month: value.slice(0, 7), years: false };
   openSheet(
     () =>
-      `<small class="calendar-caption">${translate("Select date")}</small><h2>${escapeHtml(dateLabel(chosen))}</h2>${monthGridHtml(
+      `<small class="calendar-caption">${translate("Select date")}</small>${monthGridHtml(
         view,
         chosen,
         (date) => {
@@ -678,38 +678,6 @@ export function numberPicker(title, value, fn, options = {}) {
         text,
       )}`,
     title,
-  );
-}
-// Hours and minutes as two number fields; each opens the digit keypad.
-export const timeFieldsHtml = (hours, minutes, setHours, setMinutes) =>
-  `<div class="time-fields">${numberFieldHtml("Hours", hours, setHours, { maxLength: 2 })}${numberFieldHtml("Minutes", minutes, setMinutes, { maxLength: 2 })}</div>`;
-// "HH:MM" for typed hours and minutes, or null when they are not a time of day.
-export const clockText = (hours, minutes) =>
-  hours !== "" && minutes !== "" && Number(hours) <= 23 && Number(minutes) <= 59
-    ? `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`
-    : null;
-// Dialog for a time of day; `fn` gets "HH:MM".
-export function timePicker(time, fn) {
-  let [h, m] = time.split(":");
-  openSheet(
-    () =>
-      `<h2>${translate("Select time")}</h2>${timeFieldsHtml(
-        h,
-        m,
-        (v) => (h = v),
-        (v) => (m = v),
-      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
-        "OK",
-        () => {
-          const picked = clockText(h, m);
-          if (!picked) return toast("Enter a valid time");
-          fn(picked);
-          closeLayers();
-        },
-        "primary",
-      )}</div>`,
-    "Select time",
-    "dialog",
   );
 }
 // Form field that shows a number; tapping it opens the digit keypad sheet.
