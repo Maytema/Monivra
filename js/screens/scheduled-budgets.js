@@ -11,16 +11,10 @@ import {
   periodBounds,
   reportRows,
 } from "../domain/finance.js";
-import { translate } from "../i18n/index.js";
+import { currencyName, translate } from "../i18n/index.js";
+import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
-import {
-  multiSelect,
-  opRow,
-  operationsAddMenu,
-  recurLabel,
-  remainingLabel,
-  weekdayName,
-} from "./operations.js";
+import { opRow, operationsAddMenu, recurLabel, remainingLabel, weekdayName } from "./operations.js";
 import { recurrence, reminder, reminderLabel } from "./recurrence.js";
 import {
   amountPicker,
@@ -41,7 +35,6 @@ import {
   fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
-  menuRowHtml,
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
@@ -62,22 +55,31 @@ function scheduleDetails(o) {
 // Day title of the list: the date and the day of the week.
 const dayTitle = (date) =>
   `${dateLabel(date)}, ${weekdayName(parseDate(date).getUTCDay(), "long")}`;
+// A row of the "Select date" dialog; it is tinted while the rule is on.
+const tile = (icon, title, value, fn) =>
+  buttonHtml(
+    `${iconSvg(icon, 28)}<span class="grow"><small>${translate(title)}</small><span>${value ? escapeHtml(value) : translate("Turned off")}</span></span>`,
+    fn,
+    "schedule-tile " + (value ? "on" : ""),
+  );
+// "Wednesday, November 18": the date with its day of the week.
+const dateTitle = (date) =>
+  `${weekdayName(parseDate(date).getUTCDay(), "long")}, ${dateLabel(date, true)}`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
   const setup = { date: TODAY, recur: null, reminder: null };
   const tiles = () =>
     openSheet(
       () =>
-        `<h2>${translate("Select date")}</h2>${menuRowHtml(
-          "Date",
-          "calendar",
+        `<h2>${translate("Select date")}</h2><div class="schedule-tiles">${buttonHtml(
+          `${iconSvg("calendar", 36)}<span>${escapeHtml(dateTitle(setup.date))}</span>`,
           () =>
             calendar(setup.date, (v) => {
               setup.date = v;
               render();
             }),
-          dateLabel(setup.date),
-        )}${menuRowHtml("Recur", "repeat", () => recurrence(setup), setup.recur ? recurLabel(setup.recur) + remainingLabel(setup.recur) : "Turned off")}${menuRowHtml("Reminder", "bell", () => reminder(setup), setup.reminder ? reminderLabel(setup.reminder) : "Turned off")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+          "schedule-tile schedule-date on",
+        )}${tile("repeat", "Recur", setup.recur && recurLabel(setup.recur) + remainingLabel(setup.recur), () => recurrence(setup))}${tile("bell", "Reminder", setup.reminder && reminderLabel(setup.reminder), () => reminder(setup))}</div><div class="dialog-actions">${buttonHtml(
           "Complete",
           () => {
             closeLayers();
@@ -100,6 +102,24 @@ function scheduledCreate() {
     tiles();
   });
 }
+// Dialog with the order of the scheduled payments.
+function sortDialog() {
+  const row = (descending, icon, label) =>
+    buttonHtml(
+      `<input type="radio" tabindex="-1" ${!!uiState.scheduleDesc === descending ? "checked" : ""} aria-label="${translate(label)}">${iconSvg(icon, 24)}<span class="grow">${translate(label)}</span>`,
+      () => {
+        uiState.scheduleDesc = descending;
+        closeLayers();
+      },
+      "row",
+    );
+  openSheet(
+    () =>
+      `<h2>${translate("Sort by date")}</h2>${row(false, "arrowDown", "Ascending date")}${row(true, "arrowUp", "Descending date")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}</div>`,
+    "Sort by date",
+    "dialog",
+  );
+}
 // Scheduled payments page.
 export function scheduledView() {
   const sorted = [...appData.scheduled].sort((a, b) =>
@@ -109,15 +129,7 @@ export function scheduledView() {
   return (
     pageHeader(
       "Scheduled payments",
-      iconButtonHtml(
-        uiState.scheduleDesc ? "sortReverse" : "sort",
-        uiState.scheduleDesc ? "Latest payments first" : "Nearest payments first",
-        () => {
-          uiState.scheduleDesc = !uiState.scheduleDesc;
-          render();
-          toast(uiState.scheduleDesc ? "Latest payments first" : "Nearest payments first");
-        },
-      ),
+      iconButtonHtml(uiState.scheduleDesc ? "sortReverse" : "sort", "Sort by date", sortDialog),
     ) +
     `<div class="content">${
       dates.length
@@ -160,6 +172,8 @@ export function budgetSpend(b) {
       0,
     );
 }
+// Days a budget period lasts, as the calendar icon of the period says.
+const PERIOD_DAYS = { day: 1, week: 7, month: 30, year: 365 };
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
 // Budgets list page.
@@ -209,9 +223,9 @@ export function budgetView(p) {
   const b = p.draft;
   return (
     pageHeader(b.id ? "Edit budget" : "Create a budget") +
-    `<div class="content"><div class="fields">${!b.id ? textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter a name") : ""}${fieldButtonHtml(
+    `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
-      translate(BUDGET_PERIODS[b.period]),
+      `<span class="period-value"><span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[b.period]}</b></span>${translate(BUDGET_PERIODS[b.period])}</span>`,
       () =>
         optionSheet(
           "Time period",
@@ -231,33 +245,32 @@ export function budgetView(p) {
       "Categories",
       b.categories
         ? b.categories.map((id) => escapeHtml(categoryById(id)?.name || "")).join(", ")
-        : translate("Entire expenses"),
+        : translate("All categories"),
       () =>
-        multiSelect(
-          "Categories",
-          appData.categories.filter((c) => c.type === "expense"),
-          b.categories,
-          (v) => {
-            b.categories = v;
-            render();
-          },
-        ),
-    )}${fieldButtonHtml("Budget currency", escapeHtml(b.currency), () =>
+        categorySelect(b.categories, (v) => {
+          b.categories = v;
+          render();
+        }),
+      b.categories ? "(Entirely)" : "(Entire expenses)",
+    )}${fieldButtonHtml("Budget currency", escapeHtml(currencyName(b.currency)), () =>
       currencyPicker(b.currency, (v) => {
         b.currency = v;
         render();
       }),
-    )}${fieldButtonHtml("Budget amount", formatMoney(b.amount, b.currency), () =>
-      amountPicker(
-        "Budget amount",
-        b.amount,
-        (v) => {
-          b.amount = v;
-          render();
-        },
-        false,
-        b.currency,
-      ),
+    )}${buttonHtml(
+      `<span class="field-label">${translate("Budget")}</span><span class="value">${formatMoney(b.amount, b.currency)}</span>`,
+      () =>
+        amountPicker(
+          "Budget",
+          b.amount,
+          (v) => {
+            b.amount = v;
+            render();
+          },
+          false,
+          b.currency,
+        ),
+      "field inline",
     )}</div>${buttonHtml(
       b.id ? "Save" : "Create",
       () => {
