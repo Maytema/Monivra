@@ -486,10 +486,13 @@ function storeAccount(d, mode) {
     if (!Number.isSafeInteger(received) || received <= 0)
       return toast("Converted debt amount is too small");
   }
+  // The starting balance of a new account is an Adjustment operation, visible in the list and
+  // editable like any other; debts keep it as the opening balance.
+  const startsWithAdjustment = !old && d.type !== "Debt" && d.balance !== 0;
   const temp = {
     ...d,
     id: d.id || newId(),
-    opening: old ? old.opening : d.balance,
+    opening: old ? old.opening : startsWithAdjustment ? 0 : d.balance,
   };
   delete temp.balance;
   if (temp.type !== "Debt") delete temp.totalDebt;
@@ -497,7 +500,7 @@ function storeAccount(d, mode) {
   delete temp.counterpart;
   if (old) Object.assign(old, temp);
   else appData.accounts.push(temp);
-  if (old && change && !(d.createOperation && d.type === "Debt")) {
+  if ((old && change && !(d.createOperation && d.type === "Debt")) || startsWithAdjustment) {
     appData.ops.push({
       id: newId(),
       type: "adjustment",

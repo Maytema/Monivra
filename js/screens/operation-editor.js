@@ -271,9 +271,23 @@ function accountCalculatorView(p) {
     c = categoryById(d.category),
     isTransfer = d.type === "transfer";
   const isAdjustment = d.type === "adjustment";
-  const source = isAdjustment ? from || to : isTransfer ? from : d.type === "income" ? c : from,
+  // A balance correction has no real counterpart: "Adjustment" stands on the side the money comes
+  // from (a raise) or goes to (a cut) and can be replaced like any category or account.
+  const raise = isAdjustment && !!d.to,
+    adjustment = { name: "Adjustment", icon: "edit", color: "#94949c" };
+  const source = isAdjustment
+      ? raise
+        ? adjustment
+        : from
+      : isTransfer
+        ? from
+        : d.type === "income"
+          ? c
+          : from,
     target = isAdjustment
-      ? { name: "Adjustment", icon: "edit", color: "#94949c" }
+      ? raise
+        ? to
+        : adjustment
       : isTransfer
         ? to
         : d.type === "income"
@@ -286,16 +300,16 @@ function accountCalculatorView(p) {
       fn,
       "calc-tile",
     );
+  const chooseOwnAccount = () =>
+    accountPicker(d.from || d.to, (id) => {
+      if (d.to) d.to = id;
+      else d.from = id;
+      render();
+    });
   const chooseSource = () =>
-    isAdjustment
-      ? accountPicker(d.from || d.to, (id) => {
-          if (d.to) d.to = id;
-          else d.from = id;
-          render();
-        })
-      : counterpartyPicker("from", d);
+    isAdjustment && !raise ? chooseOwnAccount() : counterpartyPicker("from", d);
   const chooseTarget = () =>
-    isAdjustment ? toast("Adjustment is a balance correction") : counterpartyPicker("to", d);
+    isAdjustment && raise ? chooseOwnAccount() : counterpartyPicker("to", d);
   const calcMode = !!p.scratchMode;
   const primary = from || to,
     secondary = isAdjustment ? null : isTransfer ? to : c;
