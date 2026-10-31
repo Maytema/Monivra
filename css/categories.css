@@ -17,45 +17,10 @@
 .cat-edit-form input {
   min-height: 45px;
 }
-#base:has(.sum-tabs) > .sum-tabs button {
-  padding: 9px 3px;
-  border-radius: 12px;
-  font-size: 13px;
-  min-height: 65px;
-}
-:is(#base, .pager-viewport):has(.sum-tabs) .cat-tile .badge svg {
-  width: 23px;
-  height: 23px;
-}
-#base:has(.sum-tabs) > .sum-tabs .money {
-  font-size: 18px;
-  margin-top: 4px;
-}
-:is(#base, .pager-viewport):has(.sum-tabs) .cat-tile .money {
-  font-size: 13px;
+.sum-tabs .money {
   display: block;
-  white-space: nowrap;
-}
-:is(#base, .pager-viewport):has(.sum-tabs) .cat-tile .name {
-  font-size: 14px;
-  margin-bottom: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-}
-:is(#base, .pager-viewport):has(.sum-tabs) .cat-tile .badge {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  border-radius: 10px;
-}
-@media (max-width: 370px) {
-  :is(#base, .pager-viewport):has(.sum-tabs) .cat-tile .badge {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-  }
+  font-size: 21px;
+  margin-top: 7px;
 }
 .sum-tabs {
   display: flex;
@@ -73,22 +38,46 @@
     margin-right: 11px;
   }
 }
-#base:has(.sum-tabs) > .sum-tabs {
-  margin: 6px 15px 13px;
-  padding: 5px;
-  gap: 4px;
-  border-radius: 16px;
-  margin-bottom: 9px;
-}
-:is(#base, .pager-viewport):has(.sum-tabs) .cat-tile {
+/* Tile of a category: compact on the categories page; the pickers widen it in editor.css */
+.cat-tile {
   gap: 9px;
+  padding: 6px 7px;
   border-radius: 12px;
   min-height: 60px;
-  padding: 6px 7px;
+}
+.cat-tile .badge {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 10px;
+}
+.cat-tile .badge svg {
+  width: 23px;
+  height: 23px;
+}
+.cat-tile .name {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cat-tile .money {
+  display: block;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 @media (max-width: 370px) {
-  :is(#base, .pager-viewport):has(.sum-tabs) .cat-tile {
+  .cat-tile {
     gap: 6px;
+  }
+  .cat-tile .badge {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
   }
 }
 .cat-manage-archive {
