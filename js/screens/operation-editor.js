@@ -13,7 +13,6 @@ import {
   offRate,
   quoteRate,
   dateLabel,
-  defaultAccountId,
   evaluateExpression,
   parseDate,
   toIsoDate,
@@ -37,6 +36,7 @@ import {
   tabsHtml,
 } from "../ui/kit.js";
 import { currencyPicker } from "../ui/currency-picker.js";
+import { putAccountOnSide, putCategoryOnSide } from "../domain/sides.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -47,38 +47,6 @@ import {
   banner,
   toast,
 } from "../ui/primitives.js";
-
-/* The left block is where money comes from, the right block where it goes.
-   A category can only be a source (income) or a target (expense), never both,
-   so choosing one on a side puts an account on the opposite side. */
-// Put a category on the left (incoming) or right side of the operation.
-function chooseCategorySide(d, incoming, categoryId) {
-  d.category = categoryId;
-  d.type = incoming ? "income" : "expense";
-  if (incoming) {
-    d.from = null;
-    d.to = d.to || defaultAccountId();
-  } else {
-    d.to = null;
-    d.from = d.from || defaultAccountId();
-  }
-}
-// Put an account on the left or right side; the other side must be an account too.
-function chooseAccountSide(d, incoming, accountId) {
-  const other = incoming ? d.to : d.from;
-  d.type = "transfer";
-  d.category = null;
-  d.from = incoming
-    ? accountId
-    : other && other !== accountId
-      ? other
-      : defaultAccountId(accountId);
-  d.to = incoming
-    ? other && other !== accountId
-      ? other
-      : defaultAccountId(accountId)
-    : accountId;
-}
 
 // Choose a category or an account from the same sheet.
 function counterpartyPicker(direction, d, onChosen = null) {
@@ -107,7 +75,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
               incoming ? "income" : "expense",
               null,
               (c) => {
-                chooseCategorySide(d, incoming, c.id);
+                putCategoryOnSide(d, incoming, c.id);
                 done();
               },
               "counterparty-categories",
@@ -116,7 +84,7 @@ function counterpartyPicker(direction, d, onChosen = null) {
               appData.accounts.filter((a) => !a.archived && a.id !== (incoming ? d.to : d.from)),
               null,
               (a) => {
-                chooseAccountSide(d, incoming, a.id);
+                putAccountOnSide(d, incoming, a.id);
                 done();
               },
             )}</div>`

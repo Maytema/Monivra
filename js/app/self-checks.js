@@ -10,6 +10,7 @@ import { isValidData } from "../data/storage.js";
 import { searchCurrencies } from "../domain/currency-search.js";
 import { leadingSide } from "../domain/dual-amount.js";
 import { applyFees } from "../domain/fees.js";
+import { putAccountOnSide, putCategoryOnSide } from "../domain/sides.js";
 import {
   accountBalance,
   accountById,
@@ -100,6 +101,45 @@ function checkAll() {
       applyFees(1000, [fixed(50)]).net === 0 &&
       applyFees(10000, [pct(20, false), fixed(7)]).net === 7300 &&
       applyFees(10000, [fixed(7), pct(20, false)]).net === 7440
+    );
+  });
+  test("Choosing on one side of an operation changes only that side", () => {
+    const [a, b] = appData.accounts.filter((x) => !x.archived).map((x) => x.id);
+    const op = (fields) => ({ type: "expense", from: a, to: null, category: "c1", ...fields });
+    const replaced = op();
+    putAccountOnSide(replaced, true, b);
+    const other = op({ type: "income", from: null, to: a });
+    putAccountOnSide(other, false, b);
+    const toTransfer = op();
+    putAccountOnSide(toTransfer, false, b);
+    const flipped = op();
+    putCategoryOnSide(flipped, true, "c2");
+    const swapped = op({ type: "income", from: null, to: a });
+    putCategoryOnSide(swapped, false, "c2");
+    const sameSide = op();
+    putCategoryOnSide(sameSide, false, "c2");
+    return (
+      replaced.type === "expense" &&
+      replaced.from === b &&
+      replaced.to === null &&
+      replaced.category === "c1" &&
+      other.type === "income" &&
+      other.to === b &&
+      other.category === "c1" &&
+      toTransfer.type === "transfer" &&
+      toTransfer.from === a &&
+      toTransfer.to === b &&
+      toTransfer.category === null &&
+      flipped.type === "income" &&
+      flipped.to === a &&
+      flipped.from === null &&
+      flipped.category === "c2" &&
+      swapped.type === "expense" &&
+      swapped.from === a &&
+      swapped.to === null &&
+      sameSide.type === "expense" &&
+      sameSide.from === a &&
+      sameSide.category === "c2"
     );
   });
   test("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
