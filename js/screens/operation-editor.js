@@ -44,6 +44,7 @@ import {
   menuRowHtml,
   registerAction,
   registerInput,
+  banner,
   toast,
 } from "../ui/primitives.js";
 
@@ -274,7 +275,7 @@ export function commitOperation(p) {
     uiState.layers = [];
     save();
     render();
-    toast(p.scheduled ? "Payment scheduled" : "Operation saved");
+    p.scheduled ? banner("Payment scheduled", "calendar", "accent") : toast("Operation saved");
   } catch (e) {
     toast(e.message);
   }
@@ -649,7 +650,7 @@ function accountCalculatorView(p) {
                     processScheduled(d.id, false);
                     uiState.layers = [];
                     render();
-                    toast("Payment skipped");
+                    banner("Payment skipped", "circleCross", "negative");
                   },
                   false,
                   "Skip",
@@ -659,7 +660,7 @@ function accountCalculatorView(p) {
                 processScheduled(d.id, true);
                 uiState.layers = [];
                 render();
-                toast("Payment added");
+                banner("Payment added", "circleCheck", "positive");
               })
             : ""
         }</div>`

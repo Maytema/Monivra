@@ -9,6 +9,7 @@ import {
   formatMoney,
   parseDate,
   periodBounds,
+  periodTitle,
   reportRows,
 } from "../domain/finance.js";
 import { currencyName, translate } from "../i18n/index.js";
@@ -35,6 +36,7 @@ import {
   fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
+  meterHtml,
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
@@ -176,30 +178,50 @@ const periodIcon = (period) =>
   `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
-// Budgets list page.
+// A budget with what is spent of it in the period shown by the period bar.
+const budgetState = (b) => {
+  const used = budgetSpend(b);
+  return { b, used, left: b.amount - used, share: b.amount ? (used / b.amount) * 100 : 0 };
+};
+const budgetCard = ({ b, used, left, share }) => {
+  const scope = b.categories
+    ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
+    : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
+  return buttonHtml(
+    `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span>${meterHtml(share, left < 0)}<span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`,
+    () => editBudget(b),
+    "card budget-card",
+  );
+};
+// Budgets of one period under a heading that adds them up in the main currency.
+const budgetGroup = (period, states) => {
+  const main = appData.settings.currency;
+  const sum = (pick) =>
+    states.reduce((total, st) => total + convertCurrency(pick(st), st.b.currency, main), 0);
+  const left = sum((st) => st.left);
+  return `<section class="budget-group"><div class="budget-group-head"><span class="budget-group-name">${periodIcon(period)}<span class="grow"><strong>${translate(BUDGET_PERIODS[period])}</strong><small>${periodTitle({ mode: period, anchor: uiState.period.anchor || TODAY })}</small></span></span><span class="budget-group-sum"><small>${formatMoney(
+    sum((st) => st.used),
+    main,
+  )} / ${formatMoney(
+    sum((st) => st.b.amount),
+    main,
+  )}</small><strong class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
+};
+// Budgets list page: budgets grouped by period.
 export function budgetsView() {
+  const states = appData.budgets.map(budgetState);
   return (
     pageHeader("Budgets") +
     periodBar() +
     `<div class="content">${
-      appData.budgets.length
-        ? appData.budgets
-            .map((b) => {
-              const used = budgetSpend(b),
-                share = b.amount ? Math.min(100, (used / b.amount) * 100) : 0,
-                left = b.amount - used;
-              const scope = b.categories
-                ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
-                : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
-              return buttonHtml(
-                `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="bar-track"><span style="width:${share}%"></span></span><span class="budget-foot"><span class="muted">${translate(BUDGET_PERIODS[b.period])}</span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span></span>`,
-                () => editBudget(b),
-                "card budget-card",
-              );
-            })
+      states.length
+        ? Object.keys(BUDGET_PERIODS)
+            .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
+            .filter(({ list }) => list.length)
+            .map(({ period, list }) => budgetGroup(period, list))
             .join("")
         : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
-    }</div>${appData.budgets.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
+    }</div>${states.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
   );
 }
 

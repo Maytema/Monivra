@@ -222,26 +222,6 @@
     font-size: 15px;
   }
 }
-/* Progress meter: thin outline with a fill set a little inside it, like a charging cell */
-.meter {
-  --tone: var(--positive);
-  display: block;
-  box-sizing: border-box;
-  height: 12px;
-  padding: 2px;
-  border: 1.5px solid color-mix(in srgb, var(--tone) 75%, transparent);
-  border-radius: 999px;
-  box-shadow: 0 0 6px color-mix(in srgb, var(--tone) 28%, transparent);
-}
-.meter.owed {
-  --tone: color-mix(in srgb, var(--negative) 78%, var(--bg));
-}
-.meter i {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: var(--tone);
-}
 /* Celebration when a goal is reached or a debt is paid off */
 .account-row.celebrate {
   animation: celebrate-glow 1.3s ease-out;

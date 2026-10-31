@@ -90,9 +90,6 @@
 .info-card p {
   margin: 8px 0px 16px;
 }
-.support-form h2 {
-  font-size: 21px;
-}
 .account-editor-bottom button {
   width: 100%;
   min-height: 46px;
@@ -694,8 +691,7 @@
   color: var(--muted);
   font-size: 14px;
 }
-.guide,
-.support-form {
+.guide {
   padding: 24px 22px;
 }
 .guide h3 {
@@ -710,11 +706,6 @@
   margin: 0px;
   line-height: 1.5;
   color: var(--ink-soft);
-}
-.muted-text {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.5;
 }
 /* Color theme page: 4 × 4 circles */
 .theme-colors {
@@ -801,4 +792,38 @@
 }
 .content.flush > .demo-note {
   padding: 10px 17px;
+}
+/* Support topics: text on top, the notice under a line, the button at the bottom */
+.support-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 8px 20px 20px;
+  box-sizing: border-box;
+}
+.support-text p {
+  margin: 0px 0px 16px;
+  line-height: 1.5;
+}
+.support-text .outline {
+  width: 100%;
+}
+.support-notice {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.support-notice p {
+  margin: 0px 0px 8px;
+}
+.support-actions {
+  margin-top: auto;
+  padding-top: 24px;
+}
+.support-actions .primary {
+  width: 100%;
+  justify-content: center;
 }

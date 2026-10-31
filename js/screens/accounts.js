@@ -52,6 +52,7 @@ import {
   buttonHtml,
   fieldButtonHtml,
   iconButtonHtml,
+  meterHtml,
   registerInput,
   textFieldHtml,
   toast,
@@ -117,10 +118,7 @@ function percentLabel(percent) {
 }
 // A debt I still have to pay back is shown in a soft red, everything else in green.
 const isOwed = (p, a) => p.kind === "debt" && p.left > 0 && debtDirection(a) === "I owe";
-// Progress meter: a thin outlined track with the fill a little inside it.
-function meterHtml(p, a, extraClass = "") {
-  return `<span class="meter ${isOwed(p, a) ? "owed" : ""} ${extraClass}"><i style="width:${Math.max(0, p.percent)}%"></i></span>`;
-}
+const accountMeter = (p, a, cls) => meterHtml(p.percent, isOwed(p, a), cls);
 // Accounts that reached their goal or were paid off while the list was away get a short party.
 const CELEBRATION_MS = 1600;
 const CONFETTI_COLORS = ["var(--positive)", "var(--accent)", "#f2a313", "#e5384f", "#1f8fe0"];
@@ -163,7 +161,7 @@ function accountLine(a) {
     progress = accountProgress(a),
     celebrate = (celebratingUntil.get(a.id) || 0) > Date.now();
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span></span>${celebrate ? confettiHtml() : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${accountMeter(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span></span>${celebrate ? confettiHtml() : ""}`,
     () => accountActions(a),
     "account-row " + (appData.settings.bigAccounts ? "big " : "") + (celebrate ? "celebrate" : ""),
     `data-account="${a.id}"`,
@@ -292,7 +290,7 @@ function progressBlockHtml(a) {
   else if (p.left < 0) status = say("Goal exceeded by {amount}", -p.left);
   else status = translate("Goal reached");
   const title = { goal: "Goal", debt: "Total debt", limit: "Limit" }[p.kind];
-  return `<div class="account-progress ${isOwed(p, a) ? "owed" : ""}"><div class="account-progress-line"><span>${translate(title)} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div>${meterHtml(p, a, "sheet-meter")}${status ? `<div class="account-progress-left">${status}</div>` : ""}</div>`;
+  return `<div class="account-progress ${isOwed(p, a) ? "owed" : ""}"><div class="account-progress-line"><span>${translate(title)} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div>${accountMeter(p, a, "sheet-meter")}${status ? `<div class="account-progress-left">${status}</div>` : ""}</div>`;
 }
 // Action sheet shown when an account is tapped.
 export function accountActions(a) {

@@ -146,3 +146,16 @@
 .stats-card .stats-tag .money {
   font-size: 16px;
 }
+.bar-track {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--tint);
+  overflow: hidden;
+}
+.bar-track > span {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  background: var(--accent);
+}

@@ -389,13 +389,10 @@ export const russianStrings = {
   "View instructions": "Посмотреть инструкцию",
   "Browser biometrics are not connected in this preview":
     "Биометрия браузера в этой версии не подключена",
-  "Enter a message first": "Сначала введите сообщение",
   "Closed beta preview: no purchase will be made.":
     "Предпросмотр закрытой беты: покупка не будет совершена.",
   "DEMO: sharing requires a Monivra account and network service. No invitation is sent.":
     "Демо: для общего доступа нужны аккаунт Monivra и сетевой сервис. Приглашение не отправляется.",
-  "Your draft is saved only on this screen. Sending messages is not available in this offline beta.":
-    "Черновик сохраняется только на этом экране. Отправка сообщений в автономной бете недоступна.",
   Restore: "Восстановить",
   "Export data file": "Экспорт файла данных",
   "Reset demo data": "Сбросить демо-данные",
@@ -426,10 +423,6 @@ export const russianStrings = {
   "Category deleted": "Категория удалена",
   "Replace current demo data with this backup?": "Заменить текущие демо-данные этой копией?",
   "Delete this saved backup?": "Удалить эту сохранённую копию?",
-  "Tell us what you would like to see in Monivra.":
-    "Расскажите, что вы хотели бы видеть в Monivra.",
-  "Describe the feature you need help with.": "Опишите функцию, с которой нужна помощь.",
-  "Message preview": "Предпросмотр сообщения",
   "Replace all current local data with the initial demo?":
     "Заменить все локальные данные исходным демо?",
   "Use full sender account balance": "Использовать весь остаток счёта отправителя",
@@ -467,8 +460,6 @@ export const russianStrings = {
   "Closed Beta · 0.1.0": "Закрытая бета · 0.1.0",
   "Closed beta": "Закрытая бета",
   "Closed beta information": "О закрытой бете",
-  "Closed beta · No message is sent to a server.":
-    "Закрытая бета · сообщения на сервер не отправляются.",
   "Cloud sync, payments and account sign-in are not connected in this HTML preview. A future online version may process data differently.":
     "Облачная синхронизация, платежи и вход в аккаунт в этой версии не подключены. Будущая онлайн-версия может обрабатывать данные иначе.",
   Colors: "Цвета",
@@ -537,8 +528,6 @@ export const russianStrings = {
   "Hide balances": "Скрывать остатки",
   "Hide preview": "Скрыть предпросмотр",
   Icons: "Значки",
-  "If payments are introduced in a future release, refund instructions will be shown here.":
-    "Если в будущих версиях появятся платежи, инструкция по возврату будет показана здесь.",
   Immediately: "Сразу",
   "Import Monivra JSON": "Импорт JSON Monivra",
   "Import failed": "Не удалось импортировать",
@@ -610,15 +599,12 @@ export const russianStrings = {
   "Privacy in the current offline preview": "Приватность в текущей автономной версии",
   "Project status": "Статус проекта",
   Purchases: "Покупки",
-  "Purchases are disabled during the closed beta, so there are no Monivra payments to refund.":
-    "Во время закрытой беты покупки отключены, поэтому возвращать платежи Monivra не нужно.",
   Purpose: "Назначение",
   "Put money aside, with or without a goal — for a dream, a big purchase or a buffer for future events.":
     "Откладывайте деньги с целью или без — на мечту, крупную покупку или запас на будущее.",
   "Question on how to use": "Вопрос по использованию",
   "Reference date: 12 October 2026. The five main sections were rebuilt from sampled source frames. Exact fonts, animations and several external flows remain UNKNOWN.":
     "Опорная дата: 12 октября 2026. Пять основных разделов воссозданы по образцам. Точные шрифты, анимации и ряд внешних сценариев пока неизвестны.",
-  "Refund requests": "Запросы на возврат",
   "Remove photo": "Удалить фото",
   "Remove this tag from all operations?": "Убрать этот тег из всех операций?",
   "Rename tag": "Переименовать тег",
@@ -633,7 +619,6 @@ export const russianStrings = {
   "Report (PDF)": "Отчёт (PDF)",
   "Report a bug": "Сообщить об ошибке",
   "Request a feature": "Предложить функцию",
-  "Request a refund": "Запросить возврат",
   "Restore data file": "Восстановить из файла",
   "Sample accounts and categories": "Примеры счетов и категорий",
   "Sample data installed": "Примеры данных установлены",
@@ -899,11 +884,7 @@ export const russianStrings = {
     "Уведомления не работают, когда страница закрыта.",
   "DEMO: local files and backups remain readable. This is not a security boundary.":
     "Локальные файлы и копии остаются читаемыми. Это не защита данных.",
-  "Back to Support": "Назад в поддержку",
   Message: "Сообщение",
-  "Describe your message": "Опишите ваше сообщение",
-  "Describe what happened and how to reproduce it.": "Опишите, что произошло и как это повторить.",
-  "Write your message or feedback.": "Напишите сообщение или отзыв.",
   "Importing data may change your existing records. Export a backup first.":
     "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
   "Export a local file from this closed beta.": "Сохраните локальный файл из этой закрытой беты.",
@@ -982,4 +963,24 @@ export const russianStrings = {
   "Another question?": "Другой вопрос?",
   "Write to us in More → Support → Question on how to use.":
     "Напишите нам в «Ещё» → «Поддержка» → «Вопрос по использованию».",
+  "Please describe the problem in as much detail as possible. What steps do you take before the problem occurs? What results do you get and what do you expect?":
+    "Опишите проблему как можно подробнее. Какие шаги вы выполняете до её появления? Какой результат получаете и какого ожидаете?",
+  "Please attach screenshots or screen recordings to your message that demonstrate the issue. This will greatly help us understand and resolve the issue faster.":
+    "Приложите к сообщению скриншоты или записи экрана, показывающие проблему. Это сильно поможет нам понять и быстрее решить её.",
+  "Please describe your idea in as much detail as possible so that we can understand it better.":
+    "Опишите вашу идею как можно подробнее, чтобы мы лучше её поняли.",
+  "Attach sketches, examples, or any materials that could visually explain what exactly you want to see.":
+    "Приложите наброски, примеры или любые материалы, которые наглядно объяснят, что именно вы хотите увидеть.",
+  "If mathematical calculations are required, please attach information or sources that will help us better understand these calculations.":
+    "Если нужны математические расчёты, приложите сведения или источники, которые помогут нам лучше понять эти расчёты.",
+  "Before asking a question, please read the instructions explaining various aspects of using the app.":
+    "Прежде чем задать вопрос, прочитайте инструкции, в которых объясняются разные стороны работы с приложением.",
+  "If you still have questions after reading, please write to us.":
+    "Если после прочтения вопросы остались, напишите нам.",
+  "Write anything, in any volume. We will definitely read everything you send, regardless of the length of the letter!":
+    "Пишите что угодно и в любом объёме. Мы обязательно прочитаем всё, что вы пришлёте, независимо от длины письма!",
+  "You will be redirected to the email sending application.":
+    "Вы будете перенаправлены в приложение для отправки почты.",
+  "A correctly completed letter will help process your request faster.":
+    "Правильно составленное письмо поможет быстрее обработать ваш запрос.",
 };

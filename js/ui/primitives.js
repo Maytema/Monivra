@@ -10,6 +10,7 @@ export let inputHandlers = {};
 // Counter used to generate unique handler ids.
 export let handlerCounter = 0;
 let toastTimer = 0;
+let bannerTimer = 0;
 
 // Register a click handler and return the id to put in data-action.
 export const registerAction = (fn) => {
@@ -63,6 +64,21 @@ export const fabHtml = (label, fn, extra = "") =>
     "fab fab-add " + extra,
     `aria-label="${escapeHtml(translate(label))}"`,
   );
+// Message that slides down from the top edge; the icon and the tone say what happened.
+export function banner(s, icon, tone = "") {
+  if (isTestMode()) {
+    window.__toast = s;
+    return;
+  }
+  const el = document.getElementById("banner");
+  el.className = `show ${tone}`;
+  el.innerHTML = `${iconSvg(icon, 30)}<span>${escapeHtml(translate(s))}</span>`;
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => el.classList.remove("show"), 1800);
+}
+// Progress meter: a thin outlined track with the fill set a little inside it; `owed` tints it red.
+export const meterHtml = (percent, owed = false, cls = "") =>
+  `<span class="meter ${owed ? "owed" : ""} ${cls}"><i style="width:${Math.min(100, Math.max(0, percent))}%"></i></span>`;
 // Switch row (label, optional hint, on/off toggle).
 export const toggleRowHtml = (label, on, fn, hint = "") =>
   buttonHtml(

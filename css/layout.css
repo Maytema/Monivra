@@ -142,12 +142,44 @@
     translate 0.18s;
   translate: 0px 6px;
 }
+/* Banner over the top edge: icon and text on the sheet colour */
+#banner {
+  position: fixed;
+  top: 0px;
+  left: 50%;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  width: min(100%, 430px);
+  padding: 18px 20px;
+  background: var(--sheet);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--black) 14%, transparent);
+  pointer-events: none;
+  transform: translateX(-50%);
+  translate: 0px -110%;
+  transition: translate 0.22s;
+}
+#banner.show {
+  translate: 0px 0px;
+}
+#banner.positive svg {
+  color: var(--positive-ink);
+}
+#banner.negative svg {
+  color: var(--negative-ink);
+}
+#banner.accent svg {
+  color: var(--accent-ink);
+}
 /* Above the bottom navigation bar instead of over its labels */
 body:has(.navbar) #toast {
   bottom: 96px;
 }
 @media (prefers-reduced-motion: reduce) {
-  #toast {
+  #toast,
+  #banner {
     transition: none;
   }
 }

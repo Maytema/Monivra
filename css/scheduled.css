@@ -118,6 +118,28 @@
   color: var(--accent-ink);
 }
 /* Budgets list */
+.budget-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 4px 8px;
+}
+.budget-group-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.budget-group-name small,
+.budget-group-sum small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.budget-group-sum {
+  text-align: right;
+}
 .budget-card {
   display: flex;
   flex-direction: column;
@@ -148,26 +170,8 @@
 .budget-sum {
   font-size: 14px;
 }
-.bar-track {
-  display: block;
-  height: 14px;
-  border-radius: 7px;
-  background: var(--tint);
-  overflow: hidden;
-}
-.bar-track > span {
-  display: block;
-  height: 100%;
-  border-radius: 7px;
-  background: var(--accent);
-}
-.budget-foot {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-size: 13px;
-}
 .budget-left {
+  align-self: flex-end;
   font-size: 17px;
   color: var(--accent-ink);
 }

@@ -23,14 +23,7 @@ import {
   pageHeader,
   showInfo,
 } from "../ui/kit.js";
-import {
-  buttonHtml,
-  iconButtonHtml,
-  menuRowHtml,
-  textFieldHtml,
-  toast,
-  toggleRowHtml,
-} from "../ui/primitives.js";
+import { buttonHtml, iconButtonHtml, menuRowHtml, toast, toggleRowHtml } from "../ui/primitives.js";
 
 // More tab: menu with settings, data and info pages.
 export function moreView() {
@@ -299,6 +292,42 @@ export function lockView() {
   const keys = [..."123456789"].map(digit).join("") + biometrics + digit("0") + backspace;
   return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div><p class="footnote">DEMO interface lock</p></div></div>`;
 }
+// Topics of the Support page: the heading, the text of the page and the row icon.
+const SUPPORT_TOPICS = {
+  bugReport: {
+    title: "Report a bug",
+    icon: "help",
+    text: [
+      "Please describe the problem in as much detail as possible. What steps do you take before the problem occurs? What results do you get and what do you expect?",
+      "Please attach screenshots or screen recordings to your message that demonstrate the issue. This will greatly help us understand and resolve the issue faster.",
+    ],
+  },
+  featureRequest: {
+    title: "Request a feature",
+    icon: "help",
+    text: [
+      "Please describe your idea in as much detail as possible so that we can understand it better.",
+      "Attach sketches, examples, or any materials that could visually explain what exactly you want to see.",
+      "If mathematical calculations are required, please attach information or sources that will help us better understand these calculations.",
+    ],
+  },
+  usageQuestion: {
+    title: "Question on how to use",
+    icon: "help",
+    instructions: true,
+    text: [
+      "Before asking a question, please read the instructions explaining various aspects of using the app.",
+      "If you still have questions after reading, please write to us.",
+    ],
+  },
+  otherSupport: {
+    title: "Other",
+    icon: "help",
+    text: [
+      "Write anything, in any volume. We will definitely read everything you send, regardless of the length of the letter!",
+    ],
+  },
+};
 // Info pages: profile, subscription, support, instructions, about, terms and similar.
 export function simplePage(kind) {
   let title = "",
@@ -347,9 +376,6 @@ export function simplePage(kind) {
       .join(
         "",
       )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>Your feedback will help shape Monivra before its public release.</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div>`;
-  } else if (kind === "refund") {
-    title = "Request a refund";
-    body = `<div class="support-form"><h2>Refund requests</h2><p>Purchases are disabled during the closed beta, so there are no Monivra payments to refund.</p><p>If payments are introduced in a future release, refund instructions will be shown here.</p>${buttonHtml("Back to Support", () => goBack(), "outline")}</div>`;
   } else if (kind === "shared") {
     title = "Shared access";
     body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access</p></div>${buttonHtml("Invite", () => showInfo("DEMO: sharing requires a Monivra account and network service. No invitation is sent."), "primary")}`;
@@ -371,34 +397,13 @@ export function simplePage(kind) {
     body = `<div class="guide">${guide.sections.map(([heading, text]) => `<h3>${translate(heading)}</h3><p>${translate(text)}</p>`).join("")}</div>`;
   } else if (kind === "support") {
     title = "Support";
-    body = `${[
-      ["Request a refund", "refund"],
-      ["Report a bug", "bugReport"],
-      ["Request a feature", "featureRequest"],
-      ["Question on how to use", "usageQuestion"],
-      ["Other", "otherSupport"],
-    ]
-      .map(([label, key]) => menuRowHtml(label, "help", () => openPage(key)))
-      .join("")}`;
-  } else if (["bugReport", "featureRequest", "usageQuestion", "otherSupport"].includes(kind)) {
-    title = {
-      bugReport: "Report a bug",
-      featureRequest: "Request a feature",
-      usageQuestion: "Question on how to use",
-      otherSupport: "Other",
-    }[kind];
-    let message = "";
-    body = `<div class="support-form"><p class="muted-text">${kind === "bugReport" ? "Describe what happened and how to reproduce it." : kind === "featureRequest" ? "Tell us what you would like to see in Monivra." : kind === "usageQuestion" ? "Describe the feature you need help with." : "Write your message or feedback."}</p>${textFieldHtml("Message", "", (v) => (message = v), "Describe your message")}${buttonHtml(
-      "Continue",
-      () => {
-        if (!message.trim()) return toast("Enter a message first");
-        showInfo(
-          "Your draft is saved only on this screen. Sending messages is not available in this offline beta.",
-          "Message preview",
-        );
-      },
-      "primary",
-    )}${kind === "usageQuestion" ? buttonHtml("View instructions", () => openPage("instructions"), "outline") : ""}<p class="muted-text">Closed beta · No message is sent to a server.</p></div>`;
+    body = Object.entries(SUPPORT_TOPICS)
+      .map(([key, topic]) => menuRowHtml(topic.title, topic.icon, () => openPage(key)))
+      .join("");
+  } else if (kind in SUPPORT_TOPICS) {
+    const topic = SUPPORT_TOPICS[kind];
+    title = topic.title;
+    body = `<div class="support-page"><div class="support-text">${topic.text.map((t) => `<p>${translate(t)}</p>`).join("")}${topic.instructions ? buttonHtml("View instructions", () => openPage("instructions"), "outline") : ""}</div><div class="support-notice"><p>${translate("You will be redirected to the email sending application.")}</p><p>${translate("A correctly completed letter will help process your request faster.")}</p></div><div class="support-actions">${buttonHtml("Continue", () => (location.href = `mailto:?subject=${encodeURIComponent(translate(topic.title))}`), "primary")}</div></div>`;
   } else if (kind === "sampleData") {
     title = "Test data";
     const hasData = !!(appData.accounts.length || appData.categories.length || appData.ops.length);
