@@ -156,6 +156,11 @@ export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
     c.name,
   );
 }
+// How many operations and scheduled payments use a category or its sub-categories.
+function operationsUsing(id) {
+  const ids = [id, ...appData.categories.filter((c) => c.parent === id).map((c) => c.id)];
+  return [...appData.ops, ...appData.scheduled].filter((o) => ids.includes(o.category)).length;
+}
 // Open the category editor (new category when no argument is given).
 export function editCategory(c, parent = null) {
   openPage("categoryEdit", {
@@ -206,6 +211,7 @@ function categoryTarget(d, mode, p, subId = null) {
                   () => saveCategory(p, { mode, target: c.id }),
                   true,
                   "Confirm",
+                  { title: mode === "nest" ? "Nest into category?" : "Move into category?" },
                 );
                 return;
               }
@@ -218,40 +224,34 @@ function categoryTarget(d, mode, p, subId = null) {
     "Choose a category",
   );
 }
-// Sub-menu: schedule or add an operation for a sub-category.
+// Plan an action on a sub-category; it is applied when the category is saved. Merging and
+// converting ask first, because they cannot be undone afterwards.
 function categoryScheduleSub(p, id, mode, target = null) {
   const sub = appData.categories.find((c) => c.id === id);
   if (!sub) return;
-  const titles = {
-    moveSub: "Move to a category?",
-    mergeSub: "Merge into a subcategory?",
-    promoteSub: "Convert to a category?",
-  };
-  const descriptions = {
-    moveSub:
-      "This subcategory and its operations will be moved to the selected category. The change will be applied after you tap Save.",
-    mergeSub:
-      "The operations will be moved to the selected subcategory and this subcategory will be deleted. The change will be applied after you tap Save.",
-    promoteSub:
-      "This subcategory will become a standalone category, and its operations will be re-pointed to it directly. The change will be applied after you tap Save.",
-  };
-  if (mode === "archiveSub" || mode === "restoreSub") {
-    p.subActions = p.subActions || [];
+  const plan = () => {
+    p.subActions = (p.subActions || []).filter((a) => a.id !== id);
     p.subActions.push({ id, mode, target });
     render();
-    return;
-  }
-  confirmAction(
-    (titles[mode] || "Apply changes?") + " " + (descriptions[mode] || ""),
-    () => {
-      p.subActions = p.subActions || [];
-      p.subActions = p.subActions.filter((a) => a.id !== id);
-      p.subActions.push({ id, mode, target });
-      render();
+  };
+  const asks = {
+    mergeSub: {
+      title: "Merge into a subcategory?",
+      text: translateWith(
+        'All operations of this subcategory will be moved to "{name}", and this subcategory will be deleted.\n\nThe change will be applied after you tap "Save".',
+        { name: categoryById(target)?.name || "" },
+      ),
     },
-    false,
-    mode === "promoteSub" ? "Confirm" : "Schedule",
-  );
+    promoteSub: {
+      title: "Convert to a category?",
+      text: translate(
+        'This subcategory will become a standalone category, and its operations will be re-pointed to it directly.\n\nThe change will be applied after you tap "Save".',
+      ),
+    },
+  };
+  const ask = asks[mode];
+  if (ask) confirmAction(ask.text, plan, false, "Schedule", { title: ask.title, tone: "info" });
+  else plan();
 }
 // Action sheet for a sub-category.
 function categorySubMenu(p, id) {
@@ -332,12 +332,9 @@ export function saveCategory(p, relocate = null) {
     finishFlow("Category saved");
   };
   if ((p.subActions || []).some((a) => ["moveSub", "mergeSub", "promoteSub"].includes(a.mode)))
-    confirmAction(
-      "Apply changes? The planned actions on subcategories will be applied",
-      apply,
-      true,
-      "Confirm",
-    );
+    confirmAction("The planned actions on subcategories will be applied.", apply, true, "Confirm", {
+      title: "Apply changes?",
+    });
   else apply();
 }
 // Expense/income switch in the category editor.
@@ -471,7 +468,10 @@ export function categoryEditView(p) {
             "Delete",
             () =>
               confirmAction(
-                "All operations associated with the category will be deleted. This applies to both normal operations and scheduled ones. The category and transactions cannot be restored. If a category or subcategory was included in a budget, it will be removed from that budget.",
+                translateWith(
+                  "All operations ({n}) associated with the category will be removed. This applies to both normal operations and scheduled ones.\n\nThe category and transactions cannot be restored. If you only want to hide the category - select Move to archive.\n\nIf this category or subcategory was in the budget, it will be removed from there. If this was the only category in the budget, the budget will also be deleted.",
+                  { n: operationsUsing(d.id) },
+                ),
                 () => {
                   deleteCategory(d.id);
                   finishFlow("Category deleted");

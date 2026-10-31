@@ -83,6 +83,7 @@ export const ICONS = {
   shield: "m12 2 9 4v7c0 5-9 9-9 9S3 18 3 13V6z",
   help: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-3 6c0-5 8-3 6 1l-3 3v2m0 4h.1",
   info: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 8v7m0-10h.1",
+  warning: "M12 3 2 21h20L12 3zm0 6v6m0 3h.1",
   repeat: "M4 8h14l-4-4m6 12H6l4 4M4 8v5m16 3v-5",
   download: "M12 2v14m-5-5 5 5 5-5M3 18v4h18v-4",
   upload: "M12 17V3m-5 5 5-5 5 5M3 18v4h18v-4",

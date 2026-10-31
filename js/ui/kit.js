@@ -91,11 +91,14 @@ export function showInfo(message, title = "DEMO") {
   );
 }
 // Confirmation dialog with an optional "create backup first" checkbox.
-export function confirmAction(message, fn, backupOption = true, label = "Confirm") {
+// `look` sets the dialog title and its icon: a red warning (default) or a green notice (tone "info").
+export function confirmAction(message, fn, backupOption = true, label = "Confirm", look = {}) {
+  const title = look.title || "Are you sure?",
+    notice = look.tone === "info";
   let doBackup = false;
   openSheet(
     () =>
-      `<div style="text-align:center;color:var(--negative)">${iconSvg("info", 32)}</div><h2>${translate("Are you sure?")}</h2><p style="text-align:center">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
+      `<div style="text-align:center;color:var(${notice ? "--positive" : "--negative"})">${iconSvg(notice ? "info" : "warning", 32)}</div><h2>${translate(title)}</h2><p style="text-align:center;white-space:pre-line">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
         label,
         () => {
           if (doBackup) createBackup();
@@ -108,7 +111,7 @@ export function confirmAction(message, fn, backupOption = true, label = "Confirm
         },
         label === "Delete" ? "danger" : "primary",
       )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
-    "Are you sure?",
+    title,
     "dialog",
   );
 }

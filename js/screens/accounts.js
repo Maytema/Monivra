@@ -115,21 +115,55 @@ function percentLabel(percent) {
 const isOwed = (p, a) => p.kind === "debt" && p.left > 0 && debtDirection(a) === "I owe";
 // Progress meter: a thin outlined track with the fill a little inside it.
 function meterHtml(p, a, extraClass = "") {
-  return `<span class="meter ${isOwed(p, a) ? "owed" : ""} ${extraClass}"><i style="width:${p.percent}%"></i></span>`;
+  return `<span class="meter ${isOwed(p, a) ? "owed" : ""} ${extraClass}"><i style="width:${Math.max(0, p.percent)}%"></i></span>`;
+}
+// Accounts that reached their goal or were paid off while the list was away get a short party.
+const CELEBRATION_MS = 1600;
+const CONFETTI_COLORS = ["var(--positive)", "var(--accent)", "#f2a313", "#e5384f", "#1f8fe0"];
+let wasFinished = new Map();
+const celebratingUntil = new Map();
+const isFinished = (a) => {
+  const p = accountProgress(a);
+  return !!p && p.kind !== "limit" && p.left <= 0;
+};
+// Remember which accounts are finished; an account that just turned finished starts celebrating.
+function trackFinished() {
+  const now = Date.now(),
+    next = new Map();
+  for (const a of appData.accounts) {
+    const finished = isFinished(a);
+    if (finished && wasFinished.get(a.id) === false)
+      celebratingUntil.set(a.id, now + CELEBRATION_MS);
+    next.set(a.id, finished);
+  }
+  wasFinished = next;
+}
+// Pieces of confetti flying out of the middle of the row.
+function confettiHtml() {
+  const pieces = CONFETTI_COLORS.flatMap((color, c) =>
+    [0, 1, 2].map((k) => {
+      const angle = ((c * 3 + k) / 15) * Math.PI * 2,
+        reach = 46 + ((c + k) % 3) * 16;
+      return `<i style="--dx:${Math.round(Math.cos(angle) * reach * 1.6)}px;--dy:${Math.round(Math.sin(angle) * reach * 0.6)}px;--r:${(c * 3 + k) * 67}deg;--c:${color};--d:${k * 60}ms"></i>`;
+    }),
+  );
+  return `<span class="confetti" aria-hidden="true">${pieces.join("")}</span>`;
 }
 // One row in the accounts list.
 function accountLine(a) {
   const n = accountBalance(a.id),
-    progress = accountProgress(a);
+    progress = accountProgress(a),
+    celebrate = (celebratingUntil.get(a.id) || 0) > Date.now();
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${celebrate ? confettiHtml() : ""}`,
     () => accountActions(a),
-    "account-row " + (appData.settings.bigAccounts ? "big" : ""),
+    "account-row " + (appData.settings.bigAccounts ? "big " : "") + (celebrate ? "celebrate" : ""),
     `data-account="${a.id}"`,
   );
 }
 // Accounts tab.
 export function accountsView() {
+  trackFinished();
   const live = appData.accounts.filter((a) => !a.archived),
     archived = appData.accounts.filter((a) => a.archived),
     hasDebts = live.some((a) => a.type === "Debt"),
@@ -233,19 +267,14 @@ function progressBlockHtml(a) {
   const p = accountProgress(a);
   if (!p) return "";
   const money = (n) => formatMoney(n, a.currency);
-  const status = {
-    goal:
-      p.left > 0
-        ? translateWith("Left: {amount}", { amount: money(p.left) })
-        : p.left < 0
-          ? translateWith("Goal exceeded by {amount}", { amount: money(-p.left) })
-          : translate("Goal reached"),
-    debt:
-      p.left > 0
-        ? translateWith("Left to repay: {amount}", { amount: money(p.left) })
-        : translate("Debt repaid"),
-    limit: "",
-  }[p.kind];
+  const say = (text, amount) => translateWith(text, { amount: money(amount) });
+  let status;
+  if (p.kind === "limit") status = say("Used: {amount}", p.used);
+  else if (p.kind === "debt")
+    status = p.left > 0 ? say("Left to repay: {amount}", p.left) : translate("Debt repaid");
+  else if (p.left > 0) status = say("Left: {amount}", p.left);
+  else if (p.left < 0) status = say("Goal exceeded by {amount}", -p.left);
+  else status = translate("Goal reached");
   const title = { goal: "Goal", debt: "Total debt", limit: "Limit" }[p.kind];
   return `<div class="account-progress ${isOwed(p, a) ? "owed" : ""}"><div class="account-progress-line"><span>${translate(title)} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div>${meterHtml(p, a, "sheet-meter")}${status ? `<div class="account-progress-left">${status}</div>` : ""}</div>`;
 }

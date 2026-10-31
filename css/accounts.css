@@ -222,7 +222,8 @@
   min-width: 24px;
 }
 .account-pct {
-  flex: 0 0 3.7em;
+  flex: 0 0 auto;
+  min-width: 3.7em;
   font-size: 18px;
   text-align: right;
   color: var(--ink-soft);
@@ -252,6 +253,56 @@
   height: 100%;
   border-radius: 999px;
   background: var(--tone);
+}
+/* Celebration when a goal is reached or a debt is paid off */
+.account-row.celebrate {
+  animation: celebrate-glow 1.3s ease-out;
+}
+.confetti {
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.confetti i {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--c);
+  opacity: 0;
+  animation: confetti-fly 1.1s ease-out var(--d) both;
+}
+@keyframes celebrate-glow {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive) 60%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}
+@keyframes confetti-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(0.6);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-row.celebrate {
+    animation: none;
+  }
+  .confetti {
+    display: none;
+  }
 }
 .sheet-meter {
   height: 16px;

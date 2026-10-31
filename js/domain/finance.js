@@ -36,19 +36,21 @@ export function debtDirection(a) {
   return balance < 0 ? "I owe" : balance > 0 ? "Owe me" : a.debt;
 }
 // Progress of an account towards its target: the goal of a savings account, the repayment of a
-// debt, or the part of a card limit that is still available. `left` is what remains (negative for
-// savings that went past the goal); `percent` is cut, not rounded, so an unfinished target never
-// shows 100. Null when there is no target.
+// debt, or the part of a card limit that is already used. `left` is what remains (negative for
+// savings that went past the goal; for a card, what is still available). `percent` is cut, not
+// rounded, so an unfinished target never shows 100, and it goes below zero when the balance does.
+// Null when there is no target.
 export function accountProgress(a) {
   const balance = accountBalance(a.id),
-    cut = (share) => Math.max(0, Math.min(99.99, Math.floor(share * 10000) / 100));
+    cut = (share) => Math.min(99.99, Math.floor(share * 10000) / 100);
   if (a.type === "Regular" && a.limit > 0) {
-    const left = Math.max(0, balance + a.limit);
+    const used = Math.max(0, -balance);
     return {
       kind: "limit",
       target: a.limit,
-      left,
-      percent: left >= a.limit ? 100 : cut(left / a.limit),
+      left: Math.max(0, a.limit - used),
+      used,
+      percent: used >= a.limit ? 100 : cut(used / a.limit),
     };
   }
   let target, left, done;

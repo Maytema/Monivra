@@ -86,6 +86,7 @@ export const russianStrings = {
   "Goal exceeded by {amount}": "Цель превышена на {amount}",
   "Goal reached": "Цель достигнута",
   "Debt repaid": "Долг выплачен",
+  "Used: {amount}": "Потрачено: {amount}",
   "Account type": "Тип счёта",
   "Account currency": "Валюта счёта",
   "Category currency": "Валюта категории",
@@ -328,8 +329,16 @@ export const russianStrings = {
   "{n} accounts and categories will be created.": "Будет создано счетов и категорий: {n}.",
   "{n} duplicates are skipped.": "Повторы будут пропущены: {n}.",
   "Apply changes?": "Применить изменения?",
-  "Apply changes? The planned actions on subcategories will be applied":
-    "Применить изменения? Запланированные действия с подкатегориями будут выполнены",
+  "Nest into category?": "Вложить в категорию?",
+  "Move into category?": "Перенести в категорию?",
+  "The planned actions on subcategories will be applied.":
+    "Запланированные действия с подкатегориями будут выполнены.",
+  'All operations of this subcategory will be moved to "{name}", and this subcategory will be deleted.\n\nThe change will be applied after you tap "Save".':
+    "Все операции этой подкатегории будут перенесены в «{name}», а сама подкатегория будет удалена.\n\nИзменение применится после нажатия «Сохранить».",
+  'This subcategory will become a standalone category, and its operations will be re-pointed to it directly.\n\nThe change will be applied after you tap "Save".':
+    "Подкатегория станет отдельной категорией, а её операции будут привязаны к ней напрямую.\n\nИзменение применится после нажатия «Сохранить».",
+  "All operations ({n}) associated with the category will be removed. This applies to both normal operations and scheduled ones.\n\nThe category and transactions cannot be restored. If you only want to hide the category - select Move to archive.\n\nIf this category or subcategory was in the budget, it will be removed from there. If this was the only category in the budget, the budget will also be deleted.":
+    "Все операции ({n}), связанные с категорией, будут удалены. Это касается и обычных, и запланированных операций.\n\nКатегорию и операции нельзя будет восстановить. Если нужно только скрыть категорию, выберите «В архив».\n\nЕсли категория или подкатегория входила в бюджет, она будет убрана из него. Если это была единственная категория бюджета, бюджет тоже будет удалён.",
   "Archived accounts and categories are included in the selection.":
     "Архивные счета и категории входят в выборку.",
   "At the time": "В назначенное время",
@@ -690,8 +699,6 @@ export const russianStrings = {
   "The first row must contain:": "Первая строка должна содержать:",
   "The offline preview stores accounts, categories and transactions in browser storage when it is available. These records are visible to anyone with access to the same browser profile and device.":
     "Автономная версия хранит счета, категории и операции в хранилище браузера, если оно доступно. Эти записи видны всем, кто имеет доступ к тому же профилю браузера и устройству.",
-  "The operations will be moved to the selected subcategory and this subcategory will be deleted. The change will be applied after you tap Save.":
-    "Операции будут перенесены в выбранную подкатегорию, а эта подкатегория будет удалена. Изменение применится после нажатия «Сохранить».",
   "The selected JSON does not match the Monivra backup format. Check the file and try again.":
     "Выбранный JSON не соответствует формату копии Monivra. Проверьте файл и повторите попытку.",
   "These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.":
@@ -703,10 +710,6 @@ export const russianStrings = {
     "Это черновая страница о проекте; она не заявляет о связи с другим приложением.",
   "This is a technical summary of the beta, not a finalized privacy policy. A public policy must be written and reviewed after the actual hosting, analytics, account and support systems are decided.":
     "Это техническое описание беты, а не окончательная политика конфиденциальности. Публичную политику напишут и проверят после выбора хостинга, аналитики, аккаунтов и поддержки.",
-  "This subcategory and its operations will be moved to the selected category. The change will be applied after you tap Save.":
-    "Эта подкатегория и её операции будут перенесены в выбранную категорию. Изменение применится после нажатия «Сохранить».",
-  "This subcategory will become a standalone category, and its operations will be re-pointed to it directly. The change will be applied after you tap Save.":
-    "Подкатегория станет отдельной категорией, а её операции будут привязаны к ней напрямую. Изменение применится после нажатия «Сохранить».",
   "This tool is intended for personal expense tracking. It is not a banking service and does not execute real transfers.":
     "Приложение предназначено для личного учёта расходов. Это не банковский сервис, и реальных переводов оно не выполняет.",
   Time: "Время",
