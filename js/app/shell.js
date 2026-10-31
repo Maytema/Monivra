@@ -23,7 +23,7 @@ import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-bud
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
 import { welcomeView } from "../screens/welcome.js";
-import { goHome, numpadDockHtml } from "../ui/kit.js";
+import { goHome } from "../ui/kit.js";
 import {
   buttonHtml,
   setActionHandlers,
@@ -141,9 +141,7 @@ export function render(top = false) {
   setInputHandlers({});
   setHandlerCounter(0);
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
-  const html = translateMarkup(
-    `<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}${numpadDockHtml()}`,
-  );
+  const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
   if (isTestMode()) {
     window.__html = html;
     return html;
@@ -173,17 +171,6 @@ export function render(top = false) {
   app.querySelectorAll(".overlay .filter-scroll").forEach((x, i) => {
     x.scrollTop = filterScrolls[i] || 0;
   });
-  // The docked keypad belongs to a field on the screen; without one it goes away.
-  const typingField = app.querySelector("[data-numfield].is-active");
-  if (uiState.numpad && !typingField) {
-    uiState.numpad = null;
-    return render();
-  }
-  app.classList.toggle("has-dock", !!uiState.numpad);
-  if (typingField) {
-    app.style.setProperty("--dock-h", `${app.querySelector(".numpad-dock").offsetHeight}px`);
-    typingField.scrollIntoView({ block: "nearest" });
-  }
   mountSwipeChrome();
   bindTabSwipe();
   animateBalance(balanceBefore, previousBalance);

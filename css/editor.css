@@ -626,7 +626,7 @@
 .calc-pad .calc-op {
   font-size: 24px;
 }
-/* Digit keypad: in the number sheet and docked at the bottom while a field is typed in */
+/* Digit keypad of the number sheet */
 .digit-pad {
   grid-template-columns: repeat(4, minmax(0px, 1fr));
   margin: 10px 0px 0px;
@@ -644,50 +644,8 @@
 .key:disabled {
   opacity: 0.45;
 }
-.numpad-dock {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  z-index: 100;
-  padding: 10px 12px 14px;
-  border-radius: 24px 24px 0px 0px;
-  background: var(--sheet);
-  box-shadow: 0px -4px 18px rgba(0, 0, 0, 0.14);
-}
-.numpad-dock .digit-pad {
-  margin: 0px;
-}
-#app.has-dock .overlay {
-  padding-bottom: var(--dock-h);
-  box-sizing: border-box;
-}
-#app.has-dock #base .content {
-  padding-bottom: var(--dock-h);
-}
-.field.is-active {
-  border-color: var(--accent);
-  box-shadow: 0px 0px 0px 1px var(--accent);
-}
-.typing-caret {
-  display: inline-block;
-  width: 2px;
-  height: 1.1em;
-  margin-left: 1px;
-  vertical-align: text-bottom;
-  background: var(--accent);
-  animation: caret-blink 1s steps(1) infinite;
-}
 .field-hint {
   color: var(--muted);
-}
-@keyframes caret-blink {
-  50% {
-    opacity: 0;
-  }
-}
-#app.has-dock .overlay .footnote {
-  display: none;
 }
 /* Hours and minutes side by side */
 .time-fields {

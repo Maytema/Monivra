@@ -48,8 +48,6 @@ export let uiState = {
   pages: [],
   layers: [],
   reorder: false,
-  // Field the docked digit keypad types into, or null.
-  numpad: null,
 };
 // Callback waiting for a photo chosen through the hidden file input.
 export let photoCallback = null;

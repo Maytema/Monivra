@@ -186,7 +186,7 @@ export function settingsPage(kind) {
   }
   return pageHeader(title) + `<div class="content flush">${body}</div>`;
 }
-// Reminder time: the hours and the minutes are typed on the keypad docked below.
+// Reminder time: the hours and the minutes are typed on the digit keypad.
 function timeDialog() {
   let [h, m] = appData.settings.notificationTime.split(":");
   openSheet(
@@ -213,7 +213,7 @@ function timeDialog() {
 }
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
-// Set or remove the PIN: the digits are typed into the fields on the keypad docked below.
+// Set or remove the PIN: the digits are typed on the digit keypad.
 export function pinSetup(remove) {
   let first = "",
     second = "";

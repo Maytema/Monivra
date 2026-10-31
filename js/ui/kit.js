@@ -51,8 +51,7 @@ export function closeLayers(n = 1) {
 // Go back one step: close the top layer, otherwise pop the top page.
 export function goBack() {
   if (locked) return;
-  if (uiState.numpad) uiState.numpad = null;
-  else if (uiState.layers.length) uiState.layers.pop();
+  if (uiState.layers.length) uiState.layers.pop();
   else if (uiState.pages.length) uiState.pages.pop().restore?.();
   else if (uiState.selection) {
     uiState.selection = false;
@@ -625,7 +624,7 @@ export function amountPicker(title, value, fn, allowNegative = false, currency =
     title,
   );
 }
-// Digit keypad shared by the number sheet and the docked keypad: the digits and a backspace
+// Digit keypad of the number sheet: the digits and a backspace
 // in four columns, the tall confirm key at the right, the zero filling the last row
 // (next to the dot when decimals are allowed; the dot is off once the number has one).
 function digitPadHtml(press, confirm, decimal, text = "") {
@@ -676,7 +675,7 @@ export function numberPicker(title, value, fn, options = {}) {
     title,
   );
 }
-// Hours and minutes as two number fields; the digits are typed on the keypad docked below.
+// Hours and minutes as two number fields; each opens the digit keypad.
 export const timeFieldsHtml = (hours, minutes, setHours, setMinutes) =>
   `<div class="time-fields">${numberFieldHtml("Hours", hours, setHours, { maxLength: 2 })}${numberFieldHtml("Minutes", minutes, setMinutes, { maxLength: 2 })}</div>`;
 // "HH:MM" for typed hours and minutes, or null when they are not a time of day.
@@ -684,53 +683,17 @@ export const clockText = (hours, minutes) =>
   hours !== "" && minutes !== "" && Number(hours) <= 23 && Number(minutes) <= 59
     ? `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`
     : null;
-// Form field that shows a number. Tapping it docks the digit keypad at the bottom of the screen
-// and the digits go straight into the field.
+// Form field that shows a number; tapping it opens the digit keypad sheet.
 export const numberFieldHtml = (label, value, fn, options = {}) => {
-  const active = uiState.numpad?.label === label;
-  const text = active
-    ? uiState.numpad.text
-    : value === null || value === undefined
-      ? ""
-      : String(value);
+  const text = value === null || value === undefined ? "" : String(value);
   const shown = options.mask ? "•".repeat(text.length) : text;
   return buttonHtml(
-    `<span class="field-label">${translate(label)}</span><span class="value">${escapeHtml(shown) || (active || options.hint ? "" : "—")}${active ? '<i class="typing-caret"></i>' : ""}${!shown && options.hint ? `<small class="field-hint">${translate(options.hint)}</small>` : ""}</span>`,
-    () => {
-      uiState.numpad = {
-        label,
-        text: String(value ?? ""),
-        fresh: String(value ?? "") !== "",
-        fn,
-        options,
-      };
-      render();
-    },
-    `field ${active ? "is-active" : ""}`,
-    `data-numfield="${escapeHtml(label)}" aria-label="${escapeHtml(translate(label))}"`,
+    `<span class="field-label">${translate(label)}</span><span class="value">${escapeHtml(shown) || (options.hint ? "" : "—")}${!shown && options.hint ? `<small class="field-hint">${translate(options.hint)}</small>` : ""}</span>`,
+    () => numberPicker(label, value, fn, options),
+    "field",
+    `aria-label="${escapeHtml(translate(label))}"`,
   );
 };
-// The docked keypad of the field being typed in, or an empty string.
-export function numpadDockHtml() {
-  const pad = uiState.numpad;
-  if (!pad) return "";
-  const press = (k) => {
-    pad.text = typeDigit(pad.text, k, pad.options, pad.fresh && k !== "⌫");
-    pad.fresh = false;
-    pad.fn(pad.text);
-    render();
-  };
-  return `<div class="numpad-dock">${digitPadHtml(
-    press,
-    () => {
-      uiState.numpad = null;
-      render();
-    },
-    pad.options.decimal,
-    pad.text,
-  )}</div>`;
-}
-
 // Calculator keypad shared by all amount inputs. The operators stand in the first column,
 // the digits in the middle, the backspace and the tall confirm key at the right.
 function calculatorKeys(get, set, takeFresh, done) {
