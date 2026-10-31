@@ -770,6 +770,12 @@ function checkAll() {
       old.settings.fixedRates.length === 0
     );
   });
+  test("Numeric settings of old data become whole numbers in range", () => {
+    const old = { settings: { monthStart: "31", weekStart: "3", lockDelay: "x" }, rates: {} };
+    completeData(old);
+    const { monthStart, weekStart, lockDelay } = old.settings;
+    return monthStart === 28 && weekStart === 3 && lockDelay === 0;
+  });
   test("Currency search narrows by code and country as letters are typed", () => {
     const one = searchCurrencies("k"),
       two = searchCurrencies("kg");

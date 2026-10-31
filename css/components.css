@@ -822,6 +822,7 @@
   font-size: 16px;
 }
 .row .sub {
+  display: block;
   color: var(--muted);
   font-size: 13px;
   margin-top: 6px;
@@ -1781,4 +1782,17 @@
   background: var(--accent);
   border-color: var(--accent);
   color: var(--on-accent);
+}
+.confirm-icon {
+  text-align: center;
+}
+.confirm-icon.notice {
+  color: var(--positive);
+}
+.confirm-icon.warning {
+  color: var(--negative);
+}
+.confirm-message {
+  text-align: center;
+  white-space: pre-line;
 }

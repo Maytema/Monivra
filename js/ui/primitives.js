@@ -60,7 +60,7 @@ export const toggleRowHtml = (label, on, fn, hint = "") =>
 // List row with icon, label, optional subtitle and trailing content.
 export const menuRowHtml = (label, icon, fn, sub = "", end = "") =>
   buttonHtml(
-    `${icon ? iconSvg(icon, 22) : ""}<span class="grow"><span class="title">${translate(label)}</span>${sub ? `<span class="sub" style="display:block">${translate(sub)}</span>` : ""}</span>${end || `<span class="chevron">${iconSvg("right", 22)}</span>`}`,
+    `${icon ? iconSvg(icon, 22) : ""}<span class="grow"><span class="title">${translate(label)}</span>${sub ? `<span class="sub">${translate(sub)}</span>` : ""}</span>${end || `<span class="chevron">${iconSvg("right", 22)}</span>`}`,
     fn,
     "row",
     `aria-label="${escapeHtml(translate(label))}"`,

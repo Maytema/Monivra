@@ -97,7 +97,7 @@ export function confirmAction(message, fn, backupOption = true, label = "Confirm
   let doBackup = false;
   openSheet(
     () =>
-      `<div style="text-align:center;color:var(${notice ? "--positive" : "--negative"})">${iconSvg(notice ? "info" : "warning", 32)}</div><h2>${translate(title)}</h2><p style="text-align:center;white-space:pre-line">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
+      `<div class="confirm-icon ${notice ? "notice" : "warning"}">${iconSvg(notice ? "info" : "warning", 32)}</div><h2>${translate(title)}</h2><p class="confirm-message">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
         label,
         () => {
           if (doBackup) createBackup();
@@ -139,7 +139,7 @@ export function optionSheet(title, options, value, fn) {
         .map((o) => {
           const [v, l] = Array.isArray(o) ? o : [o, o];
           return buttonHtml(
-            `<span class="grow">${escapeHtml(translate(l))}</span><input type="radio" tabindex="-1" ${value == v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`,
+            `<span class="grow">${escapeHtml(translate(l))}</span><input type="radio" tabindex="-1" ${value === v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`,
             () => {
               closeLayers();
               fn(v);
@@ -212,7 +212,7 @@ function shiftPeriod(n) {
 // Dialog for the day on which a month starts (payday instead of the 1st). Only the days that
 // every month has can be chosen.
 export function monthStartDialog(onDone) {
-  const chosen = Number(appData.settings.monthStart);
+  const chosen = appData.settings.monthStart;
   openSheet(
     () =>
       `<h2>${translate("Month starts on")}</h2><div class="calendar">${Array.from(
@@ -298,7 +298,7 @@ const monthTitle = (month) => {
   return title.charAt(0).toUpperCase() + title.slice(1);
 };
 const weekdayLetters = () => {
-  const first = Number(appData.settings.weekStart);
+  const first = appData.settings.weekStart;
   // 2026-11-01 is a Sunday.
   return Array.from({ length: 7 }, (_, i) =>
     parseDate(`2026-11-${String(1 + ((first + i) % 7)).padStart(2, "0")}`).toLocaleDateString(
@@ -311,7 +311,7 @@ const weekdayLetters = () => {
 // of years, the arrows move by a month, `pick(date)` handles a tap on a day.
 function monthGridHtml(view, chosen, pick) {
   const first = parseDate(view.month + "-01"),
-    lead = (first.getUTCDay() - Number(appData.settings.weekStart) + 7) % 7,
+    lead = (first.getUTCDay() - appData.settings.weekStart + 7) % 7,
     days = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
   const move = (n) => {
     first.setUTCMonth(first.getUTCMonth() + n);

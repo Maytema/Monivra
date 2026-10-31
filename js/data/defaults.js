@@ -60,11 +60,23 @@ export function createEmptyData() {
   };
 }
 
+// Numeric settings are numbers; an older file may hold them as text or out of range.
+function numericSettings(settings, fresh) {
+  const whole = (value, from, to, fallback) => {
+    const n = Number(value);
+    return Number.isInteger(n) ? Math.min(to, Math.max(from, n)) : fallback;
+  };
+  settings.monthStart = whole(settings.monthStart, 1, 28, fresh.monthStart);
+  settings.weekStart = whole(settings.weekStart, 0, 6, fresh.weekStart);
+  settings.lockDelay = whole(settings.lockDelay, 0, Infinity, fresh.lockDelay);
+}
+
 // Data of an older version or a file gets everything newer versions added: missing settings
 // and the rates of currencies it did not know. Values already present are kept.
 export function completeData(data) {
   const fresh = createEmptyData();
   data.settings = { ...fresh.settings, ...data.settings };
+  numericSettings(data.settings, fresh.settings);
   data.rates = { ...fresh.rates, ...data.rates };
   return data;
 }

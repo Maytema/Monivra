@@ -35,7 +35,7 @@ export function switchSetting(label, key, hint = "") {
 }
 // Row with a title and the current choice under it; opens an option sheet.
 export function settingOptions(label, key, options) {
-  const o = options.find((o) => (Array.isArray(o) ? o[0] : o) == appData.settings[key]);
+  const o = options.find((o) => (Array.isArray(o) ? o[0] : o) === appData.settings[key]);
   return menuRowHtml(
     label,
     null,

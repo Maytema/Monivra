@@ -128,7 +128,7 @@ export function startup() {
       if (
         appData.settings.pin &&
         appData.settings.relock &&
-        (Date.now() - hiddenAt) / 1000 >= Number(appData.settings.lockDelay)
+        (Date.now() - hiddenAt) / 1000 >= appData.settings.lockDelay
       ) {
         setLocked(true);
         setPinEntry("");

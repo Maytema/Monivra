@@ -568,7 +568,7 @@ function setAccountType(d, type) {
 function accountTypeSheet(d) {
   openSheet(
     () =>
-      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span style="width:42px"></span></div>${accountTypeCards(
+      `<div class="account-type-header">${iconButtonHtml("back", "Back", () => closeLayers())}<h2>${translate("Account type")}</h2><span class="spacer"></span></div>${accountTypeCards(
         (type) => {
           closeLayers();
           setAccountType(d, type);

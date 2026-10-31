@@ -164,11 +164,11 @@ export function periodBounds(p = uiState.period) {
   if (p.mode === "range") return [p.from, p.to];
   if (p.mode === "day") return [p.anchor, p.anchor];
   if (p.mode === "week") {
-    let a = addDays(p.anchor, -((d.getUTCDay() - Number(appData.settings.weekStart) + 7) % 7));
+    let a = addDays(p.anchor, -((d.getUTCDay() - appData.settings.weekStart + 7) % 7));
     return [a, addDays(a, 6)];
   }
   if (p.mode === "year") return [`${y}-01-01`, `${y}-12-31`];
-  const day = Number(appData.settings.monthStart) || 1;
+  const day = appData.settings.monthStart;
   const start = (month) => {
     let z = new Date(Date.UTC(y, month, 1, 12));
     z.setUTCDate(
