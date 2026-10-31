@@ -571,7 +571,7 @@
   justify-content: center;
   border-radius: 14px;
   color: var(--tone);
-  background: color-mix(in srgb, var(--tone) 18%, transparent);
+  background: color-mix(in srgb, var(--tone) 18%, var(--sheet));
 }
 
 .category-sheet-head {
