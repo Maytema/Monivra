@@ -45,7 +45,8 @@ import { pinSetup } from "../screens/more.js";
 import { commitOperation, operationStart, tagsPicker } from "../screens/operation-editor.js";
 import { bulkEdit, filters } from "../screens/operations.js";
 import { accountPicker, categoryPicker } from "../screens/pickers.js";
-import { budgetSpend, editBudget, recurrence, reminder } from "../screens/scheduled-budgets.js";
+import { budgetSpend, editBudget } from "../screens/scheduled-budgets.js";
+import { recurrence, reminder } from "../screens/recurrence.js";
 import { statsSettings } from "../screens/statistics.js";
 import {
   amountPicker,

@@ -12,7 +12,6 @@ import { GUIDES } from "./guides.js";
 import { ratesBody } from "./rates.js";
 import { settingOptions, switchSetting } from "./settings.js";
 import {
-  clockText,
   closeLayers,
   confirmAction,
   goBack,
@@ -22,7 +21,7 @@ import {
   openSheet,
   pageHeader,
   showInfo,
-  timeFieldsHtml,
+  timePicker,
 } from "../ui/kit.js";
 import {
   buttonHtml,
@@ -186,31 +185,12 @@ export function settingsPage(kind) {
   }
   return pageHeader(title) + `<div class="content flush">${body}</div>`;
 }
-// Reminder time: the hours and the minutes are typed on the digit keypad.
-function timeDialog() {
-  let [h, m] = appData.settings.notificationTime.split(":");
-  openSheet(
-    () =>
-      `<h2>${translate("Time")}</h2>${timeFieldsHtml(
-        h,
-        m,
-        (v) => (h = v),
-        (v) => (m = v),
-      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
-        "Save",
-        () => {
-          const time = clockText(h, m);
-          if (!time) return toast("Enter a valid time");
-          appData.settings.notificationTime = time;
-          save();
-          closeLayers();
-        },
-        "primary",
-      )}</div>`,
-    "Time",
-    "dialog",
-  );
-}
+// Time of the periodic reminder.
+const timeDialog = () =>
+  timePicker(appData.settings.notificationTime, (time) => {
+    appData.settings.notificationTime = time;
+    save();
+  });
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
 // Set or remove the PIN: the digits are typed on the digit keypad.

@@ -780,6 +780,21 @@ function checkAll() {
     const { monthStart, weekStart, lockDelay } = old.settings;
     return monthStart === 28 && weekStart === 3 && lockDelay === 0;
   });
+  test("A reminder of older data keeps its time of day on the day of the payment", () => {
+    const old = {
+      settings: {},
+      rates: {},
+      scheduled: [{ reminder: "08:30", reminderLead: "At the time" }],
+    };
+    completeData(old);
+    const [item] = old.scheduled;
+    return (
+      item.reminder.before === 0 &&
+      item.reminder.unit === "Days" &&
+      item.reminder.time === "08:30" &&
+      !("reminderLead" in item)
+    );
+  });
   test("Currency search narrows by code and country as letters are typed", () => {
     const one = searchCurrencies("k"),
       two = searchCurrencies("kg");

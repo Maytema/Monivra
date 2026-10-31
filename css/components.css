@@ -591,7 +591,8 @@
   align-items: center;
   gap: 10px;
 }
-.field .hint {
+.field .hint,
+.row .hint {
   display: block;
   font-size: 12px;
   line-height: 1.4;
@@ -638,11 +639,6 @@
 .more-empty .primary {
   max-width: 270px;
   margin: 22px auto 0px;
-}
-.schedule-modal-actions .primary,
-.schedule-modal-actions .outline {
-  margin: 0px;
-  min-width: 0px;
 }
 .info-card .primary,
 .info-card .outline {
@@ -1163,20 +1159,9 @@
   height: auto;
   min-height: 0px;
 }
-.schedule-unit-btn.chosen {
-  background: var(--accent);
-  color: var(--on-accent);
-  font-weight: 600;
-}
 .schedule-weekday.chosen {
   background: var(--accent);
   color: var(--on-accent);
-}
-.schedule-choice.chosen,
-.schedule-lead.chosen {
-  border: 2px solid var(--accent);
-  background: var(--soft);
-  padding: 12px 8px;
 }
 .overlay.full .account-type-choices {
   padding-top: 10px;

@@ -11,21 +11,19 @@ import {
   reportRows,
 } from "../domain/finance.js";
 import { translate, translateCount } from "../i18n/index.js";
-import { multiSelect, opRow, operationsAddMenu, recurLabel } from "./operations.js";
+import { multiSelect, opRow, operationsAddMenu, recurLabel, remainingLabel } from "./operations.js";
+import { recurrence, reminder, reminderLabel } from "./recurrence.js";
 import {
   amountPicker,
   calendar,
-  clockText,
   closeLayers,
   confirmAction,
   finishFlow,
-  numberFieldHtml,
   openPage,
   openSheet,
   optionSheet,
   pageHeader,
   periodBar,
-  timeFieldsHtml,
 } from "../ui/kit.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 import {
@@ -35,160 +33,11 @@ import {
   menuRowHtml,
   textFieldHtml,
   toast,
-  toggleRowHtml,
 } from "../ui/primitives.js";
 
-// Recurrence picker (every N days/weeks/months/years).
-export function recurrence(d) {
-  let r = deepClone(d.recur || { every: 1, unit: "Days", remaining: null, days: [] }),
-    limited = r.remaining !== null;
-  const units = ["Days", "Weeks", "Months", "Years"];
-  openSheet(
-    () =>
-      `<div class="schedule-modal"><h2>Repeat</h2><div class="schedule-unit">${units
-        .map((unit) =>
-          buttonHtml(
-            unit,
-            () => {
-              r.unit = unit;
-              render();
-            },
-            "schedule-unit-btn " + (r.unit === unit ? "chosen" : ""),
-          ),
-        )
-        .join("")}</div>${numberFieldHtml("Repeat every", r.every, (v) => {
-        r.every = Math.max(1, Number(v) || 1);
-        render();
-      })}${
-        r.unit === "Weeks"
-          ? `<div class="schedule-subtitle">Days of the week</div><div class="schedule-week">${[
-              "S",
-              "M",
-              "T",
-              "W",
-              "T",
-              "F",
-              "S",
-            ]
-              .map((name, i) =>
-                buttonHtml(
-                  name,
-                  () => {
-                    r.days = r.days.includes(i) ? r.days.filter((n) => n !== i) : [...r.days, i];
-                    render();
-                  },
-                  "schedule-weekday " + (r.days.includes(i) ? "chosen" : ""),
-                  `aria-label="${["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][i]}"`,
-                ),
-              )
-              .join("")}</div>`
-          : ""
-      }<div class="schedule-subtitle">Number of repetitions</div><div class="schedule-choices">${buttonHtml(
-        "Unlimited",
-        () => {
-          limited = false;
-          r.remaining = null;
-          render();
-        },
-        "schedule-choice " + (!limited ? "chosen" : ""),
-      )}${buttonHtml(
-        "Limited",
-        () => {
-          limited = true;
-          r.remaining = r.remaining || 2;
-          render();
-        },
-        "schedule-choice " + (limited ? "chosen" : ""),
-      )}</div>${
-        limited
-          ? numberFieldHtml("Repetitions", r.remaining, (v) => {
-              r.remaining = Math.max(1, Number(v) || 1);
-              render();
-            })
-          : ""
-      }<div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
-        "Save",
-        () => {
-          if (!Number.isInteger(r.every) || r.every < 1 || r.every > 365)
-            return toast("Repeat interval must be 1–365");
-          if (limited && (!Number.isInteger(r.remaining) || r.remaining < 1))
-            return toast("Enter a positive repetition count");
-          if (r.unit === "Weeks" && r.days.length === 0)
-            return toast("Choose at least one weekday");
-          r.remaining = limited ? r.remaining : null;
-          d.recur = r;
-          closeLayers();
-        },
-        "primary",
-      )}</div>${
-        d.recur
-          ? buttonHtml(
-              "Turn off repeating",
-              () => {
-                d.recur = null;
-                closeLayers();
-              },
-              "text-button schedule-disable",
-            )
-          : ""
-      }</div>`,
-    "Repeat",
-    "dialog",
-  );
-}
-// Reminder time picker for scheduled payments.
-export function reminder(d) {
-  let [h, m] = (d.reminder || "09:00").split(":"),
-    lead = d.reminderLead || "At the time",
-    enabled = !!d.reminder;
-  const leads = [
-    "At the time",
-    "5 minutes before",
-    "15 minutes before",
-    "30 minutes before",
-    "1 hour before",
-    "1 day before",
-  ];
-  openSheet(
-    () =>
-      `<div class="schedule-modal"><h2>Reminder</h2>${toggleRowHtml("Remind me", enabled, () => {
-        enabled = !enabled;
-        render();
-      })}${
-        enabled
-          ? `<div class="schedule-subtitle">When to remind</div><div class="schedule-leads">${leads
-              .map((x) =>
-                buttonHtml(
-                  x,
-                  () => {
-                    lead = x;
-                    render();
-                  },
-                  "schedule-lead " + (lead === x ? "chosen" : ""),
-                ),
-              )
-              .join("")}</div>${timeFieldsHtml(
-              h,
-              m,
-              (v) => (h = v),
-              (v) => (m = v),
-            )}`
-          : ""
-      }<p class="footnote">Notifications are stored locally. Browser background reminders are not available in this offline preview.</p><div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
-        "Save",
-        () => {
-          const time = clockText(h, m);
-          if (enabled && !time) return toast("Enter a valid time");
-          d.reminder = enabled ? time : null;
-          d.reminderLead = enabled ? lead : null;
-          closeLayers();
-        },
-        "primary",
-      )}</div></div>`,
-    "Reminder",
-    "dialog",
-  );
-}
+// Caption under a scheduled row: the repeat rule (or the plain date) and the reminder.
+const scheduleCaption = (o) =>
+  `<div class="recur-caption">${iconSvg(o.recur ? "repeat" : "calendar", 14)} ${escapeHtml(recurLabel(o.recur) + (o.recur ? remainingLabel(o.recur) : ""))}${o.reminder ? ` · ${iconSvg("bell", 14)} ${escapeHtml(reminderLabel(o.reminder))}` : ""}</div>`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
   const setup = { date: TODAY, recur: null, reminder: null };
@@ -204,7 +53,7 @@ function scheduledCreate() {
               render();
             }),
           dateLabel(setup.date),
-        )}${menuRowHtml("Recur", "repeat", () => recurrence(setup), setup.recur ? recurLabel(setup.recur) : "Turned off")}${menuRowHtml("Reminder", "bell", () => reminder(setup), setup.reminder || "Turned off")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        )}${menuRowHtml("Recur", "repeat", () => recurrence(setup), setup.recur ? recurLabel(setup.recur) + remainingLabel(setup.recur) : "Turned off")}${menuRowHtml("Reminder", "bell", () => reminder(setup), setup.reminder ? reminderLabel(setup.reminder) : "Turned off")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
           "Complete",
           () => {
             closeLayers();
@@ -213,7 +62,6 @@ function scheduledCreate() {
                 date: setup.date,
                 recur: setup.recur,
                 reminder: setup.reminder,
-                reminderLead: setup.reminderLead,
               },
               true,
             );
@@ -254,11 +102,7 @@ export function scheduledView() {
               (date) =>
                 `<p class="scheduled-date">${escapeHtml(dateLabel(date))}</p>${sorted
                   .filter((o) => o.date === date)
-                  .map(
-                    (o) =>
-                      opRow(o, true) +
-                      `<div class="recur-caption">${o.recur ? iconSvg("repeat", 14) : iconSvg("calendar", 14)} ${escapeHtml(recurLabel(o.recur))}</div>`,
-                  )
+                  .map((o) => opRow(o, true) + scheduleCaption(o))
                   .join("")}`,
             )
             .join("")

@@ -854,17 +854,16 @@ export function recurLabel(r) {
     r.unit === "Weeks" && r.days?.length
       ? " · " + r.days.map((n) => weekdayName(n)).join(", ")
       : "";
-  const times =
-    r.remaining !== null ? " · " + translateCount("{n} time", "{n} times", r.remaining) : "";
   return (
-    (r.every === 1 ? translate(every[0]) : translateCount(every[0], every[1], r.every)) +
-    weekdays +
-    times
+    (r.every === 1 ? translate(every[0]) : translateCount(every[0], every[1], r.every)) + weekdays
   );
 }
+// " (Remaining: 25)" for a rule limited to a number of repetitions.
+export const remainingLabel = (r) =>
+  r.remaining === null ? "" : ` (${translateWith("Remaining: {n}", { n: r.remaining })})`;
 // Short weekday name (0 is Sunday) in the interface language.
-const weekdayName = (n) =>
+export const weekdayName = (n, weekday = "short") =>
   new Date(Date.UTC(2024, 0, 7 + n)).toLocaleDateString(currentLocale(), {
-    weekday: "short",
+    weekday,
     timeZone: "UTC",
   });

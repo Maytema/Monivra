@@ -131,14 +131,18 @@ export function promptText(title, value, fn, label = "Name") {
   );
 }
 // Bottom sheet with radio options.
-export function optionSheet(title, options, value, fn) {
+export function optionSheet(title, options, value, fn, kind = "sheet") {
+  const cancel =
+    kind === "dialog"
+      ? `<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}</div>`
+      : buttonHtml("Cancel", () => closeLayers(), "outline");
   openSheet(
     () =>
       `<h2>${translate(title)}</h2>${options
         .map((o) => {
-          const [v, l] = Array.isArray(o) ? o : [o, o];
+          const [v, l, hint] = Array.isArray(o) ? o : [o, o];
           return buttonHtml(
-            `<span class="grow">${escapeHtml(translate(l))}</span><input type="radio" tabindex="-1" ${value === v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`,
+            `<span class="grow">${escapeHtml(translate(l))}${hint ? `<small class="hint">${escapeHtml(translate(hint))}</small>` : ""}</span><input type="radio" tabindex="-1" ${value === v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`,
             () => {
               closeLayers();
               fn(v);
@@ -146,8 +150,9 @@ export function optionSheet(title, options, value, fn) {
             "row",
           );
         })
-        .join("")}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+        .join("")}${cancel}`,
     title,
+    kind,
   );
 }
 // Header of a full-screen page: back button, title and extra controls.
@@ -683,6 +688,30 @@ export const clockText = (hours, minutes) =>
   hours !== "" && minutes !== "" && Number(hours) <= 23 && Number(minutes) <= 59
     ? `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`
     : null;
+// Dialog for a time of day; `fn` gets "HH:MM".
+export function timePicker(time, fn) {
+  let [h, m] = time.split(":");
+  openSheet(
+    () =>
+      `<h2>${translate("Select time")}</h2>${timeFieldsHtml(
+        h,
+        m,
+        (v) => (h = v),
+        (v) => (m = v),
+      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        "OK",
+        () => {
+          const picked = clockText(h, m);
+          if (!picked) return toast("Enter a valid time");
+          fn(picked);
+          closeLayers();
+        },
+        "primary",
+      )}</div>`,
+    "Select time",
+    "dialog",
+  );
+}
 // Form field that shows a number; tapping it opens the digit keypad sheet.
 export const numberFieldHtml = (label, value, fn, options = {}) => {
   const text = value === null || value === undefined ? "" : String(value);

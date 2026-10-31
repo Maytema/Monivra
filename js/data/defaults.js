@@ -72,12 +72,18 @@ function numericSettings(settings, fresh) {
 }
 
 // Data of an older version or a file gets everything newer versions added: missing settings
-// and the rates of currencies it did not know. Values already present are kept.
+// the rates of currencies it did not know and the reminder format. Values already present are kept.
 export function completeData(data) {
   const fresh = createEmptyData();
   data.settings = { ...fresh.settings, ...data.settings };
   numericSettings(data.settings, fresh.settings);
   data.rates = { ...fresh.rates, ...data.rates };
+  for (const item of data.scheduled || []) {
+    // Earlier versions kept only the time of day of a reminder, on the day of the payment.
+    if (typeof item.reminder === "string")
+      item.reminder = { before: 0, unit: "Days", time: item.reminder };
+    delete item.reminderLead;
+  }
   return data;
 }
 

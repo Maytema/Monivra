@@ -25,7 +25,8 @@ import { translate, translateWith } from "../i18n/index.js";
 import { pairRateText, rateText } from "../ui/rate-line.js";
 import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
 import { accountCardsHtml, accountPicker, categoryPicker, categoryTilesHtml } from "./pickers.js";
-import { recurrence, reminder } from "./scheduled-budgets.js";
+import { recurrence, reminder, reminderLabel } from "./recurrence.js";
+import { recurLabel, remainingLabel } from "./operations.js";
 import {
   calendar,
   closeLayers,
@@ -500,7 +501,7 @@ function accountCalculatorView(p) {
             render();
           },
           "Use full sender account balance",
-        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder || "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? "Enabled" : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", render), feeLabel(d, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", render), feeLabel(d, "commission"))}`,
+        )}${menuRowHtml("Reminder", "bell", () => reminder(d), d.reminder ? reminderLabel(d.reminder) : "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(d), d.recur ? recurLabel(d.recur) + remainingLabel(d.recur) : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(d, "tax", render), feeLabel(d, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(d, "commission", render), feeLabel(d, "commission"))}`,
       "Additionally",
     );
   const nums3 = keypadDigits();

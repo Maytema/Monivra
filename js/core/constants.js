@@ -2,6 +2,8 @@
 
 // localStorage key for the persisted dataset (bump the suffix on breaking schema changes).
 export const STORAGE_KEY = "monivra.offline.2026.v1";
+// Largest count of days, weeks, months or years of a repeat or reminder rule.
+export const MAX_INTERVAL = 365;
 // Today's date as YYYY-MM-DD (local time).
 export const TODAY = new Date().toLocaleDateString("en-CA");
 // Deep copy of JSON-serializable data.

@@ -1,5 +1,5 @@
 /* Data validation and persistence */
-import { STORAGE_KEY } from "../core/constants.js";
+import { MAX_INTERVAL, STORAGE_KEY } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { isSupportedLanguage } from "../i18n/index.js";
 import { toast } from "../ui/primitives.js";
@@ -45,7 +45,7 @@ function operationProblem(o, x, accountIds, categories, seen) {
     r &&
     (!Number.isInteger(r.every) ||
       r.every < 1 ||
-      r.every > 365 ||
+      r.every > MAX_INTERVAL ||
       !["Days", "Weeks", "Months", "Years"].includes(r.unit) ||
       (r.remaining !== null && (!Number.isInteger(r.remaining) || r.remaining < 1)) ||
       !Array.isArray(r.days) ||
