@@ -745,7 +745,7 @@ export const russianStrings = {
     "Создать операцию о получении или отправке суммы этого долга",
   "Consider transfers to this account as expenses": "Считать переводы на этот счёт расходами",
   "Show this account among expense categories": "Показывать этот счёт среди категорий расходов",
-  "Consider transfers to this account as incomes": "Считать переводы на этот счёт доходами",
+  "Consider transfers from this account as incomes": "Считать переводы с этого счёта доходами",
   "Show this account among income categories": "Показывать этот счёт среди категорий доходов",
   "Close currency selection": "Закрыть выбор валюты",
   "Title or code": "Название или код",

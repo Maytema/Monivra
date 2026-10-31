@@ -154,7 +154,7 @@ export function accountsView() {
           .map((type) => {
             const rows = list.filter((a) =>
               a.type === "Debt"
-                ? type === a.debt + (accountBalance(a.id) === 0 ? " - Completed" : "")
+                ? type === debtDirection(a) + (accountBalance(a.id) === 0 ? " - Completed" : "")
                 : a.type === type,
             );
             if (!rows.length && type !== "Savings") return "";
@@ -609,7 +609,7 @@ export function accountEditView(p) {
                 [
                   "Consider transfers to this account as expenses",
                   "Show this account among expense categories",
-                  "Consider transfers to this account as incomes",
+                  "Consider transfers from this account as incomes",
                   "Show this account among income categories",
                 ][i],
               ),

@@ -1,6 +1,6 @@
 /* Built-in self checks */
 import { rootView } from "./shell.js";
-import { TODAY } from "../core/constants.js";
+import { TODAY, deepClone } from "../core/constants.js";
 import { appData, firstLaunch, setAppData, setFirstLaunch, uiState } from "../core/state.js";
 import { parseCSV } from "../data/csv.js";
 import { createSampleData } from "../data/sample.js";
@@ -8,13 +8,23 @@ import { isValidData } from "../data/storage.js";
 import { applyFees } from "../domain/fees.js";
 import {
   accountBalance,
+  accountById,
+  categoryTotal,
   convertCurrency,
+  debtDirection,
   evaluateExpression,
+  operationMatchesFilters,
   overallBalance,
   reportRows,
 } from "../domain/finance.js";
 import { typeKey } from "../domain/keypad.js";
-import { nextDate, reorderedList, validateOp } from "../domain/operations.js";
+import {
+  changeAccountCurrency,
+  changeMainCurrency,
+  nextDate,
+  reorderedList,
+  validateOp,
+} from "../domain/operations.js";
 
 // Built-in regression checks on sample data; returns a list of {name, pass}. Run from the console: Monivra.runSelfChecks().
 export function runSelfChecks() {
@@ -337,6 +347,113 @@ function checkAll() {
       appData.ops = ops;
     }
   });
+  // Runs `fn` on a throwaway copy of the data and puts the real data back afterwards.
+  const onCopy = (fn) => {
+    const saved = appData;
+    setAppData(deepClone(saved));
+    try {
+      return fn();
+    } finally {
+      setAppData(saved);
+    }
+  };
+  const addAccount = (fields) => {
+    const a = {
+      id: "__t" + appData.accounts.length,
+      name: "T",
+      type: "Regular",
+      currency: appData.settings.currency,
+      opening: 0,
+      include: true,
+      archived: false,
+      goal: 0,
+      limit: 0,
+      debt: "Owe me",
+      ...fields,
+    };
+    appData.accounts.push(a);
+    return a;
+  };
+  const transfer = (from, to, amount) =>
+    appData.ops.push({
+      id: "__o" + appData.ops.length,
+      type: "transfer",
+      from: from.id,
+      to: to.id,
+      amount,
+      receive: amount,
+      date: TODAY,
+      tags: [],
+      comment: "",
+    });
+  test("A debt shown as a category counts each direction in its own tab", () =>
+    onCopy(() => {
+      appData.ops = [];
+      const cash = addAccount({ opening: 1000000 }),
+        loan = addAccount({
+          type: "Debt",
+          debt: "I owe",
+          opening: -500000,
+          considerExpense: true,
+          considerIncome: true,
+        }),
+        other = addAccount({ type: "Debt", considerExpense: true, considerIncome: true });
+      uiState.period = { mode: "all", anchor: TODAY };
+      transfer(cash, loan, 300000);
+      transfer(loan, cash, 40000);
+      transfer(loan, other, 10000);
+      const id = "debt:" + loan.id;
+      return (
+        categoryTotal(id, "expense") === 300000 &&
+        categoryTotal(id, "income") === 40000 &&
+        appData.ops.filter((o) => operationMatchesFilters(o, { categories: [id] })).length === 2
+      );
+    }));
+  test("Paying a debt back in excess turns its direction around", () =>
+    onCopy(() => {
+      appData.ops = [];
+      const cash = addAccount({ opening: 1000000 }),
+        loan = addAccount({ type: "Debt", debt: "I owe", opening: -100000 });
+      transfer(cash, loan, 100000);
+      const settled = debtDirection(loan);
+      transfer(cash, loan, 20000);
+      return (
+        settled === "I owe" && accountBalance(loan.id) === 20000 && debtDirection(loan) === "Owe me"
+      );
+    }));
+  test("Changing an account currency converts the amounts or keeps the numbers", () =>
+    onCopy(() => {
+      appData.ops = [];
+      const cash = addAccount({ opening: 100000 }),
+        usd = addAccount({ currency: "USD", opening: 10000 });
+      transfer(cash, usd, 87500);
+      appData.ops.at(-1).receive = 1000;
+      const balance = accountBalance(usd.id);
+      changeAccountCurrency(usd.id, "EUR", false);
+      const kept = accountBalance(usd.id) === balance && accountById(usd.id).currency === "EUR";
+      changeAccountCurrency(usd.id, "USD", false);
+      changeAccountCurrency(usd.id, "EUR", true);
+      return (
+        kept &&
+        accountById(usd.id).opening === convertCurrency(10000, "USD", "EUR") &&
+        appData.ops.at(-1).receive === convertCurrency(1000, "USD", "EUR") &&
+        accountBalance(cash.id) === 100000 - 87500
+      );
+    }));
+  test("Main currency change carries categories and budget limits along", () =>
+    onCopy(() => {
+      const old = appData.settings.currency;
+      appData.categories.push({ id: "__c", name: "C", type: "expense", currency: old });
+      appData.budgets.push({ id: "__b", amount: 100000, currency: old, period: "month" });
+      const other = old === "USD" ? "EUR" : "USD";
+      changeMainCurrency(other);
+      const budget = appData.budgets.at(-1);
+      return (
+        appData.categories.at(-1).currency === other &&
+        budget.currency === other &&
+        budget.amount === convertCurrency(100000, old, other)
+      );
+    }));
   test("Debt switches are independent", () => {
     const a = appData.accounts.find((x) => x.type === "Debt");
     if (!a) return true;

@@ -705,7 +705,9 @@ export function bulkEdit() {
   const apply = () => {
     const replacements = selected.map((o) => {
       const n = deepClone(o);
-      if (d.category && n.type !== "transfer") {
+      // A balance adjustment has no category and keeps its direction; only the account may change.
+      const adjustment = n.type === "adjustment";
+      if (d.category && n.type !== "transfer" && !adjustment) {
         n.category = d.category;
         const a = n.from || n.to;
         n.type = categoryById(d.category).type;
@@ -714,6 +716,7 @@ export function bulkEdit() {
       }
       if (d.account) {
         if (n.type === "transfer") n[d.role === "receiver" ? "to" : "from"] = d.account;
+        else if (adjustment) n[n.to ? "to" : "from"] = d.account;
         else if (n.type === "income") n.to = d.account;
         else n.from = d.account;
       }
@@ -724,7 +727,7 @@ export function bulkEdit() {
         n.tags = [...new Set([...(n.tags || []), ...d.addTags])].filter(
           (x) => !d.removeTags.includes(x),
         );
-      validateOp(n);
+      if (!adjustment) validateOp(n);
       return n;
     });
     for (const o of replacements) appData.ops[appData.ops.findIndex((x) => x.id === o.id)] = o;
