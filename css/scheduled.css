@@ -23,6 +23,11 @@
 .add-item small {
   font-size: 13px;
   margin-top: 5px;
+  opacity: 0.6;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .more-empty h2 {
   font-size: 19px;

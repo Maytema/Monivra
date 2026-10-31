@@ -48,6 +48,10 @@
 .add-item strong {
   font-size: 15px;
   font-weight: 400;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .stats-card .cash-total .money {
   font-size: 23px;
@@ -124,6 +128,7 @@
   width: 100%;
   padding: 12px 2px;
   text-align: left;
+  font-size: 16px;
 }
 .stats-tag + .stats-tag {
   border-top: 1px solid var(--line);
@@ -137,10 +142,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.stats-tag {
-  font-size: 16px;
 }
 .stats-card .stats-tag .money {
   font-size: 16px;

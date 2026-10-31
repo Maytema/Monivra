@@ -93,7 +93,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-} /* Header with the balance and the action button */
+}
+/* Header with the balance and the action button */
 .hero {
   position: relative;
   flex: 0 0 84px;
@@ -216,7 +217,6 @@
   overflow: hidden;
   padding-inline: 55px;
 }
-
 .period .label {
   flex: 1 1 0%;
   text-align: center;
@@ -615,6 +615,8 @@
 .filter-fields .field {
   min-height: 70px;
   border-radius: 16px;
+  margin: 0px;
+  padding: 10px 14px;
 }
 .account-editor-reference .field-label {
   font-size: 13px;
@@ -1737,7 +1739,6 @@
   font-size: 13px;
   color: var(--muted);
 }
-
 /* Switch rows inside flat settings lists look like the other rows */
 .content.flush .field.inline {
   display: flex;

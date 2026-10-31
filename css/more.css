@@ -7,10 +7,6 @@
   text-align: center;
   min-height: 65px;
 }
-.sum-tabs button {
-  padding: 8px 3px;
-  font-size: 14px;
-}
 .donut-center button {
   pointer-events: auto;
   padding: 3px;
@@ -31,10 +27,6 @@
   font-weight: 500;
   border-bottom-width: 3px;
   color: var(--ink);
-}
-.filter-main-actions button {
-  min-height: 52px;
-  border-radius: 28px;
 }
 .filter-footer button {
   min-height: 48px;
@@ -142,9 +134,6 @@
   margin-top: 4px;
   font-size: 12px;
   color: var(--muted);
-}
-.cat-sub-chip-button span {
-  flex: 1 1 0%;
 }
 .cat-sub-chip small {
   display: block;
@@ -275,19 +264,6 @@
 .ops-selection-header strong {
   font-size: 19px;
   font-weight: 500;
-}
-.add-item strong {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.add-item small {
-  opacity: 0.6;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .sync {
   color: var(--ink-soft);
@@ -468,6 +444,7 @@
   display: grid;
   gap: 14px;
   margin: 17px 0px;
+  padding: 0px 4px;
 }
 .sub-bottom {
   bottom: 0px;
@@ -510,16 +487,10 @@
 }
 .sub-actions {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 .subscription {
-  padding: 8px 21px 20px;
-}
-@media (max-width: 360px) {
-  .subscription {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+  padding: 14px 20px 24px;
 }
 .plan {
   position: relative;
@@ -582,7 +553,7 @@
 .review {
   background: var(--sheet);
   text-align: center;
-  border-radius: 4px;
+  border-radius: 14px;
   font-size: 13px;
   line-height: 1.5;
   padding: 14px 12px;
@@ -773,7 +744,6 @@
   text-align: center;
   margin-top: 24px;
 }
-
 /* Color theme page: 4 × 4 circles */
 .theme-colors {
   display: grid;
@@ -804,19 +774,6 @@
   font-weight: 400;
   line-height: 1.25;
   text-align: center;
-}
-.subscription {
-  padding: 14px 20px 24px;
-}
-.sub-features {
-  padding: 0px 4px;
-}
-.review {
-  border-radius: 14px;
-}
-.sub-actions {
-  display: grid;
-  gap: 8px;
 }
 .rates-legend {
   margin: 0px;

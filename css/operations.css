@@ -82,6 +82,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex: 1 1 0%;
 }
 .cat-target-item span {
   min-width: 0px;
@@ -286,23 +287,23 @@
 }
 .filters-title {
   font-size: 25px;
-  margin: 4px 0px 10px;
+  margin: 0px 0px 4px;
 }
 .filters-note {
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.4;
   color: var(--muted, #777);
-  padding: 0px 8px 12px;
+  padding: 0px 4px 10px;
 }
 .filter-fields {
   display: grid;
-  gap: 10px;
-  padding-bottom: 16px;
+  gap: 8px;
+  padding-bottom: 12px;
 }
 .filter-main-actions {
   display: grid;
-  gap: 12px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 0px;
 }
 .filter-picker-head {
   display: flex;
@@ -645,14 +646,6 @@
   white-space: nowrap;
 }
 /* Filters sheet: compact so that all five fields fit without scrolling */
-.filter-fields {
-  gap: 8px;
-  padding-bottom: 12px;
-}
-.filter-fields .field {
-  margin: 0px;
-  padding: 10px 14px;
-}
 .filter-fields .field-label {
   margin-bottom: 2px;
   font-size: 14px;
@@ -663,19 +656,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.filter-main-actions {
-  gap: 8px;
-  margin-top: 0px;
-}
 .filter-main-actions button {
-  min-height: 46px;
-}
-.filters-title {
-  margin: 0px 0px 4px;
-}
-.filters-note {
-  padding: 0px 4px 10px;
-  font-size: 12.5px;
+  border-radius: 28px;
 }
 .op-note {
   color: var(--muted);
