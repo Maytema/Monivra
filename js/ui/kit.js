@@ -140,9 +140,12 @@ export function optionSheet(title, options, value, fn, kind = "sheet") {
     () =>
       `<h2>${translate(title)}</h2>${options
         .map((o) => {
-          const [v, l, hint] = Array.isArray(o) ? o : [o, o];
+          const [v, l, hint, icon = ""] = Array.isArray(o) ? o : [o, o];
+          const radio = `<input type="radio" tabindex="-1" ${value === v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`;
+          const text = `<span class="grow">${escapeHtml(translate(l))}${hint ? `<small class="hint">${escapeHtml(translate(hint))}</small>` : ""}</span>`;
+          // A dialog puts the radio first, a sheet last; an icon (ready markup) stands before the text.
           return buttonHtml(
-            `<span class="grow">${escapeHtml(translate(l))}${hint ? `<small class="hint">${escapeHtml(translate(hint))}</small>` : ""}</span><input type="radio" tabindex="-1" ${value === v ? "checked" : ""} aria-label="${escapeHtml(translate(l))}">`,
+            kind === "dialog" ? radio + icon + text : icon + text + radio,
             () => {
               closeLayers();
               fn(v);

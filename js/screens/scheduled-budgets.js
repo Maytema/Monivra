@@ -103,23 +103,20 @@ function scheduledCreate() {
   });
 }
 // Dialog with the order of the scheduled payments.
-function sortDialog() {
-  const row = (descending, icon, label) =>
-    buttonHtml(
-      `<input type="radio" tabindex="-1" ${!!uiState.scheduleDesc === descending ? "checked" : ""} aria-label="${translate(label)}">${iconSvg(icon, 24)}<span class="grow">${translate(label)}</span>`,
-      () => {
-        uiState.scheduleDesc = descending;
-        closeLayers();
-      },
-      "row",
-    );
-  openSheet(
-    () =>
-      `<h2>${translate("Sort by date")}</h2>${row(false, "arrowDown", "Ascending date")}${row(true, "arrowUp", "Descending date")}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}</div>`,
+const sortDialog = () =>
+  optionSheet(
     "Sort by date",
+    [
+      [false, "Ascending date", "", iconSvg("arrowDown", 24)],
+      [true, "Descending date", "", iconSvg("arrowUp", 24)],
+    ],
+    !!uiState.scheduleDesc,
+    (descending) => {
+      uiState.scheduleDesc = descending;
+      render();
+    },
     "dialog",
   );
-}
 // Scheduled payments page.
 export function scheduledView() {
   const sorted = [...appData.scheduled].sort((a, b) =>
@@ -174,6 +171,9 @@ export function budgetSpend(b) {
 }
 // Days a budget period lasts, as the calendar icon of the period says.
 const PERIOD_DAYS = { day: 1, week: 7, month: 30, year: 365 };
+// Calendar icon with the number of days of a budget period.
+const periodIcon = (period) =>
+  `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
 // Budgets list page.
@@ -225,21 +225,17 @@ export function budgetView(p) {
     pageHeader(b.id ? "Edit budget" : "Create a budget") +
     `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
-      `<span class="period-value"><span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[b.period]}</b></span>${translate(BUDGET_PERIODS[b.period])}</span>`,
+      `<span class="period-value">${periodIcon(b.period)}${translate(BUDGET_PERIODS[b.period])}</span>`,
       () =>
         optionSheet(
-          "Time period",
-          [
-            ["day", "Daily"],
-            ["week", "Weekly"],
-            ["month", "Monthly"],
-            ["year", "Yearly"],
-          ],
+          "Choose period",
+          Object.keys(BUDGET_PERIODS).map((id) => [id, BUDGET_PERIODS[id], "", periodIcon(id)]),
           b.period,
           (v) => {
             b.period = v;
             render();
           },
+          "dialog",
         ),
     )}${fieldButtonHtml(
       "Categories",

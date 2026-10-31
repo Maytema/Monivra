@@ -649,6 +649,7 @@ function accountCalculatorView(p) {
                     processScheduled(d.id, false);
                     uiState.layers = [];
                     render();
+                    toast("Payment skipped");
                   },
                   false,
                   "Skip",

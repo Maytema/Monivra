@@ -173,6 +173,8 @@ export const russianStrings = {
   "(Entirely)": "(Целиком)",
   "(Entire expenses)": "(Все расходы)",
   "Enter the title": "Введите название",
+  "Choose period": "Выберите период",
+  "Payment skipped": "Платёж пропущен",
   "Sort by date": "Сортировка по дате",
   "Ascending date": "По возрастанию даты",
   "Descending date": "По убыванию даты",

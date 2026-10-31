@@ -34,6 +34,7 @@ import {
   changeMainCurrency,
   deleteCategory,
   nextDate,
+  processScheduled,
   reorderedList,
   validateOp,
 } from "../domain/operations.js";
@@ -794,6 +795,61 @@ function checkAll() {
       item.reminder.time === "08:30" &&
       !("reminderLead" in item)
     );
+  });
+  // A scheduled payment of the sample data's first expense, due at `date`.
+  const scheduledExpense = (date, recur) => {
+    const base = appData.ops.find((o) => o.type === "expense");
+    const item = { ...JSON.parse(JSON.stringify(base)), id: "__due", date, recur, reminder: null };
+    appData.scheduled = [item];
+    return item;
+  };
+  test("Add now posts the payment today and moves the date by the interval", () => {
+    const item = scheduledExpense("2026-11-19", {
+      every: 3,
+      unit: "Days",
+      remaining: null,
+      days: [],
+    });
+    const count = appData.ops.length;
+    const balance = accountBalance(item.from);
+    processScheduled("__due", true);
+    const posted = appData.ops.at(-1);
+    return (
+      appData.ops.length === count + 1 &&
+      posted.date === TODAY &&
+      posted.amount === item.amount &&
+      !posted.recur &&
+      accountBalance(item.from) === balance - item.amount &&
+      item.date === "2026-11-22"
+    );
+  });
+  test("Skip moves the date and posts nothing", () => {
+    const item = scheduledExpense("2026-11-19", {
+      every: 1,
+      unit: "Weeks",
+      remaining: 3,
+      days: [],
+    });
+    const count = appData.ops.length;
+    processScheduled("__due", false);
+    return appData.ops.length === count && item.date === "2026-11-26" && item.recur.remaining === 2;
+  });
+  test("The last repetition leaves the list", () => {
+    scheduledExpense("2026-11-19", { every: 1, unit: "Days", remaining: 1, days: [] });
+    processScheduled("__due", true);
+    return appData.scheduled.length === 0;
+  });
+  test("A weekly payment goes to the chosen days of the week", () => {
+    const item = scheduledExpense("2026-12-14", {
+      every: 1,
+      unit: "Weeks",
+      remaining: null,
+      days: [1, 3],
+    });
+    processScheduled("__due", false);
+    const first = item.date;
+    processScheduled("__due", false);
+    return first === "2026-12-16" && item.date === "2026-12-21";
   });
   test("Currency search narrows by code and country as letters are typed", () => {
     const one = searchCurrencies("k"),
