@@ -1011,4 +1011,8 @@ export const russianStrings = {
     "Пример 2: 100 - комиссия (7) - налог (20%) = 100 - 7 = 93 - 18,6 = 74,4",
   "Save a local copy of your data or restore a previously exported JSON file.":
     "Сохраните локальную копию данных или восстановите ранее экспортированный файл JSON.",
+  "The {app} team works every day to build a convenient and useful application for managing your finances.":
+    "Команда {app} каждый день создаёт удобное и полезное приложение для управления вашими финансами.",
+  "We hope our work will help you manage your money better and reach your goals!":
+    "Надеемся, наша работа поможет вам лучше управлять деньгами и достигать целей!",
 };

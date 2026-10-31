@@ -12,6 +12,7 @@ import {
 } from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
+import { aboutArt } from "./about-art.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
@@ -489,7 +490,7 @@ export function simplePage(kind) {
     })}<p class="footnote">Android file handling, camera, downloads and localStorage depend on the browser. PIN is not encryption. This is not financial advice or a connection to your actual accounts.</p>`;
   } else if (kind === "about") {
     title = "About our team";
-    body = `<div class="info-card"><h2>${APP_NAME}</h2><span class="info-pill">Closed Beta · 0.1.0</span><p>${translateWith("{app} is an independent personal-finance application in development. This preview is shared to gather feedback before release.", { app: APP_NAME })}</p><h3>Project status</h3><p>Accounts, categories, operations, statistics and settings are being tested. Some features are demonstrations and may change before launch.</p><h3>People behind the project</h3><p>Team member names, contact addresses and company details have not yet been supplied for public release.</p><p class="caution">This is a draft project information page, not a claim of affiliation with another application.</p></div>`;
+    body = `<div class="about">${aboutArt}<p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;
   } else if (kind === "privacyPolicy") {
     title = "Privacy policy";
     body = `<div class="info-card"><span class="info-pill">Draft · Not for publication</span><h2>Privacy in the current offline preview</h2><h3>Financial records</h3><p>The offline preview stores accounts, categories and transactions in browser storage when it is available. These records are visible to anyone with access to the same browser profile and device.</p><h3>Export and deletion</h3><p>You can export a data file from More → Data and delete the current local records there. Files you have already exported must be deleted separately.</p><h3>Connected services</h3><p>Cloud sync, payments and account sign-in are not connected in this HTML preview. A future online version may process data differently.</p><p class="caution">This is a technical summary of the beta, not a finalized privacy policy. A public policy must be written and reviewed after the actual hosting, analytics, account and support systems are decided.</p></div>`;

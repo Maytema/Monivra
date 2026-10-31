@@ -827,3 +827,166 @@
   width: 100%;
   justify-content: center;
 }
+/* About page: the illustration and a short text */
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 24px 32px;
+  text-align: center;
+}
+.about p {
+  margin: 0px 0px 16px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.about-art {
+  width: min(100%, 320px);
+  margin-bottom: 24px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.about-orbit {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 6;
+  opacity: 0.5;
+}
+.about-spark {
+  fill: var(--accent);
+  offset-path: path("M36 168C30 78 120 28 204 38S300 96 286 150");
+  animation: about-travel 7s linear infinite;
+}
+.about-frame {
+  fill: var(--soft);
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+.about-light {
+  fill: var(--accent);
+  opacity: 0.55;
+}
+.about-bar {
+  fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: about-grow 6s ease-out infinite;
+  animation-delay: calc(var(--i) * 0.25s);
+}
+.about-line {
+  stroke: var(--positive);
+  stroke-width: 4;
+  stroke-dasharray: 1;
+  animation: about-draw 6s ease-in-out infinite;
+}
+.about-teeth {
+  stroke: var(--accent);
+  stroke-width: 8;
+  stroke-dasharray: 0.5 0.5;
+}
+.about-hub {
+  fill: var(--sheet);
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.about-gear {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.about-gear.turn-forward {
+  animation: about-turn 14s linear infinite;
+}
+.about-gear.turn-back {
+  animation: about-turn 10s linear infinite reverse;
+}
+.about-coin {
+  animation: about-float 3.2s ease-in-out infinite;
+}
+.about-coin-edge {
+  fill: var(--sheet);
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.about-coin-face {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.about-check {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: about-pop 6s ease-out infinite;
+}
+.about-check circle {
+  fill: var(--positive);
+}
+.about-check path {
+  stroke: var(--white);
+  stroke-width: 3;
+}
+@keyframes about-grow {
+  0% {
+    transform: scaleY(0);
+  }
+  25%,
+  85% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+@keyframes about-draw {
+  0%,
+  20% {
+    stroke-dashoffset: 1;
+  }
+  50%,
+  85% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes about-pop {
+  0%,
+  45% {
+    transform: scale(0);
+  }
+  58% {
+    transform: scale(1.25);
+  }
+  66%,
+  85% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes about-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes about-float {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes about-travel {
+  to {
+    offset-distance: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-bar,
+  .about-line,
+  .about-gear,
+  .about-coin,
+  .about-check,
+  .about-spark {
+    animation: none;
+  }
+}
