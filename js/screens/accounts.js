@@ -6,6 +6,7 @@ import { save } from "../data/storage.js";
 import {
   accountBalance,
   accountById,
+  accountProgress,
   convertCurrency,
   debtDirection,
   formatMoney,
@@ -105,30 +106,23 @@ export function hero() {
   }<div class="hero-action">${iconButtonHtml(icon, icon === "plus" ? "New account" : icon === "edit" ? "Change categories" : icon === "filter" ? "Filters" : "Operation search", fn)}</div></div>`;
 }
 
-// Show fractional progress without rounding an incomplete goal up to 100%.
-// All balances and goals are integer minor currency units. Limit precision to 2 decimals.
-function savingsPercent(balance, goal) {
-  if (!(goal > 0)) return 0;
-  if (balance >= goal) return 100;
-  return Math.max(0, Math.min(99.99, Math.floor((Math.max(0, balance) / goal) * 10000) / 100));
-}
-// Text label for savings progress.
-function savingsPercentLabel(balance, goal) {
-  const n = savingsPercent(balance, goal);
-  const parts = n.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
+// Percent with up to two decimals, the digits after the point set smaller.
+function percentLabel(percent) {
+  const parts = percent.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
   return `<span class="goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="goal-pct-frac">.${parts[1]}</span>` : ""}<span class="goal-pct-unit">%</span>`;
+}
+// What is left to reach the target; savings past the goal show the surplus instead.
+function leftLabel(p, currency) {
+  return p.left < 0 ? "+" + formatMoney(-p.left, currency) : formatMoney(p.left, currency);
 }
 // One row in the accounts list.
 function accountLine(a) {
   const n = accountBalance(a.id),
-    goal = a.type === "Savings" && a.goal > 0;
-  const percent = goal ? savingsPercent(n, a.goal) : 0;
+    progress = accountProgress(a);
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${goal ? `<span class="goal-info">${n > a.goal ? "+" + formatMoney(n - a.goal, a.currency) : formatMoney(Math.max(0, a.goal - n), a.currency)}<br>${savingsPercentLabel(n, a.goal)}</span><span class="goal-strip" style="height:${percent}%;background:#18c99b"></span>` : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${progress ? `<span class="goal-info">${progress.kind === "goal" ? leftLabel(progress, a.currency) + "<br>" : ""}${percentLabel(progress.percent)}</span><span class="goal-strip" style="height:${progress.percent}%;background:#18c99b"></span>` : ""}`,
     () => accountActions(a),
-    "account-row " +
-      (a.type === "Debt" && accountBalance(a.id) === 0 ? "debt-completed " : "") +
-      (appData.settings.bigAccounts ? "big" : ""),
+    "account-row " + (appData.settings.bigAccounts ? "big" : ""),
     `data-account="${a.id}"`,
   );
 }
@@ -232,6 +226,23 @@ function startFromAccount(options) {
   closeLayers();
   operationStart(options);
 }
+// Target, progress bar and what is left, shown in the account sheet.
+function progressBlockHtml(a) {
+  const p = accountProgress(a);
+  if (!p) return "";
+  const money = (n) => formatMoney(n, a.currency);
+  const status =
+    p.kind === "debt"
+      ? p.left > 0
+        ? translateWith("Left to repay: {amount}", { amount: money(p.left) })
+        : translate("Debt repaid")
+      : p.left > 0
+        ? translateWith("Left: {amount}", { amount: money(p.left) })
+        : p.left < 0
+          ? translateWith("Goal exceeded by {amount}", { amount: money(-p.left) })
+          : translate("Goal reached");
+  return `<div class="account-progress"><div class="account-progress-line"><span>${translate(p.kind === "debt" ? "Total debt" : "Goal")} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div><div class="account-progress-bar"><i style="width:${p.percent}%"></i></div><div class="account-progress-left">${status}</div></div>`;
+}
 // Action sheet shown when an account is tapped.
 export function accountActions(a) {
   const n = accountBalance(a.id),
@@ -249,7 +260,7 @@ export function accountActions(a) {
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),
         'aria-label="Favorite"',
-      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
+      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}${progressBlockHtml(a)}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
         "archive",
         a.archived ? "Return from archive" : "Move to archive",
         "#7d7886",

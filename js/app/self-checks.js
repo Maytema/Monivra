@@ -9,6 +9,7 @@ import { applyFees } from "../domain/fees.js";
 import {
   accountBalance,
   accountById,
+  accountProgress,
   categoryTotal,
   convertCurrency,
   debtDirection,
@@ -419,6 +420,24 @@ function checkAll() {
       transfer(cash, loan, 20000);
       return (
         settled === "I owe" && accountBalance(loan.id) === 20000 && debtDirection(loan) === "Owe me"
+      );
+    }));
+  test("Progress of a goal and of a debt repayment", () =>
+    onCopy(() => {
+      appData.ops = [];
+      const saved = addAccount({ type: "Savings", goal: 200000, opening: 50200 }),
+        past = addAccount({ type: "Savings", goal: 100000, opening: 150000 }),
+        debt = addAccount({ type: "Debt", debt: "I owe", totalDebt: 75000, opening: -3011 }),
+        free = addAccount({});
+      const [a, b, c] = [saved, past, debt].map(accountProgress);
+      return (
+        a.percent === 25.1 &&
+        a.left === 149800 &&
+        b.percent === 100 &&
+        b.left === -50000 &&
+        c.percent === 95.98 &&
+        c.left === 3011 &&
+        accountProgress(free) === null
       );
     }));
   test("Changing an account currency converts the amounts or keeps the numbers", () =>

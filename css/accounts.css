@@ -290,9 +290,6 @@
 .account-favorite.is-favorite {
   color: var(--accent-ink);
 }
-.debt-completed {
-  border-right: 4px solid rgb(40, 189, 137);
-}
 .account-available {
   display: block;
   color: var(--muted);
@@ -464,6 +461,41 @@
 .account-detail-money {
   font-size: 28px;
   margin: 2px 0 8px;
+}
+.account-progress {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.account-progress-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.account-progress-percent {
+  color: var(--positive);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.account-progress-bar {
+  height: 10px;
+  margin: 10px 0 8px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--positive) 16%, transparent);
+  overflow: hidden;
+}
+.account-progress-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+  background: var(--positive);
+}
+.account-progress-left {
+  font-size: 14px;
+  color: var(--muted);
 }
 .sheet-actions {
   display: grid;
