@@ -33,7 +33,7 @@
 }
 .empty-line,
 .empty-handle {
-  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg, #fff));
+  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg));
   stroke-width: 7;
 }
 .empty-handle {
@@ -44,8 +44,8 @@
   transform-origin: center;
 }
 .empty-lens {
-  fill: var(--bg, #fff);
-  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg, #fff));
+  fill: var(--bg);
+  stroke: color-mix(in srgb, var(--muted) 55%, var(--bg));
   stroke-width: 7;
 }
 .empty-cross {

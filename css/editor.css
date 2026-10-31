@@ -343,7 +343,7 @@
   transition: background 0.16s;
 }
 .calc-number.dual-number.dual-active {
-  background: color-mix(in srgb, var(--tint, rgb(178, 164, 228)) 24%, transparent);
+  background: color-mix(in srgb, var(--tint) 24%, transparent);
 }
 .dual-rate {
   margin: 6px 0px 0px;

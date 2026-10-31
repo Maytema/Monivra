@@ -280,9 +280,9 @@
   gap: 9px;
 }
 .chip {
-  border: 1px solid color-mix(in srgb, var(--c, #6c61cc) 65%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--c, var(--default-color)) 65%, var(--line));
   border-radius: 14px;
-  background: color-mix(in srgb, var(--c, #6c61cc) 12%, var(--bg));
+  background: color-mix(in srgb, var(--c, var(--default-color)) 12%, var(--bg));
   padding: 12px 10px;
   flex: 1 1 0%;
   min-width: 0px;

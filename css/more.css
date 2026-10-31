@@ -50,7 +50,7 @@
   top: 13px;
   border-radius: 9px;
   background: rgb(143, 230, 187);
-  color: rgb(255, 255, 255);
+  color: var(--white);
   font-style: normal;
   font-size: 10px;
   padding: 3px 6px;
@@ -353,8 +353,8 @@
   line-height: 1;
 }
 .more-menu-pro {
-  background: rgb(0, 0, 0);
-  color: rgb(255, 255, 255);
+  background: var(--black);
+  color: var(--white);
   font-weight: 500;
   font-size: 28px;
   line-height: 1.08;
@@ -758,7 +758,7 @@
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  color: #ffffff;
+  color: var(--white);
 }
 /* Subscription: the heading sits in the content, the confirm button stays pinned */
 .sub-head {

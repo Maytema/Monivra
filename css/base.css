@@ -9,6 +9,9 @@
   --accent: #a000b8;
   /* Text on an accent background and accent used as text; both are adjusted in js/app/shell.js */
   --on-accent: #ffffff;
+  --white: #ffffff;
+  --black: #000000;
+  --default-color: #6c61cc;
   --accent-ink: var(--accent);
   --soft: color-mix(in srgb, var(--accent) 16%, #ffffff);
   --sheet: color-mix(in srgb, var(--accent) 8%, #ffffff);
