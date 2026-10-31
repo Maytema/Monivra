@@ -22,6 +22,7 @@ import {
   convertCurrency,
   debtDirection,
   evaluateExpression,
+  formatNumber,
   operationMatchesFilters,
   overallBalance,
   reportRows,
@@ -770,6 +771,9 @@ function checkAll() {
       old.settings.fixedRates.length === 0
     );
   });
+  test("Negative amounts use the minus sign", () =>
+    formatNumber(-50000, "comma-dot", true, true) === "\u2212500.00" &&
+    formatNumber(123456, "space-comma", true, false) === "1\u00a0235");
   test("Numeric settings of old data become whole numbers in range", () => {
     const old = { settings: { monthStart: "31", weekStart: "3", lockDelay: "x" }, rates: {} };
     completeData(old);

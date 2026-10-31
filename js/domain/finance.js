@@ -105,7 +105,7 @@ const SEPARATORS = {
   "space-comma": ["\u00a0", ","],
 };
 export const NUMBER_FORMATS = Object.keys(SEPARATORS);
-// Number with the chosen separators; `decimals` shows two fraction digits.
+// Number with the chosen separators and a true minus sign; `decimals` shows two fraction digits.
 export function formatNumber(n, format, group, decimals) {
   const [groupSign, decimalSign] = SEPARATORS[format] || SEPARATORS["comma-dot"];
   const fraction = decimals ? 2 : 0;
@@ -115,6 +115,7 @@ export function formatNumber(n, format, group, decimals) {
       maximumFractionDigits: fraction,
       useGrouping: group,
     })
+    .replace("-", "\u2212")
     .replace(/[,.]/g, (c) => (c === "," ? groupSign : decimalSign));
 }
 // Format an amount in minor units (cents) honoring the formatting settings; masks it when values are hidden.
