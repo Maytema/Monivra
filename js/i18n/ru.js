@@ -229,7 +229,6 @@ export const russianStrings = {
   "Create a backup first": "Сначала создать копию",
   "Not selected": "Не выбрано",
   "Enter a name": "Введите название",
-  "Settings saved": "Настройки сохранены",
   "Enter your PIN": "Введите PIN",
   "Demo and reset": "Демо и сброс",
   Empty: "Пока пусто",
@@ -331,7 +330,6 @@ export const russianStrings = {
   "Additional questions": "Дополнительные вопросы",
   Additionally: "Дополнительно",
   Adjustment: "Корректировка",
-  "Adjustment is a balance correction": "Корректировка — это исправление остатка",
   "All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.":
     "Экспорт и импорт выполняются на этом устройстве. В бета-версии нет облачных копий и синхронизации аккаунтов.",
   "All future features are included at no additional cost":
@@ -363,7 +361,6 @@ export const russianStrings = {
   "Archived accounts and categories are included in the selection.":
     "Архивные счета и категории входят в выборку.",
   "At the time": "В назначенное время",
-  "Australian Dollar": "Австралийский доллар",
   "Automatic backups": "Автоматические копии",
   "Automatic rates": "Автоматические курсы",
   "Back up your data using More → Data.": "Сохраните копию данных в разделе «Ещё» → «Данные».",
@@ -452,24 +449,20 @@ export const russianStrings = {
   Minutes: "Минуты",
   "Enter a valid time": "Введите корректное время",
   Biometrics: "Биометрия",
-  "British Pound": "Британский фунт",
   Business: "Бизнес",
   "CSV imported": "CSV импортирован",
   "CSV is empty": "CSV пуст",
-  "Canadian Dollar": "Канадский доллар",
   "Cannot divide by zero": "На ноль делить нельзя",
   "Card, card or a bank account. For everyday income and expenses.":
     "Банковская карта или счёт. Для повседневных доходов и расходов.",
   "Category does not match operation type": "Категория не подходит к типу операции",
   "Category saved": "Категория сохранена",
-  "Chinese Yuan": "Китайский юань",
   "Choose a category": "Выберите категорию",
   "Choose a category when adding an operation.": "Выберите категорию при добавлении операции.",
   "Choose a period first": "Сначала выберите период",
   "Choose a valid date": "Выберите корректную дату",
   "Choose an account, amount, category and date, then save.":
     "Выберите счёт, сумму, категорию и дату, затем сохраните.",
-  "Choose an image": "Выберите изображение",
   "Choose color": "Выбрать цвет",
   "Choose two different accounts": "Выберите два разных счёта",
   "Clear comment": "Очистить комментарий",
@@ -528,7 +521,6 @@ export const russianStrings = {
   "Enter a valid amount": "Введите корректную сумму",
   "Enter an amount greater than zero": "Введите сумму больше нуля",
   "Entire expenses": "Все расходы",
-  Euro: "Евро",
   Every: "Каждые",
   "Every day": "Каждый день",
   "Exchange rate": "Курс обмена",
@@ -572,12 +564,9 @@ export const russianStrings = {
   "Invalid debt transfer amount": "Некорректная сумма перевода долга",
   "Invalid expression": "Некорректное выражение",
   "Invalid total debt": "Некорректная сумма долга",
-  "Japanese Yen": "Японская иена",
   "KGS is the base currency (1)": "KGS — базовая валюта (1)",
-  "Kazakhstani Tenge": "Казахстанский тенге",
   "Keep your own backup before clearing browser data or moving to another device. Local storage may be unavailable in some file viewers.":
     "Сохраните свою копию, прежде чем очищать данные браузера или переходить на другое устройство. В некоторых программах просмотра локальное хранилище недоступно.",
-  "Kyrgyzstani Som": "Киргизский сом",
   "Learn the basics of Monivra": "Основы работы с Monivra",
   Lifetime: "Навсегда",
   "Lifetime access": "Доступ навсегда",
@@ -599,13 +588,11 @@ export const russianStrings = {
     "Monivra — независимое приложение для личных финансов, находящееся в разработке. Эта версия показана, чтобы собрать отзывы до выхода.",
   "Monivra is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.":
     "Сейчас Monivra — незаконченная тестовая сборка. Возможности, внешний вид и формат данных могут меняться.",
-  "Monivra · Demo report": "Monivra · Отчёт",
   "Monivra · Offline reconstruction": "Monivra · Автономная версия",
   "Month starts on": "Месяц начинается",
   "Move down": "Вниз",
   "Move into": "Переместить в",
   "Move to": "Переместить в",
-  "Move to a category?": "Переместить в категорию?",
   "Move up": "Вверх",
   Name: "Название",
   "Confirmation word": "Слово подтверждения",
@@ -631,7 +618,6 @@ export const russianStrings = {
     "Откройте страницу в браузере. Изменения хранятся на этом устройстве, если хранилище браузера доступно. Перед переносом или заменой сохраните файл данных.",
   "Operation saved": "Операция сохранена",
   "Operations (CSV)": "Операции (CSV)",
-  "Order of statistics blocks": "Порядок блоков статистики",
   "Other currencies": "Другие валюты",
   Completed: "Завершённые",
   "PIN code": "PIN-код",
@@ -670,13 +656,11 @@ export const russianStrings = {
   "Request a feature": "Предложить функцию",
   "Request a refund": "Запросить возврат",
   "Restore data file": "Восстановить из файла",
-  "Russian Ruble": "Российский рубль",
   "Sample accounts and categories": "Примеры счетов и категорий",
   "Sample data installed": "Примеры данных установлены",
   "Save data file": "Сохранить файл данных",
   Saved: "Сохранено",
   Schedule: "Расписание",
-  "Scheduled amounts": "Суммы платежей",
   "Select a category": "Выберите категорию",
   "Select a different account": "Выберите другой счёт",
   "Select a valid category": "Выберите подходящую категорию",
@@ -695,20 +679,17 @@ export const russianStrings = {
   "Skip this occurrence?": "Пропустить этот платёж?",
   "Nearest payments first": "Сначала ближайшие платежи",
   "Latest payments first": "Сначала поздние платежи",
-  "Statistics order": "Порядок статистики",
   "Subcategory actions": "Действия с подкатегорией",
   "Subcategory name": "Название подкатегории",
   "Subscription prices in the preview are visual examples. The Continue button does not make a purchase.":
     "Цены подписки показаны для примера. Кнопка «Продолжить» ничего не покупает.",
   "Subscription status": "Статус подписки",
-  "Swiss Franc": "Швейцарский франк",
   "Switch between charts and category breakdowns.":
     "Переключение между диаграммами и разбивкой по категориям.",
   "Sync status": "Статус синхронизации",
   "Synchronization of devices in real time via a shared account":
     "Синхронизация устройств в реальном времени через общий аккаунт",
   "Tag already exists": "Такой тег уже есть",
-  "Tajik Somoni": "Таджикский сомони",
   "Tap Add and choose income, expense or transfer.":
     "Нажмите «Добавить» и выберите доход, расход или перевод.",
   "Team member names, contact addresses and company details have not yet been supplied for public release.":
@@ -719,8 +700,6 @@ export const russianStrings = {
   "The first row must contain:": "Первая строка должна содержать:",
   "The offline preview stores accounts, categories and transactions in browser storage when it is available. These records are visible to anyone with access to the same browser profile and device.":
     "Автономная версия хранит счета, категории и операции в хранилище браузера, если оно доступно. Эти записи видны всем, кто имеет доступ к тому же профилю браузера и устройству.",
-  "The selected JSON does not match the Monivra backup format. Check the file and try again.":
-    "Выбранный JSON не соответствует формату копии Monivra. Проверьте файл и повторите попытку.",
   "These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.":
     "Эти заметки не являются пользовательским соглашением. Окончательные условия потребуют данных оператора, модели сервиса, юрисдикции и проверки до публичного запуска.",
   "This beta does not include the original guided overlay animations.":
@@ -736,8 +715,6 @@ export const russianStrings = {
   Tips: "Подсказки",
   "To account": "На счёт",
   "Toggle all": "Выбрать или снять все",
-  "Type / category": "Тип / категория",
-  "US Dollar": "Доллар США",
   "Unclosed CSV quote": "Не закрыта кавычка в CSV",
   "Unsupported operation type": "Неподдерживаемый тип операции",
   "Use a positive number": "Введите положительное число",
@@ -847,7 +824,6 @@ export const russianStrings = {
   "✦ Random color": "✦ Случайный цвет",
   "Random icon and color": "Случайный значок и цвет",
   Backspace: "Стереть",
-  "Clear amount": "Очистить сумму",
   "Colors list customization": "Настройка списка цветов",
   "Icon list customization": "Настройка списка значков",
   "With this setting, you can exclude colors selected for current accounts and categories from the colors list.":

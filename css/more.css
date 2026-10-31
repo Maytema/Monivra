@@ -1,20 +1,11 @@
 /* More tab: settings, subscription, profile, help pages.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
-.color-grid button {
-  aspect-ratio: 1 / 1;
-  border-radius: 4px;
-}
 .pin button {
   background: var(--tint);
   border-radius: 17px;
   font-size: 29px;
   text-align: center;
   min-height: 65px;
-}
-@media (max-width: 359px) {
-  .navbar button {
-    font-size: 10px;
-  }
 }
 .sum-tabs button {
   padding: 8px 3px;
@@ -312,18 +303,6 @@
   padding: 10px 0px;
   line-height: 1.45;
 }
-.color-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
-}
-.color-dot {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  vertical-align: middle;
-}
 .pin-dots {
   display: flex;
   justify-content: center;
@@ -367,21 +346,6 @@
   75% {
     transform: translateX(8px);
   }
-}
-.pin-length {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.pin-length button {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  background: var(--key);
-}
-.pin-length .active {
-  background: var(--accent);
-  color: var(--on-accent);
 }
 .more-menu-item:active {
   background: var(--sheet);

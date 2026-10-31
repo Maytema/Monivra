@@ -8,17 +8,6 @@
   color: var(--muted);
   font-size: 13px;
 }
-.navbar button {
-  flex: 1 1 0%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: var(--ink-soft);
-  font-size: 12px;
-  min-width: 0px;
-  min-height: 56px;
-}
 .chip small {
   color: var(--ink);
   font-size: 12px;
@@ -119,11 +108,6 @@
   font-weight: 500;
   margin-bottom: 8px;
   margin: 0px 0px 7px;
-}
-.cat-scheduled {
-  padding: 12px;
-  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
-  border-radius: 10px;
 }
 .cat-manage-content {
   padding-top: 5px;

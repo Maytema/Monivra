@@ -1,12 +1,5 @@
 /* Layout: app shell, navigation bar, floating action button, swipe pages.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
-.navbar button svg {
-  width: 24px;
-  height: 24px;
-}
-.navbar.labels-never span:last-child {
-  display: none;
-}
 .panel h2 {
   font-size: 20px;
   font-weight: 400;
@@ -99,52 +92,6 @@
   #printout .out {
     color: rgb(179, 38, 30);
   }
-}
-#base > .navbar .navicon svg,
-#base:has(.more-menu) .navbar .navicon svg {
-  width: 24px;
-  height: 24px;
-  stroke: currentcolor;
-}
-#base > .navbar.labels-never > button > span:last-child {
-  display: none;
-}
-.navbar {
-  height: 78px;
-  flex: 0 0 auto;
-  background: var(--nav);
-  display: flex;
-  align-items: center;
-  padding: 7px 0 max(10px, env(safe-area-inset-bottom));
-}
-.navbar .navicon {
-  width: 56px;
-  height: 32px;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.navbar .active .navicon {
-  background: var(--soft);
-}
-#base:has(.more-menu) .navbar .navicon {
-  height: 34px;
-  width: 56px;
-}
-#base:has(> .more-menu) > .navbar .navicon {
-  width: 56px;
-  height: 32px;
-}
-#base > .navbar .navicon,
-#base:has(.more-menu) .navbar .navicon {
-  box-sizing: border-box;
-  width: 56px;
-  height: 32px;
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .op-row {
   display: flex;

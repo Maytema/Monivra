@@ -1,0 +1,69 @@
+/* Bottom navigation bar */
+.navbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  flex: 0 0 78px;
+  height: 78px;
+  min-height: 78px;
+  padding: 7px 0 max(10px, env(safe-area-inset-bottom));
+  background: var(--nav);
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: normal;
+}
+.navbar button {
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 56px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: normal;
+  transition:
+    color 0.12s,
+    background-color 0.12s;
+}
+.navbar button.active {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.navbar button > span:last-child {
+  white-space: nowrap;
+}
+.navbar .navicon {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 32px;
+  min-height: 32px;
+  border-radius: 30px;
+}
+.navbar .active .navicon {
+  background: var(--soft);
+}
+.navbar .navicon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentcolor;
+}
+.navbar.labels-never button > span:last-child {
+  display: none;
+}
+.navbar.labels-selected button:not(.active) > span:last-child {
+  visibility: hidden;
+}

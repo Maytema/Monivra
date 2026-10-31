@@ -26,9 +26,6 @@
   width: 23px;
   height: 23px;
 }
-.navbar.labels-selected button:not(.active) span:last-child {
-  visibility: hidden;
-}
 .interval-grid button:first-child {
   grid-column: span 2;
 }
@@ -91,64 +88,11 @@
   width: 29px;
   height: 29px;
 }
-#base:has(.more-menu) .navbar button {
-  font-size: 12px;
-  gap: 5px;
-  color: var(--ink-soft);
-}
-#base:has(.more-menu) .navbar button.active svg {
-  stroke: var(--accent-ink);
-}
 #base:has(> .more-menu) {
   min-height: 0px;
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-#base:has(> .more-menu) > .navbar button {
-  font-size: 10px;
-  gap: 4px;
-  color: var(--ink-soft);
-  min-height: 56px;
-  font-weight: 400;
-}
-#base:has(> .more-menu) > .navbar button.active svg {
-  stroke: currentcolor;
-}
-#base > .navbar > button,
-#base:has(.more-menu) .navbar > button {
-  box-sizing: border-box;
-  flex: 1 1 0px;
-  min-width: 0px;
-  min-height: 56px;
-  padding: 0px;
-  margin: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  font-family: inherit;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-  letter-spacing: normal;
-  color: var(--ink-soft);
-  transform: none;
-  transition:
-    color 0.12s,
-    background-color 0.12s;
-}
-#base > .navbar > button > span:last-child,
-#base:has(.more-menu) .navbar > button > span:last-child {
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: normal;
-  white-space: nowrap;
-  transform: none;
-}
-#base > .navbar.labels-selected > button:not(.active) > span:last-child {
-  visibility: hidden;
 }
 .hero {
   min-height: 82px;
@@ -374,10 +318,6 @@
   background: var(--bg);
   color: var(--ink);
 }
-.navbar button.active {
-  color: var(--accent-ink);
-  font-weight: 600;
-}
 .tag.active {
   background: var(--soft);
   border-color: var(--accent);
@@ -390,19 +330,6 @@
 .account-tabs button.active {
   border-color: var(--accent);
   font-weight: 600;
-}
-#base:has(.more-menu) .navbar button.active {
-  color: var(--accent-ink);
-}
-#base:has(> .more-menu) > .navbar button.active {
-  color: var(--accent-ink);
-  font-weight: 600;
-}
-#base > .navbar > button.active,
-#base:has(.more-menu) .navbar > button.active {
-  color: var(--accent-ink);
-  font-weight: 600;
-  font-size: 12px;
 }
 #base > .account-tabs button.active {
   border-bottom-color: transparent;
@@ -674,47 +601,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-top: 20px;
-}
-#base:has(.more-menu) .navbar {
-  height: 75px;
-  background: color-mix(in srgb, var(--accent) 9%, var(--bg));
-  padding: 8px 0px 6px;
-}
-#base:has(> .more-menu) > .navbar {
-  display: flex;
-  position: relative;
-  z-index: 2;
-  height: 78px;
-  flex: 0 0 78px;
-  background: var(--nav);
-  padding: 7px 0 max(10px, env(safe-area-inset-bottom));
-}
-#base > .navbar,
-#base:has(.more-menu) .navbar,
-#base:has(> .more-menu) > .navbar {
-  box-sizing: border-box;
-  height: 78px;
-  min-height: 78px;
-  flex: 0 0 78px;
-  padding: 7px 0 max(10px, env(safe-area-inset-bottom));
-  background: var(--nav);
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-  font-family: inherit;
-  font-size: 12px;
-  letter-spacing: normal;
-}
-#base:has(.more-menu) .navbar .active .navicon {
-  background: color-mix(in srgb, var(--accent) 16%, var(--bg));
-}
-#base:has(> .more-menu) > .navbar .active .navicon {
-  background: var(--soft);
-}
-#base > .navbar > button.active .navicon,
-#base:has(.more-menu) .navbar > button.active .navicon {
-  background: var(--soft);
 }
 .fab {
   position: absolute;

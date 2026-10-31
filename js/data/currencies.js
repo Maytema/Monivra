@@ -50,8 +50,6 @@ export const CURRENCIES = TABLE.split("|")
     const [code, usd, ...regions] = line.trim().split(/\s+/);
     return { code, usd: Number(usd), regions };
   });
-const BY_CODE = new Map(CURRENCIES.map((c) => [c.code, c]));
-export const isKnownCurrency = (code) => BY_CODE.has(code);
 
 // Fixed rates of all currencies: how many KGS one unit is worth.
 export function defaultRates() {
