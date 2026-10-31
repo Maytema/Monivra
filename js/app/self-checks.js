@@ -22,6 +22,7 @@ import { typeKey } from "../domain/keypad.js";
 import {
   changeAccountCurrency,
   changeMainCurrency,
+  deleteCategory,
   nextDate,
   reorderedList,
   validateOp,
@@ -438,6 +439,40 @@ function checkAll() {
         c.percent === 95.98 &&
         c.left === 3011 &&
         accountProgress(free) === null
+      );
+    }));
+  test("Deleting a category removes its operations, payments and budget entries", () =>
+    onCopy(() => {
+      const base = { type: "expense", archived: false, currency: appData.settings.currency };
+      appData.categories.push(
+        { ...base, id: "__c1", name: "A", parent: null },
+        { ...base, id: "__c2", name: "B", parent: null },
+        { ...base, id: "__c3", name: "A1", parent: "__c1" },
+      );
+      const cash = addAccount({ opening: 100000 }),
+        spend = (category) => ({
+          id: "__s" + category,
+          type: "expense",
+          from: cash.id,
+          amount: 100,
+          category,
+          date: TODAY,
+          tags: [],
+          comment: "",
+        });
+      appData.ops = [spend("__c1"), spend("__c3"), spend("__c2")];
+      appData.scheduled = [spend("__c3")];
+      appData.budgets = [
+        { id: "__b1", amount: 1, categories: ["__c1", "__c3"] },
+        { id: "__b2", amount: 1, categories: ["__c1", "__c2"] },
+      ];
+      deleteCategory("__c1");
+      return (
+        appData.ops.length === 1 &&
+        appData.scheduled.length === 0 &&
+        appData.categories.filter((c) => c.id.startsWith("__c")).length === 1 &&
+        appData.budgets.length === 1 &&
+        appData.budgets[0].categories.join() === "__c2"
       );
     }));
   test("Changing an account currency converts the amounts or keeps the numbers", () =>

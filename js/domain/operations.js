@@ -11,7 +11,6 @@ import {
   parseDate,
   toIsoDate,
 } from "./finance.js";
-import { toast } from "../ui/primitives.js";
 
 // Throw an Error with a user-facing message if an operation draft is invalid.
 export function validateOp(d, lookup = { account: accountById, category: categoryById }) {
@@ -155,30 +154,27 @@ export function deleteAccount(id) {
   appData.ops = appData.ops.filter((o) => o.from !== id && o.to !== id);
   appData.scheduled = appData.scheduled.filter((o) => o.from !== id && o.to !== id);
   appData.accounts = appData.accounts.filter((a) => a.id !== id);
-  if (uiState.filters.accounts)
-    uiState.filters.accounts = uiState.filters.accounts.filter((x) => x !== id);
+  if (uiState.filters.accounts) {
+    const rest = uiState.filters.accounts.filter((x) => x !== id);
+    uiState.filters.accounts = rest.length ? rest : null;
+  }
   save();
 }
-// Delete a category and its sub-categories; archive them instead when operations still use them.
+// Delete a category with its sub-categories and every operation and scheduled payment that uses
+// them. Budgets lose these categories; a budget left without any category is deleted too.
 export function deleteCategory(id) {
-  const children = appData.categories.filter((c) => c.parent === id).map((c) => c.id),
-    ids = [id, ...children];
-  if (
-    appData.ops.some((o) => ids.includes(o.category)) ||
-    appData.scheduled.some((o) => ids.includes(o.category))
-  ) {
-    for (const c of appData.categories) if (ids.includes(c.id)) c.archived = true;
-    save();
-    toast("Category archived to preserve transaction history");
-    return;
-  }
+  const ids = [id, ...appData.categories.filter((c) => c.parent === id).map((c) => c.id)];
+  appData.ops = appData.ops.filter((o) => !ids.includes(o.category));
+  appData.scheduled = appData.scheduled.filter((o) => !ids.includes(o.category));
   appData.categories = appData.categories.filter((c) => !ids.includes(c.id));
   appData.budgets = appData.budgets
-    .map((b) => ({
-      ...b,
-      categories: b.categories?.filter((i) => !ids.includes(i)),
-    }))
+    .map((b) => ({ ...b, categories: b.categories?.filter((i) => !ids.includes(i)) }))
     .filter((b) => b.categories === null || b.categories.length);
+  uiState.selected = uiState.selected.filter((x) => appData.ops.some((o) => o.id === x));
+  if (uiState.filters.categories) {
+    const rest = uiState.filters.categories.filter((x) => !ids.includes(x));
+    uiState.filters.categories = rest.length ? rest : null;
+  }
   save();
 }
 // Move a category under another one or promote it to the top level.

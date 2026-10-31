@@ -426,8 +426,6 @@ export const russianStrings = {
   "Cannot divide by zero": "На ноль делить нельзя",
   "Card, card or a bank account. For everyday income and expenses.":
     "Банковская карта или счёт. Для повседневных доходов и расходов.",
-  "Category archived to preserve transaction history":
-    "Категория архивирована, чтобы сохранить историю операций",
   "Category does not match operation type": "Категория не подходит к типу операции",
   "Category saved": "Категория сохранена",
   "Chinese Yuan": "Китайский юань",
