@@ -51,7 +51,7 @@
   #printout td,
   #printout th {
     padding: 6px 8px;
-    border-bottom: 1px solid rgb(204, 204, 204);
+    border-bottom: 1px solid var(--line);
     text-align: left;
     vertical-align: top;
   }
@@ -63,7 +63,7 @@
   }
   #printout .period {
     margin: 0 0 14px;
-    color: rgb(90, 90, 90);
+    color: var(--muted);
   }
   #printout .totals {
     display: flex;
@@ -80,17 +80,17 @@
   }
   #printout td small {
     display: block;
-    color: rgb(110, 110, 110);
+    color: var(--muted);
   }
   #printout .amount {
     text-align: right;
     white-space: nowrap;
   }
   #printout .in {
-    color: rgb(27, 122, 75);
+    color: var(--positive-ink);
   }
   #printout .out {
-    color: rgb(179, 38, 30);
+    color: var(--negative-ink);
   }
 }
 .op-row {
@@ -110,7 +110,7 @@
 .handle {
   width: 32px;
   height: 4px;
-  background: rgb(207, 194, 214);
+  background: var(--line);
   border-radius: 8px;
   margin: 0px auto 12px;
 }
@@ -136,7 +136,7 @@
   font-size: 12px;
   line-height: 1.35;
   background: color-mix(in srgb, var(--ink) 78%, transparent);
-  box-shadow: rgba(0, 0, 0, 0.063) 0px 3px 10px;
+  box-shadow: color-mix(in srgb, var(--black) 6%, transparent) 0px 3px 10px;
   transition:
     opacity 0.18s,
     translate 0.18s;

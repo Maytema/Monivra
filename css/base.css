@@ -22,6 +22,8 @@
   /* Same hues as text: darker so that amounts stay readable on light surfaces */
   --positive-ink: #2a7a60;
   --negative-ink: #b93666;
+  --positive-soft: color-mix(in srgb, var(--positive) 18%, transparent);
+  --negative-soft: color-mix(in srgb, var(--negative) 18%, transparent);
   --nav: color-mix(in srgb, var(--accent) 9%, #ffffff);
   --tint: color-mix(in srgb, var(--accent) 18%, #ffffff);
   color-scheme: light;

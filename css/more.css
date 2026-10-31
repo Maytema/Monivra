@@ -33,7 +33,7 @@
   border-radius: 26px;
 }
 .more-empty svg {
-  color: rgb(177, 142, 184);
+  color: var(--muted);
 }
 .more-menu-item span {
   line-height: 1.2;
@@ -49,7 +49,7 @@
   left: 84px;
   top: 13px;
   border-radius: 9px;
-  background: rgb(143, 230, 187);
+  background: var(--positive);
   color: var(--white);
   font-style: normal;
   font-size: 10px;
@@ -118,7 +118,7 @@
 }
 .cat-sub-chip small {
   display: block;
-  color: rgb(139, 126, 154);
+  color: var(--muted);
   margin: 0px 0px 8px 4px;
   font-size: 12px;
 }
@@ -234,8 +234,8 @@
   height: 60px;
   padding: 17px;
   border-radius: 12px;
-  background: rgb(243, 206, 213);
-  color: rgb(187, 32, 58);
+  background: var(--negative-soft);
+  color: var(--negative-ink);
 }
 .filter-group-toggle small {
   margin-left: auto;
@@ -322,7 +322,7 @@
   padding: 0px 18px;
   gap: 12px;
   font-size: 29px;
-  border-bottom: 1px solid rgb(201, 197, 202);
+  border-bottom: 1px solid var(--line);
   letter-spacing: 0px;
 }
 .more-menu-logo {
@@ -345,7 +345,7 @@
 .more-menu-sync {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid rgb(201, 196, 204);
+  border-bottom: 1px solid var(--line);
   color: var(--muted);
   height: 41px;
   min-height: 41px;
@@ -356,11 +356,11 @@
 }
 .more-menu-cloud {
   display: flex;
-  color: rgb(49, 200, 148);
+  color: var(--positive);
 }
 .more-menu-group {
   padding: 10px 0px;
-  border-bottom: 1px solid rgb(201, 197, 202);
+  border-bottom: 1px solid var(--line);
 }
 .more-menu-group:nth-child(1) {
   padding: 10px 0px;
@@ -434,7 +434,7 @@
   margin-top: 0px;
   padding: 11px 21px max(15px, env(safe-area-inset-bottom));
   background: var(--bg);
-  border-top: 1px solid rgb(236, 230, 237);
+  border-top: 1px solid var(--line);
 }
 @media (max-height: 650px) {
   .sub-bottom {
@@ -480,11 +480,11 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgb(222, 217, 225);
+  border: 1px solid var(--line);
   background: var(--key);
   color: var(--ink);
   text-align: left;
-  box-shadow: rgba(48, 32, 68, 0.04) 0px 2px 6px;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--black) 4%, transparent);
   overflow: visible;
   min-height: 80px;
   border-radius: 11px;
@@ -542,7 +542,7 @@
 }
 .review-dots {
   text-align: center;
-  color: rgb(167, 163, 220);
+  color: var(--muted);
   font-size: 12px;
   letter-spacing: 4px;
   margin: 10px 0px 18px;
@@ -553,7 +553,7 @@
   letter-spacing: 2px;
 }
 .button-outline {
-  border: 1px solid rgb(220, 214, 224);
+  border: 1px solid var(--line);
   background: transparent;
   border-radius: 40px;
   color: var(--ink);
@@ -626,7 +626,7 @@
   gap: 7px;
 }
 .profile-cloud {
-  color: rgb(63, 188, 155);
+  color: var(--positive);
 }
 .profile-actions {
   margin-top: auto;
@@ -635,7 +635,7 @@
 .profile-action {
   display: block;
   width: 100%;
-  border: 1px solid rgb(217, 209, 218);
+  border: 1px solid var(--line);
   border-radius: 28px;
   min-height: 47px;
   text-align: center;
@@ -644,7 +644,7 @@
   background: transparent;
 }
 .profile-danger {
-  color: rgb(163, 43, 76);
+  color: var(--negative-ink);
 }
 .info-card {
   padding: 22px 19px 42px;
@@ -663,7 +663,7 @@
 }
 .caution {
   background: var(--sheet);
-  border-left: 3px solid rgb(140, 132, 174);
+  border-left: 3px solid var(--muted);
   padding: 12px 13px;
   border-radius: 5px;
 }
@@ -681,8 +681,8 @@
 .danger-outline {
   display: block;
   width: 100%;
-  border: 1px solid rgb(189, 75, 94);
-  color: rgb(162, 45, 70);
+  border: 1px solid var(--negative-ink);
+  color: var(--negative-ink);
   border-radius: 24px;
   padding: 12px;
   margin-top: 14px;

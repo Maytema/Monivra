@@ -111,7 +111,7 @@
   font-size: 14px;
   margin-bottom: 14px;
   background: var(--sheet);
-  border: 1px solid rgb(235, 230, 240);
+  border: 1px solid var(--line);
   min-height: 46px;
   border-radius: 10px;
   color: var(--muted);
@@ -128,22 +128,22 @@
   border: 1px solid var(--line);
   background: var(--bg);
   min-height: 66px;
-  border-color: rgb(232, 227, 237);
+  border-color: var(--line);
   border-radius: 10px;
   padding: 8px 9px;
   gap: 10px;
 }
 .cat-action-secondary {
   background: var(--bg);
-  border: 1px solid rgb(221, 215, 227);
+  border: 1px solid var(--line);
 }
 .cat-action-archive {
   color: var(--ink);
   background: color-mix(in srgb, var(--accent) 14%, var(--bg));
 }
 .cat-action-delete {
-  color: rgb(187, 52, 52);
-  background: rgb(255, 220, 218);
+  color: var(--negative-ink);
+  background: var(--negative-soft);
 }
 @media (max-width: 360px) {
   .cat-manage-grid {
@@ -156,7 +156,7 @@
 }
 .cat-sub-chip {
   margin: 0px;
-  border-bottom: 1px solid rgb(233, 229, 237);
+  border-bottom: 1px solid var(--line);
 }
 .cat-sub-chip:last-child {
   border-bottom: 0px;
@@ -258,7 +258,7 @@
   border: 1px solid var(--line);
   padding: 15px;
   min-height: 70px;
-  border-color: rgb(221, 215, 227);
+  border-color: var(--line);
   border-radius: 12px;
   background: var(--bg);
 }
@@ -268,7 +268,7 @@
 .cat-edit-form > .field,
 .cat-sub-section {
   background: var(--bg);
-  border: 1px solid rgb(228, 223, 232);
+  border: 1px solid var(--line);
   border-radius: 10px;
 }
 .cat-sub-actions .row {
@@ -299,7 +299,7 @@
   font-weight: 500;
 }
 .type-picker-choice + .type-picker-choice {
-  border-top: 1px solid rgb(202, 196, 206);
+  border-top: 1px solid var(--line);
 }
 .type-picker-icon {
   width: 56px;
@@ -312,7 +312,7 @@
 .type-picker-radio {
   width: 23px;
   height: 23px;
-  border: 2px solid rgb(98, 97, 106);
+  border: 2px solid var(--muted);
   border-radius: 50%;
   margin-right: 7px;
   position: relative;

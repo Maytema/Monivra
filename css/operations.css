@@ -180,7 +180,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  border-bottom: 1px solid rgb(187, 180, 188);
+  border-bottom: 1px solid var(--line);
   padding: 23px 0px 15px;
 }
 .day-num {
@@ -321,7 +321,7 @@
   padding: 12px 14px;
   border-width: 0px 0px 1px;
   border-style: none none solid;
-  border-color: currentcolor currentcolor rgba(120, 120, 130, 0.15);
+  border-color: currentcolor currentcolor var(--muted);
   border-image: none;
   background: transparent;
   color: inherit;
@@ -413,7 +413,7 @@
   gap: 7px;
   min-height: 49px;
   padding: 2px 10px;
-  border-top: 1px solid rgba(100, 95, 110, 0.1);
+  border-top: 1px solid var(--muted);
 }
 .filter-label {
   flex: 1 1 0%;
@@ -439,7 +439,7 @@
   place-items: center;
   flex: 0 0 23px;
   height: 23px;
-  border: 2px solid rgb(119, 121, 133);
+  border: 2px solid var(--muted);
   border-radius: 6px;
   color: white;
   font-size: 16px;
@@ -469,7 +469,7 @@
 }
 .add-shell .add-tabs {
   flex: 0 0 auto;
-  border-bottom: 1px solid rgb(201, 198, 210);
+  border-bottom: 1px solid var(--line);
   display: grid;
   grid-template-columns: repeat(3, minmax(0px, 1fr));
   gap: 0px;
@@ -491,7 +491,7 @@
 .add-item {
   border-color: var(--line);
   gap: 8px;
-  border: 1px solid rgb(217, 213, 224);
+  border: 1px solid var(--line);
   border-radius: 17px;
   padding: 9px 6px;
   background: var(--key);
@@ -516,7 +516,7 @@
 .operations-selection-actions {
   display: flex;
   justify-content: space-around;
-  border-top: 1px solid rgb(217, 213, 228);
+  border-top: 1px solid var(--line);
   position: relative;
   bottom: auto;
   left: auto;

@@ -70,7 +70,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgb(129, 128, 137);
+  background: var(--muted);
 }
 .customize-toggle.on i {
   background: var(--white);
@@ -269,7 +269,7 @@
   color: var(--ink);
   border: 0px;
   background: var(--key);
-  box-shadow: rgba(41, 32, 52, 0.09) 0px 1px 2px;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--black) 9%, transparent);
 }
 .add-tab.active {
   border-bottom-color: var(--accent);
@@ -378,7 +378,7 @@
 }
 .account-tabs {
   height: 54px;
-  border-bottom: 1px solid rgb(215, 209, 217);
+  border-bottom: 1px solid var(--line);
   background: var(--bg);
   display: flex;
   gap: 0px;
@@ -502,7 +502,7 @@
   background: var(--tint);
   padding: 16px 19px;
   border-radius: 19px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px;
+  box-shadow: color-mix(in srgb, var(--black) 20%, transparent) 0px 2px 4px;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -657,18 +657,18 @@
   color: var(--on-accent);
 }
 .outline {
-  border: 1px solid rgb(203, 193, 208);
+  border: 1px solid var(--line);
 }
 .danger {
-  background: rgb(250, 214, 215);
-  color: rgb(164, 22, 43);
+  background: var(--negative-soft);
+  color: var(--negative-ink);
 }
 .text-button {
   padding: 14px;
   color: var(--accent-ink);
 }
 .toggle {
-  border: 1.5px solid rgb(131, 119, 131);
+  border: 1.5px solid var(--muted);
   width: 49px;
   height: 29px;
   border-radius: 30px;
@@ -684,7 +684,7 @@
   border-radius: 50%;
   top: 3.5px;
   left: 4px;
-  background: rgb(129, 121, 131);
+  background: var(--muted);
 }
 .toggle.on {
   background: var(--accent);
@@ -721,7 +721,7 @@
   min-height: 84px;
 }
 .panel .row {
-  border-color: rgb(221, 205, 227);
+  border-color: var(--line);
 }
 .total-card .row {
   padding: 18px 15px;
@@ -738,7 +738,7 @@
 .data-menu > .row {
   min-height: 65px;
   padding-inline: 22px;
-  border-bottom: 1px solid rgb(236, 231, 237);
+  border-bottom: 1px solid var(--line);
 }
 .fields .row {
   min-height: 54px;
@@ -748,7 +748,7 @@
   min-height: 61px;
 }
 .account-editor-reference .field {
-  border: 1px solid rgb(231, 225, 232);
+  border: 1px solid var(--line);
   border-radius: 10px;
   margin: 0px 0px 13px;
   padding: 14px 13px;
@@ -846,7 +846,7 @@
 .overlay {
   position: absolute;
   inset: 0px;
-  background: rgba(0, 0, 0, 0.333);
+  background: color-mix(in srgb, var(--black) 33%, transparent);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -866,7 +866,7 @@
   padding: 8px 0;
   border-radius: 14px;
   background: var(--sheet);
-  box-shadow: 0 4px 18px rgb(0 0 0 / 28%);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--black) 28%, transparent);
 }
 .popup-item {
   display: block;
@@ -877,7 +877,7 @@
   font-size: 17px;
 }
 .overlay ~ .overlay {
-  background: rgba(0, 0, 0, 0.2);
+  background: color-mix(in srgb, var(--black) 20%, transparent);
 }
 .overlay .panel {
   width: 100%;
@@ -926,7 +926,7 @@
   padding: 22px 20px 18px;
   border-radius: 26px;
   background: var(--sheet);
-  box-shadow: rgba(0, 0, 0, 0.133) 0px 12px 36px;
+  box-shadow: color-mix(in srgb, var(--black) 13%, transparent) 0px 12px 36px;
 }
 .overlay.dialog:has(.customize-customize) .panel,
 .overlay.dialog:has(.customize-settings) .panel {
@@ -1001,7 +1001,7 @@
 .overlay.dialog:has(.picker-settings) {
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.533);
+  background: color-mix(in srgb, var(--black) 53%, transparent);
 }
 .overlay.full {
   padding: 0px;
@@ -1070,7 +1070,7 @@
   grid-column: 2 / span 2;
 }
 .tag {
-  border: 1px solid rgb(183, 166, 190);
+  border: 1px solid var(--line);
   padding: 8px 12px;
   border-radius: 16px;
   font-size: 13px;
@@ -1283,7 +1283,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  border: 1px solid rgb(231, 202, 233);
+  border: 1px solid var(--line);
 }
 .customize-choices {
   display: grid;
@@ -1344,7 +1344,7 @@
   overflow: hidden;
 }
 .customize-setting-row + .customize-setting-row {
-  border-top: 1px solid rgb(215, 209, 217);
+  border-top: 1px solid var(--line);
 }
 .customize-cancel {
   color: var(--accent-ink);
@@ -1379,7 +1379,7 @@
 .customize-switch {
   width: 48px;
   height: 27px;
-  border: 2px solid rgb(129, 128, 137);
+  border: 2px solid var(--muted);
   border-radius: 25px;
   background: color-mix(in srgb, var(--ink) 14%, var(--bg));
   display: flex;
@@ -1443,7 +1443,7 @@
 .picker-icon-group-title::after {
   content: "";
   height: 1px;
-  background: rgb(188, 182, 190);
+  background: var(--line);
   flex: 1 1 0%;
 }
 .picker-icon-grid {
@@ -1508,7 +1508,7 @@
   border-radius: 50%;
   border: 3px solid var(--white);
   background: var(--picked);
-  box-shadow: 0 1px 5px rgb(0 0 0 / 45%);
+  box-shadow: 0 1px 5px color-mix(in srgb, var(--black) 45%, transparent);
   pointer-events: none;
 }
 .wheel-hue {
@@ -1530,7 +1530,7 @@
   align-items: center;
   justify-content: center;
   color: var(--white);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 12%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--black) 12%, transparent);
 }
 .picker-swatch.small {
   max-width: 34px;
@@ -1572,7 +1572,7 @@
   font-size: 12px;
 }
 .picker-setting-row + .picker-setting-row {
-  border-top: 1px solid rgb(216, 209, 220);
+  border-top: 1px solid var(--line);
 }
 .picker-setting-buttons {
   display: flex;
@@ -1586,18 +1586,18 @@
   align-items: center;
   justify-content: center;
   color: var(--ink-soft);
-  border: 1px solid rgb(227, 220, 229);
+  border: 1px solid var(--line);
   border-radius: 8px;
   height: 44px;
   margin: 2px;
 }
 .type-picker-icon.expense {
-  background: rgb(249, 220, 229);
-  color: rgb(228, 77, 118);
+  background: var(--negative-soft);
+  color: var(--negative-ink);
 }
 .type-picker-icon.income {
-  background: rgb(216, 238, 232);
-  color: rgb(49, 189, 153);
+  background: var(--positive-soft);
+  color: var(--positive);
 }
 .currency-sheet {
   height: 100%;
@@ -1621,7 +1621,7 @@
 }
 .currency-sheet-search {
   height: 75px;
-  border-bottom: 1px solid rgb(108, 103, 112);
+  border-bottom: 1px solid var(--muted);
   display: flex;
   align-items: center;
   gap: 14px;
@@ -1654,7 +1654,7 @@
 .currency-sheet-radio {
   width: 23px;
   height: 23px;
-  border: 2px solid rgb(92, 89, 101);
+  border: 2px solid var(--muted);
   border-radius: 50%;
   flex: 0 0 auto;
   position: relative;

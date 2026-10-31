@@ -78,7 +78,7 @@
   padding: 8px 9px;
   gap: 16px;
   border-radius: 15px;
-  border: 1px solid rgb(224, 220, 227);
+  border: 1px solid var(--line);
   background: var(--key);
   text-align: left;
   position: relative;
@@ -111,9 +111,9 @@
   border: 0px;
 }
 .account-editor-delete {
-  background: rgb(252, 225, 230);
+  background: var(--negative-soft);
   border: 0px;
-  color: rgb(184, 61, 85);
+  color: var(--negative-ink);
 }
 .account-favorite-badge {
   position: absolute;
@@ -161,9 +161,9 @@
   inset: auto -1px -1px auto;
   z-index: 1;
   border-radius: 3px;
-  -webkit-text-stroke: 1.15px rgb(255, 250, 254);
+  -webkit-text-stroke: 1.15px var(--white);
   paint-order: stroke;
-  text-shadow: rgba(30, 32, 75, 0.2) 0px 0px 1px;
+  text-shadow: 0 0 1px color-mix(in srgb, var(--black) 20%, transparent);
   pointer-events: none;
   background: transparent;
   padding: 0px;
@@ -354,7 +354,7 @@
   gap: 16px;
   width: 100%;
   padding: 16px;
-  border: 1px solid rgb(227, 220, 230);
+  border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--key);
   text-align: left;
@@ -408,7 +408,7 @@
   right: 64px;
   top: 16px;
   height: 51px;
-  border-bottom: 1px solid rgb(168, 160, 170);
+  border-bottom: 1px solid var(--muted);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -417,7 +417,7 @@
   left: 12px;
   right: 65px;
   gap: 4px;
-  border-bottom: 1px solid rgb(169, 161, 170);
+  border-bottom: 1px solid var(--muted);
 }
 /* Dragging an item to reorder: rows, sub-category chips and category tiles */
 :is(.account-row, .cat-sub-chip, .cat-manage-tile)[data-account],

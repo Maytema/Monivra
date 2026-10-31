@@ -73,8 +73,8 @@
   padding-bottom: 8px;
 }
 .mode-indicator.is-active {
-  background: rgb(36, 184, 122);
-  box-shadow: rgba(36, 184, 122, 0.32) 0px 0px 5px;
+  background: var(--positive);
+  box-shadow: 0 0 5px color-mix(in srgb, var(--positive) 32%, transparent);
 }
 .counterparty-title {
   margin: 4px 18px 8px;
@@ -145,7 +145,7 @@
   gap: 11px;
   min-width: 0px;
   text-align: left;
-  border-color: rgb(130, 125, 243);
+  border-color: var(--muted);
 }
 .calc-number {
   display: flex;
@@ -339,7 +339,7 @@
 .calc-number.dual-number {
   min-height: 56px;
   margin: 0 -16px;
-  border-bottom: 1px solid rgb(211, 207, 217);
+  border-bottom: 1px solid var(--line);
   transition: background 0.16s;
 }
 .calc-number.dual-number.dual-active {
@@ -408,7 +408,7 @@
   width: 21px;
   height: 3px;
   border-radius: 5px;
-  background: rgba(100, 82, 130, 0.17);
+  background: var(--line);
   transition:
     background 0.15s,
     box-shadow 0.15s;
@@ -427,7 +427,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid rgb(180, 170, 200);
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0 4px 0 12px;
   min-height: 40px;
@@ -463,10 +463,10 @@
     color 0.18s;
 }
 .calc-toggle.is-on {
-  background: color-mix(in srgb, rgb(36, 184, 122) 16%, transparent);
+  background: color-mix(in srgb, var(--positive) 16%, transparent);
 }
 .calc-toggle.is-on svg {
-  color: rgb(20, 140, 92);
+  color: var(--positive-ink);
   transform: scale(1.08);
 }
 /* Tag chips in the picker; the last one adds a new tag */
@@ -540,7 +540,7 @@
   height: 28px;
   border-radius: 50%;
   background: var(--sheet);
-  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--black) 25%, transparent);
 }
 .calc-top {
   margin: 0 -16px;
