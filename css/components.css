@@ -84,16 +84,6 @@
 #base:has(+ .overlay) {
   pointer-events: none;
 }
-#base:has(.accounts-content) .hero .hero-action svg {
-  width: 29px;
-  height: 29px;
-}
-#base:has(> .more-menu) {
-  min-height: 0px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
 /* Header with the balance and the action button */
 .hero {
   position: relative;
@@ -197,9 +187,6 @@
   gap: 4px;
   height: 46px;
 }
-#base:has(.sum-tabs) > .period {
-  height: 43px;
-}
 .swipe-pane .period {
   position: relative;
   isolation: isolate;
@@ -301,11 +288,6 @@
     padding-left: 11px;
     padding-right: 11px;
   }
-}
-#base:has(.sum-tabs) > .content {
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 8px;
 }
 #base > .swipe-pane > .content {
   flex: 1 1 0%;
