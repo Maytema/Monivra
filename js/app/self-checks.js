@@ -8,6 +8,7 @@ import { completeData } from "../data/defaults.js";
 import { createSampleData } from "../data/sample.js";
 import { isValidData } from "../data/storage.js";
 import { searchCurrencies } from "../domain/currency-search.js";
+import { leadingSide } from "../domain/dual-amount.js";
 import { applyFees } from "../domain/fees.js";
 import {
   accountBalance,
@@ -554,6 +555,64 @@ function checkAll() {
         balance === 80000 &&
         cut.receive === 50000 &&
         accountBalance(good.id) === 80000 - 500
+      );
+    }));
+  test("The side typed last fills in the other one; the other side is typed freely", () => {
+    // Typed sides and values as in the original: [side, typed value, expected leader afterwards].
+    let leader = "send";
+    const state = { send: 0, receive: 0 };
+    const type = (side, value) => {
+      leader = leadingSide(leader, side, state);
+      state[side] = value;
+      if (leader === side)
+        state[side === "send" ? "receive" : "send"] = value * (side === "send" ? 0.01 : 100);
+    };
+    type("send", 500);
+    type("send", 0);
+    type("receive", 5);
+    const filled = state.send === 500;
+    type("send", 6);
+    type("send", 600);
+    const free = state.receive === 5 && leader === "receive";
+    type("receive", 0);
+    type("receive", 3);
+    const followed = state.send === 300;
+    type("receive", 0);
+    type("send", 5);
+    const handedOver = leader === "send" && state.receive === 0.05;
+    type("receive", 6);
+    const kept = state.send === 5 && state.receive === 6;
+    type("send", 52);
+    return filled && free && followed && handedOver && kept && state.receive === 0.52;
+  });
+  test("An expense in a category of another currency keeps the amount typed in that currency", () =>
+    onCopy(() => {
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
+      const account = addAccount({ opening: 100000 });
+      appData.categories.push({ id: "__usd", name: "Cafe", type: "expense", currency: "USD" });
+      const draft = (extra) => ({
+        type: "expense",
+        from: account.id,
+        category: "__usd",
+        amount: 5000,
+        date: TODAY,
+        tags: [],
+        comment: "",
+        ...extra,
+      });
+      const automatic = draft();
+      validateOp(automatic);
+      const typed = draft({ receive: 300, receiveManual: true });
+      validateOp(typed);
+      const same = draft({ categoryAmount: { currency: "USD", amount: 1 } });
+      appData.categories.at(-1).currency = account.currency;
+      validateOp(same);
+      return (
+        automatic.categoryAmount.amount === 50 &&
+        typed.categoryAmount.amount === 300 &&
+        typed.receive === undefined &&
+        same.categoryAmount === undefined
       );
     }));
   test("Converting everything keeps the balance at the current rate; changing back restores", () =>

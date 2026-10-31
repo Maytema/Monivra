@@ -15,6 +15,7 @@ import {
   parseDate,
   toIsoDate,
 } from "../domain/finance.js";
+import { leadingSide } from "../domain/dual-amount.js";
 import { keypadDigits, typeKey } from "../domain/keypad.js";
 import { deleteOperation, processScheduled, putOperation } from "../domain/operations.js";
 import { translate, translateWith } from "../i18n/index.js";
@@ -166,7 +167,12 @@ export function operationStart(options = {}, scheduled = false) {
     const account = accountById(d.from || d.to);
     if (account && account.currency !== appData.settings.currency) d.receive = d.amount;
   }
-  if (d.id && d.receive !== undefined && !d.fees?.length) d.receiveManual = true;
+  const stored = d.categoryAmount;
+  if (d.id && stored && stored.currency === categoryById(d.category)?.currency) {
+    // The amount in the category's currency is the second amount of the editor.
+    d.receive = stored.amount;
+    d.receiveManual = true;
+  } else if (d.id && d.receive !== undefined && !d.fees?.length) d.receiveManual = true;
   const p = {
     draft: d,
     scheduled,
@@ -347,14 +353,34 @@ function accountCalculatorView(p) {
       : calcMode
         ? p.scratchExpr
         : d.expr;
+  // Amount on the sender side; zero while the expression is incomplete.
+  const enteredAmount = () => {
+    try {
+      return evaluateExpression(calcMode ? p.scratchExpr : d.expr);
+    } catch {
+      return 0;
+    }
+  };
+  // Both amounts as they are now, in cents.
+  const amounts = () => {
+    let receive = 0;
+    try {
+      receive = evaluateExpression(receiveExpression());
+    } catch {
+      // an incomplete expression counts as zero
+    }
+    return { send: enteredAmount(), receive };
+  };
+  p.leader ??= "send";
   const setReceiveExpr = (v) => {
+    const before = amounts();
     p.receiveExpr = v;
     p.scratchReady = false;
     try {
       const cents = evaluateExpression(v);
-      // Transfers and corrections store both amounts, so the first one stays as typed; an operation
-      // with a category stores only the account amount, which then follows the typed one.
-      if (!isAdjustment && !isTransfer) {
+      p.leader = leadingSide(p.leader, "receive", before);
+      // The leading side sets the other one; otherwise both amounts stay as they were typed.
+      if (p.leader === "receive") {
         const source = asDecimal(receiveToSource(cents));
         if (calcMode) p.scratchExpr = source;
         else d.expr = source;
@@ -367,33 +393,29 @@ function accountCalculatorView(p) {
   };
   if (p.scratchExpr === undefined) p.scratchExpr = String(d.expr || "0");
   const currentExpr = () => displayedExpr();
-  // Amount on the sender side for the fee preview; zero while the expression is incomplete.
-  const enteredAmount = () => {
-    try {
-      return evaluateExpression(calcMode ? p.scratchExpr : d.expr);
-    } catch {
-      return 0;
-    }
-  };
   const assignExpr = (v) => {
     if (dual && p.currencySide === "receive") {
       setReceiveExpr(v);
       return;
     }
+    if (!calcMode && /[+×÷−*/]/.test(v)) {
+      toast("Enable calculator for arithmetic");
+      return;
+    }
+    const before = amounts();
     if (calcMode) {
       p.scratchExpr = v;
       p.scratchReady = false;
-      p.receiveExpr = undefined;
+    } else d.expr = v;
+    p.receiveExpr = undefined;
+    if (!dual) {
       d.receiveManual = false;
-    } else {
-      if (/[+×÷−*/]/.test(v)) {
-        toast("Enable calculator for arithmetic");
-        return;
-      }
-      d.expr = v;
-      p.receiveExpr = undefined;
-      d.receiveManual = false;
+      return;
     }
+    // The leading side sets the other one; otherwise the received amount stays as it was typed.
+    p.leader = leadingSide(p.leader, "send", before);
+    d.receive = before.receive;
+    d.receiveManual = p.leader !== "send";
   };
   const switchMode = () => {
     p.scratchMode = !p.scratchMode;
@@ -415,12 +437,7 @@ function accountCalculatorView(p) {
     else if (k === "=") {
       try {
         const result = typeKey(currentExpr(), k);
-        if (dual && p.currencySide === "receive") {
-          setReceiveExpr(result);
-        } else {
-          p.scratchExpr = result;
-          p.receiveExpr = undefined;
-        }
+        assignExpr(result);
         p.scratchReady = true;
       } catch (e) {
         toast(e.message);
@@ -455,6 +472,8 @@ function accountCalculatorView(p) {
             if (!max) return toast("No available balance");
             d.expr = String(max / 100);
             p.receiveExpr = undefined;
+            p.leader = "send";
+            d.receiveManual = false;
             closeLayers();
             render();
           },

@@ -61,6 +61,19 @@ export function validateOp(d, lookup = { account: accountById, category: categor
       d.to = accountId;
       delete d.from;
     }
+    // A category in another currency keeps the amount in its currency next to the account's one.
+    const account = lookup.account(accountId);
+    if (category.currency === account.currency) delete d.categoryAmount;
+    else {
+      const own =
+        d.receiveManual === true && Number.isSafeInteger(d.receive) && d.receive > 0
+          ? d.receive
+          : convertCurrency(d.amount, account.currency, category.currency);
+      if (!Number.isSafeInteger(own) || own <= 0)
+        throw Error("Converted amount is too small or too large for the destination currency");
+      d.categoryAmount = { currency: category.currency, amount: own };
+    }
+    delete d.receiveManual;
     // Income: the account gets what is left after fees; expense: the account pays in full.
     if (d.type === "income" && d.fees?.length) d.receive = netAmount(d);
     else delete d.receive;
