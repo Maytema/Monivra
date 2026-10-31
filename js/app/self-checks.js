@@ -518,6 +518,44 @@ function checkAll() {
         appData.ops[1].recalculated.amount === 50000
       );
     }));
+  test("A correction in another currency keeps both sides and the balance follows the account", () =>
+    onCopy(() => {
+      appData.ops = [];
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
+      appData.settings.currency = "KGS";
+      const good = addAccount({ currency: "USD", opening: 0 });
+      const raise = {
+        type: "adjustment",
+        to: good.id,
+        amount: 90000,
+        date: TODAY,
+        tags: [],
+        comment: "",
+      };
+      validateOp(raise);
+      const manual = { ...raise, receive: 80000, receiveManual: true };
+      validateOp(manual);
+      const cut = {
+        type: "adjustment",
+        from: good.id,
+        amount: 500,
+        date: TODAY,
+        tags: [],
+        comment: "",
+      };
+      validateOp(cut);
+      appData.ops = [{ ...manual, id: "__a1" }];
+      const balance = accountBalance(good.id);
+      appData.ops.push({ ...cut, id: "__a2" });
+      return (
+        raise.receive === 900 &&
+        manual.receive === 80000 &&
+        balance === 80000 &&
+        cut.receive === 50000 &&
+        accountBalance(good.id) === 80000 - 500
+      );
+    }));
   test("Converting everything keeps the balance at the current rate; changing back restores", () =>
     onCopy(() => {
       appData.ops = [];

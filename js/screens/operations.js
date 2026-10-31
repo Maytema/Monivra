@@ -61,13 +61,21 @@ function amountTone(o) {
   if (o.type === "income" || (o.type === "adjustment" && o.to) || roles.income) return "pos";
   return "";
 }
+// The two amounts of a balance correction that has the account and "Adjustment" in different
+// currencies: what the account got or lost and what "Adjustment" gave or took.
+function adjustmentSides(o, account) {
+  if (o.type !== "adjustment" || o.receive === undefined || !account) return null;
+  const raise = !!o.to;
+  return { account: raise ? o.receive : o.amount, pseudo: raise ? o.amount : o.receive };
+}
 // One row in the operations list.
 export function opRow(o, scheduled = false) {
   const a = accountById(o.from || o.to),
     c = categoryById(o.category),
-    selected = uiState.selected.includes(o.id);
+    selected = uiState.selected.includes(o.id),
+    adjustment = adjustmentSides(o, a);
   return buttonHtml(
-    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-was">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(o.amount, a?.currency)}</span>`,
+    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-was">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${adjustment ? `<small class="op-foreign">${formatMoney(adjustment.pseudo, appData.settings.currency)}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(adjustment ? adjustment.account : o.amount, a?.currency)}</span>`,
     () => {
       if (uiState.selection) {
         setSelected(

@@ -161,6 +161,12 @@ export function operationStart(options = {}, scheduled = false) {
     d.expr = String(d.foreign.amount / 100);
   } else d.expr = String((d.amount || 0) / 100);
   d.fresh = !d.id;
+  if (d.id && d.type === "adjustment" && d.receive === undefined) {
+    // Older corrections have one amount: both sides show it, as they did when it was made.
+    const account = accountById(d.from || d.to);
+    if (account && account.currency !== appData.settings.currency) d.receive = d.amount;
+  }
+  if (d.id && d.receive !== undefined && !d.fees?.length) d.receiveManual = true;
   const p = {
     draft: d,
     scheduled,
@@ -311,8 +317,11 @@ function accountCalculatorView(p) {
   const chooseTarget = () =>
     isAdjustment && raise ? chooseOwnAccount() : counterpartyPicker("to", d);
   const calcMode = !!p.scratchMode;
-  const primary = from || to,
-    secondary = isAdjustment ? null : isTransfer ? to : c;
+  // A balance correction has "Adjustment" in the main currency as its other side.
+  const pseudo = { currency: appData.settings.currency, color: adjustment.color },
+    own = from || to;
+  const primary = isAdjustment ? (raise ? pseudo : own) : own,
+    secondary = isAdjustment ? (raise ? own : pseudo) : isTransfer ? to : c;
   const dual = !!(primary && secondary && primary.currency !== secondary.currency);
   // The amount can be typed in another currency; it is converted to the account's one on saving.
   const canPickCurrency = !dual && (d.type === "income" || d.type === "expense");
@@ -322,6 +331,8 @@ function accountCalculatorView(p) {
   const receiveToSource = (v) => convertCurrency(v, secondary.currency, primary.currency);
   const asDecimal = (n) => String(n / 100);
   const receiveExpression = () => {
+    // An operation that is opened keeps the amount it received until the sent amount is edited.
+    if (d.receiveManual && Number.isSafeInteger(d.receive)) return asDecimal(d.receive);
     try {
       return asDecimal(sourceToReceive(evaluateExpression(calcMode ? p.scratchExpr : d.expr)));
     } catch {
@@ -341,9 +352,12 @@ function accountCalculatorView(p) {
     p.scratchReady = false;
     try {
       const cents = evaluateExpression(v);
-      const source = asDecimal(receiveToSource(cents));
-      if (calcMode) p.scratchExpr = source;
-      else d.expr = source;
+      // A correction keeps the amount of its first side; any other operation follows the rate.
+      if (!isAdjustment) {
+        const source = asDecimal(receiveToSource(cents));
+        if (calcMode) p.scratchExpr = source;
+        else d.expr = source;
+      }
       d.receive = cents;
       d.receiveManual = true;
     } catch {

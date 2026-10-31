@@ -33,6 +33,20 @@ export function validateOp(d, lookup = { account: accountById, category: categor
     if (!Number.isSafeInteger(d.receive) || d.receive <= 0)
       throw Error("Converted amount is too small or too large for the destination currency");
     delete d.category;
+  } else if (d.type === "adjustment") {
+    // The other side of a balance correction is "Adjustment" in the main currency: a raise
+    // sends the amount in the main currency and the account receives `receive`, a cut takes
+    // `amount` from the account and "Adjustment" receives `receive`.
+    const account = lookup.account(d.from || d.to);
+    if (!account || !!d.from === !!d.to) throw Error("Select an account");
+    const main = appData.settings.currency;
+    const [sent, got] = d.to ? [main, account.currency] : [account.currency, main];
+    if (sent === got) delete d.receive;
+    else if (!(d.receiveManual === true && Number.isSafeInteger(d.receive) && d.receive > 0))
+      d.receive = convertCurrency(d.amount, sent, got);
+    if (d.receive !== undefined && (!Number.isSafeInteger(d.receive) || d.receive <= 0))
+      throw Error("Converted amount is too small or too large for the destination currency");
+    delete d.category;
   } else if (d.type === "expense" || d.type === "income") {
     const category = lookup.category(d.category);
     if (!category) throw Error("Select a category");
@@ -131,6 +145,10 @@ export function planCurrencyChange(id, currency, mode) {
       if (!out || o.type === "adjustment") continue;
       change.amount = conv(o.amount);
       if (o.receive) change.receive = conv(o.receive);
+    } else if (o.type === "adjustment") {
+      // Only the account's own side is in its currency; "Adjustment" stays in the main one.
+      if (into && o.receive !== undefined) change.receive = conv(o.receive);
+      else change.amount = conv(o.amount);
     } else if (out || (into && o.type !== "transfer")) {
       change.amount = conv(o.amount);
       if (into && o.receive) change.receive = conv(o.receive);
@@ -171,7 +189,10 @@ export function changeAccountCurrency(id, currency, mode) {
   if (mode === "all")
     for (const key of ["opening", "goal", "limit", "totalDebt"]) if (a[key]) a[key] = conv(a[key]);
   for (const { op: o, amount, receive } of plan.changes) {
-    const was = o.from === id || o.type !== "transfer" ? o.amount : o.receive;
+    const was =
+      o.from === id || (o.type !== "transfer" && !(o.type === "adjustment" && o.receive))
+        ? o.amount
+        : o.receive;
     if (amount !== undefined) {
       // A fixed fee is an amount in the same currency.
       if (o.from === id)
