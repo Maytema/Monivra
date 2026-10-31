@@ -7,8 +7,6 @@ import {
   categoryById,
   categoryCount,
   categoryShare,
-  categoryTotal,
-  convertCurrency,
   formatMoney,
   totalByType,
 } from "../domain/finance.js";
@@ -16,6 +14,7 @@ import { deleteCategory, moveCategory } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor.js";
+import { categoryMoney, categoryTileHtml } from "./pickers.js";
 import { openFilteredOperations } from "./operations.js";
 import {
   actionTileHtml,
@@ -77,16 +76,10 @@ export function sumTabs() {
     .join("")}</div>`;
 }
 
-// Total of a category for the report period, shown in the currency of the category.
-const categoryMoney = (c) =>
-  formatMoney(
-    convertCurrency(categoryTotal(c.id, c.type), appData.settings.currency, c.currency),
-    c.currency,
-  );
 // One tile in the categories grid.
 function categoryTile(c, fn = null) {
-  return buttonHtml(
-    `${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><span class="money ${categoryTotal(c.id, c.type) === 0 ? "muted" : c.type === "income" ? "pos" : "neg"}">${categoryMoney(c)}</span></span>`,
+  return categoryTileHtml(
+    c,
     fn ||
       (() =>
         operationStart({
@@ -95,7 +88,7 @@ function categoryTile(c, fn = null) {
           from: c.type === "expense" ? appData.accounts.find((a) => !a.archived)?.id : null,
           to: c.type === "income" ? appData.accounts.find((a) => !a.archived)?.id : null,
         })),
-    "cat-tile",
+    false,
     `data-category="${c.id}"`,
   );
 }

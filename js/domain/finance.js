@@ -74,8 +74,7 @@ export function accountProgress(a) {
 export const ACCOUNT_GROUPS = [
   ["Accounts", (a) => a.type === "Regular"],
   ["Savings", (a) => a.type === "Savings"],
-  ["I owe", (a) => a.type === "Debt" && debtDirection(a) === "I owe"],
-  ["Owe me", (a) => a.type === "Debt" && debtDirection(a) === "Owe me"],
+  ["Debts", (a) => a.type === "Debt"],
 ];
 // Exchange rate of a currency relative to the base currency.
 const currencyRate = (c) => appData.rates[c] || 1;

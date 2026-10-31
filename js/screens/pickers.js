@@ -4,7 +4,9 @@ import { appData } from "../core/state.js";
 import {
   ACCOUNT_GROUPS,
   accountBalance,
+  categoryTotal,
   convertCurrency,
+  formatMoney,
   moneySpanHtml,
 } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
@@ -33,17 +35,27 @@ export function accountCardsHtml(accounts, chosenId, onPick) {
   }).join("");
 }
 
+// Total of a category for the report period, shown in the currency of the category.
+export const categoryMoney = (c) =>
+  formatMoney(
+    convertCurrency(categoryTotal(c.id, c.type), appData.settings.currency, c.currency),
+    c.currency,
+  );
+// One category tile: icon, name and the total of the period; `extra` is added to the button.
+export function categoryTileHtml(c, onPick, chosen = false, extra = "") {
+  const tone = categoryTotal(c.id, c.type) === 0 ? "muted" : c.type === "income" ? "pos" : "neg";
+  return buttonHtml(
+    `${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><span class="money ${tone}">${categoryMoney(c)}</span></span>${chosen ? iconSvg("check", 16) : ""}`,
+    onPick,
+    "cat-tile",
+    extra,
+  );
+}
 // Grid of tiles for the categories of one type; `onPick(category)` runs when one is tapped.
 export function categoryTilesHtml(type, chosenId, onPick, extraClass = "") {
   const tiles = appData.categories
     .filter((c) => !c.archived && c.type === type)
-    .map((c) =>
-      buttonHtml(
-        `${badgeHtml(c)}<span class="grow"><span class="name">${c.parent ? "↳ " : ""}${escapeHtml(c.name)}</span></span>${c.id === chosenId ? iconSvg("check", 16) : ""}`,
-        () => onPick(c),
-        "cat-tile",
-      ),
-    )
+    .map((c) => categoryTileHtml(c, () => onPick(c), c.id === chosenId))
     .join("");
   return `<div class="grid ${appData.settings.onePicker ? "one" : ""} ${extraClass}">${tiles}</div>`;
 }
