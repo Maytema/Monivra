@@ -1,17 +1,9 @@
 /* More tab, settings and info pages */
-import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
-import {
-  APP_BUILD,
-  APP_ID,
-  APP_NAME,
-  TODAY,
-  deepClone,
-  escapeHtml,
-  iconSvg,
-} from "../core/constants.js";
+import { APP_BUILD, APP_ID, APP_NAME, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
-import { download, exportJSON } from "../data/import-export.js";
+import { download } from "../data/import-export.js";
+import { hintHtml } from "../ui/hint.js";
 import { aboutArt } from "./about-art.js";
 import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
@@ -57,7 +49,7 @@ export function moreView() {
       ["Terms of use", "receipt", "terms"],
     ],
   ];
-  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>${APP_NAME}</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (${translate("Closed Beta")}) · ${translate("build")} ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
+  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>${APP_NAME}</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g, i) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>${i === 0 ? hintHtml("shared-access", "Shared access", () => openPage("shared")) : ""}`).join("")}</div><div class="more-version">${APP_NAME} · 0.1.0 (${translate("Closed Beta")}) · ${translate("build")} ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
 }
 
 // Settings sub-pages: notifications, security, privacy, backups, rates.
@@ -81,10 +73,8 @@ export function settingsPage(kind) {
           "Weekdays",
           "Weekends",
         ]) +
-        menuRowHtml("Test notification", "bell", () =>
-          toast("DEMO reminder: enter today’s operations"),
-        ) +
-        '<p class="footnote">DEMO: no notifications run after this page is closed.</p>';
+        menuRowHtml("Test notification", "bell", () => toast("Enter today’s operations")) +
+        '<p class="footnote">Reminders are shown only while the app is open.</p>';
       break;
     case "security":
       title = "Security";
@@ -92,14 +82,6 @@ export function settingsPage(kind) {
         toggleRowHtml("PIN code", !!appData.settings.pin, () => {
           if (appData.settings.pin) pinSetup(true);
           else pinSetup(false);
-        }) +
-        toggleRowHtml("Biometrics", appData.settings.biometrics, () => {
-          appData.settings.biometrics = !appData.settings.biometrics;
-          save();
-          render();
-          showInfo(
-            "DEMO: this switch stores a preference. Browser biometrics are not connected. PIN remains available.",
-          );
         }) +
         switchSetting("Lock after leaving", "relock") +
         settingOptions("Lock delay", "lockDelay", [
@@ -114,7 +96,7 @@ export function settingsPage(kind) {
           setPinEntry("");
           render();
         }) +
-        '<p class="footnote">DEMO PIN only hides the interface. Local data is not encrypted. PIN recovery: More → Demo and reset after exporting data, or clear this page’s browser storage.</p>';
+        '<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p>';
       break;
     case "privacy":
       title = "Privacy";
@@ -122,20 +104,15 @@ export function settingsPage(kind) {
         switchSetting(
           "Hide preview",
           "hidePreview",
-          "Demonstrates a privacy cover while the page is hidden",
+          "Cover the screen while the app is in the background",
         ) +
         settingOptions("Hidden values", "hiddenValues", ["Hide all", "Balances only"]) +
-        switchSetting("Hide balances", "hidden") +
-        '<p class="footnote">DEMO: local files and backups remain readable. This is not a security boundary.</p>';
+        switchSetting("Hide balances", "hidden");
       break;
     case "backups":
       title = "Backups";
       body =
-        switchSetting(
-          "Automatic backups",
-          "autoBackup",
-          "One backup per day when this demo opens",
-        ) +
+        switchSetting("Automatic backups", "autoBackup", "One backup per day when the app opens") +
         menuRowHtml("Create backup", "save", () => {
           createBackup();
           render();
@@ -152,7 +129,7 @@ export function settingsPage(kind) {
                     "repeat",
                     () =>
                       confirmAction(
-                        "Replace current demo data with this backup?",
+                        "Replace current data with this backup?",
                         () => {
                           const saved = deepClone(appData.backups);
                           setAppData(deepClone(b.data));
@@ -221,7 +198,7 @@ export function pinSetup(remove) {
               maxLength: size,
               hint,
             })
-      }<p class="footnote">DEMO interface lock. This does not encrypt data.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+      }<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "Save",
         () => {
           if (remove) {
@@ -283,23 +260,14 @@ export function lockView() {
     }
   };
   const digit = (k) => buttonHtml(k, () => press(k), "key");
-  // The fingerprint key stands left of the zero only while biometrics are switched on.
-  const biometrics = appData.settings.biometrics
-    ? buttonHtml(
-        iconSvg("fingerprint", 34),
-        () => toast("Browser biometrics are not connected in this preview"),
-        "key plain",
-        `aria-label="${translate("Biometrics")}"`,
-      )
-    : "<span></span>";
   const backspace = buttonHtml(
     iconSvg("backspace", 30),
     () => press("⌫"),
     "key plain",
     `aria-label="${translate("Backspace")}"`,
   );
-  const keys = [..."123456789"].map(digit).join("") + biometrics + digit("0") + backspace;
-  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div><p class="footnote">DEMO interface lock</p></div></div>`;
+  const keys = [..."123456789"].map(digit).join("") + "<span></span>" + digit("0") + backspace;
+  return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div></div></div>`;
 }
 // Topics of the Support page: the heading, the text of the page and the row icon.
 const SUPPORT_TOPICS = {
@@ -347,7 +315,7 @@ export function simplePage(kind) {
     body = `<div class="profile"><div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle class="orbit-ring" cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g class="orbit-particles" fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/><circle cx="150" cy="30" r="1.8"/><circle cx="44" cy="164" r="2"/></g><g class="orbit-particles slow" fill="#8bbcc1"><circle cx="100" cy="188" r="2.2"/><circle cx="31" cy="52" r="1.6"/><circle cx="182" cy="140" r="1.8"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
   } else if (kind === "subscription") {
     title = "Subscription";
-    footer = `<div class="sub-bottom">${buttonHtml("Continue", () => showInfo("Closed beta preview: no purchase will be made."), "continue")}</div>`;
+    footer = `<div class="sub-bottom">${buttonHtml("Continue", () => showInfo("Subscriptions are not available yet.", "Subscription"), "continue")}</div>`;
     const plan = uiState.morePlan || "Lifetime";
     const plans = [
       [
@@ -384,10 +352,10 @@ export function simplePage(kind) {
       )
       .join(
         "",
-      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>${translateWith("Your feedback will help shape {app} before its public release.", { app: APP_NAME })}</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div>`;
+      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Store billing is not connected yet.", "Subscription"), "button-outline")).join("")}</div><p class="sub-disclosure">Prices are indicative and payments are not available yet. Plans and prices may change before launch.</p></div>`;
   } else if (kind === "shared") {
     title = "Shared access";
-    body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access</p></div>${buttonHtml("Invite", () => showInfo(translateWith("DEMO: sharing requires a {app} account and network service. No invitation is sent.", { app: APP_NAME })), "primary")}`;
+    body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access will be available after sign-in is added.</p></div>`;
   } else if (kind === "instructions") {
     title = "Instructions";
     body = `<div class="help-intro">${translateWith("Learn the basics of {app}", { app: APP_NAME })}</div>${menuRowHtml(
@@ -457,37 +425,6 @@ export function simplePage(kind) {
             "primary",
           )}`
     }</div>`;
-  } else if (kind === "demo") {
-    title = "Demo and reset";
-    body = `<div class="demo-note"><strong>${APP_NAME} · ${translate("Offline reconstruction")}</strong><p>Reference date: 12 October 2026. The five main sections were rebuilt from sampled source frames. Exact fonts, animations and several external flows remain UNKNOWN.</p><p>Open this HTML in a browser. Changes are stored on this device when browser storage is available. Export a Data file before moving or replacing it.</p></div>${menuRowHtml("Export data file", "download", exportJSON)}${menuRowHtml(
-      "Reset demo data",
-      "repeat",
-      () =>
-        confirmAction(
-          "Replace all current local data with the initial demo?",
-          () => {
-            setAppData({ ...createSampleData(), backups: appData.backups });
-            uiState.filters = {
-              accounts: null,
-              categories: null,
-              types: null,
-              tags: null,
-              comment: "",
-            };
-            uiState.period = { mode: "month", anchor: TODAY };
-            save();
-            goHome("accounts");
-          },
-          true,
-          "Confirm",
-        ),
-    )}${menuRowHtml("Run self-checks", "check", () => {
-      const out = runSelfChecks();
-      showInfo(
-        out.map((x) => (x.pass ? "PASS" : "FAIL") + " · " + x.name).join("\n"),
-        "Self-checks",
-      );
-    })}<p class="footnote">Android file handling, camera, downloads and localStorage depend on the browser. PIN is not encryption. This is not financial advice or a connection to your actual accounts.</p>`;
   } else if (kind === "about") {
     title = "About our team";
     body = `<div class="about">${aboutArt}<p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;

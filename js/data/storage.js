@@ -161,7 +161,7 @@ export function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     return true;
   } catch {
-    toast("DEMO: storage is unavailable or full. Export a Data file to keep changes.");
+    toast("Storage is unavailable or full. Export a data file to keep changes.");
     return false;
   }
 }

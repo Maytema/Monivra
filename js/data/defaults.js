@@ -45,7 +45,6 @@ export function createEmptyData() {
       notificationTime: "20:00",
       notificationFrequency: "Every day",
       pin: false,
-      biometrics: false,
       relock: false,
       lockDelay: 0,
       hidePreview: false,

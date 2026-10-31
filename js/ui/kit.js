@@ -80,7 +80,7 @@ export function finishFlow(message = "Saved") {
   toast(message);
 }
 // Dialog with a title, a message and an OK button.
-export function showInfo(message, title = "DEMO") {
+export function showInfo(message, title = "Information") {
   openSheet(
     () =>
       `<h2>${escapeHtml(title)}</h2><p>${escapeHtml(message)}</p>${buttonHtml("OK", () => closeLayers(), "primary")}`,

@@ -77,13 +77,14 @@ const rateRow = (code) => {
 export function ratesBody() {
   const codes = listed();
   return (
-    `<p class="demo-note">${translate("DEMO · Fixed example rates, editable locally. No market data.")}</p>` +
+    `<p class="rates-note">${translate("Rates are fixed values that you can edit. Live quotes are not connected.")}</p>` +
     toggleRowHtml("Automatic rates", appData.settings.autoRates, () => {
       appData.settings.autoRates = !appData.settings.autoRates;
       save();
       render();
       showInfo(
-        "DEMO: automatic exchange-rate updates need a network service. Values below stay unchanged.",
+        "Automatic updates need a rates service, which is not connected yet. The values below stay unchanged.",
+        "Exchange rates",
       );
     }) +
     `<p class="rates-legend">${translate("Tick a currency to keep its rate out of the automatic update. An edited rate is ticked automatically.")}</p>` +

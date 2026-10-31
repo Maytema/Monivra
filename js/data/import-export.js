@@ -39,7 +39,7 @@ export function download(name, content, type) {
   toast("File prepared");
 }
 // Export the whole dataset as a JSON backup.
-export function exportJSON() {
+function exportJSON() {
   download(`${APP_ID}-data.json`, JSON.stringify(dataSnapshot(), null, 2), "application/json");
 }
 // Open the file chooser for JSON/CSV import.
@@ -93,7 +93,7 @@ export function dataView() {
     )}${menuRowHtml("Export data", "download", () =>
       openSheet(
         () =>
-          `<h2>Export data</h2><p>Export a local file from this closed beta.</p>${menuRowHtml(
+          `<h2>Export data</h2><p>Export a copy of your data as a file.</p>${menuRowHtml(
             "Complete data file (JSON)",
             "download",
             () => {

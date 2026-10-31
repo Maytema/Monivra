@@ -237,7 +237,6 @@ export const russianStrings = {
   "Not selected": "Не выбрано",
   "Enter a name": "Введите название",
   "Enter your PIN": "Введите PIN",
-  "Demo and reset": "Демо и сброс",
   Empty: "Пока пусто",
   Continue: "Продолжить",
   "Welcome to {app}": "Добро пожаловать в {app}",
@@ -331,8 +330,6 @@ export const russianStrings = {
   // Remaining screens, messages and currencies
   "Account saved": "Счёт сохранён",
   "Accounts and categories": "Счета и категории",
-  "Accounts, categories, operations, statistics and settings are being tested. Some features are demonstrations and may change before launch.":
-    "Счета, категории, операции, статистика и настройки проходят проверку. Часть возможностей показана для примера и может измениться до выхода.",
   "Additional questions": "Дополнительные вопросы",
   Additionally: "Дополнительно",
   Adjustment: "Корректировка",
@@ -342,8 +339,6 @@ export const russianStrings = {
     "Все будущие возможности входят без доплаты",
   Amount: "Сумма",
   "Amount is too large": "Сумма слишком большая",
-  "Android file handling, camera, downloads and localStorage depend on the browser. PIN is not encryption. This is not financial advice or a connection to your actual accounts.":
-    "Работа с файлами, камера, загрузки и локальное хранилище зависят от браузера. PIN-код не шифрует данные. Это не финансовая консультация и не подключение к вашим настоящим счетам.",
   Annually: "Раз в год",
   "Any number of accounts, debts and goals": "Любое количество счетов, долгов и целей",
   "Any number of budgets": "Любое количество бюджетов",
@@ -383,18 +378,8 @@ export const russianStrings = {
   "Move to a category": "Переместить в категорию",
   "Merge into a subcategory": "Объединить с подкатегорией",
   "Convert to a category": "Сделать категорией",
-  Invite: "Пригласить",
   "View instructions": "Посмотреть инструкцию",
-  "Browser biometrics are not connected in this preview":
-    "Биометрия браузера в этой версии не подключена",
-  "Closed beta preview: no purchase will be made.":
-    "Предпросмотр закрытой беты: покупка не будет совершена.",
-  "DEMO: sharing requires a {app} account and network service. No invitation is sent.":
-    "Демо: для общего доступа нужны аккаунт {app} и сетевой сервис. Приглашение не отправляется.",
   Restore: "Восстановить",
-  "Export data file": "Экспорт файла данных",
-  "Reset demo data": "Сбросить демо-данные",
-  "Run self-checks": "Запустить самопроверку",
   "Select sender account": "Выберите счёт отправителя",
   "No available balance": "Нет доступного остатка",
   Close: "Закрыть",
@@ -419,10 +404,7 @@ export const russianStrings = {
   "Delete this subcategory and its associated operations?":
     "Удалить эту подкатегорию и связанные с ней операции?",
   "Category deleted": "Категория удалена",
-  "Replace current demo data with this backup?": "Заменить текущие демо-данные этой копией?",
   "Delete this saved backup?": "Удалить эту сохранённую копию?",
-  "Replace all current local data with the initial demo?":
-    "Заменить все локальные данные исходным демо?",
   "Use full sender account balance": "Использовать весь остаток счёта отправителя",
   "Calculator expression": "Выражение калькулятора",
   "Save operation with calculated result": "Сохранить операцию с вычисленным результатом",
@@ -436,7 +418,6 @@ export const russianStrings = {
   "Exclude selected in accounts": "Исключить выбранные счета",
   "Exclude selected in categories": "Исключить выбранные категории",
   "Enter a valid time": "Введите корректное время",
-  Biometrics: "Биометрия",
   Business: "Бизнес",
   "CSV imported": "CSV импортирован",
   "CSV is empty": "CSV пуст",
@@ -453,9 +434,6 @@ export const russianStrings = {
   "Clear comment": "Очистить комментарий",
   "Click on the value to edit": "Нажмите на значение, чтобы изменить",
   "Close search": "Закрыть поиск",
-  "Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.":
-    "Закрытая бета: цены ориентировочные. Платежи отключены. Тарифы и цены могут измениться до запуска.",
-  "Closed Beta · 0.1.0": "Закрытая бета · 0.1.0",
   "Closed beta": "Закрытая бета",
   "Closed beta information": "О закрытой бете",
   "Cloud sync, payments and account sign-in are not connected in this HTML preview. A future online version may process data differently.":
@@ -475,18 +453,6 @@ export const russianStrings = {
   "Currencies used": "Используемые валюты",
   "Current database:": "Текущая база:",
   "Customize icon": "Настроить значок",
-  "DEMO interface lock": "Блокировка интерфейса (демо)",
-  "DEMO interface lock. This does not encrypt data.":
-    "Блокировка интерфейса (демо). Данные она не шифрует.",
-  "DEMO reminder: enter today’s operations": "Напоминание: внесите сегодняшние операции",
-  "DEMO · Fixed example rates, editable locally. No market data.":
-    "Примерные курсы, их можно изменить вручную. Рыночные данные не используются.",
-  "DEMO: automatic exchange-rate updates need a network service. Values below stay unchanged.":
-    "Автоматическое обновление курсов требует сетевого сервиса. Значения ниже не изменятся.",
-  "DEMO: storage is unavailable or full. Export a Data file to keep changes.":
-    "Хранилище недоступно или заполнено. Сохраните файл данных, чтобы не потерять изменения.",
-  "DEMO: this switch stores a preference. Browser biometrics are not connected. PIN remains available.":
-    "Переключатель сохраняет настройку. Биометрия браузера не подключена, доступен PIN-код.",
   "Data imported": "Данные импортированы",
   "Data safety": "Безопасность данных",
   "Database is not empty": "В базе уже есть данные",
@@ -494,8 +460,6 @@ export const russianStrings = {
   "Delete selected operations?": "Удалить выбранные операции?",
   "Delete this operation?": "Удалить эту операцию?",
   Demo: "Демо",
-  "Demonstrates a privacy cover while the page is hidden":
-    "Показывает заставку, пока страница скрыта",
   "Donut chart": "Кольцевая диаграмма",
   "Draft · Not for publication": "Черновик · не для публикации",
   "Enable calculator for arithmetic": "Включить калькулятор для вычислений",
@@ -561,11 +525,8 @@ export const russianStrings = {
   "Merge into a subcategory?": "Объединить с подкатегорией?",
   "Money you borrowed or lent. Track who owes whom and how debt repayment is progressing.":
     "Деньги, которые вы заняли или одолжили. Следите, кто кому должен и как идёт погашение.",
-  "{app} is an independent personal-finance application in development. This preview is shared to gather feedback before release.":
-    "{app} — независимое приложение для личных финансов, находящееся в разработке. Эта версия показана, чтобы собрать отзывы до выхода.",
   "{app} is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.":
     "Сейчас {app} — незаконченная тестовая сборка. Возможности, внешний вид и формат данных могут меняться.",
-  "Offline reconstruction": "Автономная версия",
   "Month starts on": "Месяц начинается",
   "Move down": "Вниз",
   "Move into": "Переместить в",
@@ -579,30 +540,23 @@ export const russianStrings = {
   "No icons or colors available": "Нет доступных значков и цветов",
   "Not connected": "Не подключено",
   "Not signed in": "Вход не выполнен",
-  "One backup per day when this demo opens": "Одна копия в день при открытии приложения",
   "One time payment": "Единоразовый платёж",
   "Open photo": "Открыть фото",
-  "Open this HTML in a browser. Changes are stored on this device when browser storage is available. Export a Data file before moving or replacing it.":
-    "Откройте страницу в браузере. Изменения хранятся на этом устройстве, если хранилище браузера доступно. Перед переносом или заменой сохраните файл данных.",
   "Operation saved": "Операция сохранена",
   "Operations (CSV)": "Операции (CSV)",
   "Other currencies": "Другие валюты",
   Completed: "Завершённые",
   "PIN code": "PIN-код",
-  "People behind the project": "Люди, которые делают проект",
   "Periodic reminders": "Периодические напоминания",
   Personal: "Личное",
   Photo: "Фото",
   "Press = first": "Сначала нажмите =",
   "Privacy in the current offline preview": "Приватность в текущей автономной версии",
-  "Project status": "Статус проекта",
   Purchases: "Покупки",
   Purpose: "Назначение",
   "Put money aside, with or without a goal — for a dream, a big purchase or a buffer for future events.":
     "Откладывайте деньги с целью или без — на мечту, крупную покупку или запас на будущее.",
   "Question on how to use": "Вопрос по использованию",
-  "Reference date: 12 October 2026. The five main sections were rebuilt from sampled source frames. Exact fonts, animations and several external flows remain UNKNOWN.":
-    "Опорная дата: 12 октября 2026. Пять основных разделов воссозданы по образцам. Точные шрифты, анимации и ряд внешних сценариев пока неизвестны.",
   "Remove photo": "Удалить фото",
   "Remove this tag from all operations?": "Убрать этот тег из всех операций?",
   "Rename tag": "Переименовать тег",
@@ -648,8 +602,6 @@ export const russianStrings = {
   "Synchronization of devices in real time via a shared account":
     "Синхронизация устройств в реальном времени через общий аккаунт",
   "Tag already exists": "Такой тег уже есть",
-  "Team member names, contact addresses and company details have not yet been supplied for public release.":
-    "Имена участников команды, контакты и данные компании для публичного релиза пока не предоставлены.",
   "Test data": "Тестовые данные",
   "Test notification": "Тестовое уведомление",
   "The file is larger than the 20 MB import limit.": "Файл больше лимита импорта в 20 МБ.",
@@ -659,8 +611,6 @@ export const russianStrings = {
   "These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.":
     "Эти заметки не являются пользовательским соглашением. Окончательные условия потребуют данных оператора, модели сервиса, юрисдикции и проверки до публичного запуска.",
   "This image could not be opened": "Не удалось открыть изображение",
-  "This is a draft project information page, not a claim of affiliation with another application.":
-    "Это черновая страница о проекте; она не заявляет о связи с другим приложением.",
   "This is a technical summary of the beta, not a finalized privacy policy. A public policy must be written and reviewed after the actual hosting, analytics, account and support systems are decided.":
     "Это техническое описание беты, а не окончательная политика конфиденциальности. Публичную политику напишут и проверят после выбора хостинга, аналитики, аккаунтов и поддержки.",
   "This tool is intended for personal expense tracking. It is not a banking service and does not execute real transfers.":
@@ -683,8 +633,6 @@ export const russianStrings = {
     "Эта настройка позволяет исключить из случайного выбора значки и цвета, уже занятые текущими счетами и категориями.",
   "You can export a data file from More → Data and delete the current local records there. Files you have already exported must be deleted separately.":
     "Файл данных можно сохранить в разделе «Ещё» → «Данные» и там же удалить текущие записи. Уже сохранённые файлы нужно удалять отдельно.",
-  "Your feedback will help shape {app} before its public release.":
-    "Ваши отзывы помогут сделать {app} лучше до публичного выпуска.",
   "Toggle balance visibility": "Показать или скрыть баланс",
   "Main navigation": "Основная навигация",
   Back: "Назад",
@@ -707,12 +655,10 @@ export const russianStrings = {
   "Create a new category": "Создать новую категорию",
   "All categories (All subcategories)": "Все категории (все подкатегории)",
   Type: "Тип",
-  "— Closed Beta feedback": "— отзыв закрытой беты",
   "Solving the payment problem": "Проблемы с оплатой",
   "Check purchase status": "Проверить статус покупки",
   "Restore purchases": "Восстановить покупки",
   "Subscription management": "Управление подпиской",
-  Review: "Отзыв",
   "Scheduled payments will be here": "Здесь будут плановые платежи",
   "Create your first scheduled payment": "Создайте первый плановый платёж",
   "Sign out": "Выйти",
@@ -729,9 +675,6 @@ export const russianStrings = {
   "CSV row {row}: {message}": "Строка CSV {row}: {message}",
   "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?":
     "Заменить текущие данные: счетов — {accounts}, категорий — {categories}, операций — {ops} из этого файла?",
-  "Review 1 of 8": "Отзыв 1 из 8",
-  "Offline preview: store billing is not connected.":
-    "Оплата через магазин приложений не подключена.",
   "Previous day": "Предыдущий день",
   "Next day": "Следующий день",
   Attachment: "Вложение",
@@ -876,16 +819,9 @@ export const russianStrings = {
     "Удалённого аккаунта нет. Локальными данными можно управлять в разделе «Ещё» → «Данные».",
   "This offline beta is not connected to an account.":
     "Эта автономная бета не подключена к аккаунту.",
-  "DEMO PIN only hides the interface. Local data is not encrypted. PIN recovery: More → Demo and reset after exporting data, or clear this page’s browser storage.":
-    "PIN-код только скрывает интерфейс, локальные данные не шифруются. Если забыли PIN: сохраните данные, затем «Ещё» → «Демо и сброс», либо очистите хранилище браузера для этой страницы.",
-  "DEMO: no notifications run after this page is closed.":
-    "Уведомления не работают, когда страница закрыта.",
-  "DEMO: local files and backups remain readable. This is not a security boundary.":
-    "Локальные файлы и копии остаются читаемыми. Это не защита данных.",
   Message: "Сообщение",
   "Importing data may change your existing records. Export a backup first.":
     "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
-  "Export a local file from this closed beta.": "Сохраните локальный файл из этой закрытой беты.",
   Filtered: "Фильтр",
   "Sum of operations for the period": "Сумма операций за период",
   "Operations: {n}": "Операций: {n}",
@@ -1015,4 +951,25 @@ export const russianStrings = {
     "Команда {app} каждый день создаёт удобное и полезное приложение для управления вашими финансами.",
   "We hope our work will help you manage your money better and reach your goals!":
     "Надеемся, наша работа поможет вам лучше управлять деньгами и достигать целей!",
+  "Enter today’s operations": "Внесите сегодняшние операции",
+  "Reminders are shown only while the app is open.":
+    "Напоминания показываются, только пока приложение открыто.",
+  "The PIN only hides the screen; data on the device is not encrypted.":
+    "PIN только скрывает экран; данные на устройстве не шифруются.",
+  "Cover the screen while the app is in the background": "Закрывать экран, пока приложение в фоне",
+  "One backup per day when the app opens": "Одна копия в день при открытии приложения",
+  "Replace current data with this backup?": "Заменить текущие данные этой копией?",
+  "Subscriptions are not available yet.": "Подписки пока недоступны.",
+  "Shared access will be available after sign-in is added.":
+    "Общий доступ появится после добавления входа в аккаунт.",
+  "Storage is unavailable or full. Export a data file to keep changes.":
+    "Хранилище недоступно или заполнено. Экспортируйте файл данных, чтобы сохранить изменения.",
+  "Export a copy of your data as a file.": "Экспортируйте копию данных в виде файла.",
+  "Rates are fixed values that you can edit. Live quotes are not connected.":
+    "Курсы — фиксированные значения, их можно менять. Рыночные котировки не подключены.",
+  "Automatic updates need a rates service, which is not connected yet. The values below stay unchanged.":
+    "Для автообновления нужен сервис курсов, он пока не подключён. Значения ниже не меняются.",
+  "Prices are indicative and payments are not available yet. Plans and prices may change before launch.":
+    "Цены ориентировочные, платежи пока недоступны. Тарифы и цены могут измениться до запуска.",
+  "Store billing is not connected yet.": "Оплата через магазин пока не подключена.",
 };
