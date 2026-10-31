@@ -676,6 +676,14 @@ export function numberPicker(title, value, fn, options = {}) {
     title,
   );
 }
+// Hours and minutes as two number fields; the digits are typed on the keypad docked below.
+export const timeFieldsHtml = (hours, minutes, setHours, setMinutes) =>
+  `<div class="time-fields">${numberFieldHtml("Hours", hours, setHours, { maxLength: 2 })}${numberFieldHtml("Minutes", minutes, setMinutes, { maxLength: 2 })}</div>`;
+// "HH:MM" for typed hours and minutes, or null when they are not a time of day.
+export const clockText = (hours, minutes) =>
+  hours !== "" && minutes !== "" && Number(hours) <= 23 && Number(minutes) <= 59
+    ? `${hours.padStart(2, "0")}:${minutes.padStart(2, "0")}`
+    : null;
 // Form field that shows a number. Tapping it docks the digit keypad at the bottom of the screen
 // and the digits go straight into the field.
 export const numberFieldHtml = (label, value, fn, options = {}) => {

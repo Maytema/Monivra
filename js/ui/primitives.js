@@ -39,8 +39,8 @@ export const iconButtonHtml = (icon, label, fn) =>
 export const badgeHtml = (x, small = false) =>
   `<span class="badge${small ? " small" : ""}" style="--c:${escapeHtml(x?.color || "#777")}">${iconSvg(x?.icon || "wallet")}</span>`;
 // Labeled text input wired to an input handler.
-export const textFieldHtml = (label, value, fn, placeholder = "", type = "text") =>
-  `<label class="field"><span class="field-label">${translate(label)}</span><input aria-label="${escapeHtml(translate(label))}" type="${type}" value="${escapeHtml(value)}" placeholder="${escapeHtml(translate(placeholder))}" data-input="${registerInput(fn)}"></label>`;
+export const textFieldHtml = (label, value, fn, placeholder = "") =>
+  `<label class="field"><span class="field-label">${translate(label)}</span><input aria-label="${escapeHtml(translate(label))}" value="${escapeHtml(value)}" placeholder="${escapeHtml(translate(placeholder))}" data-input="${registerInput(fn)}"></label>`;
 // Form row that looks like a field and opens a picker when clicked.
 export const fieldButtonHtml = (label, value, fn, hint = "") =>
   buttonHtml(

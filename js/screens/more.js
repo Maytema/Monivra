@@ -11,6 +11,7 @@ import { translate, translateWith } from "../i18n/index.js";
 import { ratesBody } from "./rates.js";
 import { settingOptions, switchSetting } from "./settings.js";
 import {
+  clockText,
   closeLayers,
   confirmAction,
   goBack,
@@ -20,6 +21,7 @@ import {
   openSheet,
   pageHeader,
   showInfo,
+  timeFieldsHtml,
 } from "../ui/kit.js";
 import {
   buttonHtml,
@@ -185,17 +187,20 @@ export function settingsPage(kind) {
 }
 // Reminder time: the hours and the minutes are typed on the keypad docked below.
 function timeDialog() {
-  const [hours, minutes] = appData.settings.notificationTime.split(":");
-  let h = hours,
-    m = minutes;
+  let [h, m] = appData.settings.notificationTime.split(":");
   openSheet(
     () =>
-      `<h2>${translate("Time")}</h2><div class="time-fields">${numberFieldHtml("Hours", h, (v) => (h = v), { maxLength: 2 })}${numberFieldHtml("Minutes", m, (v) => (m = v), { maxLength: 2 })}</div><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+      `<h2>${translate("Time")}</h2>${timeFieldsHtml(
+        h,
+        m,
+        (v) => (h = v),
+        (v) => (m = v),
+      )}<div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "Save",
         () => {
-          if (!(Number(h) <= 23 && Number(m) <= 59 && h !== "" && m !== ""))
-            return toast("Enter a valid time");
-          appData.settings.notificationTime = `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+          const time = clockText(h, m);
+          if (!time) return toast("Enter a valid time");
+          appData.settings.notificationTime = time;
           save();
           closeLayers();
         },

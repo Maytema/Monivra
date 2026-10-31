@@ -15,6 +15,7 @@ import { multiSelect, opRow, operationsAddMenu, recurLabel } from "./operations.
 import {
   amountPicker,
   calendar,
+  clockText,
   closeLayers,
   confirmAction,
   finishFlow,
@@ -24,6 +25,7 @@ import {
   optionSheet,
   pageHeader,
   periodBar,
+  timeFieldsHtml,
 } from "../ui/kit.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 import {
@@ -136,8 +138,7 @@ export function recurrence(d) {
 }
 // Reminder time picker for scheduled payments.
 export function reminder(d) {
-  let raw = d.reminder || "09:00",
-    clock = /^\d{2}:\d{2}$/.test(raw) ? raw : "09:00",
+  let [h, m] = (d.reminder || "09:00").split(":"),
     lead = d.reminderLead || "At the time",
     enabled = !!d.reminder;
   const leads = [
@@ -166,14 +167,19 @@ export function reminder(d) {
                   "schedule-lead " + (lead === x ? "chosen" : ""),
                 ),
               )
-              .join("")}</div>${textFieldHtml("Time", clock, (v) => (clock = v), "", "time")}`
+              .join("")}</div>${timeFieldsHtml(
+              h,
+              m,
+              (v) => (h = v),
+              (v) => (m = v),
+            )}`
           : ""
       }<p class="footnote">Notifications are stored locally. Browser background reminders are not available in this offline preview.</p><div class="schedule-modal-actions">${buttonHtml("Cancel", () => closeLayers(), "outline")}${buttonHtml(
         "Save",
         () => {
-          if (enabled && !/^([01]\d|2[0-3]):[0-5]\d$/.test(clock))
-            return toast("Enter a valid time");
-          d.reminder = enabled ? clock : null;
+          const time = clockText(h, m);
+          if (enabled && !time) return toast("Enter a valid time");
+          d.reminder = enabled ? time : null;
           d.reminderLead = enabled ? lead : null;
           closeLayers();
         },
