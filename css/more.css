@@ -90,25 +90,6 @@
 .info-card p {
   margin: 8px 0px 16px;
 }
-.guide h2 {
-  text-align: center;
-  font-size: 21px;
-  margin-bottom: 24px;
-}
-.guide-step span {
-  background: color-mix(in srgb, var(--accent) 12%, var(--bg));
-  color: var(--accent-ink);
-  border-radius: 50%;
-  width: 29px;
-  height: 29px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-}
-.guide-step p {
-  margin: 3px 0px;
-  line-height: 1.45;
-}
 .support-form h2 {
   font-size: 21px;
 }
@@ -717,32 +698,23 @@
 .support-form {
   padding: 24px 22px;
 }
-.guide-icon {
-  width: 76px;
-  height: 76px;
-  border-radius: 22px;
-  background: var(--sheet);
-  color: var(--accent-ink);
-  display: grid;
-  place-items: center;
-  margin: 8px auto 20px;
+.guide h3 {
+  margin: 24px 0px 6px;
+  font-size: 17px;
+  font-weight: 600;
 }
-.guide-step {
-  display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  padding: 15px 0px;
-  border-bottom: 1px solid rgb(236, 232, 239);
+.guide h3:first-child {
+  margin-top: 0px;
 }
-.guide-note,
+.guide p {
+  margin: 0px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
 .muted-text {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
-}
-.guide-note {
-  text-align: center;
-  margin-top: 24px;
 }
 /* Color theme page: 4 × 4 circles */
 .theme-colors {

@@ -8,6 +8,7 @@ import { createSampleData } from "../data/sample.js";
 import { save } from "../data/storage.js";
 import { createBackup } from "../domain/finance.js";
 import { translate, translateWith } from "../i18n/index.js";
+import { GUIDES } from "./guides.js";
 import { ratesBody } from "./rates.js";
 import { settingOptions, switchSetting } from "./settings.js";
 import {
@@ -48,7 +49,7 @@ export function moreView() {
       ["Data", "receipt", "data"],
     ],
     [
-      ["Video instructions", "play", "videos"],
+      ["Instructions", "play", "instructions"],
       ["Support", "help", "support"],
       ["About our team", "info", "about"],
       ["Privacy policy", "shield", "privacyPolicy"],
@@ -313,7 +314,7 @@ export function lockView() {
   const keys = [..."123456789"].map(digit).join("") + biometrics + digit("0") + backspace;
   return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div><p class="footnote">DEMO interface lock</p></div></div>`;
 }
-// Info pages: profile, subscription, support, videos, about, terms and similar.
+// Info pages: profile, subscription, support, instructions, about, terms and similar.
 export function simplePage(kind) {
   let title = "",
     body = "",
@@ -367,50 +368,22 @@ export function simplePage(kind) {
   } else if (kind === "shared") {
     title = "Shared access";
     body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access</p></div>${buttonHtml("Invite", () => showInfo("DEMO: sharing requires a Monivra account and network service. No invitation is sent."), "primary")}`;
-  } else if (kind === "videos") {
-    title = "Video instructions";
-    body = `<div class="help-intro">Learn the basics of Monivra</div>${[
-      ["Repeat hints", "repeat", "Guided explanations of controls"],
-      ["Operations", "receipt", "Income, expenses and transfers"],
-      ["Accounts and categories", "wallet", "Organize money and spending"],
-      ["Statistics", "stats", "Understand charts and filters"],
-      ["Additional questions", "help", "Frequently asked questions"],
-    ]
-      .map(([name, icon, subtitle]) =>
-        menuRowHtml(name, icon, () => openPage("guide_" + name), subtitle),
-      )
-      .join("")}`;
-  } else if (kind.startsWith("guide_")) {
-    title = kind.slice(6);
-    const steps =
-      {
-        "Repeat hints": [
-          "Hints highlight interface controls one by one.",
-          "Open a section to explore its controls.",
-          "This beta does not include the original guided overlay animations.",
-        ],
-        Operations: [
-          "Open Operations from the bottom navigation.",
-          "Tap Add and choose income, expense or transfer.",
-          "Choose an account, amount, category and date, then save.",
-        ],
-        "Accounts and categories": [
-          "Open Accounts to add or edit a wallet or savings account.",
-          "Open Categories to create income and expense categories.",
-          "Choose a category when adding an operation.",
-        ],
-        Statistics: [
-          "Open Statistics and select a period.",
-          "Switch between charts and category breakdowns.",
-          "Use filters to compare accounts and categories.",
-        ],
-        "Additional questions": [
-          "Your data is stored in this browser unless you export it.",
-          "Back up your data using More → Data.",
-          "Payments, cloud sync and support messaging are not active in this beta.",
-        ],
-      }[title] || [];
-    body = `<div class="guide"><div class="guide-icon">${iconSvg("play", 38)}</div><h2>${escapeHtml(title)}</h2>${steps.map((v, i) => `<div class="guide-step"><span>${i + 1}</span><p>${escapeHtml(v)}</p></div>`).join("")}<p class="guide-note">Interactive beta guide · No external video required</p></div>`;
+  } else if (kind === "instructions") {
+    title = "Instructions";
+    body = `<div class="help-intro">Learn the basics of Monivra</div>${menuRowHtml(
+      "Repeat hints",
+      "repeat",
+      () => {
+        appData.settings.dismissedHints = [];
+        save();
+        toast("Hints will be shown again");
+      },
+      "Restart tooltips throughout the application",
+    )}${GUIDES.map((g) => menuRowHtml(g.title, g.icon, () => openPage("guide:" + g.id), g.about)).join("")}`;
+  } else if (kind.startsWith("guide:")) {
+    const guide = GUIDES.find((g) => g.id === kind.slice(6));
+    title = guide.title;
+    body = `<div class="guide">${guide.sections.map(([heading, text]) => `<h3>${translate(heading)}</h3><p>${translate(text)}</p>`).join("")}</div>`;
   } else if (kind === "support") {
     title = "Support";
     body = `${[
@@ -440,7 +413,7 @@ export function simplePage(kind) {
         );
       },
       "primary",
-    )}${kind === "usageQuestion" ? buttonHtml("View instructions", () => openPage("videos"), "outline") : ""}<p class="muted-text">Closed beta · No message is sent to a server.</p></div>`;
+    )}${kind === "usageQuestion" ? buttonHtml("View instructions", () => openPage("instructions"), "outline") : ""}<p class="muted-text">Closed beta · No message is sent to a server.</p></div>`;
   } else if (kind === "sampleData") {
     title = "Test data";
     const hasData = !!(appData.accounts.length || appData.categories.length || appData.ops.length);

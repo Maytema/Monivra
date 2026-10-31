@@ -182,7 +182,6 @@ export const russianStrings = {
   Budgets: "Бюджеты",
   Settings: "Настройки",
   Data: "Данные",
-  "Video instructions": "Видеоинструкции",
   Support: "Поддержка",
   "About our team": "О нашей команде",
   "Privacy policy": "Политика конфиденциальности",
@@ -363,7 +362,6 @@ export const russianStrings = {
   "At the time": "В назначенное время",
   "Automatic backups": "Автоматические копии",
   "Automatic rates": "Автоматические курсы",
-  "Back up your data using More → Data.": "Сохраните копию данных в разделе «Ещё» → «Данные».",
   Backup: "Резервная копия",
   "Backup and restore data": "Резервное копирование и восстановление данных",
   "Backup saved": "Копия сохранена",
@@ -458,11 +456,8 @@ export const russianStrings = {
   "Category does not match operation type": "Категория не подходит к типу операции",
   "Category saved": "Категория сохранена",
   "Choose a category": "Выберите категорию",
-  "Choose a category when adding an operation.": "Выберите категорию при добавлении операции.",
   "Choose a period first": "Сначала выберите период",
   "Choose a valid date": "Выберите корректную дату",
-  "Choose an account, amount, category and date, then save.":
-    "Выберите счёт, сумму, категорию и дату, затем сохраните.",
   "Choose color": "Выбрать цвет",
   "Choose two different accounts": "Выберите два разных счёта",
   "Clear comment": "Очистить комментарий",
@@ -542,8 +537,6 @@ export const russianStrings = {
   "Hide all": "Скрыть всё",
   "Hide balances": "Скрывать остатки",
   "Hide preview": "Скрыть предпросмотр",
-  "Hints highlight interface controls one by one.":
-    "Подсказки по очереди выделяют элементы интерфейса.",
   Icons: "Значки",
   "If payments are introduced in a future release, refund instructions will be shown here.":
     "Если в будущих версиях появятся платежи, инструкция по возврату будет показана здесь.",
@@ -557,8 +550,6 @@ export const russianStrings = {
   "Install 5 example accounts, 14 categories and sample transactions for testing. All items will behave like ordinary records: you can edit or delete them.":
     "Установить 5 примеров счетов, 14 категорий и тестовые операции. Это обычные записи: их можно изменять и удалять.",
   "Install sample data": "Установить примеры данных",
-  "Interactive beta guide · No external video required":
-    "Интерактивный гид по бете · видео не требуется",
   Internet: "Интернет",
   "Invalid amount": "Некорректная сумма",
   "Invalid debt transfer amount": "Некорректная сумма перевода долга",
@@ -606,13 +597,6 @@ export const russianStrings = {
     "Уведомления хранятся на устройстве. Фоновые напоминания браузера в этой версии недоступны.",
   "One backup per day when this demo opens": "Одна копия в день при открытии приложения",
   "One time payment": "Единоразовый платёж",
-  "Open Accounts to add or edit a wallet or savings account.":
-    "Откройте «Счета», чтобы добавить или изменить кошелёк или накопительный счёт.",
-  "Open Categories to create income and expense categories.":
-    "Откройте «Категории», чтобы создать категории доходов и расходов.",
-  "Open Operations from the bottom navigation.": "Откройте «Операции» в нижнем меню.",
-  "Open Statistics and select a period.": "Откройте «Статистику» и выберите период.",
-  "Open a section to explore its controls.": "Откройте раздел, чтобы изучить его элементы.",
   "Open photo": "Открыть фото",
   "Open this HTML in a browser. Changes are stored on this device when browser storage is available. Export a Data file before moving or replacing it.":
     "Откройте страницу в браузере. Изменения хранятся на этом устройстве, если хранилище браузера доступно. Перед переносом или заменой сохраните файл данных.",
@@ -621,8 +605,6 @@ export const russianStrings = {
   "Other currencies": "Другие валюты",
   Completed: "Завершённые",
   "PIN code": "PIN-код",
-  "Payments, cloud sync and support messaging are not active in this beta.":
-    "Платежи, облачная синхронизация и обращения в поддержку в этой бете не работают.",
   "People behind the project": "Люди, которые делают проект",
   "Periodic reminders": "Периодические напоминания",
   Personal: "Личное",
@@ -684,14 +666,10 @@ export const russianStrings = {
   "Subscription prices in the preview are visual examples. The Continue button does not make a purchase.":
     "Цены подписки показаны для примера. Кнопка «Продолжить» ничего не покупает.",
   "Subscription status": "Статус подписки",
-  "Switch between charts and category breakdowns.":
-    "Переключение между диаграммами и разбивкой по категориям.",
   "Sync status": "Статус синхронизации",
   "Synchronization of devices in real time via a shared account":
     "Синхронизация устройств в реальном времени через общий аккаунт",
   "Tag already exists": "Такой тег уже есть",
-  "Tap Add and choose income, expense or transfer.":
-    "Нажмите «Добавить» и выберите доход, расход или перевод.",
   "Team member names, contact addresses and company details have not yet been supplied for public release.":
     "Имена участников команды, контакты и данные компании для публичного релиза пока не предоставлены.",
   "Test data": "Тестовые данные",
@@ -702,8 +680,6 @@ export const russianStrings = {
     "Автономная версия хранит счета, категории и операции в хранилище браузера, если оно доступно. Эти записи видны всем, кто имеет доступ к тому же профилю браузера и устройству.",
   "These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.":
     "Эти заметки не являются пользовательским соглашением. Окончательные условия потребуют данных оператора, модели сервиса, юрисдикции и проверки до публичного запуска.",
-  "This beta does not include the original guided overlay animations.":
-    "В этой бете нет анимированных обучающих подсказок.",
   "This image could not be opened": "Не удалось открыть изображение",
   "This is a draft project information page, not a claim of affiliation with another application.":
     "Это черновая страница о проекте; она не заявляет о связи с другим приложением.",
@@ -718,8 +694,6 @@ export const russianStrings = {
   "Unclosed CSV quote": "Не закрыта кавычка в CSV",
   "Unsupported operation type": "Неподдерживаемый тип операции",
   "Use a positive number": "Введите положительное число",
-  "Use filters to compare accounts and categories.":
-    "Фильтры помогают сравнивать счета и категории.",
   "Use the full potential of the application!": "Используйте все возможности приложения!",
   "User ID": "ID пользователя",
   Vacation: "Отпуск",
@@ -731,8 +705,6 @@ export const russianStrings = {
     "Эта настройка позволяет исключить из случайного выбора значки и цвета, уже занятые текущими счетами и категориями.",
   "You can export a data file from More → Data and delete the current local records there. Files you have already exported must be deleted separately.":
     "Файл данных можно сохранить в разделе «Ещё» → «Данные» и там же удалить текущие записи. Уже сохранённые файлы нужно удалять отдельно.",
-  "Your data is stored in this browser unless you export it.":
-    "Ваши данные хранятся в этом браузере, пока вы не сохраните их в файл.",
   "Your feedback will help shape Monivra before its public release.":
     "Ваши отзывы помогут сделать Monivra лучше до публичного выпуска.",
   "Toggle balance visibility": "Показать или скрыть баланс",
@@ -789,11 +761,6 @@ export const russianStrings = {
   "Save operation": "Сохранить операцию",
   "(Approx. $0.23 per week)": "(≈ $0.23 в неделю)",
   "(Approx. $0.35 per week)": "(≈ $0.35 в неделю)",
-  "Guided explanations of controls": "Пошаговые пояснения к элементам",
-  "Income, expenses and transfers": "Доходы, расходы и переводы",
-  "Organize money and spending": "Порядок в деньгах и тратах",
-  "Understand charts and filters": "Диаграммы и фильтры",
-  "Frequently asked questions": "Частые вопросы",
   "Test data · accounts and categories": "Тестовые данные · счета и категории",
   "Photo attached": "Фото прикреплено",
   "invalid type": "неверный тип операции",
@@ -937,4 +904,57 @@ export const russianStrings = {
   "Every rate returns to its example value and the ticks are cleared.":
     "Все курсы вернутся к примерным значениям, отметки будут сняты.",
   "Rates restored": "Курсы восстановлены",
+  Instructions: "Инструкции",
+  "Hints will be shown again": "Подсказки снова будут показаны",
+  "Restart tooltips throughout the application": "Показать подсказки во всём приложении заново",
+  "Create, edit and plan operations": "Создание, изменение и планирование операций",
+  "Open Operations and tap Add. Pick an expense or income category, or open Accounts to move money between two accounts.":
+    "Откройте «Операции» и нажмите «Добавить». Выберите категорию расхода или дохода либо вкладку «Счета», чтобы перевести деньги между двумя счетами.",
+  "Type the amount on the keypad. You can calculate with + − × ÷. The check mark saves the operation.":
+    "Введите сумму на клавиатуре. Можно считать: + − × ÷. Галочка сохраняет операцию.",
+  "Different currencies": "Разные валюты",
+  "When the account and the category use different currencies, two amounts are shown. Change either one and the other is recalculated. The operation keeps its own rate.":
+    "Если у счёта и категории разные валюты, показываются две суммы. Измените любую из них, и вторая пересчитается. Операция хранит собственный курс.",
+  "Edit and delete": "Изменение и удаление",
+  "Tap an operation to change it. Hold one to select several and delete them together.":
+    "Нажмите на операцию, чтобы изменить её. Удерживайте, чтобы выбрать несколько и удалить их вместе.",
+  "Plan ahead": "Планирование",
+  "Use Additionally in the editor to set a reminder or a repeat. All planned payments are listed in More → Scheduled payments.":
+    "В окне операции откройте «Дополнительно», чтобы задать напоминание или повтор. Все запланированные платежи собраны в «Ещё» → «Запланированные платежи».",
+  "Creating, editing, working with accounts and categories":
+    "Создание, изменение и работа со счетами и категориями",
+  "Tap + on the Accounts tab. A regular account can have a credit limit, a savings account has a goal, a debt account tracks the amount owed.":
+    "Нажмите + на вкладке «Счета». У обычного счёта может быть кредитный лимит, у накопительного есть цель, долговой счёт отслеживает сумму долга.",
+  Balance: "Баланс",
+  "A balance can be negative. Tap an account for quick actions: top up, debit, transfer, edit or archive.":
+    "Баланс может быть отрицательным. Нажмите на счёт для быстрых действий: пополнить, списать, перевести, изменить или архивировать.",
+  "Hold an account and drag it to a new place in the list.":
+    "Удерживайте счёт и перетащите его на новое место в списке.",
+  "On the Categories tab switch between expenses and incomes. The pencil opens the list for editing, a category can have subcategories.":
+    "На вкладке «Категории» переключайтесь между расходами и доходами. Карандаш открывает список для правки, у категории могут быть подкатегории.",
+  "An archived account or category leaves the lists but stays in the history of operations.":
+    "Архивный счёт или категория пропадают из списков, но остаются в истории операций.",
+  "Sorting, filtering and viewing statistics": "Сортировка, фильтрация и просмотр статистики",
+  Period: "Период",
+  "Use the arrows to move between periods. Tap the date to choose another interval.":
+    "Стрелками переходите между периодами. Нажмите на дату, чтобы выбрать другой интервал.",
+  "Expenses and incomes": "Расходы и доходы",
+  "Switch between them at the top. The report shows how the total is divided between categories.":
+    "Переключайтесь между ними сверху. Отчёт показывает, как итог делится по категориям.",
+  "The filter button narrows the report to the accounts, categories, types and tags you choose.":
+    "Кнопка фильтра ограничивает отчёт выбранными счетами, категориями, типами и тегами.",
+  "Ask us any question and we will gladly answer":
+    "Задайте нам любой вопрос, мы с радостью ответим",
+  "Where is my data?": "Где мои данные?",
+  "Only on this device, in this browser. Make a copy in More → Data before clearing browser data.":
+    "Только на этом устройстве, в этом браузере. Сделайте копию в «Ещё» → «Данные», прежде чем очищать данные браузера.",
+  "How do I change the currency?": "Как сменить валюту?",
+  "Open More → Settings → Formatting and choose the main currency.":
+    "Откройте «Ещё» → «Настройки» → «Форматирование» и выберите основную валюту.",
+  "How do I hide the amounts?": "Как скрыть суммы?",
+  "Open More → Settings → Privacy and choose what is hidden.":
+    "Откройте «Ещё» → «Настройки» → «Приватность» и выберите, что скрывать.",
+  "Another question?": "Другой вопрос?",
+  "Write to us in More → Support → Question on how to use.":
+    "Напишите нам в «Ещё» → «Поддержка» → «Вопрос по использованию».",
 };
