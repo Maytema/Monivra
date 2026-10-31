@@ -257,20 +257,39 @@ const pinDotsHtml = (size, typed, failed) =>
     { length: size },
     (_, i) => `<span class="${i < typed ? "filled" : ""}"></span>`,
   ).join("")}</div>`;
-// PIN lock screen: it unlocks as soon as the last digit is typed.
+// Pauses that let the last dot be seen: before the PIN is checked, and while a wrong one shakes.
+const PIN_CHECK_MS = 220;
+const PIN_FAIL_MS = 450;
+// True while a complete PIN waits to be checked or a wrong one is shown; keys are ignored.
+let pinBusy = false;
+// PIN lock screen: the last dot fills first, then the PIN is checked.
 export function lockView() {
   const size = appData.settings.pin.length;
+  const check = () => {
+    if (pinEntry === appData.settings.pin) {
+      pinBusy = false;
+      setPinEntry("");
+      setLocked(false);
+      return render();
+    }
+    pinFailed = true;
+    toast("Incorrect PIN");
+    render();
+    setTimeout(() => {
+      pinBusy = false;
+      pinFailed = false;
+      setPinEntry("");
+      render();
+    }, PIN_FAIL_MS);
+  };
   const press = (k) => {
+    if (pinBusy) return;
     pinFailed = false;
     if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
     else if (pinEntry.length < size) setPinEntry(pinEntry + k);
     if (pinEntry.length === size) {
-      if (pinEntry === appData.settings.pin) setLocked(false);
-      else {
-        pinFailed = true;
-        toast("Incorrect PIN");
-      }
-      setPinEntry("");
+      pinBusy = true;
+      setTimeout(check, PIN_CHECK_MS);
     }
     render();
   };
