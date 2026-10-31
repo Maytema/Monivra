@@ -93,48 +93,16 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-}
+} /* Header with the balance and the action button */
 .hero {
-  min-height: 82px;
-  max-height: 82px;
-  flex: 0 0 auto;
-  text-align: center;
   position: relative;
-  overflow: hidden;
-  height: 70px;
-  padding-top: 6px;
-}
-.hero-action {
-  position: absolute;
-  top: 17px;
-  right: 9px;
-}
-#base:has(.accounts-content) .hero {
-  height: 102px;
-  padding-top: 12px;
-  background: var(--bg);
-}
-#base:has(.accounts-content) .hero .hero-action {
-  right: 12px;
-  top: 20px;
-}
-#base:has(.sum-tabs) > .hero {
-  height: 67px;
-  padding-top: 6px;
-}
-#base .hero,
-#base:has(.accounts-content) .hero,
-#base:has(.sum-tabs) > .hero {
-  height: 84px;
-  min-height: 84px;
-  max-height: 84px;
   flex: 0 0 84px;
+  height: 84px;
   padding: 11px 0px 0px;
   background: var(--bg);
-  overflow: visible;
+  text-align: center;
 }
-#base .hero .hero-action,
-#base:has(.accounts-content) .hero .hero-action {
+.hero-action {
   position: absolute;
   top: 19px;
   right: 12px;
@@ -142,46 +110,26 @@
   height: 42px;
 }
 .hero .caption {
-  font-size: 14px;
-  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0px;
-}
-.balance {
-  font-size: 26px;
-  line-height: 1.45;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px 52px;
-}
-@media (max-width: 359px) {
-  .balance {
-    font-size: 25px;
-  }
-}
-#base:has(.accounts-content) .hero .balance {
-  font-size: 29px;
-  font-weight: 400;
-  line-height: 1.32;
-  color: var(--ink);
+  gap: 4px;
+  height: 22px;
+  font-size: 13px;
+  line-height: 22px;
 }
 .hero .balance {
-  line-height: 1.35;
-  font-variant-numeric: tabular-nums;
   position: relative;
   isolation: isolate;
-}
-#base .hero .balance,
-#base:has(.accounts-content) .hero .balance {
   height: 42px;
-  line-height: 42px;
+  padding: 0px 53px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 27px;
   font-weight: 400;
-  padding: 0px 53px;
-  white-space: nowrap;
+  line-height: 42px;
+  font-variant-numeric: tabular-nums;
 }
 .icon-button {
   width: 42px;
@@ -229,10 +177,6 @@
 .swipe-pane .period > .icon-button:last-child {
   visibility: hidden;
   pointer-events: none;
-}
-#base .hero .hero-action .icon-button {
-  width: 42px;
-  height: 42px;
 }
 .topbar {
   min-height: 60px;

@@ -48,21 +48,6 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 23%, transparent);
   transform: scale(0.965);
 }
-.hero-search {
-  height: 82px;
-}
-#base:has(.accounts-content) .hero .caption {
-  font-size: 15px;
-  line-height: 22px;
-  gap: 5px;
-}
-#base .hero .caption,
-#base:has(.accounts-content) .hero .caption {
-  height: 22px;
-  line-height: 22px;
-  font-size: 13px;
-  gap: 4px;
-}
 .hero-search .caption {
   display: none;
 }
