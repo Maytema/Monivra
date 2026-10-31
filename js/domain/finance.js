@@ -82,6 +82,12 @@ const currencyRate = (c) => appData.rates[c] || 1;
 // Convert a minor-unit amount between currencies.
 export const convertCurrency = (n, from, to) =>
   Math.round((n * currencyRate(from)) / currencyRate(to));
+// How many units of `want` one unit of `have` is worth at the current rates.
+export const currencyRatio = (have, want) => currencyRate(have) / currencyRate(want);
+// A rate written for one unit of the more valuable currency: [base, quote, quote per base].
+// `ratio` is how many units of `want` one unit of `have` is worth.
+export const quoteRate = (have, want, ratio) =>
+  ratio >= 1 ? [have, want, ratio] : [want, have, 1 / ratio];
 // Total balance of accounts included in the total, converted to the main currency.
 export function overallBalance() {
   return appData.accounts
@@ -304,6 +310,36 @@ export const categoryTotalIn = (c) =>
         : convertCurrency(o.reportAmount, appData.settings.currency, c.currency)),
     0,
   );
+// The two amounts of an operation between two currencies, as [[amount, currency], [amount,
+// currency]]; null when there is one currency, no second amount or a fee changes the amounts.
+export function amountPair(o) {
+  const account = accountById(o.from || o.to);
+  if (!account || o.fees?.length) return null;
+  const main = appData.settings.currency;
+  let own = account.currency,
+    other,
+    otherCurrency;
+  if (o.type === "transfer") {
+    [other, otherCurrency] = [o.receive, accountById(o.to)?.currency];
+  } else if (o.type === "adjustment") {
+    // A raise sends the amount from "Adjustment" in the main currency to the account.
+    [own, other, otherCurrency] = o.to
+      ? [main, o.receive, account.currency]
+      : [account.currency, o.receive, main];
+  } else {
+    const c = categoryById(o.category);
+    if (o.categoryAmount && o.categoryAmount.currency === c?.currency)
+      [other, otherCurrency] = [o.categoryAmount.amount, c.currency];
+  }
+  return other === undefined || own === otherCurrency || !otherCurrency
+    ? null
+    : [
+        [o.amount, own],
+        [other, otherCurrency],
+      ];
+}
+// Does the pair of amounts differ from what the current rate gives, by more than rounding?
+export const offRate = ([[a, from], [b, to]]) => Math.abs(convertCurrency(a, from, to) - b) > 1;
 // Number of operations of a category (with its subcategories) in the report period.
 export const categoryCount = (id, type) => categoryRows(id, type).length;
 // Share (0–1) of a category in all operations of its type in the report period.

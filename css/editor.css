@@ -332,6 +332,12 @@
 .calc-number.dual-number.dual-active {
   background: color-mix(in srgb, var(--tint, rgb(178, 164, 228)) 24%, transparent);
 }
+.dual-rate {
+  margin: 6px 0px 0px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
 .dual-value {
   display: flex;
   align-items: center;

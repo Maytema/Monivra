@@ -92,6 +92,8 @@ export const russianStrings = {
   "Category currency": "Валюта категории",
   "Change account currency": "Смена валюты счёта",
   "Rate today: 1 {from} = {rate} {to}": "Курс сегодня: 1 {from} = {rate} {to}",
+  "Operation rate: 1 {from} = {rate} {to}": "Курс операции: 1 {from} = {rate} {to}",
+  "1 {from} = {rate} {to}": "1 {from} = {rate} {to}",
   "Balance: {before} → {after}": "Баланс: {before} → {after}",
   "{operations}: {before} → {after}": "{operations}: {before} → {after}",
   "{n} operations taken": ["Списана {n} операция", "Списано {n} операции", "Списано {n} операций"],
@@ -738,7 +740,6 @@ export const russianStrings = {
   "US Dollar": "Доллар США",
   "Unclosed CSV quote": "Не закрыта кавычка в CSV",
   "Unsupported operation type": "Неподдерживаемый тип операции",
-  "Use a day from 1 to 31": "Укажите день от 1 до 31",
   "Use a positive number": "Введите положительное число",
   "Use filters to compare accounts and categories.":
     "Фильтры помогают сравнивать счета и категории.",

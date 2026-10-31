@@ -209,18 +209,31 @@ function shiftPeriod(n) {
   uiState.donut = null;
   render();
 }
-// Dialog for the day on which a month starts (payday instead of the 1st).
+// Dialog for the day on which a month starts (payday instead of the 1st). Only the days that
+// every month has can be chosen.
 export function monthStartDialog(onDone) {
-  numberPicker("Month starts on", appData.settings.monthStart, (v) => {
-    const n = Number(v);
-    if (!Number.isInteger(n) || n < 1 || n > 31) {
-      toast("Use a day from 1 to 31");
-      return false;
-    }
-    appData.settings.monthStart = n;
-    save();
-    onDone();
-  });
+  const chosen = Number(appData.settings.monthStart);
+  openSheet(
+    () =>
+      `<h2>${translate("Month starts on")}</h2><div class="calendar">${Array.from(
+        { length: 28 },
+        (_, i) => i + 1,
+      )
+        .map((day) =>
+          buttonHtml(
+            String(day),
+            () => {
+              appData.settings.monthStart = day;
+              save();
+              closeLayers();
+              onDone();
+            },
+            `calendar-day ${day === chosen ? "active" : ""}`,
+          ),
+        )
+        .join("")}</div>`,
+    "Month starts on",
+  );
 }
 // Small caption of an interval tile: the range it would select right now.
 function intervalNote(mode) {

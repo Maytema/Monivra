@@ -8,6 +8,8 @@ import {
   accountById,
   accountProgress,
   convertCurrency,
+  currencyRatio,
+  quoteRate,
   debtDirection,
   formatMoney,
   moneySpanHtml,
@@ -27,6 +29,7 @@ import { operationStart } from "./operation-editor.js";
 import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
 import { hintHtml } from "../ui/hint.js";
+import { rateText } from "../ui/rate-line.js";
 import {
   actionTileHtml,
   amountPicker,
@@ -388,9 +391,7 @@ export function saveAccount(p) {
 function currencyChangeDialog(a, currency, done) {
   let explain = false;
   const money = (n, code) => formatMoney(n, code);
-  // The rate is quoted for one unit of the more valuable currency.
-  const ratio = appData.rates[a.currency] / appData.rates[currency],
-    quoted = ratio >= 1 ? [a.currency, currency, ratio] : [currency, a.currency, 1 / ratio];
+  const quoted = quoteRate(a.currency, currency, currencyRatio(a.currency, currency));
   const pick = (mode) => () => {
     closeLayers();
     done(mode);
@@ -433,10 +434,7 @@ function currencyChangeDialog(a, currency, done) {
     () => {
       const spent = planCurrencyChange(a.id, currency, "spent"),
         all = planCurrencyChange(a.id, currency, "all");
-      return `<h2>${translate("Change account currency")}</h2><p class="currency-change-rate">${translateWith(
-        "Rate today: 1 {from} = {rate} {to}",
-        { from: quoted[0], rate: Number(quoted[2].toPrecision(6)), to: quoted[1] },
-      )}</p>${lines(spent)}${buttonHtml("Change currency", pick("spent"), "primary")}${buttonHtml("Convert everything at the current rate", pick("all"), "outline")}<p class="hint currency-change-hint">${translateWith(
+      return `<h2>${translate("Change account currency")}</h2><p class="currency-change-rate">${rateText(quoted, "Rate today: 1 {from} = {rate} {to}")}</p>${lines(spent)}${buttonHtml("Change currency", pick("spent"), "primary")}${buttonHtml("Convert everything at the current rate", pick("all"), "outline")}<p class="hint currency-change-hint">${translateWith(
         "Convert everything: balance {after}",
         { after: money(all.after, currency) },
       )}</p>${buttonHtml(

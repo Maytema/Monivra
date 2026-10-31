@@ -15,7 +15,10 @@ import {
   accountById,
   accountProgress,
   categoryTotal,
+  amountPair,
   categoryTotalIn,
+  offRate,
+  quoteRate,
   convertCurrency,
   debtDirection,
   evaluateExpression,
@@ -653,6 +656,35 @@ function checkAll() {
         before === 620 &&
         categoryTotalIn(category) === 620 &&
         categoryTotal("__usd", "expense") === 30000
+      );
+    }));
+  test("The rate of an operation follows from its two amounts and is flagged when it is off", () =>
+    onCopy(() => {
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
+      const account = addAccount({ opening: 100000 });
+      appData.categories.push({
+        id: "__usd",
+        name: "Cafe",
+        type: "expense",
+        currency: "USD",
+        color: "#d04fcc",
+      });
+      const op = (categoryAmount) => ({
+        type: "expense",
+        from: account.id,
+        category: "__usd",
+        amount: 5000,
+        categoryAmount: { currency: "USD", amount: categoryAmount },
+      });
+      const onRate = amountPair(op(50)),
+        manual = amountPair(op(300));
+      return (
+        !offRate(onRate) &&
+        offRate(manual) &&
+        quoteRate("KGS", "USD", manual[1][0] / manual[0][0]).join() ===
+          "USD,KGS,16.666666666666668" &&
+        amountPair({ ...op(50), category: null }) === null
       );
     }));
   test("Converting everything keeps the balance at the current rate; changing back restores", () =>
