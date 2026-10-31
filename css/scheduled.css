@@ -188,6 +188,10 @@
   min-height: 0px;
   overflow-y: auto;
 }
+.dialog-body .rule {
+  margin-top: 20px;
+  font-weight: 600;
+}
 /* Full-screen list: cards of choices with Cancel and Confirm under them */
 .overlay.full:has(.picker-page) .panel {
   padding: 0px;

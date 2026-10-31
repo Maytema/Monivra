@@ -91,6 +91,17 @@ function checkAll() {
       applyFees(1000, [{ kind: "tax", percent: 0, value: 2, add: true }]).net === 1200
     );
   });
+  test("Fees follow the rules of the calculation help", () => {
+    const pct = (percent, add) => ({ kind: "tax", percent, value: 0, add });
+    const fixed = (value) => ({ kind: "commission", percent: 0, value, add: false });
+    return (
+      applyFees(10000, [pct(10, true), pct(20, true)]).net === 13000 &&
+      applyFees(10000, [pct(10, false), pct(20, false)]).net === 7200 &&
+      applyFees(1000, [fixed(50)]).net === 0 &&
+      applyFees(10000, [pct(20, false), fixed(7)]).net === 7300 &&
+      applyFees(10000, [fixed(7), pct(20, false)]).net === 7440
+    );
+  });
   test("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
     const a = appData.accounts.find((x) => x.include && !x.archived && x.currency !== "USD");
     if (!a) return true;

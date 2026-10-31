@@ -40,8 +40,6 @@ export const russianStrings = {
   "Change order": "Изменить порядок",
   Remove: "Убрать",
   Help: "Справка",
-  "Fees are applied one after another, in the order shown. The sender account is charged the full amount; the receiver gets the result.":
-    "Налог и комиссия применяются по очереди в показанном порядке. Со счёта отправителя списывается вся сумма, получатель получает результат.",
   "Add commission": "Добавить комиссию",
   Percent: "Процент",
   Value: "Значение",
@@ -983,4 +981,32 @@ export const russianStrings = {
     "Вы будете перенаправлены в приложение для отправки почты.",
   "A correctly completed letter will help process your request faster.":
     "Правильно составленное письмо поможет быстрее обработать ваш запрос.",
+  "Information about calculation": "Информация о расчёте",
+  "I understood": "Понятно",
+  "In order for everything to be calculated correctly, several points must be taken into account:":
+    "Чтобы всё считалось правильно, нужно учитывать несколько моментов:",
+  "1. The value of the operation after calculations cannot be negative! In the case of a negative value, it will be equal to 0. An operation with a zero value cannot be written.":
+    "1. Значение операции после расчётов не может быть отрицательным! Если получилось отрицательное значение, оно станет равным 0. Операцию с нулевым значением записать нельзя.",
+  "Example 1: 10 - commission (50) = -40 = 0": "Пример 1: 10 - комиссия (50) = -40 = 0",
+  "2. Use add or subtract value.": "2. Используйте добавление или вычитание значения.",
+  "Example 1: 100 + commission (10%) + tax (20%) = 130":
+    "Пример 1: 100 + комиссия (10%) + налог (20%) = 130",
+  "Example 2: 100 - commission (10%) - tax (20%) = 72":
+    "Пример 2: 100 - комиссия (10%) - налог (20%) = 72",
+  "3. When subtracting, the value from the previous arithmetic operation is used, and when adding, the base value at the end of the calculation.":
+    "3. При вычитании берётся значение после предыдущего действия, а при сложении — исходное значение в конце расчёта.",
+  "Example 1: 100 + commission (10%) + tax (20%) = 100 + 30 = 130":
+    "Пример 1: 100 + комиссия (10%) + налог (20%) = 100 + 30 = 130",
+  "Example 2: 100 + commission (10%) - tax (20%) = 110 -> 80":
+    "Пример 2: 100 + комиссия (10%) - налог (20%) = 110 -> 80",
+  "Example 3: 100 - commission (10%) + tax (20%) = 120 -> 90":
+    "Пример 3: 100 - комиссия (10%) + налог (20%) = 120 -> 90",
+  "Example 4: 100 - commission (10%) - tax (20%) = 100 - 10 = 90 - 18 = 72":
+    "Пример 4: 100 - комиссия (10%) - налог (20%) = 100 - 10 = 90 - 18 = 72",
+  "4. The order of counting is important! Correctly arrange the order of counting! (you can use drag and drop elements or remove the first one and add it to the end).":
+    "4. Порядок расчёта важен! Расставьте порядок правильно! (можно перетаскивать элементы или убрать первый и добавить его в конец).",
+  "Example 1: 100 - tax (20%) - commission (7) = 100 - 20 = 80 - 7 = 73":
+    "Пример 1: 100 - налог (20%) - комиссия (7) = 100 - 20 = 80 - 7 = 73",
+  "Example 2: 100 - commission (7) - tax (20%) = 100 - 7 = 93 - 18,6 = 74,4":
+    "Пример 2: 100 - комиссия (7) - налог (20%) = 100 - 7 = 93 - 18,6 = 74,4",
 };

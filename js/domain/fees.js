@@ -8,17 +8,18 @@ function feeSize(fee, base) {
 // Round off floating point noise before rounding to whole minor units.
 const roundMinor = (n) => Math.sign(n) * Math.round(Math.round(Math.abs(n) * 1e6) / 1e6);
 
-// Apply fees in order. Each one works on what the previous ones left; only the
-// shown sizes and the final result are rounded, so the pieces may differ by one unit.
+// Apply fees in order. A deduction works on what the previous ones left, an addition on the
+// original amount; the result never drops below zero. Only the shown sizes and the final
+// result are rounded, so the pieces may differ by one unit.
 // Returns the signed change of every fee and the resulting amount.
 export function applyFees(amount, fees = []) {
   let running = amount;
   const steps = fees.map((fee) => {
-    const size = feeSize(fee, running);
+    const size = feeSize(fee, fee.add ? amount : running);
     running += fee.add ? size : -size;
     return { fee, delta: roundMinor(fee.add ? size : -size) };
   });
-  return { steps, net: roundMinor(running) };
+  return { steps, net: Math.max(0, roundMinor(running)) };
 }
 
 // Amount that reaches the receiving side of an operation.
