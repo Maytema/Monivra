@@ -5,6 +5,7 @@ import {
   ACCOUNT_GROUPS,
   accountBalance,
   categoryTotal,
+  categoryTotalIn,
   convertCurrency,
   formatMoney,
   moneySpanHtml,
@@ -36,11 +37,7 @@ export function accountCardsHtml(accounts, chosenId, onPick) {
 }
 
 // Total of a category for the report period, shown in the currency of the category.
-export const categoryMoney = (c) =>
-  formatMoney(
-    convertCurrency(categoryTotal(c.id, c.type), appData.settings.currency, c.currency),
-    c.currency,
-  );
+export const categoryMoney = (c) => formatMoney(categoryTotalIn(c), c.currency);
 // One category tile: icon, name and the total of the period; `extra` is added to the button.
 export function categoryTileHtml(c, onPick, chosen = false, extra = "") {
   const tone = categoryTotal(c.id, c.type) === 0 ? "muted" : c.type === "income" ? "pos" : "neg";

@@ -15,6 +15,7 @@ import {
   accountById,
   accountProgress,
   categoryTotal,
+  categoryTotalIn,
   convertCurrency,
   debtDirection,
   evaluateExpression,
@@ -613,6 +614,45 @@ function checkAll() {
         typed.categoryAmount.amount === 300 &&
         typed.receive === undefined &&
         same.categoryAmount === undefined
+      );
+    }));
+  test("A category counts what was entered in its currency, whatever the rates do later", () =>
+    onCopy(() => {
+      appData.ops = [];
+      appData.rates.USD = 100;
+      appData.rates.KGS = 1;
+      const account = addAccount({ opening: 100000 });
+      const category = {
+        id: "__usd",
+        name: "Cafe",
+        type: "expense",
+        currency: "USD",
+        color: "#d04fcc",
+      };
+      appData.categories.push(category);
+      [{}, { receive: 500, receiveManual: true }, { receive: 20, receiveManual: true }].forEach(
+        (extra, i) => {
+          const op = {
+            id: "__e" + i,
+            type: "expense",
+            from: account.id,
+            category: category.id,
+            amount: 10000,
+            date: TODAY,
+            tags: [],
+            comment: "",
+            ...extra,
+          };
+          validateOp(op);
+          appData.ops.push(op);
+        },
+      );
+      const before = categoryTotalIn(category);
+      appData.rates.USD = 200;
+      return (
+        before === 620 &&
+        categoryTotalIn(category) === 620 &&
+        categoryTotal("__usd", "expense") === 30000
       );
     }));
   test("Converting everything keeps the balance at the current rate; changing back restores", () =>

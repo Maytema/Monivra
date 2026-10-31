@@ -9,7 +9,7 @@ import {
   accountById,
   categoryById,
   categoryCount,
-  categoryTotal,
+  categoryTotalIn,
   convertCurrency,
   dateLabel,
   defaultAccountId,
@@ -234,7 +234,7 @@ export function filteredView() {
   const [id] = uiState.filters.categories?.length === 1 ? uiState.filters.categories : [];
   const c = categoryById(id);
   const card = c
-    ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotal(c.id), c.currency)}</span></div></div>`
+    ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotalIn(c), c.currency)}</span></div></div>`
     : "";
   const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
   return `${pageHeader("Filtered")}${periodBar()}<div class="content">${card}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>${operationsFab()}`;

@@ -293,6 +293,17 @@ const categoryRows = (id, type = categoryById(id)?.type) =>
 // Sum of operations in a category, including its sub-categories.
 export const categoryTotal = (id, type) =>
   categoryRows(id, type).reduce((s, o) => s + o.reportAmount, 0);
+// Sum of a category in its own currency. An operation entered in that currency counts as entered,
+// whatever the rates do later; the others are converted at the current rate.
+export const categoryTotalIn = (c) =>
+  categoryRows(c.id, c.type).reduce(
+    (s, o) =>
+      s +
+      (o.categoryAmount?.currency === c.currency && !o.fees?.length
+        ? o.categoryAmount.amount
+        : convertCurrency(o.reportAmount, appData.settings.currency, c.currency)),
+    0,
+  );
 // Number of operations of a category (with its subcategories) in the report period.
 export const categoryCount = (id, type) => categoryRows(id, type).length;
 // Share (0–1) of a category in all operations of its type in the report period.
