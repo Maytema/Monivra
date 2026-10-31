@@ -159,7 +159,7 @@ function accountLine(a) {
     progress = accountProgress(a),
     celebrate = (celebratingUntil.get(a.id) || 0) > Date.now();
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="account-top"><span class="name">${escapeHtml(a.name)}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span></span>${celebrate ? confettiHtml() : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span></span>${celebrate ? confettiHtml() : ""}`,
     () => accountActions(a),
     "account-row " + (appData.settings.bigAccounts ? "big " : "") + (celebrate ? "celebrate" : ""),
     `data-account="${a.id}"`,

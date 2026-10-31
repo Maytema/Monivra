@@ -27,7 +27,7 @@ export function createEmptyData() {
       numberFormat: browserLanguage() === "ru" ? "space-comma" : "comma-dot",
       groupDigits: true,
       decimal: false,
-      hideCents: true,
+      hideCents: false,
       currencyFirst: false,
       dateFormat: "month",
       monthStart: 1,

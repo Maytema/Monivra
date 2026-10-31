@@ -130,11 +130,15 @@ function formattingPage() {
       null,
       currencyFormatSheet,
       `${formatNumber(123456789, s.numberFormat, s.groupDigits, s.decimal || !s.hideCents)} ${s.currency}`,
-    )}${switchSetting("Hide cents", "hideCents")}${settingOptions("Date format", "dateFormat", [
-      ["month", "Month | day | year"],
-      ["day", "Day | month | year"],
-      ["iso", "Year | month | day"],
-    ])}${menuRowHtml(
+    )}${switchSetting("Hide cents", "hideCents", "Amounts are shown rounded to whole units")}${settingOptions(
+      "Date format",
+      "dateFormat",
+      [
+        ["month", "Month | day | year"],
+        ["day", "Day | month | year"],
+        ["iso", "Year | month | day"],
+      ],
+    )}${menuRowHtml(
       "Start of month",
       null,
       () => monthStartDialog(() => render()),
