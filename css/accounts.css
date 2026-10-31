@@ -217,49 +217,45 @@
 .account-money-line .money {
   white-space: nowrap;
 }
-.account-bar {
+.account-meter {
   flex: 1 1 0%;
   min-width: 24px;
-  max-width: 96px;
-  height: 6px;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--positive) 18%, transparent);
-  overflow: hidden;
-}
-.account-bar i {
-  display: block;
-  height: 100%;
-  border-radius: 3px;
-  background: var(--positive);
 }
 .account-pct {
-  flex: 0 0 auto;
-  font-size: 12px;
-  color: var(--muted);
-}
-.goal-info {
-  font-size: 13px;
-  color: var(--muted);
+  flex: 0 0 3.7em;
+  font-size: 18px;
   text-align: right;
-  line-height: 1.9;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
 }
-.account-row .goal-info {
-  max-width: 112px;
-  font-size: 13px;
-  flex: 0 0 auto;
-  align-self: flex-start;
-  line-height: 1.4;
-}
-.accounts-content .account-row .goal-info {
-  font-size: 12px;
-  line-height: 1.4;
-  color: var(--muted);
-  padding-right: 10px;
-}
-.accounts-content .account-row @media (max-width: 370px) {
-  .account-row .goal-info {
-    font-size: 11px;
+@media (max-width: 359px) {
+  .account-pct {
+    font-size: 15px;
   }
+}
+/* Progress meter: thin outline with a fill set a little inside it, like a charging cell */
+.meter {
+  --tone: var(--positive);
+  display: block;
+  box-sizing: border-box;
+  height: 12px;
+  padding: 2px;
+  border: 1.5px solid color-mix(in srgb, var(--tone) 75%, transparent);
+  border-radius: 999px;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--tone) 28%, transparent);
+}
+.meter.owed {
+  --tone: color-mix(in srgb, var(--negative) 78%, var(--bg));
+}
+.meter i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tone);
+}
+.sheet-meter {
+  height: 16px;
+  margin: 10px 0 8px;
 }
 .accounts-archive-toggle {
   display: flex;
@@ -338,10 +334,7 @@
   font-variant-numeric: tabular-nums;
 }
 .goal-pct-frac {
-  font-size: 0.92em;
-  vertical-align: baseline;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  opacity: 0.6;
 }
 .goal-pct-unit {
   font-size: 0.95em;
@@ -502,18 +495,8 @@
   font-weight: 600;
   white-space: nowrap;
 }
-.account-progress-bar {
-  height: 10px;
-  margin: 10px 0 8px;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--positive) 16%, transparent);
-  overflow: hidden;
-}
-.account-progress-bar i {
-  display: block;
-  height: 100%;
-  border-radius: 5px;
-  background: var(--positive);
+.account-progress.owed .account-progress-percent {
+  color: var(--negative);
 }
 .account-progress-left {
   font-size: 14px;

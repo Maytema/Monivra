@@ -429,6 +429,7 @@ function checkAll() {
       const saved = addAccount({ type: "Savings", goal: 200000, opening: 50200 }),
         past = addAccount({ type: "Savings", goal: 100000, opening: 150000 }),
         debt = addAccount({ type: "Debt", debt: "I owe", totalDebt: 75000, opening: -3011 }),
+        card = addAccount({ limit: 3000000, opening: -1500000 }),
         free = addAccount({});
       const [a, b, c] = [saved, past, debt].map(accountProgress);
       return (
@@ -438,6 +439,8 @@ function checkAll() {
         b.left === -50000 &&
         c.percent === 95.98 &&
         c.left === 3011 &&
+        accountProgress(card).percent === 50 &&
+        accountProgress(card).left === 1500000 &&
         accountProgress(free) === null
       );
     }));

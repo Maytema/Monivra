@@ -35,11 +35,22 @@ export function debtDirection(a) {
   const balance = accountBalance(a.id);
   return balance < 0 ? "I owe" : balance > 0 ? "Owe me" : a.debt;
 }
-// Progress of an account towards its target: the goal of a savings account or the repayment of
-// a debt. `left` is what remains (negative for savings that went past the goal); `percent` is
-// cut, not rounded, so an unfinished target never shows 100. Null when there is no target.
+// Progress of an account towards its target: the goal of a savings account, the repayment of a
+// debt, or the part of a card limit that is still available. `left` is what remains (negative for
+// savings that went past the goal); `percent` is cut, not rounded, so an unfinished target never
+// shows 100. Null when there is no target.
 export function accountProgress(a) {
-  const balance = accountBalance(a.id);
+  const balance = accountBalance(a.id),
+    cut = (share) => Math.max(0, Math.min(99.99, Math.floor(share * 10000) / 100));
+  if (a.type === "Regular" && a.limit > 0) {
+    const left = Math.max(0, balance + a.limit);
+    return {
+      kind: "limit",
+      target: a.limit,
+      left,
+      percent: left >= a.limit ? 100 : cut(left / a.limit),
+    };
+  }
   let target, left, done;
   if (a.type === "Savings" && a.goal > 0) {
     target = a.goal;
@@ -50,9 +61,12 @@ export function accountProgress(a) {
     left = Math.abs(balance);
     done = target - left;
   } else return null;
-  const percent =
-    left <= 0 ? 100 : Math.max(0, Math.min(99.99, Math.floor((done / target) * 10000) / 100));
-  return { kind: a.type === "Debt" ? "debt" : "goal", target, left, percent };
+  return {
+    kind: a.type === "Debt" ? "debt" : "goal",
+    target,
+    left,
+    percent: left <= 0 ? 100 : cut(done / target),
+  };
 }
 // Groups of accounts shown together in pickers and filters, in the order of the Accounts screen.
 export const ACCOUNT_GROUPS = [

@@ -111,16 +111,18 @@ function percentLabel(percent) {
   const parts = percent.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
   return `<span class="goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="goal-pct-frac">.${parts[1]}</span>` : ""}<span class="goal-pct-unit">%</span>`;
 }
-// What is left to reach the target; savings past the goal show the surplus instead.
-function leftLabel(p, currency) {
-  return p.left < 0 ? "+" + formatMoney(-p.left, currency) : formatMoney(p.left, currency);
+// A debt I still have to pay back is shown in a soft red, everything else in green.
+const isOwed = (p, a) => p.kind === "debt" && p.left > 0 && debtDirection(a) === "I owe";
+// Progress meter: a thin outlined track with the fill a little inside it.
+function meterHtml(p, a, extraClass = "") {
+  return `<span class="meter ${isOwed(p, a) ? "owed" : ""} ${extraClass}"><i style="width:${p.percent}%"></i></span>`;
 }
 // One row in the accounts list.
 function accountLine(a) {
   const n = accountBalance(a.id),
     progress = accountProgress(a);
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `<span class="account-bar"><i style="width:${progress.percent}%"></i></span><span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${progress?.kind === "goal" ? `<span class="goal-info">${leftLabel(progress, a.currency)}</span>` : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `${meterHtml(progress, a, "account-meter")}<span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>`,
     () => accountActions(a),
     "account-row " + (appData.settings.bigAccounts ? "big" : ""),
     `data-account="${a.id}"`,
@@ -226,22 +228,26 @@ function startFromAccount(options) {
   closeLayers();
   operationStart(options);
 }
-// Target, progress bar and what is left, shown in the account sheet.
+// Target, progress meter and what is left, shown in the account sheet.
 function progressBlockHtml(a) {
   const p = accountProgress(a);
   if (!p) return "";
   const money = (n) => formatMoney(n, a.currency);
-  const status =
-    p.kind === "debt"
-      ? p.left > 0
-        ? translateWith("Left to repay: {amount}", { amount: money(p.left) })
-        : translate("Debt repaid")
-      : p.left > 0
+  const status = {
+    goal:
+      p.left > 0
         ? translateWith("Left: {amount}", { amount: money(p.left) })
         : p.left < 0
           ? translateWith("Goal exceeded by {amount}", { amount: money(-p.left) })
-          : translate("Goal reached");
-  return `<div class="account-progress"><div class="account-progress-line"><span>${translate(p.kind === "debt" ? "Total debt" : "Goal")} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div><div class="account-progress-bar"><i style="width:${p.percent}%"></i></div><div class="account-progress-left">${status}</div></div>`;
+          : translate("Goal reached"),
+    debt:
+      p.left > 0
+        ? translateWith("Left to repay: {amount}", { amount: money(p.left) })
+        : translate("Debt repaid"),
+    limit: "",
+  }[p.kind];
+  const title = { goal: "Goal", debt: "Total debt", limit: "Limit" }[p.kind];
+  return `<div class="account-progress ${isOwed(p, a) ? "owed" : ""}"><div class="account-progress-line"><span>${translate(title)} ${money(p.target)}</span><span class="account-progress-percent">${percentLabel(p.percent)}</span></div>${meterHtml(p, a, "sheet-meter")}${status ? `<div class="account-progress-left">${status}</div>` : ""}</div>`;
 }
 // Action sheet shown when an account is tapped.
 export function accountActions(a) {

@@ -172,7 +172,6 @@ export function editCategory(c, parent = null) {
           parent,
           archived: false,
         },
-    pending: null,
   });
 }
 // Picker for the target category when merging, nesting or moving categories.
@@ -197,8 +196,17 @@ function categoryTarget(d, mode, p, subId = null) {
             () => {
               closeLayers();
               if (mode === "nest" || mode === "merge") {
-                p.pending = { mode, target: c.id };
-                render();
+                confirmAction(
+                  translateWith(
+                    mode === "nest"
+                      ? 'This category and its subcategories will become subcategories of "{name}". Their operations will be re-pointed to "{name}" accordingly.'
+                      : 'All operations of this category will be moved to "{name}", and this category will be deleted.',
+                    { name: c.name },
+                  ),
+                  () => saveCategory(p, { mode, target: c.id }),
+                  true,
+                  "Confirm",
+                );
                 return;
               }
               categoryScheduleSub(p, subId, mode, c.id);
@@ -287,7 +295,8 @@ function categorySubMenu(p, id) {
   );
 }
 // Validate and store the category being edited.
-export function saveCategory(p) {
+// `relocate` nests the category into another one or merges it into it ({ mode, target }).
+export function saveCategory(p, relocate = null) {
   const d = p.draft;
   if (!d.name.trim()) return toast("Enter a name");
   const apply = () => {
@@ -317,17 +326,12 @@ export function saveCategory(p) {
         deleteCategory(sub.id);
       }
     }
-    if (p.pending?.mode === "nest" && categoryById(p.pending.target))
-      moveCategory(d.id, p.pending.target, true);
-    if (p.pending?.mode === "merge" && categoryById(p.pending.target))
-      moveCategory(d.id, p.pending.target, false);
+    if (relocate && categoryById(relocate.target))
+      moveCategory(d.id, relocate.target, relocate.mode === "nest");
     save();
     finishFlow("Category saved");
   };
-  if (
-    p.pending ||
-    (p.subActions || []).some((a) => ["moveSub", "mergeSub", "promoteSub"].includes(a.mode))
-  )
+  if ((p.subActions || []).some((a) => ["moveSub", "mergeSub", "promoteSub"].includes(a.mode)))
     confirmAction(
       "Apply changes? The planned actions on subcategories will be applied",
       apply,
@@ -450,18 +454,7 @@ export function categoryEditView(p) {
         );
       },
       "cat-add-sub",
-    )}${archived.length ? `<div class="cat-sub-heading cat-archive-heading">Archive</div>${archived.map(chip).join("")}` : ""}</div></div>${
-      p.pending
-        ? `<div class="cat-scheduled">→ ${escapeHtml(translateWith(p.pending.mode === "nest" ? "Nest into {name}" : "Move into {name}", { name: categoryById(p.pending.target)?.name || "" }))}${buttonHtml(
-            "Cancel",
-            () => {
-              p.pending = null;
-              render();
-            },
-            "text-button",
-          )}</div>`
-        : ""
-    }<div class="cat-editor-actions">${buttonHtml(translate(p.editing ? "Save" : "Create"), () => saveCategory(p), "primary")}${p.editing && !d.parent ? buttonHtml("Nest into category", () => categoryTarget(d, "nest", p), "cat-action-secondary") : ""}${p.editing && !d.parent ? buttonHtml("Move into category", () => categoryTarget(d, "merge", p), "cat-action-secondary") : ""}${
+    )}${archived.length ? `<div class="cat-sub-heading cat-archive-heading">Archive</div>${archived.map(chip).join("")}` : ""}</div></div><div class="cat-editor-actions">${buttonHtml(translate(p.editing ? "Save" : "Create"), () => saveCategory(p), "primary")}${p.editing && !d.parent ? buttonHtml("Nest into category", () => categoryTarget(d, "nest", p), "cat-action-secondary") : ""}${p.editing && !d.parent ? buttonHtml("Move into category", () => categoryTarget(d, "merge", p), "cat-action-secondary") : ""}${
       p.editing
         ? buttonHtml(
             d.archived ? "Return from archive" : "Move to archive",

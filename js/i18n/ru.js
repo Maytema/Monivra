@@ -383,8 +383,10 @@ export const russianStrings = {
   "Color list customization": "Настройка списка цветов",
   "Move to {name}": "Переместить в «{name}»",
   "Merge into {name}": "Объединить с «{name}»",
-  "Nest into {name}": "Вложить в «{name}»",
-  "Move into {name}": "Перенести в «{name}»",
+  'This category and its subcategories will become subcategories of "{name}". Their operations will be re-pointed to "{name}" accordingly.':
+    "Эта категория и её подкатегории станут подкатегориями «{name}». Их операции будут соответственно отнесены к «{name}».",
+  'All operations of this category will be moved to "{name}", and this category will be deleted.':
+    "Все операции этой категории будут перенесены в «{name}», а сама категория будет удалена.",
   "Type DELETE to erase all financial data": "Введите DELETE, чтобы стереть все финансовые данные",
   "Permanently delete all accounts, categories, transactions, schedules and budgets?":
     "Безвозвратно удалить все счета, категории, операции, плановые платежи и бюджеты?",
