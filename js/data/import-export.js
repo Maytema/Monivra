@@ -1,6 +1,6 @@
 /* Import and export (JSON, CSV) */
 import { render } from "../app/shell.js";
-import { deepClone } from "../core/constants.js";
+import { APP_ID, deepClone } from "../core/constants.js";
 import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { csvText, prepareCSV } from "./csv.js";
@@ -40,7 +40,7 @@ export function download(name, content, type) {
 }
 // Export the whole dataset as a JSON backup.
 export function exportJSON() {
-  download("monivra-data.json", JSON.stringify(dataSnapshot(), null, 2), "application/json");
+  download(`${APP_ID}-data.json`, JSON.stringify(dataSnapshot(), null, 2), "application/json");
 }
 // Open the file chooser for JSON/CSV import.
 function importFile(kind) {
@@ -61,7 +61,7 @@ export function dataView() {
       () =>
         openSheet(
           () =>
-            `<h2>Data file</h2><p>Save a local copy of your Monivra beta data or restore a previously exported JSON file.</p>${menuRowHtml(
+            `<h2>Data file</h2><p>Save a local copy of your data or restore a previously exported JSON file.</p>${menuRowHtml(
               "Save data file",
               "download",
               () => {
@@ -78,7 +78,7 @@ export function dataView() {
       openSheet(
         () =>
           `<h2>Import data</h2><p>Importing data may change your existing records. Export a backup first.</p>${menuRowHtml(
-            "Import Monivra JSON",
+            "Import JSON file",
             "upload",
             () => {
               closeLayers();
@@ -102,7 +102,7 @@ export function dataView() {
             },
           )}${menuRowHtml("Operations (CSV)", "download", () => {
             closeLayers();
-            download("monivra-operations.csv", "\ufeff" + csvText(), "text/csv;charset=utf-8");
+            download(`${APP_ID}-operations.csv`, "\ufeff" + csvText(), "text/csv;charset=utf-8");
           })}${menuRowHtml("Report (PDF)", "receipt", () => {
             closeLayers();
             printReport();

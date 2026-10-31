@@ -240,7 +240,7 @@ export const russianStrings = {
   "Demo and reset": "Демо и сброс",
   Empty: "Пока пусто",
   Continue: "Продолжить",
-  "Welcome to Monivra": "Добро пожаловать в Monivra",
+  "Welcome to {app}": "Добро пожаловать в {app}",
   "Start with a basic set of accounts and categories, or begin with a blank page. You can edit or delete everything later.":
     "Начните с базового набора счетов и категорий или с чистого листа. Всё можно будет изменить или удалить.",
   "Start with basic set": "Начать с базового набора",
@@ -389,8 +389,8 @@ export const russianStrings = {
     "Биометрия браузера в этой версии не подключена",
   "Closed beta preview: no purchase will be made.":
     "Предпросмотр закрытой беты: покупка не будет совершена.",
-  "DEMO: sharing requires a Monivra account and network service. No invitation is sent.":
-    "Демо: для общего доступа нужны аккаунт Monivra и сетевой сервис. Приглашение не отправляется.",
+  "DEMO: sharing requires a {app} account and network service. No invitation is sent.":
+    "Демо: для общего доступа нужны аккаунт {app} и сетевой сервис. Приглашение не отправляется.",
   Restore: "Восстановить",
   "Export data file": "Экспорт файла данных",
   "Reset demo data": "Сбросить демо-данные",
@@ -527,7 +527,7 @@ export const russianStrings = {
   "Hide preview": "Скрыть предпросмотр",
   Icons: "Значки",
   Immediately: "Сразу",
-  "Import Monivra JSON": "Импорт JSON Monivra",
+  "Import JSON file": "Импорт файла JSON",
   "Import failed": "Не удалось импортировать",
   "Import operations CSV": "Импорт операций (CSV)",
   Information: "Информация",
@@ -544,7 +544,7 @@ export const russianStrings = {
   "KGS is the base currency (1)": "KGS — базовая валюта (1)",
   "Keep your own backup before clearing browser data or moving to another device. Local storage may be unavailable in some file viewers.":
     "Сохраните свою копию, прежде чем очищать данные браузера или переходить на другое устройство. В некоторых программах просмотра локальное хранилище недоступно.",
-  "Learn the basics of Monivra": "Основы работы с Monivra",
+  "Learn the basics of {app}": "Основы работы с {app}",
   Lifetime: "Навсегда",
   "Lifetime access": "Доступ навсегда",
   "List customization": "Настройка списков",
@@ -561,11 +561,11 @@ export const russianStrings = {
   "Merge into a subcategory?": "Объединить с подкатегорией?",
   "Money you borrowed or lent. Track who owes whom and how debt repayment is progressing.":
     "Деньги, которые вы заняли или одолжили. Следите, кто кому должен и как идёт погашение.",
-  "Monivra is an independent personal-finance application in development. This preview is shared to gather feedback before release.":
-    "Monivra — независимое приложение для личных финансов, находящееся в разработке. Эта версия показана, чтобы собрать отзывы до выхода.",
-  "Monivra is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.":
-    "Сейчас Monivra — незаконченная тестовая сборка. Возможности, внешний вид и формат данных могут меняться.",
-  "Monivra · Offline reconstruction": "Monivra · Автономная версия",
+  "{app} is an independent personal-finance application in development. This preview is shared to gather feedback before release.":
+    "{app} — независимое приложение для личных финансов, находящееся в разработке. Эта версия показана, чтобы собрать отзывы до выхода.",
+  "{app} is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.":
+    "Сейчас {app} — незаконченная тестовая сборка. Возможности, внешний вид и формат данных могут меняться.",
+  "Offline reconstruction": "Автономная версия",
   "Month starts on": "Месяц начинается",
   "Move down": "Вниз",
   "Move into": "Переместить в",
@@ -683,8 +683,8 @@ export const russianStrings = {
     "Эта настройка позволяет исключить из случайного выбора значки и цвета, уже занятые текущими счетами и категориями.",
   "You can export a data file from More → Data and delete the current local records there. Files you have already exported must be deleted separately.":
     "Файл данных можно сохранить в разделе «Ещё» → «Данные» и там же удалить текущие записи. Уже сохранённые файлы нужно удалять отдельно.",
-  "Your feedback will help shape Monivra before its public release.":
-    "Ваши отзывы помогут сделать Monivra лучше до публичного выпуска.",
+  "Your feedback will help shape {app} before its public release.":
+    "Ваши отзывы помогут сделать {app} лучше до публичного выпуска.",
   "Toggle balance visibility": "Показать или скрыть баланс",
   "Main navigation": "Основная навигация",
   Back: "Назад",
@@ -811,9 +811,9 @@ export const russianStrings = {
   "{n} selected": "Выбрано: {n}",
   "The file is empty.": "Файл пустой.",
   "The file is damaged or is not a JSON file.": "Файл повреждён или это не файл JSON.",
-  "this is not a Monivra backup": "это не резервная копия Monivra",
-  "this is not a Monivra backup or its version is not supported":
-    "это не резервная копия Monivra или её версия не поддерживается",
+  "this is not a backup of this application": "это не резервная копия этого приложения",
+  "this is not a backup of this application or its version is not supported":
+    "это не резервная копия этого приложения или её версия не поддерживается",
   Section: "Раздел",
   "the section is missing or damaged": "раздел отсутствует или повреждён",
   "settings or exchange rates are missing": "нет настроек или курсов валют",
@@ -1009,4 +1009,6 @@ export const russianStrings = {
     "Пример 1: 100 - налог (20%) - комиссия (7) = 100 - 20 = 80 - 7 = 73",
   "Example 2: 100 - commission (7) - tax (20%) = 100 - 7 = 93 - 18,6 = 74,4":
     "Пример 2: 100 - комиссия (7) - налог (20%) = 100 - 7 = 93 - 18,6 = 74,4",
+  "Save a local copy of your data or restore a previously exported JSON file.":
+    "Сохраните локальную копию данных или восстановите ранее экспортированный файл JSON.",
 };

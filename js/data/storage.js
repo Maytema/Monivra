@@ -59,9 +59,13 @@ function operationProblem(o, x, accountIds, categories, seen) {
 export function findDataProblem(x) {
   try {
     if (!x || typeof x !== "object" || Array.isArray(x))
-      return problem("File", 0, "this is not a Monivra backup");
+      return problem("File", 0, "this is not a backup of this application");
     if (x.schema !== 1)
-      return problem("File", 0, "this is not a Monivra backup or its version is not supported");
+      return problem(
+        "File",
+        0,
+        "this is not a backup of this application or its version is not supported",
+      );
     for (const section of [
       "accounts",
       "categories",
@@ -145,7 +149,7 @@ export function findDataProblem(x) {
     return null;
   } catch (error) {
     // Checks above throw a problem when they cannot go on.
-    return error?.what ? error : problem("File", 0, "this is not a Monivra backup");
+    return error?.what ? error : problem("File", 0, "this is not a backup of this application");
   }
 }
 // Check that an object matches the stored dataset schema (also used for imports).

@@ -1,7 +1,11 @@
 /* Constants: storage key, dates, helpers, icons, currencies, palette */
 
+// Working name of the application: the single place to change when the real name is chosen.
+export const APP_NAME = "Monivra";
+// Technical form of the name for file names and storage keys.
+export const APP_ID = APP_NAME.toLowerCase();
 // localStorage key for the persisted dataset (bump the suffix on breaking schema changes).
-export const STORAGE_KEY = "monivra.offline.2026.v1";
+export const STORAGE_KEY = `${APP_ID}.offline.2026.v1`;
 // Largest count of days, weeks, months or years of a repeat or reminder rule.
 export const MAX_INTERVAL = 365;
 // Today's date as YYYY-MM-DD (local time).

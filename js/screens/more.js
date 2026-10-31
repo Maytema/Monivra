@@ -1,7 +1,15 @@
 /* More tab, settings and info pages */
 import { runSelfChecks } from "../app/self-checks.js";
 import { render } from "../app/shell.js";
-import { APP_BUILD, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import {
+  APP_BUILD,
+  APP_ID,
+  APP_NAME,
+  TODAY,
+  deepClone,
+  escapeHtml,
+  iconSvg,
+} from "../core/constants.js";
 import { appData, pinEntry, setAppData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { download, exportJSON } from "../data/import-export.js";
 import { createSampleData } from "../data/sample.js";
@@ -48,7 +56,7 @@ export function moreView() {
       ["Terms of use", "receipt", "terms"],
     ],
   ];
-  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>Monivra</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (${translate("Closed Beta")}) · ${translate("build")} ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
+  return `<section class="more-menu"><header class="more-menu-brand"><span class="more-menu-logo">$</span><span>${APP_NAME}</span><span class="more-menu-pro">Pro</span></header><div class="more-menu-sync"><span class="more-menu-cloud">${iconSvg("cloud", 23)}</span><span>Local data · Closed Beta</span></div><div class="more-original-groups">${groups.map((g) => `<div class="more-menu-group">${g.map(([label, icon, kind]) => buttonHtml(`${iconSvg(icon, 24)}<span>${escapeHtml(label)}</span>`, () => openPage(kind), "more-menu-item")).join("")}</div>`).join("")}</div><div class="more-version">Monivra · 0.1.0 (${translate("Closed Beta")}) · ${translate("build")} ${APP_BUILD}</div><div class="test-link">${buttonHtml("Test data · accounts and categories", () => openPage("sampleData"), "test-button")}</div></section>`;
 }
 
 // Settings sub-pages: notifications, security, privacy, backups, rates.
@@ -154,7 +162,7 @@ export function settingsPage(kind) {
                         true,
                         "Confirm",
                       ),
-                  )}${menuRowHtml("Export data", "download", () => download("monivra-backup.json", JSON.stringify(b.data, null, 2), "application/json"))}${menuRowHtml(
+                  )}${menuRowHtml("Export data", "download", () => download(`${APP_ID}-backup.json`, JSON.stringify(b.data, null, 2), "application/json"))}${menuRowHtml(
                     "Delete",
                     "trash",
                     () =>
@@ -375,13 +383,13 @@ export function simplePage(kind) {
       )
       .join(
         "",
-      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>Your feedback will help shape Monivra before its public release.</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div>`;
+      )}</div><div class="sub-features">${features.map((x) => `<div class="feature">${iconSvg("check", 17)}<span>${x}</span></div>`).join("")}</div><div class="review" aria-label="Review"><div class="stars">★★★★★</div><p>${translateWith("Your feedback will help shape {app} before its public release.", { app: APP_NAME })}</p><small>— Closed Beta feedback</small></div><div class="review-dots" aria-label="Review 1 of 8">● ○ ○ ○ ○ ○ ○ ○</div><div class="sub-actions">${["Solving the payment problem", "Check purchase status", "Restore purchases", "Subscription management"].map((x) => buttonHtml(x, () => showInfo("Offline preview: store billing is not connected."), "button-outline")).join("")}</div><p class="sub-disclosure">Closed Beta preview: indicative pricing only. Payments are disabled. Plans and prices may change before launch.</p></div>`;
   } else if (kind === "shared") {
     title = "Shared access";
-    body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access</p></div>${buttonHtml("Invite", () => showInfo("DEMO: sharing requires a Monivra account and network service. No invitation is sent."), "primary")}`;
+    body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access</p></div>${buttonHtml("Invite", () => showInfo(translateWith("DEMO: sharing requires a {app} account and network service. No invitation is sent.", { app: APP_NAME })), "primary")}`;
   } else if (kind === "instructions") {
     title = "Instructions";
-    body = `<div class="help-intro">Learn the basics of Monivra</div>${menuRowHtml(
+    body = `<div class="help-intro">${translateWith("Learn the basics of {app}", { app: APP_NAME })}</div>${menuRowHtml(
       "Repeat hints",
       "repeat",
       () => {
@@ -450,7 +458,7 @@ export function simplePage(kind) {
     }</div>`;
   } else if (kind === "demo") {
     title = "Demo and reset";
-    body = `<div class="demo-note"><strong>Monivra · Offline reconstruction</strong><p>Reference date: 12 October 2026. The five main sections were rebuilt from sampled source frames. Exact fonts, animations and several external flows remain UNKNOWN.</p><p>Open this HTML in a browser. Changes are stored on this device when browser storage is available. Export a Data file before moving or replacing it.</p></div>${menuRowHtml("Export data file", "download", exportJSON)}${menuRowHtml(
+    body = `<div class="demo-note"><strong>${APP_NAME} · ${translate("Offline reconstruction")}</strong><p>Reference date: 12 October 2026. The five main sections were rebuilt from sampled source frames. Exact fonts, animations and several external flows remain UNKNOWN.</p><p>Open this HTML in a browser. Changes are stored on this device when browser storage is available. Export a Data file before moving or replacing it.</p></div>${menuRowHtml("Export data file", "download", exportJSON)}${menuRowHtml(
       "Reset demo data",
       "repeat",
       () =>
@@ -481,13 +489,13 @@ export function simplePage(kind) {
     })}<p class="footnote">Android file handling, camera, downloads and localStorage depend on the browser. PIN is not encryption. This is not financial advice or a connection to your actual accounts.</p>`;
   } else if (kind === "about") {
     title = "About our team";
-    body = `<div class="info-card"><h2>Monivra</h2><span class="info-pill">Closed Beta · 0.1.0</span><p>Monivra is an independent personal-finance application in development. This preview is shared to gather feedback before release.</p><h3>Project status</h3><p>Accounts, categories, operations, statistics and settings are being tested. Some features are demonstrations and may change before launch.</p><h3>People behind the project</h3><p>Team member names, contact addresses and company details have not yet been supplied for public release.</p><p class="caution">This is a draft project information page, not a claim of affiliation with another application.</p></div>`;
+    body = `<div class="info-card"><h2>${APP_NAME}</h2><span class="info-pill">Closed Beta · 0.1.0</span><p>${translateWith("{app} is an independent personal-finance application in development. This preview is shared to gather feedback before release.", { app: APP_NAME })}</p><h3>Project status</h3><p>Accounts, categories, operations, statistics and settings are being tested. Some features are demonstrations and may change before launch.</p><h3>People behind the project</h3><p>Team member names, contact addresses and company details have not yet been supplied for public release.</p><p class="caution">This is a draft project information page, not a claim of affiliation with another application.</p></div>`;
   } else if (kind === "privacyPolicy") {
     title = "Privacy policy";
     body = `<div class="info-card"><span class="info-pill">Draft · Not for publication</span><h2>Privacy in the current offline preview</h2><h3>Financial records</h3><p>The offline preview stores accounts, categories and transactions in browser storage when it is available. These records are visible to anyone with access to the same browser profile and device.</p><h3>Export and deletion</h3><p>You can export a data file from More → Data and delete the current local records there. Files you have already exported must be deleted separately.</p><h3>Connected services</h3><p>Cloud sync, payments and account sign-in are not connected in this HTML preview. A future online version may process data differently.</p><p class="caution">This is a technical summary of the beta, not a finalized privacy policy. A public policy must be written and reviewed after the actual hosting, analytics, account and support systems are decided.</p></div>`;
   } else if (kind === "terms") {
     title = "Terms of use";
-    body = `<div class="info-card"><span class="info-pill">Draft · Not for publication</span><h2>Closed beta information</h2><h3>Purpose</h3><p>Monivra is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.</p><h3>Financial information</h3><p>This tool is intended for personal expense tracking. It is not a banking service and does not execute real transfers.</p><h3>Data safety</h3><p>Keep your own backup before clearing browser data or moving to another device. Local storage may be unavailable in some file viewers.</p><h3>Purchases</h3><p>Subscription prices in the preview are visual examples. The Continue button does not make a purchase.</p><p class="caution">These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.</p></div>`;
+    body = `<div class="info-card"><span class="info-pill">Draft · Not for publication</span><h2>Closed beta information</h2><h3>Purpose</h3><p>${translateWith("{app} is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.", { app: APP_NAME })}</p><h3>Financial information</h3><p>This tool is intended for personal expense tracking. It is not a banking service and does not execute real transfers.</p><h3>Data safety</h3><p>Keep your own backup before clearing browser data or moving to another device. Local storage may be unavailable in some file viewers.</p><h3>Purchases</h3><p>Subscription prices in the preview are visual examples. The Continue button does not make a purchase.</p><p class="caution">These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.</p></div>`;
   } else {
     title = "Information";
     body = "<p>Information is not available in this preview.</p>";
