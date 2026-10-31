@@ -15,6 +15,8 @@ export const russianStrings = {
   Receiver: "Получатель",
   "Clear all": "Очистить всё",
   "Add a comment": "Добавить комментарий",
+  "Remove comments": "Удалить комментарии",
+  "Enter a comment": "Введите комментарий",
   "Select operations": "Выберите операции",
   "Operations updated": "Операции обновлены",
   "For transfers": "Для переводов",

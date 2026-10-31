@@ -209,6 +209,34 @@
 .accounts-content .account-row .grow {
   gap: 4px;
 }
+.account-money-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.account-money-line .money {
+  white-space: nowrap;
+}
+.account-bar {
+  flex: 1 1 0%;
+  min-width: 24px;
+  max-width: 96px;
+  height: 6px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--positive) 18%, transparent);
+  overflow: hidden;
+}
+.account-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--positive);
+}
+.account-pct {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--muted);
+}
 .goal-info {
   font-size: 13px;
   color: var(--muted);
@@ -219,27 +247,16 @@
   max-width: 112px;
   font-size: 13px;
   flex: 0 0 auto;
-  line-height: 1.8;
-}
-.goal-strip {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  border-radius: 8px;
-  width: 7px;
+  align-self: flex-start;
+  line-height: 1.4;
 }
 .accounts-content .account-row .goal-info {
   font-size: 12px;
-  line-height: 1.7;
+  line-height: 1.4;
   color: var(--muted);
   padding-right: 10px;
 }
-.accounts-content .account-row .goal-strip {
-  width: 8px;
-  border-radius: 8px 0px 0px 8px;
-  right: 0px;
-}
-@media (max-width: 370px) {
+.accounts-content .account-row @media (max-width: 370px) {
   .account-row .goal-info {
     font-size: 11px;
   }
@@ -321,7 +338,7 @@
   font-variant-numeric: tabular-nums;
 }
 .goal-pct-frac {
-  font-size: 0.85em;
+  font-size: 0.92em;
   vertical-align: baseline;
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -425,11 +442,10 @@
 /* Action sheets of accounts and categories: header card and round action tiles */
 .account-detail-head {
   margin: 8px 4px 22px;
-  padding: 16px 16px 18px;
+  padding: 16px 18px 18px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--key);
-  text-align: center;
 }
 .account-detail-top {
   display: flex;
@@ -454,13 +470,19 @@
 .account-favorite.is-favorite svg {
   fill: currentcolor;
 }
+.account-detail-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px 18px;
+}
 .account-detail-label {
-  font-size: 15px;
-  color: var(--ink-soft);
+  font-size: 13px;
+  color: var(--muted);
 }
 .account-detail-money {
-  font-size: 28px;
-  margin: 2px 0 8px;
+  font-size: 26px;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
 }
 .account-progress {
   margin-top: 14px;

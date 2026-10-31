@@ -120,7 +120,7 @@ function accountLine(a) {
   const n = accountBalance(a.id),
     progress = accountProgress(a);
   return buttonHtml(
-    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span>${moneySpanHtml(n, a.currency, false, true)}${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${progress ? `<span class="goal-info">${progress.kind === "goal" ? leftLabel(progress, a.currency) + "<br>" : ""}${percentLabel(progress.percent)}</span><span class="goal-strip" style="height:${progress.percent}%;background:#18c99b"></span>` : ""}`,
+    `<span class="account-icon-wrap">${badgeHtml(a)}${a.favorite ? '<span class="account-favorite-badge" aria-label="Favorite">★</span>' : ""}</span><span class="grow"><span class="name">${escapeHtml(a.name)}</span><span class="account-money-line">${moneySpanHtml(n, a.currency, false, true)}${progress ? `<span class="account-bar"><i style="width:${progress.percent}%"></i></span><span class="account-pct">${percentLabel(progress.percent)}</span>` : ""}</span>${a.type === "Regular" && a.limit > 0 ? `<span class="account-available">${translateWith("Available: {amount}", { amount: formatMoney(n + a.limit, a.currency) })}</span>` : ""}</span>${progress?.kind === "goal" ? `<span class="goal-info">${leftLabel(progress, a.currency)}</span>` : ""}`,
     () => accountActions(a),
     "account-row " + (appData.settings.bigAccounts ? "big" : ""),
     `data-account="${a.id}"`,
@@ -248,8 +248,8 @@ export function accountActions(a) {
   const n = accountBalance(a.id),
     available = a.type === "Regular" && a.limit > 0;
   const act = actionTileHtml;
-  const balance = (label, amount) =>
-    `<div class="account-detail-label">${translate(label)}</div><div class="account-detail-money">${moneySpanHtml(amount, a.currency, false, true)}</div>`;
+  const figure = (label, amount) =>
+    `<div class="account-detail-figure"><div class="account-detail-label">${translate(label)}</div><div class="account-detail-money">${moneySpanHtml(amount, a.currency, false, true)}</div></div>`;
   openSheet(
     () =>
       `<div class="account-detail-head"><div class="account-detail-top">${badgeHtml(a)}<strong>${escapeHtml(a.name)}</strong>${buttonHtml(
@@ -260,7 +260,7 @@ export function accountActions(a) {
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),
         'aria-label="Favorite"',
-      )}</div>${balance("Current balance", n)}${available ? balance("Available balance", n + a.limit) : ""}${progressBlockHtml(a)}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
+      )}</div><div class="account-detail-figures">${figure("Current balance", n)}${available ? figure("Available balance", n + a.limit) : ""}</div>${progressBlockHtml(a)}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
         "archive",
         a.archived ? "Return from archive" : "Move to archive",
         "#7d7886",

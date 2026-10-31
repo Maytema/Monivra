@@ -43,6 +43,7 @@ import {
   fieldButtonHtml,
   iconButtonHtml,
   registerAction,
+  registerInput,
   toast,
 } from "../ui/primitives.js";
 
@@ -702,6 +703,32 @@ export function bulkEdit() {
       "Tags",
     );
   };
+  // Write one comment for all selected operations, or remove their comments with a separate button.
+  const chooseComment = () => {
+    let text = d.comment || "";
+    openSheet(
+      () =>
+        `<h2>${translate("Comment")}</h2><label><small>${translate("Add a comment")}</small><input aria-label="${escapeHtml(translate("Comment"))}" value="${escapeHtml(text)}" data-input="${registerInput((v) => (text = v))}"></label>${buttonHtml(
+          "Complete",
+          () => {
+            if (!text.trim()) return toast("Enter a comment");
+            d.comment = text;
+            closeLayers();
+            render();
+          },
+          "primary",
+        )}${buttonHtml(
+          `${iconSvg("trash", 14)} ${translate("Remove comments")}`,
+          () => {
+            d.comment = "";
+            closeLayers();
+            render();
+          },
+          "outline",
+        )}`,
+      "Comment",
+    );
+  };
   const apply = () => {
     const replacements = selected.map((o) => {
       const n = deepClone(o);
@@ -764,17 +791,8 @@ export function bulkEdit() {
       )}${row(
         "Comment",
         "comment",
-        d.comment === null ? "" : d.comment || translate("Empty"),
-        () =>
-          promptText(
-            "Add a comment",
-            d.comment || "",
-            (v) => {
-              d.comment = v;
-              render();
-            },
-            "Comment",
-          ),
+        d.comment === null ? "" : d.comment || translate("Remove comments"),
+        chooseComment,
         () => (d.comment = null),
       )}${row("Tags", "tag", tagsLabel(), chooseTags, () => {
         d.addTags = [];
