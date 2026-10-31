@@ -352,8 +352,9 @@ function accountCalculatorView(p) {
     p.scratchReady = false;
     try {
       const cents = evaluateExpression(v);
-      // A correction keeps the amount of its first side; any other operation follows the rate.
-      if (!isAdjustment) {
+      // Transfers and corrections store both amounts, so the first one stays as typed; an operation
+      // with a category stores only the account amount, which then follows the typed one.
+      if (!isAdjustment && !isTransfer) {
         const source = asDecimal(receiveToSource(cents));
         if (calcMode) p.scratchExpr = source;
         else d.expr = source;
