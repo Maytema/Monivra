@@ -101,6 +101,54 @@ export function deleteOperation(id, scheduled = false) {
   uiState.selected = uiState.selected.filter((x) => x !== id);
   save();
 }
+// Does anything refer to the account: a balance, a limit, a goal or any operation?
+export function accountHasRecords(a) {
+  const used = (o) => o.from === a.id || o.to === a.id;
+  return !!(
+    a.opening ||
+    a.goal ||
+    a.limit ||
+    appData.ops.some(used) ||
+    appData.scheduled.some(used)
+  );
+}
+// Give an account another currency. With `convert` every amount that is stored in the account's
+// currency (opening balance, goal, limit, debt total, operations, scheduled payments) is converted
+// at the current rate; otherwise the numbers stay and only the currency changes. Either way the
+// other side of a transfer keeps what it received, because that money did move.
+export function changeAccountCurrency(id, currency, convert) {
+  const a = accountById(id);
+  if (convert) {
+    const conv = (n) => convertCurrency(n, a.currency, currency);
+    for (const key of ["opening", "goal", "limit", "totalDebt"]) if (a[key]) a[key] = conv(a[key]);
+    for (const o of [...appData.ops, ...appData.scheduled]) {
+      if (o.from === id || (o.to === id && o.type !== "transfer")) {
+        o.amount = conv(o.amount);
+        // A fixed fee is an amount in the same currency.
+        for (const fee of o.fees || [])
+          if (fee.value > 0) fee.value = conv(Math.round(fee.value * 100)) / 100;
+      }
+      if (o.to === id && o.receive) o.receive = conv(o.receive);
+    }
+  }
+  a.currency = currency;
+  save();
+}
+// Change the main currency of the application. Totals and statistics follow it right away because
+// every account keeps its own currency. Categories and budgets that were in the old main currency
+// follow too; a budget limit is converted so that it keeps its meaning.
+export function changeMainCurrency(currency) {
+  const old = appData.settings.currency;
+  if (old === currency) return;
+  for (const c of appData.categories) if (c.currency === old) c.currency = currency;
+  for (const b of appData.budgets)
+    if (b.currency === old) {
+      b.amount = convertCurrency(b.amount, old, currency);
+      b.currency = currency;
+    }
+  appData.settings.currency = currency;
+  save();
+}
 // Delete an account together with its operations and scheduled payments.
 export function deleteAccount(id) {
   if (!accountById(id)) return;

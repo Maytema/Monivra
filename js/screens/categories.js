@@ -77,10 +77,16 @@ export function sumTabs() {
     .join("")}</div>`;
 }
 
+// Total of a category for the report period, shown in the currency of the category.
+const categoryMoney = (c) =>
+  formatMoney(
+    convertCurrency(categoryTotal(c.id, c.type), appData.settings.currency, c.currency),
+    c.currency,
+  );
 // One tile in the categories grid.
 function categoryTile(c, fn = null) {
   return buttonHtml(
-    `${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><span class="money ${categoryTotal(c.id) === 0 ? "muted" : c.type === "income" ? "pos" : "neg"}">${formatMoney(convertCurrency(categoryTotal(c.id), appData.settings.currency, c.currency), c.currency)}</span></span>`,
+    `${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><span class="money ${categoryTotal(c.id, c.type) === 0 ? "muted" : c.type === "income" ? "pos" : "neg"}">${categoryMoney(c)}</span></span>`,
     fn ||
       (() =>
         operationStart({
@@ -123,11 +129,11 @@ export function categoriesView() {
 // Action sheet shown on a long press of a category: figures for the period and two actions;
 // "Operations" lists the category over `period` (all time by default).
 export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
-  const share = Math.round(categoryShare(c.id) * 100),
-    count = categoryCount(c.id);
+  const share = Math.round(categoryShare(c.id, c.type) * 100),
+    count = categoryCount(c.id, c.type);
   openSheet(
     () =>
-      `<div class="category-sheet-head">${badgeHtml(c)}<strong>${escapeHtml(c.name)}</strong></div><div class="category-sheet-stats"><span>${translateCount("{n} operation", "{n} operations", count)}</span><span>${formatMoney(categoryTotal(c.id), c.currency)}</span></div><div class="category-share"><span class="category-share-bar"><i style="width:${share}%;background:${escapeHtml(c.color)}"></i></span><span>${share} %</span></div><div class="sheet-actions" style="--cols:2" role="group" aria-label="Category actions">${actionTileHtml("edit", "Edit", "#c04fd8", () => editCategory(c))}${actionTileHtml(
+      `<div class="category-sheet-head">${badgeHtml(c)}<strong>${escapeHtml(c.name)}</strong></div><div class="category-sheet-stats"><span>${translateCount("{n} operation", "{n} operations", count)}</span><span>${categoryMoney(c)}</span></div><div class="category-share"><span class="category-share-bar"><i style="width:${share}%;background:${escapeHtml(c.color)}"></i></span><span>${share} %</span></div><div class="sheet-actions" style="--cols:2" role="group" aria-label="Category actions">${actionTileHtml("edit", "Edit", "#c04fd8", () => editCategory(c))}${actionTileHtml(
         "receipt",
         "Operations",
         "#1f8fe0",
@@ -141,7 +147,7 @@ export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
                   escapeHtml(x.name),
                   x.icon,
                   () => openFilteredOperations({ categories: [x.id] }, period),
-                  formatMoney(categoryTotal(x.id), x.currency),
+                  categoryMoney(x),
                 ),
               )
               .join("")
@@ -404,7 +410,7 @@ export function categoryEditView(p) {
   return (
     pageHeader(p.editing ? "Change category" : "New category") +
     `<div class="content cat-editor-content"><div class="cat-edit-form">${textFieldHtml("Title", d.name, (v) => (d.name = v), "Enter the title")}${fieldButtonHtml("Icon", badgeHtml(d), () => iconPicker(d))}${fieldButtonHtml("Type", (d.type === "expense" ? '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10V4h16v6M12 20V9m-6 6 6-6 6 6"/></svg>' : '<svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15m-6-6 6 6 6-6M4 20h16"/></svg>') + " " + translate(d.type === "expense" ? "Expenses" : "Incomes"), () => categoryTypePicker(d))}${fieldButtonHtml(
-      "Account currency",
+      "Category currency",
       escapeHtml(currencyName(d.currency)),
       () =>
         currencyPicker(d.currency, (v) => {
@@ -512,7 +518,7 @@ export function categoryManageView() {
   return (
     pageHeader("Change categories") +
     manageCategoryTabs() +
-    `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${formatMoney(categoryTotal(c.id), c.currency)}</small></span>`, () => editCategory(c), "cat-manage-tile", `data-category="${escapeHtml(c.id)}"`)).join("")}</div>${
+    `<div class="content cat-manage-content">${buttonHtml(`${iconSvg("plus", 17)}<span>Create a new category</span>`, () => editCategory(), "cat-manage-create")}<div class="cat-manage-grid">${active.map((c) => buttonHtml(`${badgeHtml(c)}<span class="grow"><span class="name">${escapeHtml(c.name)}</span><small>${categoryMoney(c)}</small></span>`, () => editCategory(c), "cat-manage-tile", `data-category="${escapeHtml(c.id)}"`)).join("")}</div>${
       archived.length
         ? `<div class="cat-manage-archive">${buttonHtml(
             `${translateWith("Archive ({n})", { n: archived.length })} ${iconSvg(uiState.manageArchive ? "chevronUp" : "chevronDown", 17)}`,

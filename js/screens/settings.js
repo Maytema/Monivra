@@ -4,6 +4,7 @@ import { THEME_COLORS, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { NUMBER_FORMATS, formatNumber } from "../domain/finance.js";
+import { changeMainCurrency } from "../domain/operations.js";
 import { LANGUAGES, translate } from "../i18n/index.js";
 import { statsSettings } from "./statistics.js";
 import {
@@ -118,7 +119,11 @@ function formattingPage() {
     `<div class="content flush">${menuRowHtml(
       "Main currency",
       null,
-      () => currencyPicker(s.currency, (v) => setting("currency", v)),
+      () =>
+        currencyPicker(s.currency, (v) => {
+          changeMainCurrency(v);
+          render();
+        }),
       s.currency,
     )}${menuRowHtml(
       "Currency format",

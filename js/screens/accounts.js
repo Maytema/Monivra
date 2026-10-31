@@ -7,11 +7,14 @@ import {
   accountBalance,
   accountById,
   convertCurrency,
+  debtDirection,
   formatMoney,
   moneySpanHtml,
   overallBalance,
 } from "../domain/finance.js";
 import {
+  accountHasRecords,
+  changeAccountCurrency,
   deleteAccount,
   putOperation,
   toggleFavoriteAccount,
@@ -289,6 +292,7 @@ export function editAccount(a) {
         showIncome: false,
       };
   d.balance = a ? accountBalance(a.id) : 0;
+  if (a?.type === "Debt") d.debt = debtDirection(a);
   if (d.type === "Debt" && d.totalDebt === undefined)
     d.totalDebt = Math.abs(a?.opening || d.balance);
   d.createOperation = false;
@@ -315,8 +319,37 @@ export function saveAccount(p) {
     if (d.totalDebt === undefined) d.totalDebt = Math.abs(d.balance);
     if (!Number.isSafeInteger(d.totalDebt) || d.totalDebt < 0) return toast("Invalid total debt");
   }
-  let old = accountById(d.id),
-    change = d.balance - (old ? accountBalance(old.id) : 0);
+  const existing = accountById(d.id);
+  if (existing && existing.currency !== d.currency && accountHasRecords(existing))
+    return currencyChangeDialog(existing, d.currency, (convert) => storeAccount(d, convert));
+  storeAccount(d, false);
+}
+// Ask whether the amounts of an account follow when its currency changes.
+function currencyChangeDialog(a, currency, done) {
+  const pick = (convert) => () => {
+    closeLayers();
+    done(convert);
+  };
+  openSheet(
+    () =>
+      `<h2>${translate("Change account currency")}</h2><p>${translateWith("The account has a balance or operations. Convert all its amounts from {from} to {to} at the current rate, or keep the numbers and only change the currency?", { from: a.currency, to: currency })}</p>${buttonHtml("Convert at the current rate", pick(true), "primary")}${buttonHtml("Keep the numbers", pick(false), "outline")}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+    "Change account currency",
+    "dialog",
+  );
+}
+// Store the validated draft; `convert` tells whether a currency change converts the amounts.
+function storeAccount(d, convert) {
+  let old = accountById(d.id);
+  if (old && old.currency !== d.currency) {
+    // Fields the user did not touch follow the conversion; edited ones are taken as typed.
+    const keys = ["balance", "goal", "limit", "totalDebt"],
+      read = (a) => ({ ...a, balance: accountBalance(a.id) }),
+      before = read(old);
+    changeAccountCurrency(old.id, d.currency, convert);
+    const after = read(old);
+    for (const key of keys) if (d[key] === before[key]) d[key] = after[key];
+  }
+  const change = d.balance - (old ? accountBalance(old.id) : 0);
   if (
     d.createOperation &&
     d.type === "Debt" &&

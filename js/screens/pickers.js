@@ -1,18 +1,15 @@
 /* Pickers for accounts and categories: one list design for every place that asks for them */
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData } from "../core/state.js";
-import { accountBalance, convertCurrency, moneySpanHtml } from "../domain/finance.js";
+import {
+  ACCOUNT_GROUPS,
+  accountBalance,
+  convertCurrency,
+  moneySpanHtml,
+} from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 import { closeLayers, openSheet, tabsHtml } from "../ui/kit.js";
 import { badgeHtml, buttonHtml } from "../ui/primitives.js";
-
-// Groups of account cards, in the order of the Accounts screen.
-const ACCOUNT_GROUPS = [
-  ["Accounts", (a) => a.type === "Regular"],
-  ["Savings", (a) => a.type === "Savings"],
-  ["I owe", (a) => a.type === "Debt" && a.debt === "I owe"],
-  ["Owe me", (a) => a.type === "Debt" && a.debt === "Owe me"],
-];
 
 // Account cards grouped by kind; `onPick(account)` runs when one is tapped.
 export function accountCardsHtml(accounts, chosenId, onPick) {

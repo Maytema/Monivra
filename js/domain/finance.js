@@ -29,6 +29,19 @@ export const accountBalance = (id) => {
         )
     : 0;
 };
+// Which way a debt goes. The sign of its balance decides, so paying a debt back in excess turns
+// it around ("Owe me" for money the other side now owes); a settled debt keeps its last direction.
+export function debtDirection(a) {
+  const balance = accountBalance(a.id);
+  return balance < 0 ? "I owe" : balance > 0 ? "Owe me" : a.debt;
+}
+// Groups of accounts shown together in pickers and filters, in the order of the Accounts screen.
+export const ACCOUNT_GROUPS = [
+  ["Accounts", (a) => a.type === "Regular"],
+  ["Savings", (a) => a.type === "Savings"],
+  ["I owe", (a) => a.type === "Debt" && debtDirection(a) === "I owe"],
+  ["Owe me", (a) => a.type === "Debt" && debtDirection(a) === "Owe me"],
+];
 // Exchange rate of a currency relative to the base currency.
 const currencyRate = (c) => appData.rates[c] || 1;
 
@@ -156,14 +169,36 @@ function rangeLabel(a, b) {
     ...(withYear ? { year: "numeric" } : {}),
   }).formatRange(parseDate(a), parseDate(b));
 }
+// How a transfer is counted besides being a transfer. Money paid into a debt account counts as an
+// expense when that account says so; money taken out of one counts as an income. The direction of
+// the transfer decides, so an account with both switches on needs no further choice. A transfer
+// between two debt accounts only moves a debt around and is not counted.
+export function transferRoles(o) {
+  const none = { expense: null, income: null };
+  if (o.type !== "transfer") return none;
+  const source = accountById(o.from),
+    dest = accountById(o.to);
+  if (source?.type === "Debt" && dest?.type === "Debt") return none;
+  return {
+    expense: dest?.type === "Debt" && dest.considerExpense ? dest : null,
+    income: source?.type === "Debt" && source.considerIncome ? source : null,
+  };
+}
 // Does an operation pass the active filters?
 export function operationMatchesFilters(o, f = uiState.filters) {
+  const roles = transferRoles(o);
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
     (!f.categories ||
       f.categories.includes(o.category) ||
-      f.categories.includes(categoryById(o.category)?.parent)) &&
-    (!f.types || o.type === "adjustment" || f.types.includes(o.type)) &&
+      f.categories.includes(categoryById(o.category)?.parent) ||
+      (roles.expense && f.categories.includes("debt:" + roles.expense.id)) ||
+      (roles.income && f.categories.includes("debt:" + roles.income.id))) &&
+    (!f.types ||
+      o.type === "adjustment" ||
+      f.types.includes(o.type) ||
+      (roles.expense && f.types.includes("expense")) ||
+      (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
     (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase()))
   );
@@ -188,27 +223,24 @@ export function reportRows(ops = visibleOperations()) {
         // The category records what is left after fees on an expense.
         reportAmount: convertCurrency(
           o.type === "expense" ? netAmount(o) : o.amount,
-          a?.currency || "KGS",
+          a?.currency || appData.settings.currency,
           appData.settings.currency,
         ),
       });
     } else {
-      const source = accountById(o.from),
-        dest = accountById(o.to);
-      if (dest?.type === "Debt" && dest.considerExpense)
-        out.push({
-          ...o,
-          category: "debt:" + dest.id,
-          reportType: "expense",
-          reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
-        });
-      if (source?.type === "Debt" && source.considerIncome)
-        out.push({
-          ...o,
-          category: "debt:" + source.id,
-          reportType: "income",
-          reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
-        });
+      const { expense, income } = transferRoles(o),
+        source = accountById(o.from);
+      for (const [debt, reportType] of [
+        [expense, "expense"],
+        [income, "income"],
+      ])
+        if (debt)
+          out.push({
+            ...o,
+            category: "debt:" + debt.id,
+            reportType,
+            reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
+          });
     }
   }
   return out;
@@ -218,19 +250,21 @@ export const totalByType = (type, ops) =>
   reportRows(ops)
     .filter((o) => o.reportType === type)
     .reduce((s, o) => s + o.reportAmount, 0);
+// Report rows of one category of the given type (its own type unless told otherwise), with its
+// sub-categories. A debt account shown as a category can be both an expense and an income.
+const categoryRows = (id, type = categoryById(id)?.type) =>
+  reportRows().filter(
+    (o) => o.reportType === type && (o.category === id || categoryById(o.category)?.parent === id),
+  );
 // Sum of operations in a category, including its sub-categories.
-const categoryRows = (id) =>
-  reportRows().filter((o) => o.category === id || categoryById(o.category)?.parent === id);
-export const categoryTotal = (id) => categoryRows(id).reduce((s, o) => s + o.reportAmount, 0);
+export const categoryTotal = (id, type) =>
+  categoryRows(id, type).reduce((s, o) => s + o.reportAmount, 0);
 // Number of operations of a category (with its subcategories) in the report period.
-export const categoryCount = (id) => categoryRows(id).length;
+export const categoryCount = (id, type) => categoryRows(id, type).length;
 // Share (0–1) of a category in all operations of its type in the report period.
-export function categoryShare(id) {
-  const type = categoryById(id)?.type;
-  const all = reportRows()
-    .filter((o) => o.reportType === type)
-    .reduce((s, o) => s + o.reportAmount, 0);
-  return all ? categoryTotal(id) / all : 0;
+export function categoryShare(id, type = categoryById(id)?.type) {
+  const all = totalByType(type);
+  return all ? categoryTotal(id, type) / all : 0;
 }
 // Evaluate a calculator expression (+ − × ÷) and return the result in minor units.
 export function evaluateExpression(expr) {

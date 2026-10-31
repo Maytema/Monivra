@@ -4,6 +4,7 @@ import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, emptyFilters, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
+  ACCOUNT_GROUPS,
   accountBalance,
   accountById,
   categoryById,
@@ -16,6 +17,7 @@ import {
   moneySpanHtml,
   parseDate,
   periodBounds,
+  transferRoles,
   visibleOperations,
 } from "../domain/finance.js";
 import { validateOp } from "../domain/operations.js";
@@ -44,19 +46,32 @@ import {
   toast,
 } from "../ui/primitives.js";
 
+// Change the selection; with nothing left selected the selection mode closes by itself.
+function setSelected(ids) {
+  uiState.selected = ids;
+  if (!ids.length) uiState.selection = false;
+  render();
+}
+// Color of an amount: red for money spent, green for money earned, also for a transfer that counts
+// as an expense or an income because of a debt account.
+function amountTone(o) {
+  const roles = transferRoles(o);
+  if (o.type === "expense" || (o.type === "adjustment" && o.from) || roles.expense) return "neg";
+  if (o.type === "income" || (o.type === "adjustment" && o.to) || roles.income) return "pos";
+  return "";
+}
 // One row in the operations list.
 export function opRow(o, scheduled = false) {
   const a = accountById(o.from || o.to),
     c = categoryById(o.category),
     selected = uiState.selected.includes(o.id);
   return buttonHtml(
-    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${o.type === "expense" || (o.type === "adjustment" && o.from) ? "neg" : o.type === "income" || (o.type === "adjustment" && o.to) ? "pos" : ""}">${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(o.amount, a?.currency)}</span>`,
+    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(opTitle(o))}${o.photo ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}${scheduled ? " · " + escapeHtml(dateLabel(o.date, true)) : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(o.amount, a?.currency)}</span>`,
     () => {
       if (uiState.selection) {
-        uiState.selected = selected
-          ? uiState.selected.filter((x) => x !== o.id)
-          : [...uiState.selected, o.id];
-        render();
+        setSelected(
+          selected ? uiState.selected.filter((x) => x !== o.id) : [...uiState.selected, o.id],
+        );
       } else operationStart(o, scheduled);
     },
     "op-row " + (selected ? "selected" : ""),
@@ -113,8 +128,7 @@ function selectionHeader(ops) {
     render();
   });
   const selectAll = iconButtonHtml("check", "Select all", () => {
-    uiState.selected = uiState.selected.length === ops.length ? [] : ops.map((o) => o.id);
-    render();
+    setSelected(uiState.selected.length === ops.length ? [] : ops.map((o) => o.id));
   });
   return `<div class="ops-selection-header">${exit}<strong>${translateWith("Selected: {n}", { n: uiState.selected.length })}</strong>${selectAll}</div>`;
 }
@@ -343,12 +357,7 @@ export function multiSelect(title, items, selected, fn) {
 // Account selection grouped by account type.
 function filterAccountSelect(selected, done) {
   let values = selected ? new Set(selected) : new Set(appData.accounts.map((a) => a.id));
-  const groups = [
-    ["Accounts", (a) => a.type === "Regular"],
-    ["Savings", (a) => a.type === "Savings"],
-    ["I owe", (a) => a.type === "Debt" && a.debtType !== "oweMe" && a.debtType !== "Owe me"],
-    ["Owe me", (a) => a.type === "Debt" && (a.debtType === "oweMe" || a.debtType === "Owe me")],
-  ];
+  const groups = ACCOUNT_GROUPS;
   const checked = (ids) => ids.length > 0 && ids.every((id) => values.has(id));
   const expanded = new Set(groups.map((g) => g[0]));
   openSheet(

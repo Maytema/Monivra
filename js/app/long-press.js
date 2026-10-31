@@ -5,7 +5,8 @@ import { actionHandlers } from "../ui/primitives.js";
 
 const LONG_PRESS_MS = 420;
 const MOVE_TOLERANCE_PX = 15;
-// True for a moment after a long press so the click that ends the touch is ignored.
+// True from a long press until the next touch starts, so the click that ends the long press is
+// ignored however long the finger stays down, and a later tap is never mistaken for it.
 let longPressJustHappened = false;
 
 // Attach the long-press listeners once (the #app element itself is never replaced).
@@ -38,6 +39,7 @@ export function initOperationLongPress() {
   app.addEventListener(
     "pointerdown",
     (e) => {
+      longPressJustHappened = false;
       const action = holdAction(e.target);
       if (!action) return;
       cancel();
@@ -48,7 +50,6 @@ export function initOperationLongPress() {
         timer: setTimeout(() => {
           if (!press) return;
           longPressJustHappened = true;
-          setTimeout(() => (longPressJustHappened = false), 950);
           if (navigator.vibrate)
             try {
               navigator.vibrate(22);

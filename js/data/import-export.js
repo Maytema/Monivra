@@ -110,22 +110,27 @@ export function dataView() {
         "Export data",
       ),
     )}${menuRowHtml("Delete my data", "trash", () => {
-      promptText("Type DELETE to erase all financial data", "", (v) => {
-        if (v.trim() !== "DELETE") {
-          toast("Deletion cancelled: type DELETE exactly");
-          return;
-        }
-        confirmAction(
-          "Permanently delete all accounts, categories, transactions, schedules and budgets?",
-          () => {
-            setAppData(createEmptyData());
-            save();
-            goHome("accounts");
-          },
-          true,
-          "Delete",
-        );
-      });
+      promptText(
+        "Type DELETE to erase all financial data",
+        "",
+        (v) => {
+          if (v.trim() !== "DELETE") {
+            toast("Deletion cancelled: type DELETE exactly");
+            return;
+          }
+          confirmAction(
+            "Permanently delete all accounts, categories, transactions, schedules and budgets?",
+            () => {
+              setAppData(createEmptyData());
+              save();
+              goHome("accounts");
+            },
+            true,
+            "Delete",
+          );
+        },
+        "Confirmation word",
+      );
     })}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
   );
 }

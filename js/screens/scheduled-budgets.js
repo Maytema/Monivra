@@ -3,12 +3,12 @@ import { render } from "../app/shell.js";
 import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import {
-  accountById,
   categoryById,
   convertCurrency,
   dateLabel,
   formatMoney,
   periodBounds,
+  reportRows,
 } from "../domain/finance.js";
 import { translate, translateCount } from "../i18n/index.js";
 import { multiSelect, opRow, operationsAddMenu, recurLabel } from "./operations.js";
@@ -268,17 +268,20 @@ export function budgetSpend(b) {
     anchor: uiState.period.anchor || TODAY,
   };
   const [from, to] = periodBounds(period);
-  return appData.ops
+  // The same rows the statistics count: fees taken into account, debt payments included when
+  // they count as expenses (only a budget for all expenses takes those).
+  return reportRows(appData.ops.filter((o) => o.date >= from && o.date <= to))
     .filter(
       (o) =>
-        o.type === "expense" &&
-        o.date >= from &&
-        o.date <= to &&
+        o.reportType === "expense" &&
         (!b.categories ||
           b.categories.includes(o.category) ||
           b.categories.includes(categoryById(o.category)?.parent)),
     )
-    .reduce((s, o) => s + convertCurrency(o.amount, accountById(o.from)?.currency, b.currency), 0);
+    .reduce(
+      (s, o) => s + convertCurrency(o.reportAmount, appData.settings.currency, b.currency),
+      0,
+    );
 }
 // Budgets list page.
 export function budgetsView() {
