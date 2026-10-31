@@ -257,41 +257,37 @@ const pinDotsHtml = (size, typed, failed) =>
     { length: size },
     (_, i) => `<span class="${i < typed ? "filled" : ""}"></span>`,
   ).join("")}</div>`;
-// Pauses that let the last dot be seen: before the PIN is checked, and while a wrong one shakes.
-const PIN_CHECK_MS = 220;
-const PIN_FAIL_MS = 450;
-// True while a complete PIN waits to be checked or a wrong one is shown; keys are ignored.
+// True while the last dot is still filling in; keys are ignored until the PIN is checked.
 let pinBusy = false;
-// PIN lock screen: the last dot fills first, then the PIN is checked.
+// Runs `fn` once the animations of the last dot are over, at once when there are none.
+const afterLastDot = (fn) => {
+  const running = document.querySelector(".pin-dots span:last-child")?.getAnimations?.() ?? [];
+  if (!running.length) return fn();
+  Promise.allSettled(running.map((a) => a.finished)).then(fn);
+};
+// PIN lock screen: the last dot fills in first, then the PIN is checked and the app opens.
 export function lockView() {
   const size = appData.settings.pin.length;
   const check = () => {
-    if (pinEntry === appData.settings.pin) {
-      pinBusy = false;
-      setPinEntry("");
-      setLocked(false);
-      return render();
+    pinBusy = false;
+    if (pinEntry === appData.settings.pin) setLocked(false);
+    else {
+      pinFailed = true;
+      toast("Incorrect PIN");
     }
-    pinFailed = true;
-    toast("Incorrect PIN");
+    setPinEntry("");
     render();
-    setTimeout(() => {
-      pinBusy = false;
-      pinFailed = false;
-      setPinEntry("");
-      render();
-    }, PIN_FAIL_MS);
   };
   const press = (k) => {
     if (pinBusy) return;
     pinFailed = false;
     if (k === "⌫") setPinEntry(pinEntry.slice(0, -1));
     else if (pinEntry.length < size) setPinEntry(pinEntry + k);
+    render();
     if (pinEntry.length === size) {
       pinBusy = true;
-      setTimeout(check, PIN_CHECK_MS);
+      afterLastDot(check);
     }
-    render();
   };
   const digit = (k) => buttonHtml(k, () => press(k), "key");
   // The fingerprint key stands left of the zero only while biometrics are switched on.

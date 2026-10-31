@@ -355,10 +355,6 @@
 .pin-dots.failed span {
   border-color: var(--negative);
 }
-.pin-dots.failed span.filled {
-  background: var(--negative);
-  box-shadow: 0 0 0 5px color-mix(in srgb, var(--negative) 22%, transparent);
-}
 @keyframes pin-pop {
   from {
     transform: scale(0.6);
