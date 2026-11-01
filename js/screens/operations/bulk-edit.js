@@ -10,7 +10,7 @@ import { accountPicker, categoryPicker } from "../pickers.js";
 import { calendar } from "../../ui/calendar.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { confirmAction, promptText } from "../../ui/dialogs.js";
-import { buttonHtml, iconButtonHtml, toast } from "../../ui/primitives.js";
+import { buttonHtml, iconButtonHtml, sheetFooterHtml, toast } from "../../ui/primitives.js";
 import { registerInput } from "../../ui/handlers.js";
 
 // Delete / change date / more buttons shown in selection mode.
@@ -151,7 +151,7 @@ function chooseTags(changes, selected) {
   };
   openSheet(
     () =>
-      `<h2>${translate("Tags")}</h2><div class="bulk-tags-title">${translate("Add")}</div><div class="tag-cloud">${tagChipsHtml(picked.add, appData.tags, toggleAdded)}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, createTag, "tag tag-add")}</div><div class="bulk-tags-title">${translate("Remove")}</div><div class="tag-cloud">${tagChipsHtml(picked.remove, used, toggleRemoved)}${buttonHtml(`${iconSvg("trash", 14)} ${translate("Clear all")}`, toggleClear, "tag tag-clear " + (picked.clear ? "active" : ""))}</div>${buttonHtml("Complete", complete, "primary")}`,
+      `<h2>${translate("Tags")}</h2><div class="bulk-tags-title">${translate("Add")}</div><div class="tag-cloud">${tagChipsHtml(picked.add, appData.tags, toggleAdded)}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, createTag, "tag tag-add")}</div><div class="bulk-tags-title">${translate("Remove")}</div><div class="tag-cloud">${tagChipsHtml(picked.remove, used, toggleRemoved)}${buttonHtml(`${iconSvg("trash", 14)} ${translate("Clear all")}`, toggleClear, "tag tag-clear " + (picked.clear ? "active" : ""))}</div>${sheetFooterHtml(buttonHtml("Complete", complete, "primary"))}`,
     "Tags",
   );
 }
@@ -172,7 +172,14 @@ function chooseComment(changes) {
   };
   openSheet(
     () =>
-      `<h2>${translate("Comment")}</h2><label><small>${translate("Add a comment")}</small><input aria-label="${escapeHtml(translate("Comment"))}" value="${escapeHtml(text)}" data-input="${registerInput((value) => (text = value))}"></label>${buttonHtml("Complete", complete, "primary")}${buttonHtml(`${iconSvg("trash", 14)} ${translate("Remove comments")}`, removeComments, "outline")}`,
+      `<h2>${translate("Comment")}</h2><label><small>${translate("Add a comment")}</small><input aria-label="${escapeHtml(translate("Comment"))}" value="${escapeHtml(text)}" data-input="${registerInput((value) => (text = value))}"></label>${sheetFooterHtml(
+        buttonHtml(
+          `${iconSvg("trash", 14)} ${translate("Remove comments")}`,
+          removeComments,
+          "outline",
+        ),
+        buttonHtml("Complete", complete, "primary"),
+      )}`,
     "Comment",
   );
 }
@@ -230,7 +237,10 @@ function bulkEdit() {
         commentShown,
         () => chooseComment(changes),
         () => (changes.comment = null),
-      )}${changeRowHtml("Tags", "tag", tagsSummary(changes), () => chooseTags(changes, selected), clearTags)}${changeRowHtml("Date", "calendar", changes.date ? dateLabel(changes.date) : "", chooseDate, () => (changes.date = null))}${buttonHtml("Confirm", confirm, "primary")}`,
+      )}${changeRowHtml("Tags", "tag", tagsSummary(changes), () => chooseTags(changes, selected), clearTags)}${changeRowHtml("Date", "calendar", changes.date ? dateLabel(changes.date) : "", chooseDate, () => (changes.date = null))}${sheetFooterHtml(
+        buttonHtml("Cancel", () => closeLayers(), "outline"),
+        buttonHtml("Confirm", confirm, "primary"),
+      )}`,
     "Bulk edit",
   );
 }

@@ -249,6 +249,19 @@ const scenarios = {
     await page.getByText("Enter a name").waitFor();
     expect(await page.locator(".account-editor-bottom").count()).toBe(1);
   },
+  async "a filter list keeps its buttons in view and applies the choice"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    await page.locator("[aria-label=Filters]").first().click();
+    await page.locator(".panel .field", { hasText: "Type" }).first().click();
+    const confirm = page.locator(".sheet-footer").getByRole("button", { name: "Confirm" }).last();
+    const box = await confirm.boundingBox();
+    expect(box.y + box.height <= page.viewportSize().height).toBe(true);
+    await page.locator(".filter-choice", { hasText: "Transfers" }).click();
+    await page.getByText("2 selected").waitFor();
+    await confirm.click();
+    await page.getByText("Expenses, Incomes").waitFor();
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
