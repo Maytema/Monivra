@@ -4,7 +4,16 @@ import { TODAY } from "../js/core/constants.js";
 import { appData } from "../js/core/state.js";
 import { leadingSide } from "../js/domain/dual-amount.js";
 import { applyFees } from "../js/domain/fees.js";
-import { accountBalance, amountPair, convertCurrency, evaluateExpression, formatNumber, offRate, quoteRate, reportRows } from "../js/domain/finance.js";
+import {
+  accountBalance,
+  amountPair,
+  convertCurrency,
+  evaluateExpression,
+  formatNumber,
+  offRate,
+  quoteRate,
+  reportRows,
+} from "../js/domain/finance.js";
 import { typeKey } from "../js/domain/keypad.js";
 import { validateOp } from "../js/domain/operations.js";
 

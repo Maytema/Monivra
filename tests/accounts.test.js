@@ -2,8 +2,24 @@ import { check } from "./harness.js";
 import { addAccount, transfer } from "./helpers.js";
 import { TODAY } from "../js/core/constants.js";
 import { appData, uiState } from "../js/core/state.js";
-import { accountBalance, accountById, accountProgress, categoryTotal, convertCurrency, debtDirection, operationMatchesFilters, overallBalance, reportRows } from "../js/domain/finance.js";
-import { changeAccountCurrency, changeMainCurrency, planCurrencyChange, reorderedList, validateOp } from "../js/domain/operations.js";
+import {
+  accountBalance,
+  accountById,
+  accountProgress,
+  categoryTotal,
+  convertCurrency,
+  debtDirection,
+  operationMatchesFilters,
+  overallBalance,
+  reportRows,
+} from "../js/domain/finance.js";
+import {
+  changeAccountCurrency,
+  changeMainCurrency,
+  planCurrencyChange,
+  reorderedList,
+  validateOp,
+} from "../js/domain/operations.js";
 
 check("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
   const a = appData.accounts.find((x) => x.include && !x.archived && x.currency !== "USD");
