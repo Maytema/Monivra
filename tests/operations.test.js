@@ -4,7 +4,13 @@ import { TODAY } from "../js/core/constants.js";
 import { appData } from "../js/core/state.js";
 import { putAccountOnSide, putCategoryOnSide } from "../js/domain/sides.js";
 import { accountBalance, categoryTotal, categoryTotalIn } from "../js/domain/finance.js";
-import { deleteCategory, nextDate, processScheduled, validateOp } from "../js/domain/operations.js";
+import {
+  applyBulkChanges,
+  deleteCategory,
+  nextDate,
+  processScheduled,
+  validateOp,
+} from "../js/domain/operations.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
 const scheduledExpense = (date, recur) => {
@@ -252,3 +258,61 @@ check("A weekly payment goes to the chosen days of the week", () => {
   processScheduled("__due", false);
   return first === "2026-12-16" && item.date === "2026-12-21";
 });
+
+check(
+  "A bulk edit moves operations to another category, account and tags, and keeps adjustments",
+  () => {
+    appData.ops = [];
+    const cash = addAccount({ opening: 100000 });
+    const card = addAccount({ opening: 100000 });
+    const base = { date: TODAY, comment: "", tags: ["a"] };
+    const expenseCategory = appData.categories.find((c) => c.type === "expense");
+    const incomeCategory = appData.categories.find((c) => c.type === "income");
+    appData.ops.push(
+      {
+        ...base,
+        id: "__e",
+        type: "expense",
+        from: cash.id,
+        to: null,
+        category: expenseCategory.id,
+        amount: 100,
+      },
+      {
+        ...base,
+        id: "__t",
+        type: "transfer",
+        from: cash.id,
+        to: card.id,
+        amount: 100,
+        receive: 100,
+      },
+      { ...base, id: "__j", type: "adjustment", from: null, to: cash.id, amount: 100 },
+    );
+    applyBulkChanges(["__e", "__t", "__j"], {
+      category: incomeCategory.id,
+      account: card.id,
+      role: "receiver",
+      comment: "note",
+      addTags: ["b"],
+      removeTags: ["a"],
+      clearTags: false,
+      date: null,
+    });
+    const [expense, move, adjust] = appData.ops;
+    return (
+      expense.type === "income" &&
+      expense.to === card.id &&
+      !expense.from &&
+      expense.category === incomeCategory.id &&
+      move.type === "transfer" &&
+      move.to === card.id &&
+      move.from === cash.id &&
+      !move.category &&
+      adjust.type === "adjustment" &&
+      adjust.to === card.id &&
+      !adjust.category &&
+      [expense, move, adjust].every((o) => o.comment === "note" && o.tags.join() === "b")
+    );
+  },
+);

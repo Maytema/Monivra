@@ -148,6 +148,24 @@ const scenarios = {
     await tab(page, "Operations");
     expect(await page.locator(".op-name").first().innerText()).toBe("Food");
   },
+  async "a bulk edit writes one comment on the selected operations"(page) {
+    await openEditorOn(page, "Food");
+    await typeAmountAndSave(page, "5");
+    await tab(page, "Operations");
+    const box = await page.locator(".op-row").first().boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.waitForTimeout(600);
+    await page.mouse.up();
+    await page.locator(".selection-action", { hasText: "More" }).click();
+    await page.locator(".bulk-field", { hasText: "Comment" }).click();
+    await page.getByRole("textbox", { name: "Comment" }).fill("shared");
+    await page.getByText("Complete", { exact: true }).click();
+    await page.getByText("Confirm", { exact: true }).click();
+    await page.getByText("Confirm", { exact: true }).last().click();
+    await page.getByText("Operations updated").waitFor();
+    expect(await page.locator(".op-comment").first().innerText()).toBe("shared");
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();

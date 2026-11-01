@@ -344,3 +344,51 @@ export function processScheduled(id, post) {
   } else appData.scheduled = appData.scheduled.filter((o) => o.id !== id);
   save();
 }
+
+// What a bulk edit may change; every field left empty keeps the operations as they are.
+export const emptyBulkChanges = () => ({
+  category: null,
+  account: null,
+  role: "sender",
+  comment: null,
+  addTags: [],
+  removeTags: [],
+  clearTags: false,
+  date: null,
+});
+
+// Replace the operations with the given ids by copies with the changes applied.
+// A balance adjustment has no category and keeps its direction; only its account may change.
+// Nothing is replaced if one of the copies turns out invalid.
+export function applyBulkChanges(ids, changes) {
+  const replacements = appData.ops
+    .filter((op) => ids.includes(op.id))
+    .map((original) => {
+      const op = deepClone(original);
+      const adjustment = op.type === "adjustment";
+      if (changes.category && op.type !== "transfer" && !adjustment) {
+        const account = op.from || op.to;
+        op.category = changes.category;
+        op.type = categoryById(changes.category).type;
+        op.from = op.type === "expense" ? account : null;
+        op.to = op.type === "income" ? account : null;
+      }
+      if (changes.account) {
+        if (op.type === "transfer")
+          op[changes.role === "receiver" ? "to" : "from"] = changes.account;
+        else if (adjustment) op[op.to ? "to" : "from"] = changes.account;
+        else if (op.type === "income") op.to = changes.account;
+        else op.from = changes.account;
+      }
+      if (changes.date) op.date = changes.date;
+      if (changes.comment !== null) op.comment = changes.comment;
+      op.tags = changes.clearTags
+        ? []
+        : [...new Set([...(op.tags || []), ...changes.addTags])].filter(
+            (tag) => !changes.removeTags.includes(tag),
+          );
+      if (!adjustment) validateOp(op);
+      return op;
+    });
+  for (const op of replacements) appData.ops[appData.ops.findIndex((x) => x.id === op.id)] = op;
+}
