@@ -11,6 +11,7 @@ import {
 import { isFarDate, isPlanned, putOperation } from "../../domain/operations.js";
 import { translateWith } from "../../i18n/index.js";
 import { confirmAction } from "../../ui/dialogs.js";
+import { goHome, openPage } from "../../ui/navigation.js";
 import { settleDueNow } from "../due-payments.js";
 import { banner, toast } from "../../ui/primitives.js";
 
@@ -49,6 +50,9 @@ function applyEntryCurrency(draft) {
   draft.amount = convertCurrency(draft.amount, entry, account.currency);
 }
 
+// The list of scheduled payments, where a notice about a new one leads.
+const openScheduled = () => openPage("scheduled");
+
 export function commitOperation(editor) {
   const { draft } = editor;
   try {
@@ -78,13 +82,16 @@ export function commitOperation(editor) {
     // A date in the future makes it a scheduled payment, whichever way it was opened.
     const planned = editor.scheduled || isPlanned(draft);
     putOperation(draft, editor.scheduled);
+    const onScheduledPage = uiState.pages.at(-1)?.kind === "scheduled";
     uiState.layers = [];
     // A scheduled payment dated today or earlier is due at once.
     const posted = editor.scheduled ? settleDueNow() : 0;
     save();
     render();
-    if (posted) toast("Added to the operations");
-    else if (planned) banner("Payment scheduled", "calendar", "accent");
+    if (posted)
+      banner("Added to the operations", "circleCheck", "positive", () => goHome("operations"));
+    else if (planned)
+      banner("Payment scheduled", "calendar", "accent", onScheduledPage ? null : openScheduled);
     else toast("Operation saved");
   } catch (e) {
     toast(e.message);

@@ -50,13 +50,20 @@ export const fabHtml = (label, fn, extra = "") =>
     "fab fab-add " + extra,
     `aria-label="${escapeHtml(translate(label))}"`,
   );
-// Message that slides down from the top edge; the icon and the tone say what happened.
-export function banner(s, icon, tone = "") {
+// Message that slides down from the top edge; the icon and the tone say what happened. With
+// `onTap` it ends in an arrow, stays longer and a tap on it leads on to what it is about.
+export function banner(s, icon, tone = "", onTap = null) {
   const el = document.getElementById("banner");
-  el.className = `show ${tone}`;
-  el.innerHTML = `${iconSvg(icon, 30)}<span>${escapeHtml(translate(s))}</span>`;
+  el.className = `show ${tone} ${onTap ? "tappable" : ""}`;
+  el.innerHTML = `${iconSvg(icon, 30)}<span class="grow">${escapeHtml(translate(s))}</span>${onTap ? iconSvg("right", 22) : ""}`;
+  el.onclick = onTap
+    ? () => {
+        el.classList.remove("show");
+        onTap();
+      }
+    : null;
   clearTimeout(bannerTimer);
-  bannerTimer = setTimeout(() => el.classList.remove("show"), 1800);
+  bannerTimer = setTimeout(() => el.classList.remove("show"), onTap ? 5000 : 1800);
 }
 // Progress meter: a thin outlined track with the fill set a little inside it; `owed` tints it red.
 export const meterHtml = (percent, owed = false, cls = "") =>

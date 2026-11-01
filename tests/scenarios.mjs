@@ -372,6 +372,56 @@ const scenarios = {
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await page.getByText("Payment scheduled").waitFor();
   },
+  async "a scheduled payment made for a past day is added to the operations at once, with a notice that leads there"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Scheduled payments", { exact: true }).first().click();
+    await page.locator(".fab-add, .more-empty button").first().click();
+    await page
+      .locator(".calendar-day", { hasText: new RegExp(`^${new Date().getDate()}$`) })
+      .first()
+      .click();
+    await page.getByRole("button", { name: "OK", exact: true }).click();
+    await page.getByRole("button", { name: "Complete", exact: true }).click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    for (let i = 0; i < 3; i++) await page.getByLabel("Previous day").click();
+    await page.locator(".calc-confirm").click();
+    const notice = page.locator("#banner.tappable");
+    await notice.getByText("Added to the operations").waitFor();
+    await notice.click();
+    await page.locator(".period .label").first().waitFor();
+    const [ops, scheduled] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      const day = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
+      return [
+        data.ops.filter((o) => o.date === day && o.fromSchedule).length,
+        data.scheduled.length,
+      ];
+    });
+    expect(ops).toBe(1);
+    expect(scheduled).toBe(0);
+  },
+  async "a payment scheduled for the future shows a notice with an arrow that opens the scheduled payments"(
+    page,
+  ) {
+    const before = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("monivra.offline.2026.v1")).scheduled.length,
+    );
+    await tab(page, "Operations");
+    await page.getByLabel("Add").first().click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    const notice = page.locator("#banner.tappable");
+    await notice.getByText("Payment scheduled").waitFor();
+    expect(await notice.locator("svg").count()).toBe(2);
+    await notice.click();
+    await page.getByText("Scheduled payments", { exact: true }).first().waitFor();
+    expect(await page.locator(".scheduled-item").count()).toBe(before + 1);
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");

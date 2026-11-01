@@ -374,6 +374,152 @@ check("A scheduled payment dated today or a few days ago is posted at once", () 
   );
 });
 
+// Scheduled payments that start in the past, in the ways the form allows.
+const startedAgo = (days, recur, extra = {}) => {
+  const item = scheduledExpense(addDays(TODAY, -days), recur);
+  Object.assign(item, extra);
+  return item;
+};
+const postedOf = (item) => appData.ops.filter((o) => o.fromSchedule?.id === item.id);
+
+check("A repeating payment that started in the past posts what was missed and goes on", () => {
+  const monthly = { every: 1, unit: "Months", remaining: null, days: [] };
+  const item = startedAgo(70, monthly);
+  postDue();
+  const dates = postedOf(item).map((o) => o.date);
+  return (
+    dates.length >= 2 &&
+    dates.every((d) => d <= TODAY) &&
+    item.date > TODAY &&
+    appData.scheduled.includes(item)
+  );
+});
+
+check("A payment with a number of repeats counts the missed ones and ends after the last", () => {
+  const weekly = (remaining) => ({ every: 1, unit: "Days", remaining, days: [] });
+  const open = startedAgo(3, weekly(10));
+  postDue();
+  const stillThere =
+    appData.scheduled.includes(open) && open.recur.remaining === 6 && postedOf(open).length === 4;
+  const done = startedAgo(10, weekly(3), { id: "__done" });
+  postDue();
+  return stillThere && postedOf(done).length === 3 && !appData.scheduled.includes(done);
+});
+
+check(
+  "A payment with one repeat left that started in the past is posted once and goes away",
+  () => {
+    const item = startedAgo(5, { every: 1, unit: "Days", remaining: 1, days: [] });
+    postDue();
+    return postedOf(item).length === 1 && appData.scheduled.length === 0;
+  },
+);
+
+check("A one-time payment from the past is posted on its own day and goes away", () => {
+  const item = startedAgo(9, null);
+  postDue();
+  const [posted] = postedOf(item);
+  return posted.date === addDays(TODAY, -9) && !posted.recur && appData.scheduled.length === 0;
+});
+
+check("A yearly and a weekly payment that started in the past keep their rules", () => {
+  const yearly = startedAgo(400, { every: 1, unit: "Years", remaining: null, days: [] });
+  const weekly = {
+    ...yearly,
+    id: "__w",
+    date: addDays(TODAY, -15),
+    recur: { every: 1, unit: "Weeks", remaining: null, days: [] },
+  };
+  appData.scheduled.push(weekly);
+  // The yearly one began more than a year ago: it waits for an answer, the weekly one is posted.
+  postDue();
+  const waiting = missedPayments().map((e) => e.item.id);
+  return waiting.join() === "__due" && postedOf(weekly).length >= 2 && weekly.date > TODAY;
+});
+
+check(
+  "Several payments are settled one by one: what is small is posted, what is large waits",
+  () => {
+    const a = startedAgo(2, null);
+    const b = { ...a, id: "__big", date: addDays(TODAY, -500) };
+    const c = {
+      ...a,
+      id: "__run",
+      date: addDays(TODAY, -45),
+      recur: { every: 1, unit: "Days", remaining: null, days: [] },
+    };
+    appData.scheduled.push(b, c);
+    const posted = postDue();
+    return (
+      posted === 1 &&
+      missedPayments()
+        .map((e) => e.item.id)
+        .sort()
+        .join() === "__big,__run"
+    );
+  },
+);
+
+check("Skipping one-time and repeating payments from the past leaves no operation behind", () => {
+  const one = startedAgo(500, null);
+  const before = appData.ops.length;
+  settleMissed(one.id, false);
+  const gone = !appData.scheduled.includes(one) && appData.ops.length === before;
+  const run = startedAgo(500, { every: 1, unit: "Months", remaining: null, days: [] });
+  settleMissed(run.id, false);
+  return (
+    gone && run.date > TODAY && run.date <= addDays(TODAY, 31) && appData.ops.length === before
+  );
+});
+
+check("A payment dated today is posted at once, whatever its time of day", () => {
+  const item = startedAgo(0, null, { time: "23:59" });
+  postDue();
+  return postedOf(item).length === 1 && !postedOf(item)[0].time && appData.scheduled.length === 0;
+});
+
+check("A deleted operation of a payment is not posted again", () => {
+  const item = startedAgo(2, { every: 1, unit: "Days", remaining: null, days: [] });
+  postDue();
+  const [first] = postedOf(item);
+  const count = postedOf(item).length;
+  appData.ops = appData.ops.filter((o) => o.id !== first.id);
+  postDue();
+  return postedOf(item).length === count - 1 && item.date === addDays(TODAY, 1);
+});
+
+check(
+  "Add now on a repeating payment posts today and moves to the next date; skip only moves",
+  () => {
+    const item = scheduledExpense(addDays(TODAY, 3), {
+      every: 1,
+      unit: "Days",
+      remaining: null,
+      days: [],
+    });
+    processScheduled(item.id, true);
+    const posted = postedOf(item)[0];
+    const moved = item.date === addDays(TODAY, 4);
+    processScheduled(item.id, false);
+    return (
+      posted.date === TODAY &&
+      posted.fromSchedule.byHand &&
+      moved &&
+      item.date === addDays(TODAY, 5) &&
+      postedOf(item).length === 1
+    );
+  },
+);
+
+check("Moving a repeating payment back to a day it already settled posts nothing twice", () => {
+  const item = startedAgo(2, { every: 1, unit: "Days", remaining: null, days: [] });
+  postDue();
+  const count = postedOf(item).length;
+  item.date = addDays(TODAY, -2);
+  postDue();
+  return postedOf(item).length === count && item.date === addDays(TODAY, 1);
+});
+
 check("A date more than a year from today is asked about", () => {
   return (
     isFarDate(addDays(TODAY, -366)) &&
