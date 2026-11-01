@@ -45,7 +45,7 @@ Paths are under `js/`.
 | `domain/keypad.js`          | Editing of the typed expression, digit order                                       |
 | `domain/operations.js`      | Check, store, delete, bulk-change operations                                       |
 | `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", posting what came due         |
-| `domain/budgets.js`         | Spent and left of a budget in its period                                           |
+| `domain/budgets.js`         | Spent and left of a budget in its period, the operations it counts                 |
 | `domain/accounts.js`        | Account form state, checks, storing, favorite, deletion                            |
 | `domain/categories.js`      | Storing with subcategory changes, deleting, moving, merging                        |
 | `domain/currency-change.js` | Plan and apply a currency change of an account or of the application               |
@@ -63,21 +63,22 @@ confirmations, prompts, option lists, menus), and pickers: `calendar`, `currency
 
 ## screens — one module per screen or flow
 
-| Path                                                 | Purpose                                                                                                        |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `screens/accounts/`                                  | `list` (tab), `actions` (account sheet), `edit`, `type`, `progress`, `currency-change`                         |
-| `screens/categories.js`                              | Categories tab, editor, subcategory menus, manage page                                                         |
-| `screens/operations/`                                | `list` (tab and filtered list), `add-menu`, `filters`, `bulk-edit`                                             |
-| `screens/operation-editor/`                          | `start` (open), `view` (compose), `parties`, `amount`, `keypad`, `extras`, `actions`, `editor` (state, saving) |
-| `screens/operation-title.js`                         | Title of an operation row                                                                                      |
-| `screens/pickers.js`                                 | Account and category pickers used everywhere                                                                   |
-| `screens/fees.js`, `recurrence.js`                   | Tax/commission dialog; repeat and reminder dialogs and labels                                                  |
-| `screens/scheduled-budgets.js`, `category-select.js` | Scheduled payments, budgets, budget categories                                                                 |
-| `screens/due-payments.js`                            | Posts due payments on their own and tells the person; the notice                                               |
-| `screens/statistics.js`                              | Statistics and charts                                                                                          |
-| `screens/settings.js`, `rates.js`                    | Settings sections; exchange rates                                                                              |
-| `screens/more/`                                      | `menu`, `settings-pages`, `lock`, `info-pages`, `support`                                                      |
-| `screens/guides.js`, `welcome.js`, `about-art.js`    | Written instructions, first launch, About illustration                                                         |
+| Path                                              | Purpose                                                                                                        |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `screens/accounts/`                               | `list` (tab), `actions` (account sheet), `edit`, `type`, `progress`, `currency-change`                         |
+| `screens/categories.js`                           | Categories tab, editor, subcategory menus, manage page                                                         |
+| `screens/operations/`                             | `list` (tab and filtered list), `add-menu`, `filters`, `bulk-edit`                                             |
+| `screens/operation-editor/`                       | `start` (open), `view` (compose), `parties`, `amount`, `keypad`, `extras`, `actions`, `editor` (state, saving) |
+| `screens/operation-title.js`                      | Title of an operation row                                                                                      |
+| `screens/pickers.js`                              | Account and category pickers used everywhere                                                                   |
+| `screens/fees.js`, `recurrence.js`                | Tax/commission dialog; repeat and reminder dialogs and labels                                                  |
+| `screens/scheduled-budgets.js`                    | Scheduled payments: list and the create dialog                                                                 |
+| `screens/budgets.js`, `category-select.js`        | Budgets: list, page of one budget, editor; budget categories                                                   |
+| `screens/due-payments.js`                         | Posts due payments on their own and tells the person; the notice                                               |
+| `screens/statistics.js`                           | Statistics and charts                                                                                          |
+| `screens/settings.js`, `rates.js`                 | Settings sections; exchange rates                                                                              |
+| `screens/more/`                                   | `menu`, `settings-pages`, `lock`, `info-pages`, `support`                                                      |
+| `screens/guides.js`, `welcome.js`, `about-art.js` | Written instructions, first launch, About illustration                                                         |
 
 ## css
 

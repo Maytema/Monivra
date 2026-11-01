@@ -11,15 +11,27 @@ const budgetTakes = (b, row) =>
     b.categories.includes(row.category) ||
     b.categories.includes(categoryById(row.category)?.parent));
 
-// Amount spent in a budget's period, the period being the one around the day shown by the period
-// bar. The rows are the ones the statistics count: fees taken into account, debt payments included
-// when they count as expenses (only a budget for all expenses takes those).
-function budgetSpend(b) {
+// The operations of a budget's period, the period being the one around the day shown by the period
+// bar.
+const periodOperations = (b) => {
   const [from, to] = periodBounds({
     mode: b.period || "month",
     anchor: uiState.period.anchor || TODAY,
   });
-  return reportRows(appData.ops.filter((o) => o.date >= from && o.date <= to))
+  return appData.ops.filter((o) => o.date >= from && o.date <= to);
+};
+
+// The operations a budget counts in its period, newest first.
+export const budgetOperations = (b) =>
+  periodOperations(b)
+    .filter((o) => reportRows([o]).some((row) => budgetTakes(b, row)))
+    .sort((a, c) => c.date.localeCompare(a.date) || c.id.localeCompare(a.id));
+
+// Amount spent in a budget's period. The rows are the ones the statistics count: fees taken into
+// account, debt payments included when they count as expenses (only a budget for all expenses
+// takes those).
+function budgetSpend(b) {
+  return reportRows(periodOperations(b))
     .filter((row) => budgetTakes(b, row))
     .reduce(
       (sum, row) => sum + convertCurrency(row.reportAmount, appData.settings.currency, b.currency),

@@ -321,6 +321,22 @@ const scenarios = {
     await choose("By hand", "By schedule");
     expect(await shown()).toBe(all - 3);
   },
+  async "a budget opens its operations of the period, editing is a button, deleting returns to the list"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    await page.locator(".budget-card").click();
+    await page.locator(".op-row").first().waitFor();
+    expect(await page.locator(".op-row").count()).toBe(2);
+    await page.getByLabel("Previous period").first().click();
+    expect(await page.locator(".op-row").count()).toBe(0);
+    await page.getByLabel("Edit budget").click();
+    await page.getByRole("button", { name: "Delete" }).click();
+    await page.getByRole("button", { name: "Delete" }).last().click();
+    await page.getByText("Budget deleted").waitFor();
+    expect(await page.getByText("Budgets will be here").count()).toBe(1);
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");
@@ -406,6 +422,25 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
+  "a budget opens its operations of the period, editing is a button, deleting returns to the list":
+    (data) => {
+      const base = data.ops.find((op) => op.type === "expense");
+      const day = new Date().toLocaleDateString("en-CA");
+      const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
+      data.ops = [
+        { ...base, id: "t1", date: day },
+        { ...base, id: "t2", date: day },
+        { ...base, id: "t3", date: day, category: elsewhere.id },
+      ];
+      data.budgets.push({
+        id: "one",
+        name: "Only one",
+        currency: data.settings.currency,
+        amount: 100000000,
+        period: "month",
+        categories: [base.category],
+      });
+    },
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");

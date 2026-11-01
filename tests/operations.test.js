@@ -21,7 +21,7 @@ import {
   validateOp,
 } from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
-import { budgetState } from "../js/domain/budgets.js";
+import { budgetOperations, budgetState } from "../js/domain/budgets.js";
 import { nextDate, postDue, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
@@ -452,6 +452,62 @@ check("A budget counts the expenses of its categories and subcategories in its p
     own.used === 500 && own.left === 500 && own.share === 50 && budgetState(budget([])).used === 0
   );
 });
+
+check("A budget lists the operations it counts, newest first, for its own period", () => {
+  const food = appData.categories.find((c) => c.type === "expense" && !c.parent);
+  const base = appData.ops.find((o) => o.type === "expense");
+  const at = (id, date, category) => ({
+    ...base,
+    id,
+    date,
+    category,
+    fees: [],
+    foreign: undefined,
+  });
+  appData.ops = [
+    at("old", addDays(TODAY, -60), food.id),
+    at("a", TODAY, food.id),
+    at("b", TODAY, "other"),
+    at("c", TODAY, food.id),
+  ];
+  uiState.period = { mode: "month", anchor: TODAY };
+  const budget = {
+    id: "x",
+    name: "x",
+    currency: appData.settings.currency,
+    amount: 1,
+    period: "month",
+    categories: [food.id],
+  };
+  return (
+    budgetOperations(budget)
+      .map((o) => o.id)
+      .join() === "c,a"
+  );
+});
+
+check(
+  "An operation dated in the past is stored on its day and moves the balance, even below zero",
+  () => {
+    const account = addAccount({ opening: 0 });
+    const category = appData.categories.find((c) => c.type === "expense" && !c.parent);
+    const day = addDays(TODAY, -33);
+    putOperation({
+      type: "expense",
+      from: account.id,
+      to: null,
+      category: category.id,
+      amount: 20000,
+      date: day,
+      comment: "",
+      tags: [],
+    });
+    const stored = appData.ops.find((o) => o.from === account.id);
+    return (
+      stored.date === day && accountBalance(account.id) === -20000 && appData.scheduled.length === 0
+    );
+  },
+);
 
 check('The period steps by its own length, and "All time" has no neighbours', () => {
   const month = { mode: "month", anchor: "2026-01-31" };

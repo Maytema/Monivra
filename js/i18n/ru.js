@@ -221,6 +221,7 @@ export const russianStrings = {
   "Delete my data": "Удалить мои данные",
   "Create a budget": "Создать бюджет",
   "Edit budget": "Изменить бюджет",
+  "No expenses of this budget in the period": "В этом периоде расходов по бюджету нет",
   "Budget currency": "Валюта бюджета",
   Budget: "Бюджет",
   "Time period": "Период",
