@@ -38,8 +38,11 @@ function operationProblem(o, x, accountIds, categories, seen) {
     if (!categories.has(o.category)) return "the category is not found";
     if (categories.get(o.category).type !== o.type) return "the category does not fit the type";
   }
-  if (o.photo && !/^data:image\/(jpeg|png|webp|gif);base64,[a-z0-9+/=]+$/i.test(o.photo))
-    return "the photo is not valid";
+  const validPhoto = (v) => /^data:image\/(jpeg|png|webp|gif);base64,[a-z0-9+/=]+$/i.test(v);
+  // A single `photo` is the form of earlier versions.
+  if (o.photo && !validPhoto(o.photo)) return "the photo is not valid";
+  if (o.photos && (!Array.isArray(o.photos) || !o.photos.every(validPhoto)))
+    return "the photos are not valid";
   const r = o.recur;
   if (
     r &&

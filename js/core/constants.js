@@ -5,6 +5,8 @@ export const APP_NAME = "Monivra";
 // Technical form of the name for file names and storage keys.
 export const APP_ID = APP_NAME.toLowerCase();
 // localStorage key for the persisted dataset (bump the suffix on breaking schema changes).
+// Photos that can be attached to one operation.
+export const MAX_PHOTOS = 5;
 export const STORAGE_KEY = `${APP_ID}.offline.2026.v1`;
 // Largest count of days, weeks, months or years of a repeat or reminder rule.
 export const MAX_INTERVAL = 365;

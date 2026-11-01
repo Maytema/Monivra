@@ -6,6 +6,7 @@ import { appData, photoCallback, setLocked, setPinEntry, uiState } from "../core
 import { handleImport } from "../data/import-export.js";
 import { categoryById, createBackup } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
+import { translate } from "../i18n/index.js";
 import { closeLayers, goBack, goHome, showInfo } from "../ui/kit.js";
 import { actionHandlers, inputHandlers, toast } from "../ui/primitives.js";
 
@@ -115,7 +116,8 @@ export function startup() {
       photoCallback?.(await photoDataUrl(file));
     } catch (error) {
       console.error("Photo failed:", error);
-      toast("This image could not be opened");
+      // The kind of failure helps to tell an unreadable file from an unsupported format.
+      toast(`${translate("This image could not be opened")} (${error.name})`);
     }
   });
   document.addEventListener("visibilitychange", () => {

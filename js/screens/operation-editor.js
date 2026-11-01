@@ -1,6 +1,6 @@
 /* Operation editor: pickers, calculator, forms */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import { MAX_PHOTOS, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, setPhotoCallback, uiState } from "../core/state.js";
 import { isTestMode } from "../core/test-mode.js";
 import { save } from "../data/storage.js";
@@ -125,7 +125,7 @@ export function operationStart(options = {}, scheduled = false) {
     date: TODAY,
     comment: "",
     tags: [],
-    photo: null,
+    photos: [],
     recur: null,
     reminder: null,
     ...deepClone(options),
@@ -324,17 +324,22 @@ function accountCalculatorView(p) {
     isAdjustment && !raise ? chooseOwnAccount() : counterpartyPicker("from", d);
   const chooseTarget = () =>
     isAdjustment && raise ? chooseOwnAccount() : counterpartyPicker("to", d);
-  // The attached photo takes the place of the clip: a small preview with a cross to remove it.
-  const attachmentHtml = d.photo
-    ? `<span class="calc-photo">${buttonHtml(`<img alt="" src="${escapeHtml(d.photo)}">`, () => photoViewer(d.photo), "calc-photo-open", 'aria-label="Open photo"')}${iconButtonHtml(
-        "close",
-        "Remove photo",
-        () => {
-          d.photo = null;
-          render();
-        },
-      )}</span>`
-    : buttonHtml(iconSvg("clip", 27), () => photoMenu(d), "icon-button", 'aria-label="Attachment"');
+  const photosHtml = () =>
+    d.photos.length
+      ? `<div class="calc-photos">${d.photos
+          .map(
+            (src, i) =>
+              `<span class="calc-photo">${buttonHtml(`<img alt="" src="${escapeHtml(src)}">`, () => photoViewer(src), "calc-photo-open", 'aria-label="Open photo"')}${iconButtonHtml(
+                "close",
+                "Remove photo",
+                () => {
+                  d.photos.splice(i, 1);
+                  render();
+                },
+              )}</span>`,
+          )
+          .join("")}</div>`
+      : "";
   const editComment = () =>
     promptText(
       "Comment",
@@ -604,7 +609,7 @@ function accountCalculatorView(p) {
           },
         )}</div>`
       : ""
-  }<div class="calc-attachments">${attachmentHtml}${iconButtonHtml(
+  }<div class="calc-attachments">${buttonHtml(iconSvg("clip", 27), () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
     "comment",
     "Comment",
     editComment,
@@ -624,7 +629,7 @@ function accountCalculatorView(p) {
     dual ? secondary.currency : accountCurrency,
     dual ? sourceToReceive : (n) => n,
     render,
-  )}</div>${
+  )}</div>${photosHtml()}${
     p.compact
       ? `<div class="ops-compact-actions">${buttonHtml(
           iconSvg("trash", 28) + "<span>Delete</span>",
@@ -812,8 +817,10 @@ function deleteTag(tag, chosen) {
     "Delete",
   );
 }
-// Menu for attaching a photo (a new one replaces the old one).
+// Menu for attaching a photo.
 function photoMenu(d) {
+  if (d.photos.length >= MAX_PHOTOS)
+    return toast(translateWith("No more than {n} photos", { n: MAX_PHOTOS }));
   openSheet(
     () =>
       `<h2>${translate("Add photo")}</h2><div class="photo-menu">${menuRowHtml("Take a photo", "camera", () => choosePhoto(d, true))}${menuRowHtml("Choose from gallery", "image", () => choosePhoto(d, false))}</div>`,
@@ -836,8 +843,7 @@ function choosePhoto(d, camera) {
     return;
   }
   setPhotoCallback((data) => {
-    if (data === d.photo) return toast("This photo is already attached");
-    d.photo = data;
+    d.photos.push(data);
     closeLayers();
     toast("Photo attached");
   });

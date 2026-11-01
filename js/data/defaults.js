@@ -77,6 +77,11 @@ export function completeData(data) {
   data.settings = { ...fresh.settings, ...data.settings };
   numericSettings(data.settings, fresh.settings);
   data.rates = { ...fresh.rates, ...data.rates };
+  // Earlier versions kept a single photo.
+  for (const o of [...(data.ops || []), ...(data.scheduled || [])]) {
+    if (o.photo) o.photos = [o.photo];
+    delete o.photo;
+  }
   for (const item of data.scheduled || []) {
     // Earlier versions kept only the time of day of a reminder, on the day of the payment.
     if (typeof item.reminder === "string")

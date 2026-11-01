@@ -484,6 +484,7 @@
 .calc-extras {
   margin: 0 -16px;
   border-top: 1px solid var(--line);
+  flex-shrink: 0;
 }
 .ops-compact-editor .calc-extras {
   margin: 0;
@@ -513,18 +514,23 @@
   flex: 0 0 auto;
   white-space: nowrap;
 }
+.calc-photos {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 10px 16px 6px;
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
 .calc-photo {
   position: relative;
-  width: 49px;
-  height: 49px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
 }
 .calc-photo-open {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   padding: 0;
   border: 0;
   border-radius: 10px;
@@ -535,10 +541,10 @@
   height: 100%;
   object-fit: cover;
 }
-.calc-attachments .calc-photo .icon-button {
+.calc-photos .icon-button {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -4px;
+  right: -4px;
   width: 22px;
   height: 22px;
   border-radius: 50%;

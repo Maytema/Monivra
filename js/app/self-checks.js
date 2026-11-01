@@ -847,6 +847,12 @@ function checkAll() {
       !("reminderLead" in item)
     );
   });
+  test("The single photo of older data becomes a list of photos", () => {
+    const old = { settings: {}, rates: {}, ops: [{ photo: "data:image/jpeg;base64,AA" }, {}] };
+    completeData(old);
+    const [withPhoto, without] = old.ops;
+    return withPhoto.photos.length === 1 && !("photo" in withPhoto) && without.photos === undefined;
+  });
   // A scheduled payment of the sample data's first expense, due at `date`.
   const scheduledExpense = (date, recur) => {
     const base = appData.ops.find((o) => o.type === "expense");
