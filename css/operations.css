@@ -121,6 +121,18 @@
   width: 43px;
   height: 43px;
 }
+/* Where the screen is tall enough the actions are as large as the buttons of the original */
+@media (min-height: 780px) {
+  .ops-compact-editor .ops-compact-actions {
+    gap: 18px 32px;
+    padding: 12px 0px 8px;
+  }
+  .ops-compact-editor .ops-compact-actions svg {
+    width: 56px;
+    height: 56px;
+    padding: 15px;
+  }
+}
 .add-item span:last-child {
   min-width: 0px;
   overflow: hidden;

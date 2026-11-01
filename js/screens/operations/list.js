@@ -179,7 +179,7 @@ function dayTotal(dayOps) {
 }
 
 // Date heading with the day total, followed by the operations of that day.
-function dayGroup(date, ops) {
+export function dayGroup(date, ops) {
   const dayOps = ops.filter((o) => o.date === date);
   const day = parseDate(date);
   const weekday = day.toLocaleDateString(currentLocale(), { weekday: "short", timeZone: "UTC" });

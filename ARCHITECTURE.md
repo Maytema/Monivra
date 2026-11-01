@@ -80,6 +80,10 @@ A scheduled payment is a record in `appData.scheduled` shaped like an operation,
 comes back to the screen, every occurrence up to today becomes an operation dated on its due day.
 The operation carries `fromSchedule: { id, date }`: which payment and which occurrence (an occurrence is posted
 once).
+A scheduled payment dated today or earlier is posted as soon as it is saved. A payment far behind
+(more than 31 occurrences missed, or the first one over a year ago) is not posted on its own:
+`missedPayments` lists it and the person answers Add or Skip (`settleMissed`). A date more than a
+year from today is confirmed before an operation is saved (`isFarDate`).
 An operation dated after today is not kept among the operations: `putOperation` stores it as a
 one-time scheduled payment.
 

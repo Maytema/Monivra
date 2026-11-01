@@ -5,7 +5,7 @@ import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { createBackup } from "../domain/backups.js";
 import { categoryById } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
-import { postDuePayments } from "../screens/due-payments.js";
+import { askAboutMissed, postDuePayments } from "../screens/due-payments.js";
 import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";
 import { toast } from "../ui/primitives.js";
@@ -162,7 +162,9 @@ function bindHashRoute() {
 function bindDuePayments() {
   postDuePayments();
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && postDuePayments()) render();
+    if (document.hidden) return;
+    if (postDuePayments()) render();
+    askAboutMissed();
   });
 }
 
@@ -187,4 +189,5 @@ export function startup() {
   if (appData.settings.pin) setLocked(true);
   bindHashRoute();
   render();
+  askAboutMissed();
 }

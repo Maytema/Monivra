@@ -3,7 +3,14 @@ import { deepClone, newId, timeNow, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { netAmount } from "./fees.js";
-import { accountById, categoryById, convertCurrency, parseDate, toIsoDate } from "./finance.js";
+import {
+  accountById,
+  addDays,
+  categoryById,
+  convertCurrency,
+  parseDate,
+  toIsoDate,
+} from "./finance.js";
 
 // Throw an Error with a user-facing message if an operation draft is invalid.
 export function validateOp(d, lookup = { account: accountById, category: categoryById }) {
@@ -74,6 +81,8 @@ export function validateOp(d, lookup = { account: accountById, category: categor
 
 // An operation dated after today has not happened yet: it belongs among the scheduled payments.
 // A correction of a balance is the exception, it is a statement about the present.
+// Is a date so far from today (more than a year either way) that it may be a slip of the finger?
+export const isFarDate = (date) => date < addDays(today(), -365) || date > addDays(today(), 365);
 export const isPlanned = (d) => d.type !== "adjustment" && d.date > today();
 
 // A month or year rule keeps the day it began on; editing the date starts it from the new day.

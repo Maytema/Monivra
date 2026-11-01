@@ -80,22 +80,67 @@ export function processScheduled(id, post) {
   save();
 }
 
-// Post every occurrence that came due up to `day` on the day it was due; returns how many.
-// What was posted before a failure stays posted and saved.
+// Move a payment on to its first occurrence after `day`, posting the ones in between or not;
+// returns how many were posted. A payment that has no occurrence left goes away.
+function catchUp(item, day, post) {
+  let posted = 0;
+  while (item.date <= day) {
+    if (post && postOccurrence(item, item.date)) posted++;
+    if (!advance(item)) {
+      appData.scheduled = appData.scheduled.filter((o) => o !== item);
+      break;
+    }
+  }
+  return posted;
+}
+
+// A catch-up that long is asked about instead of done: that many missed payments, or the first
+// of them that long ago.
+const CATCH_UP_LIMIT = 31;
+const CATCH_UP_DAYS = 365;
+
+// What is due up to `day` and not posted yet: each payment with how many occurrences that are and
+// the day of the first.
+function dueEntries(day) {
+  return appData.scheduled
+    .filter((item) => item.date <= day)
+    .map((item) => {
+      const probe = deepClone(item);
+      let count = 0;
+      while (probe.date <= day) {
+        count++;
+        if (!advance(probe)) break;
+      }
+      return { item, count, since: item.date };
+    });
+}
+const needsAnswer = ({ count, since }, day) =>
+  count > CATCH_UP_LIMIT || since < addDays(day, -CATCH_UP_DAYS);
+
+// Post every occurrence that came due up to `day` on the day it was due; returns how many. What
+// was posted before a failure stays posted and saved. A payment that is far behind waits for the
+// person's answer (`missedPayments`).
 export function postDue(day = today()) {
   let posted = 0;
   try {
-    for (const item of [...appData.scheduled]) {
-      while (item.date <= day) {
-        if (postOccurrence(item, item.date)) posted++;
-        if (!advance(item)) {
-          appData.scheduled = appData.scheduled.filter((o) => o !== item);
-          break;
-        }
-      }
-    }
+    for (const entry of dueEntries(day))
+      if (!needsAnswer(entry, day)) posted += catchUp(entry.item, day, true);
   } finally {
     if (posted) save();
   }
+  return posted;
+}
+
+// The payments far behind, which wait for the person to say whether to add what was missed.
+export const missedPayments = (day = today()) =>
+  dueEntries(day).filter((entry) => needsAnswer(entry, day));
+
+// The answer about a payment far behind: add what was missed (returns how many), or let it go and
+// carry on from the next occurrence.
+export function settleMissed(id, post, day = today()) {
+  const item = appData.scheduled.find((o) => o.id === id);
+  if (!item) return 0;
+  const posted = catchUp(item, day, post);
+  save();
   return posted;
 }

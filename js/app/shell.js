@@ -24,7 +24,8 @@ import { moreView } from "../screens/more/menu.js";
 import { settingsPage } from "../screens/more/settings-pages.js";
 import { infoPage } from "../screens/more/info-pages.js";
 import { filteredView, operationsFab, operationsView } from "../screens/operations/list.js";
-import { budgetsView, budgetView, scheduledView } from "../screens/scheduled-budgets.js";
+import { budgetDetailsView, budgetsView, budgetView } from "../screens/budgets.js";
+import { scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
 import { welcomeView } from "../screens/welcome.js";
@@ -62,6 +63,7 @@ const PAGE_VIEWS = {
   categoryManage: categoryManageView,
   scheduled: scheduledView,
   budgets: budgetsView,
+  budgetDetails: budgetDetailsView,
   budget: budgetView,
   settings: settingsView,
   data: dataView,

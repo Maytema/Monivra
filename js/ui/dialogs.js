@@ -16,7 +16,8 @@ export function showInfo(message, title = "Information") {
   );
 }
 // Confirmation dialog with an optional "create backup first" checkbox.
-// `look` sets the dialog title and its icon: a red warning (default) or a green notice (tone "info").
+// `look` sets the dialog title and its icon: a red warning (default) or a green notice (tone "info");
+// `look.cancel` ({ label, fn }) gives the second button its own text and action.
 export function confirmAction(message, fn, backupOption = true, label = "Confirm", look = {}) {
   const title = look.title || "Are you sure?",
     notice = look.tone === "info";
@@ -35,7 +36,14 @@ export function confirmAction(message, fn, backupOption = true, label = "Confirm
           }
         },
         label === "Delete" ? "danger" : "primary",
-      )}${buttonHtml("Cancel", () => closeLayers(), "outline")}`,
+      )}${buttonHtml(
+        look.cancel?.label || "Cancel",
+        () => {
+          closeLayers();
+          look.cancel?.fn();
+        },
+        "outline",
+      )}`,
     title,
     "dialog",
   );

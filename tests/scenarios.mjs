@@ -321,6 +321,107 @@ const scenarios = {
     await choose("By hand", "By schedule");
     expect(await shown()).toBe(all - 3);
   },
+  async "a budget opens its operations of the period, editing is a button, deleting returns to the list"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    await page.locator(".budget-card").click();
+    await page.locator(".op-row").first().waitFor();
+    expect(await page.locator(".op-row").count()).toBe(2);
+    await page.getByLabel("Previous period").first().click();
+    expect(await page.locator(".op-row").count()).toBe(0);
+    await page.getByLabel("Edit budget").click();
+    await page.getByRole("button", { name: "Delete" }).click();
+    await page.getByRole("button", { name: "Delete" }).last().click();
+    await page.getByText("Budget deleted").waitFor();
+    expect(await page.getByText("Budgets will be here").count()).toBe(1);
+  },
+  async "a payment far behind is asked about: adding posts what was missed, skipping does not"(
+    page,
+  ) {
+    await page.getByText("Missed payments", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByText("scheduled payments were added", { exact: false }).waitFor();
+    expect(await page.getByText("Missed payments", { exact: true }).count()).toBe(0);
+    const [added, left] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      return [data.ops.filter((o) => o.fromSchedule?.id === "old").length, data.scheduled.length];
+    });
+    expect(added >= 41).toBe(true);
+    expect(left).toBe(1);
+  },
+  async "skipping the missed payments adds nothing"(page) {
+    await page.getByText("Missed payments", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Skip", exact: true }).click();
+    expect(await page.getByText("Missed payments", { exact: true }).count()).toBe(0);
+    const added = await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("monivra.offline.2026.v1")).ops.filter(
+          (o) => o.fromSchedule?.id === "old",
+        ).length,
+    );
+    expect(added).toBe(0);
+  },
+  async "a date more than a year away is confirmed before saving"(page) {
+    await openEditorOn(page, "Food");
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    for (let i = 0; i < 366; i++) await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    await page.getByText("Check the date", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByText("Payment scheduled").waitFor();
+  },
+  async "a scheduled payment made for a past day is added to the operations at once, with a notice that leads there"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Scheduled payments", { exact: true }).first().click();
+    await page.locator(".fab-add, .more-empty button").first().click();
+    await page
+      .locator(".calendar-day", { hasText: new RegExp(`^${new Date().getDate()}$`) })
+      .first()
+      .click();
+    await page.getByRole("button", { name: "OK", exact: true }).click();
+    await page.getByRole("button", { name: "Complete", exact: true }).click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    for (let i = 0; i < 3; i++) await page.getByLabel("Previous day").click();
+    await page.locator(".calc-confirm").click();
+    const notice = page.locator("#banner.tappable");
+    await notice.getByText("Added to the operations").waitFor();
+    await notice.click();
+    await page.locator(".period .label").first().waitFor();
+    const [ops, scheduled] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      const day = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
+      return [
+        data.ops.filter((o) => o.date === day && o.fromSchedule).length,
+        data.scheduled.length,
+      ];
+    });
+    expect(ops).toBe(1);
+    expect(scheduled).toBe(0);
+  },
+  async "a payment scheduled for the future shows a notice with an arrow that opens the scheduled payments"(
+    page,
+  ) {
+    const before = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("monivra.offline.2026.v1")).scheduled.length,
+    );
+    await tab(page, "Operations");
+    await page.getByLabel("Add").first().click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    const notice = page.locator("#banner.tappable");
+    await notice.getByText("Payment scheduled").waitFor();
+    expect(await notice.locator("svg").count()).toBe(2);
+    await notice.click();
+    await page.getByText("Scheduled payments", { exact: true }).first().waitFor();
+    expect(await page.locator(".scheduled-item").count()).toBe(before + 1);
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");
@@ -406,6 +507,28 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
+  "a budget opens its operations of the period, editing is a button, deleting returns to the list":
+    (data) => {
+      const base = data.ops.find((op) => op.type === "expense");
+      const day = new Date().toLocaleDateString("en-CA");
+      const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
+      data.ops = [
+        { ...base, id: "t1", date: day },
+        { ...base, id: "t2", date: day },
+        { ...base, id: "t3", date: day, category: elsewhere.id },
+      ];
+      data.budgets.push({
+        id: "one",
+        name: "Only one",
+        currency: data.settings.currency,
+        amount: 100000000,
+        period: "month",
+        categories: [base.category],
+      });
+    },
+  "a payment far behind is asked about: adding posts what was missed, skipping does not":
+    addOverdue,
+  "skipping the missed payments adds nothing": addOverdue,
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
@@ -417,6 +540,18 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// A daily payment that was last due forty days ago: too far behind to be added without asking.
+function addOverdue(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const since = new Date(Date.now() - 40 * 86400000).toLocaleDateString("en-CA");
+  data.scheduled.push({
+    ...base,
+    id: "old",
+    date: since,
+    recur: { every: 1, unit: "Days", remaining: null, days: [] },
+    reminder: null,
+  });
+}
 function addSubcategories(data) {
   const food = data.categories.find((category) => category.name === "Food");
   for (const name of ["Market", "Cafe"])
