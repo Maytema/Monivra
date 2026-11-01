@@ -3,31 +3,21 @@ import { render } from "../app/shell.js";
 import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { addDays, parseDate, periodBounds, periodTitle, toIsoDate } from "../domain/finance.js";
+import { canShiftPeriod, periodBounds, periodTitle, shiftPeriod } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 import { hintHtml } from "./hint.js";
-import { buttonHtml, iconButtonHtml, toast } from "./primitives.js";
+import { buttonHtml, iconButtonHtml } from "./primitives.js";
 import { closeLayers, openSheet } from "./navigation.js";
 import { calendar, rangeDialog } from "./calendar.js";
 
-// Period selector bar with previous/next arrows.
+// Period selector bar with previous/next arrows; "All time" has no neighbours, so they are dimmed.
 export function periodBar() {
-  return `<div class="period">${iconButtonHtml("left", "Previous period", () => shiftPeriod(-1))}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), periodPicker, "label")}${iconButtonHtml("right", "Next period", () => shiftPeriod(1))}</div>`;
+  const fixed = !canShiftPeriod();
+  return `<div class="period">${iconButtonHtml("left", "Previous period", () => stepPeriod(-1), fixed)}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), periodPicker, "label")}${iconButtonHtml("right", "Next period", () => stepPeriod(1), fixed)}</div>`;
 }
 // Move the selected period forward or backward.
-function shiftPeriod(n) {
-  const p = uiState.period;
-  if (p.mode === "all") return toast("Choose a period first");
-  if (p.mode === "range") {
-    const days = Math.round((parseDate(p.to) - parseDate(p.from)) / 86400000) + 1;
-    p.from = addDays(p.from, n * days);
-    p.to = addDays(p.to, n * days);
-  } else if (p.mode === "month" || p.mode === "year") {
-    const d = parseDate(p.anchor);
-    d.setUTCDate(1);
-    d.setUTCMonth(d.getUTCMonth() + n * (p.mode === "year" ? 12 : 1));
-    p.anchor = toIsoDate(d);
-  } else p.anchor = addDays(p.anchor, n * (p.mode === "week" ? 7 : 1));
+function stepPeriod(n) {
+  if (!shiftPeriod(n)) return;
   uiState.donut = null;
   render();
 }

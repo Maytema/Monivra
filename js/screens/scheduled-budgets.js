@@ -1,23 +1,23 @@
 /* Scheduled payments and budgets */
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, timeNow, TODAY } from "../core/constants.js";
-import { appData, uiState } from "../core/state.js";
+import { appData, forgetDeleted, uiState } from "../core/state.js";
 import {
   categoryById,
   convertCurrency,
   dateLabel,
   formatMoney,
   parseDate,
-  periodBounds,
   periodTitle,
-  reportRows,
 } from "../domain/finance.js";
+import { BUDGET_STATUS_NAMES, BUDGET_STATUSES, budgetState } from "../domain/budgets.js";
 import { currencyName, translate } from "../i18n/index.js";
 import { percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
-import { opRow } from "./operations/list.js";
+import { multiSelect } from "./operations/filter-parts.js";
+import { filteredBannerHtml, opRow } from "./operations/list.js";
 import {
   recurLabel,
   recurrence,
@@ -160,28 +160,6 @@ export function scheduledView() {
   );
 }
 
-// Amount spent in a budget's period.
-function budgetSpend(b) {
-  const period = {
-    mode: b.period || "month",
-    anchor: uiState.period.anchor || TODAY,
-  };
-  const [from, to] = periodBounds(period);
-  // The same rows the statistics count: fees taken into account, debt payments included when
-  // they count as expenses (only a budget for all expenses takes those).
-  return reportRows(appData.ops.filter((o) => o.date >= from && o.date <= to))
-    .filter(
-      (o) =>
-        o.reportType === "expense" &&
-        (!b.categories ||
-          b.categories.includes(o.category) ||
-          b.categories.includes(categoryById(o.category)?.parent)),
-    )
-    .reduce(
-      (s, o) => s + convertCurrency(o.reportAmount, appData.settings.currency, b.currency),
-      0,
-    );
-}
 // Days a budget period lasts, as the calendar icon of the period says.
 const PERIOD_DAYS = { day: 1, week: 7, month: 30, year: 365 };
 // Calendar icon with the number of days of a budget period.
@@ -189,11 +167,6 @@ const periodIcon = (period) =>
   `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
-// A budget with what is spent of it in the period shown by the period bar.
-const budgetState = (b) => {
-  const used = budgetSpend(b);
-  return { b, used, left: b.amount - used, share: b.amount ? (used / b.amount) * 100 : 0 };
-};
 const budgetCard = ({ b, used, left, share }) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
@@ -218,21 +191,46 @@ const budgetGroup = (period, states) => {
     main,
   )}</small><strong class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
 };
+// Choice of the budgets to show by where they stand against their limit.
+function budgetFilter() {
+  multiSelect(
+    "Budgets",
+    BUDGET_STATUSES.map((id) => ({ id, name: BUDGET_STATUS_NAMES[id] })),
+    uiState.budgetStatuses,
+    (chosen) => {
+      uiState.budgetStatuses = chosen;
+      render();
+    },
+  );
+}
 // Budgets list page: budgets grouped by period.
 export function budgetsView() {
-  const states = appData.budgets.map(budgetState);
+  const all = appData.budgets.map(budgetState),
+    states = uiState.budgetStatuses
+      ? all.filter((st) => uiState.budgetStatuses.includes(st.status))
+      : all;
+  const banner = uiState.budgetStatuses
+    ? filteredBannerHtml(budgetFilter, () => {
+        uiState.budgetStatuses = null;
+        render();
+      })
+    : "";
+  const groups = Object.keys(BUDGET_PERIODS)
+    .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
+    .filter(({ list }) => list.length)
+    .map(({ period, list }) => budgetGroup(period, list))
+    .join("");
   return (
-    pageHeader("Budgets") +
+    pageHeader("Budgets", all.length ? iconButtonHtml("filter", "Filters", budgetFilter) : "") +
     periodBar() +
+    banner +
     `<div class="content">${
-      states.length
-        ? Object.keys(BUDGET_PERIODS)
-            .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
-            .filter(({ list }) => list.length)
-            .map(({ period, list }) => budgetGroup(period, list))
-            .join("")
-        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
-    }</div>${states.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
+      !all.length
+        ? `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+        : states.length
+          ? groups
+          : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Nothing found</h2><p class="muted">No budget matches the filter</p></div>`
+    }</div>${all.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
   );
 }
 
@@ -324,6 +322,7 @@ export function budgetView(p) {
                 "Delete this budget?",
                 () => {
                   appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
+                  forgetDeleted({ budgets: [b.id] });
                   finishFlow("Budget deleted");
                 },
                 true,

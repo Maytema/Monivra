@@ -20,6 +20,7 @@ import {
 } from "../../domain/finance.js";
 import { currentLocale, translate, translateWith } from "../../i18n/index.js";
 import { hero } from "../accounts/list.js";
+import { upcomingOperations } from "../../domain/scheduled.js";
 import { postedNoticeHtml } from "../due-payments.js";
 import { operationStart } from "../operation-editor/start.js";
 import { operationTitle } from "../operation-title.js";
@@ -64,7 +65,7 @@ function adjustmentSides(o, account) {
 }
 
 // One row in the operations list.
-export function opRow(o, scheduled = false) {
+export function opRow(o, scheduled = o.upcoming === true) {
   const a = accountById(o.from || o.to),
     c = categoryById(o.category),
     selected = uiState.selected.includes(o.id),
@@ -78,15 +79,19 @@ export function opRow(o, scheduled = false) {
   const pair = amountPair(o),
     rate = pair && offRate(pair) ? pair : null;
   return buttonHtml(
-    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(operationTitle(o))}${o.photos?.length ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-note">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${adjustment ? `<small class="op-foreign">${formatMoney(adjustment.pseudo, appData.settings.currency)}</small>` : ""}${inCategory ? `<small class="op-foreign">${formatMoney(inCategory.amount, inCategory.currency)}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(adjustment ? adjustment.account : o.amount, a?.currency)}${rate ? `<small class="op-foreign op-note">${pairRateText(rate)}</small>` : ""}</span>`,
+    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(operationTitle(o))}${o.photos?.length ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}</span>${o.upcoming ? `<span class="op-upcoming">${iconSvg("calendar", 15)} ${translate("Upcoming")}</span>` : ""}${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-note">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${adjustment ? `<small class="op-foreign">${formatMoney(adjustment.pseudo, appData.settings.currency)}</small>` : ""}${inCategory ? `<small class="op-foreign">${formatMoney(inCategory.amount, inCategory.currency)}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(adjustment ? adjustment.account : o.amount, a?.currency)}${rate ? `<small class="op-foreign op-note">${pairRateText(rate)}</small>` : ""}</span>`,
     () => {
       if (uiState.selection) {
         setSelected(
           selected ? uiState.selected.filter((x) => x !== o.id) : [...uiState.selected, o.id],
         );
-      } else operationStart(o, scheduled);
+      } else
+        operationStart(
+          scheduled ? (appData.scheduled.find((x) => x.id === o.id) ?? o) : o,
+          scheduled,
+        );
     },
-    "op-row " + (selected ? "selected" : ""),
+    "op-row " + (selected ? "selected" : "") + (o.upcoming ? " upcoming" : ""),
     `data-operation="${escapeHtml(o.id)}"`,
   );
 }
@@ -94,7 +99,7 @@ export function opRow(o, scheduled = false) {
 // Is any filter currently active?
 export function filterActive() {
   const f = uiState.filters;
-  return !!(f.accounts || f.categories || f.types || f.tags || f.comment || f.scheduled);
+  return !!(f.accounts || f.categories || f.types || f.tags || f.comment || f.kinds || f.budgets);
 }
 
 // Total balance of the filtered accounts at a given date.
@@ -167,7 +172,7 @@ function dayTotal(dayOps) {
 }
 
 // Date heading with the day total, followed by the operations of that day.
-function dayGroup(date, ops) {
+function dayGroup(date, ops, upcoming) {
   const dayOps = ops.filter((o) => o.date === date);
   const day = parseDate(date);
   const weekday = day.toLocaleDateString(currentLocale(), { weekday: "short", timeZone: "UTC" });
@@ -176,22 +181,29 @@ function dayGroup(date, ops) {
     year: "numeric",
     timeZone: "UTC",
   });
-  return `<div class="day-head"><span class="day-num">${Number(date.slice(-2))}</span><span class="day-desc">${weekday}<br>${monthYear}</span><span class="day-total">${moneySpanHtml(dayTotal(dayOps))}</span></div>${dayOps.map((o) => opRow(o)).join("")}`;
+  return `<div class="day-head"><span class="day-num">${Number(date.slice(-2))}</span><span class="day-desc">${weekday}<br>${monthYear}</span><span class="day-total">${dayOps.length ? moneySpanHtml(dayTotal(dayOps)) : ""}</span></div>${upcoming
+    .filter((o) => o.date === date)
+    .concat(dayOps)
+    .map((o) => opRow(o))
+    .join("")}`;
+}
+
+// The days of the list, newest first: the operations of each day, and the payments still to come.
+function dayGroups(ops, upcoming) {
+  const dates = [...new Set([...ops, ...upcoming].map((o) => o.date))].sort().reverse();
+  return dates.map((date) => dayGroup(date, ops, upcoming)).join("");
 }
 
 // Floating "Add" button of the operations tab.
 export const operationsFab = () => fabHtml("Add", () => operationsAddMenu());
 
 // Strip under the period bar while filters are on: tap the text to change them, the red button clears them.
-export function filteredBannerHtml() {
-  return `<div class="filtered-banner">${iconSvg("info", 20)}${buttonHtml("Filtered data", filters, "filtered-text")}${iconButtonHtml(
-    "filterOff",
-    "Clear filters",
-    () => {
-      uiState.filters = emptyFilters();
-      render();
-    },
-  )}</div>`;
+export function filteredBannerHtml(edit = filters, clear = clearFilters) {
+  return `<div class="filtered-banner">${iconSvg("info", 20)}${buttonHtml("Filtered data", edit, "filtered-text")}${iconButtonHtml("filterOff", "Clear filters", clear)}</div>`;
+}
+function clearFilters() {
+  uiState.filters = emptyFilters();
+  render();
 }
 
 // Hint shown under the empty-state title.
@@ -200,12 +212,14 @@ const EMPTY_HINT = "Start adding expenses or income and the data will appear";
 // Operations tab.
 export function operationsView() {
   const ops = visibleOperations();
-  const dates = [...new Set(ops.map((o) => o.date))];
+  // Selecting is for operations, which payments still to come are not.
+  const upcoming = uiState.selection ? [] : upcomingOperations();
   const banner = filterActive() ? filteredBannerHtml() : "";
   const summary =
     appData.settings.opening && ops.length > 0 && !filterActive() ? balanceSummary() : "";
-  const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
-  const list = `<div class="content">${postedNoticeHtml()}${summary}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`;
+  const empty =
+    ops.length + upcoming.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
+  const list = `<div class="content">${postedNoticeHtml()}${summary}${dayGroups(ops, upcoming)}${empty}</div>`;
   const pane = periodBar() + banner + list;
   if (uiState.selection) return swipePane(selectionHeader(ops) + pane + selectionActions());
   return hero() + swipePane(pane);
@@ -231,14 +245,15 @@ function filteredCategory() {
 
 // Page with the filtered operations; a single category gets a card with its figures.
 export function filteredView() {
-  const ops = visibleOperations();
-  const dates = [...new Set(ops.map((o) => o.date))];
+  const ops = visibleOperations(),
+    upcoming = upcomingOperations();
   const c = filteredCategory();
   const card = c
     ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotalIn(c), c.currency)}</span></div></div>`
     : "";
-  const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
-  return `${pageHeader("Filtered")}${periodBar()}<div class="content">${card}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>${operationsFab()}`;
+  const empty =
+    ops.length + upcoming.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
+  return `${pageHeader("Filtered")}${periodBar()}<div class="content">${card}${dayGroups(ops, upcoming)}${empty}</div>${operationsFab()}`;
 }
 
 // Toggle the operations search bar.

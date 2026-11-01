@@ -1,9 +1,16 @@
 /* Scheduled payments: the next date and posting a due payment */
 import { deepClone, newId, today } from "../core/constants.js";
-import { appData } from "../core/state.js";
+import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { putOperation } from "./operations.js";
-import { addDays, parseDate, toIsoDate } from "./finance.js";
+import {
+  addDays,
+  chosenKinds,
+  fieldsMatch,
+  parseDate,
+  periodBounds,
+  toIsoDate,
+} from "./finance.js";
 
 // Next occurrence of a recurring payment, or null when finished.
 export function nextDate(item) {
@@ -102,4 +109,33 @@ export function postDue(day = today()) {
     if (posted) save();
   }
   return posted;
+}
+
+// A year of a daily payment still fits; more than that is not a list anyone reads.
+const UPCOMING_LIMIT = 400;
+
+// Dates on which a scheduled payment happens within a period, starting from its next one.
+function occurrencesIn(item, from, to, limit) {
+  const probe = deepClone(item),
+    dates = [];
+  while (probe.date <= to && dates.length < limit) {
+    if (probe.date >= from) dates.push(probe.date);
+    if (!advance(probe)) break;
+  }
+  return dates;
+}
+
+// Payments that have not happened yet, as they would stand in the history: one entry for each
+// date of the period, passing the same filters as the operations. Only when the filter asks for
+// them. "All time" has no end, so it shows the next payment of each schedule.
+export function upcomingOperations(f = uiState.filters) {
+  if (!chosenKinds(f).includes("upcoming")) return [];
+  const period = uiState.period,
+    [from, to] = periodBounds(period),
+    limit = period.mode === "all" ? 1 : UPCOMING_LIMIT;
+  return appData.scheduled
+    .filter((item) => fieldsMatch(item, f))
+    .flatMap((item) =>
+      occurrencesIn(item, from, to, limit).map((date) => ({ ...item, date, upcoming: true })),
+    );
 }

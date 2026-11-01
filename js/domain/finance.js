@@ -181,6 +181,25 @@ export function periodBounds(p = uiState.period) {
   return [start(month), addDays(start(month + 1), -1)];
 }
 
+// Can the period be moved to the neighbouring one? "All time" has none.
+export const canShiftPeriod = (p = uiState.period) => p.mode !== "all";
+// Move the period one step forward (1) or back (-1): a day, week, month or year, or a range by
+// its own length.
+export function shiftPeriod(n, p = uiState.period) {
+  if (!canShiftPeriod(p)) return false;
+  if (p.mode === "range") {
+    const days = Math.round((parseDate(p.to) - parseDate(p.from)) / 86400000) + 1;
+    p.from = addDays(p.from, n * days);
+    p.to = addDays(p.to, n * days);
+  } else if (p.mode === "month" || p.mode === "year") {
+    const d = parseDate(p.anchor);
+    d.setUTCDate(1);
+    d.setUTCMonth(d.getUTCMonth() + n * (p.mode === "year" ? 12 : 1));
+    p.anchor = toIsoDate(d);
+  } else p.anchor = addDays(p.anchor, n * (p.mode === "week" ? 7 : 1));
+  return true;
+}
+
 // Title shown in the period bar, e.g. "October 2026".
 export function periodTitle(period = uiState.period) {
   const [a, b] = periodBounds(period);
@@ -242,9 +261,27 @@ export function editedFromPlan(o) {
     o.category !== plan.category
   );
 }
-// Does an operation pass the active filters? A category is matched as chosen: choosing a category
-// with subcategories means choosing them one by one.
-export function operationMatchesFilters(o, f = uiState.filters) {
+// The kinds of operations the filter tells apart by where they come from. A payment made by a
+// schedule is "paid" until the person changes it, then it is "changed"; an "upcoming" payment is a
+// scheduled one that has not happened yet and is not an operation.
+export const SCHEDULE_KINDS = ["manual", "paid", "changed", "upcoming"];
+// What the list shows when the filter says nothing: everything that has happened.
+export const DEFAULT_KINDS = ["manual", "paid", "changed"];
+// Which kind an operation of the history is.
+export const scheduleKind = (o) =>
+  !o.fromSchedule ? "manual" : editedFromPlan(o) ? "changed" : "paid";
+// The kinds a filter shows.
+export const chosenKinds = (f) => f.kinds ?? DEFAULT_KINDS;
+// Does a budget count a row of the report? A budget takes expenses of its categories (and their
+// subcategories), or all expenses when it has no categories.
+export const budgetTakes = (b, row) =>
+  row.reportType === "expense" &&
+  (!b.categories ||
+    b.categories.includes(row.category) ||
+    b.categories.includes(categoryById(row.category)?.parent));
+// Does an operation (or a payment about to happen) pass the filters other than its kind? A category
+// is matched as chosen: choosing a category with subcategories means choosing them one by one.
+export function fieldsMatch(o, f = uiState.filters) {
   const roles = transferRoles(o);
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
@@ -259,10 +296,17 @@ export function operationMatchesFilters(o, f = uiState.filters) {
       (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
     (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase())) &&
-    (f.scheduled !== "only" || (o.fromSchedule && (!f.edited || editedFromPlan(o)))) &&
-    (f.scheduled !== "exclude" || !o.fromSchedule)
+    (!f.budgets || budgetsTake(f.budgets, o))
   );
 }
+// Does any of the budgets count the operation?
+function budgetsTake(ids, o) {
+  const rows = reportRows([o]);
+  return appData.budgets.some((b) => ids.includes(b.id) && rows.some((row) => budgetTakes(b, row)));
+}
+// Does an operation of the history pass the active filters?
+export const operationMatchesFilters = (o, f = uiState.filters) =>
+  chosenKinds(f).includes(scheduleKind(o)) && fieldsMatch(o, f);
 // Operations that pass the active filters and period, newest first.
 export function visibleOperations() {
   const [a, b] = periodBounds();

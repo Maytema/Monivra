@@ -31,10 +31,11 @@ export const emptyFilters = () => ({
   types: null,
   tags: null,
   comment: "",
-  // Payments made by a schedule: null shows everything, "only" those, "exclude" hides them;
-  // `edited` narrows "only" to the ones the person changed after they were posted.
-  scheduled: null,
-  edited: false,
+  // Kinds of operations to show (by hand, paid by schedule, changed after that, upcoming); null
+  // is everything that has happened.
+  kinds: null,
+  // Budgets whose operations to show; null is all.
+  budgets: null,
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {
@@ -48,6 +49,8 @@ export const uiState = {
   selection: false,
   search: false,
   filters: emptyFilters(),
+  // Budgets page: statuses of the budgets to show; null is all.
+  budgetStatuses: null,
   donut: null,
   // Scheduled payments posted on their own since the person last looked.
   paymentsPosted: 0,
@@ -57,9 +60,9 @@ export const uiState = {
 };
 // Deleted records can no longer be selected or filtered by: `removed` lists their ids.
 export function forgetDeleted(removed) {
-  const gone = { operations: [], accounts: [], categories: [], ...removed };
+  const gone = { operations: [], accounts: [], categories: [], budgets: [], ...removed };
   uiState.selected = uiState.selected.filter((id) => !gone.operations.includes(id));
-  for (const key of ["accounts", "categories"]) {
+  for (const key of ["accounts", "categories", "budgets"]) {
     const rest = uiState.filters[key]?.filter((id) => !gone[key].includes(id));
     if (rest) uiState.filters[key] = rest.length ? rest : null;
   }

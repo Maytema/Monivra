@@ -8,46 +8,9 @@ import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { promptText } from "../../ui/dialogs.js";
 import { badgeHtml, buttonHtml, fieldButtonHtml, sheetFooterHtml } from "../../ui/primitives.js";
 import { filterCategorySelect } from "./category-filter.js";
-import { checkboxHtml, pickerHtml, summaryHtml } from "./filter-parts.js";
+import { multiSelect, pickerHtml, summaryHtml } from "./filter-parts.js";
 import { registerAction } from "../../ui/handlers.js";
-
-// Multi-select sheet: one group whose head chooses everything or nothing.
-function multiSelect(title, items, selected, done) {
-  const values = new Set(selected ?? items.map((item) => item.id));
-  const toggleAll = () => {
-    const all = values.size === items.length;
-    values.clear();
-    if (!all) items.forEach((item) => values.add(item.id));
-    render();
-  };
-  const toggle = (id) => {
-    if (!values.delete(id)) values.add(id);
-    render();
-  };
-  const listHtml = () => {
-    const head = buttonHtml(
-      `<strong>${translate("Select all")}</strong><small>${values.size}/${items.length}</small>${checkboxHtml(items.length > 0 && values.size === items.length)}`,
-      toggleAll,
-      "filter-group-head filter-group-all",
-    );
-    const rows = items.map((item) =>
-      buttonHtml(
-        `${checkboxHtml(values.has(item.id))}<span>${escapeHtml(item.name)}</span>`,
-        () => toggle(item.id),
-        "filter-choice",
-      ),
-    );
-    return `<div class="filter-group">${head}${rows.join("")}</div>`;
-  };
-  openSheet(
-    () =>
-      pickerHtml(title, summaryHtml(values.size), listHtml(), () => {
-        closeLayers();
-        done(values.size === items.length ? null : [...values]);
-      }),
-    title,
-  );
-}
+import { scheduleFilterSelect, scheduleFilterSummary } from "./schedule-filter.js";
 
 // Account selection grouped by account type.
 function filterAccountSelect(selected, done) {
@@ -97,56 +60,6 @@ function filterAccountSelect(selected, done) {
         },
       ),
     "Accounts",
-  );
-}
-
-// What the filter shows of the operations that scheduled payments made.
-const SCHEDULED_CHOICES = [
-  [null, "All operations"],
-  ["only", "Only scheduled payments"],
-  ["exclude", "Without scheduled payments"],
-];
-const EDITED_CHOICES = [
-  [false, "All scheduled payments"],
-  [true, "Only the ones I changed"],
-];
-
-// Short text of the choice for the field of the filters sheet.
-function scheduledSummary(f) {
-  if (f.scheduled === "only" && f.edited) return "Only scheduled payments I changed";
-  return SCHEDULED_CHOICES.find(([value]) => value === f.scheduled)[1];
-}
-
-// Choice of the scheduled payments to show: all, only them, or none; and when only them,
-// all of them or just the ones changed after they were posted.
-function scheduledSelect(f, done) {
-  const draft = { scheduled: f.scheduled, edited: f.edited };
-  const group = (title, choices, key) =>
-    `<div class="filter-group"><div class="filter-group-head"><strong>${translate(title)}</strong></div>${choices
-      .map(([value, label]) =>
-        buttonHtml(
-          `<span class="grow">${translate(label)}</span><input type="radio" tabindex="-1" ${draft[key] === value ? "checked" : ""} aria-label="${escapeHtml(translate(label))}">`,
-          () => {
-            draft[key] = value;
-            render();
-          },
-          "filter-choice",
-        ),
-      )
-      .join("")}</div>`;
-  openSheet(
-    () =>
-      pickerHtml(
-        "Scheduled payments",
-        "",
-        group("Show", SCHEDULED_CHOICES, "scheduled") +
-          (draft.scheduled === "only" ? group("Scheduled payments", EDITED_CHOICES, "edited") : ""),
-        () => {
-          closeLayers();
-          done({ scheduled: draft.scheduled, edited: draft.scheduled === "only" && draft.edited });
-        },
-      ),
-    "Scheduled payments",
   );
 }
 
@@ -213,8 +126,8 @@ export function filters() {
           },
           "Comment",
         ),
-      )}${fieldButtonHtml("Scheduled payments", scheduledSummary(f), () =>
-        scheduledSelect(f, (v) => {
+      )}${fieldButtonHtml("Scheduled payments and budgets", scheduleFilterSummary(f), () =>
+        scheduleFilterSelect(f, (v) => {
           Object.assign(f, v);
           render();
         }),

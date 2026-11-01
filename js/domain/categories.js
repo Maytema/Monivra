@@ -13,11 +13,13 @@ export function deleteCategory(id) {
   appData.ops = appData.ops.filter((o) => !ids.includes(o.category));
   appData.scheduled = appData.scheduled.filter((o) => !ids.includes(o.category));
   appData.categories = appData.categories.filter((c) => !ids.includes(c.id));
-  appData.budgets = appData.budgets
+  const kept = appData.budgets
     .map((b) => ({ ...b, categories: b.categories?.filter((i) => !ids.includes(i)) }))
     .filter((b) => b.categories === null || b.categories.length);
+  const budgets = appData.budgets.filter((b) => !kept.some((k) => k.id === b.id)).map((b) => b.id);
+  appData.budgets = kept;
   save();
-  return { operations, categories: ids };
+  return { operations, categories: ids, budgets };
 }
 
 // Everything that belongs to a category goes to another one and the category disappears.

@@ -12,12 +12,12 @@ let bannerTimer = 0;
 export const buttonHtml = (label, fn, cls = "", attrs = "") =>
   `<button class="${cls}" data-action="${registerAction(fn)}" ${attrs}>${translate(label)}</button>`;
 // HTML for an icon-only button with an accessible label.
-export const iconButtonHtml = (icon, label, fn) =>
+export const iconButtonHtml = (icon, label, fn, disabled = false) =>
   buttonHtml(
     iconSvg(icon),
     fn,
     "icon-button",
-    `aria-label="${escapeHtml(translate(label))}" title="${escapeHtml(translate(label))}"`,
+    `aria-label="${escapeHtml(translate(label))}" title="${escapeHtml(translate(label))}"${disabled ? " disabled" : ""}`,
   );
 // Colored round badge with an account/category icon.
 export const badgeHtml = (x, small = false) =>
