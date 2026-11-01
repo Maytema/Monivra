@@ -683,6 +683,7 @@ export const russianStrings = {
   "(Approx. $0.35 per week)": "(≈ $0.35 в неделю)",
   "Test data · accounts and categories": "Тестовые данные · счета и категории",
   "Photo attached": "Фото прикреплено",
+  "This photo is already attached": "Это фото уже прикреплено",
   "invalid type": "неверный тип операции",
   "invalid amount": "неверная сумма",
   "account is missing": "не указан счёт",

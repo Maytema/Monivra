@@ -515,16 +515,19 @@
 }
 .calc-photo {
   position: relative;
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--line);
+  width: 49px;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .calc-photo-open {
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
 }
 .calc-photo-open img {
@@ -532,15 +535,19 @@
   height: 100%;
   object-fit: cover;
 }
-.calc-photo .icon-button {
+.calc-attachments .calc-photo .icon-button {
   position: absolute;
-  top: 2px;
-  left: 56px;
-  width: 28px;
-  height: 28px;
+  top: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--sheet);
   box-shadow: 0 1px 4px color-mix(in srgb, var(--black) 25%, transparent);
+}
+.calc-photo .icon-button svg {
+  width: 14px;
+  height: 14px;
 }
 .calc-top {
   margin: 0 -16px;

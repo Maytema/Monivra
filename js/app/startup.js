@@ -113,7 +113,6 @@ export function startup() {
     if (!file) return;
     try {
       photoCallback?.(await photoDataUrl(file));
-      toast("Photo attached");
     } catch (error) {
       console.error("Photo failed:", error);
       toast("This image could not be opened");

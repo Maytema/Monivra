@@ -152,6 +152,8 @@ export function operationStart(options = {}, scheduled = false) {
     scheduled,
     editing: !!d.id,
     compact: !!d.id,
+    // The draft as it was opened: any difference means there is something to save.
+    snapshot: JSON.stringify(d),
   };
   const openEditor = () => openSheet(() => accountCalculatorView(p), "Add an operation");
   // An account-action choice is a separate state. No calculator layer exists
@@ -251,6 +253,8 @@ export function commitOperation(p) {
 
 // Calculator-style editor for operations between accounts.
 function accountCalculatorView(p) {
+  // An opened operation shows its keypad with the check as soon as something was changed.
+  if (p.compact && JSON.stringify(p.draft) !== p.snapshot) p.compact = false;
   const d = p.draft,
     from = accountById(d.from),
     to = accountById(d.to),
@@ -320,6 +324,17 @@ function accountCalculatorView(p) {
     isAdjustment && !raise ? chooseOwnAccount() : counterpartyPicker("from", d);
   const chooseTarget = () =>
     isAdjustment && raise ? chooseOwnAccount() : counterpartyPicker("to", d);
+  // The attached photo takes the place of the clip: a small preview with a cross to remove it.
+  const attachmentHtml = d.photo
+    ? `<span class="calc-photo">${buttonHtml(`<img alt="" src="${escapeHtml(d.photo)}">`, () => photoViewer(d.photo), "calc-photo-open", 'aria-label="Open photo"')}${iconButtonHtml(
+        "close",
+        "Remove photo",
+        () => {
+          d.photo = null;
+          render();
+        },
+      )}</span>`
+    : buttonHtml(iconSvg("clip", 27), () => photoMenu(d), "icon-button", 'aria-label="Attachment"');
   const editComment = () =>
     promptText(
       "Comment",
@@ -589,7 +604,7 @@ function accountCalculatorView(p) {
           },
         )}</div>`
       : ""
-  }<div class="calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
+  }<div class="calc-attachments">${attachmentHtml}${iconButtonHtml(
     "comment",
     "Comment",
     editComment,
@@ -601,17 +616,6 @@ function accountCalculatorView(p) {
           "calc-tags",
           'aria-label="Tags"',
         )
-      : ""
-  }${
-    d.photo
-      ? `<div class="calc-photo">${buttonHtml(`<img alt="" src="${escapeHtml(d.photo)}">`, () => photoViewer(d.photo), "calc-photo-open", 'aria-label="Open photo"')}${iconButtonHtml(
-          "close",
-          "Remove photo",
-          () => {
-            d.photo = null;
-            render();
-          },
-        )}</div>`
       : ""
   }</div>${feeBlockHtml(
     d,
@@ -820,7 +824,7 @@ function photoMenu(d) {
 export function photoViewer(src) {
   openSheet(
     () =>
-      `<div class="photo-viewer">${iconButtonHtml("close", "Close", () => closeLayers())}<img alt="Photo" src="${escapeHtml(src)}"></div>`,
+      `<div class="photo-viewer" data-action="${registerAction(() => closeLayers())}">${iconButtonHtml("close", "Close", () => closeLayers())}<img alt="Photo" src="${escapeHtml(src)}"></div>`,
     "Photo",
     "full",
   );
@@ -832,8 +836,10 @@ function choosePhoto(d, camera) {
     return;
   }
   setPhotoCallback((data) => {
+    if (data === d.photo) return toast("This photo is already attached");
     d.photo = data;
     closeLayers();
+    toast("Photo attached");
   });
   const e = document.getElementById("photo-file");
   e.value = "";
