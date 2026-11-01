@@ -140,7 +140,6 @@ export const russianStrings = {
   "Add to": "Добавить в",
   Account: "Счёт",
   Category: "Категория",
-  Parent: "Родитель",
   Comment: "Комментарий",
   Tags: "Теги",
   Date: "Дата",

@@ -292,23 +292,24 @@ function accountCalculatorView(p) {
       fn,
       "calc-tile",
     );
-  const pickSubcategory = (id, parentChosen) => {
-    d.category = id;
-    p.parentChosen = parentChosen ? root.id : null;
+  // A tapped subcategory is chosen; tapping it again goes back to the category itself.
+  const pickSubcategory = (id) => {
+    d.category = d.category === id ? root.id : id;
     render();
   };
-  const subcategoriesHtml = () => {
-    if (!subcategories.length) return "";
-    const chip = (label, id, active, parentChosen) =>
-      buttonHtml(
-        escapeHtml(label),
-        () => pickSubcategory(id, parentChosen),
-        `calc-sub ${active ? "active" : ""} ${parentChosen ? "calc-sub-parent" : ""}`,
-        `aria-pressed="${active}"`,
-      );
-    const parentActive = d.category === root.id && (p.editing || p.parentChosen === root.id);
-    return `<div class="calc-subs">${subcategories.map((x) => chip(x.name, x.id, d.category === x.id, false)).join("")}${chip(translate("Parent"), root.id, parentActive, true)}</div>`;
-  };
+  const subcategoriesHtml = () =>
+    subcategories.length
+      ? `<div class="calc-subs">${subcategories
+          .map((x) =>
+            buttonHtml(
+              escapeHtml(x.name),
+              () => pickSubcategory(x.id),
+              `calc-sub ${d.category === x.id ? "active" : ""}`,
+              `aria-pressed="${d.category === x.id}"`,
+            ),
+          )
+          .join("")}</div>`
+      : "";
   const chooseOwnAccount = () =>
     accountPicker(d.from || d.to, (id) => {
       if (d.to) d.to = id;
@@ -848,14 +849,9 @@ export function opTitle(o) {
       ? translate("Transfer")
       : categoryTitle(o.category);
 }
-// Name of a category as an operation shows it: a subcategory follows its category,
-// and an operation of a category that has subcategories says it belongs to the category itself.
+// Name of a category as an operation shows it: a subcategory follows its category.
 function categoryTitle(id) {
   const c = categoryById(id);
   if (!c) return translate("Category");
-  if (c.parent) return `${categoryById(c.parent)?.name} (${c.name})`;
-  const hasSubcategories = appData.categories.some((x) => x.parent === c.id && !x.archived);
-  return hasSubcategories && appData.settings.subcategories
-    ? `${c.name} (${translate("Parent")})`
-    : c.name;
+  return c.parent ? `${categoryById(c.parent)?.name} (${c.name})` : c.name;
 }
