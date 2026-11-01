@@ -19,7 +19,10 @@ import {
   categoryManageView,
   orderView,
 } from "../screens/categories.js";
-import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
+import { lockView } from "../screens/more/lock.js";
+import { moreView } from "../screens/more/menu.js";
+import { settingsPage } from "../screens/more/settings-pages.js";
+import { infoPage } from "../screens/more/info-pages.js";
 import { filteredView, operationsFab, operationsView } from "../screens/operations/list.js";
 import { budgetsView, budgetView, scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
@@ -78,7 +81,7 @@ function pageView(page) {
   const view = PAGE_VIEWS[page.kind];
   if (view) return view(page);
   if (SETTINGS_TREE_KINDS.includes(page.kind)) return settingsTreePage(page.kind);
-  return SETTINGS_PAGE_KINDS.includes(page.kind) ? settingsPage(page.kind) : simplePage(page.kind);
+  return SETTINGS_PAGE_KINDS.includes(page.kind) ? settingsPage(page.kind) : infoPage(page.kind);
 }
 
 // HTML of the whole screen: current root tab or the top page, plus layers.

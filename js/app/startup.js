@@ -2,7 +2,8 @@
 import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
 import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
-import { categoryById, createBackup } from "../domain/finance.js";
+import { createBackup } from "../domain/backups.js";
+import { categoryById } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
 import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";

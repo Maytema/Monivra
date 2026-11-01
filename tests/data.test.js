@@ -1,10 +1,12 @@
 import { check } from "./harness.js";
+import { addAccount } from "./helpers.js";
 import { rootView } from "../js/app/shell.js";
 import { appData, uiState } from "../js/core/state.js";
 import { parseCSV } from "../js/data/csv.js";
 import { CURRENCIES, defaultRates } from "../js/data/currencies.js";
 import { completeData } from "../js/data/defaults.js";
 import { isValidData } from "../js/data/storage.js";
+import { createBackup, deleteBackup, restoreBackup } from "../js/domain/backups.js";
 import { searchCurrencies } from "../js/domain/currency-search.js";
 
 check("Stored schema", () => isValidData(appData));
@@ -85,4 +87,23 @@ check("Currency search narrows by code and country as letters are typed", () => 
     searchCurrencies("japan")[0] === "JPY" &&
     searchCurrencies("zzzz").length === 0
   );
+});
+
+check("A restored backup brings the old data back and keeps the list of backups", () => {
+  appData.ops = [];
+  const cash = addAccount({ opening: 100 });
+  createBackup();
+  const [backup] = appData.backups;
+  appData.accounts = appData.accounts.filter((a) => a.id !== cash.id);
+  restoreBackup(backup);
+  const restored = appData.accounts.some((a) => a.id === cash.id);
+  const listKept = appData.backups.length === 1 && appData.backups[0].data.backups.length === 0;
+  deleteBackup(backup.id);
+  return restored && listKept && appData.backups.length === 0;
+});
+
+check("Only the ten latest backups are kept", () => {
+  appData.backups = [];
+  for (let n = 0; n < 12; n++) createBackup();
+  return appData.backups.length === 10;
 });

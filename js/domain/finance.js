@@ -1,7 +1,6 @@
 /* Finance model: balances, currency conversion, periods, reports */
-import { deepClone, escapeHtml, newId } from "../core/constants.js";
+import { escapeHtml } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
-import { save } from "../data/storage.js";
 import { netAmount } from "./fees.js";
 import { currentLocale, translate } from "../i18n/index.js";
 
@@ -372,20 +371,4 @@ export function evaluateExpression(expr) {
   const cents = Math.round(terms.reduce((sum, term) => sum + term, 0) * 100);
   if (!Number.isSafeInteger(cents) || Math.abs(cents) > 9e12) throw Error("Amount is too large");
   return cents;
-}
-// Copy of the dataset without its backup list.
-export function dataSnapshot() {
-  const x = deepClone(appData);
-  x.backups = [];
-  return x;
-}
-// Store a snapshot of the dataset in the backup list (before destructive actions).
-export function createBackup() {
-  appData.backups.unshift({
-    id: newId(),
-    at: new Date().toISOString(),
-    data: dataSnapshot(),
-  });
-  appData.backups = appData.backups.slice(0, 10);
-  save();
 }

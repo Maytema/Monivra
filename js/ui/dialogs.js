@@ -1,6 +1,6 @@
 /* Dialogs: messages, confirmations, text prompts, option lists and small menus */
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { createBackup } from "../domain/finance.js";
+import { createBackup } from "../domain/backups.js";
 import { translate } from "../i18n/index.js";
 import { buttonHtml, toast } from "./primitives.js";
 import { registerInput } from "./handlers.js";

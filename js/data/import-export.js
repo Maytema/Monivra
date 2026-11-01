@@ -7,7 +7,7 @@ import { completeData, createEmptyData } from "./defaults.js";
 import { pickFile, saveTextFile } from "../platform/files.js";
 import { printReport } from "./report.js";
 import { findDataProblem, save } from "./storage.js";
-import { dataSnapshot } from "../domain/finance.js";
+import { dataSnapshot } from "../domain/backups.js";
 import { translate, translateWith } from "../i18n/index.js";
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
 import { confirmAction, promptText, showInfo } from "../ui/dialogs.js";
