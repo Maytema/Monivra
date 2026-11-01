@@ -153,6 +153,45 @@ const scenarios = {
       await page.waitForTimeout(100);
     }
   },
+  async "a photo cut short is attached as far as it goes, and a turned one is straightened"(page) {
+    await openEditorOn(page, "Food");
+    // A wide picture; its end is missing, and a second copy says it must be turned a quarter.
+    const [cut, turned] = await page.evaluate(async () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 200;
+      canvas.height = 100;
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#3a7";
+      context.fillRect(0, 0, 200, 100);
+      const blob = await new Promise((done) => canvas.toBlob(done, "image/jpeg"));
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const exif = [0xff, 0xe1, 0, 34, ...[..."Exif"].map((c) => c.charCodeAt(0)), 0, 0];
+      exif.push(0x49, 0x49, 0x2a, 0, 8, 0, 0, 0, 1, 0, 0x12, 1, 3, 0, 1, 0, 0, 0, 6, 0, 0, 0);
+      exif.push(0, 0, 0, 0);
+      return [
+        [...bytes.slice(0, bytes.length - 40)],
+        [...bytes.slice(0, 2), ...exif, ...bytes.slice(2)],
+      ];
+    });
+    for (const [index, bytes] of [cut, turned].entries()) {
+      await page.getByLabel("Attachment").click();
+      const [chooser] = await Promise.all([
+        page.waitForEvent("filechooser"),
+        page.getByText("Choose from gallery").click(),
+      ]);
+      await chooser.setFiles({
+        name: "photo.jpg",
+        mimeType: "image/jpeg",
+        buffer: Buffer.from(bytes),
+      });
+      await page.locator(".calc-photo").nth(index).waitFor();
+    }
+    const sizes = await page
+      .locator(".calc-photo img")
+      .evaluateAll((images) => images.map((image) => [image.naturalWidth, image.naturalHeight]));
+    expect(sizes[0].join("x")).toBe("200x100");
+    expect(sizes[1].join("x")).toBe("100x200");
+  },
   async "the calculator adds up and the check saves the result"(page) {
     await openEditorOn(page, "Food");
     await page.getByLabel("Additionally").dblclick();
