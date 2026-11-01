@@ -116,8 +116,8 @@ export function startup() {
       photoCallback?.(await photoDataUrl(file));
     } catch (error) {
       console.error("Photo failed:", error);
-      // The kind of failure helps to tell an unreadable file from an unsupported format.
-      toast(`${translate("This image could not be opened")} (${error.name})`);
+      // The format of the file and the kind of failure tell an unreadable file from an unsupported format.
+      toast(`${translate("This image could not be opened")} (${file.type || "?"}, ${error.name})`);
     }
   });
   document.addEventListener("visibilitychange", () => {
