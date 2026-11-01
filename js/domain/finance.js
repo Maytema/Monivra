@@ -249,39 +249,9 @@ export const categoryFamily = (id) => [
   id,
   ...appData.categories.filter((c) => c.parent === id).map((c) => c.id),
 ];
-// Did the person change a payment's operation after it was posted (amount, day, accounts or category)?
-export function editedFromPlan(o) {
-  const plan = o.fromSchedule?.planned;
-  if (!plan) return false;
-  return (
-    o.date !== plan.date ||
-    o.amount !== plan.amount ||
-    (o.from ?? null) !== (plan.from ?? null) ||
-    (o.to ?? null) !== (plan.to ?? null) ||
-    o.category !== plan.category
-  );
-}
-// The kinds of operations the filter tells apart by where they come from. A payment made by a
-// schedule is "paid" until the person changes it, then it is "changed"; an "upcoming" payment is a
-// scheduled one that has not happened yet and is not an operation.
-export const SCHEDULE_KINDS = ["manual", "paid", "changed", "upcoming"];
-// What the list shows when the filter says nothing: everything that has happened.
-export const DEFAULT_KINDS = ["manual", "paid", "changed"];
-// Which kind an operation of the history is.
-export const scheduleKind = (o) =>
-  !o.fromSchedule ? "manual" : editedFromPlan(o) ? "changed" : "paid";
-// The kinds a filter shows.
-export const chosenKinds = (f) => f.kinds ?? DEFAULT_KINDS;
-// Does a budget count a row of the report? A budget takes expenses of its categories (and their
-// subcategories), or all expenses when it has no categories.
-export const budgetTakes = (b, row) =>
-  row.reportType === "expense" &&
-  (!b.categories ||
-    b.categories.includes(row.category) ||
-    b.categories.includes(categoryById(row.category)?.parent));
-// Does an operation (or a payment about to happen) pass the filters other than its kind? A category
-// is matched as chosen: choosing a category with subcategories means choosing them one by one.
-export function fieldsMatch(o, f = uiState.filters) {
+// Does an operation pass the active filters? A category is matched as chosen: choosing a category
+// with subcategories means choosing them one by one.
+export function operationMatchesFilters(o, f = uiState.filters) {
   const roles = transferRoles(o);
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
@@ -296,17 +266,10 @@ export function fieldsMatch(o, f = uiState.filters) {
       (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
     (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase())) &&
-    (!f.budgets || budgetsTake(f.budgets, o))
+    (f.scheduled !== "only" || o.fromSchedule) &&
+    (f.scheduled !== "exclude" || !o.fromSchedule)
   );
 }
-// Does any of the budgets count the operation?
-function budgetsTake(ids, o) {
-  const rows = reportRows([o]);
-  return appData.budgets.some((b) => ids.includes(b.id) && rows.some((row) => budgetTakes(b, row)));
-}
-// Does an operation of the history pass the active filters?
-export const operationMatchesFilters = (o, f = uiState.filters) =>
-  chosenKinds(f).includes(scheduleKind(o)) && fieldsMatch(o, f);
 // Operations that pass the active filters and period, newest first.
 export function visibleOperations() {
   const [a, b] = periodBounds();

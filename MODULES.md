@@ -36,22 +36,22 @@ Paths are under `js/`.
 
 ## domain — rules and commands (no DOM)
 
-| Module                      | Purpose                                                                              |
-| --------------------------- | ------------------------------------------------------------------------------------ |
-| `domain/finance.js`         | Balances, conversion, formatting of money, periods, reports, expression evaluation   |
-| `domain/fees.js`            | Tax and commission applied one after another                                         |
-| `domain/sides.js`           | Which side of an operation a chosen account or category lands on                     |
-| `domain/dual-amount.js`     | Which of the two amounts of a cross-currency operation leads                         |
-| `domain/keypad.js`          | Editing of the typed expression, digit order                                         |
-| `domain/operations.js`      | Check, store, delete, bulk-change operations                                         |
-| `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", posting what came due, upcoming |
-| `domain/budgets.js`         | Spent and left of a budget, its state (not used, within the limit, exceeded)         |
-| `domain/accounts.js`        | Account form state, checks, storing, favorite, deletion                              |
-| `domain/categories.js`      | Storing with subcategory changes, deleting, moving, merging                          |
-| `domain/currency-change.js` | Plan and apply a currency change of an account or of the application                 |
-| `domain/ordering.js`        | Manual order of accounts and categories                                              |
-| `domain/backups.js`         | Snapshot, create, restore, delete backups                                            |
-| `domain/currency-search.js` | Find a currency while typing                                                         |
+| Module                      | Purpose                                                                            |
+| --------------------------- | ---------------------------------------------------------------------------------- |
+| `domain/finance.js`         | Balances, conversion, formatting of money, periods, reports, expression evaluation |
+| `domain/fees.js`            | Tax and commission applied one after another                                       |
+| `domain/sides.js`           | Which side of an operation a chosen account or category lands on                   |
+| `domain/dual-amount.js`     | Which of the two amounts of a cross-currency operation leads                       |
+| `domain/keypad.js`          | Editing of the typed expression, digit order                                       |
+| `domain/operations.js`      | Check, store, delete, bulk-change operations                                       |
+| `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", posting what came due         |
+| `domain/budgets.js`         | Spent and left of a budget in its period                                           |
+| `domain/accounts.js`        | Account form state, checks, storing, favorite, deletion                            |
+| `domain/categories.js`      | Storing with subcategory changes, deleting, moving, merging                        |
+| `domain/currency-change.js` | Plan and apply a currency change of an account or of the application               |
+| `domain/ordering.js`        | Manual order of accounts and categories                                            |
+| `domain/backups.js`         | Snapshot, create, restore, delete backups                                          |
+| `domain/currency-search.js` | Find a currency while typing                                                       |
 
 ## ui — reusable pieces
 
@@ -67,7 +67,7 @@ confirmations, prompts, option lists, menus), and pickers: `calendar`, `currency
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `screens/accounts/`                                  | `list` (tab), `actions` (account sheet), `edit`, `type`, `progress`, `currency-change`                         |
 | `screens/categories.js`                              | Categories tab, editor, subcategory menus, manage page                                                         |
-| `screens/operations/`                                | `list` (tab and filtered list), `add-menu`, `filters`, `schedule-filter`, `bulk-edit`                          |
+| `screens/operations/`                                | `list` (tab and filtered list), `add-menu`, `filters`, `bulk-edit`                                             |
 | `screens/operation-editor/`                          | `start` (open), `view` (compose), `parties`, `amount`, `keypad`, `extras`, `actions`, `editor` (state, saving) |
 | `screens/operation-title.js`                         | Title of an operation row                                                                                      |
 | `screens/pickers.js`                                 | Account and category pickers used everywhere                                                                   |

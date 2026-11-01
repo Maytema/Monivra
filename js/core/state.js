@@ -31,11 +31,8 @@ export const emptyFilters = () => ({
   types: null,
   tags: null,
   comment: "",
-  // Kinds of operations to show (by hand, paid by schedule, changed after that, upcoming); null
-  // is everything that has happened.
-  kinds: null,
-  // Budgets whose operations to show; null is all.
-  budgets: null,
+  // Operations made by a scheduled payment: null shows everything, "only" those, "exclude" hides them.
+  scheduled: null,
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {
@@ -49,8 +46,6 @@ export const uiState = {
   selection: false,
   search: false,
   filters: emptyFilters(),
-  // Budgets page: statuses of the budgets to show; null is all.
-  budgetStatuses: null,
   donut: null,
   // Scheduled payments posted on their own since the person last looked.
   paymentsPosted: 0,
@@ -60,9 +55,9 @@ export const uiState = {
 };
 // Deleted records can no longer be selected or filtered by: `removed` lists their ids.
 export function forgetDeleted(removed) {
-  const gone = { operations: [], accounts: [], categories: [], budgets: [], ...removed };
+  const gone = { operations: [], accounts: [], categories: [], ...removed };
   uiState.selected = uiState.selected.filter((id) => !gone.operations.includes(id));
-  for (const key of ["accounts", "categories", "budgets"]) {
+  for (const key of ["accounts", "categories"]) {
     const rest = uiState.filters[key]?.filter((id) => !gone[key].includes(id));
     if (rest) uiState.filters[key] = rest.length ? rest : null;
   }

@@ -78,24 +78,19 @@ A scheduled payment is a record in `appData.scheduled` shaped like an operation,
 `reminder`, `time` (optional "HH:MM") and `anchorDay` (the day a monthly or yearly rule keeps).
 `domain/scheduled.js` finds its next date and posts what came due: at launch and when the app
 comes back to the screen, every occurrence up to today becomes an operation dated on its due day.
-The operation carries `fromSchedule: { id, date, planned }`: which payment, which occurrence
-(an occurrence is posted once) and what was planned, so `editedFromPlan` can tell a changed one.
+The operation carries `fromSchedule: { id, date }`: which payment and which occurrence (an occurrence is posted
+once).
 An operation dated after today is not kept among the operations: `putOperation` stores it as a
 one-time scheduled payment.
 
 ## Filters of the history
 
-`uiState.filters` is `{ accounts, categories, types, tags, comment, kinds, budgets }`; `null` is
+`uiState.filters` is `{ accounts, categories, types, tags, comment, scheduled }`; `null` is
 "everything". A field is an OR over its choices and the fields are ANDed
-(`fieldsMatch` in `domain/finance.js`). Categories are matched by exact id: choosing a subcategory
-alone shows only its operations, not the parent's and not a same-named one under another parent;
-transfers have no category, so any category filter leaves them out.
-`kinds` splits operations by origin (`scheduleKind`: by hand, paid by schedule, changed after that)
-and adds `upcoming`, payments that have not happened yet; `null` means the first three.
-Upcoming payments are not operations: `upcomingOperations` (`domain/scheduled.js`) lists each
-date of every schedule within the period (the next one only for "All time"), passing the same
-filters; they are drawn in the list but never counted, and a tap opens the scheduled payment.
-`budgets` keeps the operations a budget counts (`budgetTakes`); the budget's own period does not
-matter here, the period bar does. The Budgets page has its own filter by state
-(`BUDGET_STATUSES` in `domain/budgets.js`) in `uiState.budgetStatuses`.
-The period bar steps with `shiftPeriod`; "All time" has no neighbours, so the arrows are disabled.
+(`operationMatchesFilters` in `domain/finance.js`). Categories are matched by exact id: choosing a
+subcategory alone shows only its operations, not the parent's and not a same-named one under
+another parent; transfers have no category, so any category filter leaves them out.
+`scheduled` is `null` (all), `"only"` (operations a scheduled payment made, they have
+`fromSchedule`) or `"exclude"`. The history holds only what has happened; payments still to come
+are listed in their own section. The period bar steps with `shiftPeriod`; "All time" has no
+neighbours, so the arrows are disabled.

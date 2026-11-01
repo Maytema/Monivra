@@ -11,11 +11,9 @@ import {
   categoryTotal,
   categoryTotalIn,
   canShiftPeriod,
-  editedFromPlan,
   operationMatchesFilters,
   shiftPeriod,
 } from "../js/domain/finance.js";
-import { budgetState } from "../js/domain/budgets.js";
 import {
   applyBulkChanges,
   emptyBulkChanges,
@@ -23,7 +21,8 @@ import {
   validateOp,
 } from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
-import { nextDate, postDue, processScheduled, upcomingOperations } from "../js/domain/scheduled.js";
+import { budgetState } from "../js/domain/budgets.js";
+import { nextDate, postDue, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
 const scheduledExpense = (date, recur) => {
@@ -296,18 +295,15 @@ check("A payment that is not due yet stays untouched", () => {
   return postDue() === 0 && appData.ops.length === count && item.date === later;
 });
 
-check("A posted payment remembers where it came from and what was planned", () => {
+check("A posted payment remembers which payment and occurrence it came from", () => {
   const item = scheduledExpense(addDays(TODAY, -1), null);
   postDue();
   const posted = appData.ops.at(-1);
-  const plan = posted.fromSchedule?.planned;
   return (
     posted.fromSchedule.id === item.id &&
     posted.fromSchedule.date === item.date &&
-    plan.amount === item.amount &&
-    plan.date === posted.date &&
-    !posted.recur &&
-    !editedFromPlan(posted)
+    posted.date === item.date &&
+    !posted.recur
   );
 });
 
@@ -393,9 +389,10 @@ check("A bulk change of the date to the future moves those operations to the pay
   );
 });
 
-// Posts three days of a daily payment, then changes the first operation's amount and the second's
-// day: one operation is "changed" in the amount, one in the day, the third stays "paid".
-const dailyPayments = () => {
+const pick = (filter, list = appData.ops) =>
+  list.filter((o) => operationMatchesFilters(o, { ...emptyFilters(), ...filter }));
+
+check("The filter shows operations of scheduled payments, or leaves them out", () => {
   const item = scheduledExpense(addDays(TODAY, -2), {
     every: 1,
     unit: "Days",
@@ -403,130 +400,41 @@ const dailyPayments = () => {
     days: [],
   });
   postDue();
-  const made = appData.ops.filter((o) => o.fromSchedule?.id === item.id);
-  made[0].amount += 100;
-  made[1].date = addDays(made[1].date, 1);
-  return { item, made };
-};
-const pick = (filter, list = appData.ops) =>
-  list.filter((o) => operationMatchesFilters(o, { ...emptyFilters(), ...filter }));
-
-check("The filter tells operations by hand, paid and changed ones apart and combines them", () => {
-  const { made } = dailyPayments();
-  const rest = appData.ops.length - made.length;
+  const made = appData.ops.filter((o) => o.fromSchedule?.id === item.id).length;
   return (
-    made.length === 3 &&
+    made === 3 &&
     pick({}).length === appData.ops.length &&
-    pick({ kinds: ["manual"] }).length === rest &&
-    pick({ kinds: ["paid"] }).length === 1 &&
-    pick({ kinds: ["changed"] }).length === 2 &&
-    pick({ kinds: ["paid", "changed"] }).length === 3 &&
-    pick({ kinds: ["manual", "changed"] }).length === rest + 2 &&
-    pick({ kinds: ["upcoming"] }).length === 0
+    pick({ scheduled: "only" }).length === 3 &&
+    pick({ scheduled: "exclude" }).length === appData.ops.length - 3
   );
 });
 
-check("Payments still to come are listed only when asked for, on their dates in the period", () => {
-  const item = scheduledExpense(addDays(TODAY, 1), {
-    every: 1,
-    unit: "Days",
-    remaining: null,
-    days: [],
-  });
-  const before = deepClone(uiState.period);
-  uiState.period = { mode: "range", from: addDays(TODAY, 1), to: addDays(TODAY, 5) };
-  const shown = upcomingOperations({ ...emptyFilters(), kinds: ["upcoming"] });
-  const hidden = upcomingOperations(emptyFilters());
-  const elsewhere = upcomingOperations({
-    ...emptyFilters(),
-    kinds: ["upcoming"],
-    accounts: ["__none"],
-  });
-  uiState.period = { mode: "all", anchor: TODAY };
-  const next = upcomingOperations({ ...emptyFilters(), kinds: ["upcoming"] });
-  uiState.period = before;
-  return (
-    shown.length === 5 &&
-    shown.every((o) => o.upcoming && o.id === item.id) &&
-    shown[0].date === addDays(TODAY, 1) &&
-    shown[4].date === addDays(TODAY, 5) &&
-    hidden.length === 0 &&
-    elsewhere.length === 0 &&
-    next.length === 1 &&
-    appData.scheduled[0].date === addDays(TODAY, 1)
-  );
-});
-
-check("A budget filter shows the operations the budget counts, several budgets together", () => {
+check("A budget counts the expenses of its categories and subcategories in its period", () => {
   const food = appData.categories.find((c) => c.type === "expense" && !c.parent);
-  const other = appData.categories.find(
-    (c) => c.type === "expense" && !c.parent && c.id !== food.id,
-  );
-  const sub = { ...food, id: "bsub", name: "Bakery", parent: food.id };
-  appData.categories.push(sub);
+  appData.categories.push({ ...food, id: "bsub", name: "Bakery", parent: food.id });
   const base = appData.ops.find((o) => o.type === "expense");
-  const make = (id, category, type = "expense") => ({ ...base, id, category, type });
-  const ops = [
-    make("in-food", food.id),
-    make("in-sub", "bsub"),
-    make("in-other", other.id),
-    make("income", food.id, "income"),
-  ];
-  const budget = (id, categories) => ({
+  const spent = (id, category, amount) => ({
+    ...base,
     id,
-    name: id,
+    category,
+    amount,
+    date: TODAY,
+    fees: [],
+    foreign: undefined,
+  });
+  appData.ops = [spent("a", food.id, 300), spent("b", "bsub", 200), spent("c", "other", 900)];
+  uiState.period = { mode: "month", anchor: TODAY };
+  const budget = (categories) => ({
+    id: "x",
+    name: "x",
     currency: appData.settings.currency,
     amount: 1000,
     period: "month",
     categories,
   });
-  appData.budgets = [
-    budget("b-food", [food.id]),
-    budget("b-other", [other.id]),
-    budget("b-all", null),
-  ];
-  const ids = (budgets) => pick({ budgets }, ops).map((o) => o.id);
+  const own = budgetState(budget([food.id]));
   return (
-    ids(["b-food"]).join() === "in-food,in-sub" &&
-    ids(["b-other"]).join() === "in-other" &&
-    ids(["b-food", "b-other"]).join() === "in-food,in-sub,in-other" &&
-    ids(["b-all"]).join() === "in-food,in-sub,in-other" &&
-    ids(["missing"]).length === 0 &&
-    ids(null).length === 4
-  );
-});
-
-check("A deleted budget leaves the filter", () => {
-  uiState.filters = { ...emptyFilters(), budgets: ["a", "b"] };
-  forgetDeleted({ budgets: ["a"] });
-  const rest = uiState.filters.budgets.join();
-  forgetDeleted({ budgets: ["b"] });
-  const none = uiState.filters.budgets;
-  uiState.filters = emptyFilters();
-  return rest === "b" && none === null;
-});
-
-check("A budget is unused, within its limit or over it", () => {
-  const food = appData.categories.find((c) => c.type === "expense" && !c.parent);
-  const base = appData.ops.find((o) => o.type === "expense");
-  appData.ops = [{ ...base, id: "spent", category: food.id, date: TODAY, amount: 500, fees: [] }];
-  uiState.period = { mode: "month", anchor: TODAY };
-  const budget = (amount, categories) => ({
-    id: "x",
-    name: "x",
-    currency: appData.settings.currency,
-    amount,
-    period: "month",
-    categories,
-  });
-  const other = appData.categories.find(
-    (c) => c.type === "expense" && !c.parent && c.id !== food.id,
-  );
-  return (
-    budgetState(budget(1000, [other.id])).status === "unused" &&
-    budgetState(budget(1000, [food.id])).status === "used" &&
-    budgetState(budget(500, [food.id])).status === "used" &&
-    budgetState(budget(499, [food.id])).status === "exceeded"
+    own.used === 500 && own.left === 500 && own.share === 50 && budgetState(budget([])).used === 0
   );
 });
 

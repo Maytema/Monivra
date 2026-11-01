@@ -437,11 +437,6 @@
   color: white;
   font-size: 16px;
 }
-.filter-choice small {
-  display: block;
-  color: var(--muted);
-  font-size: 13px;
-}
 .filter-choice .checkbox {
   order: 3;
   margin-left: auto;
@@ -661,15 +656,4 @@
 .filter-tools {
   display: flex;
   align-items: center;
-}
-/* A payment that has not happened yet, among the operations of the history */
-.op-row.upcoming {
-  opacity: 0.75;
-}
-.op-upcoming {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--accent);
-  font-size: 13px;
 }

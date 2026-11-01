@@ -63,17 +63,8 @@ function operationProblem(o, x, accountIds, categories, seen) {
   )
     return "the day of the repeat is not valid";
   const link = o.fromSchedule;
-  if (link) {
-    const plan = link.planned;
-    if (
-      typeof link.id !== "string" ||
-      !validDate(link.date) ||
-      !plan ||
-      !validDate(plan.date) ||
-      !Number.isSafeInteger(plan.amount)
-    )
-      return "the scheduled payment it came from is not valid";
-  }
+  if (link && (typeof link.id !== "string" || !validDate(link.date)))
+    return "the scheduled payment it came from is not valid";
   return null;
 }
 // First problem of a dataset as { what, number, reason }, or null when the data is valid.

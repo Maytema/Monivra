@@ -8,9 +8,46 @@ import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { promptText } from "../../ui/dialogs.js";
 import { badgeHtml, buttonHtml, fieldButtonHtml, sheetFooterHtml } from "../../ui/primitives.js";
 import { filterCategorySelect } from "./category-filter.js";
-import { multiSelect, pickerHtml, summaryHtml } from "./filter-parts.js";
+import { checkboxHtml, pickerHtml, summaryHtml } from "./filter-parts.js";
 import { registerAction } from "../../ui/handlers.js";
-import { scheduleFilterSelect, scheduleFilterSummary } from "./schedule-filter.js";
+
+// Multi-select sheet: one group whose head chooses everything or nothing.
+function multiSelect(title, items, selected, done) {
+  const values = new Set(selected ?? items.map((item) => item.id));
+  const toggleAll = () => {
+    const all = values.size === items.length;
+    values.clear();
+    if (!all) items.forEach((item) => values.add(item.id));
+    render();
+  };
+  const toggle = (id) => {
+    if (!values.delete(id)) values.add(id);
+    render();
+  };
+  const listHtml = () => {
+    const head = buttonHtml(
+      `<strong>${translate("Select all")}</strong><small>${values.size}/${items.length}</small>${checkboxHtml(items.length > 0 && values.size === items.length)}`,
+      toggleAll,
+      "filter-group-head filter-group-all",
+    );
+    const rows = items.map((item) =>
+      buttonHtml(
+        `${checkboxHtml(values.has(item.id))}<span>${escapeHtml(item.name)}</span>`,
+        () => toggle(item.id),
+        "filter-choice",
+      ),
+    );
+    return `<div class="filter-group">${head}${rows.join("")}</div>`;
+  };
+  openSheet(
+    () =>
+      pickerHtml(title, summaryHtml(values.size), listHtml(), () => {
+        closeLayers();
+        done(values.size === items.length ? null : [...values]);
+      }),
+    title,
+  );
+}
 
 // Account selection grouped by account type.
 function filterAccountSelect(selected, done) {
@@ -60,6 +97,40 @@ function filterAccountSelect(selected, done) {
         },
       ),
     "Accounts",
+  );
+}
+
+// What the filter shows of the operations that scheduled payments made.
+const SCHEDULED_CHOICES = [
+  [null, "All operations"],
+  ["only", "Only by schedule"],
+  ["exclude", "Without scheduled payments"],
+];
+
+// Choice of whether to show the operations that scheduled payments made.
+function scheduledSelect(current, done) {
+  let chosen = current;
+  openSheet(
+    () =>
+      pickerHtml(
+        "Scheduled payments",
+        "",
+        `<div class="filter-group">${SCHEDULED_CHOICES.map(([value, label]) =>
+          buttonHtml(
+            `<span class="grow">${translate(label)}</span><input type="radio" tabindex="-1" ${chosen === value ? "checked" : ""} aria-label="${escapeHtml(translate(label))}">`,
+            () => {
+              chosen = value;
+              render();
+            },
+            "filter-choice",
+          ),
+        ).join("")}</div>`,
+        () => {
+          closeLayers();
+          done(chosen);
+        },
+      ),
+    "Scheduled payments",
   );
 }
 
@@ -126,11 +197,14 @@ export function filters() {
           },
           "Comment",
         ),
-      )}${fieldButtonHtml("Scheduled payments and budgets", scheduleFilterSummary(f), () =>
-        scheduleFilterSelect(f, (v) => {
-          Object.assign(f, v);
-          render();
-        }),
+      )}${fieldButtonHtml(
+        "Scheduled payments",
+        SCHEDULED_CHOICES.find(([value]) => value === f.scheduled)[1],
+        () =>
+          scheduledSelect(f.scheduled, (v) => {
+            f.scheduled = v;
+            render();
+          }),
       )}</div>${sheetFooterHtml(
         buttonHtml(
           "Reset all",

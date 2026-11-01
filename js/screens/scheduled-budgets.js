@@ -1,7 +1,7 @@
 /* Scheduled payments and budgets */
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, timeNow, TODAY } from "../core/constants.js";
-import { appData, forgetDeleted, uiState } from "../core/state.js";
+import { appData, uiState } from "../core/state.js";
 import {
   categoryById,
   convertCurrency,
@@ -10,14 +10,13 @@ import {
   parseDate,
   periodTitle,
 } from "../domain/finance.js";
-import { BUDGET_STATUS_NAMES, BUDGET_STATUSES, budgetState } from "../domain/budgets.js";
+import { budgetState } from "../domain/budgets.js";
 import { currencyName, translate } from "../i18n/index.js";
 import { percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
-import { multiSelect } from "./operations/filter-parts.js";
-import { filteredBannerHtml, opRow } from "./operations/list.js";
+import { opRow } from "./operations/list.js";
 import {
   recurLabel,
   recurrence,
@@ -191,46 +190,21 @@ const budgetGroup = (period, states) => {
     main,
   )}</small><strong class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
 };
-// Choice of the budgets to show by where they stand against their limit.
-function budgetFilter() {
-  multiSelect(
-    "Budgets",
-    BUDGET_STATUSES.map((id) => ({ id, name: BUDGET_STATUS_NAMES[id] })),
-    uiState.budgetStatuses,
-    (chosen) => {
-      uiState.budgetStatuses = chosen;
-      render();
-    },
-  );
-}
 // Budgets list page: budgets grouped by period.
 export function budgetsView() {
-  const all = appData.budgets.map(budgetState),
-    states = uiState.budgetStatuses
-      ? all.filter((st) => uiState.budgetStatuses.includes(st.status))
-      : all;
-  const banner = uiState.budgetStatuses
-    ? filteredBannerHtml(budgetFilter, () => {
-        uiState.budgetStatuses = null;
-        render();
-      })
-    : "";
-  const groups = Object.keys(BUDGET_PERIODS)
-    .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
-    .filter(({ list }) => list.length)
-    .map(({ period, list }) => budgetGroup(period, list))
-    .join("");
+  const states = appData.budgets.map(budgetState);
   return (
-    pageHeader("Budgets", all.length ? iconButtonHtml("filter", "Filters", budgetFilter) : "") +
+    pageHeader("Budgets") +
     periodBar() +
-    banner +
     `<div class="content">${
-      !all.length
-        ? `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
-        : states.length
-          ? groups
-          : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Nothing found</h2><p class="muted">No budget matches the filter</p></div>`
-    }</div>${all.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
+      states.length
+        ? Object.keys(BUDGET_PERIODS)
+            .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
+            .filter(({ list }) => list.length)
+            .map(({ period, list }) => budgetGroup(period, list))
+            .join("")
+        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+    }</div>${states.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
   );
 }
 
@@ -322,7 +296,6 @@ export function budgetView(p) {
                 "Delete this budget?",
                 () => {
                   appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
-                  forgetDeleted({ budgets: [b.id] });
                   finishFlow("Budget deleted");
                 },
                 true,

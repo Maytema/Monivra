@@ -300,81 +300,24 @@ const scenarios = {
     expect(operations).toBe(false);
     expect(scheduled).toBe(true);
   },
-  async "kinds of payments are combined in the filter and upcoming ones open for editing"(page) {
+  async "operations of scheduled payments can be shown alone or left out of the history"(page) {
     await tab(page, "Operations");
     await page.getByLabel("Operation search").first().click();
-    const setKinds = async (...wanted) => {
+    const choose = async (choice) => {
       await page.locator("[aria-label=Filters]").first().click();
-      await page
-        .locator(".panel .field", { hasText: "Scheduled payments and budgets" })
-        .first()
-        .click();
-      for (const name of ["Entered by hand", "Paid by schedule", "Changed by me", "Upcoming"]) {
-        const row = page.locator(".filter-choice", { hasText: new RegExp(`^${name}`) });
-        const on = (await row.locator(".checkbox.on").count()) > 0;
-        if (on !== wanted.includes(name)) await row.click();
-      }
+      await page.locator(".panel .field", { hasText: "Scheduled payments" }).first().click();
+      await page.locator(".filter-choice", { hasText: choice }).click();
       await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
       await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
     };
     const shown = () => page.locator(".op-row").count();
     await page.locator(".op-row").first().waitFor();
     const all = await shown();
-    expect(await page.locator(".op-upcoming").count()).toBe(0);
-    await setKinds("Paid by schedule", "Changed by me");
+    expect(await page.locator(".op-row[data-operation^=plan] .op-name svg").count()).toBe(2);
+    await choose("Only by schedule");
     expect(await shown()).toBe(2);
-    await setKinds("Changed by me");
-    expect(await shown()).toBe(1);
-    await setKinds("Entered by hand", "Changed by me");
-    expect(await shown()).toBe(all - 1);
-    // The upcoming payment is on tomorrow; on the last day of a month that is the next period.
-    if (new Date(Date.now() + 86400000).getDate() === 1)
-      await page.getByLabel("Next period").first().click();
-    await setKinds("Upcoming");
-    expect(await shown()).toBe(1);
-    expect(await page.locator(".op-upcoming").count()).toBe(1);
-    await setKinds("Paid by schedule", "Upcoming");
-    expect(await shown()).toBe(2);
-    await page.locator(".op-row.upcoming").click();
-    await page.getByRole("button", { name: "Add now" }).waitFor();
-  },
-  async "budgets narrow the history to the operations they count"(page) {
-    await tab(page, "Operations");
-    await page.getByLabel("Operation search").first().click();
-    await page.locator(".op-row").first().waitFor();
-    const all = await page.locator(".op-row").count();
-    await page.locator("[aria-label=Filters]").first().click();
-    await page
-      .locator(".panel .field", { hasText: "Scheduled payments and budgets" })
-      .first()
-      .click();
-    const everything = page.locator(".filter-choice", { hasText: "Everything else" });
-    expect(await everything.getByText("Limit exceeded").count()).toBe(1);
-    await everything.click();
-    await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
-    await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
-    const counted = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
-      const month = new Date().toLocaleDateString("en-CA").slice(0, 7);
-      const category = data.budgets.find((b) => b.id === "one").categories[0];
-      return data.ops.filter(
-        (o) => o.date.startsWith(month) && o.type === "expense" && o.category === category,
-      ).length;
-    });
-    expect(counted >= 2 && counted < all).toBe(true);
-    expect(await page.locator(".op-row").count()).toBe(counted);
-  },
-  async "the budgets page hides the budgets by their state and the filter is cleared"(page) {
-    await tab(page, "More");
-    await page.getByText("Budgets", { exact: true }).first().click();
-    await page.locator(".budget-card").first().waitFor();
-    expect(await page.locator(".budget-card").count()).toBe(3);
-    await page.locator("[aria-label=Filters]").first().click();
-    await page.locator(".filter-choice", { hasText: "Not used" }).click();
-    await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
-    expect(await page.locator(".budget-card").count()).toBe(2);
-    await page.getByLabel("Clear filters").click();
-    expect(await page.locator(".budget-card").count()).toBe(3);
+    await choose("Without scheduled payments");
+    expect(await shown()).toBe(all - 2);
   },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
@@ -452,26 +395,15 @@ const adjustments = {
     const day = new Date().toLocaleDateString("en-CA");
     data.ops.push({ ...base, id: "today", date: day });
   },
-  "kinds of payments are combined in the filter and upcoming ones open for editing": (data) => {
+  "operations of scheduled payments can be shown alone or left out of the history": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const day = new Date().toLocaleDateString("en-CA");
-    const tomorrow = new Date(Date.now() + 86400000).toLocaleDateString("en-CA");
-    const planned = {
-      date: day,
-      amount: base.amount,
-      from: base.from,
-      to: base.to ?? null,
-      category: base.category,
-    };
-    const link = { id: "plan", date: day, planned };
+    const link = { id: "plan", date: day };
     data.ops.push(
       { ...base, id: "plan-a", date: day, fromSchedule: link },
-      { ...base, id: "plan-b", date: day, amount: base.amount + 100, fromSchedule: link },
+      { ...base, id: "plan-b", date: day, fromSchedule: link },
     );
-    data.scheduled.push({ ...base, id: "later", date: tomorrow, recur: null, reminder: null });
   },
-  "budgets narrow the history to the operations they count": addBudgets,
-  "the budgets page hides the budgets by their state and the filter is cleared": addBudgets,
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
@@ -483,43 +415,6 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
-// Operations of today in two categories, and three budgets: all expenses (over its limit at once),
-// one category and a category nothing is spent in.
-function addBudgets(data) {
-  const base = data.ops.find((op) => op.type === "expense");
-  const day = new Date().toLocaleDateString("en-CA");
-  const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
-  data.ops.push(
-    { ...base, id: "t1", date: day },
-    { ...base, id: "t2", date: day },
-    { ...base, id: "t3", date: day, category: elsewhere.id },
-  );
-  data.budgets.push({
-    id: "all",
-    name: "Everything else",
-    currency: data.settings.currency,
-    amount: 1,
-    period: "month",
-    categories: null,
-  });
-  data.categories.push({ ...elsewhere, id: "idle-cat", name: "Idle" });
-  data.budgets.push({
-    id: "idle",
-    name: "Idle",
-    currency: data.settings.currency,
-    amount: 100000000,
-    period: "month",
-    categories: ["idle-cat"],
-  });
-  data.budgets.push({
-    id: "one",
-    name: "Only one",
-    currency: data.settings.currency,
-    amount: 100000000,
-    period: "month",
-    categories: [base.category],
-  });
-}
 function addSubcategories(data) {
   const food = data.categories.find((category) => category.name === "Food");
   for (const name of ["Market", "Cafe"])
