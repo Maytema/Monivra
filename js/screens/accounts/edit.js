@@ -1,3 +1,4 @@
+/* Account editor: the form, saving, archiving and deleting */
 import { render } from "../../app/shell.js";
 import { escapeHtml } from "../../core/constants.js";
 import { forgetDeleted, uiState } from "../../core/state.js";

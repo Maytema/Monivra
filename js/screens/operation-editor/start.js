@@ -1,3 +1,4 @@
+/* Opening the editor: a fresh draft and the choices a new operation needs first */
 import { deepClone, TODAY } from "../../core/constants.js";
 import { appData } from "../../core/state.js";
 import { accountById, categoryById } from "../../domain/finance.js";

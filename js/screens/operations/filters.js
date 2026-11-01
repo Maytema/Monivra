@@ -1,3 +1,4 @@
+/* Filters of the operations list */
 import { render } from "../../app/shell.js";
 import { deepClone, escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData, emptyFilters, uiState } from "../../core/state.js";

@@ -1,3 +1,4 @@
+/* Operations tab and the filtered list: rows, days, balance summary and selection */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData, emptyFilters, uiState } from "../../core/state.js";

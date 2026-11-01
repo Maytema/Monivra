@@ -1,3 +1,4 @@
+/* Accounts tab: the header block, the groups of accounts and their totals */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData, uiState } from "../../core/state.js";

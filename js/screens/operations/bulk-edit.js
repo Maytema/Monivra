@@ -1,3 +1,4 @@
+/* Selection mode of the operations list: delete, change the date, edit many at once */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, TODAY } from "../../core/constants.js";
 import { appData, uiState } from "../../core/state.js";

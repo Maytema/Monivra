@@ -1,3 +1,4 @@
+/* Display title of an operation */
 import { categoryById } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
 

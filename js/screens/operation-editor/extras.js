@@ -1,3 +1,4 @@
+/* Comment, tags and photos of the operation being edited */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, MAX_PHOTOS } from "../../core/constants.js";
 import { appData } from "../../core/state.js";

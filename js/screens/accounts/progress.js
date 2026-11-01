@@ -1,3 +1,4 @@
+/* Progress of a goal or a debt repayment: percent, meter and the block in the account sheet */
 import { accountProgress, debtDirection, formatMoney } from "../../domain/finance.js";
 import { translate, translateWith } from "../../i18n/index.js";
 import { meterHtml } from "../../ui/primitives.js";

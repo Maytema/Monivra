@@ -1,3 +1,4 @@
+/* Choice of the account type: a page for a new account, a sheet for an existing one */
 import { render } from "../../app/shell.js";
 import { iconSvg } from "../../core/constants.js";
 import { uiState } from "../../core/state.js";

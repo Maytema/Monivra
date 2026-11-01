@@ -1,3 +1,4 @@
+/* Sheet with the actions of an account (new operation, transfer, favorite, edit) and its progress */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, TODAY } from "../../core/constants.js";
 import { uiState } from "../../core/state.js";

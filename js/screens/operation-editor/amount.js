@@ -1,3 +1,4 @@
+/* The amount of the editor: typing, the calculator and the two sides of a cross-currency operation */
 import { render } from "../../app/shell.js";
 import { escapeHtml } from "../../core/constants.js";
 import {

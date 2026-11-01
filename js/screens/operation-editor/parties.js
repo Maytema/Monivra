@@ -1,3 +1,4 @@
+/* Who takes part in the operation: the two tiles, subcategories and the pickers behind them */
 import { render } from "../../app/shell.js";
 import { escapeHtml } from "../../core/constants.js";
 import { appData } from "../../core/state.js";

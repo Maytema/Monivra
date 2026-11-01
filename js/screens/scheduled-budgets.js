@@ -1,4 +1,4 @@
-/* Recurrence, reminders, scheduled payments and budgets */
+/* Scheduled payments and budgets */
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";

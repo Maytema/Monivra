@@ -1,3 +1,4 @@
+/* State of one open operation editor and saving of the operation */
 import { render } from "../../app/shell.js";
 import { uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";

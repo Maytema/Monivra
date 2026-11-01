@@ -1,3 +1,4 @@
+/* The menu that starts a new operation, transfer or scheduled payment */
 import { render } from "../../app/shell.js";
 import { escapeHtml } from "../../core/constants.js";
 import { appData } from "../../core/state.js";

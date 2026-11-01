@@ -1,3 +1,4 @@
+/* Dialog that asks how an account changes its currency */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { accountById, currencyRatio, formatMoney, quoteRate } from "../../domain/finance.js";

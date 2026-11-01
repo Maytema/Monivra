@@ -1,3 +1,4 @@
+/* Actions of an opened operation: delete, duplicate, skip or add a scheduled payment */
 import { render } from "../../app/shell.js";
 import { deepClone, iconSvg } from "../../core/constants.js";
 import { forgetDeleted, uiState } from "../../core/state.js";

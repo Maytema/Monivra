@@ -1,3 +1,4 @@
+/* Keypad of the editor and the sheet with additional options */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { accountBalance, accountById } from "../../domain/finance.js";

@@ -1,3 +1,4 @@
+/* The whole operation editor sheet */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { dateLabel, parseDate, toIsoDate } from "../../domain/finance.js";
