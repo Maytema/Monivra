@@ -693,3 +693,7 @@ button.calc-tags {
   width: 100%;
   text-align: left;
 }
+/* The category itself, not one of its subcategories. */
+.calc-sub-parent {
+  border-style: dashed;
+}

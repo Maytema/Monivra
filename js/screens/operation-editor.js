@@ -303,7 +303,7 @@ function accountCalculatorView(p) {
       buttonHtml(
         escapeHtml(label),
         () => pickSubcategory(id, parentChosen),
-        `calc-sub ${active ? "active" : ""}`,
+        `calc-sub ${active ? "active" : ""} ${parentChosen ? "calc-sub-parent" : ""}`,
         `aria-pressed="${active}"`,
       );
     const parentActive = d.category === root.id && (p.editing || p.parentChosen === root.id);
