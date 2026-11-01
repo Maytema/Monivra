@@ -31,7 +31,7 @@ export const escapeHtml = (x) =>
   );
 
 // Inline SVG paths for every icon used in the UI.
-export const ICONS = {
+const ICONS = {
   wallet: "M4 5h15v4H5a2 2 0 0 1 0-4zm-1 2v13h18V9H5m12 4h4v4h-4z",
   card: "M3 5h18v14H3zM3 9h18M6 15h5m4 0h3",
   cash: "M3 6h18v13H3zM7 6c0 3-1 4-4 4m18 5c-3 0-4 1-4 4m-5-9v5m-2-1c2 2 5 0 3-1s-4-1-2-3",

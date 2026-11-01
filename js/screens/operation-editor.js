@@ -1,6 +1,6 @@
 /* Operation editor: pickers, calculator, forms */
 import { render } from "../app/shell.js";
-import { MAX_PHOTOS, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, MAX_PHOTOS, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { photoDataUrl } from "../platform/photo.js";
 import { pickFile } from "../platform/files.js";
@@ -11,11 +11,11 @@ import {
   categoryById,
   convertCurrency,
   currencyRatio,
-  offRate,
-  quoteRate,
   dateLabel,
   evaluateExpression,
+  offRate,
   parseDate,
+  quoteRate,
   toIsoDate,
 } from "../domain/finance.js";
 import { leadingSide } from "../domain/dual-amount.js";
@@ -27,27 +27,21 @@ import { feeBlockHtml, feeDialog, feeLabel } from "./fees.js";
 import { accountCardsHtml, accountPicker, categoryPicker, categoryTilesHtml } from "./pickers.js";
 import { recurrence, reminder, reminderLabel } from "./recurrence.js";
 import { recurLabel, remainingLabel } from "./operations.js";
-import {
-  calendar,
-  closeLayers,
-  confirmAction,
-  openSheet,
-  popupMenu,
-  promptText,
-  tabsHtml,
-} from "../ui/kit.js";
-import { currencyPicker } from "../ui/currency-picker.js";
-import { putAccountOnSide, putCategoryOnSide } from "../domain/sides.js";
+import { calendar } from "../ui/calendar.js";
+import { closeLayers, openSheet } from "../ui/navigation.js";
+import { confirmAction, popupMenu, promptText } from "../ui/dialogs.js";
 import {
   badgeHtml,
+  banner,
   buttonHtml,
   iconButtonHtml,
   menuRowHtml,
-  registerAction,
-  registerInput,
-  banner,
+  tabsHtml,
   toast,
 } from "../ui/primitives.js";
+import { registerAction, registerInput } from "../ui/handlers.js";
+import { currencyPicker } from "../ui/currency-picker.js";
+import { putAccountOnSide, putCategoryOnSide } from "../domain/sides.js";
 
 // Choose a category or an account from the same sheet.
 function counterpartyPicker(direction, d, onChosen = null) {
@@ -229,7 +223,7 @@ function applyEntryCurrency(d) {
   d.amount = convertCurrency(d.amount, entry, account.currency);
 }
 // Save the operation of the open editor.
-export function commitOperation(p) {
+function commitOperation(p) {
   try {
     if (!p.scratchMode && /[+×÷−*/]/.test(String(p.draft.expr).replace(/^-/, "")))
       throw Error("Enable calculator for arithmetic");
@@ -732,7 +726,7 @@ function accountCalculatorView(p) {
   }</div>`;
 }
 // Sheet for choosing tags of an operation: several can be picked, "+ Add" creates a new one.
-export function tagsPicker(d) {
+function tagsPicker(d) {
   let chosen = [...(d.tags || [])];
   const addTag = () =>
     promptText(
@@ -829,7 +823,7 @@ function photoMenu(d) {
   );
 }
 // Full-screen view of an attached photo.
-export function photoViewer(src) {
+function photoViewer(src) {
   openSheet(
     () =>
       `<div class="photo-viewer" data-action="${registerAction(() => closeLayers())}">${iconButtonHtml("close", "Close", () => closeLayers())}<img alt="Photo" src="${escapeHtml(src)}"></div>`,

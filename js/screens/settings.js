@@ -1,22 +1,17 @@
 /* Settings: list of sections and the pages for formatting, styles and elements */
 import { render } from "../app/shell.js";
-import { THEME_COLORS, escapeHtml, iconSvg } from "../core/constants.js";
+import { escapeHtml, iconSvg, THEME_COLORS } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { NUMBER_FORMATS, formatNumber } from "../domain/finance.js";
+import { formatNumber, NUMBER_FORMATS } from "../domain/finance.js";
 import { changeMainCurrency } from "../domain/operations.js";
 import { LANGUAGES, translate } from "../i18n/index.js";
 import { statsSettings } from "./statistics.js";
-import {
-  closeLayers,
-  monthStartDialog,
-  openPage,
-  openSheet,
-  optionSheet,
-  pageHeader,
-} from "../ui/kit.js";
+import { closeLayers, openPage, openSheet } from "../ui/navigation.js";
+import { monthStartDialog } from "../ui/period-picker.js";
+import { optionSheet } from "../ui/dialogs.js";
+import { buttonHtml, menuRowHtml, pageHeader, toggleRowHtml } from "../ui/primitives.js";
 import { currencyPicker } from "../ui/currency-picker.js";
-import { buttonHtml, menuRowHtml, toggleRowHtml } from "../ui/primitives.js";
 
 // Change a setting, persist it and re-render.
 export function setting(key, value) {

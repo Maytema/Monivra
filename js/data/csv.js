@@ -1,5 +1,5 @@
 /* Operations as CSV: writing, reading, and turning rows into operations */
-import { PALETTE, newId } from "../core/constants.js";
+import { newId, PALETTE } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { blankAccount, blankCategory } from "./defaults.js";
 import { accountById, categoryById } from "../domain/finance.js";

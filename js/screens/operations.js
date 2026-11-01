@@ -1,6 +1,6 @@
 /* Operations list, filters, details, bulk actions */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, TODAY } from "../core/constants.js";
 import { appData, emptyFilters, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -15,8 +15,8 @@ import {
   dateLabel,
   defaultAccountId,
   formatMoney,
-  offRate,
   moneySpanHtml,
+  offRate,
   parseDate,
   periodBounds,
   transferRoles,
@@ -25,31 +25,25 @@ import {
 import { validateOp } from "../domain/operations.js";
 import { currentLocale, translate, translateCount, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
-import { opTitle, operationStart } from "./operation-editor.js";
+import { operationStart, opTitle } from "./operation-editor.js";
 import { accountPicker, categoryPicker } from "./pickers.js";
 import { pairRateText } from "../ui/rate-line.js";
-import {
-  calendar,
-  closeLayers,
-  confirmAction,
-  emptyStateHtml,
-  openPage,
-  openSheet,
-  pageHeader,
-  periodBar,
-  promptText,
-  swipePane,
-} from "../ui/kit.js";
+import { calendar } from "../ui/calendar.js";
+import { closeLayers, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, promptText } from "../ui/dialogs.js";
+import { emptyStateHtml } from "../ui/empty-state.js";
 import {
   badgeHtml,
   buttonHtml,
   fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
-  registerAction,
-  registerInput,
+  pageHeader,
+  swipePane,
   toast,
 } from "../ui/primitives.js";
+import { registerAction, registerInput } from "../ui/handlers.js";
+import { periodBar } from "../ui/period-picker.js";
 
 // Change the selection; with nothing left selected the selection mode closes by itself.
 function setSelected(ids) {
@@ -328,7 +322,7 @@ export function operationsMenu() {
   render();
 }
 // Generic multi-select sheet with select-all.
-export function multiSelect(title, items, selected, fn) {
+function multiSelect(title, items, selected, fn) {
   let values = selected ? new Set(selected) : new Set(items.map((i) => i.id));
   openSheet(
     () =>
@@ -583,7 +577,7 @@ function bulkDeleteOperations() {
   );
 }
 // Edit the selected operations at once.
-export function bulkEdit() {
+function bulkEdit() {
   if (!uiState.selected.length) return toast("Select operations");
   const selected = appData.ops.filter((o) => uiState.selected.includes(o.id));
   const d = {

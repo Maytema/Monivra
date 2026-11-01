@@ -1,8 +1,9 @@
 /* Time of day dialog: a dial for the hour and the minute, or two typed fields */
 import { render } from "../app/shell.js";
 import { currentLocale, translate } from "../i18n/index.js";
-import { buttonHtml, iconButtonHtml, registerInput, registerAction, toast } from "./primitives.js";
-import { closeLayers, openSheet } from "./kit.js";
+import { buttonHtml, iconButtonHtml, toast } from "./primitives.js";
+import { registerAction, registerInput } from "./handlers.js";
+import { closeLayers, openSheet } from "./navigation.js";
 
 // The dial is drawn in a box of this size; marks and hands are placed from its centre.
 const DIAL = 256;
@@ -12,7 +13,7 @@ const INNER_RADIUS = 64;
 const INNER_SHARE = 0.62;
 
 // Whether the language of the application writes the time with AM and PM.
-export const twelveHour = () =>
+const twelveHour = () =>
   /^h1[12]$/.test(
     new Intl.DateTimeFormat(currentLocale(), { hour: "numeric" }).resolvedOptions().hourCycle,
   );

@@ -10,7 +10,7 @@ import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
-import { accountEditView, accountTypeView, accountsView } from "../screens/accounts.js";
+import { accountEditView, accountsView, accountTypeView } from "../screens/accounts.js";
 import {
   categoriesView,
   categoryEditView,
@@ -19,17 +19,13 @@ import {
 } from "../screens/categories.js";
 import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
 import { filteredView, operationsFab, operationsView } from "../screens/operations.js";
-import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
+import { budgetsView, budgetView, scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
 import { welcomeView } from "../screens/welcome.js";
-import { goHome } from "../ui/kit.js";
-import {
-  buttonHtml,
-  setActionHandlers,
-  setHandlerCounter,
-  setInputHandlers,
-} from "../ui/primitives.js";
+import { goHome } from "../ui/navigation.js";
+import { resetHandlers } from "../ui/handlers.js";
+import { buttonHtml } from "../ui/primitives.js";
 
 // Bottom navigation bar.
 function navigationBar() {
@@ -176,9 +172,7 @@ function restoreContainers(app, saved) {
 
 // Re-render the application and restore focus and scroll positions.
 export function render(top = false) {
-  setActionHandlers({});
-  setInputHandlers({});
-  setHandlerCounter(0);
+  resetHandlers();
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
   const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
   const balanceBefore = previousBalance;

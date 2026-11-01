@@ -1,6 +1,6 @@
 /* Currency search: finds a currency by its code, sign, name or country as the text is typed. */
 import { CURRENCIES, currencySymbol } from "../data/currencies.js";
-import { LANGUAGES, currencyName, currentLocale } from "../i18n/index.js";
+import { currencyName, currentLocale, LANGUAGES } from "../i18n/index.js";
 
 // Lower case, without accents and with "ё" written as "е", so typing is forgiving.
 const plain = (text) => text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ё/g, "е");

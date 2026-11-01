@@ -6,8 +6,9 @@ import { CURRENCIES, currencySymbol } from "../data/currencies.js";
 import { save } from "../data/storage.js";
 import { searchCurrencies } from "../domain/currency-search.js";
 import { currencyName, currentLocale, translate } from "../i18n/index.js";
-import { closeLayers, openSheet } from "./kit.js";
-import { buttonHtml, registerInput } from "./primitives.js";
+import { closeLayers, openSheet } from "./navigation.js";
+import { buttonHtml } from "./primitives.js";
+import { registerInput } from "./handlers.js";
 
 const POPULAR = ["USD", "EUR", "GBP", "CNY", "JPY", "CHF", "CAD", "AUD"];
 // Ways to order the list when nothing is typed: label of each.

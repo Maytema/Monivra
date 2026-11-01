@@ -9,17 +9,9 @@ import { printReport } from "./report.js";
 import { findDataProblem, save } from "./storage.js";
 import { dataSnapshot } from "../domain/finance.js";
 import { translate, translateWith } from "../i18n/index.js";
-import {
-  closeLayers,
-  confirmAction,
-  goHome,
-  openPage,
-  openSheet,
-  pageHeader,
-  promptText,
-  showInfo,
-} from "../ui/kit.js";
-import { menuRowHtml, toast } from "../ui/primitives.js";
+import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, promptText, showInfo } from "../ui/dialogs.js";
+import { menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
 
 export function download(name, content, type) {
   saveTextFile(name, content, type);

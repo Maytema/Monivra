@@ -33,7 +33,7 @@ export const emptyFilters = () => ({
   comment: "",
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
-export let uiState = {
+export const uiState = {
   tab: "accounts",
   accountTab: "Accounts",
   catType: "expense",
@@ -55,11 +55,6 @@ export let locked = false;
 export let pinEntry = "";
 export function setAppData(value) {
   appData = value;
-  return value;
-}
-
-export function setUiState(value) {
-  uiState = value;
   return value;
 }
 

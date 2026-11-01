@@ -13,18 +13,17 @@ import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { GUIDES } from "./guides.js";
 import { ratesBody } from "./rates.js";
 import { settingOptions, switchSetting } from "./settings.js";
+import { closeLayers, goBack, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, showInfo } from "../ui/dialogs.js";
+import { numberFieldHtml } from "../ui/number-picker.js";
 import {
-  closeLayers,
-  confirmAction,
-  goBack,
-  goHome,
-  numberFieldHtml,
-  openPage,
-  openSheet,
+  buttonHtml,
+  iconButtonHtml,
+  menuRowHtml,
   pageHeader,
-  showInfo,
-} from "../ui/kit.js";
-import { buttonHtml, iconButtonHtml, menuRowHtml, toast, toggleRowHtml } from "../ui/primitives.js";
+  toast,
+  toggleRowHtml,
+} from "../ui/primitives.js";
 
 // More tab: menu with settings, data and info pages.
 export function moreView() {
@@ -178,7 +177,7 @@ const timeDialog = () =>
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
 // Set or remove the PIN: the digits are typed on the digit keypad.
-export function pinSetup(remove) {
+function pinSetup(remove) {
   let first = "",
     second = "";
   openSheet(

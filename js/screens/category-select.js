@@ -2,7 +2,7 @@
 import { render } from "../app/shell.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData } from "../core/state.js";
-import { closeLayers, openSheet } from "../ui/kit.js";
+import { closeLayers, openSheet } from "../ui/navigation.js";
 import { badgeHtml, buttonHtml, iconButtonHtml } from "../ui/primitives.js";
 import { translate } from "../i18n/index.js";
 

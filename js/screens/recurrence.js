@@ -2,7 +2,9 @@
 import { render } from "../app/shell.js";
 import { deepClone, MAX_INTERVAL } from "../core/constants.js";
 import { translate, translateCount, translateWith } from "../i18n/index.js";
-import { closeLayers, numberPicker, openSheet, optionSheet } from "../ui/kit.js";
+import { closeLayers, openSheet } from "../ui/navigation.js";
+import { numberPicker } from "../ui/number-picker.js";
+import { optionSheet } from "../ui/dialogs.js";
 import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { buttonHtml, dropdownHtml, fieldButtonHtml, stepperHtml, toast } from "../ui/primitives.js";
 import { weekdayName } from "./operations.js";

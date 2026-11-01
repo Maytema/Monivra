@@ -1,6 +1,6 @@
 /* Accounts screens */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -9,17 +9,17 @@ import {
   accountProgress,
   convertCurrency,
   currencyRatio,
-  quoteRate,
   debtDirection,
   formatMoney,
   moneySpanHtml,
   overallBalance,
+  quoteRate,
 } from "../domain/finance.js";
 import {
   accountHasRecords,
   changeAccountCurrency,
-  planCurrencyChange,
   deleteAccount,
+  planCurrencyChange,
   putOperation,
   toggleFavoriteAccount,
   validateOp,
@@ -32,32 +32,24 @@ import { hintHtml } from "../ui/hint.js";
 import { rateText } from "../ui/rate-line.js";
 import {
   actionTileHtml,
-  amountPicker,
-  closeLayers,
-  confirmAction,
-  finishFlow,
-  goBack,
-  goHome,
-  iconPicker,
-  openPage,
-  openSheet,
-  optionSheet,
-  pageHeader,
-  swipePane,
-  tabsHtml,
-} from "../ui/kit.js";
-import { currencyPicker } from "../ui/currency-picker.js";
-import {
   badgeHtml,
   buttonHtml,
   fieldButtonHtml,
   iconButtonHtml,
   meterHtml,
-  registerInput,
+  pageHeader,
+  swipePane,
+  tabsHtml,
   textFieldHtml,
   toast,
   toggleRowHtml,
 } from "../ui/primitives.js";
+import { registerInput } from "../ui/handlers.js";
+import { amountPicker } from "../ui/number-picker.js";
+import { closeLayers, finishFlow, goBack, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, optionSheet } from "../ui/dialogs.js";
+import { iconPicker } from "../ui/icon-picker.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 
 // Header block of the root screens: title, balance and action buttons.
 export function hero() {
@@ -328,7 +320,7 @@ export function accountActions(a) {
 }
 
 // Open the account editor (new account when no argument is given).
-export function editAccount(a) {
+function editAccount(a) {
   const d = a
     ? deepClone(a)
     : {
@@ -362,7 +354,7 @@ export function editAccount(a) {
   openPage(a ? "accountEdit" : "accountType", { draft: d, editing: !!a });
 }
 // Validate and store the account being edited.
-export function saveAccount(p) {
+function saveAccount(p) {
   const d = deepClone(p.draft);
   d.name = String(d.name || "").trim();
   if (!d.name) return toast("Enter a name");

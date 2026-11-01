@@ -1,4 +1,4 @@
-import { setAppData, setFirstLaunch, appData, firstLaunch } from "../js/core/state.js";
+import { appData, firstLaunch, setAppData, setFirstLaunch } from "../js/core/state.js";
 import { createSampleData } from "../js/data/sample.js";
 
 const registered = [];

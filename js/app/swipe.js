@@ -4,14 +4,7 @@ import { render, rootView } from "./shell.js";
 import { deepClone } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { addDays, parseDate, toIsoDate } from "../domain/finance.js";
-import {
-  actionHandlers,
-  handlerCounter,
-  inputHandlers,
-  setActionHandlers,
-  setHandlerCounter,
-  setInputHandlers,
-} from "../ui/primitives.js";
+import { withTemporaryHandlers } from "../ui/handlers.js";
 
 // One gesture recognizer shared by all four root sections.
 // Buttons inside the scrollable content no longer suppress a swipe; controls in sheets do.
@@ -59,39 +52,28 @@ function swipeAdvanceState(direction) {
   uiState.donut = null;
   return true;
 }
+// A detached copy of the screen the swipe leads to; the shown state and handlers stay untouched.
 function swipePreview(direction) {
-  const prior = {
-      accountTab: uiState.accountTab,
-      period: deepClone(uiState.period),
-      donut: uiState.donut,
-    },
-    priorActions = actionHandlers,
-    priorInputs = inputHandlers,
-    priorCounter = handlerCounter;
-  let node = null;
+  const shown = {
+    accountTab: uiState.accountTab,
+    period: deepClone(uiState.period),
+    donut: uiState.donut,
+  };
   try {
     if (!swipeAdvanceState(direction)) return null;
-    setActionHandlers({});
-    setInputHandlers({});
-    setHandlerCounter(0);
     const wrapper = document.createElement("div");
-    wrapper.innerHTML = rootView();
-    node = wrapper.querySelector(".swipe-pane");
+    wrapper.innerHTML = withTemporaryHandlers(rootView);
+    const node = wrapper.querySelector(".swipe-pane");
     if (node) {
       node.querySelectorAll(".fab,.period-arrows").forEach((e) => e.remove());
       node.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
       node.setAttribute("aria-hidden", "true");
       node.setAttribute("inert", "");
     }
+    return node;
   } finally {
-    uiState.accountTab = prior.accountTab;
-    uiState.period = prior.period;
-    uiState.donut = prior.donut;
-    setActionHandlers(priorActions);
-    setInputHandlers(priorInputs);
-    setHandlerCounter(priorCounter);
+    Object.assign(uiState, shown);
   }
-  return node;
 }
 function swipeCleanup(s) {
   if (!s) return;

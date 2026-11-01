@@ -1,7 +1,7 @@
 /* Long press: an operation row starts selection mode; an element with data-hold runs its handler. */
 import { render } from "./shell.js";
 import { uiState } from "../core/state.js";
-import { actionHandlers } from "../ui/primitives.js";
+import { runAction } from "../ui/handlers.js";
 
 const LONG_PRESS_MS = 420;
 const MOVE_TOLERANCE_PX = 15;
@@ -27,7 +27,7 @@ export function initOperationLongPress() {
   // What a long press on the touched element does, or null when nothing.
   const holdAction = (target) => {
     const held = target.closest("[data-hold]");
-    if (held) return () => actionHandlers[held.dataset.hold]?.(held);
+    if (held) return () => runAction(held.dataset.hold, held);
     const row = target.closest(".op-row[data-operation]");
     const blocked =
       uiState.tab !== "operations" ||

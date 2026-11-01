@@ -1,6 +1,6 @@
 /* Categories screens */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -18,29 +18,22 @@ import { categoryMoney, categoryTileHtml } from "./pickers.js";
 import { openFilteredOperations } from "./operations.js";
 import {
   actionTileHtml,
-  closeLayers,
-  confirmAction,
-  finishFlow,
-  goBack,
-  iconPicker,
-  openPage,
-  openSheet,
-  pageHeader,
-  periodBar,
-  promptText,
-  swipePane,
-  tabsHtml,
-} from "../ui/kit.js";
-import { currencyPicker } from "../ui/currency-picker.js";
-import {
   badgeHtml,
   buttonHtml,
   fieldButtonHtml,
   iconButtonHtml,
   menuRowHtml,
+  pageHeader,
+  swipePane,
+  tabsHtml,
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
+import { closeLayers, finishFlow, goBack, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, promptText } from "../ui/dialogs.js";
+import { iconPicker } from "../ui/icon-picker.js";
+import { periodBar } from "../ui/period-picker.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 
 // Screen for changing the order of accounts or categories.
 export function orderView(kind) {
@@ -155,7 +148,7 @@ function operationsUsing(id) {
   return [...appData.ops, ...appData.scheduled].filter((o) => ids.includes(o.category)).length;
 }
 // Open the category editor (new category when no argument is given).
-export function editCategory(c, parent = null) {
+function editCategory(c, parent = null) {
   openPage("categoryEdit", {
     editing: !!c,
     draft: c
@@ -289,7 +282,7 @@ function categorySubMenu(p, id) {
 }
 // Validate and store the category being edited.
 // `relocate` nests the category into another one or merges it into it ({ mode, target }).
-export function saveCategory(p, relocate = null) {
+function saveCategory(p, relocate = null) {
   const d = p.draft;
   if (!d.name.trim()) return toast("Enter a name");
   const apply = () => {

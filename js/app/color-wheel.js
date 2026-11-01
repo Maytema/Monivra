@@ -1,6 +1,6 @@
 /* Color wheel: a hue ring with a saturation/brightness square (turned 45°) inside it. */
 import { hexToHsv, hsvToHex } from "../core/color.js";
-import { actionHandlers, inputHandlers, registerAction, registerInput } from "../ui/primitives.js";
+import { registerAction, registerInput, runAction, runInput } from "../ui/handlers.js";
 
 const RING_INNER = 0.76; // share of the wheel radius where the hue ring starts
 const SQUARE_HALF = 0.5; // half side of the square, share of the wheel radius
@@ -68,7 +68,7 @@ export function initColorWheel() {
       s = clamp((lx / SQUARE_HALF + 1) / 2);
       v = clamp(1 - (ly / SQUARE_HALF + 1) / 2);
     }
-    inputHandlers[active.wheel.dataset.wheel]?.(paintWheel(active.wheel, h, s, v));
+    runInput(active.wheel.dataset.wheel, paintWheel(active.wheel, h, s, v));
     const field = active.wheel.closest(".picker-color-page")?.querySelector(".picker-hex input");
     if (field) field.value = hsvToHex(h, s, v);
   };
@@ -87,7 +87,7 @@ export function initColorWheel() {
   const stop = () => {
     const wheel = active?.wheel;
     active = null;
-    if (wheel) actionHandlers[wheel.dataset.settled]?.();
+    if (wheel) runAction(wheel.dataset.settled);
   };
   for (const type of ["pointerup", "pointercancel"]) app.addEventListener(type, stop);
   // A finger on the wheel must not scroll the sheet.

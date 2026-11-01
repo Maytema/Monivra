@@ -1,6 +1,6 @@
 /* Recurrence, reminders, scheduled payments and budgets */
 import { render } from "../app/shell.js";
-import { TODAY, deepClone, escapeHtml, iconSvg, newId } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import {
   categoryById,
@@ -15,31 +15,25 @@ import {
 import { currencyName, translate } from "../i18n/index.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
-import { opRow, operationsAddMenu, recurLabel, remainingLabel, weekdayName } from "./operations.js";
+import { operationsAddMenu, opRow, recurLabel, remainingLabel, weekdayName } from "./operations.js";
 import { recurrence, reminder, reminderLabel } from "./recurrence.js";
+import { amountPicker } from "../ui/number-picker.js";
+import { calendar } from "../ui/calendar.js";
+import { closeLayers, finishFlow, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, optionSheet } from "../ui/dialogs.js";
 import {
-  amountPicker,
-  calendar,
-  closeLayers,
-  confirmAction,
-  finishFlow,
-  openPage,
-  openSheet,
-  optionSheet,
-  pageHeader,
-  periodBar,
-} from "../ui/kit.js";
-import { currencyPicker } from "../ui/currency-picker.js";
-import {
-  buttonHtml,
   badgeHtml,
+  buttonHtml,
   fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
   meterHtml,
+  pageHeader,
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
+import { periodBar } from "../ui/period-picker.js";
+import { currencyPicker } from "../ui/currency-picker.js";
 
 // What goes under a scheduled row: fees with the net amount, the repeat rule and the reminder.
 function scheduleDetails(o) {
@@ -150,7 +144,7 @@ export function scheduledView() {
 }
 
 // Amount spent in a budget's period.
-export function budgetSpend(b) {
+function budgetSpend(b) {
   const period = {
     mode: b.period || "month",
     anchor: uiState.period.anchor || TODAY,
@@ -226,7 +220,7 @@ export function budgetsView() {
 }
 
 // Open the budget editor (new budget when no argument is given).
-export function editBudget(b) {
+function editBudget(b) {
   openPage("budget", {
     draft: b
       ? deepClone(b)

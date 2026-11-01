@@ -4,8 +4,9 @@ import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
 import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { categoryById, createBackup } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
-import { closeLayers, goBack, goHome } from "../ui/kit.js";
-import { actionHandlers, inputHandlers, toast } from "../ui/primitives.js";
+import { closeLayers, goBack, goHome } from "../ui/navigation.js";
+import { hasAction, runAction, runInput } from "../ui/handlers.js";
+import { toast } from "../ui/primitives.js";
 
 // Attach global handlers (clicks, inputs, swipe gestures, hash routing) and render.
 export function startup() {
@@ -24,10 +25,9 @@ export function startup() {
     }
     const target = event.target.closest("[data-action]");
     if (target) {
-      const fn = actionHandlers[target.dataset.action];
-      if (fn)
+      if (hasAction(target.dataset.action))
         try {
-          fn();
+          runAction(target.dataset.action);
         } catch (e) {
           toast(e.message);
           console.error(e);
@@ -40,11 +40,12 @@ export function startup() {
   });
   document.addEventListener("input", (e) => {
     if (e.target.matches("input:not([type=checkbox]):not([type=radio]),textarea"))
-      inputHandlers[e.target.dataset.input]?.(e.target.value);
+      runInput(e.target.dataset.input, e.target.value);
   });
   document.addEventListener("change", (e) => {
     if (e.target.matches("select,input[type=checkbox],input[type=radio]"))
-      inputHandlers[e.target.dataset.input]?.(
+      runInput(
+        e.target.dataset.input,
         e.target.type === "checkbox" ? e.target.checked : e.target.value,
       );
   });
@@ -58,7 +59,7 @@ export function startup() {
       e.target.tagName.toLowerCase() === "circle" &&
       e.target.dataset.action
     ) {
-      actionHandlers[e.target.dataset.action]?.();
+      runAction(e.target.dataset.action);
       e.preventDefault();
     }
   });

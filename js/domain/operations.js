@@ -1,5 +1,5 @@
 /* Operation, account and category mutations; scheduled payments */
-import { TODAY, deepClone, newId } from "../core/constants.js";
+import { deepClone, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { netAmount } from "./fees.js";

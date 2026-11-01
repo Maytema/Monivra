@@ -1,6 +1,6 @@
 /* Statistics screens and charts */
 import { render } from "../app/shell.js";
-import { TODAY, escapeHtml, iconSvg } from "../core/constants.js";
+import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -19,16 +19,11 @@ import { currentLocale, translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { categoryActions, sumTabs } from "./categories.js";
 import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations.js";
-import {
-  closeLayers,
-  emptyStateHtml,
-  goHome,
-  openPage,
-  openSheet,
-  periodBar,
-  swipePane,
-} from "../ui/kit.js";
-import { badgeHtml, buttonHtml, registerAction, toggleRowHtml } from "../ui/primitives.js";
+import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { emptyStateHtml } from "../ui/empty-state.js";
+import { periodBar } from "../ui/period-picker.js";
+import { badgeHtml, buttonHtml, swipePane, toggleRowHtml } from "../ui/primitives.js";
+import { registerAction } from "../ui/handlers.js";
 
 // Category totals for the statistics screen.
 function statsGroups(type = uiState.catType) {
