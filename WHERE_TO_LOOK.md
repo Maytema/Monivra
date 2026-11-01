@@ -57,25 +57,26 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 
 ## Symptoms and where they start
 
-| Symptom                                         | Start here                                                                                                |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| A photo does not attach, or an error about it   | `platform/photo.js` (reading, decoding, `PhotoError`), `operation-editor/extras.js` (`choosePhoto`)       |
-| Too many or too few photos                      | `MAX_PHOTOS` in `core/constants.js`; row width in `css/editor.css`                                        |
-| A sheet looks different from the others         | Build it from the shared pieces in `ui/primitives.js`; its frame is `.overlay .panel` in `components.css` |
-| Buttons scroll away with the content of a sheet | Use `sheetFooterHtml(...)` (see DEVELOPMENT.md)                                                           |
-| A tapped checkbox or switch does not change     | The sheet function must build its markup **inside** the function passed to `openSheet`                    |
-| Wrong amount, balance or conversion             | `domain/finance.js`; for an operation `domain/operations.js`; rates in `data/currencies.js`               |
-| Amount typed wrongly / keypad order             | `domain/keypad.js`, `operation-editor/keypad.js`                                                          |
-| A rule is refused with a message                | The command in `domain/` throws `Error(message)`; `app/startup.js` shows it as a toast                    |
-| A deleted item is still selected or in a filter | `forgetDeleted` in `core/state.js`; the command must return the removed ids                               |
-| Data lost or not loading after an update        | `data/storage.js`, `completeData` in `data/defaults.js`; never rename the storage key                     |
-| Import or export fails                          | `data/import-export.js`, `data/csv.js`, `platform/files.js`                                               |
-| Debt or saving shows progress / "Completed"     | `accounts/list.js` (`isFinished`, `isCompleted`), `accounts/progress.js`                                  |
-| Scheduled payment fires on the wrong date       | `domain/scheduled.js`, `screens/recurrence.js`                                                            |
-| Text not translated                             | Add the English text as a key in `i18n/ru.js`                                                             |
-| The new version does not show on a phone        | The browser caches the modules: reload the page fully or clear the site data                              |
-| Page scrolls back to the top after a change     | Scroll restoration in `app/shell.js` (`render`)                                                           |
-| Swipe or long press misbehaves                  | `app/swipe.js`, `app/long-press.js`, `app/drag-reorder.js`                                                |
+| Symptom                                           | Start here                                                                                                |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| A photo does not attach, or an error about it     | `platform/photo.js` (reading, decoding, `PhotoError`), `operation-editor/extras.js` (`choosePhoto`)       |
+| Too many or too few photos                        | `MAX_PHOTOS` in `core/constants.js`; row width in `css/editor.css`                                        |
+| A sheet looks different from the others           | Build it from the shared pieces in `ui/primitives.js`; its frame is `.overlay .panel` in `components.css` |
+| Buttons scroll away with the content of a sheet   | Use `sheetFooterHtml(...)` (see DEVELOPMENT.md)                                                           |
+| A tapped checkbox or switch does not change       | The sheet function must build its markup **inside** the function passed to `openSheet`                    |
+| Wrong amount, balance or conversion               | `domain/finance.js`; for an operation `domain/operations.js`; rates in `data/currencies.js`               |
+| Amount typed wrongly / keypad order               | `domain/keypad.js`, `operation-editor/keypad.js`                                                          |
+| A rule is refused with a message                  | The command in `domain/` throws `Error(message)`; `app/startup.js` shows it as a toast                    |
+| A deleted item is still selected or in a filter   | `forgetDeleted` in `core/state.js`; the command must return the removed ids                               |
+| Data lost or not loading after an update          | `data/storage.js`, `completeData` in `data/defaults.js`; never rename the storage key                     |
+| Import or export fails                            | `data/import-export.js`, `data/csv.js`, `platform/files.js`                                               |
+| Debt or saving shows progress / "Completed"       | `accounts/list.js` (`isFinished`, `isCompleted`), `accounts/progress.js`                                  |
+| Scheduled payment fires on the wrong date         | `domain/scheduled.js`, `screens/recurrence.js`                                                            |
+| Due payments: the reminder and what one tap posts | `screens/due-payments.js`, `domain/scheduled.js` (`dueCount`, `postDue`)                                  |
+| Text not translated                               | Add the English text as a key in `i18n/ru.js`                                                             |
+| The new version does not show on a phone          | The browser caches the modules: reload the page fully or clear the site data                              |
+| Page scrolls back to the top after a change       | Scroll restoration in `app/shell.js` (`render`)                                                           |
+| Swipe or long press misbehaves                    | `app/swipe.js`, `app/long-press.js`, `app/drag-reorder.js`                                                |
 
 ## Typical changes
 

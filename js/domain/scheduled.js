@@ -41,20 +41,63 @@ export function nextDate(item) {
   return result || null;
 }
 
-// Post or skip a due scheduled payment and schedule the next one.
+// Move a payment to its next occurrence; false when that was the last one.
+function advance(item) {
+  const next = nextDate(item);
+  if (!next) return false;
+  item.date = next;
+  if (item.recur.remaining !== null) item.recur.remaining--;
+  return true;
+}
+
+// Record one occurrence of a scheduled payment as an operation of the given day.
+function postOccurrence(item, date) {
+  const op = { ...deepClone(item), id: newId(), date };
+  delete op.recur;
+  delete op.reminder;
+  putOperation(op);
+}
+
+// Post or skip a scheduled payment and schedule the next one.
 export function processScheduled(id, post) {
   const item = appData.scheduled.find((o) => o.id === id);
   if (!item) return;
-  if (post) {
-    const op = { ...deepClone(item), id: newId(), date: TODAY };
-    delete op.recur;
-    delete op.reminder;
-    putOperation(op);
-  }
-  const n = nextDate(item);
-  if (n) {
-    item.date = n;
-    if (item.recur.remaining !== null) item.recur.remaining--;
-  } else appData.scheduled = appData.scheduled.filter((o) => o.id !== id);
+  if (post) postOccurrence(item, TODAY);
+  if (!advance(item)) appData.scheduled = appData.scheduled.filter((o) => o.id !== id);
   save();
+}
+
+// How many occurrences have come due up to `today`, a recurring payment counting once for
+// every missed date.
+export function dueCount(today = TODAY) {
+  let count = 0;
+  for (const item of appData.scheduled) {
+    const walker = deepClone(item);
+    while (walker.date <= today) {
+      count++;
+      if (!advance(walker)) break;
+    }
+  }
+  return count;
+}
+
+// Post every occurrence that came due up to `today` on the day it was due; returns how many.
+// What was posted before a failure stays posted and saved.
+export function postDue(today = TODAY) {
+  let posted = 0;
+  try {
+    for (const item of [...appData.scheduled]) {
+      while (item.date <= today) {
+        postOccurrence(item, item.date);
+        posted++;
+        if (!advance(item)) {
+          appData.scheduled = appData.scheduled.filter((o) => o !== item);
+          break;
+        }
+      }
+    }
+  } finally {
+    if (posted) save();
+  }
+  return posted;
 }
