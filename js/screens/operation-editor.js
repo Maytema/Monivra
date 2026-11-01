@@ -622,14 +622,14 @@ function accountCalculatorView(p) {
           'aria-label="Tags"',
         )
       : ""
-  }</div>${feeBlockHtml(
+  }${photosHtml()}</div>${feeBlockHtml(
     d,
     enteredAmount(),
     accountCurrency,
     dual ? secondary.currency : accountCurrency,
     dual ? sourceToReceive : (n) => n,
     render,
-  )}</div>${photosHtml()}${
+  )}</div>${
     p.compact
       ? `<div class="ops-compact-actions">${buttonHtml(
           iconSvg("trash", 28) + "<span>Delete</span>",
@@ -845,6 +845,8 @@ function choosePhoto(d, camera) {
   setPhotoCallback((data) => {
     d.photos.push(data);
     closeLayers();
+    // The row of photos grows the editor: bring it, with the buttons above it, into view.
+    document.querySelector(".calc-extras")?.scrollIntoView({ block: "nearest" });
     toast("Photo attached");
   });
   const e = document.getElementById("photo-file");
