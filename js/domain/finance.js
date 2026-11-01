@@ -181,6 +181,25 @@ export function periodBounds(p = uiState.period) {
   return [start(month), addDays(start(month + 1), -1)];
 }
 
+// Can the period be moved to the neighbouring one? "All time" has none.
+export const canShiftPeriod = (p = uiState.period) => p.mode !== "all";
+// Move the period one step forward (1) or back (-1): a day, week, month or year, or a range by
+// its own length.
+export function shiftPeriod(n, p = uiState.period) {
+  if (!canShiftPeriod(p)) return false;
+  if (p.mode === "range") {
+    const days = Math.round((parseDate(p.to) - parseDate(p.from)) / 86400000) + 1;
+    p.from = addDays(p.from, n * days);
+    p.to = addDays(p.to, n * days);
+  } else if (p.mode === "month" || p.mode === "year") {
+    const d = parseDate(p.anchor);
+    d.setUTCDate(1);
+    d.setUTCMonth(d.getUTCMonth() + n * (p.mode === "year" ? 12 : 1));
+    p.anchor = toIsoDate(d);
+  } else p.anchor = addDays(p.anchor, n * (p.mode === "week" ? 7 : 1));
+  return true;
+}
+
 // Title shown in the period bar, e.g. "October 2026".
 export function periodTitle(period = uiState.period) {
   const [a, b] = periodBounds(period);
@@ -225,14 +244,19 @@ export function transferRoles(o) {
     income: source?.type === "Debt" && source.considerIncome ? source : null,
   };
 }
-// Does an operation pass the active filters?
+// A category with its subcategories: what a filter by a whole category selects.
+export const categoryFamily = (id) => [
+  id,
+  ...appData.categories.filter((c) => c.parent === id).map((c) => c.id),
+];
+// Does an operation pass the active filters? A category is matched as chosen: choosing a category
+// with subcategories means choosing them one by one.
 export function operationMatchesFilters(o, f = uiState.filters) {
   const roles = transferRoles(o);
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
     (!f.categories ||
       f.categories.includes(o.category) ||
-      f.categories.includes(categoryById(o.category)?.parent) ||
       (roles.expense && f.categories.includes("debt:" + roles.expense.id)) ||
       (roles.income && f.categories.includes("debt:" + roles.income.id))) &&
     (!f.types ||
@@ -241,7 +265,8 @@ export function operationMatchesFilters(o, f = uiState.filters) {
       (roles.expense && f.types.includes("expense")) ||
       (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
-    (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase()))
+    (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase())) &&
+    (!f.origin || f.origin.includes(o.fromSchedule ? "schedule" : "manual"))
   );
 }
 // Operations that pass the active filters and period, newest first.

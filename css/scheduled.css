@@ -149,6 +149,9 @@
   padding: 14px 16px;
   text-align: left;
 }
+.budget-details {
+  margin-bottom: 16px;
+}
 .budget-title {
   font-size: 18px;
 }
@@ -169,6 +172,24 @@
 .budget-scope,
 .budget-sum {
   font-size: 14px;
+}
+/* The meter with the share of the limit that is used, as on the accounts with a goal */
+.budget-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.budget-progress .meter {
+  flex: 1 1 0%;
+}
+.budget-percent {
+  flex: 0 0 auto;
+  min-width: 3.7em;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 16px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
 }
 .budget-left {
   align-self: flex-end;

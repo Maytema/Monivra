@@ -287,6 +287,69 @@ const scenarios = {
     );
     expect(stored).toBe(0);
   },
+  async "an operation moved to a future day becomes a scheduled payment"(page) {
+    await tab(page, "Operations");
+    await page.locator(".op-row").first().click();
+    await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    await page.getByText("Payment scheduled").waitFor();
+    const [operations, scheduled] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      return [data.ops.some((o) => o.id === "today"), data.scheduled.some((o) => o.id === "today")];
+    });
+    expect(operations).toBe(false);
+    expect(scheduled).toBe(true);
+  },
+  async "operations of scheduled payments are marked and can be shown alone or left out"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    const choose = async (...clicks) => {
+      await page.locator("[aria-label=Filters]").first().click();
+      await page.locator(".panel .field", { hasText: "How added" }).first().click();
+      for (const name of clicks) await page.locator(".filter-choice", { hasText: name }).click();
+      await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
+      await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
+    };
+    const shown = () => page.locator(".op-row").count();
+    await page.locator(".op-row").first().waitFor();
+    const all = await shown();
+    expect(await page.locator(".op-schedule").count()).toBe(3);
+    expect(await page.locator(".op-schedule", { hasText: "by hand" }).count()).toBe(1);
+    // Both are chosen at first: a tap takes one away.
+    await choose("By hand");
+    expect(await shown()).toBe(3);
+    await choose("By hand", "By schedule");
+    expect(await shown()).toBe(all - 3);
+  },
+  async "the arrows of the period are dimmed on All time"(page) {
+    await tab(page, "Operations");
+    const arrows = page.locator(".period-arrows .icon-button");
+    expect(await arrows.first().isDisabled()).toBe(false);
+    await page.locator(".period .label").first().click();
+    await page.getByText("All time", { exact: true }).first().click();
+    await page.locator(".op-row").first().waitFor();
+    expect(await arrows.count()).toBe(2);
+    expect(await arrows.first().isDisabled()).toBe(true);
+    expect(await arrows.last().isDisabled()).toBe(true);
+  },
+  async "a subcategory can be left out of the category filter and all can be folded"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    await page.locator(".op-row").first().waitFor();
+    const before = await page.locator(".op-row").count();
+    await page.locator("[aria-label=Filters]").first().click();
+    await page.locator(".panel .field", { hasText: "Categories" }).first().click();
+    await page.getByLabel("Collapse all").click();
+    expect(await page.locator(".filter-parent-row").count()).toBe(0);
+    await page.getByLabel("Expand all").click();
+    await page.locator(".filter-child-row", { hasText: "Cafe" }).getByRole("button").click();
+    expect(
+      await page.locator(".filter-child-row", { hasText: "Without subcategory" }).count(),
+    ).toBe(1);
+    await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
+    await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
+    expect(await page.locator(".op-row").count()).toBe(before - 1);
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
@@ -319,6 +382,30 @@ const expect = (actual) => ({
 });
 
 const adjustments = {
+  "a subcategory can be left out of the category filter and all can be folded": (data) => {
+    const food = data.categories.find((category) => category.name === "Food");
+    for (const name of ["Market", "Cafe"])
+      data.categories.push({ ...food, id: `sub-${name}`, name, parent: food.id });
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops.push({ ...base, id: "cafe", date: day, category: "sub-Cafe" });
+    data.ops.push({ ...base, id: "market", date: day, category: "sub-Market" });
+    data.ops.push({ ...base, id: "plain", date: day, category: food.id });
+  },
+  "an operation moved to a future day becomes a scheduled payment": (data) => {
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops.push({ ...base, id: "today", date: day });
+  },
+  "operations of scheduled payments are marked and can be shown alone or left out": (data) => {
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops.push(
+      { ...base, id: "plan-a", date: day, fromSchedule: { id: "plan", date: day } },
+      { ...base, id: "plan-b", date: day, fromSchedule: { id: "plan", date: day } },
+      { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
+    );
+  },
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");

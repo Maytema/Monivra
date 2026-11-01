@@ -1,5 +1,5 @@
 /* Operations: checking, storing and deleting; changing many at once */
-import { deepClone, newId } from "../core/constants.js";
+import { deepClone, newId, timeNow, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { netAmount } from "./fees.js";
@@ -72,7 +72,30 @@ export function validateOp(d, lookup = { account: accountById, category: categor
   } else throw Error("Unsupported operation type");
 }
 
-// Validate and insert or update an operation (or a scheduled payment), then save.
+// An operation dated after today has not happened yet: it belongs among the scheduled payments.
+// A correction of a balance is the exception, it is a statement about the present.
+export const isPlanned = (d) => d.type !== "adjustment" && d.date > today();
+
+// A month or year rule keeps the day it began on; editing the date starts it from the new day.
+function keepRuleDay(d, previous) {
+  const rule = d.recur && ["Months", "Years"].includes(d.recur.unit);
+  if (!rule) delete d.anchorDay;
+  else if (previous?.date === d.date && previous.anchorDay) d.anchorDay = previous.anchorDay;
+  else d.anchorDay = parseDate(d.date).getUTCDate();
+}
+
+// Turn an operation into a one-time scheduled payment; it can then be given a repeat and a reminder.
+function planOperation(d) {
+  appData.ops = appData.ops.filter((o) => o.id !== d.id);
+  delete d.fromSchedule;
+  d.recur = null;
+  d.reminder = null;
+  d.time = d.time || timeNow();
+  appData.scheduled.push(d);
+}
+
+// Validate and insert or update an operation (or a scheduled payment), then save. An operation
+// dated in the future becomes a one-time scheduled payment instead.
 export function putOperation(d, schedule = false) {
   d = deepClone(d);
   delete d.expr;
@@ -82,9 +105,16 @@ export function putOperation(d, schedule = false) {
   delete d.fresh;
   if (!d.fees?.length) delete d.fees;
   validateOp(d);
-  const list = schedule ? appData.scheduled : appData.ops;
   if (!d.id) d.id = newId();
+  if (!schedule && isPlanned(d)) {
+    planOperation(d);
+    save();
+    return d;
+  }
+  const list = schedule ? appData.scheduled : appData.ops;
   const i = list.findIndex((o) => o.id === d.id);
+  if (schedule) keepRuleDay(d, list[i]);
+  else delete d.time;
   if (i < 0) list.push(d);
   else list[i] = d;
   save();
@@ -142,5 +172,12 @@ export function applyBulkChanges(ids, changes) {
       if (!adjustment) validateOp(op);
       return op;
     });
-  for (const op of replacements) appData.ops[appData.ops.findIndex((x) => x.id === op.id)] = op;
+  let planned = 0;
+  for (const op of replacements)
+    if (isPlanned(op)) {
+      planOperation(op);
+      planned++;
+    } else appData.ops[appData.ops.findIndex((x) => x.id === op.id)] = op;
+  save();
+  return planned;
 }

@@ -3,7 +3,7 @@ import { placeTabUnderline } from "./chrome.js";
 import { render, rootView } from "./shell.js";
 import { deepClone } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
-import { addDays, parseDate, toIsoDate } from "../domain/finance.js";
+import { canShiftPeriod, shiftPeriod } from "../domain/finance.js";
 import { withTemporaryHandlers } from "../ui/handlers.js";
 
 // One gesture recognizer shared by all four root sections.
@@ -27,7 +27,7 @@ function swipeEdge(direction) {
       tabs.indexOf(uiState.accountTab) + direction >= tabs.length
     );
   }
-  return uiState.period.mode === "all";
+  return !canShiftPeriod();
 }
 function swipeAdvanceState(direction) {
   if (uiState.tab === "accounts") {
@@ -37,18 +37,7 @@ function swipeAdvanceState(direction) {
     uiState.accountTab = tabs[idx];
     return true;
   }
-  if (uiState.period.mode === "all") return false;
-  const p = uiState.period;
-  if (p.mode === "range") {
-    const days = Math.round((parseDate(p.to) - parseDate(p.from)) / 86400000) + 1;
-    p.from = addDays(p.from, direction * days);
-    p.to = addDays(p.to, direction * days);
-  } else if (p.mode === "month" || p.mode === "year") {
-    const d = parseDate(p.anchor);
-    d.setUTCDate(1);
-    d.setUTCMonth(d.getUTCMonth() + direction * (p.mode === "year" ? 12 : 1));
-    p.anchor = toIsoDate(d);
-  } else p.anchor = addDays(p.anchor, direction * (p.mode === "week" ? 7 : 1));
+  if (!shiftPeriod(direction)) return false;
   uiState.donut = null;
   return true;
 }

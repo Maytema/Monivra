@@ -6,6 +6,7 @@ import { save } from "../data/storage.js";
 import {
   categoryById,
   categoryCount,
+  categoryFamily,
   categoryShare,
   formatMoney,
   totalByType,
@@ -124,7 +125,7 @@ export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
         "receipt",
         "Operations",
         "#1f8fe0",
-        () => openFilteredOperations({ categories: [c.id] }, period),
+        () => openFilteredOperations({ categories: categoryFamily(c.id) }, period),
       )}</div>${
         appData.settings.subcategories
           ? appData.categories

@@ -1,12 +1,27 @@
 import { check } from "./harness.js";
 import { addAccount } from "./helpers.js";
-import { TODAY } from "../js/core/constants.js";
-import { appData, forgetDeleted, uiState } from "../js/core/state.js";
+import { deepClone, TODAY } from "../js/core/constants.js";
+import { appData, emptyFilters, forgetDeleted, uiState } from "../js/core/state.js";
 import { deleteAccount } from "../js/domain/accounts.js";
 import { putAccountOnSide, putCategoryOnSide } from "../js/domain/sides.js";
-import { accountBalance, categoryTotal, categoryTotalIn } from "../js/domain/finance.js";
-import { applyBulkChanges, validateOp } from "../js/domain/operations.js";
+import {
+  accountBalance,
+  addDays,
+  categoryFamily,
+  categoryTotal,
+  categoryTotalIn,
+  canShiftPeriod,
+  operationMatchesFilters,
+  shiftPeriod,
+} from "../js/domain/finance.js";
+import {
+  applyBulkChanges,
+  emptyBulkChanges,
+  putOperation,
+  validateOp,
+} from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
+import { budgetState } from "../js/domain/budgets.js";
 import { nextDate, postDue, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
@@ -244,44 +259,270 @@ check("The last repetition leaves the list", () => {
 });
 
 check("Payments that came due are posted on the day they were due", () => {
-  const item = scheduledExpense("2026-11-19", {
+  const item = scheduledExpense(addDays(TODAY, -2), {
     every: 1,
     unit: "Days",
     remaining: 5,
     days: [],
   });
   const count = appData.ops.length;
-  const posted = postDue("2026-11-21");
+  const posted = postDue();
   const days = appData.ops.slice(count).map((o) => o.date);
   return (
     posted === 3 &&
-    days.join() === "2026-11-19,2026-11-20,2026-11-21" &&
-    item.date === "2026-11-22" &&
+    days.join() === [-2, -1, 0].map((n) => addDays(TODAY, n)).join() &&
+    item.date === addDays(TODAY, 1) &&
     item.recur.remaining === 2 &&
-    postDue("2026-11-21") === 0
+    postDue() === 0
   );
 });
 
 check("A one-time payment that came due is posted once and leaves the list", () => {
-  scheduledExpense("2026-11-19", null);
+  scheduledExpense(addDays(TODAY, -1), null);
   const count = appData.ops.length;
   return (
-    postDue("2026-11-20") === 1 &&
+    postDue() === 1 &&
     appData.ops.length === count + 1 &&
     appData.scheduled.length === 0 &&
-    postDue("2026-11-20") === 0
+    postDue() === 0
   );
 });
 
 check("A payment that is not due yet stays untouched", () => {
-  const item = scheduledExpense("2026-11-25", {
+  const later = addDays(TODAY, 3);
+  const item = scheduledExpense(later, { every: 1, unit: "Days", remaining: null, days: [] });
+  const count = appData.ops.length;
+  return postDue() === 0 && appData.ops.length === count && item.date === later;
+});
+
+check(
+  "A payment added ahead of time says it was added by hand, one made on its day does not",
+  () => {
+    const ahead = scheduledExpense(addDays(TODAY, 3), null);
+    processScheduled(ahead.id, true);
+    const byHand = appData.ops.at(-1).fromSchedule;
+    scheduledExpense(addDays(TODAY, -1), null);
+    postDue();
+    const onItsDay = appData.ops.at(-1).fromSchedule;
+    return byHand.byHand === true && byHand.date === addDays(TODAY, 3) && !onItsDay.byHand;
+  },
+);
+
+check("A posted payment remembers which payment and occurrence it came from", () => {
+  const item = scheduledExpense(addDays(TODAY, -1), null);
+  postDue();
+  const posted = appData.ops.at(-1);
+  return (
+    posted.fromSchedule.id === item.id &&
+    posted.fromSchedule.date === item.date &&
+    posted.date === item.date &&
+    !posted.recur
+  );
+});
+
+check("One occurrence of a payment is posted only once", () => {
+  const item = scheduledExpense(addDays(TODAY, -1), {
     every: 1,
     unit: "Days",
     remaining: null,
     days: [],
   });
+  const first = deepClone(item);
+  postDue();
   const count = appData.ops.length;
-  return postDue("2026-11-24") === 0 && appData.ops.length === count && item.date === "2026-11-25";
+  // The same payment, as another device still has it, comes due again.
+  appData.scheduled = [first];
+  postDue();
+  return appData.ops.length === count && first.date === addDays(TODAY, 1);
+});
+
+check("A payment that repeats monthly keeps its day after a short month", () => {
+  const item = {
+    date: "2026-01-31",
+    anchorDay: 31,
+    recur: { every: 1, unit: "Months", remaining: null, days: [] },
+  };
+  const seen = [];
+  for (let n = 0; n < 4; n++) {
+    seen.push(item.date);
+    item.date = nextDate(item);
+  }
+  return seen.join() === "2026-01-31,2026-02-28,2026-03-31,2026-04-30";
+});
+
+check("The day of a monthly rule is the day of its date, and editing the date moves it", () => {
+  const rule = { every: 1, unit: "Months", remaining: null, days: [] };
+  const item = scheduledExpense("2030-01-31", rule);
+  putOperation({ ...item }, true);
+  const first = appData.scheduled[0].anchorDay;
+  putOperation({ ...appData.scheduled[0], date: "2030-02-28" }, true);
+  const moved = appData.scheduled[0].anchorDay;
+  putOperation({ ...appData.scheduled[0], recur: null }, true);
+  return first === 31 && moved === 28 && appData.scheduled[0].anchorDay === undefined;
+});
+
+check("An operation dated in the future becomes a one-time scheduled payment", () => {
+  const base = appData.ops.find((o) => o.type === "expense");
+  const day = addDays(TODAY, 4);
+  const count = appData.ops.length;
+  const before = accountBalance(base.from);
+  putOperation({ ...base, date: day });
+  const moved = appData.scheduled.find((o) => o.id === base.id);
+  return (
+    appData.ops.length === count - 1 &&
+    !appData.ops.some((o) => o.id === base.id) &&
+    moved.date === day &&
+    moved.recur === null &&
+    /^\d\d:\d\d$/.test(moved.time) &&
+    accountBalance(base.from) === before + base.amount
+  );
+});
+
+check("Moving an operation to a past day only changes its date", () => {
+  const base = appData.ops.find((o) => o.type === "expense");
+  const count = appData.ops.length;
+  const day = addDays(TODAY, -40);
+  putOperation({ ...base, date: day });
+  return (
+    appData.ops.length === count &&
+    appData.ops.find((o) => o.id === base.id).date === day &&
+    !appData.scheduled.some((o) => o.id === base.id)
+  );
+});
+
+check("A bulk change of the date to the future moves those operations to the payments", () => {
+  const [a, b] = appData.ops.filter((o) => o.type === "expense");
+  const day = addDays(TODAY, 2);
+  const count = appData.ops.length;
+  const moved = applyBulkChanges([a.id, b.id], { ...emptyBulkChanges(), date: day });
+  return (
+    moved === 2 &&
+    appData.ops.length === count - 2 &&
+    appData.scheduled.filter((o) => o.date === day).length === 2
+  );
+});
+
+const pick = (filter, list = appData.ops) =>
+  list.filter((o) => operationMatchesFilters(o, { ...emptyFilters(), ...filter }));
+
+check("The filter shows operations of scheduled payments, or leaves them out", () => {
+  const item = scheduledExpense(addDays(TODAY, -2), {
+    every: 1,
+    unit: "Days",
+    remaining: null,
+    days: [],
+  });
+  postDue();
+  const made = appData.ops.filter((o) => o.fromSchedule?.id === item.id).length;
+  return (
+    made === 3 &&
+    pick({}).length === appData.ops.length &&
+    pick({ origin: ["schedule"] }).length === 3 &&
+    pick({ origin: ["manual"] }).length === appData.ops.length - 3 &&
+    pick({ origin: ["manual", "schedule"] }).length === appData.ops.length &&
+    pick({ origin: [] }).length === 0
+  );
+});
+
+check("A budget counts the expenses of its categories and subcategories in its period", () => {
+  const food = appData.categories.find((c) => c.type === "expense" && !c.parent);
+  appData.categories.push({ ...food, id: "bsub", name: "Bakery", parent: food.id });
+  const base = appData.ops.find((o) => o.type === "expense");
+  const spent = (id, category, amount) => ({
+    ...base,
+    id,
+    category,
+    amount,
+    date: TODAY,
+    fees: [],
+    foreign: undefined,
+  });
+  appData.ops = [spent("a", food.id, 300), spent("b", "bsub", 200), spent("c", "other", 900)];
+  uiState.period = { mode: "month", anchor: TODAY };
+  const budget = (categories) => ({
+    id: "x",
+    name: "x",
+    currency: appData.settings.currency,
+    amount: 1000,
+    period: "month",
+    categories,
+  });
+  const own = budgetState(budget([food.id]));
+  return (
+    own.used === 500 && own.left === 500 && own.share === 50 && budgetState(budget([])).used === 0
+  );
+});
+
+check('The period steps by its own length, and "All time" has no neighbours', () => {
+  const month = { mode: "month", anchor: "2026-01-31" };
+  const range = { mode: "range", from: "2026-03-01", to: "2026-03-10" };
+  const all = { mode: "all", anchor: "2026-01-31" };
+  shiftPeriod(1, month);
+  shiftPeriod(-1, range);
+  return (
+    month.anchor === "2026-02-01" &&
+    range.from === "2026-02-19" &&
+    range.to === "2026-02-28" &&
+    !canShiftPeriod(all) &&
+    shiftPeriod(1, all) === false &&
+    all.anchor === "2026-01-31"
+  );
+});
+
+check("Filters combine: subcategory under its own parent, account, type and tags", () => {
+  const parents = appData.categories.filter((c) => c.type === "expense" && !c.parent);
+  const [first, second] = parents;
+  appData.categories.push(
+    { ...first, id: "s1", name: "Same", parent: first.id },
+    { ...second, id: "s2", name: "Same", parent: second.id },
+  );
+  const [a, b] = appData.accounts.filter((x) => !x.archived).map((x) => x.id);
+  const base = appData.ops.find((o) => o.type === "expense");
+  const make = (id, fields) => ({ ...base, id, from: a, tags: [], comment: "", ...fields });
+  const ops = [
+    make("p1", { category: first.id }),
+    make("c1", { category: "s1" }),
+    make("c2", { category: "s2" }),
+    make("c1-b", { category: "s1", from: b, tags: ["t"] }),
+    make("t1", { type: "transfer", category: null, from: a, to: b }),
+    make("i1", { type: "income", category: "s1", from: null, to: a }),
+  ];
+  const ids = (filter) =>
+    pick(filter, ops)
+      .map((o) => o.id)
+      .join();
+  return (
+    ids({ categories: ["s1"] }) === "c1,c1-b,i1" &&
+    ids({ categories: ["s2"] }) === "c2" &&
+    ids({ categories: ["s1"], types: ["expense"] }) === "c1,c1-b" &&
+    ids({ categories: ["s1"], accounts: [b] }) === "c1-b" &&
+    ids({ categories: ["s1", "s2"], accounts: [a], types: ["expense"] }) === "c1,c2" &&
+    ids({ categories: ["s1"], tags: ["t"] }) === "c1-b" &&
+    ids({ types: ["transfer"] }) === "t1" &&
+    ids({ types: ["transfer", "income"] }) === "t1,i1" &&
+    ids({ accounts: [b] }) === "c1-b,t1" &&
+    ids({ categories: [first.id] }) === "p1"
+  );
+});
+
+check("A category is filtered as chosen: a subcategory can be left out of its parent", () => {
+  const food = appData.categories.find((c) => c.name === "Food");
+  const sub = { ...food, id: "sub", name: "Cafe", parent: food.id };
+  const other = { ...food, id: "sub2", name: "Market", parent: food.id };
+  appData.categories.push(sub, other);
+  const base = appData.ops.find((o) => o.type === "expense");
+  const make = (category) => ({ ...base, id: `x-${category}`, category });
+  const ops = [make(food.id), make("sub"), make("sub2")];
+  const match = (categories) =>
+    ops
+      .filter((o) => operationMatchesFilters(o, { ...emptyFilters(), categories }))
+      .map((o) => o.category);
+  return (
+    match(categoryFamily(food.id)).length === 3 &&
+    match([food.id, "sub"]).join() === `${food.id},sub` &&
+    match(["sub2"]).join() === "sub2" &&
+    match([food.id]).join() === food.id
+  );
 });
 
 check("A weekly payment goes to the chosen days of the week", () => {

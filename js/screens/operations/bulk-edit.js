@@ -5,7 +5,7 @@ import { appData, uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { accountById, categoryById, dateLabel } from "../../domain/finance.js";
 import { applyBulkChanges, emptyBulkChanges } from "../../domain/operations.js";
-import { translate } from "../../i18n/index.js";
+import { translate, translateCount } from "../../i18n/index.js";
 import { accountPicker, categoryPicker } from "../pickers.js";
 import { calendar } from "../../ui/calendar.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
@@ -13,13 +13,25 @@ import { confirmAction, promptText } from "../../ui/dialogs.js";
 import { buttonHtml, iconButtonHtml, sheetFooterHtml, toast } from "../../ui/primitives.js";
 import { registerInput } from "../../ui/handlers.js";
 
+// Message after a bulk change; operations moved to a future date went to the scheduled payments.
+function reportChange(planned) {
+  toast(
+    planned
+      ? translateCount(
+          "{n} operation moved to scheduled payments",
+          "{n} operations moved to scheduled payments",
+          planned,
+        )
+      : "Operations updated",
+  );
+}
+
 // Delete / change date / more buttons shown in selection mode.
 export function selectionActions() {
   const changeDate = () => {
     if (!uiState.selected.length) return toast("Select operations");
     calendar(TODAY, (date) => {
-      appData.ops.filter((o) => uiState.selected.includes(o.id)).forEach((o) => (o.date = date));
-      save();
+      reportChange(applyBulkChanges(uiState.selected, { ...emptyBulkChanges(), date }));
       render();
     });
   };
@@ -213,12 +225,11 @@ function bulkEdit() {
     changes.clearTags = false;
   };
   const apply = () => {
-    applyBulkChanges(uiState.selected, changes);
+    const planned = applyBulkChanges(uiState.selected, changes);
     uiState.selection = false;
     uiState.selected = [];
-    save();
     closeLayers();
-    toast("Operations updated");
+    reportChange(planned);
   };
   const confirm = () =>
     confirmAction(

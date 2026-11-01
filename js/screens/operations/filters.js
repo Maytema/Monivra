@@ -7,18 +7,9 @@ import { translate, translateCount, translateWith } from "../../i18n/index.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { promptText } from "../../ui/dialogs.js";
 import { badgeHtml, buttonHtml, fieldButtonHtml, sheetFooterHtml } from "../../ui/primitives.js";
+import { filterCategorySelect } from "./category-filter.js";
+import { checkboxHtml, pickerHtml, summaryHtml } from "./filter-parts.js";
 import { registerAction } from "../../ui/handlers.js";
-
-const checkboxHtml = (on) => `<span class="checkbox ${on ? "on" : ""}">${on ? "✓" : ""}</span>`;
-
-// The common frame of the pickers of the filters: title, how many are chosen, a list that scrolls
-// and the buttons that stay in view.
-function pickerHtml(title, summary, list, confirm) {
-  return `<div class="filter-picker-head"><h2>${translate(title)}</h2>${summary ? `<span>${summary}</span>` : ""}</div><div class="filter-scroll">${list}</div>${sheetFooterHtml(
-    buttonHtml("Cancel", () => closeLayers(), "outline"),
-    buttonHtml("Confirm", confirm, "primary"),
-  )}`;
-}
 
 // Multi-select sheet: one group whose head chooses everything or nothing.
 function multiSelect(title, items, selected, done) {
@@ -50,7 +41,7 @@ function multiSelect(title, items, selected, done) {
   };
   openSheet(
     () =>
-      pickerHtml(title, translateWith("{n} selected", { n: values.size }), listHtml(), () => {
+      pickerHtml(title, summaryHtml(values.size), listHtml(), () => {
         closeLayers();
         done(values.size === items.length ? null : [...values]);
       }),
@@ -68,7 +59,7 @@ function filterAccountSelect(selected, done) {
     () =>
       pickerHtml(
         "Accounts",
-        translateWith("{n} selected", { n: values.size }),
+        summaryHtml(values.size),
         `${groups
           .map(([name, predicate]) => {
             const items = appData.accounts.filter(predicate),
@@ -109,64 +100,8 @@ function filterAccountSelect(selected, done) {
   );
 }
 
-// Category selection with expandable tree.
-function filterCategorySelect(selected, done) {
-  const values = selected ? new Set(selected) : new Set(appData.categories.map((c) => c.id));
-  const ids = appData.categories.map((c) => c.id),
-    expanded = new Set(["expense", "income"]);
-  const parentExpanded = new Set(appData.categories.filter((c) => !c.parent).map((c) => c.id));
-  const checked = (group) => group.length > 0 && group.every((id) => values.has(id));
-  const toggle = (group) => {
-    const on = checked(group);
-    group.forEach((id) => (on ? values.delete(id) : values.add(id)));
-    render();
-  };
-  openSheet(
-    () =>
-      pickerHtml(
-        "Filter by categories",
-        "",
-        `<div class="filter-category-tree">${["expense", "income"]
-          .map((type) => {
-            const group = appData.categories.filter((c) => c.type === type),
-              groupIds = group.map((c) => c.id);
-            return `<div class="filter-group"><div class="filter-group-head"><button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(
-              () => {
-                expanded.has(type) ? expanded.delete(type) : expanded.add(type);
-                render();
-              },
-            )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
-              expanded.has(type)
-                ? group
-                    .filter((c) => !c.parent)
-                    .map((c) => {
-                      const children = group.filter((x) => x.parent === c.id),
-                        groupIds = [c.id, ...children.map((x) => x.id)],
-                        open = parentExpanded.has(c.id);
-                      return `<div class="filter-parent-row">${
-                        children.length
-                          ? `<button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(
-                              () => {
-                                open ? parentExpanded.delete(c.id) : parentExpanded.add(c.id);
-                                render();
-                              },
-                            )}">${iconSvg(open ? "down" : "right", 18)}</button>`
-                          : '<span class="filter-expand-placeholder"></span>'
-                      }${badgeHtml(c, true)}<span class="filter-label">${escapeHtml(c.name)}</span><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="filter-subcategories">${children.map((x) => `<div class="filter-child-row"><span class="filter-label">${escapeHtml(x.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="checkbox ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
-                    })
-                    .join("")
-                : ""
-            }</div>`;
-          })
-          .join("")}</div>`,
-        () => {
-          closeLayers();
-          done(values.size === ids.length ? null : [...values]);
-        },
-      ),
-    "Filter by categories",
-  );
-}
+// The ways an operation gets into the history.
+const ORIGINS = { manual: "By hand", schedule: "By schedule" };
 
 // Filters sheet (accounts, categories, types, tags, comment).
 export function filters() {
@@ -231,6 +166,19 @@ export function filters() {
           },
           "Comment",
         ),
+      )}${fieldButtonHtml(
+        "How added",
+        f.origin ? f.origin.map((id) => translate(ORIGINS[id])).join(", ") : "All operations",
+        () =>
+          multiSelect(
+            "How added",
+            Object.entries(ORIGINS).map(([id, name]) => ({ id, name })),
+            f.origin,
+            (v) => {
+              f.origin = v;
+              render();
+            },
+          ),
       )}</div>${sheetFooterHtml(
         buttonHtml(
           "Reset all",

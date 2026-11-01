@@ -71,3 +71,27 @@ when the person confirms; nothing is written to `appData` while typing.
 - **Subscriptions:** the pages exist as screens without a backend (`screens/more/info-pages.js`).
 - **React:** domain, data, i18n and platform do not touch the DOM and can be reused as they are;
   screens are the part that would be rewritten.
+
+## Scheduled payments
+
+A scheduled payment is a record in `appData.scheduled` shaped like an operation, plus `recur`,
+`reminder`, `time` (optional "HH:MM") and `anchorDay` (the day a monthly or yearly rule keeps).
+`domain/scheduled.js` finds its next date and posts what came due: at launch and when the app
+comes back to the screen, every occurrence up to today becomes an operation dated on its due day.
+The operation carries `fromSchedule: { id, date }`: which payment and which occurrence (an occurrence is posted
+once).
+An operation dated after today is not kept among the operations: `putOperation` stores it as a
+one-time scheduled payment.
+
+## Filters of the history
+
+`uiState.filters` is `{ accounts, categories, types, tags, comment, origin }`; `null` is
+"everything". A field is an OR over its choices and the fields are ANDed
+(`operationMatchesFilters` in `domain/finance.js`). Categories are matched by exact id: choosing a
+subcategory alone shows only its operations, not the parent's and not a same-named one under
+another parent; transfers have no category, so any category filter leaves them out.
+`origin` is `null` (all) or a list of `"manual"` and `"schedule"` (operations a scheduled payment
+made have `fromSchedule`; `byHand` is set when the person added the payment ahead of time with
+"Add now", so the list can say why an operation stands on its day). The history holds only what has happened; payments still to come
+are listed in their own section. The period bar steps with `shiftPeriod`; "All time" has no
+neighbours, so the arrows are disabled.

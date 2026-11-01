@@ -1,5 +1,5 @@
 /* Scheduled payments: the next date and posting a due payment */
-import { deepClone, newId, today, TODAY } from "../core/constants.js";
+import { deepClone, newId, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { putOperation } from "./operations.js";
@@ -28,9 +28,10 @@ export function nextDate(item) {
       }
     }
   } else {
+    // The rule keeps its own day: after a short month the next one is on that day again.
     const y = base.getUTCFullYear(),
       m = base.getUTCMonth(),
-      day = base.getUTCDate(),
+      day = item.anchorDay ?? base.getUTCDate(),
       delta = r.unit === "Years" ? 12 * r.every : r.every;
     const d = new Date(Date.UTC(y, m + delta, 1, 12));
     d.setUTCDate(
@@ -50,19 +51,31 @@ function advance(item) {
   return true;
 }
 
-// Record one occurrence of a scheduled payment as an operation of the given day.
-function postOccurrence(item, date) {
-  const op = { ...deepClone(item), id: newId(), date };
+// Was this occurrence of the payment already recorded (here or by another device)?
+const isPosted = (item, occurrence) =>
+  appData.ops.some((o) => o.fromSchedule?.id === item.id && o.fromSchedule.date === occurrence);
+
+// Record one occurrence of a scheduled payment as an operation of the given day. The operation
+// remembers the payment and the occurrence it settles, so it can be told apart from one entered by
+// hand, and tells a payment the person added ahead of time from one made on its day. An occurrence
+// is recorded only once.
+function postOccurrence(item, day, byHand = false) {
+  if (isPosted(item, item.date)) return false;
+  const op = { ...deepClone(item), id: newId(), date: day };
   delete op.recur;
   delete op.reminder;
+  delete op.time;
+  delete op.anchorDay;
+  op.fromSchedule = { id: item.id, date: item.date, ...(byHand && { byHand }) };
   putOperation(op);
+  return true;
 }
 
 // Post or skip a scheduled payment and schedule the next one.
 export function processScheduled(id, post) {
   const item = appData.scheduled.find((o) => o.id === id);
   if (!item) return;
-  if (post) postOccurrence(item, TODAY);
+  if (post) postOccurrence(item, today(), true);
   if (!advance(item)) appData.scheduled = appData.scheduled.filter((o) => o.id !== id);
   save();
 }
@@ -74,8 +87,7 @@ export function postDue(day = today()) {
   try {
     for (const item of [...appData.scheduled]) {
       while (item.date <= day) {
-        postOccurrence(item, item.date);
-        posted++;
+        if (postOccurrence(item, item.date)) posted++;
         if (!advance(item)) {
           appData.scheduled = appData.scheduled.filter((o) => o !== item);
           break;

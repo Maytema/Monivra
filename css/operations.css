@@ -349,6 +349,10 @@
   margin: 7px 0px 12px;
   background: var(--sheet);
 }
+/* The last row has no divider: it would be clipped by the rounded corners and look unfinished */
+.filter-group > :last-child {
+  border-bottom: 0px;
+}
 .filter-group-head {
   align-items: center;
   justify-content: space-between;
@@ -647,4 +651,17 @@
 }
 .op-note {
   color: var(--muted);
+}
+/* Collapse and expand all of a tree, at the right of the head of a picker */
+.filter-tools {
+  display: flex;
+  align-items: center;
+}
+/* Where an operation of a scheduled payment came from, under its account */
+.op-schedule {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
 }

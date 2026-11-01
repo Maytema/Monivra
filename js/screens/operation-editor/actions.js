@@ -33,6 +33,7 @@ export function compactActionsHtml(editor, duplicate) {
   const copy = () => {
     const clone = deepClone(draft);
     delete clone.id;
+    delete clone.fromSchedule;
     duplicate(clone, scheduled);
   };
   const skip = () =>

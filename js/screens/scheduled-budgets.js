@@ -1,6 +1,6 @@
 /* Scheduled payments and budgets */
 import { render } from "../app/shell.js";
-import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, timeNow, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import {
   categoryById,
@@ -8,11 +8,11 @@ import {
   dateLabel,
   formatMoney,
   parseDate,
-  periodBounds,
   periodTitle,
-  reportRows,
 } from "../domain/finance.js";
+import { budgetState } from "../domain/budgets.js";
 import { currencyName, translate } from "../i18n/index.js";
+import { exactPercent, percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
@@ -27,6 +27,7 @@ import {
 } from "./recurrence.js";
 import { amountPicker } from "../ui/number-picker.js";
 import { calendar } from "../ui/calendar.js";
+import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { closeLayers, finishFlow, openPage, openSheet } from "../ui/navigation.js";
 import { confirmAction, optionSheet } from "../ui/dialogs.js";
 import {
@@ -48,6 +49,7 @@ function scheduleDetails(o) {
   const line = (icon, text) =>
     `<div class="detail-line">${icon}<span>${escapeHtml(text)}</span></div>`;
   const rule = [
+    o.time ? line(iconSvg("clock", 18), timeLabel(o.time)) : "",
     o.recur ? line(iconSvg("repeat", 18), recurLabel(o.recur) + remainingLabel(o.recur)) : "",
     o.reminder ? line(iconSvg("bell", 18), reminderLabel(o.reminder)) : "",
   ].join("");
@@ -71,7 +73,7 @@ const dateTitle = (date) =>
   `${weekdayName(parseDate(date).getUTCDay(), "long")}, ${dateLabel(date, true)}`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
-  const setup = { date: TODAY, recur: null, reminder: null };
+  const setup = { date: TODAY, time: timeNow(), recur: null, reminder: null };
   const tiles = () =>
     openSheet(
       () =>
@@ -83,6 +85,11 @@ function scheduledCreate() {
               render();
             }),
           "schedule-tile schedule-date on",
+        )}${tile("clock", "Time", timeLabel(setup.time), () =>
+          timePicker(setup.time, (time) => {
+            setup.time = time;
+            render();
+          }),
         )}${tile("repeat", "Recur", setup.recur && recurLabel(setup.recur) + remainingLabel(setup.recur), () => recurrence(setup))}${tile("bell", "Reminder", setup.reminder && reminderLabel(setup.reminder), () => reminder(setup))}</div><div class="dialog-actions">${buttonHtml(
           "Complete",
           () => {
@@ -90,6 +97,7 @@ function scheduledCreate() {
             operationsAddMenu(
               {
                 date: setup.date,
+                time: setup.time,
                 recur: setup.recur,
                 reminder: setup.reminder,
               },
@@ -151,28 +159,6 @@ export function scheduledView() {
   );
 }
 
-// Amount spent in a budget's period.
-function budgetSpend(b) {
-  const period = {
-    mode: b.period || "month",
-    anchor: uiState.period.anchor || TODAY,
-  };
-  const [from, to] = periodBounds(period);
-  // The same rows the statistics count: fees taken into account, debt payments included when
-  // they count as expenses (only a budget for all expenses takes those).
-  return reportRows(appData.ops.filter((o) => o.date >= from && o.date <= to))
-    .filter(
-      (o) =>
-        o.reportType === "expense" &&
-        (!b.categories ||
-          b.categories.includes(o.category) ||
-          b.categories.includes(categoryById(o.category)?.parent)),
-    )
-    .reduce(
-      (s, o) => s + convertCurrency(o.reportAmount, appData.settings.currency, b.currency),
-      0,
-    );
-}
 // Days a budget period lasts, as the calendar icon of the period says.
 const PERIOD_DAYS = { day: 1, week: 7, month: 30, year: 365 };
 // Calendar icon with the number of days of a budget period.
@@ -180,17 +166,12 @@ const periodIcon = (period) =>
   `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
-// A budget with what is spent of it in the period shown by the period bar.
-const budgetState = (b) => {
-  const used = budgetSpend(b);
-  return { b, used, left: b.amount - used, share: b.amount ? (used / b.amount) * 100 : 0 };
-};
 const budgetCard = ({ b, used, left, share }) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
   return buttonHtml(
-    `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span>${meterHtml(share, left < 0)}<span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`,
+    `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percentLabel(share)}</span></span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`,
     () => editBudget(b),
     "card budget-card",
   );
@@ -242,12 +223,17 @@ function editBudget(b) {
         },
   });
 }
+// What is spent of a budget in its current period, with the exact percent.
+function budgetDetails(b) {
+  const { used, left, share } = budgetState(b);
+  return `<div class="card budget-card budget-details"><small class="muted">${periodTitle({ mode: b.period, anchor: uiState.period.anchor || TODAY })}</small><span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${exactPercent(share)}</span></span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span></div>`;
+}
 // Budget editor form.
 export function budgetView(p) {
   const b = p.draft;
   return (
     pageHeader(b.id ? "Edit budget" : "Create a budget") +
-    `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
+    `<div class="content">${b.id ? budgetDetails(b) : ""}<div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
       `<span class="period-value">${periodIcon(b.period)}${translate(BUDGET_PERIODS[b.period])}</span>`,
       () =>

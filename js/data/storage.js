@@ -55,6 +55,16 @@ function operationProblem(o, x, accountIds, categories, seen) {
       r.days.some((n) => !Number.isInteger(n) || n < 0 || n > 6))
   )
     return "the repeat setting is not valid";
+  if (o.time !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(o.time))
+    return "the time is not valid";
+  if (
+    o.anchorDay !== undefined &&
+    !(Number.isInteger(o.anchorDay) && o.anchorDay >= 1 && o.anchorDay <= 31)
+  )
+    return "the day of the repeat is not valid";
+  const link = o.fromSchedule;
+  if (link && (typeof link.id !== "string" || !validDate(link.date)))
+    return "the scheduled payment it came from is not valid";
   return null;
 }
 // First problem of a dataset as { what, number, reason }, or null when the data is valid.

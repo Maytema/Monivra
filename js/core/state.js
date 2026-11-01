@@ -31,6 +31,8 @@ export const emptyFilters = () => ({
   types: null,
   tags: null,
   comment: "",
+  // How operations were added ("manual", "schedule"); null is all.
+  origin: null,
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {
