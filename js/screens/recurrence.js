@@ -1,13 +1,12 @@
 /* Dialogs of a scheduled payment: how it repeats and when it reminds */
 import { render } from "../app/shell.js";
 import { deepClone, MAX_INTERVAL } from "../core/constants.js";
-import { translate, translateCount, translateWith } from "../i18n/index.js";
+import { currentLocale, translate, translateCount, translateWith } from "../i18n/index.js";
 import { closeLayers, openSheet } from "../ui/navigation.js";
 import { numberPicker } from "../ui/number-picker.js";
 import { optionSheet } from "../ui/dialogs.js";
 import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { buttonHtml, dropdownHtml, fieldButtonHtml, stepperHtml, toast } from "../ui/primitives.js";
-import { weekdayName } from "./operations.js";
 
 const UNITS = ["Days", "Weeks", "Months", "Years"];
 // The unit in the singular, as the list shows it after the number one.
@@ -216,3 +215,30 @@ export function reminder(d) {
     "dialog",
   );
 }
+
+// Text describing a recurrence rule.
+export function recurLabel(r) {
+  if (!r) return translate("One time");
+  const every = {
+    Days: ["Every day", "Every {n} days"],
+    Weeks: ["Every week", "Every {n} weeks"],
+    Months: ["Every month", "Every {n} months"],
+    Years: ["Every year", "Every {n} years"],
+  }[r.unit];
+  const weekdays =
+    r.unit === "Weeks" && r.days?.length
+      ? " · " + r.days.map((n) => weekdayName(n)).join(", ")
+      : "";
+  return (
+    (r.every === 1 ? translate(every[0]) : translateCount(every[0], every[1], r.every)) + weekdays
+  );
+}
+// " (Remaining: 25)" for a rule limited to a number of repetitions.
+export const remainingLabel = (r) =>
+  r.remaining === null ? "" : ` (${translateWith("Remaining: {n}", { n: r.remaining })})`;
+// Short weekday name (0 is Sunday) in the interface language.
+export const weekdayName = (n, weekday = "short") =>
+  new Date(Date.UTC(2024, 0, 7 + n)).toLocaleDateString(currentLocale(), {
+    weekday,
+    timeZone: "UTC",
+  });

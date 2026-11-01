@@ -15,7 +15,7 @@ import { currencyName, translate, translateCount, translateWith } from "../i18n/
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor/start.js";
 import { categoryMoney, categoryTileHtml } from "./pickers.js";
-import { openFilteredOperations } from "./operations.js";
+import { openFilteredOperations } from "./operations/list.js";
 import {
   actionTileHtml,
   badgeHtml,

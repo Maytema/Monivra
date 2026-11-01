@@ -18,7 +18,7 @@ import {
 import { currentLocale, translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts.js";
 import { categoryActions, sumTabs } from "./categories.js";
-import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations.js";
+import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations/list.js";
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { periodBar } from "../ui/period-picker.js";

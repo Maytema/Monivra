@@ -4,7 +4,7 @@ import { appData } from "../../core/state.js";
 import { accountById, categoryById } from "../../domain/finance.js";
 import { putAccountOnSide, putCategoryOnSide } from "../../domain/sides.js";
 import { translate } from "../../i18n/index.js";
-import { tabsHtml, badgeHtml, buttonHtml } from "../../ui/primitives.js";
+import { badgeHtml, buttonHtml, tabsHtml } from "../../ui/primitives.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { accountCardsHtml, accountPicker, categoryTilesHtml } from "../pickers.js";
 

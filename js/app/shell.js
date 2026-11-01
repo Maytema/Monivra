@@ -18,7 +18,7 @@ import {
   orderView,
 } from "../screens/categories.js";
 import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
-import { filteredView, operationsFab, operationsView } from "../screens/operations.js";
+import { filteredView, operationsFab, operationsView } from "../screens/operations/list.js";
 import { budgetsView, budgetView, scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";

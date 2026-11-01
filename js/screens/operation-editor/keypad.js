@@ -7,8 +7,7 @@ import { currencyPicker } from "../../ui/currency-picker.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { buttonHtml, menuRowHtml, toast } from "../../ui/primitives.js";
 import { feeDialog, feeLabel } from "../fees.js";
-import { recurLabel, remainingLabel } from "../operations.js";
-import { recurrence, reminder, reminderLabel } from "../recurrence.js";
+import { recurLabel, recurrence, remainingLabel, reminder, reminderLabel } from "../recurrence.js";
 import { commitOperation } from "./editor.js";
 
 // A tap on the calculator key within this time of the previous one is a double tap.

@@ -26,7 +26,8 @@ import {
 } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { operationStart } from "./operation-editor/start.js";
-import { filters, operationsMenu } from "./operations.js";
+import { filters } from "./operations/filters.js";
+import { toggleOperationSearch } from "./operations/list.js";
 import { accountPicker } from "./pickers.js";
 import { hintHtml } from "../ui/hint.js";
 import { rateText } from "../ui/rate-line.js";
@@ -72,7 +73,7 @@ export function hero() {
           ? filters
           : uiState.search
             ? filters
-            : operationsMenu;
+            : toggleOperationSearch;
   return `<div class="hero ${uiState.tab === "operations" && uiState.search ? "hero-search" : ""}"><div class="caption">${buttonHtml(
     `<span>${translate("Overall balance")}</span>${iconSvg(appData.settings.hidden ? "eye" : "eyeOpen", 20)}`,
     () => {

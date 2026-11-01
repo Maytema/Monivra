@@ -15,8 +15,16 @@ import {
 import { currencyName, translate } from "../i18n/index.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
-import { operationsAddMenu, opRow, recurLabel, remainingLabel, weekdayName } from "./operations.js";
-import { recurrence, reminder, reminderLabel } from "./recurrence.js";
+import { operationsAddMenu } from "./operations/add-menu.js";
+import { opRow } from "./operations/list.js";
+import {
+  recurLabel,
+  recurrence,
+  remainingLabel,
+  reminder,
+  reminderLabel,
+  weekdayName,
+} from "./recurrence.js";
 import { amountPicker } from "../ui/number-picker.js";
 import { calendar } from "../ui/calendar.js";
 import { closeLayers, finishFlow, openPage, openSheet } from "../ui/navigation.js";
