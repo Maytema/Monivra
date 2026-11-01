@@ -259,6 +259,12 @@ function accountCalculatorView(p) {
   const isAdjustment = d.type === "adjustment";
   // A balance correction has no real counterpart: "Adjustment" stands on the side the money comes
   // from (a raise) or goes to (a cut) and can be replaced like any category or account.
+  // A subcategory is chosen on a row under the tiles; the tile itself always shows its category.
+  const root = c?.parent ? categoryById(c.parent) : c;
+  const subcategories =
+    root && appData.settings.subcategories
+      ? appData.categories.filter((x) => x.parent === root.id && !x.archived)
+      : [];
   const raise = isAdjustment && !!d.to,
     adjustment = { name: "Adjustment", icon: "edit", color: "#94949c" };
   const source = isAdjustment
@@ -268,7 +274,7 @@ function accountCalculatorView(p) {
       : isTransfer
         ? from
         : d.type === "income"
-          ? c
+          ? root
           : from,
     target = isAdjustment
       ? raise
@@ -278,7 +284,7 @@ function accountCalculatorView(p) {
         ? to
         : d.type === "income"
           ? to
-          : c;
+          : root;
   const accountCurrency = (from || to)?.currency || appData.settings.currency;
   const tile = (label, item, fn) =>
     buttonHtml(
@@ -286,6 +292,23 @@ function accountCalculatorView(p) {
       fn,
       "calc-tile",
     );
+  const pickSubcategory = (id, parentChosen) => {
+    d.category = id;
+    p.parentChosen = parentChosen ? root.id : null;
+    render();
+  };
+  const subcategoriesHtml = () => {
+    if (!subcategories.length) return "";
+    const chip = (label, id, active, parentChosen) =>
+      buttonHtml(
+        escapeHtml(label),
+        () => pickSubcategory(id, parentChosen),
+        `calc-sub ${active ? "active" : ""}`,
+        `aria-pressed="${active}"`,
+      );
+    const parentActive = d.category === root.id && (p.editing || p.parentChosen === root.id);
+    return `<div class="calc-subs">${subcategories.map((x) => chip(x.name, x.id, d.category === x.id, false)).join("")}${chip(translate("Parent"), root.id, parentActive, true)}</div>`;
+  };
   const chooseOwnAccount = () =>
     accountPicker(d.from || d.to, (id) => {
       if (d.to) d.to = id;
@@ -296,6 +319,16 @@ function accountCalculatorView(p) {
     isAdjustment && !raise ? chooseOwnAccount() : counterpartyPicker("from", d);
   const chooseTarget = () =>
     isAdjustment && raise ? chooseOwnAccount() : counterpartyPicker("to", d);
+  const editComment = () =>
+    promptText(
+      "Comment",
+      d.comment,
+      (v) => {
+        d.comment = v;
+        render();
+      },
+      "Comment",
+    );
   const calcMode = !!p.scratchMode;
   // A balance correction has "Adjustment" in the main currency as its other side.
   const pseudo = { currency: appData.settings.currency, color: adjustment.color },
@@ -507,7 +540,7 @@ function accountCalculatorView(p) {
   )}${iconButtonHtml("right", "Next day", () => {
     d.date = toIsoDate(new Date(parseDate(d.date).getTime() + 86400000));
     render();
-  })}</div><div class="calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${
+  })}</div><div class="calc-parties">${tile(!isTransfer && !isAdjustment && d.type === "income" ? "Category" : "Account", source, chooseSource)}${tile(isAdjustment ? "Account" : !isTransfer && d.type === "expense" ? "Category" : "Account", target, chooseTarget)}</div>${subcategoriesHtml()}${
     dual
       ? `<div class="calc-number dual-number ${p.currencySide === "send" ? "dual-active" : ""}" data-side="send" style="--tint:${escapeHtml(primary.color || "")}">${buttonHtml(
           escapeHtml(
@@ -546,7 +579,7 @@ function accountCalculatorView(p) {
       : ""
   }<div class="calc-extras">${
     d.comment
-      ? `<div class="calc-comment"><span>${escapeHtml(d.comment)}</span>${iconButtonHtml(
+      ? `<div class="calc-comment">${buttonHtml(escapeHtml(d.comment), editComment, "calc-comment-text", 'aria-label="Comment"')}${iconButtonHtml(
           "close",
           "Clear comment",
           () => {
@@ -558,19 +591,15 @@ function accountCalculatorView(p) {
   }<div class="calc-attachments">${buttonHtml('<svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12.5v5a4 4 0 0 0 8 0V6.5a3 3 0 0 0-6 0v10a1.5 1.5 0 0 0 3 0V7"/></svg>', () => photoMenu(d), "icon-button", 'aria-label="Attachment"')}${iconButtonHtml(
     "comment",
     "Comment",
-    () =>
-      promptText(
-        "Comment",
-        d.comment,
-        (v) => {
-          d.comment = v;
-          render();
-        },
-        "Comment",
-      ),
+    editComment,
   )}${iconButtonHtml("tag", "Tags", () => tagsPicker(d))}</div>${
     d.tags?.length
-      ? `<div class="calc-tags">${d.tags.map((x) => `<span class="tag-chip">${escapeHtml(x)}</span>`).join("")}</div>`
+      ? buttonHtml(
+          d.tags.map((x) => `<span class="tag-chip">${escapeHtml(x)}</span>`).join(""),
+          () => tagsPicker(d),
+          "calc-tags",
+          'aria-label="Tags"',
+        )
       : ""
   }${
     d.photo
@@ -817,5 +846,16 @@ export function opTitle(o) {
     ? "Adjustment"
     : o.type === "transfer"
       ? translate("Transfer")
-      : categoryById(o.category)?.name || translate("Category");
+      : categoryTitle(o.category);
+}
+// Name of a category as an operation shows it: a subcategory follows its category,
+// and an operation of a category that has subcategories says it belongs to the category itself.
+function categoryTitle(id) {
+  const c = categoryById(id);
+  if (!c) return translate("Category");
+  if (c.parent) return `${categoryById(c.parent)?.name} (${c.name})`;
+  const hasSubcategories = appData.categories.some((x) => x.parent === c.id && !x.archived);
+  return hasSubcategories && appData.settings.subcategories
+    ? `${c.name} (${translate("Parent")})`
+    : c.name;
 }

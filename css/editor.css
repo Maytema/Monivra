@@ -662,3 +662,34 @@
   color: var(--muted);
 }
 /* Hours and minutes side by side */
+.calc-subs {
+  display: flex;
+  gap: 8px;
+  margin: 0px 0px 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.calc-subs::-webkit-scrollbar {
+  display: none;
+}
+.calc-sub {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, var(--line));
+  border-radius: 999px;
+  color: var(--accent-ink);
+  white-space: nowrap;
+}
+.calc-sub.active {
+  background: color-mix(in srgb, var(--accent) 18%, var(--bg));
+  font-weight: 600;
+}
+.calc-comment-text {
+  flex: 1 1 0%;
+  min-height: 48px;
+  font-style: inherit;
+}
+button.calc-tags {
+  width: 100%;
+  text-align: left;
+}

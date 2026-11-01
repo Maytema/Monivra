@@ -129,6 +129,14 @@ export function promptText(title, value, fn, label = "Name") {
     title,
     "dialog",
   );
+  focusFieldEnd();
+}
+// Put the caret after the text of the first field of the top layer, so it can be edited at once.
+function focusFieldEnd() {
+  const field = [...document.querySelectorAll(".overlay")].at(-1)?.querySelector("input");
+  if (!field) return;
+  field.focus({ preventScroll: true });
+  field.setSelectionRange(field.value.length, field.value.length);
 }
 // Bottom sheet with radio options.
 export function optionSheet(title, options, value, fn, kind = "sheet") {

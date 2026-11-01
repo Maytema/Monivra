@@ -136,6 +136,45 @@ function animateBalance(before, now) {
     ?.classList.add(now > before ? "balance-rise" : "balance-fall");
 }
 
+// Scroll positions of the screens that are covered or left, by screen key.
+const screenScrolls = new Map();
+let renderedScreen = null;
+
+// Identity of what fills the screen: the open page or the root tab.
+function screenKey() {
+  return uiState.pages.length ? uiState.pages.map((p) => p.kind).join(">") : uiState.tab;
+}
+// Position of an element among the children of the app, so it can be found after a re-render.
+function domPath(app, el) {
+  const path = [];
+  for (let node = el; node !== app; node = node.parentElement)
+    path.unshift([...node.parentElement.children].indexOf(node));
+  return path;
+}
+// Every scrolled container (vertical or horizontal) with the place it has to return to.
+function scrolledContainers(app) {
+  return [...app.querySelectorAll("*")]
+    .filter((el) => el.scrollTop || el.scrollLeft)
+    .map((el) => ({
+      path: domPath(app, el),
+      className: el.className,
+      top: el.scrollTop,
+      left: el.scrollLeft,
+      base: !!el.closest("#base"),
+    }));
+}
+function restoreContainers(app, saved) {
+  for (const { path, className, top, left } of saved) {
+    let el = app;
+    for (const i of path) el = el?.children[i];
+    // A different element at that place means the screen was rebuilt: leave it alone.
+    if (el && el.className === className) {
+      el.scrollTop = top;
+      el.scrollLeft = left;
+    }
+  }
+}
+
 // Re-render the application and restore focus and scroll positions.
 export function render(top = false) {
   setActionHandlers({});
@@ -151,11 +190,16 @@ export function render(top = false) {
   previousBalance = overallBalance();
   const app = document.getElementById("app");
   // Remember what has to survive the re-render.
-  const scroll = top ? 0 : app.querySelector(".content")?.scrollTop || 0;
-  const panelScrolls = [...app.querySelectorAll(".panel")].map((x) => x.scrollTop);
-  const filterScrolls = [...app.querySelectorAll(".overlay .filter-scroll")].map(
-    (x) => x.scrollTop,
-  );
+  const screen = screenKey();
+  const scrolled = scrolledContainers(app);
+  const screenChanged = renderedScreen !== null && renderedScreen !== screen;
+  if (screenChanged)
+    screenScrolls.set(
+      renderedScreen,
+      scrolled.filter((x) => x.base),
+    );
+  if (top) screenScrolls.delete(screen);
+  renderedScreen = screen;
   const focused = document.activeElement;
   const focusLabel = focused?.getAttribute("aria-label");
   const selectionStart = focused?.selectionStart;
@@ -166,13 +210,9 @@ export function render(top = false) {
   initColorWheel();
   initClockDial();
   applyAppearance();
-  // Restore scroll positions.
-  const content = app.querySelector(".content");
-  if (content) content.scrollTop = scroll;
-  app.querySelectorAll(".panel").forEach((x, i) => (x.scrollTop = panelScrolls[i] || 0));
-  app.querySelectorAll(".overlay .filter-scroll").forEach((x, i) => {
-    x.scrollTop = filterScrolls[i] || 0;
-  });
+  // A screen that comes back finds its scroll where it was left; a re-render keeps everything.
+  if (screenChanged) restoreContainers(app, screenScrolls.get(screen) || []);
+  else if (!top) restoreContainers(app, scrolled);
   mountSwipeChrome();
   bindTabSwipe();
   animateBalance(balanceBefore, previousBalance);

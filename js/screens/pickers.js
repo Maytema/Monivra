@@ -51,7 +51,7 @@ export function categoryTileHtml(c, onPick, chosen = false, extra = "") {
 // Grid of tiles for the categories of one type; `onPick(category)` runs when one is tapped.
 export function categoryTilesHtml(type, chosenId, onPick, extraClass = "") {
   const tiles = appData.categories
-    .filter((c) => !c.archived && c.type === type)
+    .filter((c) => !c.archived && !c.parent && c.type === type)
     .map((c) => categoryTileHtml(c, () => onPick(c), c.id === chosenId))
     .join("");
   return `<div class="grid ${appData.settings.onePicker ? "one" : ""} ${extraClass}">${tiles}</div>`;
