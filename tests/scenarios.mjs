@@ -276,6 +276,14 @@ const scenarios = {
     await confirm.click();
     await page.getByText("Expenses, Incomes").waitFor();
   },
+  async "a payment that came due is offered and added to the operations with one tap"(page) {
+    await page.getByText("payment is due", { exact: false }).waitFor();
+    await page.getByText("payment is due", { exact: false }).click();
+    await page.getByText("1 payment added").waitFor();
+    expect(await page.getByText("is due", { exact: false }).count()).toBe(0);
+    await tab(page, "Operations");
+    await page.locator(".op-row").first().waitFor();
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
@@ -308,6 +316,11 @@ const expect = (actual) => ({
 });
 
 const adjustments = {
+  "a payment that came due is offered and added to the operations with one tap": (data) => {
+    const base = data.ops.find((op) => op.type === "expense");
+    const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
+    data.scheduled.push({ ...base, id: "due", date: dueDate, recur: null, reminder: null });
+  },
   "a subcategory is chosen on a row and shows in the history": addSubcategories,
   "a subcategory has no tile of its own in the category chooser": addSubcategories,
   "an amount in another currency is edited on both sides": (data) => {

@@ -7,7 +7,7 @@ import { putAccountOnSide, putCategoryOnSide } from "../js/domain/sides.js";
 import { accountBalance, categoryTotal, categoryTotalIn } from "../js/domain/finance.js";
 import { applyBulkChanges, validateOp } from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
-import { nextDate, processScheduled } from "../js/domain/scheduled.js";
+import { dueCount, nextDate, postDue, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
 const scheduledExpense = (date, recur) => {
@@ -241,6 +241,55 @@ check("The last repetition leaves the list", () => {
   scheduledExpense("2026-11-19", { every: 1, unit: "Days", remaining: 1, days: [] });
   processScheduled("__due", true);
   return appData.scheduled.length === 0;
+});
+
+check("Payments that came due are posted on the day they were due", () => {
+  const item = scheduledExpense("2026-11-19", {
+    every: 1,
+    unit: "Days",
+    remaining: 5,
+    days: [],
+  });
+  const count = appData.ops.length;
+  const due = dueCount("2026-11-21");
+  const posted = postDue("2026-11-21");
+  const days = appData.ops.slice(count).map((o) => o.date);
+  return (
+    due === 3 &&
+    posted === 3 &&
+    days.join() === "2026-11-19,2026-11-20,2026-11-21" &&
+    item.date === "2026-11-22" &&
+    item.recur.remaining === 2 &&
+    dueCount("2026-11-21") === 0
+  );
+});
+
+check("A one-time payment that came due is posted once and leaves the list", () => {
+  scheduledExpense("2026-11-19", null);
+  const count = appData.ops.length;
+  return (
+    dueCount("2026-11-20") === 1 &&
+    postDue("2026-11-20") === 1 &&
+    appData.ops.length === count + 1 &&
+    appData.scheduled.length === 0 &&
+    postDue("2026-11-20") === 0
+  );
+});
+
+check("A payment that is not due yet stays untouched", () => {
+  const item = scheduledExpense("2026-11-25", {
+    every: 1,
+    unit: "Days",
+    remaining: null,
+    days: [],
+  });
+  const count = appData.ops.length;
+  return (
+    dueCount("2026-11-24") === 0 &&
+    postDue("2026-11-24") === 0 &&
+    appData.ops.length === count &&
+    item.date === "2026-11-25"
+  );
 });
 
 check("A weekly payment goes to the chosen days of the week", () => {
