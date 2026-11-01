@@ -12,7 +12,7 @@ dependencies. Everything is stored on the device in `localStorage`.
 ES modules need a web server (opening `index.html` from the file system does not work).
 
 - Locally: `python3 -m http.server 8000`, then open <http://localhost:8000>.
-- GitHub Pages: *Deploy from a branch* → `main` / `/ (root)`.
+- GitHub Pages: _Deploy from a branch_ → `main` / `/ (root)`.
 
 ## Check
 
@@ -25,10 +25,12 @@ npm run format:check
 
 ## Documents
 
-| Document                                 | What it is                                              |
-| ---------------------------------------- | ------------------------------------------------------- |
-| [ARCHITECTURE.md](ARCHITECTURE.md)       | Layers, how a screen is drawn, where data lives         |
-| [MODULES.md](MODULES.md)                 | What every folder and module is for                     |
-| [DEVELOPMENT.md](DEVELOPMENT.md)         | Conventions, how to add a screen, a language, a check   |
-| [REFACTOR_REPORT.md](REFACTOR_REPORT.md) | What the architecture clean-up changed and what is left |
-| [tools/visual-regression](tools/visual-regression/README.md) | Screenshot comparison of every screen state |
+| Document                                                     | What it is                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| [AGENTS.md](AGENTS.md)                                       | Rules of the work and where to start, for an agent      |
+| [WHERE_TO_LOOK.md](WHERE_TO_LOOK.md)                         | A screen, a look or a symptom → the file to open        |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                           | Layers, how a screen is drawn, where data lives         |
+| [MODULES.md](MODULES.md)                                     | What every folder and module is for                     |
+| [DEVELOPMENT.md](DEVELOPMENT.md)                             | Conventions, how to add a screen, a language, a check   |
+| [REFACTOR_REPORT.md](REFACTOR_REPORT.md)                     | What the architecture clean-up changed and what is left |
+| [tools/visual-regression](tools/visual-regression/README.md) | Screenshot comparison of every screen state             |
