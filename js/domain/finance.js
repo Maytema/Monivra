@@ -104,14 +104,14 @@ const SEPARATORS = {
   "space-comma": ["\u00a0", ","],
 };
 export const NUMBER_FORMATS = Object.keys(SEPARATORS);
-// Number with the chosen separators and a true minus sign; `decimals` shows two fraction digits.
-export function formatNumber(n, format, group, decimals) {
+// Number with the chosen separators and a true minus sign. It shows at least `least` and at most
+// `most` fraction digits, so with (0, 2) a whole amount has none and 1.5 stays "1.5".
+export function formatNumber(n, format, group, least, most = least) {
   const [groupSign, decimalSign] = SEPARATORS[format] || SEPARATORS["comma-dot"];
-  const fraction = decimals ? 2 : 0;
   return (n / 100)
     .toLocaleString("en-US", {
-      minimumFractionDigits: fraction,
-      maximumFractionDigits: fraction,
+      minimumFractionDigits: least,
+      maximumFractionDigits: most,
       useGrouping: group,
     })
     .replace("-", "\u2212")
@@ -122,8 +122,9 @@ export function formatMoney(n, currency = appData.settings.currency, isBalance =
   if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
     return "•••• " + escapeHtml(currency);
   const s = appData.settings;
-  const decimals = s.hideCents ? false : s.decimal || Math.abs(n) % 100 !== 0;
-  const text = formatNumber(n, s.numberFormat, s.groupDigits, decimals);
+  // "Two decimal places" always shows both digits; otherwise only the cents that exist.
+  const fixed = s.decimal && !s.hideCents ? 2 : 0;
+  const text = formatNumber(n, s.numberFormat, s.groupDigits, fixed, s.hideCents ? 0 : 2);
   return escapeHtml(appData.settings.currencyFirst ? currency + " " + text : text + " " + currency);
 }
 // Amount wrapped in a <span> colored by sign.
