@@ -3,7 +3,7 @@ import { render } from "../app/shell.js";
 import { escapeHtml, iconSvg, THEME_COLORS } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { formatNumber, NUMBER_FORMATS } from "../domain/finance.js";
+import { formatMoney, formatNumber, NUMBER_FORMATS } from "../domain/finance.js";
 import { changeMainCurrency } from "../domain/currency-change.js";
 import { LANGUAGES, translate } from "../i18n/index.js";
 import { statsSettings } from "./statistics.js";
@@ -133,7 +133,7 @@ function formattingPage() {
       "Currency format",
       null,
       currencyFormatSheet,
-      `${formatNumber(123456789, s.numberFormat, s.groupDigits, s.decimal || !s.hideCents)} ${s.currency}`,
+      formatMoney(12345678900, s.currency),
     )}${switchSetting("Hide cents", "hideCents", "Amounts are shown rounded to whole units")}${settingOptions(
       "Date format",
       "dateFormat",

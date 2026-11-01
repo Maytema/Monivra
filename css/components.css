@@ -892,6 +892,32 @@
 .overlay .panel > .row:last-child {
   border-bottom: 0px;
 }
+/* A switch card that follows list rows keeps the same distance as the cards between themselves */
+.overlay .panel > .row + .field {
+  margin-top: 14px;
+}
+/* The buttons of a sheet stay in view while the content above them scrolls. A sheet that has
+   them ends with them, so nothing shows under the bar. */
+.overlay .panel:has(> .sheet-footer) {
+  padding-bottom: 0px;
+}
+.sheet-footer {
+  position: sticky;
+  bottom: 0px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 12px;
+  margin: 0px -16px;
+  padding: 12px 16px 23px;
+  border-top: 1px solid var(--line);
+  background: var(--sheet);
+}
+.sheet-footer button {
+  min-height: 48px;
+  margin: 0px;
+  border-radius: 26px;
+}
 .overlay.dialog .panel {
   border-radius: 28px;
   background: var(--dialog);
