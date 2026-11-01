@@ -61,7 +61,7 @@ import {
 
 // Header block of the root screens: title, balance and action buttons.
 export function hero() {
-  let icon =
+  const icon =
     uiState.tab === "accounts"
       ? "plus"
       : uiState.tab === "categories"
@@ -71,7 +71,7 @@ export function hero() {
           : uiState.search
             ? "filter"
             : "more";
-  let fn =
+  const fn =
     uiState.tab === "accounts"
       ? () => editAccount()
       : uiState.tab === "categories"
@@ -452,7 +452,7 @@ function currencyChangeDialog(a, currency, done) {
 // Store the validated draft; `mode` is how a currency change treats the operations (see
 // `changeAccountCurrency`).
 function storeAccount(d, mode) {
-  let old = accountById(d.id);
+  const old = accountById(d.id);
   if (old && old.currency !== d.currency) {
     // Fields the user did not touch follow the conversion; edited ones are taken as typed.
     const keys = ["balance", "goal", "limit", "totalDebt"],
@@ -511,7 +511,7 @@ function storeAccount(d, mode) {
   if (d.createOperation && d.type === "Debt" && change) {
     const target = accountById(temp.id),
       other = accountById(d.counterpart);
-    let op = {
+    const op = {
       type: "transfer",
       date: TODAY,
       comment: "Debt balance adjustment",

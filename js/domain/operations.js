@@ -123,7 +123,7 @@ export function reorderCategories(orderedIds) {
   save();
 }
 export function deleteOperation(id, scheduled = false) {
-  let key = scheduled ? "scheduled" : "ops";
+  const key = scheduled ? "scheduled" : "ops";
   appData[key] = appData[key].filter((o) => o.id !== id);
   uiState.selected = uiState.selected.filter((x) => x !== id);
   save();

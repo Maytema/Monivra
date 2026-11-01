@@ -216,7 +216,7 @@ function shiftPeriod(n) {
     p.from = addDays(p.from, n * days);
     p.to = addDays(p.to, n * days);
   } else if (p.mode === "month" || p.mode === "year") {
-    let d = parseDate(p.anchor);
+    const d = parseDate(p.anchor);
     d.setUTCDate(1);
     d.setUTCMonth(d.getUTCMonth() + n * (p.mode === "year" ? 12 : 1));
     p.anchor = toIsoDate(d);
@@ -466,7 +466,7 @@ export function iconPicker(obj) {
     render();
   };
   const randomSettings = () => {
-    let working = {
+    const working = {
       iconAccounts: false,
       iconCategories: false,
       colorAccounts: false,
@@ -520,7 +520,7 @@ export function iconPicker(obj) {
   };
   const pickerSettings = (mode = "icon") => {
     const isColor = mode === "color";
-    let working = {
+    const working = {
       ...(appData.settings[isColor ? "colorPickerExclusions" : "iconPickerExclusions"] || {}),
     };
     const keys = isColor
@@ -628,7 +628,7 @@ export function amountPicker(title, value, fn, allowNegative = false, currency =
         },
         () => {
           try {
-            let n = evaluateExpression(expr);
+            const n = evaluateExpression(expr);
             if (n < 0 && !allowNegative) throw Error("Use a non-negative amount");
             closeLayers();
             fn(n);

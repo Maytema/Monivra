@@ -151,7 +151,7 @@ export function scheduledView() {
 
 // Amount spent in a budget's period.
 export function budgetSpend(b) {
-  let period = {
+  const period = {
     mode: b.period || "month",
     anchor: uiState.period.anchor || TODAY,
   };

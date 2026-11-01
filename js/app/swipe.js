@@ -52,7 +52,7 @@ function swipeAdvanceState(direction) {
     p.from = addDays(p.from, direction * days);
     p.to = addDays(p.to, direction * days);
   } else if (p.mode === "month" || p.mode === "year") {
-    let d = parseDate(p.anchor);
+    const d = parseDate(p.anchor);
     d.setUTCDate(1);
     d.setUTCMonth(d.getUTCMonth() + direction * (p.mode === "year" ? 12 : 1));
     p.anchor = toIsoDate(d);

@@ -95,7 +95,7 @@ function categoryTile(c, fn = null) {
 
 // Categories tab.
 export function categoriesView() {
-  let list = appData.categories.filter(
+  const list = appData.categories.filter(
     (c) => c.type === uiState.catType && !c.archived && !c.parent,
   );
   return (

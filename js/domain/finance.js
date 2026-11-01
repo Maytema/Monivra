@@ -136,7 +136,7 @@ export const parseDate = (s) => new Date(s + "T12:00:00Z");
 export const toIsoDate = (d) => d.toISOString().slice(0, 10);
 // Add days to a YYYY-MM-DD string.
 export const addDays = (s, n) => {
-  let d = parseDate(s);
+  const d = parseDate(s);
   d.setUTCDate(d.getUTCDate() + n);
   return toIsoDate(d);
 };
@@ -165,19 +165,19 @@ export function periodBounds(p = uiState.period) {
   if (p.mode === "range") return [p.from, p.to];
   if (p.mode === "day") return [p.anchor, p.anchor];
   if (p.mode === "week") {
-    let a = addDays(p.anchor, -((d.getUTCDay() - appData.settings.weekStart + 7) % 7));
+    const a = addDays(p.anchor, -((d.getUTCDay() - appData.settings.weekStart + 7) % 7));
     return [a, addDays(a, 6)];
   }
   if (p.mode === "year") return [`${y}-01-01`, `${y}-12-31`];
   const day = appData.settings.monthStart;
   const start = (month) => {
-    let z = new Date(Date.UTC(y, month, 1, 12));
+    const z = new Date(Date.UTC(y, month, 1, 12));
     z.setUTCDate(
       Math.min(day, new Date(Date.UTC(z.getUTCFullYear(), z.getUTCMonth() + 1, 0)).getUTCDate()),
     );
     return toIsoDate(z);
   };
-  let month = p.anchor < start(m) ? m - 1 : m;
+  const month = p.anchor < start(m) ? m - 1 : m;
   return [start(month), addDays(start(month + 1), -1)];
 }
 
@@ -253,7 +253,7 @@ export function visibleOperations() {
 }
 // Flat rows used by CSV export and the printable report.
 export function reportRows(ops = visibleOperations()) {
-  let out = [];
+  const out = [];
   for (const o of ops) {
     if (o.type === "adjustment") continue;
     if (o.type !== "transfer") {
@@ -359,22 +359,19 @@ export function evaluateExpression(expr) {
   if (!/^-?\d*\.?\d+(?:[+\-*/]-?\d*\.?\d+)*$/.test(clean)) throw Error("Enter a valid amount");
   const tokens = clean.match(/(?:^|(?<=[+*/-]))-?\d*\.?\d+|[+*/-]/g);
   if (!tokens || tokens.join("") !== clean) throw Error("Invalid expression");
-  let terms = [],
-    last = "+",
-    v = Number(tokens[0]);
-  terms.push(v);
+  const terms = [Number(tokens[0])];
   for (let i = 1; i < tokens.length; i += 2) {
-    last = tokens[i];
-    v = Number(tokens[i + 1]);
-    if (last === "*") terms[terms.length - 1] *= v;
-    else if (last === "/") {
-      if (v === 0) throw Error("Cannot divide by zero");
-      terms[terms.length - 1] /= v;
-    } else terms.push(last === "-" ? -v : v);
+    const operator = tokens[i];
+    const operand = Number(tokens[i + 1]);
+    if (operator === "*") terms[terms.length - 1] *= operand;
+    else if (operator === "/") {
+      if (operand === 0) throw Error("Cannot divide by zero");
+      terms[terms.length - 1] /= operand;
+    } else terms.push(operator === "-" ? -operand : operand);
   }
-  const n = Math.round(terms.reduce((a, b) => a + b, 0) * 100);
-  if (!Number.isSafeInteger(n) || Math.abs(n) > 9e12) throw Error("Amount is too large");
-  return n;
+  const cents = Math.round(terms.reduce((sum, term) => sum + term, 0) * 100);
+  if (!Number.isSafeInteger(cents) || Math.abs(cents) > 9e12) throw Error("Amount is too large");
+  return cents;
 }
 // Copy of the dataset without its backup list.
 export function dataSnapshot() {

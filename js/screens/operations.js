@@ -370,7 +370,7 @@ export function multiSelect(title, items, selected, fn) {
 }
 // Account selection grouped by account type.
 function filterAccountSelect(selected, done) {
-  let values = selected ? new Set(selected) : new Set(appData.accounts.map((a) => a.id));
+  const values = selected ? new Set(selected) : new Set(appData.accounts.map((a) => a.id));
   const groups = ACCOUNT_GROUPS;
   const checked = (ids) => ids.length > 0 && ids.every((id) => values.has(id));
   const expanded = new Set(groups.map((g) => g[0]));
@@ -421,7 +421,7 @@ function filterAccountSelect(selected, done) {
 }
 // Category selection with expandable tree.
 function filterCategorySelect(selected, done) {
-  let values = selected ? new Set(selected) : new Set(appData.categories.map((c) => c.id));
+  const values = selected ? new Set(selected) : new Set(appData.categories.map((c) => c.id));
   const ids = appData.categories.map((c) => c.id),
     expanded = new Set(["expense", "income"]);
   const parentExpanded = new Set(appData.categories.filter((c) => !c.parent).map((c) => c.id));
