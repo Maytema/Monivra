@@ -6,7 +6,7 @@ import { deleteAccount } from "../js/domain/accounts.js";
 import { putAccountOnSide, putCategoryOnSide } from "../js/domain/sides.js";
 import { accountBalance, categoryTotal, categoryTotalIn } from "../js/domain/finance.js";
 import { applyBulkChanges, validateOp } from "../js/domain/operations.js";
-import { deleteCategory } from "../js/domain/categories.js";
+import { deleteCategory, storeCategory } from "../js/domain/categories.js";
 import { nextDate, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
@@ -345,5 +345,53 @@ check("Deleted records leave the selection and the filters", () => {
   forgetDeleted(deleteAccount(cash.id));
   return (
     afterCategory && uiState.selected.length === 0 && uiState.filters.accounts.join() === "other"
+  );
+});
+
+check("Storing a category applies the planned changes of its subcategories", () => {
+  const base = { type: "expense", archived: false, currency: appData.settings.currency };
+  appData.categories.push(
+    { ...base, id: "__p", name: "Parent", parent: null },
+    { ...base, id: "__other", name: "Other", parent: null },
+    { ...base, id: "__s1", name: "Merged", parent: "__p" },
+    { ...base, id: "__s2", name: "Archived", parent: "__p" },
+    { ...base, id: "__s3", name: "Removed", parent: "__p" },
+  );
+  const cash = addAccount({ opening: 100000 });
+  const spend = (id, category) => ({
+    id,
+    type: "expense",
+    from: cash.id,
+    amount: 100,
+    category,
+    date: TODAY,
+    tags: [],
+  });
+  appData.ops = [spend("__o1", "__s1"), spend("__o3", "__s3")];
+  appData.budgets = [{ id: "__b", amount: 1, categories: ["__s1"] }];
+  const removed = storeCategory(
+    { ...appData.categories.find((c) => c.id === "__p"), name: "Renamed" },
+    {
+      newSubcategories: [{ ...base, id: "__s4", name: "Fresh" }],
+      subActions: [
+        { id: "__s1", mode: "mergeSub", target: "__other" },
+        { id: "__s2", mode: "archiveSub" },
+        { id: "__s3", mode: "deleteSub" },
+      ],
+    },
+  );
+  const find = (id) => appData.categories.find((c) => c.id === id);
+  return (
+    find("__p").name === "Renamed" &&
+    find("__s1") === undefined &&
+    appData.ops.find((o) => o.id === "__o1").category === "__other" &&
+    appData.budgets[0].categories.join() === "__other" &&
+    find("__s2").archived === true &&
+    find("__s3") === undefined &&
+    !appData.ops.some((o) => o.id === "__o3") &&
+    find("__s4").parent === "__p" &&
+    removed.operations.join() === "__o3" &&
+    removed.categories.includes("__s1") &&
+    removed.categories.includes("__s3")
   );
 });

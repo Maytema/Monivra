@@ -10,7 +10,7 @@ import {
   formatMoney,
   totalByType,
 } from "../domain/finance.js";
-import { deleteCategory, moveCategory } from "../domain/categories.js";
+import { deleteCategory, storeCategory } from "../domain/categories.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions } from "./accounts/actions.js";
 import { hero } from "./accounts/list.js";
@@ -287,35 +287,13 @@ function saveCategory(p, relocate = null) {
   const d = p.draft;
   if (!d.name.trim()) return toast("Enter a name");
   const apply = () => {
-    if (d.id && categoryById(d.id)) {
-      Object.assign(categoryById(d.id), d);
-    } else {
-      if (!d.id) d.id = newId();
-      appData.categories.push(deepClone(d));
-    }
-    for (const sub of p.newSubcategories || []) {
-      sub.parent = d.id;
-      if (!appData.categories.some((c) => c.id === sub.id)) appData.categories.push(deepClone(sub));
-    }
-    for (const a of p.subActions || []) {
-      const sub = categoryById(a.id);
-      if (!sub) continue;
-      if (a.mode === "archiveSub") sub.archived = true;
-      else if (a.mode === "restoreSub") sub.archived = false;
-      else if (a.mode === "promoteSub") sub.parent = null;
-      else if (a.mode === "moveSub" && categoryById(a.target)?.type === sub.type)
-        sub.parent = a.target;
-      else if (a.mode === "mergeSub" && categoryById(a.target)?.type === sub.type) {
-        for (const key of ["ops", "scheduled"])
-          for (const o of appData[key]) if (o.category === sub.id) o.category = a.target;
-        appData.categories = appData.categories.filter((x) => x.id !== sub.id);
-      } else if (a.mode === "deleteSub") {
-        forgetDeleted(deleteCategory(sub.id));
-      }
-    }
-    if (relocate && categoryById(relocate.target))
-      forgetDeleted(moveCategory(d.id, relocate.target, relocate.mode === "nest"));
-    save();
+    forgetDeleted(
+      storeCategory(d, {
+        newSubcategories: p.newSubcategories,
+        subActions: p.subActions,
+        relocate,
+      }),
+    );
     finishFlow("Category saved");
   };
   if ((p.subActions || []).some((a) => ["moveSub", "mergeSub", "promoteSub"].includes(a.mode)))
