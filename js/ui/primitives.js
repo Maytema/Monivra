@@ -1,6 +1,5 @@
 /* UI primitives: translation, action registry, buttons, fields, toast */
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { isTestMode } from "../core/test-mode.js";
 import { translate } from "../i18n/index.js";
 
 // Registry of click handlers referenced from markup via data-action.
@@ -66,10 +65,6 @@ export const fabHtml = (label, fn, extra = "") =>
   );
 // Message that slides down from the top edge; the icon and the tone say what happened.
 export function banner(s, icon, tone = "") {
-  if (isTestMode()) {
-    window.__toast = s;
-    return;
-  }
   const el = document.getElementById("banner");
   el.className = `show ${tone}`;
   el.innerHTML = `${iconSvg(icon, 30)}<span>${escapeHtml(translate(s))}</span>`;
@@ -97,10 +92,6 @@ export const menuRowHtml = (label, icon, fn, sub = "", end = "") =>
   );
 // Show a short message at the bottom of the screen.
 export function toast(s) {
-  if (isTestMode()) {
-    window.__toast = s;
-    return;
-  }
   const el = document.getElementById("toast");
   el.textContent = translate(s);
   el.classList.add("show");

@@ -574,6 +574,9 @@
   border-radius: 20px;
   background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
+.overlay.full:has(.photo-viewer) .panel {
+  padding: 0px;
+}
 .photo-viewer {
   height: 100%;
   display: flex;

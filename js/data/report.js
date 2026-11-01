@@ -1,6 +1,6 @@
 /* Printable report (saved as PDF from the print dialog) of the operations in the chosen period */
 import { APP_NAME, escapeHtml } from "../core/constants.js";
-import { isTestMode } from "../core/test-mode.js";
+import { printHtml } from "../platform/files.js";
 import {
   accountById,
   categoryById,
@@ -51,13 +51,8 @@ const row = (o) =>
 export function printReport() {
   const income = totalByType("income"),
     expense = totalByType("expense");
-  const out = translateMarkup(
+  const report = translateMarkup(
     `<h1>${APP_NAME} · ${translate("Report")}</h1><p class="period">${escapeHtml(periodTitle())}</p><div class="totals"><span>${translate("Income")}<b class="in">${formatMoney(income)}</b></span><span>${translate("Expenses")}<b class="out">${formatMoney(expense)}</b></span><span>${translate("Cash flow")}<b>${formatMoney(income - expense)}</b></span></div><table><thead><tr><th>Date</th><th>Category</th><th>Account</th><th>Comment</th><th class="amount">Amount</th></tr></thead><tbody>${visibleOperations().map(row).join("")}</tbody></table>`,
   );
-  if (isTestMode()) {
-    window.__print = out;
-    return;
-  }
-  document.getElementById("printout").innerHTML = out;
-  window.print();
+  printHtml(report);
 }

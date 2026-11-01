@@ -49,10 +49,6 @@ export let uiState = {
   layers: [],
   reorder: false,
 };
-// Callback waiting for a photo chosen through the hidden file input.
-export let photoCallback = null;
-// Kind of file the import dialog expects: "json" or "csv".
-export let importKind = "json";
 // True while the PIN lock screen is shown.
 export let locked = false;
 // Digits typed so far on the PIN lock screen.
@@ -64,16 +60,6 @@ export function setAppData(value) {
 
 export function setUiState(value) {
   uiState = value;
-  return value;
-}
-
-export function setPhotoCallback(value) {
-  photoCallback = value;
-  return value;
-}
-
-export function setImportKind(value) {
-  importKind = value;
   return value;
 }
 

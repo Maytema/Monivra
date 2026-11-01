@@ -7,7 +7,6 @@ import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, uiState } from "../core/state.js";
-import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
@@ -182,10 +181,6 @@ export function render(top = false) {
   setHandlerCounter(0);
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
   const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
-  if (isTestMode()) {
-    window.__html = html;
-    return html;
-  }
   const balanceBefore = previousBalance;
   previousBalance = overallBalance();
   const app = document.getElementById("app");
@@ -229,5 +224,4 @@ export function render(top = false) {
         // some input types have no caret
       }
   }
-  return html;
 }

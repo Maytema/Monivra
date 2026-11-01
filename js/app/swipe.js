@@ -3,7 +3,6 @@ import { placeTabUnderline } from "./chrome.js";
 import { render, rootView } from "./shell.js";
 import { deepClone } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
-import { isTestMode } from "../core/test-mode.js";
 import { addDays, parseDate, toIsoDate } from "../domain/finance.js";
 import {
   actionHandlers,
@@ -215,7 +214,7 @@ function swipeMove(s, dx) {
 }
 function swipeFinish(s, commit) {
   if (!s?.el) return;
-  const reduce = isTestMode() || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!s.track) {
     const old = s.el.style.transform;
     s.el.style.transform = "";

@@ -1,13 +1,10 @@
 /* Startup: global event handlers, routing and lifecycle */
-import { photoDataUrl } from "./photo.js";
 import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
-import { appData, photoCallback, setLocked, setPinEntry, uiState } from "../core/state.js";
-import { handleImport } from "../data/import-export.js";
+import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { categoryById, createBackup } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
-import { translate } from "../i18n/index.js";
-import { closeLayers, goBack, goHome, showInfo } from "../ui/kit.js";
+import { closeLayers, goBack, goHome } from "../ui/kit.js";
 import { actionHandlers, inputHandlers, toast } from "../ui/primitives.js";
 
 // Attach global handlers (clicks, inputs, swipe gestures, hash routing) and render.
@@ -96,30 +93,6 @@ export function startup() {
       clearTimeout(heldTimer);
       holdStart = null;
     });
-  document.getElementById("import-file").addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    e.target.value = "";
-    if (file.size > 20 * 1024 * 1024)
-      return showInfo("The file is larger than the 20 MB import limit.", "Import failed");
-    try {
-      handleImport(await file.text());
-    } catch (error) {
-      showInfo(error.message, "Import failed");
-      console.error("Import failed:", error);
-    }
-  });
-  document.getElementById("photo-file").addEventListener("change", async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      photoCallback?.(await photoDataUrl(file));
-    } catch (error) {
-      console.error("Photo failed:", error);
-      // The format of the file and the kind of failure tell an unreadable file from an unsupported format.
-      toast(`${translate("This image could not be opened")} (${file.type || "?"}, ${error.name})`);
-    }
-  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       hiddenAt = Date.now();

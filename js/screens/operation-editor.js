@@ -1,8 +1,9 @@
 /* Operation editor: pickers, calculator, forms */
 import { render } from "../app/shell.js";
 import { MAX_PHOTOS, TODAY, deepClone, escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, setPhotoCallback, uiState } from "../core/state.js";
-import { isTestMode } from "../core/test-mode.js";
+import { appData, uiState } from "../core/state.js";
+import { photoDataUrl } from "../platform/photo.js";
+import { pickFile } from "../platform/files.js";
 import { save } from "../data/storage.js";
 import {
   accountBalance,
@@ -836,24 +837,22 @@ export function photoViewer(src) {
     "full",
   );
 }
-// Open the file chooser for an operation photo.
-function choosePhoto(d, camera) {
-  if (isTestMode()) {
-    toast("File picker requested");
+// Let the person pick or take a photo and attach it to the operation.
+async function choosePhoto(draft, camera) {
+  const file = await pickFile({ accept: "image/*", camera });
+  if (!file) return;
+  try {
+    draft.photos.push(await photoDataUrl(file));
+  } catch (error) {
+    console.error("Photo failed:", error);
+    // The format and the kind of failure tell an unreadable file from an unsupported format.
+    toast(`${translate("This image could not be opened")} (${file.type || "?"}, ${error.name})`);
     return;
   }
-  setPhotoCallback((data) => {
-    d.photos.push(data);
-    closeLayers();
-    // The row of photos grows the editor: bring it, with the buttons above it, into view.
-    document.querySelector(".calc-extras")?.scrollIntoView({ block: "nearest" });
-    toast("Photo attached");
-  });
-  const e = document.getElementById("photo-file");
-  e.value = "";
-  if (camera) e.setAttribute("capture", "environment");
-  else e.removeAttribute("capture");
-  e.click();
+  closeLayers();
+  // The row of photos grows the editor: bring it, with the buttons above it, into view.
+  document.querySelector(".calc-extras")?.scrollIntoView({ block: "nearest" });
+  toast("Photo attached");
 }
 // Display title of an operation.
 export function opTitle(o) {
