@@ -81,7 +81,7 @@ function currencyFormatSheet() {
     () =>
       `<h2>${translate("Currency format")}</h2>${NUMBER_FORMATS.map((id) =>
         buttonHtml(
-          `<span class="grow">${escapeHtml(formatNumber(123456789, id, true, true))} ${escapeHtml(appData.settings.currency)}</span><input type="radio" tabindex="-1" ${draft.numberFormat === id ? "checked" : ""} aria-label="${id}">`,
+          `<span class="grow">${escapeHtml(formatNumber(123456789, id, true, 2))} ${escapeHtml(appData.settings.currency)}</span><input type="radio" tabindex="-1" ${draft.numberFormat === id ? "checked" : ""} aria-label="${id}">`,
           () => {
             draft.numberFormat = id;
             render();

@@ -889,12 +889,13 @@
   min-height: 56px;
   padding: 12px 9px;
 }
-.overlay .panel > .row:last-child {
+.overlay .panel > .row:last-child,
+.overlay .panel > .row:has(+ :not(.row)) {
   border-bottom: 0px;
 }
-/* A switch card that follows list rows keeps the same distance as the cards between themselves */
+/* A switch card that follows list rows is set a little apart from them */
 .overlay .panel > .row + .field {
-  margin-top: 14px;
+  margin-top: 18px;
 }
 /* The buttons of a sheet stay in view while the content above them scrolls. A sheet that has
    them ends with them, so nothing shows under the bar. */

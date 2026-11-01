@@ -9,6 +9,7 @@ import {
   amountPair,
   convertCurrency,
   evaluateExpression,
+  formatMoney,
   formatNumber,
   offRate,
   quoteRate,
@@ -184,6 +185,25 @@ check("The rate of an operation follows from its two amounts and is flagged when
 check(
   "Negative amounts use the minus sign",
   () =>
-    formatNumber(-50000, "comma-dot", true, true) === "\u2212500.00" &&
-    formatNumber(123456, "space-comma", true, false) === "1\u00a0235",
+    formatNumber(-50000, "comma-dot", true, 2) === "\u2212500.00" &&
+    formatNumber(123456, "space-comma", true, 0) === "1\u00a0235",
 );
+
+check("Cents are shown only when there are some, without a trailing zero", () => {
+  const settings = appData.settings;
+  const saved = { ...settings };
+  Object.assign(settings, { currency: "KGS", numberFormat: "comma-dot", groupDigits: true });
+  const shown = (setting) => {
+    Object.assign(settings, setting);
+    return [50000, 50050, 50051, -50051].map((n) => formatMoney(n).replace(/\u2212/, "-"));
+  };
+  const plain = shown({ decimal: false, hideCents: false });
+  const fixed = shown({ decimal: true, hideCents: false });
+  const whole = shown({ decimal: true, hideCents: true });
+  Object.assign(settings, saved);
+  return (
+    plain.join() === "500 KGS,500.5 KGS,500.51 KGS,-500.51 KGS" &&
+    fixed.join() === "500.00 KGS,500.50 KGS,500.51 KGS,-500.51 KGS" &&
+    whole.join() === "500 KGS,501 KGS,501 KGS,-501 KGS"
+  );
+});
