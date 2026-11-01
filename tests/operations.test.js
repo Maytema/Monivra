@@ -295,6 +295,19 @@ check("A payment that is not due yet stays untouched", () => {
   return postDue() === 0 && appData.ops.length === count && item.date === later;
 });
 
+check(
+  "A payment added ahead of time says it was added by hand, one made on its day does not",
+  () => {
+    const ahead = scheduledExpense(addDays(TODAY, 3), null);
+    processScheduled(ahead.id, true);
+    const byHand = appData.ops.at(-1).fromSchedule;
+    scheduledExpense(addDays(TODAY, -1), null);
+    postDue();
+    const onItsDay = appData.ops.at(-1).fromSchedule;
+    return byHand.byHand === true && byHand.date === addDays(TODAY, 3) && !onItsDay.byHand;
+  },
+);
+
 check("A posted payment remembers which payment and occurrence it came from", () => {
   const item = scheduledExpense(addDays(TODAY, -1), null);
   postDue();
@@ -404,8 +417,10 @@ check("The filter shows operations of scheduled payments, or leaves them out", (
   return (
     made === 3 &&
     pick({}).length === appData.ops.length &&
-    pick({ scheduled: "only" }).length === 3 &&
-    pick({ scheduled: "exclude" }).length === appData.ops.length - 3
+    pick({ origin: ["schedule"] }).length === 3 &&
+    pick({ origin: ["manual"] }).length === appData.ops.length - 3 &&
+    pick({ origin: ["manual", "schedule"] }).length === appData.ops.length &&
+    pick({ origin: [] }).length === 0
   );
 });
 

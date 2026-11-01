@@ -300,24 +300,26 @@ const scenarios = {
     expect(operations).toBe(false);
     expect(scheduled).toBe(true);
   },
-  async "operations of scheduled payments can be shown alone or left out of the history"(page) {
+  async "operations of scheduled payments are marked and can be shown alone or left out"(page) {
     await tab(page, "Operations");
     await page.getByLabel("Operation search").first().click();
-    const choose = async (choice) => {
+    const choose = async (...clicks) => {
       await page.locator("[aria-label=Filters]").first().click();
-      await page.locator(".panel .field", { hasText: "Scheduled payments" }).first().click();
-      await page.locator(".filter-choice", { hasText: choice }).click();
+      await page.locator(".panel .field", { hasText: "How added" }).first().click();
+      for (const name of clicks) await page.locator(".filter-choice", { hasText: name }).click();
       await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
       await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
     };
     const shown = () => page.locator(".op-row").count();
     await page.locator(".op-row").first().waitFor();
     const all = await shown();
-    expect(await page.locator(".op-row[data-operation^=plan] .op-name svg").count()).toBe(2);
-    await choose("Only by schedule");
-    expect(await shown()).toBe(2);
-    await choose("Without scheduled payments");
-    expect(await shown()).toBe(all - 2);
+    expect(await page.locator(".op-schedule").count()).toBe(3);
+    expect(await page.locator(".op-schedule", { hasText: "by hand" }).count()).toBe(1);
+    // Both are chosen at first: a tap takes one away.
+    await choose("By hand");
+    expect(await shown()).toBe(3);
+    await choose("By hand", "By schedule");
+    expect(await shown()).toBe(all - 3);
   },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
@@ -395,13 +397,13 @@ const adjustments = {
     const day = new Date().toLocaleDateString("en-CA");
     data.ops.push({ ...base, id: "today", date: day });
   },
-  "operations of scheduled payments can be shown alone or left out of the history": (data) => {
+  "operations of scheduled payments are marked and can be shown alone or left out": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const day = new Date().toLocaleDateString("en-CA");
-    const link = { id: "plan", date: day };
     data.ops.push(
-      { ...base, id: "plan-a", date: day, fromSchedule: link },
-      { ...base, id: "plan-b", date: day, fromSchedule: link },
+      { ...base, id: "plan-a", date: day, fromSchedule: { id: "plan", date: day } },
+      { ...base, id: "plan-b", date: day, fromSchedule: { id: "plan", date: day } },
+      { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {

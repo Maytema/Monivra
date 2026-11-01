@@ -12,7 +12,7 @@ import {
 } from "../domain/finance.js";
 import { budgetState } from "../domain/budgets.js";
 import { currencyName, translate } from "../i18n/index.js";
-import { percentLabel } from "./accounts/progress.js";
+import { exactPercent, percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
@@ -223,12 +223,17 @@ function editBudget(b) {
         },
   });
 }
+// What is spent of a budget in its current period, with the exact percent.
+function budgetDetails(b) {
+  const { used, left, share } = budgetState(b);
+  return `<div class="card budget-card budget-details"><small class="muted">${periodTitle({ mode: b.period, anchor: uiState.period.anchor || TODAY })}</small><span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${exactPercent(share)}</span></span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span></div>`;
+}
 // Budget editor form.
 export function budgetView(p) {
   const b = p.draft;
   return (
     pageHeader(b.id ? "Edit budget" : "Create a budget") +
-    `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
+    `<div class="content">${b.id ? budgetDetails(b) : ""}<div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
       `<span class="period-value">${periodIcon(b.period)}${translate(BUDGET_PERIODS[b.period])}</span>`,
       () =>

@@ -266,8 +266,7 @@ export function operationMatchesFilters(o, f = uiState.filters) {
       (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
     (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase())) &&
-    (f.scheduled !== "only" || o.fromSchedule) &&
-    (f.scheduled !== "exclude" || !o.fromSchedule)
+    (!f.origin || f.origin.includes(o.fromSchedule ? "schedule" : "manual"))
   );
 }
 // Operations that pass the active filters and period, newest first.

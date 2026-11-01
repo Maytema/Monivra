@@ -149,6 +149,9 @@
   padding: 14px 16px;
   text-align: left;
 }
+.budget-details {
+  margin-bottom: 16px;
+}
 .budget-title {
   font-size: 18px;
 }
@@ -183,6 +186,7 @@
   flex: 0 0 auto;
   min-width: 3.7em;
   text-align: right;
+  white-space: nowrap;
   font-size: 16px;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;

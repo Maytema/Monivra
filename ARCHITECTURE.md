@@ -85,12 +85,13 @@ one-time scheduled payment.
 
 ## Filters of the history
 
-`uiState.filters` is `{ accounts, categories, types, tags, comment, scheduled }`; `null` is
+`uiState.filters` is `{ accounts, categories, types, tags, comment, origin }`; `null` is
 "everything". A field is an OR over its choices and the fields are ANDed
 (`operationMatchesFilters` in `domain/finance.js`). Categories are matched by exact id: choosing a
 subcategory alone shows only its operations, not the parent's and not a same-named one under
 another parent; transfers have no category, so any category filter leaves them out.
-`scheduled` is `null` (all), `"only"` (operations a scheduled payment made, they have
-`fromSchedule`) or `"exclude"`. The history holds only what has happened; payments still to come
+`origin` is `null` (all) or a list of `"manual"` and `"schedule"` (operations a scheduled payment
+made have `fromSchedule`; `byHand` is set when the person added the payment ahead of time with
+"Add now", so the list can say why an operation stands on its day). The history holds only what has happened; payments still to come
 are listed in their own section. The period bar steps with `shiftPeriod`; "All time" has no
 neighbours, so the arrows are disabled.

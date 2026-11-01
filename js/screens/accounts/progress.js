@@ -1,10 +1,23 @@
 /* Progress of a goal or a debt repayment: percent, meter and the block in the account sheet */
 import { accountProgress, debtDirection, formatMoney } from "../../domain/finance.js";
-import { translate, translateWith } from "../../i18n/index.js";
+import { currentLocale, translate, translateWith } from "../../i18n/index.js";
 import { meterHtml } from "../../ui/primitives.js";
 
-// Percent with up to two decimals, the digits after the point set smaller.
+// From which percent on the figure is shortened.
+const COMPACT_FROM = 10000;
+const compactNumber = (n) =>
+  new Intl.NumberFormat(currentLocale(), { notation: "compact", maximumFractionDigits: 1 }).format(
+    n,
+  );
+// The exact percent, with its digits in full.
+export const exactPercent = (percent) =>
+  new Intl.NumberFormat(currentLocale(), { maximumFractionDigits: 2 }).format(percent) + "%";
+
+// Percent with up to two decimals, the digits after the point set smaller. A huge one is
+// shortened (2.4M); the exact figure is for the details.
 export function percentLabel(percent) {
+  if (percent >= COMPACT_FROM)
+    return `<span class="goal-pct-main">${compactNumber(percent)}</span><span class="goal-pct-unit">%</span>`;
   const parts = percent.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
   return `<span class="goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="goal-pct-frac">.${parts[1]}</span>` : ""}<span class="goal-pct-unit">%</span>`;
 }

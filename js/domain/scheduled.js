@@ -57,15 +57,16 @@ const isPosted = (item, occurrence) =>
 
 // Record one occurrence of a scheduled payment as an operation of the given day. The operation
 // remembers the payment and the occurrence it settles, so it can be told apart from one entered by
-// hand. An occurrence is recorded only once.
-function postOccurrence(item, day) {
+// hand, and tells a payment the person added ahead of time from one made on its day. An occurrence
+// is recorded only once.
+function postOccurrence(item, day, byHand = false) {
   if (isPosted(item, item.date)) return false;
   const op = { ...deepClone(item), id: newId(), date: day };
   delete op.recur;
   delete op.reminder;
   delete op.time;
   delete op.anchorDay;
-  op.fromSchedule = { id: item.id, date: item.date };
+  op.fromSchedule = { id: item.id, date: item.date, ...(byHand && { byHand }) };
   putOperation(op);
   return true;
 }
@@ -74,7 +75,7 @@ function postOccurrence(item, day) {
 export function processScheduled(id, post) {
   const item = appData.scheduled.find((o) => o.id === id);
   if (!item) return;
-  if (post) postOccurrence(item, today());
+  if (post) postOccurrence(item, today(), true);
   if (!advance(item)) appData.scheduled = appData.scheduled.filter((o) => o.id !== id);
   save();
 }

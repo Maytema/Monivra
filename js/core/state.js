@@ -31,8 +31,8 @@ export const emptyFilters = () => ({
   types: null,
   tags: null,
   comment: "",
-  // Operations made by a scheduled payment: null shows everything, "only" those, "exclude" hides them.
-  scheduled: null,
+  // How operations were added ("manual", "schedule"); null is all.
+  origin: null,
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {

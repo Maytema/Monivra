@@ -100,39 +100,8 @@ function filterAccountSelect(selected, done) {
   );
 }
 
-// What the filter shows of the operations that scheduled payments made.
-const SCHEDULED_CHOICES = [
-  [null, "All operations"],
-  ["only", "Only by schedule"],
-  ["exclude", "Without scheduled payments"],
-];
-
-// Choice of whether to show the operations that scheduled payments made.
-function scheduledSelect(current, done) {
-  let chosen = current;
-  openSheet(
-    () =>
-      pickerHtml(
-        "Scheduled payments",
-        "",
-        `<div class="filter-group">${SCHEDULED_CHOICES.map(([value, label]) =>
-          buttonHtml(
-            `<span class="grow">${translate(label)}</span><input type="radio" tabindex="-1" ${chosen === value ? "checked" : ""} aria-label="${escapeHtml(translate(label))}">`,
-            () => {
-              chosen = value;
-              render();
-            },
-            "filter-choice",
-          ),
-        ).join("")}</div>`,
-        () => {
-          closeLayers();
-          done(chosen);
-        },
-      ),
-    "Scheduled payments",
-  );
-}
+// The ways an operation gets into the history.
+const ORIGINS = { manual: "By hand", schedule: "By schedule" };
 
 // Filters sheet (accounts, categories, types, tags, comment).
 export function filters() {
@@ -198,13 +167,18 @@ export function filters() {
           "Comment",
         ),
       )}${fieldButtonHtml(
-        "Scheduled payments",
-        SCHEDULED_CHOICES.find(([value]) => value === f.scheduled)[1],
+        "How added",
+        f.origin ? f.origin.map((id) => translate(ORIGINS[id])).join(", ") : "All operations",
         () =>
-          scheduledSelect(f.scheduled, (v) => {
-            f.scheduled = v;
-            render();
-          }),
+          multiSelect(
+            "How added",
+            Object.entries(ORIGINS).map(([id, name]) => ({ id, name })),
+            f.origin,
+            (v) => {
+              f.origin = v;
+              render();
+            },
+          ),
       )}</div>${sheetFooterHtml(
         buttonHtml(
           "Reset all",

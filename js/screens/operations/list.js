@@ -10,6 +10,7 @@ import {
   categoryFamily,
   categoryTotalIn,
   convertCurrency,
+  dateLabel,
   formatMoney,
   moneySpanHtml,
   offRate,
@@ -63,6 +64,17 @@ function adjustmentSides(o, account) {
   return { account: raise ? o.receive : o.amount, pseudo: raise ? o.amount : o.receive };
 }
 
+// Why an operation is there: a scheduled payment made it on its day, or the person added it
+// by hand ahead of time.
+function scheduleNote(link) {
+  const text = link.byHand
+    ? translateWith("By schedule, by hand (planned {date})", {
+        date: dateLabel(link.date, true),
+      })
+    : translate("By schedule");
+  return `<span class="op-schedule">${iconSvg("calendar", 15)} ${text}</span>`;
+}
+
 // One row in the operations list.
 export function opRow(o, scheduled = false) {
   const a = accountById(o.from || o.to),
@@ -78,7 +90,7 @@ export function opRow(o, scheduled = false) {
   const pair = amountPair(o),
     rate = pair && offRate(pair) ? pair : null;
   return buttonHtml(
-    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(operationTitle(o))}${o.photos?.length ? iconSvg("clip", 15) : ""}${o.fromSchedule ? iconSvg("calendar", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}</span>${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-note">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${adjustment ? `<small class="op-foreign">${formatMoney(adjustment.pseudo, appData.settings.currency)}</small>` : ""}${inCategory ? `<small class="op-foreign">${formatMoney(inCategory.amount, inCategory.currency)}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(adjustment ? adjustment.account : o.amount, a?.currency)}${rate ? `<small class="op-foreign op-note">${pairRateText(rate)}</small>` : ""}</span>`,
+    `${uiState.selection ? `<span class="ops-select-icon ${selected ? "is-selected" : ""}">${selected ? iconSvg("check", 25) : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}</span>` : badgeHtml(c || { icon: "transfer", color: "#8694bb" }, true)}<span class="grow"><span class="op-name">${escapeHtml(operationTitle(o))}${o.photos?.length ? iconSvg("clip", 15) : ""}</span><span class="op-account">${iconSvg(a?.icon || "wallet", 18)} ${escapeHtml(a?.name || "")}${o.type === "transfer" ? " → " + escapeHtml(accountById(o.to)?.name || "") : ""}</span>${o.fromSchedule ? scheduleNote(o.fromSchedule) : ""}${o.comment ? `<span class="op-comment">${escapeHtml(o.comment)}</span>` : ""}${o.tags?.length ? `<span class="op-tags">${o.tags.map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("")}</span>` : ""}</span><span class="op-amount ${amountTone(o)}">${o.recalculated ? `<small class="op-foreign op-note">${translateWith("was {amount}", { amount: formatMoney(o.recalculated.amount, o.recalculated.currency) })}</small>` : ""}${adjustment ? `<small class="op-foreign">${formatMoney(adjustment.pseudo, appData.settings.currency)}</small>` : ""}${inCategory ? `<small class="op-foreign">${formatMoney(inCategory.amount, inCategory.currency)}</small>` : ""}${o.foreign ? `<small class="op-foreign">${formatMoney(o.foreign.amount, o.foreign.currency)}</small>` : ""}${o.type === "adjustment" ? (o.to ? "+" : "−") : ""}${formatMoney(adjustment ? adjustment.account : o.amount, a?.currency)}${rate ? `<small class="op-foreign op-note">${pairRateText(rate)}</small>` : ""}</span>`,
     () => {
       if (uiState.selection) {
         setSelected(
@@ -94,7 +106,7 @@ export function opRow(o, scheduled = false) {
 // Is any filter currently active?
 export function filterActive() {
   const f = uiState.filters;
-  return !!(f.accounts || f.categories || f.types || f.tags || f.comment || f.scheduled);
+  return !!(f.accounts || f.categories || f.types || f.tags || f.comment || f.origin);
 }
 
 // Total balance of the filtered accounts at a given date.

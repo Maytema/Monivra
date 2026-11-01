@@ -657,3 +657,11 @@
   display: flex;
   align-items: center;
 }
+/* Where an operation of a scheduled payment came from, under its account */
+.op-schedule {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
