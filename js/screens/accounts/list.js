@@ -16,7 +16,7 @@ import { translate } from "../../i18n/index.js";
 import { filters } from "../operations/filters.js";
 import { toggleOperationSearch } from "../operations/list.js";
 import { hintHtml } from "../../ui/hint.js";
-import { dueBannerHtml } from "../due-payments.js";
+import { postedNoticeHtml } from "../due-payments.js";
 import { badgeHtml, buttonHtml, iconButtonHtml, swipePane, tabsHtml } from "../../ui/primitives.js";
 import { registerInput } from "../../ui/handlers.js";
 import { openPage } from "../../ui/navigation.js";
@@ -198,7 +198,7 @@ export function accountsView() {
       "tabs account-tabs",
     ) +
     swipePane(
-      `<div class="content accounts-content">${dueBannerHtml()}${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${completedFolder}${folder("Archive", "archive", archived, "archive")}</div>`,
+      `<div class="content accounts-content">${postedNoticeHtml()}${list.length > 1 && uiState.accountTab !== "Total" ? hintHtml("account-reorder", "Hold an account to drag and reorder") : ""}${body}${completedFolder}${folder("Archive", "archive", archived, "archive")}</div>`,
     )
   );
 }

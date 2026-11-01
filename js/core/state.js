@@ -45,6 +45,8 @@ export const uiState = {
   search: false,
   filters: emptyFilters(),
   donut: null,
+  // Scheduled payments posted on their own since the person last looked.
+  paymentsPosted: 0,
   pages: [],
   layers: [],
   reorder: false,

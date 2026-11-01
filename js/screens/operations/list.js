@@ -19,7 +19,7 @@ import {
 } from "../../domain/finance.js";
 import { currentLocale, translate, translateWith } from "../../i18n/index.js";
 import { hero } from "../accounts/list.js";
-import { dueBannerHtml } from "../due-payments.js";
+import { postedNoticeHtml } from "../due-payments.js";
 import { operationStart } from "../operation-editor/start.js";
 import { operationTitle } from "../operation-title.js";
 import { pairRateText } from "../../ui/rate-line.js";
@@ -204,7 +204,7 @@ export function operationsView() {
   const summary =
     appData.settings.opening && ops.length > 0 && !filterActive() ? balanceSummary() : "";
   const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
-  const list = `<div class="content">${dueBannerHtml()}${summary}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`;
+  const list = `<div class="content">${postedNoticeHtml()}${summary}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`;
   const pane = periodBar() + banner + list;
   if (uiState.selection) return swipePane(selectionHeader(ops) + pane + selectionActions());
   return hero() + swipePane(pane);

@@ -44,7 +44,7 @@ Paths are under `js/`.
 | `domain/dual-amount.js`     | Which of the two amounts of a cross-currency operation leads                       |
 | `domain/keypad.js`          | Editing of the typed expression, digit order                                       |
 | `domain/operations.js`      | Check, store, delete, bulk-change operations                                       |
-| `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", what came due and posting it  |
+| `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", posting what came due         |
 | `domain/accounts.js`        | Account form state, checks, storing, favorite, deletion                            |
 | `domain/categories.js`      | Storing with subcategory changes, deleting, moving, merging                        |
 | `domain/currency-change.js` | Plan and apply a currency change of an account or of the application               |
@@ -72,7 +72,7 @@ confirmations, prompts, option lists, menus), and pickers: `calendar`, `currency
 | `screens/pickers.js`                                 | Account and category pickers used everywhere                                                                   |
 | `screens/fees.js`, `recurrence.js`                   | Tax/commission dialog; repeat and reminder dialogs and labels                                                  |
 | `screens/scheduled-budgets.js`, `category-select.js` | Scheduled payments, budgets, budget categories                                                                 |
-| `screens/due-payments.js`                            | Reminder that scheduled payments came due; one tap posts them                                                  |
+| `screens/due-payments.js`                            | Posts due payments on their own and tells the person; the notice                                               |
 | `screens/statistics.js`                              | Statistics and charts                                                                                          |
 | `screens/settings.js`, `rates.js`                    | Settings sections; exchange rates                                                                              |
 | `screens/more/`                                      | `menu`, `settings-pages`, `lock`, `info-pages`, `support`                                                      |

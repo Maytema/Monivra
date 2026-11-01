@@ -276,13 +276,16 @@ const scenarios = {
     await confirm.click();
     await page.getByText("Expenses, Incomes").waitFor();
   },
-  async "a payment that came due is offered and added to the operations with one tap"(page) {
-    await page.getByText("payment is due", { exact: false }).waitFor();
-    await page.getByText("payment is due", { exact: false }).click();
-    await page.getByText("1 payment added").waitFor();
-    expect(await page.getByText("is due", { exact: false }).count()).toBe(0);
-    await tab(page, "Operations");
+  async "a payment that came due is posted on its own and the notice leads to the operations"(
+    page,
+  ) {
+    await page.getByText("scheduled payment was added", { exact: false }).click();
     await page.locator(".op-row").first().waitFor();
+    expect(await page.getByText("was added", { exact: false }).count()).toBe(0);
+    const stored = await page.evaluate(
+      () => JSON.parse(localStorage.getItem("monivra.offline.2026.v1")).scheduled.length,
+    );
+    expect(stored).toBe(0);
   },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
@@ -316,7 +319,7 @@ const expect = (actual) => ({
 });
 
 const adjustments = {
-  "a payment that came due is offered and added to the operations with one tap": (data) => {
+  "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
     data.scheduled.push({ ...base, id: "due", date: dueDate, recur: null, reminder: null });
