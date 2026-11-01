@@ -261,6 +261,16 @@ const scenarios = {
     const confirm = page.locator(".sheet-footer").getByRole("button", { name: "Confirm" }).last();
     const box = await confirm.boundingBox();
     expect(box.y + box.height <= page.viewportSize().height).toBe(true);
+    // The bar ends where the sheet ends: nothing that scrolls shows under it.
+    const sheetBottom = await page
+      .locator(".overlay .panel")
+      .last()
+      .evaluate((el) => el.getBoundingClientRect().bottom);
+    const footerBottom = await page
+      .locator(".sheet-footer")
+      .last()
+      .evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(Math.round(footerBottom)).toBe(Math.round(sheetBottom));
     await page.locator(".filter-choice", { hasText: "Transfers" }).click();
     await page.getByText("2 selected").waitFor();
     await confirm.click();
