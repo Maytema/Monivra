@@ -25,7 +25,7 @@ import {
   validateOp,
 } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
-import { operationStart } from "./operation-editor.js";
+import { operationStart } from "./operation-editor/start.js";
 import { filters, operationsMenu } from "./operations.js";
 import { accountPicker } from "./pickers.js";
 import { hintHtml } from "../ui/hint.js";

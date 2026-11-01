@@ -126,6 +126,28 @@ const scenarios = {
     await page.getByLabel("Back").first().click();
     expect(await page.evaluate(() => document.querySelector(".content").scrollTop)).toBe(40);
   },
+  async "the calculator adds up and the check saves the result"(page) {
+    await openEditorOn(page, "Food");
+    await page.getByLabel("Additionally").dblclick();
+    for (const key of ["2", "+", "3"])
+      await page.locator(".calc-key", { hasText: key }).first().click();
+    await page.locator(".calc-confirm").click();
+    expect(await page.locator(".calc-number input").inputValue()).toBe("5");
+    await page.locator(".calc-confirm").click();
+    await tab(page, "Operations");
+    expect(await page.locator(".op-amount").first().innerText()).toMatch(/5/);
+  },
+  async "an amount in another currency is edited on both sides"(page) {
+    await openEditorOn(page, "Food");
+    expect(await page.locator(".dual-number").count()).toBe(2);
+    await page.locator(".dual-number.dual-receive .dual-value").click();
+    expect(await page.locator(".dual-active").getAttribute("class")).toMatch(/dual-receive/);
+    await page.locator(".calc-key", { hasText: "7" }).first().click();
+    expect(await page.locator(".dual-receive .dual-value").innerText()).toMatch(/^7 USD/);
+    await page.locator(".calc-confirm").click();
+    await tab(page, "Operations");
+    expect(await page.locator(".op-name").first().innerText()).toBe("Food");
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
@@ -152,12 +174,17 @@ const expect = (actual) => ({
   toBe(expected) {
     if (actual !== expected) throw Error(`expected ${expected}, got ${actual}`);
   },
+  toMatch(pattern) {
+    if (!pattern.test(actual)) throw Error(`expected ${actual} to match ${pattern}`);
+  },
 });
 
 const adjustments = {
   "a subcategory is chosen on a row and shows in the history": addSubcategories,
   "a subcategory has no tile of its own in the category chooser": addSubcategories,
-  "photos are listed under the buttons, limited, and removable": () => {},
+  "an amount in another currency is edited on both sides": (data) => {
+    data.categories.find((category) => category.name === "Food").currency = "USD";
+  },
 };
 function addSubcategories(data) {
   const food = data.categories.find((category) => category.name === "Food");

@@ -10,25 +10,37 @@ const browserGlobals = Object.fromEntries(
   ].map((name) => [name, "readonly"]),
 );
 
+const nodeGlobals = { Buffer: "readonly", process: "readonly", console: "readonly" };
+
+const rules = {
+  "no-undef": "error",
+  "no-unused-vars": ["error", { args: "after-used", caughtErrors: "none" }],
+  "no-redeclare": "error",
+  "no-dupe-keys": "error",
+  "no-duplicate-imports": "error",
+  "no-unreachable": "error",
+  "no-empty": ["error", { allowEmptyCatch: false }],
+  "no-shadow-restricted-names": "error",
+  "no-self-assign": "error",
+  "no-prototype-builtins": "error",
+  "no-useless-escape": "error",
+  "no-var": "error",
+  "prefer-const": "error",
+  eqeqeq: ["error", "always"],
+};
+
+const language = { ecmaVersion: 2023, sourceType: "module" };
+
 export default [
   {
     files: ["js/**/*.js", "tests/**/*.js"],
-    languageOptions: { ecmaVersion: 2023, sourceType: "module", globals: browserGlobals },
-    rules: {
-      "no-undef": "error",
-      "no-unused-vars": ["error", { args: "after-used", caughtErrors: "none" }],
-      "no-redeclare": "error",
-      "no-dupe-keys": "error",
-      "no-duplicate-imports": "error",
-      "no-unreachable": "error",
-      "no-empty": ["error", { allowEmptyCatch: false }],
-      "no-shadow-restricted-names": "error",
-      "no-self-assign": "error",
-      "no-prototype-builtins": "error",
-      "no-useless-escape": "error",
-      "no-var": "error",
-      "prefer-const": "error",
-      eqeqeq: ["error", "always"],
-    },
+    languageOptions: { ...language, globals: browserGlobals },
+    rules,
+  },
+  {
+    // Test runners are Node programs that drive the page in a browser.
+    files: ["tests/**/*.mjs"],
+    languageOptions: { ...language, globals: { ...nodeGlobals, ...browserGlobals } },
+    rules,
   },
 ];

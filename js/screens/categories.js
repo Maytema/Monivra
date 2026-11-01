@@ -13,7 +13,7 @@ import {
 import { deleteCategory, moveCategory } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
-import { operationStart } from "./operation-editor.js";
+import { operationStart } from "./operation-editor/start.js";
 import { categoryMoney, categoryTileHtml } from "./pickers.js";
 import { openFilteredOperations } from "./operations.js";
 import {
