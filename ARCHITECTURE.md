@@ -71,3 +71,14 @@ when the person confirms; nothing is written to `appData` while typing.
 - **Subscriptions:** the pages exist as screens without a backend (`screens/more/info-pages.js`).
 - **React:** domain, data, i18n and platform do not touch the DOM and can be reused as they are;
   screens are the part that would be rewritten.
+
+## Scheduled payments
+
+A scheduled payment is a record in `appData.scheduled` shaped like an operation, plus `recur`,
+`reminder`, `time` (optional "HH:MM") and `anchorDay` (the day a monthly or yearly rule keeps).
+`domain/scheduled.js` finds its next date and posts what came due: at launch and when the app
+comes back to the screen, every occurrence up to today becomes an operation dated on its due day.
+The operation carries `fromSchedule: { id, date, planned }`: which payment, which occurrence
+(an occurrence is posted once) and what was planned, so `editedFromPlan` can tell a changed one.
+An operation dated after today is not kept among the operations: `putOperation` stores it as a
+one-time scheduled payment.

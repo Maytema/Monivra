@@ -287,6 +287,61 @@ const scenarios = {
     );
     expect(stored).toBe(0);
   },
+  async "an operation moved to a future day becomes a scheduled payment"(page) {
+    await tab(page, "Operations");
+    await page.locator(".op-row").first().click();
+    await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    await page.getByText("Payment scheduled").waitFor();
+    const [operations, scheduled] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      return [data.ops.some((o) => o.id === "today"), data.scheduled.some((o) => o.id === "today")];
+    });
+    expect(operations).toBe(false);
+    expect(scheduled).toBe(true);
+  },
+  async "scheduled payments can be shown, hidden or only the changed ones"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    const choose = async (choice, then) => {
+      await page.locator("[aria-label=Filters]").first().click();
+      await page.locator(".panel .field", { hasText: "Scheduled payments" }).first().click();
+      await page.locator(".filter-choice", { hasText: choice }).click();
+      if (then) await page.locator(".filter-choice", { hasText: then }).click();
+      await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
+      await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
+    };
+    const shown = () => page.locator(".op-row").count();
+    await page.locator(".op-row").first().waitFor();
+    const all = await shown();
+    await choose("Only scheduled payments");
+    const only = await shown();
+    await choose("Only scheduled payments", "Only the ones I changed");
+    const changed = await shown();
+    await choose("Without scheduled payments");
+    const without = await shown();
+    expect(only).toBe(2);
+    expect(changed).toBe(1);
+    expect(without).toBe(all - 2);
+  },
+  async "a subcategory can be left out of the category filter and all can be folded"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    await page.locator(".op-row").first().waitFor();
+    const before = await page.locator(".op-row").count();
+    await page.locator("[aria-label=Filters]").first().click();
+    await page.locator(".panel .field", { hasText: "Categories" }).first().click();
+    await page.getByLabel("Collapse all").click();
+    expect(await page.locator(".filter-parent-row").count()).toBe(0);
+    await page.getByLabel("Expand all").click();
+    await page.locator(".filter-child-row", { hasText: "Cafe" }).getByRole("button").click();
+    expect(
+      await page.locator(".filter-child-row", { hasText: "Without subcategory" }).count(),
+    ).toBe(1);
+    await page.locator(".sheet-footer").last().getByRole("button", { name: "Confirm" }).click();
+    await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
+    expect(await page.locator(".op-row").count()).toBe(before - 1);
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
@@ -319,6 +374,37 @@ const expect = (actual) => ({
 });
 
 const adjustments = {
+  "a subcategory can be left out of the category filter and all can be folded": (data) => {
+    const food = data.categories.find((category) => category.name === "Food");
+    for (const name of ["Market", "Cafe"])
+      data.categories.push({ ...food, id: `sub-${name}`, name, parent: food.id });
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops.push({ ...base, id: "cafe", date: day, category: "sub-Cafe" });
+    data.ops.push({ ...base, id: "market", date: day, category: "sub-Market" });
+    data.ops.push({ ...base, id: "plain", date: day, category: food.id });
+  },
+  "an operation moved to a future day becomes a scheduled payment": (data) => {
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops.push({ ...base, id: "today", date: day });
+  },
+  "scheduled payments can be shown, hidden or only the changed ones": (data) => {
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    const planned = {
+      date: day,
+      amount: base.amount,
+      from: base.from,
+      to: base.to ?? null,
+      category: base.category,
+    };
+    const link = { id: "plan", date: day, planned };
+    data.ops.push(
+      { ...base, id: "plan-a", date: day, fromSchedule: link },
+      { ...base, id: "plan-b", date: day, amount: base.amount + 100, fromSchedule: link },
+    );
+  },
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");

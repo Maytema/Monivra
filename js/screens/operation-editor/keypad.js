@@ -1,10 +1,11 @@
 /* Keypad of the editor and the sheet with additional options */
 import { render } from "../../app/shell.js";
-import { escapeHtml, iconSvg } from "../../core/constants.js";
+import { escapeHtml, iconSvg, timeNow } from "../../core/constants.js";
 import { accountBalance, accountById } from "../../domain/finance.js";
 import { keypadDigits } from "../../domain/keypad.js";
 import { translate } from "../../i18n/index.js";
 import { currencyPicker } from "../../ui/currency-picker.js";
+import { timeLabel, timePicker } from "../../ui/time-picker.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { buttonHtml, menuRowHtml, toast } from "../../ui/primitives.js";
 import { feeDialog, feeLabel } from "../fees.js";
@@ -49,7 +50,20 @@ function additionalOptions(editor, model) {
   };
   openSheet(
     () =>
-      `<h2>Additionally</h2>${menuRowHtml("Fill max", "wallet", fillMax, "Use full sender account balance")}${menuRowHtml("Reminder", "bell", () => reminder(draft), draft.reminder ? reminderLabel(draft.reminder) : "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(draft), draft.recur ? recurLabel(draft.recur) + remainingLabel(draft.recur) : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(draft, "tax", render), feeLabel(draft, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(draft, "commission", render), feeLabel(draft, "commission"))}`,
+      `<h2>Additionally</h2>${menuRowHtml("Fill max", "wallet", fillMax, "Use full sender account balance")}${
+        editor.scheduled
+          ? menuRowHtml(
+              "Time",
+              "clock",
+              () =>
+                timePicker(draft.time || timeNow(), (time) => {
+                  draft.time = time;
+                  render();
+                }),
+              timeLabel(draft.time || timeNow()),
+            )
+          : ""
+      }${menuRowHtml("Reminder", "bell", () => reminder(draft), draft.reminder ? reminderLabel(draft.reminder) : "Turned off")}${menuRowHtml("Recur", "repeat", () => recurrence(draft), draft.recur ? recurLabel(draft.recur) + remainingLabel(draft.recur) : "Turned off")}${menuRowHtml("Tax", "receipt", () => feeDialog(draft, "tax", render), feeLabel(draft, "tax"))}${menuRowHtml("Commission", "percent", () => feeDialog(draft, "commission", render), feeLabel(draft, "commission"))}`,
     "Additionally",
   );
 }

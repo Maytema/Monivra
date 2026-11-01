@@ -3,7 +3,7 @@ import { render } from "../../app/shell.js";
 import { uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { accountById, convertCurrency, evaluateExpression } from "../../domain/finance.js";
-import { putOperation } from "../../domain/operations.js";
+import { isPlanned, putOperation } from "../../domain/operations.js";
 import { banner, toast } from "../../ui/primitives.js";
 
 // The state of one open editor: the operation being edited and how it is being edited.
@@ -54,11 +54,13 @@ export function commitOperation(editor) {
     draft.amount = evaluateExpression(draft.expr);
     applyEntryCurrency(draft);
     delete draft.accountAction;
+    // A date in the future makes it a scheduled payment, whichever way it was opened.
+    const planned = editor.scheduled || isPlanned(draft);
     putOperation(draft, editor.scheduled);
     uiState.layers = [];
     save();
     render();
-    if (editor.scheduled) banner("Payment scheduled", "calendar", "accent");
+    if (planned) banner("Payment scheduled", "calendar", "accent");
     else toast("Operation saved");
   } catch (e) {
     toast(e.message);

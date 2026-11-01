@@ -31,6 +31,10 @@ export const emptyFilters = () => ({
   types: null,
   tags: null,
   comment: "",
+  // Payments made by a schedule: null shows everything, "only" those, "exclude" hides them;
+  // `edited` narrows "only" to the ones the person changed after they were posted.
+  scheduled: null,
+  edited: false,
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {

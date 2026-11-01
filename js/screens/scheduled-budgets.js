@@ -1,6 +1,6 @@
 /* Scheduled payments and budgets */
 import { render } from "../app/shell.js";
-import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, timeNow, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import {
   categoryById,
@@ -13,6 +13,7 @@ import {
   reportRows,
 } from "../domain/finance.js";
 import { currencyName, translate } from "../i18n/index.js";
+import { percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
@@ -27,6 +28,7 @@ import {
 } from "./recurrence.js";
 import { amountPicker } from "../ui/number-picker.js";
 import { calendar } from "../ui/calendar.js";
+import { timeLabel, timePicker } from "../ui/time-picker.js";
 import { closeLayers, finishFlow, openPage, openSheet } from "../ui/navigation.js";
 import { confirmAction, optionSheet } from "../ui/dialogs.js";
 import {
@@ -48,6 +50,7 @@ function scheduleDetails(o) {
   const line = (icon, text) =>
     `<div class="detail-line">${icon}<span>${escapeHtml(text)}</span></div>`;
   const rule = [
+    o.time ? line(iconSvg("clock", 18), timeLabel(o.time)) : "",
     o.recur ? line(iconSvg("repeat", 18), recurLabel(o.recur) + remainingLabel(o.recur)) : "",
     o.reminder ? line(iconSvg("bell", 18), reminderLabel(o.reminder)) : "",
   ].join("");
@@ -71,7 +74,7 @@ const dateTitle = (date) =>
   `${weekdayName(parseDate(date).getUTCDay(), "long")}, ${dateLabel(date, true)}`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
-  const setup = { date: TODAY, recur: null, reminder: null };
+  const setup = { date: TODAY, time: timeNow(), recur: null, reminder: null };
   const tiles = () =>
     openSheet(
       () =>
@@ -83,6 +86,11 @@ function scheduledCreate() {
               render();
             }),
           "schedule-tile schedule-date on",
+        )}${tile("clock", "Time", timeLabel(setup.time), () =>
+          timePicker(setup.time, (time) => {
+            setup.time = time;
+            render();
+          }),
         )}${tile("repeat", "Recur", setup.recur && recurLabel(setup.recur) + remainingLabel(setup.recur), () => recurrence(setup))}${tile("bell", "Reminder", setup.reminder && reminderLabel(setup.reminder), () => reminder(setup))}</div><div class="dialog-actions">${buttonHtml(
           "Complete",
           () => {
@@ -90,6 +98,7 @@ function scheduledCreate() {
             operationsAddMenu(
               {
                 date: setup.date,
+                time: setup.time,
                 recur: setup.recur,
                 reminder: setup.reminder,
               },
@@ -190,7 +199,7 @@ const budgetCard = ({ b, used, left, share }) => {
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
   return buttonHtml(
-    `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span>${meterHtml(share, left < 0)}<span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`,
+    `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percentLabel(share)}</span></span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`,
     () => editBudget(b),
     "card budget-card",
   );

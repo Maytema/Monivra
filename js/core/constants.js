@@ -14,6 +14,8 @@ export const MAX_INTERVAL = 365;
 // Today as YYYY-MM-DD, read at the moment of the call (the app can stay open past midnight).
 export const today = () => new Date().toLocaleDateString("en-CA");
 export const TODAY = today();
+// The time of day now as "HH:MM".
+export const timeNow = () => new Date().toTimeString().slice(0, 5);
 // Deep copy of JSON-serializable data.
 export const deepClone = (x) => JSON.parse(JSON.stringify(x));
 // Generate a short unique id.

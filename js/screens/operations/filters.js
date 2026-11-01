@@ -7,18 +7,9 @@ import { translate, translateCount, translateWith } from "../../i18n/index.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { promptText } from "../../ui/dialogs.js";
 import { badgeHtml, buttonHtml, fieldButtonHtml, sheetFooterHtml } from "../../ui/primitives.js";
+import { filterCategorySelect } from "./category-filter.js";
+import { checkboxHtml, pickerHtml, summaryHtml } from "./filter-parts.js";
 import { registerAction } from "../../ui/handlers.js";
-
-const checkboxHtml = (on) => `<span class="checkbox ${on ? "on" : ""}">${on ? "✓" : ""}</span>`;
-
-// The common frame of the pickers of the filters: title, how many are chosen, a list that scrolls
-// and the buttons that stay in view.
-function pickerHtml(title, summary, list, confirm) {
-  return `<div class="filter-picker-head"><h2>${translate(title)}</h2>${summary ? `<span>${summary}</span>` : ""}</div><div class="filter-scroll">${list}</div>${sheetFooterHtml(
-    buttonHtml("Cancel", () => closeLayers(), "outline"),
-    buttonHtml("Confirm", confirm, "primary"),
-  )}`;
-}
 
 // Multi-select sheet: one group whose head chooses everything or nothing.
 function multiSelect(title, items, selected, done) {
@@ -50,7 +41,7 @@ function multiSelect(title, items, selected, done) {
   };
   openSheet(
     () =>
-      pickerHtml(title, translateWith("{n} selected", { n: values.size }), listHtml(), () => {
+      pickerHtml(title, summaryHtml(values.size), listHtml(), () => {
         closeLayers();
         done(values.size === items.length ? null : [...values]);
       }),
@@ -68,7 +59,7 @@ function filterAccountSelect(selected, done) {
     () =>
       pickerHtml(
         "Accounts",
-        translateWith("{n} selected", { n: values.size }),
+        summaryHtml(values.size),
         `${groups
           .map(([name, predicate]) => {
             const items = appData.accounts.filter(predicate),
@@ -109,62 +100,53 @@ function filterAccountSelect(selected, done) {
   );
 }
 
-// Category selection with expandable tree.
-function filterCategorySelect(selected, done) {
-  const values = selected ? new Set(selected) : new Set(appData.categories.map((c) => c.id));
-  const ids = appData.categories.map((c) => c.id),
-    expanded = new Set(["expense", "income"]);
-  const parentExpanded = new Set(appData.categories.filter((c) => !c.parent).map((c) => c.id));
-  const checked = (group) => group.length > 0 && group.every((id) => values.has(id));
-  const toggle = (group) => {
-    const on = checked(group);
-    group.forEach((id) => (on ? values.delete(id) : values.add(id)));
-    render();
-  };
+// What the filter shows of the operations that scheduled payments made.
+const SCHEDULED_CHOICES = [
+  [null, "All operations"],
+  ["only", "Only scheduled payments"],
+  ["exclude", "Without scheduled payments"],
+];
+const EDITED_CHOICES = [
+  [false, "All scheduled payments"],
+  [true, "Only the ones I changed"],
+];
+
+// Short text of the choice for the field of the filters sheet.
+function scheduledSummary(f) {
+  if (f.scheduled === "only" && f.edited) return "Only scheduled payments I changed";
+  return SCHEDULED_CHOICES.find(([value]) => value === f.scheduled)[1];
+}
+
+// Choice of the scheduled payments to show: all, only them, or none; and when only them,
+// all of them or just the ones changed after they were posted.
+function scheduledSelect(f, done) {
+  const draft = { scheduled: f.scheduled, edited: f.edited };
+  const group = (title, choices, key) =>
+    `<div class="filter-group"><div class="filter-group-head"><strong>${translate(title)}</strong></div>${choices
+      .map(([value, label]) =>
+        buttonHtml(
+          `<span class="grow">${translate(label)}</span><input type="radio" tabindex="-1" ${draft[key] === value ? "checked" : ""} aria-label="${escapeHtml(translate(label))}">`,
+          () => {
+            draft[key] = value;
+            render();
+          },
+          "filter-choice",
+        ),
+      )
+      .join("")}</div>`;
   openSheet(
     () =>
       pickerHtml(
-        "Filter by categories",
+        "Scheduled payments",
         "",
-        `<div class="filter-category-tree">${["expense", "income"]
-          .map((type) => {
-            const group = appData.categories.filter((c) => c.type === type),
-              groupIds = group.map((c) => c.id);
-            return `<div class="filter-group"><div class="filter-group-head"><button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(
-              () => {
-                expanded.has(type) ? expanded.delete(type) : expanded.add(type);
-                render();
-              },
-            )}">${iconSvg(expanded.has(type) ? "down" : "right", 19)}</button><strong>${type === "expense" ? "Expenses" : "Incomes"}</strong><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: translate(type === "expense" ? "Expenses" : "Incomes") })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${
-              expanded.has(type)
-                ? group
-                    .filter((c) => !c.parent)
-                    .map((c) => {
-                      const children = group.filter((x) => x.parent === c.id),
-                        groupIds = [c.id, ...children.map((x) => x.id)],
-                        open = parentExpanded.has(c.id);
-                      return `<div class="filter-parent-row">${
-                        children.length
-                          ? `<button class="filter-expand" aria-label="${translateWith("Expand {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(
-                              () => {
-                                open ? parentExpanded.delete(c.id) : parentExpanded.add(c.id);
-                                render();
-                              },
-                            )}">${iconSvg(open ? "down" : "right", 18)}</button>`
-                          : '<span class="filter-expand-placeholder"></span>'
-                      }${badgeHtml(c, true)}<span class="filter-label">${escapeHtml(c.name)}</span><button class="filter-check-action" aria-label="${translateWith("Select {name}", { name: escapeHtml(c.name) })}" data-action="${registerAction(() => toggle(groupIds))}"><span class="checkbox ${checked(groupIds) ? "on" : ""}">${checked(groupIds) ? "✓" : ""}</span></button></div>${open && children.length ? `<div class="filter-subcategories">${children.map((x) => `<div class="filter-child-row"><span class="filter-label">${escapeHtml(x.name)}</span><button class="filter-check-action" aria-label="Select ${escapeHtml(x.name)}" data-action="${registerAction(() => toggle([x.id]))}"><span class="checkbox ${values.has(x.id) ? "on" : ""}">${values.has(x.id) ? "✓" : ""}</span></button></div>`).join("")}</div>` : ""}`;
-                    })
-                    .join("")
-                : ""
-            }</div>`;
-          })
-          .join("")}</div>`,
+        group("Show", SCHEDULED_CHOICES, "scheduled") +
+          (draft.scheduled === "only" ? group("Scheduled payments", EDITED_CHOICES, "edited") : ""),
         () => {
           closeLayers();
-          done(values.size === ids.length ? null : [...values]);
+          done({ scheduled: draft.scheduled, edited: draft.scheduled === "only" && draft.edited });
         },
       ),
-    "Filter by categories",
+    "Scheduled payments",
   );
 }
 
@@ -231,6 +213,11 @@ export function filters() {
           },
           "Comment",
         ),
+      )}${fieldButtonHtml("Scheduled payments", scheduledSummary(f), () =>
+        scheduledSelect(f, (v) => {
+          Object.assign(f, v);
+          render();
+        }),
       )}</div>${sheetFooterHtml(
         buttonHtml(
           "Reset all",

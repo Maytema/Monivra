@@ -225,14 +225,31 @@ export function transferRoles(o) {
     income: source?.type === "Debt" && source.considerIncome ? source : null,
   };
 }
-// Does an operation pass the active filters?
+// A category with its subcategories: what a filter by a whole category selects.
+export const categoryFamily = (id) => [
+  id,
+  ...appData.categories.filter((c) => c.parent === id).map((c) => c.id),
+];
+// Did the person change a payment's operation after it was posted (amount, day, accounts or category)?
+export function editedFromPlan(o) {
+  const plan = o.fromSchedule?.planned;
+  if (!plan) return false;
+  return (
+    o.date !== plan.date ||
+    o.amount !== plan.amount ||
+    (o.from ?? null) !== (plan.from ?? null) ||
+    (o.to ?? null) !== (plan.to ?? null) ||
+    o.category !== plan.category
+  );
+}
+// Does an operation pass the active filters? A category is matched as chosen: choosing a category
+// with subcategories means choosing them one by one.
 export function operationMatchesFilters(o, f = uiState.filters) {
   const roles = transferRoles(o);
   return (
     (!f.accounts || f.accounts.includes(o.from) || f.accounts.includes(o.to)) &&
     (!f.categories ||
       f.categories.includes(o.category) ||
-      f.categories.includes(categoryById(o.category)?.parent) ||
       (roles.expense && f.categories.includes("debt:" + roles.expense.id)) ||
       (roles.income && f.categories.includes("debt:" + roles.income.id))) &&
     (!f.types ||
@@ -241,7 +258,9 @@ export function operationMatchesFilters(o, f = uiState.filters) {
       (roles.expense && f.types.includes("expense")) ||
       (roles.income && f.types.includes("income"))) &&
     (!f.tags || f.tags.some((v) => (o.tags || []).includes(v))) &&
-    (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase()))
+    (!f.comment || (o.comment || "").toLowerCase().includes(f.comment.toLowerCase())) &&
+    (f.scheduled !== "only" || (o.fromSchedule && (!f.edited || editedFromPlan(o)))) &&
+    (f.scheduled !== "exclude" || !o.fromSchedule)
   );
 }
 // Operations that pass the active filters and period, newest first.

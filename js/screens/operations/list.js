@@ -7,6 +7,7 @@ import {
   amountPair,
   categoryById,
   categoryCount,
+  categoryFamily,
   categoryTotalIn,
   convertCurrency,
   formatMoney,
@@ -93,7 +94,7 @@ export function opRow(o, scheduled = false) {
 // Is any filter currently active?
 export function filterActive() {
   const f = uiState.filters;
-  return !!(f.accounts || f.categories || f.types || f.tags || f.comment);
+  return !!(f.accounts || f.categories || f.types || f.tags || f.comment || f.scheduled);
 }
 
 // Total balance of the filtered accounts at a given date.
@@ -218,12 +219,21 @@ export function openFilteredOperations(filter, period = uiState.period) {
   openPage("filtered", { restore: () => Object.assign(uiState, before) });
 }
 
+// The one category the filter chooses as a whole (itself and all its subcategories), if any.
+function filteredCategory() {
+  const chosen = uiState.filters.categories;
+  if (!chosen) return undefined;
+  return appData.categories.find((c) => {
+    const family = categoryFamily(c.id);
+    return family.length === chosen.length && family.every((id) => chosen.includes(id));
+  });
+}
+
 // Page with the filtered operations; a single category gets a card with its figures.
 export function filteredView() {
   const ops = visibleOperations();
   const dates = [...new Set(ops.map((o) => o.date))];
-  const [id] = uiState.filters.categories?.length === 1 ? uiState.filters.categories : [];
-  const c = categoryById(id);
+  const c = filteredCategory();
   const card = c
     ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotalIn(c), c.currency)}</span></div></div>`
     : "";
