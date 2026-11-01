@@ -8,9 +8,9 @@
   border: 0px;
   padding: 0px;
 }
-.ops-compact-actions button:last-child svg {
-  background: color-mix(in srgb, var(--accent) 16%, var(--bg));
-  color: var(--accent-ink);
+.ops-compact-actions .positive svg {
+  background: var(--positive-soft);
+  color: var(--positive-ink);
 }
 .hero-search .ops-hero-search input {
   font-size: 16px;

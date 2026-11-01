@@ -2,8 +2,16 @@
 import { render } from "../../app/shell.js";
 import { uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";
-import { accountById, convertCurrency, evaluateExpression } from "../../domain/finance.js";
-import { isPlanned, putOperation } from "../../domain/operations.js";
+import {
+  accountById,
+  convertCurrency,
+  dateLabel,
+  evaluateExpression,
+} from "../../domain/finance.js";
+import { isFarDate, isPlanned, putOperation } from "../../domain/operations.js";
+import { translateWith } from "../../i18n/index.js";
+import { confirmAction } from "../../ui/dialogs.js";
+import { settleDueNow } from "../due-payments.js";
 import { banner, toast } from "../../ui/primitives.js";
 
 // The state of one open editor: the operation being edited and how it is being edited.
@@ -54,13 +62,29 @@ export function commitOperation(editor) {
     draft.amount = evaluateExpression(draft.expr);
     applyEntryCurrency(draft);
     delete draft.accountAction;
+    if (editor.confirmedDate !== draft.date && isFarDate(draft.date))
+      return confirmAction(
+        translateWith("The date {date} is more than a year from today. Save anyway?", {
+          date: dateLabel(draft.date),
+        }),
+        () => {
+          editor.confirmedDate = draft.date;
+          commitOperation(editor);
+        },
+        false,
+        "Save",
+        { title: "Check the date", tone: "info" },
+      );
     // A date in the future makes it a scheduled payment, whichever way it was opened.
     const planned = editor.scheduled || isPlanned(draft);
     putOperation(draft, editor.scheduled);
     uiState.layers = [];
+    // A scheduled payment dated today or earlier is due at once.
+    const posted = editor.scheduled ? settleDueNow() : 0;
     save();
     render();
-    if (planned) banner("Payment scheduled", "calendar", "accent");
+    if (posted) toast("Added to the operations");
+    else if (planned) banner("Payment scheduled", "calendar", "accent");
     else toast("Operation saved");
   } catch (e) {
     toast(e.message);

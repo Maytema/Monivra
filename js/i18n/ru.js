@@ -221,6 +221,13 @@ export const russianStrings = {
   "Delete my data": "Удалить мои данные",
   "Create a budget": "Создать бюджет",
   "Edit budget": "Изменить бюджет",
+  "Missed payments": "Пропущенные платежи",
+  "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":
+    "Платёж «{name}» не добавлялся с {date} (платежей: {n}). Добавить их в операции?",
+  "Check the date": "Проверьте дату",
+  "The date {date} is more than a year from today. Save anyway?":
+    "Дата {date} дальше чем на год от сегодняшнего дня. Всё равно сохранить?",
+  "Added to the operations": "Добавлено в операции",
   "No expenses of this budget in the period": "В этом периоде расходов по бюджету нет",
   "Budget currency": "Валюта бюджета",
   Budget: "Бюджет",

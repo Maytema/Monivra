@@ -7,8 +7,8 @@ import { processScheduled } from "../../domain/scheduled.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { banner, buttonHtml } from "../../ui/primitives.js";
 
-const actionButton = (icon, label, onTap) =>
-  buttonHtml(`${iconSvg(icon, 28)}<span>${label}</span>`, onTap);
+const actionButton = (icon, label, onTap, tone = "") =>
+  buttonHtml(`${iconSvg(icon, 28)}<span>${label}</span>`, onTap, tone);
 
 // What can be done with an operation that is opened: delete, duplicate and, for a payment, skip or add now.
 export function compactActionsHtml(editor, duplicate) {
@@ -51,7 +51,7 @@ export function compactActionsHtml(editor, duplicate) {
     finish("Payment added", "circleCheck", "positive");
   };
   const payment = scheduled
-    ? actionButton("right", "Skip", skip) + actionButton("plus", "Add now", addNow)
+    ? actionButton("close", "Skip", skip) + actionButton("check", "Add now", addNow, "positive")
     : "";
   return `<div class="ops-compact-actions">${actionButton("trash", "Delete", remove)}${actionButton("copy", "Duplicate", copy)}${payment}</div>`;
 }

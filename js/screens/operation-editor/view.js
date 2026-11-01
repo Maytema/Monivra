@@ -4,6 +4,7 @@ import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { dateLabel, parseDate, toIsoDate } from "../../domain/finance.js";
 import { calendar } from "../../ui/calendar.js";
 import { buttonHtml, iconButtonHtml } from "../../ui/primitives.js";
+import { weekdayName } from "../recurrence.js";
 import { feeBlockHtml } from "../fees.js";
 import { compactActionsHtml } from "./actions.js";
 import { amountHtml, amountModel } from "./amount.js";
@@ -25,7 +26,11 @@ function dateRowHtml(draft) {
       render();
     });
   return `<div class="calc-date">${iconButtonHtml("left", "Previous day", () => shiftDay(-1))}${buttonHtml(
-    iconSvg("calendar", 16) + " " + escapeHtml(dateLabel(draft.date, true)),
+    iconSvg("calendar", 16) +
+      " " +
+      escapeHtml(
+        `${weekdayName(parseDate(draft.date).getUTCDay(), "long")}, ${dateLabel(draft.date, true)}`,
+      ),
     pickDate,
     "calc-date-label",
   )}${iconButtonHtml("right", "Next day", () => shiftDay(1))}</div>`;

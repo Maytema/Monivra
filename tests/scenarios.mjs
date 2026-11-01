@@ -337,6 +337,41 @@ const scenarios = {
     await page.getByText("Budget deleted").waitFor();
     expect(await page.getByText("Budgets will be here").count()).toBe(1);
   },
+  async "a payment far behind is asked about: adding posts what was missed, skipping does not"(
+    page,
+  ) {
+    await page.getByText("Missed payments", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Add", exact: true }).click();
+    await page.getByText("scheduled payments were added", { exact: false }).waitFor();
+    expect(await page.getByText("Missed payments", { exact: true }).count()).toBe(0);
+    const [added, left] = await page.evaluate(() => {
+      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+      return [data.ops.filter((o) => o.fromSchedule?.id === "old").length, data.scheduled.length];
+    });
+    expect(added >= 41).toBe(true);
+    expect(left).toBe(1);
+  },
+  async "skipping the missed payments adds nothing"(page) {
+    await page.getByText("Missed payments", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Skip", exact: true }).click();
+    expect(await page.getByText("Missed payments", { exact: true }).count()).toBe(0);
+    const added = await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("monivra.offline.2026.v1")).ops.filter(
+          (o) => o.fromSchedule?.id === "old",
+        ).length,
+    );
+    expect(added).toBe(0);
+  },
+  async "a date more than a year away is confirmed before saving"(page) {
+    await openEditorOn(page, "Food");
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    for (let i = 0; i < 366; i++) await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    await page.getByText("Check the date", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByText("Payment scheduled").waitFor();
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");
@@ -441,6 +476,9 @@ const adjustments = {
         categories: [base.category],
       });
     },
+  "a payment far behind is asked about: adding posts what was missed, skipping does not":
+    addOverdue,
+  "skipping the missed payments adds nothing": addOverdue,
   "a payment that came due is posted on its own and the notice leads to the operations": (data) => {
     const base = data.ops.find((op) => op.type === "expense");
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
@@ -452,6 +490,18 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// A daily payment that was last due forty days ago: too far behind to be added without asking.
+function addOverdue(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const since = new Date(Date.now() - 40 * 86400000).toLocaleDateString("en-CA");
+  data.scheduled.push({
+    ...base,
+    id: "old",
+    date: since,
+    recur: { every: 1, unit: "Days", remaining: null, days: [] },
+    reminder: null,
+  });
+}
 function addSubcategories(data) {
   const food = data.categories.find((category) => category.name === "Food");
   for (const name of ["Market", "Cafe"])

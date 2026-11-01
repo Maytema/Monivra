@@ -17,12 +17,19 @@ import {
 import {
   applyBulkChanges,
   emptyBulkChanges,
+  isFarDate,
   putOperation,
   validateOp,
 } from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
 import { budgetOperations, budgetState } from "../js/domain/budgets.js";
-import { nextDate, postDue, processScheduled } from "../js/domain/scheduled.js";
+import {
+  missedPayments,
+  nextDate,
+  postDue,
+  processScheduled,
+  settleMissed,
+} from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
 const scheduledExpense = (date, recur) => {
@@ -317,6 +324,62 @@ check("A posted payment remembers which payment and occurrence it came from", ()
     posted.fromSchedule.date === item.date &&
     posted.date === item.date &&
     !posted.recur
+  );
+});
+
+check(
+  "A payment far behind waits for an answer; adding posts what was missed, skipping posts none",
+  () => {
+    const daily = { every: 1, unit: "Days", remaining: null, days: [] };
+    const item = scheduledExpense(addDays(TODAY, -40), daily);
+    const before = appData.ops.length;
+    const posted = postDue();
+    const waiting = missedPayments();
+    const kept =
+      waiting.length === 1 && waiting[0].count === 41 && item.date === addDays(TODAY, -40);
+    const added = settleMissed(item.id, true);
+    const afterAdd = appData.ops.length - before;
+    const next = item.date;
+    const again = scheduledExpense(addDays(TODAY, -40), daily);
+    const count = appData.ops.length;
+    const skipped = settleMissed(again.id, false);
+    return (
+      posted === 0 &&
+      kept &&
+      added === 41 &&
+      afterAdd === 41 &&
+      next === addDays(TODAY, 1) &&
+      skipped === 0 &&
+      appData.ops.length === count &&
+      again.date === addDays(TODAY, 1) &&
+      missedPayments().length === 0
+    );
+  },
+);
+
+check("A single payment dated more than a year ago waits for an answer too", () => {
+  scheduledExpense(addDays(TODAY, -400), null);
+  const before = appData.ops.length;
+  return postDue() === 0 && appData.ops.length === before && missedPayments().length === 1;
+});
+
+check("A scheduled payment dated today or a few days ago is posted at once", () => {
+  scheduledExpense(addDays(TODAY, -20), null);
+  const before = appData.ops.length;
+  return (
+    postDue() === 1 &&
+    appData.ops.at(-1).date === addDays(TODAY, -20) &&
+    appData.ops.length === before + 1 &&
+    appData.scheduled.length === 0
+  );
+});
+
+check("A date more than a year from today is asked about", () => {
+  return (
+    isFarDate(addDays(TODAY, -366)) &&
+    isFarDate(addDays(TODAY, 366)) &&
+    !isFarDate(addDays(TODAY, -365)) &&
+    !isFarDate(TODAY)
   );
 });
 
