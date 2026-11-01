@@ -51,11 +51,10 @@ Nothing is left as a wrapper for the old names. Storage key and data format are 
 
 ### Bugs found
 
-Fixed, each with a check or a scenario where it can be reproduced:
+Fixed, each with a check where it can be reproduced:
 
-1. The photo viewer did not close on a tap near its edges (panel padding) — CSS.
-2. Merging a category left a filter on the category that no longer exists (empty list).
-3. Merging a subcategory left budgets pointing at the missing category.
+1. Merging a category left a filter on the category that no longer exists (empty list).
+2. Merging a subcategory left budgets pointing at the missing category.
 
 Not fixed (no clear expected behaviour yet, or outside this clean-up):
 
