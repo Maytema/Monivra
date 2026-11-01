@@ -49,6 +49,9 @@ starts from the sample data and the user's own data is restored afterwards
 `app/shell.js`, open it with `openPage("kind", state)`.
 
 **A sheet or dialog.** `openSheet(() => html, "Title")` — the function is called on every render.
+Build everything the sheet shows inside that function, or the markup goes stale after a tap.
+Buttons that finish a sheet go into `sheetFooterHtml(...)`: they stay in view while the content
+above them scrolls. Use Cancel / Confirm for choices and a single Complete for the rest.
 
 **A tappable element.** `buttonHtml(label, fn, className)`; an input uses `registerInput`.
 

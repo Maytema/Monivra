@@ -22,7 +22,13 @@ import { filterActive, filteredBannerHtml, openFilteredOperations } from "./oper
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { periodBar } from "../ui/period-picker.js";
-import { badgeHtml, buttonHtml, swipePane, toggleRowHtml } from "../ui/primitives.js";
+import {
+  badgeHtml,
+  buttonHtml,
+  sheetFooterHtml,
+  swipePane,
+  toggleRowHtml,
+} from "../ui/primitives.js";
 import { registerAction } from "../ui/handlers.js";
 
 // Category totals for the statistics screen.
@@ -214,7 +220,7 @@ export function statsSettings() {
             },
           )}</div>`,
       )
-      .join("")}</div>${buttonHtml("Complete", () => closeLayers(), "primary")}`;
+      .join("")}</div>${sheetFooterHtml(buttonHtml("Complete", () => closeLayers(), "primary"))}`;
   }, "Statistics");
 }
 // Keep the order of the dragged rows for the blocks that are switched on.

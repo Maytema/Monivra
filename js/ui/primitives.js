@@ -39,6 +39,9 @@ export const stepperHtml = (label, shown, step, edit) =>
 // Outlined button that shows the current choice of a list and opens the list.
 export const dropdownHtml = (shown, fn) =>
   buttonHtml(`<span>${translate(shown)}</span>${iconSvg("down", 20)}`, fn, "dropdown");
+// Buttons at the bottom of a sheet; they stay in view while the content above them scrolls.
+export const sheetFooterHtml = (...buttons) =>
+  `<div class="sheet-footer">${buttons.join("")}</div>`;
 // Floating "Add" button: the label folds away when the list under it is scrolled.
 export const fabHtml = (label, fn, extra = "") =>
   buttonHtml(

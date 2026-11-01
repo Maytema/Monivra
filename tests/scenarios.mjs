@@ -76,6 +76,10 @@ const scenarios = {
       await page.locator(".calc-photo").nth(n).waitFor();
     }
     expect(await page.locator(".calc-photo").count()).toBe(5);
+    // All five thumbnails fit in one row without scrolling.
+    expect(
+      await page.locator(".calc-photos").evaluate((row) => row.scrollWidth <= row.clientWidth),
+    ).toBe(true);
     const strip = await page.locator(".calc-photos").boundingBox();
     const keypad = await page.locator(".calc-keypad").boundingBox();
     expect(strip.y + strip.height <= keypad.y + 1).toBe(true);
@@ -248,6 +252,19 @@ const scenarios = {
     await page.getByRole("button", { name: "Create" }).click();
     await page.getByText("Enter a name").waitFor();
     expect(await page.locator(".account-editor-bottom").count()).toBe(1);
+  },
+  async "a filter list keeps its buttons in view and applies the choice"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Operation search").first().click();
+    await page.locator("[aria-label=Filters]").first().click();
+    await page.locator(".panel .field", { hasText: "Type" }).first().click();
+    const confirm = page.locator(".sheet-footer").getByRole("button", { name: "Confirm" }).last();
+    const box = await confirm.boundingBox();
+    expect(box.y + box.height <= page.viewportSize().height).toBe(true);
+    await page.locator(".filter-choice", { hasText: "Transfers" }).click();
+    await page.getByText("2 selected").waitFor();
+    await confirm.click();
+    await page.getByText("Expenses, Incomes").waitFor();
   },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");

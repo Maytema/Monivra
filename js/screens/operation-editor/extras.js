@@ -9,7 +9,13 @@ import { translate, translateWith } from "../../i18n/index.js";
 import { confirmAction, popupMenu, promptText } from "../../ui/dialogs.js";
 import { registerAction } from "../../ui/handlers.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
-import { buttonHtml, iconButtonHtml, menuRowHtml, toast } from "../../ui/primitives.js";
+import {
+  buttonHtml,
+  iconButtonHtml,
+  menuRowHtml,
+  sheetFooterHtml,
+  toast,
+} from "../../ui/primitives.js";
 
 // Sheet for choosing tags of an operation: several can be picked, "+ Add" creates a new one.
 function tagsPicker(draft) {
@@ -52,14 +58,16 @@ function tagsPicker(draft) {
         )
         .join(
           "",
-        )}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, addTag, "tag tag-add")}</div>${buttonHtml(
-        "Complete",
-        () => {
-          draft.tags = chosen.filter((tag) => appData.tags.includes(tag));
-          closeLayers();
-          render();
-        },
-        "primary",
+        )}${buttonHtml(`${iconSvg("plus", 14)} ${translate("Add")}`, addTag, "tag tag-add")}</div>${sheetFooterHtml(
+        buttonHtml(
+          "Complete",
+          () => {
+            draft.tags = chosen.filter((tag) => appData.tags.includes(tag));
+            closeLayers();
+            render();
+          },
+          "primary",
+        ),
       )}`,
     "Select tags",
   );

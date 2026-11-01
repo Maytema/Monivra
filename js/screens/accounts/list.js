@@ -172,7 +172,7 @@ export function accountsView() {
     if (!items.length) return "";
     return (
       buttonHtml(
-        `${iconSvg(icon, 18)} ${translate(title)} (${items.length}) ${iconSvg(unfolded ? "up" : "down", 14)}`,
+        `${icon ? `${iconSvg(icon, 18)} ` : ""}${translate(title)} (${items.length}) ${iconSvg(unfolded ? "up" : "down", 14)}`,
         () => {
           uiState.openFolders = { ...uiState.openFolders, [key]: !unfolded };
           render();
@@ -187,7 +187,7 @@ export function accountsView() {
   const completedFolder =
     uiState.accountTab === "Total"
       ? ""
-      : folder("Completed", "check", completed, "completed-" + uiState.accountTab);
+      : folder("Completed", null, completed, "completed-" + uiState.accountTab);
   return (
     hero() +
     tabsHtml(

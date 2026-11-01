@@ -10,7 +10,13 @@ import { statsSettings } from "./statistics.js";
 import { closeLayers, openPage, openSheet } from "../ui/navigation.js";
 import { monthStartDialog } from "../ui/period-picker.js";
 import { optionSheet } from "../ui/dialogs.js";
-import { buttonHtml, menuRowHtml, pageHeader, toggleRowHtml } from "../ui/primitives.js";
+import {
+  buttonHtml,
+  menuRowHtml,
+  pageHeader,
+  sheetFooterHtml,
+  toggleRowHtml,
+} from "../ui/primitives.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 
 // Change a setting, persist it and re-render.
@@ -93,14 +99,17 @@ function currencyFormatSheet() {
             render();
           }),
         )
-        .join("")}${buttonHtml(
-        "Save",
-        () => {
-          Object.assign(appData.settings, draft);
-          save();
-          closeLayers();
-        },
-        "primary",
+        .join("")}${sheetFooterHtml(
+        buttonHtml("Cancel", () => closeLayers(), "outline"),
+        buttonHtml(
+          "Save",
+          () => {
+            Object.assign(appData.settings, draft);
+            save();
+            closeLayers();
+          },
+          "primary",
+        ),
       )}`,
     "Currency format",
   );
