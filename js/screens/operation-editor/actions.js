@@ -1,7 +1,8 @@
 import { render } from "../../app/shell.js";
 import { deepClone, iconSvg } from "../../core/constants.js";
-import { uiState } from "../../core/state.js";
-import { deleteOperation, processScheduled } from "../../domain/operations.js";
+import { forgetDeleted, uiState } from "../../core/state.js";
+import { deleteOperation } from "../../domain/operations.js";
+import { processScheduled } from "../../domain/scheduled.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { banner, buttonHtml } from "../../ui/primitives.js";
 
@@ -21,6 +22,7 @@ export function compactActionsHtml(editor, duplicate) {
       "Delete this operation?",
       () => {
         deleteOperation(draft.id, scheduled);
+        forgetDeleted({ operations: [draft.id] });
         uiState.layers = [];
         render();
       },

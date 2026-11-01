@@ -1,16 +1,13 @@
 import { check } from "./harness.js";
 import { addAccount } from "./helpers.js";
 import { TODAY } from "../js/core/constants.js";
-import { appData } from "../js/core/state.js";
+import { appData, forgetDeleted, uiState } from "../js/core/state.js";
+import { deleteAccount } from "../js/domain/accounts.js";
 import { putAccountOnSide, putCategoryOnSide } from "../js/domain/sides.js";
 import { accountBalance, categoryTotal, categoryTotalIn } from "../js/domain/finance.js";
-import {
-  applyBulkChanges,
-  deleteCategory,
-  nextDate,
-  processScheduled,
-  validateOp,
-} from "../js/domain/operations.js";
+import { applyBulkChanges, validateOp } from "../js/domain/operations.js";
+import { deleteCategory } from "../js/domain/categories.js";
+import { nextDate, processScheduled } from "../js/domain/scheduled.js";
 
 // A scheduled payment of the sample data's first expense, due at `date`.
 const scheduledExpense = (date, recur) => {
@@ -316,3 +313,37 @@ check(
     );
   },
 );
+
+check("Deleted records leave the selection and the filters", () => {
+  appData.categories.push({ id: "__c1", name: "A", type: "expense", parent: null });
+  const cash = addAccount({ opening: 100000 });
+  appData.ops = [
+    {
+      id: "__a",
+      type: "expense",
+      from: cash.id,
+      amount: 100,
+      category: "__c1",
+      date: TODAY,
+      tags: [],
+    },
+    {
+      id: "__b",
+      type: "expense",
+      from: cash.id,
+      amount: 100,
+      category: "c1",
+      date: TODAY,
+      tags: [],
+    },
+  ];
+  uiState.selected = ["__a", "__b"];
+  uiState.filters.categories = ["__c1"];
+  uiState.filters.accounts = [cash.id, "other"];
+  forgetDeleted(deleteCategory("__c1"));
+  const afterCategory = uiState.selected.join() === "__b" && uiState.filters.categories === null;
+  forgetDeleted(deleteAccount(cash.id));
+  return (
+    afterCategory && uiState.selected.length === 0 && uiState.filters.accounts.join() === "other"
+  );
+});

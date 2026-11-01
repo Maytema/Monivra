@@ -4,7 +4,7 @@ import { escapeHtml, iconSvg, THEME_COLORS } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { formatNumber, NUMBER_FORMATS } from "../domain/finance.js";
-import { changeMainCurrency } from "../domain/operations.js";
+import { changeMainCurrency } from "../domain/currency-change.js";
 import { LANGUAGES, translate } from "../i18n/index.js";
 import { statsSettings } from "./statistics.js";
 import { closeLayers, openPage, openSheet } from "../ui/navigation.js";

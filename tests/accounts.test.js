@@ -17,9 +17,9 @@ import {
   changeAccountCurrency,
   changeMainCurrency,
   planCurrencyChange,
-  reorderedList,
-  validateOp,
-} from "../js/domain/operations.js";
+} from "../js/domain/currency-change.js";
+import { reorderedList } from "../js/domain/ordering.js";
+import { validateOp } from "../js/domain/operations.js";
 
 check("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
   const a = appData.accounts.find((x) => x.include && !x.archived && x.currency !== "USD");

@@ -49,6 +49,15 @@ export const uiState = {
   layers: [],
   reorder: false,
 };
+// Deleted records can no longer be selected or filtered by: `removed` lists their ids.
+export function forgetDeleted(removed) {
+  const gone = { operations: [], accounts: [], categories: [], ...removed };
+  uiState.selected = uiState.selected.filter((id) => !gone.operations.includes(id));
+  for (const key of ["accounts", "categories"]) {
+    const rest = uiState.filters[key]?.filter((id) => !gone[key].includes(id));
+    if (rest) uiState.filters[key] = rest.length ? rest : null;
+  }
+}
 // True while the PIN lock screen is shown.
 export let locked = false;
 // Digits typed so far on the PIN lock screen.

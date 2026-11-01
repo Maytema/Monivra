@@ -1,7 +1,7 @@
 /* Accounts screens */
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
-import { appData, uiState } from "../core/state.js";
+import { appData, forgetDeleted, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
   accountBalance,
@@ -15,15 +15,9 @@ import {
   overallBalance,
   quoteRate,
 } from "../domain/finance.js";
-import {
-  accountHasRecords,
-  changeAccountCurrency,
-  deleteAccount,
-  planCurrencyChange,
-  putOperation,
-  toggleFavoriteAccount,
-  validateOp,
-} from "../domain/operations.js";
+import { accountHasRecords, deleteAccount, toggleFavoriteAccount } from "../domain/accounts.js";
+import { changeAccountCurrency, planCurrencyChange } from "../domain/currency-change.js";
+import { putOperation, validateOp } from "../domain/operations.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { operationStart } from "./operation-editor/start.js";
 import { filters } from "./operations/filters.js";
@@ -748,7 +742,7 @@ export function accountEditView(p) {
               confirmAction(
                 "Delete this account and all linked operations?",
                 () => {
-                  deleteAccount(d.id);
+                  forgetDeleted(deleteAccount(d.id));
                   uiState.layers = [];
                   goBack();
                 },

@@ -1,7 +1,7 @@
 /* Categories screens */
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
-import { appData, uiState } from "../core/state.js";
+import { appData, forgetDeleted, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
   categoryById,
@@ -10,7 +10,7 @@ import {
   formatMoney,
   totalByType,
 } from "../domain/finance.js";
-import { deleteCategory, moveCategory } from "../domain/operations.js";
+import { deleteCategory, moveCategory } from "../domain/categories.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
 import { accountActions, hero } from "./accounts.js";
 import { operationStart } from "./operation-editor/start.js";
@@ -309,11 +309,11 @@ function saveCategory(p, relocate = null) {
           for (const o of appData[key]) if (o.category === sub.id) o.category = a.target;
         appData.categories = appData.categories.filter((x) => x.id !== sub.id);
       } else if (a.mode === "deleteSub") {
-        deleteCategory(sub.id);
+        forgetDeleted(deleteCategory(sub.id));
       }
     }
     if (relocate && categoryById(relocate.target))
-      moveCategory(d.id, relocate.target, relocate.mode === "nest");
+      forgetDeleted(moveCategory(d.id, relocate.target, relocate.mode === "nest"));
     save();
     finishFlow("Category saved");
   };
@@ -459,7 +459,7 @@ export function categoryEditView(p) {
                   { n: operationsUsing(d.id) },
                 ),
                 () => {
-                  deleteCategory(d.id);
+                  forgetDeleted(deleteCategory(d.id));
                   finishFlow("Category deleted");
                 },
                 true,
