@@ -11,8 +11,8 @@ import {
   moneySpanHtml,
 } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
-import { closeLayers, openSheet, tabsHtml } from "../ui/kit.js";
-import { badgeHtml, buttonHtml } from "../ui/primitives.js";
+import { closeLayers, openSheet } from "../ui/navigation.js";
+import { badgeHtml, buttonHtml, tabsHtml } from "../ui/primitives.js";
 
 // Account cards grouped by kind; `onPick(account)` runs when one is tapped.
 export function accountCardsHtml(accounts, chosenId, onPick) {

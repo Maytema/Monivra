@@ -4,7 +4,8 @@ import { escapeHtml, iconSvg } from "../core/constants.js";
 import { applyFees, feeOfKind, setFee } from "../domain/fees.js";
 import { accountById, formatMoney } from "../domain/finance.js";
 import { translate } from "../i18n/index.js";
-import { closeLayers, numberFieldHtml, openSheet } from "../ui/kit.js";
+import { closeLayers, openSheet } from "../ui/navigation.js";
+import { numberFieldHtml } from "../ui/number-picker.js";
 import { buttonHtml, iconButtonHtml, toggleRowHtml } from "../ui/primitives.js";
 
 const KIND_TITLES = { tax: "Add tax", commission: "Add commission" };
@@ -16,7 +17,7 @@ function feeSizeLabel(fee) {
 }
 
 // Name of a fee with its size: "Tax (−1.5 %)".
-export const feeTitle = (fee) =>
+const feeTitle = (fee) =>
   `${translate(fee.kind === "tax" ? "Tax" : "Commission")} (${feeSizeLabel(fee)})`;
 
 // Lines under an operation with fees: every fee, then what is left for the account.

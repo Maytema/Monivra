@@ -7,30 +7,30 @@ import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, uiState } from "../core/state.js";
-import { isTestMode } from "../core/test-mode.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
-import { accountEditView, accountTypeView, accountsView } from "../screens/accounts.js";
+import { accountEditView } from "../screens/accounts/edit.js";
+import { accountsView } from "../screens/accounts/list.js";
+import { accountTypeView } from "../screens/accounts/type.js";
 import {
   categoriesView,
   categoryEditView,
   categoryManageView,
   orderView,
 } from "../screens/categories.js";
-import { lockView, moreView, settingsPage, simplePage } from "../screens/more.js";
-import { filteredView, operationsFab, operationsView } from "../screens/operations.js";
-import { budgetView, budgetsView, scheduledView } from "../screens/scheduled-budgets.js";
+import { lockView } from "../screens/more/lock.js";
+import { moreView } from "../screens/more/menu.js";
+import { settingsPage } from "../screens/more/settings-pages.js";
+import { infoPage } from "../screens/more/info-pages.js";
+import { filteredView, operationsFab, operationsView } from "../screens/operations/list.js";
+import { budgetsView, budgetView, scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
 import { welcomeView } from "../screens/welcome.js";
-import { goHome } from "../ui/kit.js";
-import {
-  buttonHtml,
-  setActionHandlers,
-  setHandlerCounter,
-  setInputHandlers,
-} from "../ui/primitives.js";
+import { goHome } from "../ui/navigation.js";
+import { resetHandlers } from "../ui/handlers.js";
+import { buttonHtml } from "../ui/primitives.js";
 
 // Bottom navigation bar.
 function navigationBar() {
@@ -81,7 +81,7 @@ function pageView(page) {
   const view = PAGE_VIEWS[page.kind];
   if (view) return view(page);
   if (SETTINGS_TREE_KINDS.includes(page.kind)) return settingsTreePage(page.kind);
-  return SETTINGS_PAGE_KINDS.includes(page.kind) ? settingsPage(page.kind) : simplePage(page.kind);
+  return SETTINGS_PAGE_KINDS.includes(page.kind) ? settingsPage(page.kind) : infoPage(page.kind);
 }
 
 // HTML of the whole screen: current root tab or the top page, plus layers.
@@ -177,15 +177,9 @@ function restoreContainers(app, saved) {
 
 // Re-render the application and restore focus and scroll positions.
 export function render(top = false) {
-  setActionHandlers({});
-  setInputHandlers({});
-  setHandlerCounter(0);
+  resetHandlers();
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
   const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
-  if (isTestMode()) {
-    window.__html = html;
-    return html;
-  }
   const balanceBefore = previousBalance;
   previousBalance = overallBalance();
   const app = document.getElementById("app");
@@ -229,5 +223,4 @@ export function render(top = false) {
         // some input types have no caret
       }
   }
-  return html;
 }

@@ -19,7 +19,7 @@ function luminance(hex) {
 }
 
 // Contrast ratio of two colors (1 … 21).
-export function contrast(a, b) {
+function contrast(a, b) {
   const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 }
@@ -68,7 +68,7 @@ export function hexToHsv(hex) {
 }
 
 // "#rrggbb" from hue (0–360), saturation and lightness (0–1).
-export function hslToHex(h, s, l) {
+function hslToHex(h, s, l) {
   const v = l + s * Math.min(l, 1 - l);
   return hsvToHex(h, v ? 2 * (1 - l / v) : 0, v);
 }

@@ -1,5 +1,5 @@
 /* Operations as CSV: writing, reading, and turning rows into operations */
-import { PALETTE, newId } from "../core/constants.js";
+import { newId, PALETTE } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { blankAccount, blankCategory } from "./defaults.js";
 import { accountById, categoryById } from "../domain/finance.js";
@@ -99,81 +99,99 @@ export function parseCSV(text) {
   return rows.map((values) => Object.fromEntries(headers.map((h, i) => [h, values[i] || ""])));
 }
 
-// Operations for the rows, plus the accounts and categories they need that do not exist yet.
-export function prepareCSV(text) {
-  const rows = parseCSV(text);
-  const accounts = [...appData.accounts],
-    categories = [...appData.categories],
-    created = { accounts: [], categories: [] },
-    ops = [];
-  const known = new Set(appData.ops.map(duplicateKey));
-  let duplicates = 0;
-  const fail = (i, message) =>
-    Error(translateWith("CSV row {row}: {message}", { row: i + 2, message: translate(message) }));
+const rowError = (index, message) =>
+  Error(translateWith("CSV row {row}: {message}", { row: index + 2, message: translate(message) }));
 
-  const accountFor = (name, currency, i) => {
-    if (!name) throw fail(i, "account is missing");
+// Finds the account of a row by name and currency, or creates it (the list `created` collects those).
+function accountResolver(accounts, created) {
+  return (name, currency, index) => {
+    if (!name) throw rowError(index, "account is missing");
     if (!(appData.rates[currency] > 0))
-      throw fail(i, translateWith("unknown currency {code}", { code: currency }));
-    let a = accounts.find((x) => x.name === name && x.currency === currency);
-    if (!a) {
-      a = blankAccount({ name, currency, color: PALETTE[accounts.length % PALETTE.length] });
-      accounts.push(a);
-      created.accounts.push(a);
+      throw rowError(index, translateWith("unknown currency {code}", { code: currency }));
+    let account = accounts.find((x) => x.name === name && x.currency === currency);
+    if (!account) {
+      account = blankAccount({ name, currency, color: PALETTE[accounts.length % PALETTE.length] });
+      accounts.push(account);
+      created.accounts.push(account);
     }
-    return a;
+    return account;
   };
-  const categoryFor = (cell, type, i) => {
+}
+
+// Finds the category of a row ("Category / Subcategory"), or creates what is missing.
+function categoryResolver(categories, created) {
+  return (cell, type, index) => {
     const [top, sub] = cell.split(SEPARATOR).map((x) => x.trim());
-    if (!top) throw fail(i, "category is missing");
+    if (!top) throw rowError(index, "category is missing");
     const find = (name, parent) =>
       categories.find((c) => c.name === name && c.type === type && (c.parent || null) === parent);
     const make = (name, parent) => {
-      const c = blankCategory({
+      const category = blankCategory({
         name,
         type,
         parent,
         currency: appData.settings.currency,
         color: PALETTE[categories.length % PALETTE.length],
       });
-      categories.push(c);
-      created.categories.push(c);
-      return c;
+      categories.push(category);
+      created.categories.push(category);
+      return category;
     };
     const parent = find(top, null) || make(top, null);
     return sub ? find(sub, parent.id) || make(sub, parent.id) : parent;
   };
+}
 
-  for (const [i, r] of rows.entries()) {
-    if (!["income", "expense", "transfer", "adjustment"].includes(r.type))
-      throw fail(i, "invalid type");
-    const amount = r.amount.replace(",", ".");
-    if (!/^\d+(\.\d{1,2})?$/.test(amount)) throw fail(i, "invalid amount");
-    const o = {
-      id: newId(),
-      type: r.type,
-      date: r.date,
-      amount: Math.round(Number(amount) * 100),
-      comment: r.comment,
-      tags: r.tags ? r.tags.split("|") : [],
-    };
-    // Income has no source and expense no destination; an adjustment has exactly one side.
-    if (r.type !== "income" && (r.type !== "adjustment" || r.from))
-      o.from = accountFor(r.from, r.currency, i).id;
-    if (r.type !== "expense" && (r.type !== "adjustment" || r.to))
-      o.to = accountFor(
-        r.to,
-        r.type === "transfer" && r.to_currency ? r.to_currency : r.currency,
-        i,
-      ).id;
-    if (r.type === "income" || r.type === "expense")
-      o.category = categoryFor(r.category, r.type, i).id;
-    if (r.type === "transfer" && r.to_amount) {
-      o.receive = Math.round(Number(r.to_amount.replace(",", ".")) * 100);
-      o.receiveManual = true;
-    }
-    if (known.has(duplicateKey(o))) duplicates++;
-    else ops.push({ row: i, op: o });
+const MINOR_UNITS = 100;
+const toMinorUnits = (text) => Math.round(Number(text.replace(",", ".")) * MINOR_UNITS);
+
+// The operation described by one row of the file.
+function operationFromRow(row, index, accountFor, categoryFor) {
+  if (!["income", "expense", "transfer", "adjustment"].includes(row.type))
+    throw rowError(index, "invalid type");
+  if (!/^\d+(\.\d{1,2})?$/.test(row.amount.replace(",", ".")))
+    throw rowError(index, "invalid amount");
+  const op = {
+    id: newId(),
+    type: row.type,
+    date: row.date,
+    amount: toMinorUnits(row.amount),
+    comment: row.comment,
+    tags: row.tags ? row.tags.split("|") : [],
+  };
+  // Income has no source and expense no destination; an adjustment has exactly one side.
+  if (row.type !== "income" && (row.type !== "adjustment" || row.from))
+    op.from = accountFor(row.from, row.currency, index).id;
+  if (row.type !== "expense" && (row.type !== "adjustment" || row.to))
+    op.to = accountFor(
+      row.to,
+      row.type === "transfer" && row.to_currency ? row.to_currency : row.currency,
+      index,
+    ).id;
+  if (row.type === "income" || row.type === "expense")
+    op.category = categoryFor(row.category, row.type, index).id;
+  if (row.type === "transfer" && row.to_amount) {
+    op.receive = toMinorUnits(row.to_amount);
+    op.receiveManual = true;
+  }
+  return op;
+}
+
+// Operations for the rows, plus the accounts and categories they need that do not exist yet.
+export function prepareCSV(text) {
+  const rows = parseCSV(text);
+  const accounts = [...appData.accounts];
+  const categories = [...appData.categories];
+  const created = { accounts: [], categories: [] };
+  const accountFor = accountResolver(accounts, created);
+  const categoryFor = categoryResolver(categories, created);
+  const known = new Set(appData.ops.map(duplicateKey));
+  const ops = [];
+  let duplicates = 0;
+  for (const [index, row] of rows.entries()) {
+    const op = operationFromRow(row, index, accountFor, categoryFor);
+    if (known.has(duplicateKey(op))) duplicates++;
+    else ops.push({ row: index, op });
   }
   // Validate against the accounts and categories that will exist after the import.
   const lookup = {
@@ -183,10 +201,10 @@ export function prepareCSV(text) {
   for (const { row, op } of ops)
     try {
       if (op.type === "adjustment") {
-        if (!!op.from === !!op.to) throw Error("Choose an account");
+        if (Boolean(op.from) === Boolean(op.to)) throw Error("Choose an account");
       } else validateOp(op, lookup);
     } catch (error) {
-      throw fail(row, error.message);
+      throw rowError(row, error.message);
     }
   return { ops: ops.map((x) => x.op), created, duplicates };
 }

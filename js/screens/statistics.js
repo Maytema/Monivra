@@ -1,6 +1,6 @@
 /* Statistics screens and charts */
 import { render } from "../app/shell.js";
-import { TODAY, escapeHtml, iconSvg } from "../core/constants.js";
+import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -16,19 +16,14 @@ import {
   visibleOperations,
 } from "../domain/finance.js";
 import { currentLocale, translate, translateWith } from "../i18n/index.js";
-import { hero } from "./accounts.js";
+import { hero } from "./accounts/list.js";
 import { categoryActions, sumTabs } from "./categories.js";
-import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations.js";
-import {
-  closeLayers,
-  emptyStateHtml,
-  goHome,
-  openPage,
-  openSheet,
-  periodBar,
-  swipePane,
-} from "../ui/kit.js";
-import { badgeHtml, buttonHtml, registerAction, toggleRowHtml } from "../ui/primitives.js";
+import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations/list.js";
+import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { emptyStateHtml } from "../ui/empty-state.js";
+import { periodBar } from "../ui/period-picker.js";
+import { badgeHtml, buttonHtml, swipePane, toggleRowHtml } from "../ui/primitives.js";
+import { registerAction } from "../ui/handlers.js";
 
 // Category totals for the statistics screen.
 function statsGroups(type = uiState.catType) {
@@ -79,7 +74,7 @@ function chartBars() {
     inc = Array(bins).fill(0),
     exp = Array(bins).fill(0);
   for (const o of reportRows()) {
-    let i = Math.min(
+    const i = Math.min(
       bins - 1,
       Math.floor(((parseDate(o.date) - parseDate(start)) / 86400000 / days) * bins),
     );
@@ -96,7 +91,7 @@ function donut(groups) {
   const circ = 2 * Math.PI * 68;
   return `<div class="donut-wrap"><svg viewBox="0 0 190 190" role="img" aria-label="Category distribution"><circle cx="95" cy="95" r="68" fill="none" stroke="var(--line)" stroke-width="28"/>${groups
     .map((g) => {
-      let length = total ? (g.total / total) * circ : 0;
+      const length = total ? (g.total / total) * circ : 0;
       const out = `<circle role="button" tabindex="0" aria-label="${escapeHtml(g.name)}" data-action="${registerAction(
         () => {
           uiState.donut = uiState.donut === g.id ? null : g.id;

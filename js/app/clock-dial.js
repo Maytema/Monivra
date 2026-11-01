@@ -1,5 +1,5 @@
 /* Pointer handling of the dial of the time picker */
-import { actionHandlers, inputHandlers } from "../ui/primitives.js";
+import { runAction, runInput } from "../ui/handlers.js";
 
 // Attach the listeners once (the #app element itself is never replaced).
 export function initClockDial() {
@@ -14,7 +14,7 @@ export function initClockDial() {
     const dx = e.clientX - rect.left - radius,
       dy = e.clientY - rect.top - radius;
     const turns = (((Math.atan2(dx, -dy) / (2 * Math.PI)) % 1) + 1) % 1;
-    inputHandlers[active.dataset.dial]?.({ turns, share: Math.hypot(dx, dy) / radius });
+    runInput(active.dataset.dial, { turns, share: Math.hypot(dx, dy) / radius });
   };
   app.addEventListener("pointerdown", (e) => {
     const dial = e.target.closest("[data-dial]");
@@ -27,7 +27,7 @@ export function initClockDial() {
   const stop = () => {
     const dial = active;
     active = null;
-    if (dial) actionHandlers[dial.dataset.settled]?.();
+    if (dial) runAction(dial.dataset.settled);
   };
   for (const type of ["pointerup", "pointercancel"]) app.addEventListener(type, stop);
   // A finger on the dial must not scroll the dialog.

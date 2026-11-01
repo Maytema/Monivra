@@ -611,6 +611,12 @@ export const russianStrings = {
   "These notes are not a binding user agreement. Final terms require the actual operator identity, service model, jurisdiction and review before public launch.":
     "Эти заметки не являются пользовательским соглашением. Окончательные условия потребуют данных оператора, модели сервиса, юрисдикции и проверки до публичного запуска.",
   "This image could not be opened": "Не удалось открыть изображение",
+  "The photo could not be read": "Не удалось прочитать фото",
+  "The photo is not fully on the phone. Download it first":
+    "Фото загружено на телефон не полностью. Сначала скачайте его",
+  "This photo format is not supported. Choose a JPEG or PNG photo":
+    "Этот формат фото не поддерживается. Выберите фото в JPEG или PNG",
+  "This photo is damaged and cannot be opened": "Фото повреждено, его не удалось открыть",
   "This is a technical summary of the beta, not a finalized privacy policy. A public policy must be written and reviewed after the actual hosting, analytics, account and support systems are decided.":
     "Это техническое описание беты, а не окончательная политика конфиденциальности. Публичную политику напишут и проверят после выбора хостинга, аналитики, аккаунтов и поддержки.",
   "This tool is intended for personal expense tracking. It is not a banking service and does not execute real transfers.":

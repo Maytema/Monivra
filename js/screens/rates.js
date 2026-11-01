@@ -7,8 +7,10 @@ import { defaultRates } from "../data/currencies.js";
 import { save } from "../data/storage.js";
 import { searchCurrencies } from "../domain/currency-search.js";
 import { currencyName, translate } from "../i18n/index.js";
-import { confirmAction, numberPicker, showInfo } from "../ui/kit.js";
-import { buttonHtml, menuRowHtml, registerInput, toast, toggleRowHtml } from "../ui/primitives.js";
+import { confirmAction, showInfo } from "../ui/dialogs.js";
+import { numberPicker } from "../ui/number-picker.js";
+import { buttonHtml, menuRowHtml, toast, toggleRowHtml } from "../ui/primitives.js";
+import { registerInput } from "../ui/handlers.js";
 
 let query = "";
 const isFixed = (code) => appData.settings.fixedRates.includes(code);

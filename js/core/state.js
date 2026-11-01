@@ -33,7 +33,7 @@ export const emptyFilters = () => ({
   comment: "",
 });
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
-export let uiState = {
+export const uiState = {
   tab: "accounts",
   accountTab: "Accounts",
   catType: "expense",
@@ -49,31 +49,21 @@ export let uiState = {
   layers: [],
   reorder: false,
 };
-// Callback waiting for a photo chosen through the hidden file input.
-export let photoCallback = null;
-// Kind of file the import dialog expects: "json" or "csv".
-export let importKind = "json";
+// Deleted records can no longer be selected or filtered by: `removed` lists their ids.
+export function forgetDeleted(removed) {
+  const gone = { operations: [], accounts: [], categories: [], ...removed };
+  uiState.selected = uiState.selected.filter((id) => !gone.operations.includes(id));
+  for (const key of ["accounts", "categories"]) {
+    const rest = uiState.filters[key]?.filter((id) => !gone[key].includes(id));
+    if (rest) uiState.filters[key] = rest.length ? rest : null;
+  }
+}
 // True while the PIN lock screen is shown.
 export let locked = false;
 // Digits typed so far on the PIN lock screen.
 export let pinEntry = "";
 export function setAppData(value) {
   appData = value;
-  return value;
-}
-
-export function setUiState(value) {
-  uiState = value;
-  return value;
-}
-
-export function setPhotoCallback(value) {
-  photoCallback = value;
-  return value;
-}
-
-export function setImportKind(value) {
-  importKind = value;
   return value;
 }
 

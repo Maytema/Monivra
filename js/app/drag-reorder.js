@@ -2,7 +2,7 @@
 import { render } from "./shell.js";
 import { cancelSwipe } from "./swipe.js";
 import { uiState } from "../core/state.js";
-import { reorderAccounts, reorderCategories } from "../domain/operations.js";
+import { reorderAccounts, reorderCategories } from "../domain/ordering.js";
 import { reorderStatsBlocks } from "../screens/statistics.js";
 
 const HOLD_MS = 380;

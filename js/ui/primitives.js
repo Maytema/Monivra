@@ -1,29 +1,12 @@
-/* UI primitives: translation, action registry, buttons, fields, toast */
+/* UI building blocks: buttons, fields, rows, tabs, page header, toast and banner */
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { isTestMode } from "../core/test-mode.js";
 import { translate } from "../i18n/index.js";
+import { render } from "../app/shell.js";
+import { registerAction, registerInput } from "./handlers.js";
+import { goBack } from "./navigation.js";
 
-// Registry of click handlers referenced from markup via data-action.
-export let actionHandlers = {};
-// Registry of input handlers referenced from markup via data-input.
-export let inputHandlers = {};
-// Counter used to generate unique handler ids.
-export let handlerCounter = 0;
 let toastTimer = 0;
 let bannerTimer = 0;
-
-// Register a click handler and return the id to put in data-action.
-export const registerAction = (fn) => {
-  const id = "a" + ++handlerCounter;
-  actionHandlers[id] = fn;
-  return id;
-};
-// Register an input handler and return the id to put in data-input.
-export const registerInput = (fn) => {
-  const id = "i" + ++handlerCounter;
-  inputHandlers[id] = fn;
-  return id;
-};
 
 // HTML for a button wired to a click handler.
 export const buttonHtml = (label, fn, cls = "", attrs = "") =>
@@ -66,10 +49,6 @@ export const fabHtml = (label, fn, extra = "") =>
   );
 // Message that slides down from the top edge; the icon and the tone say what happened.
 export function banner(s, icon, tone = "") {
-  if (isTestMode()) {
-    window.__toast = s;
-    return;
-  }
   const el = document.getElementById("banner");
   el.className = `show ${tone}`;
   el.innerHTML = `${iconSvg(icon, 30)}<span>${escapeHtml(translate(s))}</span>`;
@@ -97,27 +76,39 @@ export const menuRowHtml = (label, icon, fn, sub = "", end = "") =>
   );
 // Show a short message at the bottom of the screen.
 export function toast(s) {
-  if (isTestMode()) {
-    window.__toast = s;
-    return;
-  }
   const el = document.getElementById("toast");
   el.textContent = translate(s);
   el.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove("show"), 1450);
 }
-export function setActionHandlers(value) {
-  actionHandlers = value;
-  return value;
+// Wrap the part of a root screen that slides when swiping between tabs or periods.
+export function swipePane(html) {
+  return `<div class="swipe-pane">${html}</div>`;
 }
-
-export function setInputHandlers(value) {
-  inputHandlers = value;
-  return value;
+// Header of a full-screen page: back button, title and extra controls.
+export function pageHeader(title, extra = "") {
+  return `<div class="topbar">${iconButtonHtml("back", "Back", goBack)}<h1>${translate(title)}</h1>${extra || '<span class="spacer"></span>'}</div>`;
 }
-
-export function setHandlerCounter(value) {
-  handlerCounter = value;
-  return value;
+// Round-cornered tile with a colored icon and a caption, for the action sheets.
+export const actionTileHtml = (icon, label, tone, fn) =>
+  buttonHtml(
+    `<span class="sheet-action-icon" style="--tone:${tone}">${iconSvg(icon, 26)}</span><span>${translate(label)}</span>`,
+    fn,
+    "sheet-action",
+  );
+// Strip of tabs: `tabs` are [id, label] pairs; `onChange(id)` runs before the redraw.
+export function tabsHtml(tabs, active, onChange, className = "tabs") {
+  return `<div class="${className}">${tabs
+    .map(([id, label]) =>
+      buttonHtml(
+        translate(label),
+        () => {
+          onChange(id);
+          render();
+        },
+        active === id ? "active" : "",
+      ),
+    )
+    .join("")}</div>`;
 }

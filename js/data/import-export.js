@@ -1,55 +1,42 @@
 /* Import and export (JSON, CSV) */
 import { render } from "../app/shell.js";
 import { APP_ID, deepClone } from "../core/constants.js";
-import { appData, importKind, setAppData, setImportKind, uiState } from "../core/state.js";
-import { isTestMode } from "../core/test-mode.js";
+import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
 import { csvText, prepareCSV } from "./csv.js";
 import { completeData, createEmptyData } from "./defaults.js";
+import { pickFile, saveTextFile } from "../platform/files.js";
 import { printReport } from "./report.js";
 import { findDataProblem, save } from "./storage.js";
-import { dataSnapshot } from "../domain/finance.js";
+import { dataSnapshot } from "../domain/backups.js";
 import { translate, translateWith } from "../i18n/index.js";
-import {
-  closeLayers,
-  confirmAction,
-  goHome,
-  openPage,
-  openSheet,
-  pageHeader,
-  promptText,
-} from "../ui/kit.js";
-import { menuRowHtml, toast } from "../ui/primitives.js";
+import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { confirmAction, promptText, showInfo } from "../ui/dialogs.js";
+import { menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
 
-// Trigger a file download from text content.
 export function download(name, content, type) {
-  if (isTestMode()) {
-    window.__download = { name, content, type };
-    toast("File prepared");
-    return;
-  }
-  const blob = new Blob([content], { type }),
-    url = URL.createObjectURL(blob),
-    a = document.createElement("a");
-  a.href = url;
-  a.download = name;
-  document.body.append(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  saveTextFile(name, content, type);
   toast("File prepared");
 }
 // Export the whole dataset as a JSON backup.
 function exportJSON() {
   download(`${APP_ID}-data.json`, JSON.stringify(dataSnapshot(), null, 2), "application/json");
 }
-// Open the file chooser for JSON/CSV import.
-function importFile(kind) {
-  setImportKind(kind);
-  if (isTestMode()) return toast("File picker requested");
-  const e = document.getElementById("import-file");
-  e.accept = kind === "csv" ? ".csv" : ".json";
-  e.value = "";
-  e.click();
+const MAX_IMPORT_BYTES = 20 * 1024 * 1024;
+
+// Let the person choose a data file (JSON backup or CSV) and offer to import it.
+async function importFile(kind) {
+  const file = await pickFile({ accept: kind === "csv" ? ".csv" : ".json" });
+  if (!file) return;
+  if (file.size > MAX_IMPORT_BYTES)
+    return showInfo("The file is larger than the 20 MB import limit.", "Import failed");
+  try {
+    const text = await file.text();
+    if (kind === "csv") offerCsvImport(text);
+    else offerBackupImport(text);
+  } catch (error) {
+    showInfo(error.message, "Import failed");
+    console.error("Import failed:", error);
+  }
 }
 // Data page: backups, data file export/import and reset.
 export function dataView() {
@@ -165,58 +152,51 @@ function parseBackup(text) {
   if (found) throw Error(describeProblem(found));
   return data;
 }
-// Apply a selected import file after confirmation.
-export function handleImport(text) {
-  if (importKind === "csv") {
-    const { ops, created, duplicates } = prepareCSV(text);
-    const news = created.accounts.length + created.categories.length;
-    confirmAction(
-      translateWith("Append {n} operations from this CSV?", { n: ops.length }) +
-        (news
-          ? " " + translateWith("{n} accounts and categories will be created.", { n: news })
-          : "") +
-        (duplicates ? " " + translateWith("{n} duplicates are skipped.", { n: duplicates }) : ""),
-      () => {
-        appData.accounts.push(...created.accounts);
-        appData.categories.push(...created.categories);
-        appData.ops.push(...ops);
-        for (const o of ops)
-          for (const tag of o.tags) if (!appData.tags.includes(tag)) appData.tags.push(tag);
-        save();
-        toast("CSV imported");
-        render();
+function offerCsvImport(text) {
+  const { ops, created, duplicates } = prepareCSV(text);
+  const createdCount = created.accounts.length + created.categories.length;
+  confirmAction(
+    translateWith("Append {n} operations from this CSV?", { n: ops.length }) +
+      (createdCount
+        ? " " + translateWith("{n} accounts and categories will be created.", { n: createdCount })
+        : "") +
+      (duplicates ? " " + translateWith("{n} duplicates are skipped.", { n: duplicates }) : ""),
+    () => {
+      appData.accounts.push(...created.accounts);
+      appData.categories.push(...created.categories);
+      appData.ops.push(...ops);
+      for (const op of ops)
+        for (const tag of op.tags) if (!appData.tags.includes(tag)) appData.tags.push(tag);
+      save();
+      toast("CSV imported");
+      render();
+    },
+    true,
+    "Apply",
+  );
+}
+
+function offerBackupImport(text) {
+  const data = parseBackup(text);
+  confirmAction(
+    translateWith(
+      "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?",
+      {
+        accounts: data.accounts.length,
+        categories: data.categories.length,
+        ops: data.ops.length,
       },
-      true,
-      "Apply",
-    );
-  } else {
-    const data = parseBackup(text);
-    confirmAction(
-      translateWith(
-        "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?",
-        {
-          accounts: data.accounts.length,
-          categories: data.categories.length,
-          ops: data.ops.length,
-        },
-      ),
-      () => {
-        const backups = deepClone(appData.backups);
-        setAppData(completeData(deepClone(data)));
-        appData.backups = backups;
-        uiState.filters = {
-          accounts: null,
-          categories: null,
-          types: null,
-          tags: null,
-          comment: "",
-        };
-        save();
-        goHome("more");
-        toast("Data imported");
-      },
-      true,
-      "Apply",
-    );
-  }
+    ),
+    () => {
+      const backups = deepClone(appData.backups);
+      setAppData(completeData(deepClone(data)));
+      appData.backups = backups;
+      uiState.filters = emptyFilters();
+      save();
+      goHome("more");
+      toast("Data imported");
+    },
+    true,
+    "Apply",
+  );
 }
