@@ -32,5 +32,6 @@ npm run format:check
 | [ARCHITECTURE.md](ARCHITECTURE.md)                           | Layers, how a screen is drawn, where data lives         |
 | [MODULES.md](MODULES.md)                                     | What every folder and module is for                     |
 | [DEVELOPMENT.md](DEVELOPMENT.md)                             | Conventions, how to add a screen, a language, a check   |
+| [PAYMENTS_AND_BUDGETS_PLAN.md](PAYMENTS_AND_BUDGETS_PLAN.md) | Proposed work on scheduled payments and budgets         |
 | [REFACTOR_REPORT.md](REFACTOR_REPORT.md)                     | What the architecture clean-up changed and what is left |
 | [tools/visual-regression](tools/visual-regression/README.md) | Screenshot comparison of every screen state             |
