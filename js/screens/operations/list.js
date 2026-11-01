@@ -17,7 +17,7 @@ import {
   visibleOperations,
 } from "../../domain/finance.js";
 import { currentLocale, translate, translateWith } from "../../i18n/index.js";
-import { hero } from "../accounts.js";
+import { hero } from "../accounts/list.js";
 import { operationStart } from "../operation-editor/start.js";
 import { operationTitle } from "../operation-title.js";
 import { pairRateText } from "../../ui/rate-line.js";

@@ -10,7 +10,9 @@ import { appData, firstLaunch, locked, uiState } from "../core/state.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
-import { accountEditView, accountsView, accountTypeView } from "../screens/accounts.js";
+import { accountEditView } from "../screens/accounts/edit.js";
+import { accountsView } from "../screens/accounts/list.js";
+import { accountTypeView } from "../screens/accounts/type.js";
 import {
   categoriesView,
   categoryEditView,

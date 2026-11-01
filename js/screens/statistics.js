@@ -16,7 +16,7 @@ import {
   visibleOperations,
 } from "../domain/finance.js";
 import { currentLocale, translate, translateWith } from "../i18n/index.js";
-import { hero } from "./accounts.js";
+import { hero } from "./accounts/list.js";
 import { categoryActions, sumTabs } from "./categories.js";
 import { filterActive, filteredBannerHtml, openFilteredOperations } from "./operations/list.js";
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";

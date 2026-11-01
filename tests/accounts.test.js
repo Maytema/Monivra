@@ -13,6 +13,7 @@ import {
   overallBalance,
   reportRows,
 } from "../js/domain/finance.js";
+import { accountDraft, checkedAccountDraft, storeAccount } from "../js/domain/accounts.js";
 import {
   changeAccountCurrency,
   changeMainCurrency,
@@ -388,4 +389,83 @@ check("Debt switches are independent", () => {
     showIncome: true,
   };
   return Object.values(copy).filter((v) => v === true).length >= 4;
+});
+
+check("A new account with a balance starts with an adjustment operation", () => {
+  appData.ops = [];
+  const draft = { ...accountDraft(null), name: "Wallet", balance: 12345 };
+  const account = storeAccount(checkedAccountDraft(draft), "spent");
+  const [start] = appData.ops;
+  return (
+    appData.accounts.includes(account) &&
+    account.opening === 0 &&
+    accountBalance(account.id) === 12345 &&
+    appData.ops.length === 1 &&
+    start.type === "adjustment" &&
+    start.to === account.id &&
+    start.amount === 12345
+  );
+});
+
+check("A new debt recorded with an operation brings the balance to the typed amount", () => {
+  appData.ops = [];
+  const cash = addAccount({ opening: 100000 });
+  const draft = {
+    ...accountDraft(null),
+    name: "Loan",
+    type: "Debt",
+    debt: "I owe",
+    balance: 30000,
+    createOperation: true,
+    counterpart: cash.id,
+  };
+  const loan = storeAccount(checkedAccountDraft(draft), "spent");
+  const [transfer] = appData.ops;
+  return (
+    accountBalance(loan.id) === -30000 &&
+    accountBalance(cash.id) === 100000 + 30000 &&
+    transfer.type === "transfer" &&
+    transfer.from === loan.id &&
+    transfer.to === cash.id &&
+    appData.ops.length === 1
+  );
+});
+
+check("An invalid account is refused with a message and stores nothing", () => {
+  const count = appData.accounts.length;
+  const refused = (changes) => {
+    try {
+      checkedAccountDraft({ ...accountDraft(null), name: "Ok", ...changes });
+      return null;
+    } catch (error) {
+      return error.message;
+    }
+  };
+  return (
+    refused({ name: "  " }) === "Enter a name" &&
+    refused({ name: "x".repeat(65) }) === "Name is too long" &&
+    refused({ type: "Credit" }) === "Select account type" &&
+    refused({ type: "Savings", goal: -1 }) === "Goal cannot be negative" &&
+    refused({ balance: 0.5 }) === "Invalid amount" &&
+    refused({}) === null &&
+    appData.accounts.length === count
+  );
+});
+
+check("A debt operation with a missing counterpart is refused before anything changes", () => {
+  const count = appData.accounts.length;
+  const draft = {
+    ...accountDraft(null),
+    name: "Loan",
+    type: "Debt",
+    balance: 1000,
+    createOperation: true,
+    counterpart: null,
+  };
+  try {
+    storeAccount(checkedAccountDraft(draft), "spent");
+    return false;
+  } catch (error) {
+    return error.message === "Select a different account" && appData.accounts.length === count;
+  }
 });

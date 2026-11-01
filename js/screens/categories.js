@@ -12,7 +12,8 @@ import {
 } from "../domain/finance.js";
 import { deleteCategory, moveCategory } from "../domain/categories.js";
 import { currencyName, translate, translateCount, translateWith } from "../i18n/index.js";
-import { accountActions, hero } from "./accounts.js";
+import { accountActions } from "./accounts/actions.js";
+import { hero } from "./accounts/list.js";
 import { operationStart } from "./operation-editor/start.js";
 import { categoryMoney, categoryTileHtml } from "./pickers.js";
 import { openFilteredOperations } from "./operations/list.js";

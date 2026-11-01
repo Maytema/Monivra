@@ -166,6 +166,23 @@ const scenarios = {
     await page.getByText("Operations updated").waitFor();
     expect(await page.locator(".op-comment").first().innerText()).toBe("shared");
   },
+  async "a new account is created from the form and keeps the typed name"(page) {
+    await tab(page, "Accounts");
+    await page.getByLabel("New account").first().click();
+    await page.locator(".account-type-choice", { hasText: "Savings" }).click();
+    await page.getByRole("textbox", { name: "Title" }).fill("Holiday fund");
+    await page.getByRole("button", { name: "Create" }).click();
+    await page.getByText("Account saved").waitFor();
+    expect(await page.getByText("Holiday fund").count()).toBe(1);
+  },
+  async "an account without a name is refused"(page) {
+    await tab(page, "Accounts");
+    await page.getByLabel("New account").first().click();
+    await page.locator(".account-type-choice", { hasText: "Regular" }).click();
+    await page.getByRole("button", { name: "Create" }).click();
+    await page.getByText("Enter a name").waitFor();
+    expect(await page.locator(".account-editor-bottom").count()).toBe(1);
+  },
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
