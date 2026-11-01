@@ -76,6 +76,10 @@ const scenarios = {
       await page.locator(".calc-photo").nth(n).waitFor();
     }
     expect(await page.locator(".calc-photo").count()).toBe(5);
+    // All five thumbnails fit in one row without scrolling.
+    expect(
+      await page.locator(".calc-photos").evaluate((row) => row.scrollWidth <= row.clientWidth),
+    ).toBe(true);
     const strip = await page.locator(".calc-photos").boundingBox();
     const keypad = await page.locator(".calc-keypad").boundingBox();
     expect(strip.y + strip.height <= keypad.y + 1).toBe(true);
