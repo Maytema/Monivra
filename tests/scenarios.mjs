@@ -126,6 +126,33 @@ const scenarios = {
     await page.getByLabel("Back").first().click();
     expect(await page.evaluate(() => document.querySelector(".content").scrollTop)).toBe(40);
   },
+  async "a photo that cannot be used is refused with a plain message"(page) {
+    await openEditorOn(page, "Food");
+    const heif = Buffer.concat([
+      Buffer.from([0, 0, 0, 24]),
+      Buffer.from("ftypheic"),
+      Buffer.alloc(40),
+    ]);
+    const refused = {
+      "not fully on the phone": Buffer.alloc(0),
+      "format is not supported": heif,
+      "is damaged": Buffer.from("this is not an image"),
+    };
+    for (const [message, buffer] of Object.entries(refused)) {
+      await page.getByLabel("Attachment").click();
+      const [chooser] = await Promise.all([
+        page.waitForEvent("filechooser"),
+        page.getByText("Choose from gallery").click(),
+      ]);
+      await chooser.setFiles({ name: "photo.jpg", mimeType: "image/jpeg", buffer });
+      const toast = page.locator("#toast");
+      await page.getByText(message, { exact: false }).waitFor();
+      expect(await toast.innerText()).toMatch(/^[^()]*$/);
+      expect(await page.locator(".calc-photo").count()).toBe(0);
+      await page.keyboard.press("Escape");
+      await page.waitForTimeout(100);
+    }
+  },
   async "the calculator adds up and the check saves the result"(page) {
     await openEditorOn(page, "Food");
     await page.getByLabel("Additionally").dblclick();

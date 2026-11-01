@@ -4,7 +4,7 @@ import { escapeHtml, iconSvg, MAX_PHOTOS } from "../../core/constants.js";
 import { appData } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { pickFile } from "../../platform/files.js";
-import { photoDataUrl } from "../../platform/photo.js";
+import { PhotoError, photoDataUrl } from "../../platform/photo.js";
 import { translate, translateWith } from "../../i18n/index.js";
 import { confirmAction, popupMenu, promptText } from "../../ui/dialogs.js";
 import { registerAction } from "../../ui/handlers.js";
@@ -111,9 +111,8 @@ async function choosePhoto(draft, camera) {
   try {
     draft.photos.push(await photoDataUrl(file));
   } catch (error) {
-    console.error("Photo failed:", error);
-    // The format and the kind of failure tell an unreadable file from an unsupported format.
-    toast(`${translate("This image could not be opened")} (${file.type || "?"}, ${error.name})`);
+    console.error("Photo failed:", file.type, file.size, error);
+    toast(error instanceof PhotoError ? error.message : "This image could not be opened");
     return;
   }
   closeLayers();
