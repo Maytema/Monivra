@@ -5,6 +5,7 @@ import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { createBackup } from "../domain/backups.js";
 import { categoryById } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
+import { postDuePayments } from "../screens/due-payments.js";
 import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";
 import { toast } from "../ui/primitives.js";
@@ -157,6 +158,14 @@ function bindHashRoute() {
   route();
 }
 
+// Post the scheduled payments that came due, at launch and whenever the app comes back to the screen.
+function bindDuePayments() {
+  postDuePayments();
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && postDuePayments()) render();
+  });
+}
+
 // Daily backup, if the person chose to have one.
 function backUpOncePerDay() {
   const today = new Date().toISOString().slice(0, 10);
@@ -174,6 +183,7 @@ export function startup() {
   bindPrivacy();
   bindSystemBack();
   backUpOncePerDay();
+  bindDuePayments();
   if (appData.settings.pin) setLocked(true);
   bindHashRoute();
   render();

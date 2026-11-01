@@ -1,5 +1,5 @@
 /* Scheduled payments: the next date and posting a due payment */
-import { deepClone, newId, TODAY } from "../core/constants.js";
+import { deepClone, newId, today, TODAY } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { putOperation } from "./operations.js";
@@ -67,27 +67,13 @@ export function processScheduled(id, post) {
   save();
 }
 
-// How many occurrences have come due up to `today`, a recurring payment counting once for
-// every missed date.
-export function dueCount(today = TODAY) {
-  let count = 0;
-  for (const item of appData.scheduled) {
-    const walker = deepClone(item);
-    while (walker.date <= today) {
-      count++;
-      if (!advance(walker)) break;
-    }
-  }
-  return count;
-}
-
-// Post every occurrence that came due up to `today` on the day it was due; returns how many.
+// Post every occurrence that came due up to `day` on the day it was due; returns how many.
 // What was posted before a failure stays posted and saved.
-export function postDue(today = TODAY) {
+export function postDue(day = today()) {
   let posted = 0;
   try {
     for (const item of [...appData.scheduled]) {
-      while (item.date <= today) {
+      while (item.date <= day) {
         postOccurrence(item, item.date);
         posted++;
         if (!advance(item)) {

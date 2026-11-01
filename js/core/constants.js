@@ -11,7 +11,9 @@ export const STORAGE_KEY = `${APP_ID}.offline.2026.v1`;
 // Largest count of days, weeks, months or years of a repeat or reminder rule.
 export const MAX_INTERVAL = 365;
 // Today's date as YYYY-MM-DD (local time).
-export const TODAY = new Date().toLocaleDateString("en-CA");
+// Today as YYYY-MM-DD, read at the moment of the call (the app can stay open past midnight).
+export const today = () => new Date().toLocaleDateString("en-CA");
+export const TODAY = today();
 // Deep copy of JSON-serializable data.
 export const deepClone = (x) => JSON.parse(JSON.stringify(x));
 // Generate a short unique id.
