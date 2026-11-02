@@ -5,6 +5,29 @@ import { save } from "../data/storage.js";
 import { putOperation } from "./operations.js";
 import { addDays, parseDate, toIsoDate } from "./finance.js";
 
+const toMinutes = (time) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
+const toClock = (n) =>
+  `${String(Math.floor(n / 60)).padStart(2, "0")}:${String(n % 60).padStart(2, "0")}`;
+
+// A reminder on the day of the payment has to come before the payment time.
+export const comesAfterPayment = (reminder, time) =>
+  !!reminder &&
+  !!time &&
+  reminder.before === 0 &&
+  reminder.unit === "Days" &&
+  reminder.time >= time;
+
+// The reminder to keep once the payment time becomes `time`. One that still comes before it stays;
+// one that would come after it moves along and keeps its lead before the payment, and is dropped
+// (null) when there is no room left before the payment on that day.
+export function reminderForTime(reminder, oldTime, time) {
+  if (!comesAfterPayment(reminder, time)) return reminder;
+  const lead =
+    oldTime && reminder.time < oldTime ? toMinutes(oldTime) - toMinutes(reminder.time) : null;
+  const moved = lead === null ? -1 : toMinutes(time) - lead;
+  return moved >= 0 ? { ...reminder, time: toClock(moved) } : null;
+}
+
 // Next occurrence of a recurring payment, or null when finished.
 export function nextDate(item) {
   const r = item.recur;

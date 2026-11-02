@@ -25,11 +25,12 @@ import {
 } from "../js/domain/operations.js";
 import { deleteCategory, storeCategory } from "../js/domain/categories.js";
 import { budgetOperations, budgetState } from "../js/domain/budgets.js";
-import { comesAfterPayment } from "../js/screens/recurrence.js";
 import {
   missedPayments,
   nextDate,
+  comesAfterPayment,
   postDue,
+  reminderForTime,
   processScheduled,
   settleMissed,
 } from "../js/domain/scheduled.js";
@@ -1007,3 +1008,22 @@ check("A reminder on the day of the payment cannot come after the payment time",
     !comesAfterPayment(null, "18:00")
   );
 });
+
+check(
+  "A reminder of the payment day follows the payment time, or goes when there is no room",
+  () => {
+    const same = { before: 0, unit: "Days", time: "16:00" };
+    const later = reminderForTime(same, "18:00", "19:00");
+    const moved = reminderForTime(same, "18:00", "15:00");
+    const dropped = reminderForTime(same, "18:00", "01:00");
+    const other = { before: 1, unit: "Days", time: "16:00" };
+    return (
+      later === same &&
+      moved.time === "13:00" &&
+      moved.before === 0 &&
+      dropped === null &&
+      reminderForTime(other, "18:00", "09:00") === other &&
+      reminderForTime(null, "18:00", "09:00") === null
+    );
+  },
+);

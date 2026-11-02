@@ -2,6 +2,7 @@
 import { render } from "../app/shell.js";
 import { deepClone, MAX_INTERVAL } from "../core/constants.js";
 import { currentLocale, translate, translateCount, translateWith } from "../i18n/index.js";
+import { comesAfterPayment, reminderForTime } from "../domain/scheduled.js";
 import { closeLayers, openSheet } from "../ui/navigation.js";
 import { numberPicker } from "../ui/number-picker.js";
 import { optionSheet } from "../ui/dialogs.js";
@@ -34,19 +35,29 @@ export const reminderLabel = (r) =>
         time: timeLabel(r.time),
       });
 
-// A reminder on the day of the payment has to come before the time of the payment.
-export const comesAfterPayment = (reminder, time) =>
-  !!reminder && !!time && reminder.before === 0 && reminder.time >= time;
-// Dialog that tells so; the payment time and the reminder time are never changed behind the back.
+// Dialog that tells why a reminder on the day of the payment is not accepted.
 export const reminderAfterPaymentDialog = (time) =>
   errorDialog("Error: Wrong time", [
     translateWith(
       "A reminder on the day of the payment has to come before the payment time ({time}).",
-      {
-        time: timeLabel(time),
-      },
+      { time: timeLabel(time) },
     ),
   ]);
+
+// Set the time of a payment. A reminder of the same day that would come after it moves along, or
+// is turned off when there is no room before the payment; the person is told either way.
+export function setPaymentTime(d, time) {
+  const kept = reminderForTime(d.reminder, d.time, time);
+  if (kept !== d.reminder)
+    toast(
+      kept
+        ? translateWith("Reminder moved to {time}", { time: timeLabel(kept.time) })
+        : "Reminder turned off: there is no time left before the payment",
+    );
+  d.reminder = kept;
+  d.time = time;
+  render();
+}
 
 // Choice of the unit of time; `weekdays` tells that weeks can be narrowed to days of the week.
 function unitDialog(unit, fn, weekdays = false) {

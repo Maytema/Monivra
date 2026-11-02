@@ -732,6 +732,9 @@ export const russianStrings = {
   "{interval} before at {time}": "За {interval} в {time}",
   "On the same day at {time}": "В тот же день в {time}",
   "Error: Wrong time": "Ошибка: неверное время",
+  "Reminder moved to {time}": "Напоминание перенесено на {time}",
+  "Reminder turned off: there is no time left before the payment":
+    "Напоминание выключено: до платежа не осталось времени в этот день",
   "A reminder on the day of the payment has to come before the payment time ({time}).":
     "Напоминание в день платежа должно быть раньше времени платежа ({time}).",
   "A scheduled payment starts tomorrow at the earliest":

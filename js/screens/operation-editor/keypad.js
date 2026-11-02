@@ -10,13 +10,12 @@ import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { buttonHtml, menuRowHtml, toast } from "../../ui/primitives.js";
 import { feeDialog, feeLabel } from "../fees.js";
 import {
-  comesAfterPayment,
   recurLabel,
   recurrence,
   remainingLabel,
   reminder,
-  reminderAfterPaymentDialog,
   reminderLabel,
+  setPaymentTime,
 } from "../recurrence.js";
 import { commitOperation } from "./editor.js";
 
@@ -63,13 +62,7 @@ function additionalOptions(editor, model) {
           ? menuRowHtml(
               "Time",
               "clock",
-              () =>
-                timePicker(draft.time || timeNow(), (time) => {
-                  if (comesAfterPayment(draft.reminder, time))
-                    return reminderAfterPaymentDialog(time);
-                  draft.time = time;
-                  render();
-                }),
+              () => timePicker(draft.time || timeNow(), (time) => setPaymentTime(draft, time)),
               timeLabel(draft.time || timeNow()),
             )
           : ""

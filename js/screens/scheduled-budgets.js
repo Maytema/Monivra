@@ -9,13 +9,12 @@ import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
 import { opRow } from "./operations/list.js";
 import {
-  comesAfterPayment,
   recurLabel,
   recurrence,
   remainingLabel,
   reminder,
-  reminderAfterPaymentDialog,
   reminderLabel,
+  setPaymentTime,
   weekdayName,
 } from "./recurrence.js";
 import { calendar } from "../ui/calendar.js";
@@ -70,11 +69,7 @@ function scheduledCreate() {
             ),
           "schedule-tile schedule-date on",
         )}${tile("clock", "Time", timeLabel(setup.time), () =>
-          timePicker(setup.time, (time) => {
-            if (comesAfterPayment(setup.reminder, time)) return reminderAfterPaymentDialog(time);
-            setup.time = time;
-            render();
-          }),
+          timePicker(setup.time, (time) => setPaymentTime(setup, time)),
         )}${tile("repeat", "Recur", setup.recur && recurLabel(setup.recur) + remainingLabel(setup.recur), () => recurrence(setup))}${tile("bell", "Reminder", setup.reminder && reminderLabel(setup.reminder), () => reminder(setup))}</div><div class="dialog-actions">${buttonHtml(
           "Complete",
           () => {
