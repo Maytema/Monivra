@@ -35,40 +35,33 @@ export function debtDirection(a) {
   return balance < 0 ? "I owe" : balance > 0 ? "Owe me" : a.debt;
 }
 // Progress of an account towards its target: the goal of a savings account, the repayment of a
-// debt, or the part of a card limit that is already used. `done` is what the percent counts:
-// what is saved, paid back or used. `left` is what remains (negative for savings that went past
-// the goal; for a card, what is still available). `percent` is the exact share, 100 once the
-// target is met, and it goes below zero when the balance does; it is rounded only when shown
-// (shownPercent). Null when there is no target.
+// debt, or the part of a card limit that is already used. `done` is what the percent counts: what
+// is saved, paid back or used (never below zero). `left` is what remains to the target, below zero
+// by as much as the target is passed: a goal that is exceeded, a debt that is paid back with more
+// than it was, a card limit that is overrun. `percent` is the exact share of the target and
+// passes 100 with it; it goes below zero when the balance does. It is rounded only when shown
+// (shownPercent). A debt counts from the side it was taken on (`debt` of the account), so the
+// overpaid part is what the other side owes afterwards. Null when there is no target.
 export function accountProgress(a) {
   const balance = accountBalance(a.id);
+  let kind, target, done;
   if (a.type === "Regular" && a.limit > 0) {
-    const used = Math.max(0, -balance);
-    return {
-      kind: "limit",
-      target: a.limit,
-      left: Math.max(0, a.limit - used),
-      used,
-      done: used,
-      percent: used >= a.limit ? 100 : (used / a.limit) * 100,
-    };
-  }
-  let target, left, done;
-  if (a.type === "Savings" && a.goal > 0) {
-    target = a.goal;
-    left = a.goal - balance;
-    done = balance;
+    [kind, target, done] = ["limit", a.limit, -balance];
+  } else if (a.type === "Savings" && a.goal > 0) {
+    [kind, target, done] = ["goal", a.goal, balance];
   } else if (a.type === "Debt" && a.totalDebt > 0) {
-    target = a.totalDebt;
-    left = Math.abs(balance);
-    done = target - left;
+    [kind, target, done] = [
+      "debt",
+      a.totalDebt,
+      a.totalDebt - (a.debt === "I owe" ? -balance : balance),
+    ];
   } else return null;
   return {
-    kind: a.type === "Debt" ? "debt" : "goal",
+    kind,
     target,
-    left,
+    left: target - done,
     done: Math.max(0, done),
-    percent: left <= 0 ? 100 : (done / target) * 100,
+    percent: (done / target) * 100,
   };
 }
 // Groups of accounts shown together in pickers and filters, in the order of the Accounts screen.

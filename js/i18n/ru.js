@@ -95,6 +95,7 @@ export const russianStrings = {
   Limit: "Лимит",
   "Over by {amount}": "Превышение на {amount}",
   "Paid back: {amount}": "Выплачено: {amount}",
+  "Overpaid by {amount}": "Переплата: {amount}",
   "Goal exceeded by {amount}": "Цель превышена на {amount}",
   "Goal reached": "Цель достигнута",
   "Debt repaid": "Долг выплачен",

@@ -261,7 +261,7 @@ check("Progress of a goal and of a debt repayment", () => {
   return (
     a.percent === 25.1 &&
     a.left === 149800 &&
-    b.percent === 100 &&
+    b.percent === 150 &&
     b.left === -50000 &&
     shownPercent(c.percent) === 95.99 &&
     c.left === 3011 &&
@@ -328,6 +328,14 @@ check(
       line(card(-300000)) === "Limit reached" &&
       line(card(-310000)) === "Limit exceeded by 100" &&
       line(debt(-608000)) === "Paid back: 8,920" &&
+      // paid back with more than it was: 105 of 100 is 105 percent and 5 is overpaid, either side
+      line(debt(500)) === "Overpaid by 5" &&
+      accountProgress(addAccount({ type: "Debt", debt: "I owe", totalDebt: 10000, opening: 500 }))
+        .percent === 105 &&
+      accountProgress(addAccount({ type: "Debt", debt: "Owe me", totalDebt: 10000, opening: -500 }))
+        .percent === 105 &&
+      line(addAccount({ type: "Debt", debt: "Owe me", totalDebt: 10000, opening: -500 })) ===
+        "Overpaid by 5" &&
       line(debt(0)) === "Debt repaid"
     );
   },
