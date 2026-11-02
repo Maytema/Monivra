@@ -20,10 +20,15 @@ export function progressBlockHtml(a) {
   let status;
   if (p.kind === "limit") {
     // The sheet shows the balance and what is available to spend, so only the extremes are said.
-    if (p.used > p.target) status = say("Limit exceeded by {amount}", p.used - p.target);
+    if (p.left < 0) status = say("Limit exceeded by {amount}", -p.left);
     else if (p.left === 0) status = translate("Limit reached");
   } else if (p.kind === "debt")
-    status = p.left > 0 ? say("Paid back: {amount}", p.done) : translate("Debt repaid");
+    status =
+      p.left > 0
+        ? say("Paid back: {amount}", p.done)
+        : p.left < 0
+          ? say("Overpaid by {amount}", -p.left)
+          : translate("Debt repaid");
   else if (p.left > 0) status = say("To goal: {amount}", p.left);
   else if (p.left < 0) status = say("Goal exceeded by {amount}", -p.left);
   else status = translate("Goal reached");
