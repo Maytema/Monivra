@@ -13,7 +13,8 @@ import { translateWith } from "../../i18n/index.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { openPage } from "../../ui/navigation.js";
 import { spotlight } from "../../ui/spotlight.js";
-import { settleDueNow, showOperations } from "../due-payments.js";
+import { settleDueNow } from "../due-payments.js";
+import { operationShown, showOperations } from "../operations/reveal.js";
 import { banner, toast } from "../../ui/primitives.js";
 
 // The state of one open editor: the operation being edited and how it is being edited.
@@ -103,7 +104,17 @@ export function commitOperation(editor) {
         onScheduledPage ? null : () => showScheduled(saved.id),
       );
       if (onScheduledPage) spotlight([saved.id]);
-    } else toast("Operation saved");
+    } else {
+      // On the list that shows it the operation is just highlighted; elsewhere a tap leads to it.
+      const shown = operationShown(saved);
+      banner(
+        "Operation saved",
+        "circleCheck",
+        "positive",
+        shown ? null : () => showOperations([saved.id]),
+      );
+      if (shown) spotlight([saved.id]);
+    }
   } catch (e) {
     toast(e.message);
   }

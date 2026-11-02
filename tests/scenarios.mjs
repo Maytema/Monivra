@@ -478,6 +478,29 @@ const scenarios = {
     expect(next === before).toBe(false);
     expect(await title.innerText()).toBe(before);
   },
+  async "a saved operation shows a notice with an arrow that leads to it, highlighted"(page) {
+    await openEditorOn(page, "Food");
+    await typeAmountAndSave(page, "5");
+    const notice = page.locator("#banner.tappable");
+    await notice.getByText("Operation saved").waitFor();
+    expect(await notice.locator("svg").count()).toBe(2);
+    await notice.click();
+    await page.locator(".op-row.spot").waitFor();
+    expect(await page.locator(".op-row.spot").count()).toBe(1);
+  },
+  async "an operation saved on the list that shows it is highlighted, the notice has no arrow"(
+    page,
+  ) {
+    await tab(page, "Operations");
+    await page.getByLabel("Add").first().click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    await page.locator(".calc-confirm").click();
+    const notice = page.locator("#banner.show");
+    await notice.getByText("Operation saved").waitFor();
+    expect(await notice.locator("svg").count()).toBe(1);
+    await page.locator(".op-row.spot").waitFor();
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");

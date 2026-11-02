@@ -1,15 +1,14 @@
 /* Scheduled payments that came due are posted on their own; the person is told afterwards */
 import { render } from "../app/shell.js";
 import { iconSvg } from "../core/constants.js";
-import { appData, emptyFilters, uiState } from "../core/state.js";
-import { dateLabel, operationMatchesFilters, periodAround } from "../domain/finance.js";
+import { uiState } from "../core/state.js";
+import { dateLabel } from "../domain/finance.js";
 import { missedPayments, postDue, settleMissed } from "../domain/scheduled.js";
 import { translate, translateCount, translateWith } from "../i18n/index.js";
 import { confirmAction } from "../ui/dialogs.js";
-import { goHome } from "../ui/navigation.js";
 import { buttonHtml, iconButtonHtml } from "../ui/primitives.js";
-import { spotlight } from "../ui/spotlight.js";
 import { operationTitle } from "./operation-title.js";
+import { showOperations } from "./operations/reveal.js";
 
 // Post what came due; the operations are remembered until the person has seen them. Returns how
 // many were posted.
@@ -52,18 +51,6 @@ export function settleDueNow() {
   const posted = postDue();
   askAboutMissed();
   return posted;
-}
-
-// The operations list as it shows the given operations: a period and filters that include them,
-// scrolled to them and flashed once.
-export function showOperations(ids) {
-  goHome("operations");
-  const shown = appData.ops.filter((o) => ids.includes(o.id));
-  if (!shown.length) return;
-  uiState.period = periodAround(shown.map((o) => o.date));
-  if (!shown.every((o) => operationMatchesFilters(o))) uiState.filters = emptyFilters();
-  render();
-  spotlight(ids);
 }
 
 // The notice is read: it goes away, and the tap that read it can go on to the operations.
