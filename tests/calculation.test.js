@@ -189,7 +189,7 @@ check(
     formatNumber(123456, "space-comma", true, 0) === "1\u00a0235",
 );
 
-check("Cents are shown only when there are some, without a trailing zero", () => {
+check("Cents are shown only when there are some, whole amounts never get zeros", () => {
   const settings = appData.settings;
   const saved = { ...settings };
   Object.assign(settings, { currency: "KGS", numberFormat: "comma-dot", groupDigits: true });
@@ -203,7 +203,7 @@ check("Cents are shown only when there are some, without a trailing zero", () =>
   Object.assign(settings, saved);
   return (
     plain.join() === "500 KGS,500.5 KGS,500.51 KGS,-500.51 KGS" &&
-    fixed.join() === "500.00 KGS,500.50 KGS,500.51 KGS,-500.51 KGS" &&
+    fixed.join() === "500 KGS,500.50 KGS,500.51 KGS,-500.51 KGS" &&
     whole.join() === "500 KGS,501 KGS,501 KGS,-501 KGS"
   );
 });

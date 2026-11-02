@@ -8,6 +8,7 @@ import { translate } from "../i18n/index.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
 import { opRow } from "./operations/list.js";
+import { emptyStateHtml } from "../ui/empty-state.js";
 import {
   recurLabel,
   recurrence,
@@ -138,7 +139,12 @@ export function scheduledView() {
                   .join("")}`,
             )
             .join("")
-        : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", scheduledCreate, "primary")}</div>`
+        : emptyStateHtml(
+            "scheduled",
+            "Scheduled payments will be here",
+            "Create your first scheduled payment",
+            buttonHtml("Create", scheduledCreate, "primary"),
+          )
     }</div>${dates.length ? fabHtml("Add", scheduledCreate) : ""}`
   );
 }

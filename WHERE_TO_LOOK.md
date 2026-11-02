@@ -47,6 +47,8 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 | More tab, About (`about-art.js`), Privacy, Terms, support                        | `screens/more/menu.js`, `info-pages.js`, `support.js`, `screens/guides.js`, `screens/about-art.js`                 | `more.css`                                  |
 | Rolling digits of the total balance, amounts of category tiles                   | `ui/reel.js`, `app/shell.js` (`animateBalance`, `animateTileAmounts`)                                              | `animations.css`                            |
 | Exchange rates                                                                   | `screens/rates.js`, `domain/finance.js`                                                                            | `more.css`                                  |
+| Deletion page (ways, counts)                                                     | `screens/more/deletion-page.js`                                                                                    | `more.css`                                  |
+| Empty states and their animations (accounts, categories, operations, statistics) | `ui/empty-state.js`                                                                                                | `empty-state.css`                           |
 | Import, export, CSV, printable report                                            | `data/import-export.js` (data, data file, import, deletion pages), `screens/export.js`, `data/csv.js`, `report.js` | `more.css`                                  |
 | First launch                                                                     | `screens/welcome.js`                                                                                               | `empty-state.css`                           |
 | Calendar, time, number, currency, icon, period pickers                           | `ui/calendar.js`, `time-picker.js`, `number-picker.js`, `currency-picker.js`, `icon-picker.js`, `period-picker.js` | `calendar.css`, `components.css`            |
@@ -98,6 +100,8 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 360 px browser) are in `tests/`; `npm run lint`, `npm run format:check`; screenshots of every
 state with `tools/visual-regression`. A screen change gets a scenario, a rule change gets a check.
 See [DEVELOPMENT.md](DEVELOPMENT.md).
+
+Rules for sizes, list ends and buttons: [LAYOUT_RULES.md](LAYOUT_RULES.md).
 
 ## Reference material
 

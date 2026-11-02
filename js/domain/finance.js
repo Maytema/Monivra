@@ -122,8 +122,8 @@ export function formatMoney(n, currency = appData.settings.currency, isBalance =
   if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
     return "•••• " + escapeHtml(currency);
   const s = appData.settings;
-  // "Two decimal places" always shows both digits; otherwise only the cents that exist.
-  const fixed = s.decimal && !s.hideCents ? 2 : 0;
+  // "Two decimal places" writes both digits of the cents that exist; a whole amount has none.
+  const fixed = s.decimal && !s.hideCents && n % 100 !== 0 ? 2 : 0;
   const text = formatNumber(n, s.numberFormat, s.groupDigits, fixed, s.hideCents ? 0 : 2);
   return escapeHtml(appData.settings.currencyFirst ? currency + " " + text : text + " " + currency);
 }

@@ -86,7 +86,12 @@ export function budgetsView() {
                 .filter(({ list }) => list.length)
                 .map(({ period, list }) => budgetGroup(period, list))
                 .join("")
-            : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+            : emptyStateHtml(
+                "budgets",
+                "Budgets will be here",
+                "So far, it's empty. Create your first budget?",
+                buttonHtml("Create a budget", () => editBudget(), "primary"),
+              )
         }</div>`,
     )
   );
