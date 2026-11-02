@@ -140,6 +140,11 @@
 .budget-group-sum {
   text-align: right;
 }
+.budget-pinned {
+  flex: 0 0 auto;
+  padding: 0px 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
 .budget-card {
   display: flex;
   flex-direction: column;

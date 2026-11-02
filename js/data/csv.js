@@ -29,35 +29,58 @@ const categoryCell = (id) => {
   return c?.parent ? categoryById(c.parent)?.name + SEPARATOR + c.name : c?.name;
 };
 
-// CSV text of all operations; it can be read back by `prepareCSV`.
-export function csvText() {
-  const quote = (s) => '"' + String(s ?? "").replace(/"/g, '""') + '"';
-  const money = (n) => (n / 100).toFixed(2);
+// The part of an operation each column tells; the date is always written.
+const COLUMN_PART = {
+  type: "type",
+  amount: "amount",
+  currency: "amount",
+  from: "accounts",
+  to: "accounts",
+  category: "accounts",
+  comment: "comment",
+  tags: "tags",
+  to_amount: "amount",
+  to_currency: "amount",
+};
+const quote = (s) => '"' + String(s ?? "").replace(/"/g, '""') + '"';
+const money = (n) => (n / 100).toFixed(2);
+
+// Cells of one operation by column name.
+function cellsOf(o) {
+  const from = accountById(o.from),
+    to = accountById(o.to);
+  const crossCurrency = o.type === "transfer" && from?.currency !== to?.currency;
+  return {
+    type: o.type,
+    date: o.date,
+    // Income is written as it reached the account, after taxes and commissions.
+    amount: money(o.type === "income" ? (o.receive ?? o.amount) : o.amount),
+    currency: (from || to)?.currency,
+    from: from?.name,
+    to: to?.name,
+    category: categoryCell(o.category),
+    comment: o.comment,
+    tags: (o.tags || []).join("|"),
+    to_amount: crossCurrency ? money(o.receive) : "",
+    to_currency: crossCurrency ? to.currency : "",
+  };
+}
+
+// CSV text of the operations with the parts chosen in `parts` ({ type, accounts, amount, comment,
+// tags }, all by default); written with all parts it can be read back by `prepareCSV`.
+export function csvText(ops = appData.ops, parts = {}) {
+  const columns = COLUMNS.filter((c) => c === "date" || parts[COLUMN_PART[c]] !== false);
   return [
-    COLUMNS.join(","),
-    ...appData.ops.map((o) => {
-      const from = accountById(o.from),
-        to = accountById(o.to);
-      const crossCurrency = o.type === "transfer" && from?.currency !== to?.currency;
-      return [
-        o.type,
-        o.date,
-        // Income is written as it reached the account, after taxes and commissions.
-        money(o.type === "income" ? (o.receive ?? o.amount) : o.amount),
-        (from || to)?.currency,
-        from?.name,
-        to?.name,
-        categoryCell(o.category),
-        o.comment,
-        (o.tags || []).join("|"),
-        crossCurrency ? money(o.receive) : "",
-        crossCurrency ? to.currency : "",
-      ]
-        .map(quote)
-        .join(",");
+    columns.join(","),
+    ...ops.map((o) => {
+      const cells = cellsOf(o);
+      return columns.map((c) => quote(cells[c])).join(",");
     }),
   ].join("\r\n");
 }
+
+// A file with the columns of the operations and no rows, to be filled in and imported.
+export const csvTemplate = () => COLUMNS.join(",");
 
 // Parse CSV text (commas or semicolons) into one object per row.
 export function parseCSV(text) {

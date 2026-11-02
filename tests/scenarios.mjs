@@ -13,12 +13,12 @@ const { server, address } = await serveApp();
 const browser = await chromium.launch();
 
 // A fresh phone-sized page with the sample data (plus whatever `adjust` changes in it) stored.
-async function openApp({ height = 700, adjust = () => {} } = {}) {
+async function openApp({ height = 700, adjust = () => {}, motion = false } = {}) {
   const context = await browser.newContext({
     viewport: { width: 360, height },
     isMobile: true,
     hasTouch: true,
-    reducedMotion: "reduce",
+    reducedMotion: motion ? "no-preference" : "reduce",
   });
   const page = await context.newPage();
   page.errors = [];
@@ -344,17 +344,18 @@ const scenarios = {
     await choose("By hand", "By schedule");
     expect(await shown()).toBe(all - 3);
   },
-  async "a budget opens its operations of the period, editing is a button, deleting returns to the list"(
+  async "a budget card opens its editor, the operations of the period are a button, deleting returns to the list"(
     page,
   ) {
     await tab(page, "More");
     await page.getByText("Budgets", { exact: true }).first().click();
     await page.locator(".budget-card").click();
+    await page.getByLabel("Operations of the budget").click();
     await page.locator(".op-row").first().waitFor();
     expect(await page.locator(".op-row").count()).toBe(2);
     await page.locator(".period-arrows").getByLabel("Previous period").click();
     expect(await page.locator(".op-row").count()).toBe(0);
-    await page.getByLabel("Edit budget").click();
+    await page.getByLabel("Back").click();
     await page.getByRole("button", { name: "Delete" }).click();
     await page.getByRole("button", { name: "Delete" }).last().click();
     await page.getByText("Budget deleted").waitFor();
@@ -449,6 +450,78 @@ const scenarios = {
     await page.waitForSelector(".navbar");
     await tab(page, "Operations");
     expect(await page.locator(".period .label").first().innerText()).toMatch(/All time/);
+  },
+  async "with motion: the digits of the balance roll and the plain text comes back"(page) {
+    // The balance rolls once when the application opens.
+    await page.waitForFunction(() => !document.querySelector(".hero .balance .reel"));
+    const text = await page.locator(".hero .balance").textContent();
+    const rolling = await page.evaluate(async () => {
+      const { rollNumber } = await import("/js/ui/reel.js");
+      const element = document.querySelector(".hero .balance");
+      rollNumber(element, null, true);
+      return element.querySelectorAll(".reel").length;
+    });
+    expect(rolling > 0).toBe(true);
+    await page.waitForFunction(() => !document.querySelector(".hero .balance .reel"));
+    expect(await page.locator(".hero .balance").textContent()).toBe(text);
+  },
+  async "with motion: the amounts of the category tiles settle in when the tab opens"(page) {
+    await tab(page, "Categories");
+    expect((await page.locator(".cat-tile .money.money-in").count()) > 0).toBe(true);
+  },
+  async "partial deletion removes the records and keeps the settings, deleting local data starts from scratch"(
+    page,
+  ) {
+    const stored = () =>
+      page.evaluate(() => {
+        const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+        return [data.accounts.length, data.ops.length, data.settings.accent];
+      });
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Delete my data", { exact: true }).click();
+    await page.getByText("Partial deletion", { exact: true }).click();
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
+    await page.getByText("Data deleted").waitFor();
+    expect((await stored()).join()).toBe("0,0,#0b6aa8");
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Delete my data", { exact: true }).click();
+    await page.getByText("Delete local data", { exact: true }).click();
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
+    await page.getByText("Data deleted").waitFor();
+    expect((await stored())[2]).toBe("#a000b8");
+  },
+  async "the button of a support page is pinned under the scrolling text"(page) {
+    await tab(page, "More");
+    await page.getByText("Support", { exact: true }).click();
+    await page.getByText("Report a bug", { exact: true }).click();
+    expect(await page.locator(".content .page-footer, .content button.primary").count()).toBe(0);
+    expect(await page.locator(".page-footer button", { hasText: "Continue" }).count()).toBe(1);
+  },
+  async "the figures of a budget stay above the scrolling operations"(page) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    await page.locator(".budget-card").click();
+    await page.getByLabel("Operations of the budget").click();
+    expect(await page.locator(".content .budget-card").count()).toBe(0);
+    expect(await page.locator(".budget-pinned .budget-card").count()).toBe(1);
+  },
+  async "the interface mode and the colour change the whole application"(page) {
+    await tab(page, "More");
+    await page.getByText("Settings", { exact: true }).first().click();
+    await page.getByText("Styles and elements").click();
+    await page.getByText("Global").click();
+    await page.getByText("Interface mode").click();
+    await page.getByText("Dark", { exact: true }).click();
+    expect(await page.evaluate(() => document.documentElement.classList.contains("dark"))).toBe(
+      true,
+    );
+    await page.getByText("Color theme").click();
+    await page.getByLabel("#0b6aa8").click();
+    expect(
+      await page.evaluate(() => document.documentElement.style.getPropertyValue("--accent")),
+    ).toBe("#0b6aa8");
   },
   async "a swipe in the calendar moves by a month"(page) {
     await tab(page, "Operations");
@@ -548,22 +621,77 @@ const scenarios = {
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
-    await page.getByText("Export data", { exact: true }).click();
+    await page.getByText("Data file", { exact: true }).click();
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByText("Complete data file (JSON)").click(),
+      page.getByRole("button", { name: "Export and save" }).click(),
     ]);
     expect(download.suggestedFilename()).toBe("monivra-data.json");
     const buffer = await readFile(await download.path());
-    await page.getByText("Import data", { exact: true }).click();
     const [chooser] = await Promise.all([
       page.waitForEvent("filechooser"),
-      page.getByText("Import JSON file").click(),
+      page.getByRole("button", { name: "Restore from file" }).click(),
     ]);
     await chooser.setFiles({ name: "monivra-data.json", mimeType: "application/json", buffer });
     await page.getByText("Replace existing data", { exact: false }).waitFor();
     await page.getByText("Apply", { exact: true }).click();
     await page.getByText("Data imported").waitFor();
+  },
+  async "the CSV export leaves out what is turned off and the whole file is accepted by the import"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Export data", { exact: true }).click();
+    await page.getByRole("button", { name: "CSV", exact: true }).click();
+    const save = async () => {
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        page.getByRole("button", { name: "Export and save" }).click(),
+      ]);
+      return readFile(await download.path(), "utf8");
+    };
+    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    const without = await save();
+    expect(without.split("\r\n")[0].includes("comment")).toBe(false);
+    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    const whole = await save();
+    expect(whole.split("\r\n")[0].includes("comment")).toBe(true);
+    await page.getByLabel("Back").click();
+    await page.getByText("Import data", { exact: true }).click();
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Select CSV file" }).click(),
+    ]);
+    await chooser.setFiles({
+      name: "operations.csv",
+      mimeType: "text/csv",
+      buffer: Buffer.from(whole),
+    });
+    await page.getByText("Apply", { exact: true }).click();
+    await page.getByText("CSV imported").waitFor();
+  },
+  async "a saved backup is made on its page and brought back by merging or replacing"(page) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Saved backups", { exact: true }).click();
+    await page.getByRole("button", { name: "Create a backup" }).click();
+    await page.getByText("Backup saved").waitFor();
+    await page.locator(".backup-card").click();
+    await page.getByRole("button", { name: "Merge data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+  },
+  async "the report holds the parts that are chosen"(page) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Export data", { exact: true }).click();
+    await page.evaluate(() => (window.print = () => {}));
+    await page.locator(".filter-choice", { hasText: "Accounts" }).first().click();
+    await page.getByRole("button", { name: "Export and save" }).click();
+    const report = await page.locator("#printout").innerHTML();
+    expect(report.includes("<th>Date</th>")).toBe(true);
+    expect(report.includes("<th>Balance</th>")).toBe(false);
   },
 };
 
@@ -601,25 +729,13 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
-  "a budget opens its operations of the period, editing is a button, deleting returns to the list":
+  "the figures of a budget stay above the scrolling operations": budgetWithOperations,
+  "partial deletion removes the records and keeps the settings, deleting local data starts from scratch":
     (data) => {
-      const base = data.ops.find((op) => op.type === "expense");
-      const day = new Date().toLocaleDateString("en-CA");
-      const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
-      data.ops = [
-        { ...base, id: "t1", date: day },
-        { ...base, id: "t2", date: day },
-        { ...base, id: "t3", date: day, category: elsewhere.id },
-      ];
-      data.budgets.push({
-        id: "one",
-        name: "Only one",
-        currency: data.settings.currency,
-        amount: 100000000,
-        period: "month",
-        categories: [base.category],
-      });
+      data.settings.accent = "#0b6aa8";
     },
+  "a budget card opens its editor, the operations of the period are a button, deleting returns to the list":
+    budgetWithOperations,
   "a payment far behind is asked about: adding posts what was missed, skipping does not":
     addOverdue,
   "skipping the missed payments adds nothing": addOverdue,
@@ -634,6 +750,25 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// A budget with two of the three operations of the month in its category.
+function budgetWithOperations(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const day = new Date().toLocaleDateString("en-CA");
+  const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
+  data.ops = [
+    { ...base, id: "t1", date: day },
+    { ...base, id: "t2", date: day },
+    { ...base, id: "t3", date: day, category: elsewhere.id },
+  ];
+  data.budgets.push({
+    id: "one",
+    name: "Only one",
+    currency: data.settings.currency,
+    amount: 100000000,
+    period: "month",
+    categories: [base.category],
+  });
+}
 // A daily payment that was last due forty days ago: too far behind to be added without asking.
 function addOverdue(data) {
   const base = data.ops.find((op) => op.type === "expense");
@@ -657,6 +792,7 @@ let failures = 0;
 for (const [name, scenario] of Object.entries(scenarios)) {
   const page = await openApp({
     height: SHORT_SCREEN.some((start) => name.startsWith(start)) ? 540 : 700,
+    motion: name.startsWith("with motion"),
     adjust: adjustments[name] ?? (() => {}),
   });
   try {

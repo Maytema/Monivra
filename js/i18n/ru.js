@@ -221,6 +221,144 @@ export const russianStrings = {
   "Delete my data": "Удалить мои данные",
   "Create a budget": "Создать бюджет",
   "Edit budget": "Изменить бюджет",
+  "How to add an expense": "Как добавить расход",
+  "On the Operations tab tap Add and choose Expenses. Pick a category, type the amount on the keypad and tap the check mark. The account can be changed in the same window.":
+    "На вкладке «Операции» нажмите «Добавить» и выберите «Расходы». Выберите категорию, введите сумму на клавиатуре и нажмите галочку. Счёт можно сменить в том же окне.",
+  "How to add an income": "Как добавить доход",
+  "Choose Incomes in the same window, pick a category and enter the amount.":
+    "Выберите «Доходы» в том же окне, затем категорию, и введите сумму.",
+  "How to add a transfer between accounts": "Как добавить перевод между счетами",
+  "Choose Accounts in the add window and pick the account the money leaves. In the editor choose the account it goes to and enter the amount.":
+    "Выберите «Счета» в окне добавления и укажите счёт, с которого уходят деньги. В редакторе выберите счёт-получатель и введите сумму.",
+  "How to change an operation": "Как изменить операцию",
+  "Tap the operation in the list, change what you need and save. To delete several at once, hold one operation and tick the others.":
+    "Нажмите на операцию в списке, измените нужное и сохраните. Чтобы удалить сразу несколько, удерживайте одну операцию и отметьте остальные.",
+  "How to add a comment to an operation": "Как добавить комментарий к операции",
+  "Open the operation and write the text in the comment field. Comments can be searched with the search button of the operations list.":
+    "Откройте операцию и напишите текст в поле комментария. Комментарии можно искать кнопкой поиска в списке операций.",
+  "How to create a scheduled payment": "Как создать запланированный платёж",
+  "Open More → Scheduled payments and tap Add. Choose the date, a repeat and a reminder if needed, and fill in the payment like an ordinary operation. When its day comes, the payment is added to the operations by itself.":
+    "Откройте «Ещё» → «Запланированные платежи» и нажмите «Добавить». Выберите дату, при необходимости повтор и напоминание, и заполните платёж как обычную операцию. Когда наступит его день, платёж сам добавится в операции.",
+  "What if the account and the category use different currencies?":
+    "Что, если у счёта и категории разные валюты?",
+  "Two amounts are shown. Change either one and the other is recalculated; the operation keeps its own rate.":
+    "Показываются две суммы. Измените любую, и вторая пересчитается; операция хранит свой курс.",
+  "How to create an account": "Как создать счёт",
+  "On the Accounts tab tap the plus and choose the type of the account. Then enter the title, the currency and the starting balance.":
+    "На вкладке «Счета» нажмите плюс и выберите тип счёта. Затем введите название, валюту и начальный баланс.",
+  "How to create a category": "Как создать категорию",
+  "On the Categories tab tap the pencil, then Create a new category. Choose its name, icon, colour and currency.":
+    "На вкладке «Категории» нажмите карандаш, затем «Создать новую категорию». Выберите название, значок, цвет и валюту.",
+  "How to switch to income categories": "Как перейти к категориям доходов",
+  "On the Categories tab use the Expenses and Incomes tabs at the top.":
+    "На вкладке «Категории» используйте вкладки «Расходы» и «Доходы» сверху.",
+  "How to change the order of categories": "Как изменить порядок категорий",
+  "Tap the pencil on the Categories tab, hold a category and drag it to a new place.":
+    "Нажмите карандаш на вкладке «Категории», удерживайте категорию и перетащите на новое место.",
+  "How to change the order of accounts": "Как изменить порядок счетов",
+  "On the Accounts tab hold an account and drag it to a new place in the list.":
+    "На вкладке «Счета» удерживайте счёт и перетащите его на новое место в списке.",
+  "What happens to an archived account or category?":
+    "Что происходит с архивным счётом или категорией?",
+  "It leaves the lists but stays in the history of operations.":
+    "Он пропадает из списков, но остаётся в истории операций.",
+  "How to show a list of operations and their amount only for a specific account":
+    "Как показать список операций и их сумму только по одному счёту",
+  "Tap the filter button, choose the account and apply. The statistics and the operations show only that account, and a bar at the top tells that a filter is on.":
+    "Нажмите кнопку фильтра, выберите счёт и примените. Статистика и операции покажут только этот счёт, а полоса сверху сообщит, что фильтр включён.",
+  "How to show a list of operations and their amount only for a specific category":
+    "Как показать список операций и их сумму только по одной категории",
+  "Tap the category in the report: the operations of the category open with their total.":
+    "Нажмите на категорию в отчёте: откроются операции категории с их итогом.",
+  "How to change the period": "Как изменить период",
+  "How to choose which blocks the statistics show":
+    "Как выбрать, какие блоки показывает статистика",
+  "Open More → Settings → Styles and elements → Elements → Statistics. Switch blocks on and off, hold a row and drag it to change the order.":
+    "Откройте «Ещё» → «Настройки» → «Стили и элементы» → «Элементы» → «Статистика». Включайте и выключайте блоки, удерживайте строку и перетаскивайте, чтобы поменять порядок.",
+  "Bishkek, Kyrgyzstan": "Бишкек, Кыргызстан",
+  "Create and restore data from automatic local copies":
+    "Создание и восстановление данных из автоматических локальных копий",
+  "Create and restore data from a manual backup file":
+    "Создание и восстановление данных из файла копии, сохранённого вручную",
+  "Import data from a file": "Загрузка данных из файла",
+  "Save a copy of your data as a file": "Сохранение копии данных в файл",
+  "Permanently delete all data": "Безвозвратное удаление всех данных",
+  Deletion: "Удаление",
+  "Partial deletion": "Частичное удаление",
+  "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.":
+    "Удаляются счета, категории, операции, бюджеты и запланированные платежи. Настройки и копии остаются.",
+  "Delete accounts, categories, operations, budgets and scheduled payments?":
+    "Удалить счета, категории, операции, бюджеты и запланированные платежи?",
+  "Delete local data": "Удалить локальные данные",
+  "Everything stored on this device is deleted: the data above, backups, settings and reminders. The application starts from scratch.":
+    "Удаляется всё, что хранится на этом устройстве: данные выше, копии, настройки и напоминания. Приложение начнёт с чистого листа.",
+  "Delete everything stored on this device? The application will start from scratch.":
+    "Удалить всё, что хранится на этом устройстве? Приложение начнёт с чистого листа.",
+  "Deleted data cannot be restored. Choose what to delete.":
+    "Удалённые данные восстановить нельзя. Выберите, что удалить.",
+  "Nothing is stored outside this device: there is no account and no cloud copy.":
+    "Вне этого устройства ничего не хранится: нет ни аккаунта, ни облачной копии.",
+  "Data deleted": "Данные удалены",
+  Balance: "Баланс",
+  "Export and share": "Экспортировать и поделиться",
+  "Export and save": "Экспортировать и сохранить",
+  "Include in report": "Включить в отчёт",
+  "Fields to include": "Какие поля включить",
+  "Accounts / categories": "Счета / категории",
+  "Choose what to export": "Выберите, что экспортировать",
+  "Restore from file": "Восстановить из файла",
+  "Select CSV file": "Выбрать CSV-файл",
+  "Download template": "Скачать шаблон",
+  "Back up your data to keep it safe or move it to another device.":
+    "Сохраните копию данных, чтобы они были в безопасности, или перенесите их на другое устройство.",
+  "This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.":
+    "Этот формат файла свой для приложения: другие программы его не откроют. Чтобы использовать данные в другом месте, перейдите в «Экспорт данных».",
+  "Before exporting data from another application, we recommend switching that application to English.":
+    "Перед выгрузкой данных из другого приложения рекомендуем переключить то приложение на английский язык.",
+  "Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.":
+    "Некоторые приложения переводят выгружаемые данные (заголовки, названия типов операций и т. д.). Это может помешать правильному распознаванию данных.",
+  "Importing may create duplicate operations, accounts and categories.":
+    "При импорте могут появиться дубликаты операций, счетов и категорий.",
+  "Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.":
+    "Перед сохранением импортированных данных делается копия текущих. Из неё можно будет восстановить данные.",
+  "Backups are made automatically once a day when Save locally is on, and you can make one yourself at any time.":
+    "Копии делаются автоматически раз в день, если включено «Сохранять локально», и вы можете сделать копию сами в любой момент.",
+  "Create a backup": "Создать копию",
+  "To restore, select one of the previous backups":
+    "Чтобы восстановить, выберите одну из предыдущих копий",
+  "Previous backups": "Предыдущие копии",
+  "Local backup": "Локальная копия",
+  "Accounts: {accounts} · Categories: {categories} · Operations: {ops}":
+    "Счета: {accounts} · Категории: {categories} · Операции: {ops}",
+  "Count and schedule": "Учесть и запланировать",
+  "Count all scheduled payments whose time has come since the backup was made and, if they repeat, schedule the next ones.":
+    "Учесть все запланированные платежи, срок которых наступил с момента создания копии, и, если они повторяются, запланировать следующие.",
+  "Skip and schedule": "Пропустить и запланировать",
+  "Do not count the scheduled payments whose time has come since the backup was made and, if they repeat, schedule the next ones.":
+    "Не учитывать запланированные платежи, срок которых наступил с момента создания копии, и, если они повторяются, запланировать следующие.",
+  "Do not restore": "Не восстанавливать",
+  "Do not restore the scheduled payments of the backup, if it has any.":
+    "Не восстанавливать запланированные платежи из копии, если они в ней есть.",
+  "Merge this backup into the current data?": "Объединить эту копию с текущими данными?",
+  "Restore from backup": "Восстановление из копии",
+  "Backup made": "Копия создана",
+  "To keep the data created on this device, choose Merge data: it is added to the data of the backup.":
+    "Чтобы сохранить данные, созданные на этом устройстве, выберите «Объединить данные»: они добавятся к данным копии.",
+  "To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.":
+    "Чтобы удалить данные, созданные на этом устройстве, выберите «Заменить данные»: они полностью заменятся данными копии.",
+  "How to restore scheduled payments?": "Как восстановить запланированные платежи?",
+  "Merge data": "Объединить данные",
+  "Backup restored": "Копия восстановлена",
+  "Save locally": "Сохранять локально",
+  "Copy the data locally once a day. This increases the size of the data on the device. Only the latest copies are stored.":
+    "Копировать данные локально раз в день. Это увеличит объём данных на устройстве. Хранятся только последние копии.",
+  "Delete all local data copies": "Удалить все локальные копии данных",
+  "Delete all saved backups? They cannot be restored.":
+    "Удалить все сохранённые копии? Восстановить их будет нельзя.",
+  "Backups deleted": "Копии удалены",
+  "Delete all local backups from storage. Deleted data cannot be restored.":
+    "Удалить все локальные копии из хранилища. Удалённые данные восстановить нельзя.",
+  "Operations of the budget": "Операции бюджета",
   "Missed payments": "Пропущенные платежи",
   "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":
     "Платёж «{name}» не добавлялся с {date} (платежей: {n}). Добавить их в операции?",
@@ -389,8 +527,6 @@ export const russianStrings = {
   "Based on": "На основе",
   "Beta offer": "Предложение беты",
   Subcategory: "Подкатегория",
-  "Deletion cancelled: type DELETE exactly":
-    "Удаление отменено: нужно ввести DELETE точно как показано",
   "Subcategory type follows its parent": "Тип подкатегории совпадает с типом родителя",
   "Move to a category": "Переместить в категорию",
   "Merge into a subcategory": "Объединить с подкатегорией",
@@ -412,9 +548,6 @@ export const russianStrings = {
     "Эта категория и её подкатегории станут подкатегориями «{name}». Их операции будут соответственно отнесены к «{name}».",
   'All operations of this category will be moved to "{name}", and this category will be deleted.':
     "Все операции этой категории будут перенесены в «{name}», а сама категория будет удалена.",
-  "Type DELETE to erase all financial data": "Введите DELETE, чтобы стереть все финансовые данные",
-  "Permanently delete all accounts, categories, transactions, schedules and budgets?":
-    "Безвозвратно удалить все счета, категории, операции, плановые платежи и бюджеты?",
   File: "Файл",
   "Delete this account and all linked operations?": "Удалить этот счёт и все связанные операции?",
   "Choose a subcategory": "Выберите подкатегорию",
@@ -456,7 +589,6 @@ export const russianStrings = {
     "Облачная синхронизация, платежи и вход в аккаунт в этой версии не подключены. Будущая онлайн-версия может обрабатывать данные иначе.",
   Colors: "Цвета",
   Commission: "Комиссия",
-  "Complete data file (JSON)": "Полный файл данных (JSON)",
   "Connected services": "Подключённые сервисы",
   "Convert to a category?": "Сделать категорией?",
   "Converted amount is too small or too large for the destination currency":
@@ -507,9 +639,7 @@ export const russianStrings = {
   "Hide preview": "Скрыть предпросмотр",
   Icons: "Значки",
   Immediately: "Сразу",
-  "Import JSON file": "Импорт файла JSON",
   "Import failed": "Не удалось импортировать",
-  "Import operations CSV": "Импорт операций (CSV)",
   Information: "Информация",
   "Information is not available in this preview.": "В этой версии информация недоступна.",
   Install: "Установить",
@@ -544,12 +674,9 @@ export const russianStrings = {
   "{app} is currently an unfinished testing build. Features, appearance and stored-data formats may change during development.":
     "Сейчас {app} — незаконченная тестовая сборка. Возможности, внешний вид и формат данных могут меняться.",
   "Month starts on": "Месяц начинается",
-  "Move down": "Вниз",
   "Move into": "Переместить в",
   "Move to": "Переместить в",
-  "Move up": "Вверх",
   Name: "Название",
-  "Confirmation word": "Слово подтверждения",
   "Name is too long": "Название слишком длинное",
   "Nest into": "Вложить в",
   "No ads": "Без рекламы",
@@ -559,7 +686,6 @@ export const russianStrings = {
   "One time payment": "Единоразовый платёж",
   "Open photo": "Открыть фото",
   "Operation saved": "Операция сохранена",
-  "Operations (CSV)": "Операции (CSV)",
   "Other currencies": "Другие валюты",
   Completed: "Завершённые",
   "PIN code": "PIN-код",
@@ -584,13 +710,10 @@ export const russianStrings = {
     "Заменить текущие записи примерами данных? Можно отменить, ничего не скачивая.",
   "Replace data": "Заменить данные",
   "Replace with sample data": "Заменить примерами данных",
-  "Report (PDF)": "Отчёт (PDF)",
   "Report a bug": "Сообщить об ошибке",
   "Request a feature": "Предложить функцию",
-  "Restore data file": "Восстановить из файла",
   "Sample accounts and categories": "Примеры счетов и категорий",
   "Sample data installed": "Примеры данных установлены",
-  "Save data file": "Сохранить файл данных",
   Saved: "Сохранено",
   Schedule: "Расписание",
   "Select a category": "Выберите категорию",
@@ -862,8 +985,6 @@ export const russianStrings = {
   "This offline beta is not connected to an account.":
     "Эта автономная бета не подключена к аккаунту.",
   Message: "Сообщение",
-  "Importing data may change your existing records. Export a backup first.":
-    "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
   Filtered: "Фильтр",
   "Sum of operations for the period": "Сумма операций за период",
   "Operations: {n}": "Операций: {n}",
@@ -890,41 +1011,11 @@ export const russianStrings = {
   "Hints will be shown again": "Подсказки снова будут показаны",
   "Restart tooltips throughout the application": "Показать подсказки во всём приложении заново",
   "Create, edit and plan operations": "Создание, изменение и планирование операций",
-  "Open Operations and tap Add. Pick an expense or income category, or open Accounts to move money between two accounts.":
-    "Откройте «Операции» и нажмите «Добавить». Выберите категорию расхода или дохода либо вкладку «Счета», чтобы перевести деньги между двумя счетами.",
-  "Type the amount on the keypad. You can calculate with + − × ÷. The check mark saves the operation.":
-    "Введите сумму на клавиатуре. Можно считать: + − × ÷. Галочка сохраняет операцию.",
-  "Different currencies": "Разные валюты",
-  "When the account and the category use different currencies, two amounts are shown. Change either one and the other is recalculated. The operation keeps its own rate.":
-    "Если у счёта и категории разные валюты, показываются две суммы. Измените любую из них, и вторая пересчитается. Операция хранит собственный курс.",
-  "Edit and delete": "Изменение и удаление",
-  "Tap an operation to change it. Hold one to select several and delete them together.":
-    "Нажмите на операцию, чтобы изменить её. Удерживайте, чтобы выбрать несколько и удалить их вместе.",
-  "Plan ahead": "Планирование",
-  "Use Additionally in the editor to set a reminder or a repeat. All planned payments are listed in More → Scheduled payments.":
-    "В окне операции откройте «Дополнительно», чтобы задать напоминание или повтор. Все запланированные платежи собраны в «Ещё» → «Запланированные платежи».",
   "Creating, editing, working with accounts and categories":
     "Создание, изменение и работа со счетами и категориями",
-  "Tap + on the Accounts tab. A regular account can have a credit limit, a savings account has a goal, a debt account tracks the amount owed.":
-    "Нажмите + на вкладке «Счета». У обычного счёта может быть кредитный лимит, у накопительного есть цель, долговой счёт отслеживает сумму долга.",
-  Balance: "Баланс",
-  "A balance can be negative. Tap an account for quick actions: top up, debit, transfer, edit or archive.":
-    "Баланс может быть отрицательным. Нажмите на счёт для быстрых действий: пополнить, списать, перевести, изменить или архивировать.",
-  "Hold an account and drag it to a new place in the list.":
-    "Удерживайте счёт и перетащите его на новое место в списке.",
-  "On the Categories tab switch between expenses and incomes. The pencil opens the list for editing, a category can have subcategories.":
-    "На вкладке «Категории» переключайтесь между расходами и доходами. Карандаш открывает список для правки, у категории могут быть подкатегории.",
-  "An archived account or category leaves the lists but stays in the history of operations.":
-    "Архивный счёт или категория пропадают из списков, но остаются в истории операций.",
   "Sorting, filtering and viewing statistics": "Сортировка, фильтрация и просмотр статистики",
-  Period: "Период",
   "Use the arrows to move between periods. Tap the date to choose another interval.":
     "Стрелками переходите между периодами. Нажмите на дату, чтобы выбрать другой интервал.",
-  "Expenses and incomes": "Расходы и доходы",
-  "Switch between them at the top. The report shows how the total is divided between categories.":
-    "Переключайтесь между ними сверху. Отчёт показывает, как итог делится по категориям.",
-  "The filter button narrows the report to the accounts, categories, types and tags you choose.":
-    "Кнопка фильтра ограничивает отчёт выбранными счетами, категориями, типами и тегами.",
   "Ask us any question and we will gladly answer":
     "Задайте нам любой вопрос, мы с радостью ответим",
   "Where is my data?": "Где мои данные?",
@@ -987,8 +1078,6 @@ export const russianStrings = {
     "Пример 1: 100 - налог (20%) - комиссия (7) = 100 - 20 = 80 - 7 = 73",
   "Example 2: 100 - commission (7) - tax (20%) = 100 - 7 = 93 - 18,6 = 74,4":
     "Пример 2: 100 - комиссия (7) - налог (20%) = 100 - 7 = 93 - 18,6 = 74,4",
-  "Save a local copy of your data or restore a previously exported JSON file.":
-    "Сохраните локальную копию данных или восстановите ранее экспортированный файл JSON.",
   "The {app} team works every day to build a convenient and useful application for managing your finances.":
     "Команда {app} каждый день создаёт удобное и полезное приложение для управления вашими финансами.",
   "We hope our work will help you manage your money better and reach your goals!":
@@ -1006,7 +1095,6 @@ export const russianStrings = {
     "Общий доступ появится после добавления входа в аккаунт.",
   "Storage is unavailable or full. Export a data file to keep changes.":
     "Хранилище недоступно или заполнено. Экспортируйте файл данных, чтобы сохранить изменения.",
-  "Export a copy of your data as a file.": "Экспортируйте копию данных в виде файла.",
   "Rates are fixed values that you can edit. Live quotes are not connected.":
     "Курсы — фиксированные значения, их можно менять. Рыночные котировки не подключены.",
   "Automatic updates need a rates service, which is not connected yet. The values below stay unchanged.":

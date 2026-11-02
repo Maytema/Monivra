@@ -7,7 +7,7 @@ import { parseCSV, prepareCSV } from "../js/data/csv.js";
 import { CURRENCIES, defaultRates } from "../js/data/currencies.js";
 import { completeData } from "../js/data/defaults.js";
 import { isValidData } from "../js/data/storage.js";
-import { createBackup, deleteBackup, restoreBackup } from "../js/domain/backups.js";
+import { createBackup, deleteAllBackups, restoreBackup } from "../js/domain/backups.js";
 import { searchCurrencies } from "../js/domain/currency-search.js";
 
 check("Stored schema", () => isValidData(appData));
@@ -90,17 +90,60 @@ check("Currency search narrows by code and country as letters are typed", () => 
   );
 });
 
-check("A restored backup brings the old data back and keeps the list of backups", () => {
+const REPLACE = { mode: "replace", scheduled: "count" };
+
+check("A replaced backup brings the old data back and keeps the list of backups", () => {
   appData.ops = [];
   const cash = addAccount({ opening: 100 });
   createBackup();
   const [backup] = appData.backups;
   appData.accounts = appData.accounts.filter((a) => a.id !== cash.id);
-  restoreBackup(backup);
+  restoreBackup(backup, REPLACE);
   const restored = appData.accounts.some((a) => a.id === cash.id);
   const listKept = appData.backups.length === 1 && appData.backups[0].data.backups.length === 0;
-  deleteBackup(backup.id);
+  deleteAllBackups();
   return restored && listKept && appData.backups.length === 0;
+});
+
+check(
+  "A merged backup keeps what only the current data has and brings back what only it has",
+  () => {
+    appData.ops = [];
+    const old = addAccount({ opening: 100 });
+    createBackup();
+    const [backup] = appData.backups;
+    appData.accounts = appData.accounts.filter((a) => a.id !== old.id);
+    const fresh = addAccount({ opening: 5 });
+    const currency = appData.settings.currency;
+    appData.settings.currency = "EUR";
+    restoreBackup(backup, { mode: "merge", scheduled: "count" });
+    const both =
+      appData.accounts.some((a) => a.id === old.id) &&
+      appData.accounts.some((a) => a.id === fresh.id);
+    const kept = appData.settings.currency === "EUR";
+    appData.settings.currency = currency;
+    deleteAllBackups();
+    return both && kept;
+  },
+);
+
+check("The scheduled payments of a backup are counted, skipped or left out as chosen", () => {
+  const base = appData.ops.find((o) => o.type === "expense");
+  const dueDay = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
+  const item = { ...structuredClone(base), id: "__old", date: dueDay, recur: null, reminder: null };
+  const outcome = (scheduled) => {
+    appData.scheduled = [structuredClone(item)];
+    createBackup();
+    const [backup] = appData.backups;
+    appData.scheduled = [];
+    restoreBackup(backup, { mode: "replace", scheduled });
+    const result = appData.scheduled.map((x) => x.id).join();
+    deleteAllBackups();
+    return result;
+  };
+  // Counted: kept, so the payment that came due is added on its own. Skipped: the payment that came
+  // due is let go and, as it does not repeat, nothing is left. Left out: nothing comes back.
+  return outcome("count") === "__old" && outcome("skip") === "" && outcome("none") === "";
 });
 
 check("Only the ten latest backups are kept", () => {

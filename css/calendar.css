@@ -149,7 +149,8 @@
 }
 .clock-field input:focus {
   border-color: var(--accent);
-  background: var(--tint);
+  background: var(--sheet);
+  padding: 0px;
 }
 .clock-field small {
   margin-top: 4px;

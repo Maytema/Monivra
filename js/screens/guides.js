@@ -1,83 +1,98 @@
-/* Short written instructions: a list of guides, each made of titled paragraphs */
+/* Short written instructions: a list of guides, each made of questions with their answers */
 
 export const GUIDES = [
   {
     id: "operations",
     title: "Operations",
-    icon: "receipt",
     about: "Create, edit and plan operations",
     sections: [
       [
-        "Add an operation",
-        "Open Operations and tap Add. Pick an expense or income category, or open Accounts to move money between two accounts.",
+        "How to add an expense",
+        "On the Operations tab tap Add and choose Expenses. Pick a category, type the amount on the keypad and tap the check mark. The account can be changed in the same window.",
       ],
       [
-        "Amount",
-        "Type the amount on the keypad. You can calculate with + − × ÷. The check mark saves the operation.",
+        "How to add an income",
+        "Choose Incomes in the same window, pick a category and enter the amount.",
       ],
       [
-        "Different currencies",
-        "When the account and the category use different currencies, two amounts are shown. Change either one and the other is recalculated. The operation keeps its own rate.",
+        "How to add a transfer between accounts",
+        "Choose Accounts in the add window and pick the account the money leaves. In the editor choose the account it goes to and enter the amount.",
       ],
       [
-        "Edit and delete",
-        "Tap an operation to change it. Hold one to select several and delete them together.",
+        "How to change an operation",
+        "Tap the operation in the list, change what you need and save. To delete several at once, hold one operation and tick the others.",
       ],
       [
-        "Plan ahead",
-        "Use Additionally in the editor to set a reminder or a repeat. All planned payments are listed in More → Scheduled payments.",
+        "How to add a comment to an operation",
+        "Open the operation and write the text in the comment field. Comments can be searched with the search button of the operations list.",
+      ],
+      [
+        "How to create a scheduled payment",
+        "Open More → Scheduled payments and tap Add. Choose the date, a repeat and a reminder if needed, and fill in the payment like an ordinary operation. When its day comes, the payment is added to the operations by itself.",
+      ],
+      [
+        "What if the account and the category use different currencies?",
+        "Two amounts are shown. Change either one and the other is recalculated; the operation keeps its own rate.",
       ],
     ],
   },
   {
     id: "accounts",
     title: "Accounts and categories",
-    icon: "wallet",
     about: "Creating, editing, working with accounts and categories",
     sections: [
       [
-        "Accounts",
-        "Tap + on the Accounts tab. A regular account can have a credit limit, a savings account has a goal, a debt account tracks the amount owed.",
+        "How to create an account",
+        "On the Accounts tab tap the plus and choose the type of the account. Then enter the title, the currency and the starting balance.",
       ],
       [
-        "Balance",
-        "A balance can be negative. Tap an account for quick actions: top up, debit, transfer, edit or archive.",
-      ],
-      ["Order", "Hold an account and drag it to a new place in the list."],
-      [
-        "Categories",
-        "On the Categories tab switch between expenses and incomes. The pencil opens the list for editing, a category can have subcategories.",
+        "How to create a category",
+        "On the Categories tab tap the pencil, then Create a new category. Choose its name, icon, colour and currency.",
       ],
       [
-        "Archive",
-        "An archived account or category leaves the lists but stays in the history of operations.",
+        "How to switch to income categories",
+        "On the Categories tab use the Expenses and Incomes tabs at the top.",
+      ],
+      [
+        "How to change the order of categories",
+        "Tap the pencil on the Categories tab, hold a category and drag it to a new place.",
+      ],
+      [
+        "How to change the order of accounts",
+        "On the Accounts tab hold an account and drag it to a new place in the list.",
+      ],
+      [
+        "What happens to an archived account or category?",
+        "It leaves the lists but stays in the history of operations.",
       ],
     ],
   },
   {
     id: "statistics",
     title: "Statistics",
-    icon: "stats",
     about: "Sorting, filtering and viewing statistics",
     sections: [
       [
-        "Period",
+        "How to show a list of operations and their amount only for a specific account",
+        "Tap the filter button, choose the account and apply. The statistics and the operations show only that account, and a bar at the top tells that a filter is on.",
+      ],
+      [
+        "How to show a list of operations and their amount only for a specific category",
+        "Tap the category in the report: the operations of the category open with their total.",
+      ],
+      [
+        "How to change the period",
         "Use the arrows to move between periods. Tap the date to choose another interval.",
       ],
       [
-        "Expenses and incomes",
-        "Switch between them at the top. The report shows how the total is divided between categories.",
-      ],
-      [
-        "Filters",
-        "The filter button narrows the report to the accounts, categories, types and tags you choose.",
+        "How to choose which blocks the statistics show",
+        "Open More → Settings → Styles and elements → Elements → Statistics. Switch blocks on and off, hold a row and drag it to change the order.",
       ],
     ],
   },
   {
     id: "questions",
     title: "Additional questions",
-    icon: "help",
     about: "Ask us any question and we will gladly answer",
     sections: [
       [

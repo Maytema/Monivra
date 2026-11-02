@@ -1,15 +1,12 @@
 /* Settings sub-pages of the More tab */
 import { render } from "../../app/shell.js";
-import { APP_ID, escapeHtml } from "../../core/constants.js";
 import { appData, setLocked, setPinEntry } from "../../core/state.js";
-import { download } from "../../data/import-export.js";
 import { save } from "../../data/storage.js";
-import { createBackup, deleteBackup, restoreBackup } from "../../domain/backups.js";
-import { translate } from "../../i18n/index.js";
+import { deleteAllBackups } from "../../domain/backups.js";
 import { timeLabel, timePicker } from "../../ui/time-picker.js";
 import { ratesBody } from "../rates.js";
 import { settingOptions, switchSetting } from "../settings.js";
-import { closeLayers, goHome, openSheet } from "../../ui/navigation.js";
+import { closeLayers, openPage, openSheet } from "../../ui/navigation.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { numberFieldHtml } from "../../ui/number-picker.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast, toggleRowHtml } from "../../ui/primitives.js";
@@ -111,51 +108,34 @@ function privacySettings() {
 
 function backupsSettings() {
   const body =
-    switchSetting("Automatic backups", "autoBackup", "One backup per day when the app opens") +
-    menuRowHtml("Create backup", "save", () => {
-      createBackup();
-      render();
-      toast("Backup saved");
-    }) +
-    `<div class="section-label">${translate("Saved backups")}</div>` +
-    appData.backups
-      .map((b) =>
-        menuRowHtml(escapeHtml(new Date(b.at).toLocaleString()), "archive", () =>
-          openSheet(
-            () =>
-              `<h2>${escapeHtml(new Date(b.at).toLocaleString())}</h2>${menuRowHtml(
-                "Restore",
-                "repeat",
-                () =>
-                  confirmAction(
-                    "Replace current data with this backup?",
-                    () => {
-                      restoreBackup(b);
-                      goHome("more");
-                    },
-                    true,
-                    "Confirm",
-                  ),
-              )}${menuRowHtml("Export data", "download", () => download(`${APP_ID}-backup.json`, JSON.stringify(b.data, null, 2), "application/json"))}${menuRowHtml(
-                "Delete",
-                "trash",
-                () =>
-                  confirmAction(
-                    "Delete this saved backup?",
-                    () => {
-                      deleteBackup(b.id);
-                      closeLayers();
-                      render();
-                    },
-                    false,
-                    "Delete",
-                  ),
-              )}`,
-            "Backup",
-          ),
+    menuRowHtml(
+      "Saved backups",
+      null,
+      () => openPage("savedBackups"),
+      "Create and restore data from automatic local copies",
+    ) +
+    switchSetting(
+      "Save locally",
+      "autoBackup",
+      "Copy the data locally once a day. This increases the size of the data on the device. Only the latest copies are stored.",
+    ) +
+    menuRowHtml(
+      "Delete all local data copies",
+      null,
+      () =>
+        confirmAction(
+          "Delete all saved backups? They cannot be restored.",
+          () => {
+            deleteAllBackups();
+            render();
+            toast("Backups deleted");
+          },
+          false,
+          "Delete",
         ),
-      )
-      .join("");
+      "Delete all local backups from storage. Deleted data cannot be restored.",
+      "",
+    );
   return { title: "Backups", body };
 }
 

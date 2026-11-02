@@ -70,7 +70,7 @@ function sharedAccessPage() {
 }
 
 function aboutPage() {
-  const body = `<div class="about">${aboutArt}<p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;
+  const body = `<div class="about">${aboutArt}<div class="about-place">${iconSvg("pin", 22)}<span>${translate("Bishkek, Kyrgyzstan")}</span></div><p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;
   return { title: "About our team", body };
 }
 
@@ -156,9 +156,10 @@ function buildPage(kind) {
 
 // Info pages: profile, subscription, support, instructions, about, terms and similar.
 export function infoPage(kind) {
-  const { title, body, footer } = buildPage(kind);
+  const { title, body, footer, pinned } = buildPage(kind);
   // A page with a pinned footer has no top bar: the back arrow and heading scroll with the content.
   return footer
     ? `<div class="sub-screen"><div class="sub-scroll">${body}</div>${footer}</div>`
-    : pageHeader(title) + `<div class="content">${body}</div>`;
+    : pageHeader(title) +
+        `<div class="content">${body}</div>${pinned ? `<div class="page-footer">${pinned}</div>` : ""}`;
 }

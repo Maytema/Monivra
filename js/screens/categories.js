@@ -2,7 +2,6 @@
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, forgetDeleted, uiState } from "../core/state.js";
-import { save } from "../data/storage.js";
 import {
   categoryById,
   categoryCount,
@@ -23,7 +22,6 @@ import {
   badgeHtml,
   buttonHtml,
   fieldButtonHtml,
-  iconButtonHtml,
   menuRowHtml,
   pageHeader,
   swipePane,
@@ -31,29 +29,12 @@ import {
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
-import { closeLayers, finishFlow, goBack, openPage, openSheet } from "../ui/navigation.js";
+import { closeLayers, finishFlow, openPage, openSheet } from "../ui/navigation.js";
 import { confirmAction, promptText } from "../ui/dialogs.js";
 import { iconPicker } from "../ui/icon-picker.js";
 import { periodBar } from "../ui/period-picker.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 
-// Screen for changing the order of accounts or categories.
-export function orderView(kind) {
-  const list = kind === "accounts" ? appData.accounts : appData.categories.filter((c) => !c.parent);
-  function move(id, n) {
-    const arr = kind === "accounts" ? appData.accounts : appData.categories,
-      i = arr.findIndex((x) => x.id === id),
-      j = i + n;
-    if (j < 0 || j >= arr.length) return;
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-    save();
-    render();
-  }
-  return (
-    pageHeader("Change order") +
-    `<div class="content">${list.map((a) => `<div class="row">${badgeHtml(a, true)}<span class="grow">${escapeHtml(a.name)}</span>${iconButtonHtml("up", "Move up", () => move(a.id, -1))}${iconButtonHtml("down", "Move down", () => move(a.id, 1))}</div>`).join("")}${buttonHtml("Complete", goBack, "primary")}</div>`
-  );
-}
 // Expense/income tabs shared by categories and statistics.
 export function sumTabs() {
   return `<div class="sum-tabs">${["expense", "income"]
