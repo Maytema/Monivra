@@ -104,6 +104,9 @@ function swipePrepare(s, direction) {
   const current = s.el.cloneNode(true);
   current.querySelectorAll(".fab,.period-arrows").forEach((e) => e.remove());
   current.classList.add("swipe-page");
+  // A copy of an element that is animating would play the animation again, so the amounts that
+  // settled in when the screen opened must not move while the screen is only being dragged.
+  current.querySelectorAll(".money-in").forEach((e) => e.classList.remove("money-in"));
   current.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
   current.setAttribute("inert", "");
   node.classList.add("swipe-page");

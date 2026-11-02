@@ -43,29 +43,33 @@ const openEditorOn = async (page, categoryName) => {
   await page.locator(".cat-tile", { hasText: categoryName }).first().click();
   await page.waitForSelector(".calc-keypad");
 };
-const swipe = (page, selector, dx) =>
-  page.locator(selector).evaluate((el, shift) => {
-    const touch = (x) =>
-      new globalThis.Touch({
-        identifier: 1,
-        target: el,
-        clientX: x,
-        clientY: 200,
-        radiusX: 1,
-        radiusY: 1,
-      });
-    const send = (type, x) =>
-      el.dispatchEvent(
-        new globalThis.TouchEvent(type, {
-          bubbles: true,
-          touches: type === "touchend" ? [] : [touch(x)],
-          changedTouches: [touch(x)],
-        }),
-      );
-    send("touchstart", 200);
-    for (const step of [0.25, 0.5, 0.75, 1]) send("touchmove", 200 + shift * step);
-    send("touchend", 200 + shift);
-  }, dx);
+// A swipe of `dx` pixels; with `release` off the finger stays down after `steps` of the way.
+const swipe = (page, selector, dx, { steps = [0.25, 0.5, 0.75, 1], release = true } = {}) =>
+  page.locator(selector).evaluate(
+    (el, [shift, parts, lift]) => {
+      const touch = (x) =>
+        new globalThis.Touch({
+          identifier: 1,
+          target: el,
+          clientX: x,
+          clientY: 200,
+          radiusX: 1,
+          radiusY: 1,
+        });
+      const send = (type, x) =>
+        el.dispatchEvent(
+          new globalThis.TouchEvent(type, {
+            bubbles: true,
+            touches: type === "touchend" ? [] : [touch(x)],
+            changedTouches: [touch(x)],
+          }),
+        );
+      send("touchstart", 200);
+      for (const step of parts) send("touchmove", 200 + shift * step);
+      if (lift) send("touchend", 200 + shift * parts.at(-1));
+    },
+    [dx, steps, release],
+  );
 const typeAmountAndSave = async (page, digit) => {
   await page.locator(".calc-key", { hasText: digit }).first().click();
   await page.locator(".calc-confirm").click();
@@ -464,6 +468,20 @@ const scenarios = {
     expect(rolling > 0).toBe(true);
     await page.waitForFunction(() => !document.querySelector(".hero .balance .reel"));
     expect(await page.locator(".hero .balance").textContent()).toBe(text);
+  },
+  async "with motion: dragging the categories without turning the page does not replay the amounts"(
+    page,
+  ) {
+    await tab(page, "Categories");
+    await page.waitForFunction(
+      () =>
+        !document
+          .getAnimations()
+          .some((a) => a.animationName === "money-in" && a.playState === "running"),
+    );
+    await swipe(page, "#base > .swipe-pane", -150, { steps: [0.3, 0.6], release: false });
+    expect(await page.locator(".pager-viewport").count()).toBe(1);
+    expect(await page.locator(".pager-viewport .money-in").count()).toBe(0);
   },
   async "with motion: the amounts of the category tiles settle in when the tab opens"(page) {
     await tab(page, "Categories");
