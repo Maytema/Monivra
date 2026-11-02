@@ -276,25 +276,31 @@
   height: 16px;
   margin: 10px 0 8px;
 }
-.accounts-archive-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 9px;
-  width: 100%;
-  padding: 18px 4px;
-  text-align: left;
-}
 .accounts-content {
   padding: 0px 16px 24px;
   background: var(--bg);
 }
-.accounts-content .accounts-archive-toggle {
-  display: block;
-  margin: 24px auto 0px;
-  padding: 12px;
+/* Folders at the end of the list: each one under a line, with its title, icon and arrow in a row */
+.account-folder {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.account-folder + .account-folder {
+  margin-top: 0px;
+}
+.account-folder-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0px 4px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
+  text-align: left;
+}
+.account-folder .account-group {
+  margin-bottom: 16px;
 }
 @media (max-width: 360px) {
   .accounts-content {

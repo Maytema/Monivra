@@ -25,6 +25,9 @@ export const badgeHtml = (x, small = false) =>
 // Labeled text input wired to an input handler.
 export const textFieldHtml = (label, value, fn, placeholder = "") =>
   `<label class="field"><span class="field-label">${translate(label)}</span><input aria-label="${escapeHtml(translate(label))}" value="${escapeHtml(value)}" placeholder="${escapeHtml(translate(placeholder))}" data-input="${registerInput(fn)}"></label>`;
+// Search field with a magnifier: one look for every list that can be narrowed by typing.
+export const searchFieldHtml = (placeholder, value, fn) =>
+  `<div class="search-field"><span>${iconSvg("search", 22)}</span><input aria-label="${escapeHtml(translate(placeholder))}" placeholder="${escapeHtml(translate(placeholder))}" value="${escapeHtml(value)}" autocomplete="off" data-input="${registerInput(fn)}"></div>`;
 // Form row that looks like a field and opens a picker when clicked.
 export const fieldButtonHtml = (label, value, fn, hint = "") =>
   buttonHtml(
