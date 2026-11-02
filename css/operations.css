@@ -247,23 +247,49 @@
     font-size: 14px;
   }
 }
-/* A row the person was led to: it lifts a little inside a thin accent outline with a soft tint. */
-.op-row.spot {
+/* What the person was led to (a row, or a scheduled payment with its details): it lifts a little
+   inside a thin accent outline with a soft tint, and a light runs once around the outline. */
+.spot {
   position: relative;
   isolation: isolate;
+  scroll-margin-block: 16px;
   animation: spot-lift 2.6s ease-out;
 }
-.op-row.spot::before {
+.spot::before,
+.spot::after {
   content: "";
   position: absolute;
-  inset: -5px -9px;
+  inset: 0 -9px;
   z-index: -1;
-  border: 1.5px solid color-mix(in srgb, var(--accent) 50%, transparent);
   border-radius: 16px;
-  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
-  box-shadow: 0 8px 22px -12px color-mix(in srgb, var(--accent) 60%, transparent);
   pointer-events: none;
+}
+/* The details under a scheduled row have no padding of their own: the card reaches past them. */
+.scheduled-item.spot::before,
+.scheduled-item.spot::after {
+  bottom: -8px;
+}
+.spot::before {
+  border: 1.5px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+  box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--accent) 55%, transparent);
   animation: spot-glow 2.6s ease-out both;
+}
+.spot::after {
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--spot-angle),
+    transparent 0deg,
+    transparent 230deg,
+    var(--accent) 340deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  animation: spot-sweep 1.8s ease-in-out both;
 }
 .op-row.selected .op-name {
   font-size: 15px;

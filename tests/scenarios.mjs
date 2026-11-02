@@ -413,7 +413,7 @@ const scenarios = {
     const notice = page.locator("#banner.tappable");
     await notice.getByText("Added to the operations").waitFor();
     await notice.click();
-    await page.locator(".op-row.spot").waitFor();
+    await page.locator(".spot").waitFor();
     const [ops, scheduled] = await page.evaluate(() => {
       const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
       const day = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
@@ -452,7 +452,7 @@ const scenarios = {
     await page.getByLabel("Next day").click();
     await page.locator(".calc-confirm").click();
     await page.locator("#banner.tappable").click();
-    const flashed = page.locator(".scheduled-item .op-row.spot");
+    const flashed = page.locator(".scheduled-item.spot");
     await flashed.waitFor();
     expect(await flashed.count()).toBe(1);
   },
