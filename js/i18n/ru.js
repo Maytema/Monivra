@@ -276,6 +276,13 @@ export const russianStrings = {
   "Open More → Settings → Styles and elements → Elements → Statistics. Switch blocks on and off, hold a row and drag it to change the order.":
     "Откройте «Ещё» → «Настройки» → «Стили и элементы» → «Элементы» → «Статистика». Включайте и выключайте блоки, удерживайте строку и перетаскивайте, чтобы поменять порядок.",
   "Bishkek, Kyrgyzstan": "Бишкек, Кыргызстан",
+  "Create and restore data from automatic local copies":
+    "Создание и восстановление данных из автоматических локальных копий",
+  "Create and restore data from a manual backup file":
+    "Создание и восстановление данных из файла копии, сохранённого вручную",
+  "Import data from a file": "Загрузка данных из файла",
+  "Save a copy of your data as a file": "Сохранение копии данных в файл",
+  "Permanently delete all data": "Безвозвратное удаление всех данных",
   "Operations of the budget": "Операции бюджета",
   "Missed payments": "Пропущенные платежи",
   "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":

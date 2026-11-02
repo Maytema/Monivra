@@ -42,7 +42,7 @@ async function importFile(kind) {
 export function dataView() {
   return (
     pageHeader("Data") +
-    `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("backups"))}${menuRowHtml(
+    `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("backups"), "Create and restore data from automatic local copies")}${menuRowHtml(
       "Data file",
       "receipt",
       () =>
@@ -61,64 +61,78 @@ export function dataView() {
             })}`,
           "Data file",
         ),
-    )}${menuRowHtml("Import data", "upload", () =>
-      openSheet(
-        () =>
-          `<h2>Import data</h2><p>Importing data may change your existing records. Export a backup first.</p>${menuRowHtml(
-            "Import JSON file",
-            "upload",
-            () => {
+      "Create and restore data from a manual backup file",
+    )}${menuRowHtml(
+      "Import data",
+      "upload",
+      () =>
+        openSheet(
+          () =>
+            `<h2>Import data</h2><p>Importing data may change your existing records. Export a backup first.</p>${menuRowHtml(
+              "Import JSON file",
+              "upload",
+              () => {
+                closeLayers();
+                importFile("json");
+              },
+            )}${menuRowHtml("Import operations CSV", "upload", () => {
               closeLayers();
-              importFile("json");
-            },
-          )}${menuRowHtml("Import operations CSV", "upload", () => {
-            closeLayers();
-            importFile("csv");
-          })}`,
-        "Import data",
-      ),
-    )}${menuRowHtml("Export data", "download", () =>
-      openSheet(
-        () =>
-          `<h2>Export data</h2><p>Export a copy of your data as a file.</p>${menuRowHtml(
-            "Complete data file (JSON)",
-            "download",
-            () => {
+              importFile("csv");
+            })}`,
+          "Import data",
+        ),
+      "Import data from a file",
+    )}${menuRowHtml(
+      "Export data",
+      "download",
+      () =>
+        openSheet(
+          () =>
+            `<h2>Export data</h2><p>Export a copy of your data as a file.</p>${menuRowHtml(
+              "Complete data file (JSON)",
+              "download",
+              () => {
+                closeLayers();
+                exportJSON();
+              },
+            )}${menuRowHtml("Operations (CSV)", "download", () => {
               closeLayers();
-              exportJSON();
-            },
-          )}${menuRowHtml("Operations (CSV)", "download", () => {
-            closeLayers();
-            download(`${APP_ID}-operations.csv`, "\ufeff" + csvText(), "text/csv;charset=utf-8");
-          })}${menuRowHtml("Report (PDF)", "receipt", () => {
-            closeLayers();
-            printReport();
-          })}`,
-        "Export data",
-      ),
-    )}${menuRowHtml("Delete my data", "trash", () => {
-      promptText(
-        "Type DELETE to erase all financial data",
-        "",
-        (v) => {
-          if (v.trim() !== "DELETE") {
-            toast("Deletion cancelled: type DELETE exactly");
-            return;
-          }
-          confirmAction(
-            "Permanently delete all accounts, categories, transactions, schedules and budgets?",
-            () => {
-              setAppData(createEmptyData());
-              save();
-              goHome("accounts");
-            },
-            true,
-            "Delete",
-          );
-        },
-        "Confirmation word",
-      );
-    })}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
+              download(`${APP_ID}-operations.csv`, "\ufeff" + csvText(), "text/csv;charset=utf-8");
+            })}${menuRowHtml("Report (PDF)", "receipt", () => {
+              closeLayers();
+              printReport();
+            })}`,
+          "Export data",
+        ),
+      "Save a copy of your data as a file",
+    )}${menuRowHtml(
+      "Delete my data",
+      "trash",
+      () => {
+        promptText(
+          "Type DELETE to erase all financial data",
+          "",
+          (v) => {
+            if (v.trim() !== "DELETE") {
+              toast("Deletion cancelled: type DELETE exactly");
+              return;
+            }
+            confirmAction(
+              "Permanently delete all accounts, categories, transactions, schedules and budgets?",
+              () => {
+                setAppData(createEmptyData());
+                save();
+                goHome("accounts");
+              },
+              true,
+              "Delete",
+            );
+          },
+          "Confirmation word",
+        );
+      },
+      "Permanently delete all data",
+    )}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
   );
 }
 // The reason of a damaged backup as one short sentence for the person.
