@@ -3,7 +3,7 @@ import { render } from "../app/shell.js";
 import { APP_ID, deepClone } from "../core/constants.js";
 import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
 import { csvTemplate, prepareCSV } from "./csv.js";
-import { completeData, createEmptyData, withoutFinanceData } from "./defaults.js";
+import { completeData } from "./defaults.js";
 import { pickFile, saveTextFile, shareTextFile } from "../platform/files.js";
 import { findDataProblem, save } from "./storage.js";
 import { createBackup, dataSnapshot } from "../domain/backups.js";
@@ -63,67 +63,21 @@ export function dataView() {
       "trash",
       () => openPage("deletion"),
       "Permanently delete all data",
-    )}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
+    )}</div>`
   );
 }
 // Page of the data file: a copy of everything in the format of this application.
 export function dataFileView() {
   return (
     pageHeader("Data file") +
-    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Export and share", () => shareTextFile(`${APP_ID}-data.json`, backupText(), "application/json"), "primary")}${buttonHtml("Export and save", exportJSON, "outline")}${buttonHtml("Restore from file", () => importFile("json"), "outline")}</div>`
+    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Export and share", () => shareTextFile(`${APP_ID}-data.json`, backupText(), "application/json"), "secondary")}${buttonHtml("Export and save", exportJSON, "secondary")}<hr>${buttonHtml("Restore from file", () => importFile("json"), "outline")}</div>`
   );
 }
 // Page of the import of operations from another application as a CSV file.
 export function importDataView() {
   return (
     pageHeader("Import data") +
-    `<div class="content info-text"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><p>Importing may create duplicate operations, accounts and categories.</p><p>Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", () => importFile("csv"), "primary")}${buttonHtml("Download template", () => download(`${APP_ID}-template.csv`, "\ufeff" + csvTemplate(), "text/csv;charset=utf-8"), "outline")}</div>`
-  );
-}
-// What a deletion removes; each one asks once more before it starts.
-const DELETIONS = [
-  {
-    title: "Partial deletion",
-    note: "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.",
-    ask: "Delete accounts, categories, operations, budgets and scheduled payments?",
-    result: () => withoutFinanceData(appData),
-    backupFirst: true,
-  },
-  {
-    title: "Delete local data",
-    note: "Everything stored on this device is deleted: the data above, backups, settings and reminders. The application starts from scratch.",
-    ask: "Delete everything stored on this device? The application will start from scratch.",
-    result: createEmptyData,
-    backupFirst: false,
-  },
-];
-// Deletion page: the ways to delete data, each with what exactly goes.
-export function deletionView() {
-  return (
-    pageHeader("Deletion") +
-    `<div class="content flush"><p class="deletion-intro">Deleted data cannot be restored. Choose what to delete.</p>${DELETIONS.map(
-      ({ title, note, ask, result, backupFirst }) =>
-        menuRowHtml(
-          title,
-          "trash",
-          () =>
-            confirmAction(
-              ask,
-              () => {
-                setAppData(result());
-                save();
-                goHome("accounts");
-                toast("Data deleted");
-              },
-              backupFirst,
-              "Delete",
-            ),
-          note,
-          "",
-        ),
-    ).join(
-      "",
-    )}<p class="footnote">Nothing is stored outside this device: there is no account and no cloud copy.</p></div>`
+    `<div class="content info-text roomy tight"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><hr><p>Importing may create duplicate operations, accounts and categories.</p><p>Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", () => importFile("csv"), "primary")}${buttonHtml("Download template", () => download(`${APP_ID}-template.csv`, "\ufeff" + csvTemplate(), "text/csv;charset=utf-8"), "outline")}</div>`
   );
 }
 // The reason of a damaged backup as one short sentence for the person.

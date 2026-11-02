@@ -36,9 +36,10 @@ export function printHtml(html) {
 }
 
 // Offers a file to the share sheet of the device; where sharing files is not possible the file is
-// saved instead. Resolves with false when the person dismissed the sheet.
+// saved instead. Resolves with false when the person dismissed the sheet. Share sheets accept the
+// bare media type only ("text/csv", not "text/csv;charset=utf-8").
 export async function shareTextFile(name, content, type) {
-  const file = new File([content], name, { type });
+  const file = new File([content], name, { type: type.split(";")[0] });
   if (!navigator.canShare?.({ files: [file] })) {
     saveTextFile(name, content, type);
     return true;

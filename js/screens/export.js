@@ -1,5 +1,5 @@
 /* Export of data: a PDF report or a CSV file of the operations of a period, with filters and parts */
-import { APP_ID } from "../core/constants.js";
+import { APP_ID, iconSvg } from "../core/constants.js";
 import { emptyFilters, uiState } from "../core/state.js";
 import { csvText } from "../data/csv.js";
 import { printReport } from "../data/report.js";
@@ -43,16 +43,29 @@ export function openExport() {
   });
 }
 
-// A row with a checkbox that turns one thing of the report on or off.
-const choice = (label, flags, key) =>
-  buttonHtml(
-    `${checkboxHtml(flags[key])}<span>${translate(label)}</span>`,
+// A row of the filters: what is chosen, with its icon; "All categories (All subcategories)" gets
+// the part in brackets as a second line.
+function filterRow(label, value, open, icon) {
+  const [main, sub] = value.replace(/\)$/, "").split(" (");
+  return buttonHtml(
+    `${iconSvg(icon, 24)}<span class="grow"><span>${translate(main)}</span>${sub ? `<small>${translate(sub)}</small>` : ""}</span>`,
+    open,
+    "export-row",
+    `aria-label="${translate(label)}"`,
+  );
+}
+// A row with a checkbox that turns one thing of the report on or off; a row with an icon is a
+// part of the report, one without is a field of it.
+function choice(label, flags, key, icon = "") {
+  return buttonHtml(
+    `${icon ? iconSvg(icon, 24) : ""}<span class="grow">${translate(label)}</span>${checkboxHtml(flags[key])}`,
     () => {
       flags[key] = !flags[key];
       render();
     },
-    "filter-choice",
+    `export-option ${icon ? "export-part" : ""} ${flags[key] ? "on" : ""}`,
   );
+}
 
 const CSV_TYPE = "text/csv;charset=utf-8";
 // Writes a file into the downloads of the device and says so.
@@ -86,10 +99,10 @@ export function exportView(p) {
           ],
           draft.format,
           (id) => (draft.format = id),
-          "tabs export-tabs",
-        )}<div class="filter-fields">${filterFieldRows(draft.filters, ["accounts", "categories", "types", "tags"])}</div>${
+          "segmented",
+        )}<div class="export-rows">${filterFieldRows(draft.filters, ["accounts", "categories", "types", "tags"], filterRow)}</div>${
           pdf
-            ? `<h3 class="export-heading">${translate("Include in report")}</h3>${choice("Operations", draft.sections, "operations")}${choice("Accounts", draft.sections, "accounts")}`
+            ? `<h3 class="export-heading">${translate("Include in report")}</h3>${choice("Operations", draft.sections, "operations", "receipt")}${choice("Accounts", draft.sections, "accounts", "wallet")}`
             : ""
         }<h3 class="export-heading">${translate("Fields to include")}</h3>${
           operations
@@ -101,6 +114,11 @@ export function exportView(p) {
             : ""
         }</div>`,
     ) +
-    `<div class="page-footer">${buttonHtml("Export and share", () => exportNow(draft, shareTextFile), "primary")}${buttonHtml("Export and save", () => exportNow(draft, saveFile), "outline")}</div>`
+    `<div class="page-footer">${
+      pdf
+        ? buttonHtml("Save as PDF", () => exportNow(draft, saveFile), "primary")
+        : buttonHtml("Export and share", () => exportNow(draft, shareTextFile), "primary") +
+          buttonHtml("Export and save", () => exportNow(draft, saveFile), "secondary")
+    }</div>`
   );
 }

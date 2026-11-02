@@ -1,12 +1,12 @@
 /* Saved backups: the list with the button that makes one, and the page that brings one back */
 import { render } from "../../app/shell.js";
-import { escapeHtml } from "../../core/constants.js";
+import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData } from "../../core/state.js";
 import { createBackup, restoreBackup } from "../../domain/backups.js";
 import { currentLocale, translate, translateWith } from "../../i18n/index.js";
 import { confirmAction, optionSheet } from "../../ui/dialogs.js";
 import { goHome, openPage } from "../../ui/navigation.js";
-import { buttonHtml, dropdownHtml, pageHeader, toast } from "../../ui/primitives.js";
+import { buttonHtml, pageHeader, toast } from "../../ui/primitives.js";
 import { postDuePayments } from "../due-payments.js";
 
 // What the backups says, in one line: how many accounts, categories and operations it holds.
@@ -38,22 +38,21 @@ const SCHEDULED_WAYS = [
 export function savedBackupsView() {
   return (
     pageHeader("Saved backups") +
-    `<div class="content"><p class="backups-note">${translate("Backups are made automatically once a day when Save locally is on, and you can make one yourself at any time.")}</p>${buttonHtml(
+    `<div class="backups-top"><p class="backups-note">${translate("Backups are made automatically once a day when Save locally is on, and you can make one yourself at any time.")}</p>${buttonHtml(
       "Create a backup",
       () => {
         createBackup();
         render();
         toast("Backup saved");
       },
-      "primary",
-    )}<p class="backups-hint">${translate("To restore, select one of the previous backups")}</p><h3 class="backups-heading">${translate("Previous backups")}</h3>${appData.backups
-      .map(
-        (backup) =>
-          `${buttonHtml(
-            `<strong>${translate("Local backup")}</strong><small>${escapeHtml(madeAt(backup))}</small><small>${escapeHtml(contents(backup.data))}</small>`,
-            () => openPage("restoreBackup", { id: backup.id, scheduled: "count" }),
-            "card backup-card",
-          )}`,
+      "primary compact",
+    )}<p class="backups-hint">${translate("To restore, select one of the previous backups")}</p></div><div class="content backups-list"><h3 class="backups-heading">${translate("Previous backups")}</h3>${appData.backups
+      .map((backup) =>
+        buttonHtml(
+          `<strong>${translate("Local backup")}</strong><small>${escapeHtml(madeAt(backup))}</small><small>${escapeHtml(contents(backup.data))}</small>`,
+          () => openPage("restoreBackup", { id: backup.id, scheduled: "count" }),
+          "card backup-card",
+        ),
       )
       .join("")}</div>`
   );
@@ -79,8 +78,8 @@ export function restoreBackupView(p) {
     );
   return (
     pageHeader("Restore from backup") +
-    `<div class="content info-text"><p>${translate("Backup made")}: <strong>${escapeHtml(madeAt(backup))}</strong><br><small>${escapeHtml(contents(backup.data))}</small></p><p>${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p><p>${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p><h3 class="backups-heading">${translate("Scheduled payments")}</h3>${dropdownHtml(
-      way[1],
+    `<div class="content info-text roomy"><p>${translate("Backup made")}: <strong>${escapeHtml(madeAt(backup))}</strong><br><small class="backup-contents">${escapeHtml(contents(backup.data))}</small></p><p>${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p><p>${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p><h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
+      `${iconSvg("check", 22)}<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
       () =>
         optionSheet(
           "How to restore scheduled payments?",
@@ -92,6 +91,7 @@ export function restoreBackupView(p) {
           },
           "dialog",
         ),
+      "dropdown chosen",
     )}</div><div class="page-footer">${buttonHtml("Merge data", () => restore("merge"), "primary")}${buttonHtml("Replace data", () => restore("replace"), "outline")}</div>`
   );
 }

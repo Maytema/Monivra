@@ -28,9 +28,6 @@
   border-bottom-width: 3px;
   color: var(--ink);
 }
-.more-empty svg {
-  color: var(--muted);
-}
 .more-menu-item span {
   line-height: 1.2;
 }
@@ -990,58 +987,168 @@
   font-size: 14px;
 }
 /* Export page: formats, filters, what the report holds */
-.export-content .export-tabs {
-  margin: 0px -16px 8px;
+.segmented {
+  display: flex;
+  margin: 8px 0px 12px;
+  border: 1px solid var(--muted);
+  border-radius: 20px;
+  overflow: hidden;
 }
-.export-content .filter-fields {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  padding: 8px 0px;
+.segmented button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0%;
+  min-height: 38px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.segmented button + button {
+  border-left: 1px solid var(--muted);
+}
+.segmented button.active {
+  background: var(--soft);
+}
+.segmented button.active::before {
+  content: "✓";
+  margin-right: 8px;
+}
+.export-rows {
+  display: grid;
+  gap: 2px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.export-row,
+.export-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 16px;
+  text-align: left;
+}
+.export-row {
+  min-height: 64px;
+  background: color-mix(in srgb, var(--ink) 7%, var(--bg));
+}
+.export-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
 }
 .export-heading {
-  margin: 20px 0px 4px;
+  margin: 20px 0px 8px;
   font-size: 15px;
   font-weight: 600;
 }
 .export-group {
-  margin: 12px 0px 0px;
+  margin: 12px 0px 6px;
   color: var(--muted);
   font-size: 13px;
 }
+.export-option {
+  min-height: 50px;
+  margin-bottom: 8px;
+  border: 1px solid var(--muted);
+  border-radius: 14px;
+}
+.export-option.export-part {
+  min-height: 62px;
+  border-color: transparent;
+  background: var(--soft);
+}
+.export-option .checkbox {
+  flex: 0 0 auto;
+}
 /* Pages that explain something and keep their buttons at the bottom */
 .info-text {
-  padding-top: 8px;
+  padding: 12px 24px 0px;
 }
 .info-text p {
-  margin: 0px 0px 16px;
+  margin: 0px 0px 8px;
   line-height: 1.5;
 }
-/* Backup pages: the list of copies and the texts around it */
+/* Backup pages: the top with the button, the list of copies and the page of one copy */
+.backups-top {
+  flex: 0 0 auto;
+  padding: 2px 24px 12px;
+  border-bottom: 1px solid var(--line);
+}
 .backups-note,
 .backups-hint {
-  margin: 0px 0px 16px;
-  line-height: 1.5;
+  margin: 0px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.backups-note {
+  margin-bottom: 12px;
 }
 .backups-hint {
-  margin: 16px 0px 0px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.primary.compact {
+  min-height: 40px;
+  margin: 0px;
+  padding: 8px 18px;
+  font-size: 14px;
+}
+.backups-list {
+  padding-inline: 24px;
 }
 .backups-heading {
-  margin: 20px 0px 8px;
-  font-size: 18px;
+  margin: 18px 0px 12px;
+  font-size: 15px;
   font-weight: 600;
 }
 .backup-card {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 4px;
+  gap: 10px;
   width: 100%;
   margin-bottom: 8px;
-  padding: 12px 16px;
+  padding: 16px;
   text-align: left;
 }
-.backup-card small {
-  color: var(--muted);
+.backup-card strong {
+  font-weight: 400;
+  font-size: 16px;
 }
-.info-text small {
-  color: var(--muted);
+.backup-card small {
+  font-size: 12px;
+  font-weight: 500;
+}
+.info-text.tight {
+  padding-inline: 16px;
+}
+.info-text hr {
+  margin: 8px 0px 16px;
+  border: 0px;
+  border-top: 1px solid var(--line);
+}
+.info-text.roomy p {
+  margin-bottom: 16px;
+}
+.backup-contents {
+  font-size: 12px;
+  font-weight: 500;
+}
+.backups-subject {
+  margin: 8px 0px 0px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 18px;
+  font-weight: 400;
+}
+.dropdown.chosen {
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+.dropdown.chosen .grow {
+  text-align: center;
 }

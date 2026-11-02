@@ -105,14 +105,27 @@ const ORIGINS = { manual: "By hand", schedule: "By schedule" };
 const TYPE_NAMES = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
 const countLabel = (v, one, other) => (v ? translateCount(one, other, v.length) : null);
 
+// The icon of each part of a filter, for the lists that show one beside the row.
+const FILTER_ICONS = {
+  accounts: "wallet",
+  categories: "categories",
+  types: "receipt",
+  tags: "tag",
+  comment: "comment",
+  origin: "link",
+};
 // Rows that each choose one part of a filter; `f` is the filter being edited and changes in place.
+// `row(label, value, open, icon)` draws a row; the default is a field of a form.
 export function filterFieldRows(
   f,
   kinds = ["accounts", "categories", "types", "tags", "comment", "origin"],
+  row = (label, value, open) => fieldButtonHtml(label, value, open),
 ) {
+  const line = (kind, label, value, open) => row(label, value, open, FILTER_ICONS[kind]);
   const rows = {
     accounts: () =>
-      fieldButtonHtml(
+      line(
+        "accounts",
         "Accounts",
         countLabel(f.accounts, "{n} account", "{n} accounts") || "All accounts",
         () =>
@@ -122,7 +135,8 @@ export function filterFieldRows(
           }),
       ),
     categories: () =>
-      fieldButtonHtml(
+      line(
+        "categories",
         "Categories",
         countLabel(f.categories, "{n} category", "{n} categories") ||
           "All categories (All subcategories)",
@@ -133,7 +147,8 @@ export function filterFieldRows(
           }),
       ),
     types: () =>
-      fieldButtonHtml(
+      line(
+        "types",
         "Type",
         f.types
           ? f.types.map((t) => translate(TYPE_NAMES[t])).join(", ")
@@ -154,7 +169,7 @@ export function filterFieldRows(
           ),
       ),
     tags: () =>
-      fieldButtonHtml("Tags", f.tags ? f.tags.map(escapeHtml).join(", ") : "All tags", () =>
+      line("tags", "Tags", f.tags ? f.tags.map(escapeHtml).join(", ") : "All tags", () =>
         multiSelect(
           "Tags",
           appData.tags.map((x) => ({ id: x, name: x })),
@@ -166,7 +181,7 @@ export function filterFieldRows(
         ),
       ),
     comment: () =>
-      fieldButtonHtml("Comment", f.comment ? escapeHtml(f.comment) : "No comment", () =>
+      line("comment", "Comment", f.comment ? escapeHtml(f.comment) : "No comment", () =>
         promptText(
           "Comment",
           f.comment,
@@ -178,7 +193,8 @@ export function filterFieldRows(
         ),
       ),
     origin: () =>
-      fieldButtonHtml(
+      line(
+        "origin",
         "How added",
         f.origin ? f.origin.map((id) => translate(ORIGINS[id])).join(", ") : "All operations",
         () =>

@@ -1,4 +1,5 @@
 /* Categories screens */
+import { emptyStateHtml } from "../ui/empty-state.js";
 import { render } from "../app/shell.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, forgetDeleted, uiState } from "../core/state.js";
@@ -74,18 +75,32 @@ export function categoriesView() {
   const list = appData.categories.filter(
     (c) => c.type === uiState.catType && !c.archived && !c.parent,
   );
+  const debts = appData.accounts.filter(
+    (a) =>
+      a.type === "Debt" &&
+      !a.archived &&
+      (uiState.catType === "expense" ? a.showExpense : a.showIncome),
+  );
+  if (!list.length && !debts.length)
+    return (
+      hero() +
+      swipePane(
+        periodBar() +
+          sumTabs() +
+          `<div class="content">${emptyStateHtml(
+            "categories",
+            "Categories will be here",
+            "So far, it's empty. Create your first category?",
+            buttonHtml("Create", () => editCategory(), "primary"),
+          )}</div>`,
+      )
+    );
   return (
     hero() +
     swipePane(
       periodBar() +
         sumTabs() +
-        `<div class="content"><div class="grid ${appData.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${appData.accounts
-          .filter(
-            (a) =>
-              a.type === "Debt" &&
-              !a.archived &&
-              (uiState.catType === "expense" ? a.showExpense : a.showIncome),
-          )
+        `<div class="content"><div class="grid ${appData.settings.oneColumn ? "one" : ""}">${list.map((c) => categoryTile(c)).join("")}${debts
           .map((a) =>
             categoryTile({ ...a, id: "debt:" + a.id, type: uiState.catType }, () =>
               accountActions(a),

@@ -16,6 +16,7 @@ import { translate } from "../../i18n/index.js";
 import { filters } from "../operations/filters.js";
 import { toggleOperationSearch } from "../operations/list.js";
 import { hintHtml } from "../../ui/hint.js";
+import { emptyStateHtml } from "../../ui/empty-state.js";
 import { postedNoticeHtml } from "../due-payments.js";
 import { badgeHtml, buttonHtml, iconButtonHtml, swipePane, tabsHtml } from "../../ui/primitives.js";
 import { registerInput } from "../../ui/handlers.js";
@@ -149,7 +150,7 @@ export function accountsView() {
   const completed = list.filter(isCompleted),
     open = list.filter((a) => !isCompleted(a));
   const groups = uiState.accountTab === "Debts" ? ["Owe me", "I owe"] : ["Regular", "Savings"];
-  let body =
+  const body =
     uiState.accountTab === "Total"
       ? accountTotals(live)
       : groups
@@ -166,7 +167,6 @@ export function accountsView() {
             return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type)}</span>${moneySpanHtml(total, appData.settings.currency, false, true)}</div>${rows.length ? `<div class="account-group">${rows.map(accountLine).join("")}</div>` : ""}`;
           })
           .join("");
-  if (!body && !completed.length) body = `<div class="empty">${translate("Empty")}</div>`;
   // A folder row that unfolds a list of accounts: the archive or the finished goals and debts.
   const folder = (title, icon, items, key) => {
     const unfolded = !!uiState.openFolders[key];
@@ -189,6 +189,16 @@ export function accountsView() {
     uiState.accountTab === "Total"
       ? ""
       : folder("Completed", null, completed, "completed-" + uiState.accountTab);
+  if (!appData.accounts.length)
+    return (
+      hero() +
+      `<div class="content">${emptyStateHtml(
+        "accounts",
+        "Accounts and savings will be here",
+        "So far, there is not a single financial or savings account. Create your first financial or savings account?",
+        buttonHtml("Create", () => editAccount(), "primary"),
+      )}</div>`
+    );
   return (
     hero() +
     tabsHtml(

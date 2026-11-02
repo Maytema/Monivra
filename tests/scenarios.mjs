@@ -401,7 +401,7 @@ const scenarios = {
   ) {
     await tab(page, "More");
     await page.getByText("Scheduled payments", { exact: true }).first().click();
-    await page.locator(".fab-add, .more-empty button").first().click();
+    await page.locator(".fab-add, .empty-state button").first().click();
     await page.locator(".calendar-day.today").waitFor();
     expect(await page.locator(".calendar-day.today").isDisabled()).toBe(true);
     expect(await page.getByRole("button", { name: "Today", exact: true }).count()).toBe(0);
@@ -651,10 +651,10 @@ const scenarios = {
       ]);
       return readFile(await download.path(), "utf8");
     };
-    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    await page.locator(".export-option", { hasText: "Comment" }).click();
     const without = await save();
     expect(without.split("\r\n")[0].includes("comment")).toBe(false);
-    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    await page.locator(".export-option", { hasText: "Comment" }).click();
     const whole = await save();
     expect(whole.split("\r\n")[0].includes("comment")).toBe(true);
     await page.getByLabel("Back").click();
@@ -682,13 +682,64 @@ const scenarios = {
     await page.getByRole("button", { name: "Confirm" }).click();
     await page.getByText("Backup restored").waitFor();
   },
+  async "a list ends without a line after its last row and without space after it"(page) {
+    const ending = () =>
+      page.evaluate(() => {
+        const content = document.querySelector("#base .content.flush");
+        const last = content.lastElementChild;
+        return [
+          getComputedStyle(last).borderBottomWidth,
+          getComputedStyle(content).paddingBottom,
+        ].join();
+      });
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    expect(await ending()).toBe("0px,0px");
+    await page.locator(".icon-button[title=Back]").click();
+    await page.getByText("Settings", { exact: true }).first().click();
+    expect(await ending()).toBe("0px,0px");
+    await page.getByText("Formatting").click();
+    expect(await ending()).toBe("0px,0px");
+  },
+  async "an account list that is empty offers to create the first account"(page) {
+    expect(await page.locator(".empty-state .empty-art").count()).toBe(1);
+    await page.locator(".empty-state").getByRole("button", { name: "Create" }).click();
+    await page.getByLabel("Back").waitFor();
+  },
+  async "empty categories show an illustration with a button that creates the first one"(page) {
+    await tab(page, "Categories");
+    expect(await page.locator(".empty-state .empty-art").count()).toBe(1);
+    await page.locator(".empty-state").getByRole("button", { name: "Create" }).click();
+    expect((await page.locator(".calc-keypad, input").count()) > 0).toBe(true);
+  },
+  async "the deletion page says how much is stored and each way names what goes"(page) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Delete my data", { exact: true }).click();
+    expect(await page.locator(".deletion-intro").textContent()).toMatch(/\d+ accounts/);
+    expect(await page.locator("#base .row").count()).toBe(4);
+    await page.getByText("Delete operations", { exact: true }).click();
+    expect(await page.locator(".confirm-message").textContent()).toMatch(/^\d+ operations will be/);
+  },
+  async "a whole amount never gets zero cents, even with two decimal places turned on"(page) {
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      appData.settings.decimal = true;
+      appData.settings.hideCents = false;
+    });
+    const { formatted } = await page.evaluate(async () => {
+      const { formatMoney } = await import("/js/domain/finance.js");
+      return { formatted: [0, 50000, 50050].map((n) => formatMoney(n, "KGS")).join(" | ") };
+    });
+    expect(formatted).toBe("0 KGS | 500 KGS | 500.50 KGS");
+  },
   async "the report holds the parts that are chosen"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
     await page.getByText("Export data", { exact: true }).click();
     await page.evaluate(() => (window.print = () => {}));
-    await page.locator(".filter-choice", { hasText: "Accounts" }).first().click();
-    await page.getByRole("button", { name: "Export and save" }).click();
+    await page.locator(".export-option", { hasText: "Accounts" }).first().click();
+    await page.getByRole("button", { name: "Save as PDF" }).click();
     const report = await page.locator("#printout").innerHTML();
     expect(report.includes("<th>Date</th>")).toBe(true);
     expect(report.includes("<th>Balance</th>")).toBe(false);
@@ -704,7 +755,13 @@ const expect = (actual) => ({
   },
 });
 
+const withoutRecords = (data) => {
+  data.accounts = [];
+  data.categories = [];
+};
 const adjustments = {
+  "an account list that is empty offers to create the first account": withoutRecords,
+  "empty categories show an illustration with a button that creates the first one": withoutRecords,
   "a subcategory can be left out of the category filter and all can be folded": (data) => {
     const food = data.categories.find((category) => category.name === "Food");
     for (const name of ["Market", "Cafe"])
