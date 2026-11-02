@@ -515,6 +515,24 @@ const scenarios = {
       before,
     );
   },
+  async "the budgets look at one month: the title opens the calendar and leaving restores the period"(
+    page,
+  ) {
+    await tab(page, "Operations");
+    await page.locator(".period .label").first().click();
+    await page.getByText("All time", { exact: true }).first().click();
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    const title = page.locator(".swipe-pane .period .label");
+    expect(/All time/.test(await title.innerText())).toBe(false);
+    await title.click();
+    await page.getByText("Select date", { exact: true }).first().waitFor();
+    await page.getByRole("button", { name: "Today", exact: true }).click();
+    await page.getByRole("button", { name: "OK", exact: true }).click();
+    await page.getByLabel("Back").click();
+    await tab(page, "Operations");
+    expect(await page.locator(".period .label").first().innerText()).toMatch(/All time/);
+  },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");
     const arrows = page.locator(".period-arrows .icon-button");
