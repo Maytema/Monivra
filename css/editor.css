@@ -8,19 +8,10 @@
   border: 0px;
   padding: 0px;
 }
-.ops-compact-actions .positive svg {
-  background: var(--positive-soft);
-  color: var(--positive-ink);
-}
 .hero-search .ops-hero-search input {
   font-size: 16px;
   flex: 1 1 0%;
   padding: 7px 4px;
-}
-.ops-compact-editor .ops-compact-actions button {
-  font-size: 13px;
-  gap: 5px;
-  min-width: 80px;
 }
 .single-tappable input {
   pointer-events: none;
@@ -292,7 +283,7 @@
   height: clamp(204px, 36dvh, 330px);
 }
 .ops-compact-editor .calc-number {
-  min-height: 56px;
+  min-height: 64px;
   margin: 0px;
   padding: 3px 0px;
   flex-shrink: 0;
@@ -306,34 +297,21 @@
   gap: 3px;
 }
 .ops-compact-editor .calc-date {
-  margin: 0px 0px 10px;
   flex-shrink: 0;
-  height: 40px;
-  margin-bottom: 6px;
+  height: 48px;
+  margin: 0px 0px 8px;
 }
 .ops-compact-editor .calc-parties {
-  gap: 9px;
-  margin: 0px 0px 10px;
   flex-shrink: 0;
-  margin-bottom: 6px;
+  margin: 0px 0px 12px;
 }
 .ops-compact-editor .calc-tile {
-  min-height: 70px;
-  padding: 8px;
+  min-height: 80px;
+  padding: 12px 10px;
 }
 .ops-compact-editor .calc-attachments {
   flex-shrink: 0;
   min-height: 46px;
-}
-@media (max-height: 740px) {
-  .ops-compact-editor .calc-tile {
-    min-height: 60px;
-  }
-}
-@media (max-height: 740px) {
-  .ops-compact-editor .calc-number {
-    min-height: 48px;
-  }
 }
 /* Cross-currency operation: sender amount above receiver amount, the active one tinted. */
 .calc-number.dual-number {
@@ -373,16 +351,9 @@
 .ops-tap-to-edit {
   text-align: center;
   font-size: 13px;
-  min-height: 34px;
-}
-.ops-compact-actions {
-  display: flex;
-  justify-content: space-around;
-  padding: 28px 0px 10px;
+  min-height: 36px;
 }
 .ops-compact-editor .ops-tap-to-edit {
-  min-height: 32px;
-  font-size: 13px;
   margin: 0px;
 }
 .ops-compact-editor {
@@ -392,17 +363,9 @@
   display: flex;
   flex-direction: column;
 }
-.ops-compact-editor .ops-compact-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 32px;
-  flex-shrink: 0;
-  padding: 7px 0px 4px;
-}
-@media (max-height: 740px) {
-  .ops-compact-editor .ops-compact-actions {
-    padding: 4px 0px;
-  }
+.ops-compact-editor .sheet-actions {
+  padding-top: 16px;
+  row-gap: 12px;
 }
 .mode-indicator {
   width: 21px;
@@ -505,7 +468,7 @@
 .calc-tags {
   display: flex;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--line);
   overflow-x: auto;
   scrollbar-width: none;

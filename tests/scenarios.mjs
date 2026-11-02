@@ -133,11 +133,34 @@ const scenarios = {
     await typeAmountAndSave(page, "5");
     await tab(page, "Operations");
     await page.locator(".op-name").first().click();
-    expect(await page.locator(".ops-compact-actions").count()).toBe(1);
+    expect(await page.locator(".ops-compact-editor .sheet-actions").count()).toBe(1);
     await page.locator(".calc-comment .icon-button, .calc-attachments .icon-button").nth(1).click();
     await page.keyboard.type("note");
     await page.getByText("OK", { exact: true }).click();
     expect(await page.locator(".calc-keypad").count()).toBe(1);
+  },
+  async "an opened operation has the same sizes on a short and on a tall screen"(page) {
+    const measure = async () => {
+      await page.locator(".op-name").first().click();
+      await page.locator(".ops-compact-editor").waitFor();
+      const sizes = await page.evaluate(() => {
+        const height = (selector) =>
+          document.querySelector(selector).getBoundingClientRect().height;
+        return [".calc-date", ".calc-tile", ".sheet-action-icon"].map(height);
+      });
+      await page.mouse.click(180, 8);
+      await page.locator(".ops-compact-editor").waitFor({ state: "detached" });
+      return sizes;
+    };
+    await openEditorOn(page, "Food");
+    await typeAmountAndSave(page, "5");
+    await tab(page, "Operations");
+    await page.setViewportSize({ width: 360, height: 800 });
+    const tall = await measure();
+    await page.setViewportSize({ width: 360, height: 640 });
+    const short = await measure();
+    expect(short.join()).toBe(tall.join());
+    expect(tall[2]).toBe(56);
   },
   async "the comment field opens with the caret after the text"(page) {
     await openEditorOn(page, "Food");
