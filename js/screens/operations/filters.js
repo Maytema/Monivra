@@ -102,35 +102,41 @@ function filterAccountSelect(selected, done) {
 
 // The ways an operation gets into the history.
 const ORIGINS = { manual: "By hand", schedule: "By schedule" };
+const TYPE_NAMES = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
+const countLabel = (v, one, other) => (v ? translateCount(one, other, v.length) : null);
 
-// Filters sheet (accounts, categories, types, tags, comment).
-export function filters() {
-  let f = deepClone(uiState.filters);
-  const count = (v, one, other) => (v ? translateCount(one, other, v.length) : null);
-  const typeNames = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
-  openSheet(
-    () =>
-      `<h2 class="filters-title">Filters</h2><p class="filters-note">Archived accounts and categories are included in the selection.</p><div class="filter-fields">${fieldButtonHtml(
+// Rows that each choose one part of a filter; `f` is the filter being edited and changes in place.
+export function filterFieldRows(
+  f,
+  kinds = ["accounts", "categories", "types", "tags", "comment", "origin"],
+) {
+  const rows = {
+    accounts: () =>
+      fieldButtonHtml(
         "Accounts",
-        count(f.accounts, "{n} account", "{n} accounts") || "All accounts",
+        countLabel(f.accounts, "{n} account", "{n} accounts") || "All accounts",
         () =>
           filterAccountSelect(f.accounts, (v) => {
             f.accounts = v;
             render();
           }),
-      )}${fieldButtonHtml(
+      ),
+    categories: () =>
+      fieldButtonHtml(
         "Categories",
-        count(f.categories, "{n} category", "{n} categories") ||
+        countLabel(f.categories, "{n} category", "{n} categories") ||
           "All categories (All subcategories)",
         () =>
           filterCategorySelect(f.categories, (v) => {
             f.categories = v;
             render();
           }),
-      )}${fieldButtonHtml(
+      ),
+    types: () =>
+      fieldButtonHtml(
         "Type",
         f.types
-          ? f.types.map((t) => translate(typeNames[t])).join(", ")
+          ? f.types.map((t) => translate(TYPE_NAMES[t])).join(", ")
           : "All types of operations",
         () =>
           multiSelect(
@@ -146,7 +152,9 @@ export function filters() {
               render();
             },
           ),
-      )}${fieldButtonHtml("Tags", f.tags ? f.tags.map(escapeHtml).join(", ") : "All tags", () =>
+      ),
+    tags: () =>
+      fieldButtonHtml("Tags", f.tags ? f.tags.map(escapeHtml).join(", ") : "All tags", () =>
         multiSelect(
           "Tags",
           appData.tags.map((x) => ({ id: x, name: x })),
@@ -156,7 +164,9 @@ export function filters() {
             render();
           },
         ),
-      )}${fieldButtonHtml("Comment", f.comment ? escapeHtml(f.comment) : "No comment", () =>
+      ),
+    comment: () =>
+      fieldButtonHtml("Comment", f.comment ? escapeHtml(f.comment) : "No comment", () =>
         promptText(
           "Comment",
           f.comment,
@@ -166,7 +176,9 @@ export function filters() {
           },
           "Comment",
         ),
-      )}${fieldButtonHtml(
+      ),
+    origin: () =>
+      fieldButtonHtml(
         "How added",
         f.origin ? f.origin.map((id) => translate(ORIGINS[id])).join(", ") : "All operations",
         () =>
@@ -179,7 +191,17 @@ export function filters() {
               render();
             },
           ),
-      )}</div>${sheetFooterHtml(
+      ),
+  };
+  return kinds.map((kind) => rows[kind]()).join("");
+}
+
+// Filters sheet (accounts, categories, types, tags, comment).
+export function filters() {
+  let f = deepClone(uiState.filters);
+  openSheet(
+    () =>
+      `<h2 class="filters-title">Filters</h2><p class="filters-note">Archived accounts and categories are included in the selection.</p><div class="filter-fields">${filterFieldRows(f)}</div>${sheetFooterHtml(
         buttonHtml(
           "Reset all",
           () => {

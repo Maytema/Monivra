@@ -34,3 +34,21 @@ export function printHtml(html) {
   document.getElementById("printout").innerHTML = html;
   window.print();
 }
+
+// Offers a file to the share sheet of the device; where sharing files is not possible the file is
+// saved instead. Resolves with false when the person dismissed the sheet.
+export async function shareTextFile(name, content, type) {
+  const file = new File([content], name, { type });
+  if (!navigator.canShare?.({ files: [file] })) {
+    saveTextFile(name, content, type);
+    return true;
+  }
+  try {
+    await navigator.share({ files: [file] });
+    return true;
+  } catch (error) {
+    if (error.name === "AbortError") return false;
+    saveTextFile(name, content, type);
+    return true;
+  }
+}

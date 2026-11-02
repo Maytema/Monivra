@@ -621,22 +621,77 @@ const scenarios = {
   async "exported data is accepted again by the import"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
-    await page.getByText("Export data", { exact: true }).click();
+    await page.getByText("Data file", { exact: true }).click();
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByText("Complete data file (JSON)").click(),
+      page.getByRole("button", { name: "Export and save" }).click(),
     ]);
     expect(download.suggestedFilename()).toBe("monivra-data.json");
     const buffer = await readFile(await download.path());
-    await page.getByText("Import data", { exact: true }).click();
     const [chooser] = await Promise.all([
       page.waitForEvent("filechooser"),
-      page.getByText("Import JSON file").click(),
+      page.getByRole("button", { name: "Restore from file" }).click(),
     ]);
     await chooser.setFiles({ name: "monivra-data.json", mimeType: "application/json", buffer });
     await page.getByText("Replace existing data", { exact: false }).waitFor();
     await page.getByText("Apply", { exact: true }).click();
     await page.getByText("Data imported").waitFor();
+  },
+  async "the CSV export leaves out what is turned off and the whole file is accepted by the import"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Export data", { exact: true }).click();
+    await page.getByRole("button", { name: "CSV", exact: true }).click();
+    const save = async () => {
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        page.getByRole("button", { name: "Export and save" }).click(),
+      ]);
+      return readFile(await download.path(), "utf8");
+    };
+    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    const without = await save();
+    expect(without.split("\r\n")[0].includes("comment")).toBe(false);
+    await page.locator(".filter-choice", { hasText: "Comment" }).click();
+    const whole = await save();
+    expect(whole.split("\r\n")[0].includes("comment")).toBe(true);
+    await page.getByLabel("Back").click();
+    await page.getByText("Import data", { exact: true }).click();
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Select CSV file" }).click(),
+    ]);
+    await chooser.setFiles({
+      name: "operations.csv",
+      mimeType: "text/csv",
+      buffer: Buffer.from(whole),
+    });
+    await page.getByText("Apply", { exact: true }).click();
+    await page.getByText("CSV imported").waitFor();
+  },
+  async "a saved backup is made on its page and brought back by merging or replacing"(page) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Saved backups", { exact: true }).click();
+    await page.getByRole("button", { name: "Create a backup" }).click();
+    await page.getByText("Backup saved").waitFor();
+    await page.locator(".backup-card").click();
+    await page.getByRole("button", { name: "Merge data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+  },
+  async "the report holds the parts that are chosen"(page) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Export data", { exact: true }).click();
+    await page.evaluate(() => (window.print = () => {}));
+    await page.locator(".filter-choice", { hasText: "Accounts" }).first().click();
+    await page.getByRole("button", { name: "Export and save" }).click();
+    const report = await page.locator("#printout").innerHTML();
+    expect(report.includes("<th>Date</th>")).toBe(true);
+    expect(report.includes("<th>Balance</th>")).toBe(false);
   },
 };
 

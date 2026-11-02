@@ -7,7 +7,9 @@ import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, rememberPeriod, uiState } from "../core/state.js";
-import { dataView, deletionView } from "../data/import-export.js";
+import { dataFileView, dataView, deletionView, importDataView } from "../data/import-export.js";
+import { exportView } from "../screens/export.js";
+import { restoreBackupView, savedBackupsView } from "../screens/more/backup-pages.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
 import { rollNumber } from "../ui/reel.js";
@@ -62,6 +64,11 @@ const PAGE_VIEWS = {
   settings: settingsView,
   data: dataView,
   deletion: deletionView,
+  dataFile: dataFileView,
+  importData: importDataView,
+  export: exportView,
+  savedBackups: savedBackupsView,
+  restoreBackup: restoreBackupView,
 };
 const SETTINGS_PAGE_KINDS = ["backups", "notifications", "security", "privacy", "rates"];
 // Root tabs.

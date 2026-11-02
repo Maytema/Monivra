@@ -989,3 +989,59 @@
   color: var(--muted);
   font-size: 14px;
 }
+/* Export page: formats, filters, what the report holds */
+.export-content .export-tabs {
+  margin: 0px -16px 8px;
+}
+.export-content .filter-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 8px 0px;
+}
+.export-heading {
+  margin: 20px 0px 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.export-group {
+  margin: 12px 0px 0px;
+  color: var(--muted);
+  font-size: 13px;
+}
+/* Pages that explain something and keep their buttons at the bottom */
+.info-text {
+  padding-top: 8px;
+}
+.info-text p {
+  margin: 0px 0px 16px;
+  line-height: 1.5;
+}
+/* Backup pages: the list of copies and the texts around it */
+.backups-note,
+.backups-hint {
+  margin: 0px 0px 16px;
+  line-height: 1.5;
+}
+.backups-hint {
+  margin: 16px 0px 0px;
+}
+.backups-heading {
+  margin: 20px 0px 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.backup-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  text-align: left;
+}
+.backup-card small {
+  color: var(--muted);
+}
+.info-text small {
+  color: var(--muted);
+}

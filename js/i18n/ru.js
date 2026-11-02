@@ -299,6 +299,65 @@ export const russianStrings = {
   "Nothing is stored outside this device: there is no account and no cloud copy.":
     "Вне этого устройства ничего не хранится: нет ни аккаунта, ни облачной копии.",
   "Data deleted": "Данные удалены",
+  Balance: "Баланс",
+  "Export and share": "Экспортировать и поделиться",
+  "Export and save": "Экспортировать и сохранить",
+  "Include in report": "Включить в отчёт",
+  "Fields to include": "Какие поля включить",
+  "Accounts / categories": "Счета / категории",
+  "Choose what to export": "Выберите, что экспортировать",
+  "Restore from file": "Восстановить из файла",
+  "Select CSV file": "Выбрать CSV-файл",
+  "Download template": "Скачать шаблон",
+  "Back up your data to keep it safe or move it to another device.":
+    "Сохраните копию данных, чтобы они были в безопасности, или перенесите их на другое устройство.",
+  "This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.":
+    "Этот формат файла свой для приложения: другие программы его не откроют. Чтобы использовать данные в другом месте, перейдите в «Экспорт данных».",
+  "Before exporting data from another application, we recommend switching that application to English.":
+    "Перед выгрузкой данных из другого приложения рекомендуем переключить то приложение на английский язык.",
+  "Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.":
+    "Некоторые приложения переводят выгружаемые данные (заголовки, названия типов операций и т. д.). Это может помешать правильному распознаванию данных.",
+  "Importing may create duplicate operations, accounts and categories.":
+    "При импорте могут появиться дубликаты операций, счетов и категорий.",
+  "Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.":
+    "Перед сохранением импортированных данных делается копия текущих. Из неё можно будет восстановить данные.",
+  "Backups are made automatically once a day when Save locally is on, and you can make one yourself at any time.":
+    "Копии делаются автоматически раз в день, если включено «Сохранять локально», и вы можете сделать копию сами в любой момент.",
+  "Create a backup": "Создать копию",
+  "To restore, select one of the previous backups":
+    "Чтобы восстановить, выберите одну из предыдущих копий",
+  "Previous backups": "Предыдущие копии",
+  "Local backup": "Локальная копия",
+  "Accounts: {accounts} · Categories: {categories} · Operations: {ops}":
+    "Счета: {accounts} · Категории: {categories} · Операции: {ops}",
+  "Count and schedule": "Учесть и запланировать",
+  "Count all scheduled payments whose time has come since the backup was made and, if they repeat, schedule the next ones.":
+    "Учесть все запланированные платежи, срок которых наступил с момента создания копии, и, если они повторяются, запланировать следующие.",
+  "Skip and schedule": "Пропустить и запланировать",
+  "Do not count the scheduled payments whose time has come since the backup was made and, if they repeat, schedule the next ones.":
+    "Не учитывать запланированные платежи, срок которых наступил с момента создания копии, и, если они повторяются, запланировать следующие.",
+  "Do not restore": "Не восстанавливать",
+  "Do not restore the scheduled payments of the backup, if it has any.":
+    "Не восстанавливать запланированные платежи из копии, если они в ней есть.",
+  "Merge this backup into the current data?": "Объединить эту копию с текущими данными?",
+  "Restore from backup": "Восстановление из копии",
+  "Backup made": "Копия создана",
+  "To keep the data created on this device, choose Merge data: it is added to the data of the backup.":
+    "Чтобы сохранить данные, созданные на этом устройстве, выберите «Объединить данные»: они добавятся к данным копии.",
+  "To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.":
+    "Чтобы удалить данные, созданные на этом устройстве, выберите «Заменить данные»: они полностью заменятся данными копии.",
+  "How to restore scheduled payments?": "Как восстановить запланированные платежи?",
+  "Merge data": "Объединить данные",
+  "Backup restored": "Копия восстановлена",
+  "Save locally": "Сохранять локально",
+  "Copy the data locally once a day. This increases the size of the data on the device. Only the latest copies are stored.":
+    "Копировать данные локально раз в день. Это увеличит объём данных на устройстве. Хранятся только последние копии.",
+  "Delete all local data copies": "Удалить все локальные копии данных",
+  "Delete all saved backups? They cannot be restored.":
+    "Удалить все сохранённые копии? Восстановить их будет нельзя.",
+  "Backups deleted": "Копии удалены",
+  "Delete all local backups from storage. Deleted data cannot be restored.":
+    "Удалить все локальные копии из хранилища. Удалённые данные восстановить нельзя.",
   "Operations of the budget": "Операции бюджета",
   "Missed payments": "Пропущенные платежи",
   "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":
@@ -530,7 +589,6 @@ export const russianStrings = {
     "Облачная синхронизация, платежи и вход в аккаунт в этой версии не подключены. Будущая онлайн-версия может обрабатывать данные иначе.",
   Colors: "Цвета",
   Commission: "Комиссия",
-  "Complete data file (JSON)": "Полный файл данных (JSON)",
   "Connected services": "Подключённые сервисы",
   "Convert to a category?": "Сделать категорией?",
   "Converted amount is too small or too large for the destination currency":
@@ -581,9 +639,7 @@ export const russianStrings = {
   "Hide preview": "Скрыть предпросмотр",
   Icons: "Значки",
   Immediately: "Сразу",
-  "Import JSON file": "Импорт файла JSON",
   "Import failed": "Не удалось импортировать",
-  "Import operations CSV": "Импорт операций (CSV)",
   Information: "Информация",
   "Information is not available in this preview.": "В этой версии информация недоступна.",
   Install: "Установить",
@@ -630,7 +686,6 @@ export const russianStrings = {
   "One time payment": "Единоразовый платёж",
   "Open photo": "Открыть фото",
   "Operation saved": "Операция сохранена",
-  "Operations (CSV)": "Операции (CSV)",
   "Other currencies": "Другие валюты",
   Completed: "Завершённые",
   "PIN code": "PIN-код",
@@ -655,13 +710,10 @@ export const russianStrings = {
     "Заменить текущие записи примерами данных? Можно отменить, ничего не скачивая.",
   "Replace data": "Заменить данные",
   "Replace with sample data": "Заменить примерами данных",
-  "Report (PDF)": "Отчёт (PDF)",
   "Report a bug": "Сообщить об ошибке",
   "Request a feature": "Предложить функцию",
-  "Restore data file": "Восстановить из файла",
   "Sample accounts and categories": "Примеры счетов и категорий",
   "Sample data installed": "Примеры данных установлены",
-  "Save data file": "Сохранить файл данных",
   Saved: "Сохранено",
   Schedule: "Расписание",
   "Select a category": "Выберите категорию",
@@ -933,8 +985,6 @@ export const russianStrings = {
   "This offline beta is not connected to an account.":
     "Эта автономная бета не подключена к аккаунту.",
   Message: "Сообщение",
-  "Importing data may change your existing records. Export a backup first.":
-    "Импорт может изменить имеющиеся записи. Сначала сохраните резервную копию.",
   Filtered: "Фильтр",
   "Sum of operations for the period": "Сумма операций за период",
   "Operations: {n}": "Операций: {n}",
@@ -1028,8 +1078,6 @@ export const russianStrings = {
     "Пример 1: 100 - налог (20%) - комиссия (7) = 100 - 20 = 80 - 7 = 73",
   "Example 2: 100 - commission (7) - tax (20%) = 100 - 7 = 93 - 18,6 = 74,4":
     "Пример 2: 100 - комиссия (7) - налог (20%) = 100 - 7 = 93 - 18,6 = 74,4",
-  "Save a local copy of your data or restore a previously exported JSON file.":
-    "Сохраните локальную копию данных или восстановите ранее экспортированный файл JSON.",
   "The {app} team works every day to build a convenient and useful application for managing your finances.":
     "Команда {app} каждый день создаёт удобное и полезное приложение для управления вашими финансами.",
   "We hope our work will help you manage your money better and reach your goals!":
@@ -1047,7 +1095,6 @@ export const russianStrings = {
     "Общий доступ появится после добавления входа в аккаунт.",
   "Storage is unavailable or full. Export a data file to keep changes.":
     "Хранилище недоступно или заполнено. Экспортируйте файл данных, чтобы сохранить изменения.",
-  "Export a copy of your data as a file.": "Экспортируйте копию данных в виде файла.",
   "Rates are fixed values that you can edit. Live quotes are not connected.":
     "Курсы — фиксированные значения, их можно менять. Рыночные котировки не подключены.",
   "Automatic updates need a rates service, which is not connected yet. The values below stay unchanged.":

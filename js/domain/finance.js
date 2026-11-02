@@ -285,10 +285,10 @@ export function operationMatchesFilters(o, f = uiState.filters) {
   );
 }
 // Operations that pass the active filters and period, newest first.
-export function visibleOperations() {
+export function visibleOperations(filters = uiState.filters) {
   const [a, b] = periodBounds();
   return appData.ops
-    .filter((o) => o.date >= a && o.date <= b && operationMatchesFilters(o))
+    .filter((o) => o.date >= a && o.date <= b && operationMatchesFilters(o, filters))
     .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
 }
 // Flat rows used by CSV export and the printable report.

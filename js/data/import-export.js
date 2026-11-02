@@ -2,24 +2,25 @@
 import { render } from "../app/shell.js";
 import { APP_ID, deepClone } from "../core/constants.js";
 import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
-import { csvText, prepareCSV } from "./csv.js";
+import { csvTemplate, prepareCSV } from "./csv.js";
 import { completeData, createEmptyData, withoutFinanceData } from "./defaults.js";
-import { pickFile, saveTextFile } from "../platform/files.js";
-import { printReport } from "./report.js";
+import { pickFile, saveTextFile, shareTextFile } from "../platform/files.js";
 import { findDataProblem, save } from "./storage.js";
-import { dataSnapshot } from "../domain/backups.js";
+import { createBackup, dataSnapshot } from "../domain/backups.js";
 import { translate, translateWith } from "../i18n/index.js";
-import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
+import { goHome, openPage } from "../ui/navigation.js";
 import { confirmAction, showInfo } from "../ui/dialogs.js";
-import { menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
+import { buttonHtml, menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
+import { openExport } from "../screens/export.js";
 
-export function download(name, content, type) {
+function download(name, content, type) {
   saveTextFile(name, content, type);
   toast("File prepared");
 }
 // Export the whole dataset as a JSON backup.
+const backupText = () => JSON.stringify(dataSnapshot(), null, 2);
 function exportJSON() {
-  download(`${APP_ID}-data.json`, JSON.stringify(dataSnapshot(), null, 2), "application/json");
+  download(`${APP_ID}-data.json`, backupText(), "application/json");
 }
 const MAX_IMPORT_BYTES = 20 * 1024 * 1024;
 
@@ -42,68 +43,20 @@ async function importFile(kind) {
 export function dataView() {
   return (
     pageHeader("Data") +
-    `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("backups"), "Create and restore data from automatic local copies")}${menuRowHtml(
+    `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("savedBackups"), "Create and restore data from automatic local copies")}${menuRowHtml(
       "Data file",
       "receipt",
-      () =>
-        openSheet(
-          () =>
-            `<h2>Data file</h2><p>Save a local copy of your data or restore a previously exported JSON file.</p>${menuRowHtml(
-              "Save data file",
-              "download",
-              () => {
-                closeLayers();
-                exportJSON();
-              },
-            )}${menuRowHtml("Restore data file", "upload", () => {
-              closeLayers();
-              importFile("json");
-            })}`,
-          "Data file",
-        ),
+      () => openPage("dataFile"),
       "Create and restore data from a manual backup file",
     )}${menuRowHtml(
       "Import data",
       "upload",
-      () =>
-        openSheet(
-          () =>
-            `<h2>Import data</h2><p>Importing data may change your existing records. Export a backup first.</p>${menuRowHtml(
-              "Import JSON file",
-              "upload",
-              () => {
-                closeLayers();
-                importFile("json");
-              },
-            )}${menuRowHtml("Import operations CSV", "upload", () => {
-              closeLayers();
-              importFile("csv");
-            })}`,
-          "Import data",
-        ),
+      () => openPage("importData"),
       "Import data from a file",
     )}${menuRowHtml(
       "Export data",
       "download",
-      () =>
-        openSheet(
-          () =>
-            `<h2>Export data</h2><p>Export a copy of your data as a file.</p>${menuRowHtml(
-              "Complete data file (JSON)",
-              "download",
-              () => {
-                closeLayers();
-                exportJSON();
-              },
-            )}${menuRowHtml("Operations (CSV)", "download", () => {
-              closeLayers();
-              download(`${APP_ID}-operations.csv`, "\ufeff" + csvText(), "text/csv;charset=utf-8");
-            })}${menuRowHtml("Report (PDF)", "receipt", () => {
-              closeLayers();
-              printReport();
-            })}`,
-          "Export data",
-        ),
+      openExport,
       "Save a copy of your data as a file",
     )}${menuRowHtml(
       "Delete my data",
@@ -111,6 +64,20 @@ export function dataView() {
       () => openPage("deletion"),
       "Permanently delete all data",
     )}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
+  );
+}
+// Page of the data file: a copy of everything in the format of this application.
+export function dataFileView() {
+  return (
+    pageHeader("Data file") +
+    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Export and share", () => shareTextFile(`${APP_ID}-data.json`, backupText(), "application/json"), "primary")}${buttonHtml("Export and save", exportJSON, "outline")}${buttonHtml("Restore from file", () => importFile("json"), "outline")}</div>`
+  );
+}
+// Page of the import of operations from another application as a CSV file.
+export function importDataView() {
+  return (
+    pageHeader("Import data") +
+    `<div class="content info-text"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><p>Importing may create duplicate operations, accounts and categories.</p><p>Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", () => importFile("csv"), "primary")}${buttonHtml("Download template", () => download(`${APP_ID}-template.csv`, "\ufeff" + csvTemplate(), "text/csv;charset=utf-8"), "outline")}</div>`
   );
 }
 // What a deletion removes; each one asks once more before it starts.
@@ -200,6 +167,7 @@ function offerCsvImport(text) {
         : "") +
       (duplicates ? " " + translateWith("{n} duplicates are skipped.", { n: duplicates }) : ""),
     () => {
+      createBackup();
       appData.accounts.push(...created.accounts);
       appData.categories.push(...created.categories);
       appData.ops.push(...ops);
@@ -209,7 +177,7 @@ function offerCsvImport(text) {
       toast("CSV imported");
       render();
     },
-    true,
+    false,
     "Apply",
   );
 }
