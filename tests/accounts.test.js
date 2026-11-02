@@ -20,6 +20,9 @@ import {
   planCurrencyChange,
 } from "../js/domain/currency-change.js";
 import { reorderedList } from "../js/domain/ordering.js";
+import { shownPercent } from "../js/domain/percent.js";
+import { exactPercent, percentLabel } from "../js/ui/percent.js";
+import { progressBlockHtml } from "../js/screens/accounts/progress.js";
 import { validateOp } from "../js/domain/operations.js";
 
 check("Relabeling an account currency keeps its amounts and changes the total by the rate", () => {
@@ -260,7 +263,7 @@ check("Progress of a goal and of a debt repayment", () => {
     a.left === 149800 &&
     b.percent === 100 &&
     b.left === -50000 &&
-    c.percent === 95.98 &&
+    shownPercent(c.percent) === 95.99 &&
     c.left === 3011 &&
     // the percent counts what is saved, paid back or used, and `done` is that amount
     a.done === 50200 &&
@@ -272,6 +275,63 @@ check("Progress of a goal and of a debt repayment", () => {
     accountProgress(free) === null
   );
 });
+
+check(
+  "A percent is rounded the same way everywhere and a target not reached never shows 100",
+  () => {
+    // Savings, debt, credit limit, weekly, monthly and food budgets of the reported screenshots.
+    const shown = [
+      [324276 / 500000, 64.86],
+      [892000 / 1500000, 59.47],
+      [14927 / 300000, 4.98],
+      [18604 / 11000, 169.13],
+      [144773 / 360000, 40.21],
+      [11169 / 52000, 21.48],
+    ].map(([share, expected]) => shownPercent(share * 100) === expected);
+    return (
+      shown.every(Boolean) &&
+      shownPercent(99.999) === 99.99 &&
+      shownPercent(100) === 100 &&
+      shownPercent(1.005) === 1.01 &&
+      shownPercent(0) === 0 &&
+      shownPercent(-0.001) === 0 &&
+      shownPercent(-5.456) === -5.46 &&
+      shownPercent(Infinity) === 0 &&
+      shownPercent(NaN) === 0 &&
+      exactPercent(64.8552) === "64.86%" &&
+      exactPercent(4.9757) === "4.98%" &&
+      exactPercent(100) === "100%" &&
+      exactPercent(99.9999) === "99.99%" &&
+      percentLabel(64.8552).includes(">64<") &&
+      percentLabel(64.8552).includes(">.86<") &&
+      !percentLabel(25).includes("goal-pct-frac")
+    );
+  },
+);
+
+check(
+  "The line under a meter says what the balance does not: to goal, paid back, a limit used up",
+  () => {
+    appData.ops = [];
+    // The currency of the test data does not matter, only the words and the amounts.
+    const line = (a) =>
+      /account-progress-left">([^<]*)</.exec(progressBlockHtml(a))?.[1].replace(/ [A-Z]{3}$/, "");
+    const goal = (opening) => addAccount({ type: "Savings", goal: 500000, opening }),
+      card = (opening) => addAccount({ limit: 300000, opening }),
+      debt = (opening) => addAccount({ type: "Debt", debt: "I owe", totalDebt: 1500000, opening });
+    return (
+      line(goal(324276)) === "To goal: 1,757.24" &&
+      line(goal(500000)) === "Goal reached" &&
+      line(goal(520000)) === "Goal exceeded by 200" &&
+      line(card(-14927)) === undefined &&
+      line(card(0)) === undefined &&
+      line(card(-300000)) === "Limit reached" &&
+      line(card(-310000)) === "Limit exceeded by 100" &&
+      line(debt(-608000)) === "Paid back: 8,920" &&
+      line(debt(0)) === "Debt repaid"
+    );
+  },
+);
 
 check("Currency change recalculates only what was spent, as the original does", () => {
   appData.ops = [];
