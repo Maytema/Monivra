@@ -15,6 +15,9 @@ screen is drawn and [DEVELOPMENT.md](DEVELOPMENT.md) for conventions and checks.
   `ui/primitives.js` and the tokens in `css/base.css`. When one screen is fixed, check the others
   that are built the same way. The rules for the sizes and the ends of screens are in
   [LAYOUT_RULES.md](LAYOUT_RULES.md); read them before building or changing a window.
+- Action tiles of any sheet (Edit, Delete, Duplicate…) come from `actionTileHtml` and `.sheet-actions`.
+  Sizes and gaps of a sheet do not depend on the height of the screen: when a sheet does not fit,
+  its content scrolls.
 - A person never sees a technical error. Commands throw `Error("message for the person")`;
   details go to the console.
 - New visible text: English in the code, Russian in `js/i18n/ru.js`.
