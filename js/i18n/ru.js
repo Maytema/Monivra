@@ -9,6 +9,7 @@ export const russianStrings = {
   "Choose from gallery": "Выбрать из галереи",
   "So far, it's empty. Create your first budget?": "Пока пусто. Создайте первый бюджет?",
   "Payment scheduled": "Платёж запланирован",
+  "Will be added on {date}": "Будет добавлен {date}",
   "Payment added": "Платёж добавлен",
   "Add tax": "Добавить налог",
   Sender: "Отправитель",

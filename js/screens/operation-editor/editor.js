@@ -15,7 +15,7 @@ import { openPage } from "../../ui/navigation.js";
 import { spotlight } from "../../ui/spotlight.js";
 import { settleDueNow } from "../due-payments.js";
 import { operationShown, showOperations } from "../operations/reveal.js";
-import { banner, toast } from "../../ui/primitives.js";
+import { notice, toast } from "../../ui/primitives.js";
 
 // The state of one open editor: the operation being edited and how it is being edited.
 export function createEditor(draft, scheduled) {
@@ -95,24 +95,29 @@ export function commitOperation(editor) {
     save();
     render();
     if (posted.length)
-      banner("Added to the operations", "circleCheck", "positive", () => showOperations(posted));
+      notice("Added to the operations", {
+        icon: "circleCheck",
+        tone: "positive",
+        onTap: () => showOperations(posted),
+      });
     else if (planned) {
-      banner(
-        "Payment scheduled",
-        "calendar",
-        "accent",
-        onScheduledPage ? null : () => showScheduled(saved.id),
-      );
+      // It is not in the history but among the scheduled payments: that is worth a longer look.
+      notice("Payment scheduled", {
+        icon: "calendar",
+        tone: "accent",
+        level: "important",
+        detail: translateWith("Will be added on {date}", { date: dateLabel(saved.date) }),
+        onTap: onScheduledPage ? null : () => showScheduled(saved.id),
+      });
       if (onScheduledPage) spotlight([saved.id]);
     } else {
       // On the list that shows it the operation is just highlighted; elsewhere a tap leads to it.
       const shown = operationShown(saved);
-      banner(
-        "Operation saved",
-        "circleCheck",
-        "positive",
-        shown ? null : () => showOperations([saved.id]),
-      );
+      notice("Operation saved", {
+        icon: "circleCheck",
+        tone: "positive",
+        onTap: shown ? null : () => showOperations([saved.id]),
+      });
       if (shown) spotlight([saved.id]);
     }
   } catch (e) {

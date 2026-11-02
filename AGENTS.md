@@ -30,6 +30,16 @@ rounded percent. The line under a meter must not repeat a figure the card alread
 says what is left (`To goal`), a debt what is paid back, a budget what is left or by how much it is
 passed (`Over by`), a credit limit only that it is used up or exceeded.
 
+## Notices
+
+What just happened is told by `notice` (`ui/primitives.js`), always at the bottom, above the
+navigation bar and the floating button, never over the balance. Two weights: `quiet` is a small
+pill (1.6 s, 3.2 s when a tap leads on) for what went as expected, such as a saved operation;
+`important` is a card with a second line (4.5 s) for what ended up somewhere else than one
+might think, such as a payment dated in the future that went to the scheduled payments. A new
+kind of notice picks one of the two; it does not get a form of its own. `toast` is for short text
+without an icon, mostly input mistakes.
+
 ## Before handing over
 
 Run `node tests/run.mjs`, `node tests/scenarios.mjs`, `npm run lint` and `npm run format:check`.

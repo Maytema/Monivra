@@ -35,7 +35,8 @@
 }
 @media print {
   #app,
-  #toast {
+  #toast,
+  #notice {
     display: none;
   }
   #printout {
@@ -121,7 +122,7 @@
 }
 /* The look both notices share: a soft tinted card with a thin outline of the theme colour. */
 #toast,
-#banner {
+#notice {
   box-sizing: border-box;
   color: var(--ink);
   border: 1.5px solid color-mix(in srgb, var(--accent) 26%, transparent);
@@ -131,81 +132,103 @@
     0 6px 18px -8px color-mix(in srgb, var(--accent) 45%, transparent),
     0 2px 6px color-mix(in srgb, var(--black) 8%, transparent);
 }
-/* Short message over the bottom edge. */
-#toast {
+/* Both sit at the bottom edge: above the navigation bar and above the floating button when
+   there are any, so they never cover the balance or the list that just changed. */
+#toast,
+#notice {
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 0px;
+  left: 0px;
+  margin-inline: auto;
+  width: fit-content;
   bottom: calc(var(--edge-gap) + env(safe-area-inset-bottom, 0px));
-  text-align: center;
   z-index: 99;
   pointer-events: none;
   opacity: 0;
+  translate: 0px 8px;
+  transition:
+    opacity 0.18s,
+    translate 0.22s,
+    scale 0.12s;
+}
+body:has(.navbar) #toast,
+body:has(.navbar) #notice {
+  bottom: calc(var(--nav-height) + var(--edge-gap) + env(safe-area-inset-bottom, 0px));
+}
+body:has(.fab) #toast,
+body:has(.fab) #notice {
+  margin-bottom: calc(var(--fab-height) + 12px);
+}
+#toast.show,
+#notice.show {
+  opacity: 1;
+  translate: 0px 0px;
+}
+/* Short message without an icon. */
+#toast {
+  text-align: center;
   min-width: 0px;
   max-width: min(calc(100vw - 2 * var(--edge-gap)), 340px);
   padding: 10px 16px;
   font-size: 14px;
   line-height: 1.35;
-  transition:
-    opacity 0.18s,
-    translate 0.18s;
-  translate: 0px 6px;
 }
-/* Message that slides in from the top edge: the icon says what happened, and when a tap leads
-   on to the thing, an arrow ends it. */
-#banner {
-  position: fixed;
-  top: calc(10px + env(safe-area-inset-top, 0px));
-  left: 50%;
-  z-index: 99;
+/* What just happened: the icon says what, a tap leads on to the thing (an arrow ends it).
+   Quiet is a small pill for what went as expected; important is a card with a second line for
+   what ended up somewhere else than one might think. */
+#notice {
   display: flex;
   align-items: center;
-  gap: 12px;
-  width: min(calc(100% - 2 * var(--edge-gap)), 420px);
-  padding: 13px 16px;
-  font-size: 15px;
-  pointer-events: none;
-  transform: translateX(-50%);
-  translate: 0px calc(-100% - 24px);
-  transition:
-    translate 0.22s,
-    scale 0.12s;
+  gap: 10px;
+  max-width: min(calc(100vw - 2 * var(--edge-gap)), 420px);
 }
-#banner.show {
-  translate: 0px 0px;
-}
-#banner.tappable {
+#notice.tappable.show {
   pointer-events: auto;
   cursor: pointer;
 }
-#banner.tappable:active {
+#notice.tappable:active {
   scale: 0.97;
 }
-#banner.tappable > svg:last-child {
+#notice.quiet {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+#notice.important {
+  width: min(calc(100% - 2 * var(--edge-gap)), 420px);
+  padding: 12px 16px;
+  border-color: color-mix(in srgb, var(--accent) 48%, transparent);
+  font-size: 15px;
+}
+.notice-title {
+  display: block;
+  font-weight: 500;
+}
+.notice-detail {
+  display: block;
+  margin-top: 1px;
+  font-size: 13px;
+  color: var(--muted);
+}
+#notice > svg:last-child:not(:first-child) {
   flex: none;
   color: var(--accent-ink);
 }
-#banner.positive svg {
+#notice.positive > svg:first-child {
   color: var(--positive-ink);
 }
-#banner.negative svg {
+#notice.negative > svg:first-child {
   color: var(--negative-ink);
 }
-#banner.accent svg {
+#notice.accent > svg:first-child {
   color: var(--accent-ink);
-}
-/* Above the floating button instead of over it */
-body:has(.fab) #toast {
-  margin-bottom: calc(var(--fab-height) + 12px);
-}
-/* Above the bottom navigation bar instead of over its labels */
-body:has(.navbar) #toast {
-  bottom: calc(var(--nav-height) + var(--edge-gap) + env(safe-area-inset-bottom, 0px));
 }
 @media (prefers-reduced-motion: reduce) {
   #toast,
-  #banner {
-    transition: none;
+  #notice {
+    transition: opacity 0.1s;
+    translate: 0px 0px;
   }
 }
 .filter-scroll {

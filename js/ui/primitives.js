@@ -1,4 +1,4 @@
-/* UI building blocks: buttons, fields, rows, tabs, page header, toast and banner */
+/* UI building blocks: buttons, fields, rows, tabs, page header, toast and notice */
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { translate } from "../i18n/index.js";
 import { render } from "../app/shell.js";
@@ -6,7 +6,7 @@ import { registerAction, registerInput } from "./handlers.js";
 import { goBack } from "./navigation.js";
 
 let toastTimer = 0;
-let bannerTimer = 0;
+let noticeTimer = 0;
 
 // HTML for a button wired to a click handler.
 export const buttonHtml = (label, fn, cls = "", attrs = "") =>
@@ -53,20 +53,26 @@ export const fabHtml = (label, fn) =>
     "fab fab-add",
     `aria-label="${escapeHtml(translate(label))}"`,
   );
-// Message that slides down from the top edge; the icon and the tone say what happened. With
-// `onTap` it ends in an arrow, stays longer and a tap on it leads on to what it is about.
-export function banner(s, icon, tone = "", onTap = null) {
-  const el = document.getElementById("banner");
-  el.className = `show ${tone} ${onTap ? "tappable" : ""}`;
-  el.innerHTML = `${iconSvg(icon, 30)}<span class="grow">${escapeHtml(translate(s))}</span>${onTap ? iconSvg("right", 22) : ""}`;
+// How long a notice stays, by weight and by whether a tap on it leads on.
+const NOTICE_MS = { quiet: 1600, quietTap: 3200, important: 4500 };
+// Notice at the bottom edge about what just happened; the icon and the tone say what. "quiet" is a
+// small pill for what went as expected, "important" a card with a second line (`detail`) for what
+// ended up somewhere else than one might think. With `onTap` it ends in an arrow, stays longer and
+// a tap on it leads on to what it is about.
+export function notice(text, { icon, tone = "", level = "quiet", detail = "", onTap = null }) {
+  const el = document.getElementById("notice");
+  el.className = `show ${level} ${tone} ${onTap ? "tappable" : ""}`;
+  el.innerHTML = `${iconSvg(icon, level === "quiet" ? 20 : 28)}<span class="grow"><span class="notice-title">${escapeHtml(translate(text))}</span>${detail ? `<span class="notice-detail">${escapeHtml(detail)}</span>` : ""}</span>${onTap ? iconSvg("right", 20) : ""}`;
   el.onclick = onTap
     ? () => {
         el.classList.remove("show");
         onTap();
       }
     : null;
-  clearTimeout(bannerTimer);
-  bannerTimer = setTimeout(() => el.classList.remove("show"), onTap ? 5000 : 1800);
+  clearTimeout(noticeTimer);
+  const stay =
+    level === "important" ? NOTICE_MS.important : NOTICE_MS[onTap ? "quietTap" : "quiet"];
+  noticeTimer = setTimeout(() => el.classList.remove("show"), stay);
 }
 // Progress meter: a thin outlined track with the fill set a little inside it; `owed` tints it red.
 export const meterHtml = (percent, owed = false, cls = "") =>

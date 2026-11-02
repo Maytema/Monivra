@@ -426,7 +426,7 @@ const scenarios = {
     await page.locator(".calc-key", { hasText: "5" }).first().click();
     await page.getByLabel("Next day").click();
     await page.locator(".calc-confirm").click();
-    const notice = page.locator("#banner.tappable");
+    const notice = page.locator("#notice.tappable");
     await notice.getByText("Payment scheduled").waitFor();
     expect(await notice.locator("svg").count()).toBe(2);
     await notice.click();
@@ -440,7 +440,7 @@ const scenarios = {
     await page.locator(".calc-key", { hasText: "5" }).first().click();
     await page.getByLabel("Next day").click();
     await page.locator(".calc-confirm").click();
-    await page.locator("#banner.tappable").click();
+    await page.locator("#notice.tappable").click();
     const flashed = page.locator(".scheduled-item.spot");
     await flashed.waitFor();
     expect(await flashed.count()).toBe(1);
@@ -556,7 +556,7 @@ const scenarios = {
   async "a saved operation shows a notice with an arrow that leads to it, highlighted"(page) {
     await openEditorOn(page, "Food");
     await typeAmountAndSave(page, "5");
-    const notice = page.locator("#banner.tappable");
+    const notice = page.locator("#notice.tappable");
     await notice.getByText("Operation saved").waitFor();
     expect(await notice.locator("svg").count()).toBe(2);
     await notice.click();
@@ -571,10 +571,51 @@ const scenarios = {
     await page.locator(".add-item").first().click();
     await page.locator(".calc-key", { hasText: "5" }).first().click();
     await page.locator(".calc-confirm").click();
-    const notice = page.locator("#banner.show");
+    const notice = page.locator("#notice.show");
     await notice.getByText("Operation saved").waitFor();
     expect(await notice.locator("svg").count()).toBe(1);
     await page.locator(".op-row.spot").waitFor();
+  },
+  async "a saved operation gets a quiet notice at the bottom, a scheduled one an important notice that stays longer"(
+    page,
+  ) {
+    await tab(page, "Operations");
+    const save = async (nextDay) => {
+      await page.getByLabel("Add").first().click();
+      await page.locator(".add-item").first().click();
+      await page.locator(".calc-key", { hasText: "5" }).first().click();
+      if (nextDay) await page.getByLabel("Next day").click();
+      await page.locator(".calc-confirm").click();
+      await page.locator("#notice.show").waitFor();
+    };
+    const where = () =>
+      page.evaluate(() => {
+        const box = document.querySelector("#notice").getBoundingClientRect();
+        const balance = document.querySelector("#base .hero")?.getBoundingClientRect();
+        return {
+          low: box.top > window.innerHeight / 2,
+          covers: !!balance && box.top < balance.bottom,
+        };
+      });
+    await save(false);
+    expect(await page.locator("#notice.quiet").count()).toBe(1);
+    expect(await page.locator(".notice-detail").count()).toBe(0);
+    const quiet = await where();
+    expect(quiet.low).toBe(true);
+    expect(quiet.covers).toBe(false);
+    await page.waitForFunction(
+      () => !document.querySelector("#notice").classList.contains("show"),
+      null,
+      {
+        timeout: 2600,
+      },
+    );
+    await save(true);
+    expect(await page.locator("#notice.important .notice-detail").count()).toBe(1);
+    expect((await where()).low).toBe(true);
+    // Still there when a quiet one would have gone.
+    await page.waitForTimeout(2800);
+    expect(await page.locator("#notice.show").count()).toBe(1);
   },
   async "the period of a filtered page is changed by a swipe"(page) {
     await page.evaluate(async () => {
