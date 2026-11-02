@@ -719,6 +719,33 @@ const scenarios = {
     await page.getByText("Formatting").click();
     expect(await ending()).toBe("0px,0px");
   },
+  async "an account sheet is compact, its touch targets stay comfortable and nothing overflows"(
+    page,
+  ) {
+    await tab(page, "Accounts");
+    await page.locator(".account-row").first().click();
+    const sheet = await page.evaluate(() => {
+      const box = (selector) => {
+        const r = document.querySelector(selector).getBoundingClientRect();
+        return [r.width, r.height];
+      };
+      const panel = document.querySelector(".overlay .panel");
+      return {
+        share: panel.getBoundingClientRect().height / window.innerHeight,
+        overflow: panel.scrollWidth > panel.clientWidth,
+        star: box(".account-favorite"),
+        tile: box(".sheet-action-icon"),
+        action: box(".sheet-action"),
+      };
+    });
+    // Compact: the six actions and the card take well under two thirds of the screen.
+    expect(sheet.share < 0.62).toBe(true);
+    expect(sheet.overflow).toBe(false);
+    // The star is drawn small but is still a full touch target; so is every action.
+    expect(Math.min(...sheet.star) >= 44).toBe(true);
+    expect(Math.min(...sheet.action) >= 44).toBe(true);
+    expect(Math.min(...sheet.tile) >= 48).toBe(true);
+  },
   async "an account list that is empty offers to create the first account"(page) {
     expect(await page.locator(".empty-state .empty-art").count()).toBe(1);
     await page.locator(".empty-state").getByRole("button", { name: "Create" }).click();

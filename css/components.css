@@ -536,8 +536,8 @@
 .field {
   border: 1px solid var(--line);
   border-radius: 13px;
-  padding: 22px;
-  margin: 0px 0px 24px;
+  padding: 16px;
+  margin: 0px 0px 14px;
   background: var(--bg);
   width: 100%;
   display: block;
@@ -545,7 +545,7 @@
 .field-label {
   display: block;
   font-size: 15px;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
   font-weight: 500;
 }
 .field.inline .field-label {
@@ -553,7 +553,7 @@
 }
 @media (max-width: 359px) {
   .field {
-    padding: 17px;
+    padding: 14px;
   }
 }
 .panel .field {
@@ -572,7 +572,7 @@
 .account-editor-reference .field-label {
   font-size: 13px;
   font-weight: 550;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .field .value {
   color: var(--accent-ink);
@@ -744,9 +744,9 @@
 .account-editor-reference .field {
   border: 1px solid var(--line);
   border-radius: 10px;
-  margin: 0px 0px 13px;
-  padding: 14px 13px;
-  min-height: 69px;
+  margin: 0px 0px 10px;
+  padding: 12px 13px;
+  min-height: 58px;
   background: var(--key);
 }
 .counterparty-accounts .row {

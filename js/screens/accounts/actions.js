@@ -28,7 +28,7 @@ export function accountActions(a) {
   openSheet(
     () =>
       `<div class="account-detail-head"><div class="account-detail-top">${badgeHtml(a)}<strong>${escapeHtml(a.name)}</strong>${buttonHtml(
-        iconSvg("star", 26),
+        iconSvg("star", 22),
         () => {
           toggleFavoriteAccount(a.id);
           render();

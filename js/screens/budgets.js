@@ -46,7 +46,7 @@ const budgetBody = ({ b, used, left, share }, percent) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
-  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${remainderHtml(left, b.currency)}`;
+  return `<span class="budget-head"><strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}</span><span class="budget-figures"><span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span>${remainderHtml(left, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>`;
 };
 const budgetCard = (state) =>
   buttonHtml(

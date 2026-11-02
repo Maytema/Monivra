@@ -106,7 +106,7 @@ export function pageHeader(title, extra = "") {
 // Round-cornered tile with a colored icon and a caption, for the action sheets.
 export const actionTileHtml = (icon, label, tone, fn) =>
   buttonHtml(
-    `<span class="sheet-action-icon" style="--tone:${tone}">${iconSvg(icon, 26)}</span><span>${translate(label)}</span>`,
+    `<span class="sheet-action-icon" style="--tone:${tone}">${iconSvg(icon, 24)}</span><span>${translate(label)}</span>`,
     fn,
     "sheet-action",
   );
