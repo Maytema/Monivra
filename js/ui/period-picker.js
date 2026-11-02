@@ -11,9 +11,18 @@ import { closeLayers, openSheet } from "./navigation.js";
 import { calendar, rangeDialog } from "./calendar.js";
 
 // Period selector bar with previous/next arrows; "All time" has no neighbours, so they are dimmed.
-export function periodBar() {
+// `picker` opens when the title is tapped.
+export function periodBar(picker = periodPicker) {
   const fixed = !canShiftPeriod();
-  return `<div class="period">${iconButtonHtml("left", "Previous period", () => stepPeriod(-1), fixed)}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), periodPicker, "label")}${iconButtonHtml("right", "Next period", () => stepPeriod(1), fixed)}</div>`;
+  return `<div class="period">${iconButtonHtml("left", "Previous period", () => stepPeriod(-1), fixed)}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), picker, "label")}${iconButtonHtml("right", "Next period", () => stepPeriod(1), fixed)}</div>`;
+}
+// For screens that count by whole months (budgets): the title opens the calendar, and the month of
+// the day chosen is shown.
+export function monthPicker() {
+  calendar(uiState.period.anchor, (day) => {
+    uiState.period = { mode: "month", anchor: day };
+    render();
+  });
 }
 // Move the selected period forward or backward.
 function stepPeriod(n) {

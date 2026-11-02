@@ -24,7 +24,7 @@ import {
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
-import { periodBar } from "../ui/period-picker.js";
+import { monthPicker, periodBar } from "../ui/period-picker.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 
 // Days a budget period lasts, as the calendar icon of the period says.
@@ -61,13 +61,22 @@ const budgetGroup = (period, states) => {
     main,
   )}</small><strong class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
 };
+// A budget is looked at one month at a time, each budget in its own period around the month's
+// day. The page opens on a month (the shown one, or today after "All time" or a range), and the
+// period shown before comes back when the page is left.
+export function openBudgets() {
+  const before = uiState.period;
+  const shown = ["all", "range"].includes(before.mode) ? TODAY : before.anchor;
+  uiState.period = { mode: "month", anchor: shown };
+  openPage("budgets", { restore: () => (uiState.period = before) });
+}
 // Budgets list page: budgets grouped by period.
 export function budgetsView() {
   const states = appData.budgets.map(budgetState);
   return (
     pageHeader("Budgets") +
     swipePane(
-      periodBar() +
+      periodBar(monthPicker) +
         `<div class="content">${
           states.length
             ? Object.keys(BUDGET_PERIODS)
@@ -109,7 +118,7 @@ export function budgetDetailsView(p) {
       iconButtonHtml("edit", "Edit budget", () => editBudget(b)),
     ) +
     swipePane(
-      periodBar() +
+      periodBar(monthPicker) +
         `<div class="content"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div>${
           ops.length
             ? dates.map((date) => dayGroup(date, ops)).join("")
