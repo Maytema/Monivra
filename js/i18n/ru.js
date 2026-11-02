@@ -283,6 +283,22 @@ export const russianStrings = {
   "Import data from a file": "Загрузка данных из файла",
   "Save a copy of your data as a file": "Сохранение копии данных в файл",
   "Permanently delete all data": "Безвозвратное удаление всех данных",
+  Deletion: "Удаление",
+  "Partial deletion": "Частичное удаление",
+  "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.":
+    "Удаляются счета, категории, операции, бюджеты и запланированные платежи. Настройки и копии остаются.",
+  "Delete accounts, categories, operations, budgets and scheduled payments?":
+    "Удалить счета, категории, операции, бюджеты и запланированные платежи?",
+  "Delete local data": "Удалить локальные данные",
+  "Everything stored on this device is deleted: the data above, backups, settings and reminders. The application starts from scratch.":
+    "Удаляется всё, что хранится на этом устройстве: данные выше, копии, настройки и напоминания. Приложение начнёт с чистого листа.",
+  "Delete everything stored on this device? The application will start from scratch.":
+    "Удалить всё, что хранится на этом устройстве? Приложение начнёт с чистого листа.",
+  "Deleted data cannot be restored. Choose what to delete.":
+    "Удалённые данные восстановить нельзя. Выберите, что удалить.",
+  "Nothing is stored outside this device: there is no account and no cloud copy.":
+    "Вне этого устройства ничего не хранится: нет ни аккаунта, ни облачной копии.",
+  "Data deleted": "Данные удалены",
   "Operations of the budget": "Операции бюджета",
   "Missed payments": "Пропущенные платежи",
   "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":
@@ -452,8 +468,6 @@ export const russianStrings = {
   "Based on": "На основе",
   "Beta offer": "Предложение беты",
   Subcategory: "Подкатегория",
-  "Deletion cancelled: type DELETE exactly":
-    "Удаление отменено: нужно ввести DELETE точно как показано",
   "Subcategory type follows its parent": "Тип подкатегории совпадает с типом родителя",
   "Move to a category": "Переместить в категорию",
   "Merge into a subcategory": "Объединить с подкатегорией",
@@ -475,9 +489,6 @@ export const russianStrings = {
     "Эта категория и её подкатегории станут подкатегориями «{name}». Их операции будут соответственно отнесены к «{name}».",
   'All operations of this category will be moved to "{name}", and this category will be deleted.':
     "Все операции этой категории будут перенесены в «{name}», а сама категория будет удалена.",
-  "Type DELETE to erase all financial data": "Введите DELETE, чтобы стереть все финансовые данные",
-  "Permanently delete all accounts, categories, transactions, schedules and budgets?":
-    "Безвозвратно удалить все счета, категории, операции, плановые платежи и бюджеты?",
   File: "Файл",
   "Delete this account and all linked operations?": "Удалить этот счёт и все связанные операции?",
   "Choose a subcategory": "Выберите подкатегорию",
@@ -610,7 +621,6 @@ export const russianStrings = {
   "Move into": "Переместить в",
   "Move to": "Переместить в",
   Name: "Название",
-  "Confirmation word": "Слово подтверждения",
   "Name is too long": "Название слишком длинное",
   "Nest into": "Вложить в",
   "No ads": "Без рекламы",

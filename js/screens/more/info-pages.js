@@ -156,9 +156,10 @@ function buildPage(kind) {
 
 // Info pages: profile, subscription, support, instructions, about, terms and similar.
 export function infoPage(kind) {
-  const { title, body, footer } = buildPage(kind);
+  const { title, body, footer, pinned } = buildPage(kind);
   // A page with a pinned footer has no top bar: the back arrow and heading scroll with the content.
   return footer
     ? `<div class="sub-screen"><div class="sub-scroll">${body}</div>${footer}</div>`
-    : pageHeader(title) + `<div class="content">${body}</div>`;
+    : pageHeader(title) +
+        `<div class="content">${body}</div>${pinned ? `<div class="page-footer">${pinned}</div>` : ""}`;
 }

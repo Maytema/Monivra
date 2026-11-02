@@ -469,6 +469,60 @@ const scenarios = {
     await tab(page, "Categories");
     expect((await page.locator(".cat-tile .money.money-in").count()) > 0).toBe(true);
   },
+  async "partial deletion removes the records and keeps the settings, deleting local data starts from scratch"(
+    page,
+  ) {
+    const stored = () =>
+      page.evaluate(() => {
+        const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+        return [data.accounts.length, data.ops.length, data.settings.accent];
+      });
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Delete my data", { exact: true }).click();
+    await page.getByText("Partial deletion", { exact: true }).click();
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
+    await page.getByText("Data deleted").waitFor();
+    expect((await stored()).join()).toBe("0,0,#0b6aa8");
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Delete my data", { exact: true }).click();
+    await page.getByText("Delete local data", { exact: true }).click();
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
+    await page.getByText("Data deleted").waitFor();
+    expect((await stored())[2]).toBe("#a000b8");
+  },
+  async "the button of a support page is pinned under the scrolling text"(page) {
+    await tab(page, "More");
+    await page.getByText("Support", { exact: true }).click();
+    await page.getByText("Report a bug", { exact: true }).click();
+    expect(await page.locator(".content .page-footer, .content button.primary").count()).toBe(0);
+    expect(await page.locator(".page-footer button", { hasText: "Continue" }).count()).toBe(1);
+  },
+  async "the figures of a budget stay above the scrolling operations"(page) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    await page.locator(".budget-card").click();
+    await page.getByLabel("Operations of the budget").click();
+    expect(await page.locator(".content .budget-card").count()).toBe(0);
+    expect(await page.locator(".budget-pinned .budget-card").count()).toBe(1);
+  },
+  async "the interface mode and the colour change the whole application"(page) {
+    await tab(page, "More");
+    await page.getByText("Settings", { exact: true }).first().click();
+    await page.getByText("Styles and elements").click();
+    await page.getByText("Global").click();
+    await page.getByText("Interface mode").click();
+    await page.getByText("Dark", { exact: true }).click();
+    expect(await page.evaluate(() => document.documentElement.classList.contains("dark"))).toBe(
+      true,
+    );
+    await page.getByText("Color theme").click();
+    await page.getByLabel("#0b6aa8").click();
+    expect(
+      await page.evaluate(() => document.documentElement.style.getPropertyValue("--accent")),
+    ).toBe("#0b6aa8");
+  },
   async "a swipe in the calendar moves by a month"(page) {
     await tab(page, "Operations");
     await page.locator(".period .label").first().click();
@@ -620,25 +674,13 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
-  "a budget card opens its editor, the operations of the period are a button, deleting returns to the list":
+  "the figures of a budget stay above the scrolling operations": budgetWithOperations,
+  "partial deletion removes the records and keeps the settings, deleting local data starts from scratch":
     (data) => {
-      const base = data.ops.find((op) => op.type === "expense");
-      const day = new Date().toLocaleDateString("en-CA");
-      const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
-      data.ops = [
-        { ...base, id: "t1", date: day },
-        { ...base, id: "t2", date: day },
-        { ...base, id: "t3", date: day, category: elsewhere.id },
-      ];
-      data.budgets.push({
-        id: "one",
-        name: "Only one",
-        currency: data.settings.currency,
-        amount: 100000000,
-        period: "month",
-        categories: [base.category],
-      });
+      data.settings.accent = "#0b6aa8";
     },
+  "a budget card opens its editor, the operations of the period are a button, deleting returns to the list":
+    budgetWithOperations,
   "a payment far behind is asked about: adding posts what was missed, skipping does not":
     addOverdue,
   "skipping the missed payments adds nothing": addOverdue,
@@ -653,6 +695,25 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// A budget with two of the three operations of the month in its category.
+function budgetWithOperations(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const day = new Date().toLocaleDateString("en-CA");
+  const elsewhere = data.categories.find((c) => c.type === "expense" && c.id !== base.category);
+  data.ops = [
+    { ...base, id: "t1", date: day },
+    { ...base, id: "t2", date: day },
+    { ...base, id: "t3", date: day, category: elsewhere.id },
+  ];
+  data.budgets.push({
+    id: "one",
+    name: "Only one",
+    currency: data.settings.currency,
+    amount: 100000000,
+    period: "month",
+    categories: [base.category],
+  });
+}
 // A daily payment that was last due forty days ago: too far behind to be added without asking.
 function addOverdue(data) {
   const base = data.ops.find((op) => op.type === "expense");

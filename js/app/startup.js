@@ -176,6 +176,13 @@ function backUpOncePerDay() {
 }
 
 // Attach global handlers (clicks, inputs, swipe gestures, hash routing) and render.
+// "As in the system" follows the system while the application is open.
+function bindSystemTheme() {
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (appData.settings.theme === "system") render();
+  });
+}
+
 export function startup() {
   initSwipeGestures();
   bindClicks();
@@ -183,6 +190,7 @@ export function startup() {
   bindKeyboard();
   bindCategoryHold();
   bindPrivacy();
+  bindSystemTheme();
   bindSystemBack();
   backUpOncePerDay();
   bindDuePayments();

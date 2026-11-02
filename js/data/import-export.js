@@ -3,14 +3,14 @@ import { render } from "../app/shell.js";
 import { APP_ID, deepClone } from "../core/constants.js";
 import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
 import { csvText, prepareCSV } from "./csv.js";
-import { completeData, createEmptyData } from "./defaults.js";
+import { completeData, createEmptyData, withoutFinanceData } from "./defaults.js";
 import { pickFile, saveTextFile } from "../platform/files.js";
 import { printReport } from "./report.js";
 import { findDataProblem, save } from "./storage.js";
 import { dataSnapshot } from "../domain/backups.js";
 import { translate, translateWith } from "../i18n/index.js";
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
-import { confirmAction, promptText, showInfo } from "../ui/dialogs.js";
+import { confirmAction, showInfo } from "../ui/dialogs.js";
 import { menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
 
 export function download(name, content, type) {
@@ -108,31 +108,55 @@ export function dataView() {
     )}${menuRowHtml(
       "Delete my data",
       "trash",
-      () => {
-        promptText(
-          "Type DELETE to erase all financial data",
-          "",
-          (v) => {
-            if (v.trim() !== "DELETE") {
-              toast("Deletion cancelled: type DELETE exactly");
-              return;
-            }
-            confirmAction(
-              "Permanently delete all accounts, categories, transactions, schedules and budgets?",
-              () => {
-                setAppData(createEmptyData());
-                save();
-                goHome("accounts");
-              },
-              true,
-              "Delete",
-            );
-          },
-          "Confirmation word",
-        );
-      },
+      () => openPage("deletion"),
       "Permanently delete all data",
     )}<p class="footnote">All exports and imports are handled on this device. This beta does not provide cloud backup or account synchronization.</p></div>`
+  );
+}
+// What a deletion removes; each one asks once more before it starts.
+const DELETIONS = [
+  {
+    title: "Partial deletion",
+    note: "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.",
+    ask: "Delete accounts, categories, operations, budgets and scheduled payments?",
+    result: () => withoutFinanceData(appData),
+    backupFirst: true,
+  },
+  {
+    title: "Delete local data",
+    note: "Everything stored on this device is deleted: the data above, backups, settings and reminders. The application starts from scratch.",
+    ask: "Delete everything stored on this device? The application will start from scratch.",
+    result: createEmptyData,
+    backupFirst: false,
+  },
+];
+// Deletion page: the ways to delete data, each with what exactly goes.
+export function deletionView() {
+  return (
+    pageHeader("Deletion") +
+    `<div class="content flush"><p class="deletion-intro">Deleted data cannot be restored. Choose what to delete.</p>${DELETIONS.map(
+      ({ title, note, ask, result, backupFirst }) =>
+        menuRowHtml(
+          title,
+          "trash",
+          () =>
+            confirmAction(
+              ask,
+              () => {
+                setAppData(result());
+                save();
+                goHome("accounts");
+                toast("Data deleted");
+              },
+              backupFirst,
+              "Delete",
+            ),
+          note,
+          "",
+        ),
+    ).join(
+      "",
+    )}<p class="footnote">Nothing is stored outside this device: there is no account and no cloud copy.</p></div>`
   );
 }
 // The reason of a damaged backup as one short sentence for the person.

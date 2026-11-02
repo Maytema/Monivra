@@ -769,13 +769,9 @@
 .content.flush > .rates-note {
   padding: 10px 17px;
 }
-/* Support topics: text on top, the notice under a line, the button at the bottom */
+/* Support topics: text on top and the notice under a line; the button is pinned under them */
 .support-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  padding: 8px 20px 20px;
-  box-sizing: border-box;
+  padding: 8px 4px 0px;
 }
 .support-text p {
   margin: 0px 0px 16px;
@@ -794,14 +790,6 @@
 }
 .support-notice p {
   margin: 0px 0px 8px;
-}
-.support-actions {
-  margin-top: auto;
-  padding-top: 24px;
-}
-.support-actions .primary {
-  width: 100%;
-  justify-content: center;
 }
 /* About page: the illustration, the place and a short text */
 .about {
@@ -993,4 +981,11 @@
   .about-place svg {
     animation: none;
   }
+}
+/* Deletion page: a short line before the ways to delete */
+.deletion-intro {
+  margin: 0px;
+  padding: 8px 20px 12px;
+  color: var(--muted);
+  font-size: 14px;
 }

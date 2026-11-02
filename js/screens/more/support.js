@@ -74,6 +74,11 @@ export function supportPage() {
 
 export function supportTopicPage(kind) {
   const topic = SUPPORT_TOPICS[kind];
-  const body = `<div class="support-page"><div class="support-text">${topic.text.map((t) => `<p>${translate(t)}</p>`).join("")}${topic.instructions ? buttonHtml("View instructions", () => openPage("instructions"), "outline") : ""}</div><div class="support-notice"><p>${translate("You will be redirected to the email sending application.")}</p><p>${translate("A correctly completed letter will help process your request faster.")}</p></div><div class="support-actions">${buttonHtml("Continue", () => (location.href = `mailto:?subject=${encodeURIComponent(translate(topic.title))}`), "primary")}</div></div>`;
-  return { title: topic.title, body };
+  const body = `<div class="support-page"><div class="support-text">${topic.text.map((t) => `<p>${translate(t)}</p>`).join("")}${topic.instructions ? buttonHtml("View instructions", () => openPage("instructions"), "outline") : ""}</div><div class="support-notice"><p>${translate("You will be redirected to the email sending application.")}</p><p>${translate("A correctly completed letter will help process your request faster.")}</p></div></div>`;
+  const pinned = buttonHtml(
+    "Continue",
+    () => (location.href = `mailto:?subject=${encodeURIComponent(translate(topic.title))}`),
+    "primary",
+  );
+  return { title: topic.title, body, pinned };
 }

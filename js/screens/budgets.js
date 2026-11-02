@@ -117,7 +117,8 @@ export function budgetDetailsView(p) {
     pageHeader("Budget") +
     swipePane(
       periodBar(monthPicker) +
-        `<div class="content"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div>${
+        // The figures stay in view while the operations under them scroll.
+        `<div class="budget-pinned"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div></div><div class="content">${
           ops.length
             ? dates.map((date) => dayGroup(date, ops)).join("")
             : emptyStateHtml("operations", "Empty", "No expenses of this budget in the period")

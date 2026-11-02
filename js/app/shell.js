@@ -7,7 +7,7 @@ import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
 import { appData, firstLaunch, locked, rememberPeriod, uiState } from "../core/state.js";
-import { dataView } from "../data/import-export.js";
+import { dataView, deletionView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
 import { rollNumber } from "../ui/reel.js";
@@ -61,6 +61,7 @@ const PAGE_VIEWS = {
   budget: budgetView,
   settings: settingsView,
   data: dataView,
+  deletion: deletionView,
 };
 const SETTINGS_PAGE_KINDS = ["backups", "notifications", "security", "privacy", "rates"];
 // Root tabs.

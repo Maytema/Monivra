@@ -59,6 +59,20 @@ export function createEmptyData() {
   };
 }
 
+// The data without what the person recorded: accounts, categories, operations, tags, scheduled
+// payments and budgets. Settings, backups and rates stay.
+export function withoutFinanceData(data) {
+  return {
+    ...data,
+    accounts: [],
+    categories: [],
+    ops: [],
+    tags: [],
+    scheduled: [],
+    budgets: [],
+  };
+}
+
 // Numeric settings are numbers; an older file may hold them as text or out of range.
 function numericSettings(settings, fresh) {
   const whole = (value, from, to, fallback) => {
