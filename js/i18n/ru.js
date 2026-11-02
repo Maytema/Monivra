@@ -802,6 +802,7 @@ export const russianStrings = {
   Back: "Назад",
   Favorite: "Избранное",
   "Account actions": "Действия со счётом",
+  "Operation actions": "Действия с операцией",
   "Previous period": "Предыдущий период",
   "Next period": "Следующий период",
   "Operation search": "Поиск операций",

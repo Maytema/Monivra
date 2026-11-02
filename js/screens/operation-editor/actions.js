@@ -1,14 +1,11 @@
 /* Actions of an opened operation: delete, duplicate, skip or add a scheduled payment */
 import { render } from "../../app/shell.js";
-import { deepClone, iconSvg } from "../../core/constants.js";
+import { deepClone } from "../../core/constants.js";
 import { forgetDeleted, uiState } from "../../core/state.js";
 import { deleteOperation, earliestScheduleDate } from "../../domain/operations.js";
 import { processScheduled } from "../../domain/scheduled.js";
 import { confirmAction } from "../../ui/dialogs.js";
-import { buttonHtml, notice } from "../../ui/primitives.js";
-
-const actionButton = (icon, label, onTap, tone = "") =>
-  buttonHtml(`${iconSvg(icon, 28)}<span>${label}</span>`, onTap, tone);
+import { actionTileHtml, notice } from "../../ui/primitives.js";
 
 // What can be done with an operation that is opened: delete, duplicate and, for a payment, skip or add now.
 export function compactActionsHtml(editor, duplicate) {
@@ -53,7 +50,8 @@ export function compactActionsHtml(editor, duplicate) {
     finish("Payment added", "circleCheck", "positive");
   };
   const payment = scheduled
-    ? actionButton("close", "Skip", skip) + actionButton("check", "Add now", addNow, "positive")
+    ? actionTileHtml("close", "Skip", "var(--negative)", skip) +
+      actionTileHtml("check", "Add now", "var(--positive)", addNow)
     : "";
-  return `<div class="ops-compact-actions">${actionButton("trash", "Delete", remove)}${actionButton("copy", "Duplicate", copy)}${payment}</div>`;
+  return `<div class="sheet-actions" style="--cols:${scheduled ? 4 : 2}" role="group" aria-label="Operation actions">${actionTileHtml("trash", "Delete", "var(--negative)", remove)}${actionTileHtml("copy", "Duplicate", "#c04fd8", copy)}${payment}</div>`;
 }
