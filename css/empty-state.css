@@ -144,6 +144,7 @@
   stroke: var(--muted);
   stroke-width: 2;
   stroke-dasharray: 0.03 0.03;
+  opacity: 0;
 }
 .empty-ball {
   fill: var(--bg);
@@ -160,60 +161,62 @@
   max-width: 270px;
   margin: 24px auto 0px;
 }
-/* One-time animations. Statistics: the arrow is drawn left to right and each bar rises as it passes.
-   Operations: the lines of the paper are written one by one, then the lens slides in and the cross appears. */
-[data-play] .bar {
-  animation: empty-bar 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
-  animation-delay: calc(var(--i) * 0.2s + var(--elapsed, 0ms));
-}
-[data-play] .empty-arrow {
-  animation: empty-draw 1.4s ease-in-out backwards;
-  animation-delay: calc(0.5s + var(--elapsed, 0ms));
-}
-[data-play] .empty-paper {
-  animation: empty-fade 0.5s ease-out backwards;
-  animation-delay: var(--elapsed, 0ms);
-}
-[data-play] .empty-line {
-  animation: empty-draw 0.4s ease-out backwards;
-  animation-delay: calc(0.3s + var(--i) * 0.25s + var(--elapsed, 0ms));
-}
-[data-play] .empty-search {
-  animation: empty-scan 3.4s ease-in-out backwards;
-  animation-delay: calc(0.9s + var(--elapsed, 0ms));
-}
-[data-play] .empty-cross {
-  animation: empty-found-nothing 0.4s ease-out backwards;
-  animation-delay: calc(4.4s + var(--elapsed, 0ms));
-}
-[data-play] .empty-wallet,
-[data-play] .empty-coins {
-  animation: empty-fade 0.4s ease-out backwards;
-  animation-delay: var(--elapsed, 0ms);
-}
-[data-play] .empty-coin-drop {
-  animation: empty-drop 0.7s cubic-bezier(0.5, 0, 0.9, 0.6) backwards;
-  animation-delay: calc(0.4s + var(--elapsed, 0ms));
-}
-[data-play] .empty-notes {
-  animation: empty-rise 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
-  animation-delay: calc(1.5s + var(--elapsed, 0ms));
-}
-[data-play] .empty-box {
-  animation: empty-fade 0.4s ease-out backwards;
-  animation-delay: var(--elapsed, 0ms);
-}
-[data-play] .empty-trail {
-  animation: empty-fade 0.6s ease-out backwards;
-  animation-delay: calc(0.4s + var(--elapsed, 0ms));
-}
-[data-play] .empty-ball {
-  animation: empty-fly 1.1s ease-in-out backwards;
-  animation-delay: calc(0.4s + var(--elapsed, 0ms));
-}
-[data-play].empty-icon {
-  animation: empty-pop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) backwards;
-  animation-delay: var(--elapsed, 0ms);
+@media (prefers-reduced-motion: no-preference) {
+  /* One-time animations. Statistics: the arrow is drawn left to right and each bar rises as it passes.
+     Operations: the lines of the paper are written one by one, then the lens slides in and the cross appears. */
+  [data-play] .bar {
+    animation: empty-bar 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+    animation-delay: calc(var(--i) * 0.2s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-arrow {
+    animation: empty-draw 1.4s ease-in-out backwards;
+    animation-delay: calc(0.5s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-paper {
+    animation: empty-fade 0.5s ease-out backwards;
+    animation-delay: var(--elapsed, 0ms);
+  }
+  [data-play] .empty-line {
+    animation: empty-draw 0.4s ease-out backwards;
+    animation-delay: calc(0.3s + var(--i) * 0.25s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-search {
+    animation: empty-scan 3.4s ease-in-out backwards;
+    animation-delay: calc(0.9s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-cross {
+    animation: empty-found-nothing 0.4s ease-out backwards;
+    animation-delay: calc(4.4s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-wallet,
+  [data-play] .empty-coins {
+    animation: empty-fade 0.4s ease-out backwards;
+    animation-delay: var(--elapsed, 0ms);
+  }
+  [data-play] .empty-coin-drop {
+    animation: empty-drop 0.7s cubic-bezier(0.5, 0, 0.9, 0.6) backwards;
+    animation-delay: calc(0.4s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-notes {
+    animation: empty-rise 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+    animation-delay: calc(1.5s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-box {
+    animation: empty-fade 0.4s ease-out backwards;
+    animation-delay: var(--elapsed, 0ms);
+  }
+  [data-play] .empty-trail {
+    animation: empty-trail 1.5s ease-in-out;
+    animation-delay: calc(0.4s + var(--elapsed, 0ms));
+  }
+  [data-play] .empty-ball {
+    animation: empty-fly 1.1s ease-in-out backwards;
+    animation-delay: calc(0.4s + var(--elapsed, 0ms));
+  }
+  [data-play].empty-icon {
+    animation: empty-pop 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) backwards;
+    animation-delay: var(--elapsed, 0ms);
+  }
 }
 @keyframes empty-drop {
   from {
@@ -228,6 +231,12 @@
   from {
     transform: translateY(38px);
     opacity: 0;
+  }
+}
+@keyframes empty-trail {
+  15%,
+  80% {
+    opacity: 1;
   }
 }
 @keyframes empty-fly {
@@ -315,11 +324,6 @@
   from {
     opacity: 0;
     transform: scale(0.4);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-play] * {
-    animation: none;
   }
 }
 /* Welcome screen of the first launch */

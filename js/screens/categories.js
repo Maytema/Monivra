@@ -86,7 +86,6 @@ export function categoriesView() {
       hero() +
       swipePane(
         periodBar() +
-          sumTabs() +
           `<div class="content">${emptyStateHtml(
             "categories",
             "Categories will be here",

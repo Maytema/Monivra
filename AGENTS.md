@@ -24,6 +24,10 @@ screen is drawn and [DEVELOPMENT.md](DEVELOPMENT.md) for conventions and checks.
 ## Before handing over
 
 Run `node tests/run.mjs`, `node tests/scenarios.mjs`, `npm run lint` and `npm run format:check`.
-Work on a branch and open a pull request; merge only when the owner says so. After a change that
+Only two working branches exist besides `main`: `updates` for improvements that invent nothing new
+(spacing, layout, fixes, matching the original) and `experiments` for new functions and large
+changes. Never create further branches. After a pull request is merged, reset the branch to `main`
+and force-push it (`git push --force origin main:updates`), so the branches stay clean. Merge only
+when the owner says so. After a change that
 is visible on a phone, tell the owner to reload the page fully, because the browser keeps the
 old modules.
