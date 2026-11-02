@@ -149,6 +149,10 @@
   padding: 14px 16px;
   text-align: left;
 }
+/* A budget over its limit stands out in the list. */
+.budget-card.over {
+  border-color: var(--negative);
+}
 .budget-details {
   margin-bottom: 16px;
 }
