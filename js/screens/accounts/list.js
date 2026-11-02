@@ -167,28 +167,24 @@ export function accountsView() {
             return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type)}</span>${moneySpanHtml(total, appData.settings.currency, false, true)}</div>${rows.length ? `<div class="account-group">${rows.map(accountLine).join("")}</div>` : ""}`;
           })
           .join("");
-  // A folder row that unfolds a list of accounts: the archive or the finished goals and debts.
+  // A folder that unfolds a list of accounts: the finished goals and debts, or the archive.
   const folder = (title, icon, items, key) => {
-    const unfolded = !!uiState.openFolders[key];
     if (!items.length) return "";
-    return (
-      buttonHtml(
-        `${icon ? `${iconSvg(icon, 18)} ` : ""}${translate(title)} (${items.length}) ${iconSvg(unfolded ? "up" : "down", 14)}`,
-        () => {
-          uiState.openFolders = { ...uiState.openFolders, [key]: !unfolded };
-          render();
-        },
-        "accounts-archive-toggle",
-      ) +
-      (unfolded
-        ? `<div class="account-group archived-accounts">${items.map(accountLine).join("")}</div>`
-        : "")
-    );
+    const unfolded = !!uiState.openFolders[key];
+    return `<section class="account-folder">${buttonHtml(
+      `${iconSvg(icon, 20)}<span class="grow">${translate(title)} (${items.length})</span>${iconSvg(unfolded ? "up" : "down", 14)}`,
+      () => {
+        uiState.openFolders = { ...uiState.openFolders, [key]: !unfolded };
+        render();
+      },
+      "account-folder-toggle",
+      `aria-expanded="${unfolded}"`,
+    )}${unfolded ? `<div class="account-group archived-accounts">${items.map(accountLine).join("")}</div>` : ""}</section>`;
   };
   const completedFolder =
     uiState.accountTab === "Total"
       ? ""
-      : folder("Completed", null, completed, "completed-" + uiState.accountTab);
+      : folder("Completed", "check", completed, "completed-" + uiState.accountTab);
   if (!appData.accounts.length)
     return (
       hero() +

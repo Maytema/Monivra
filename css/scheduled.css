@@ -192,10 +192,13 @@
 }
 .budget-left {
   align-self: flex-end;
-  font-size: 17px;
+  font-size: 15px;
+  color: var(--negative);
+}
+.budget-spent {
   color: var(--accent-ink);
 }
-.budget-left.neg {
+.budget-spent.neg {
   color: var(--negative);
 }
 /* A dialog with long text: the text scrolls, the buttons stay in view */

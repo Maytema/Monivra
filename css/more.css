@@ -180,19 +180,6 @@
   font-weight: 500;
   margin: 0px 8px 18px;
 }
-.currency-sheet-head h2 {
-  font-size: 23px;
-  font-weight: 400;
-  text-align: center;
-  margin: 0px;
-}
-.currency-sheet-scroll h3 {
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0px;
-  padding: 18px 17px 9px;
-  min-height: 56px;
-}
 .operations-selection-actions svg {
   width: 22px;
   height: 22px;
@@ -718,23 +705,6 @@
   line-height: 1.4;
   color: var(--muted);
 }
-.rates-search {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 0px 17px 8px;
-  padding: 0px 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-}
-.rates-search input {
-  flex: 1 1 0%;
-  min-width: 0px;
-  min-height: 46px;
-  border: 0px;
-  background: transparent;
-  font-size: 16px;
-}
 .rate-row {
   display: flex;
   align-items: center;
@@ -1151,4 +1121,39 @@
 }
 .dropdown.chosen .grow {
   text-align: center;
+}
+/* Search field of a list that is narrowed by typing: currency picker, exchange rates */
+.search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0px 17px 8px;
+  padding: 0px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.search-field input {
+  flex: 1 1 0%;
+  min-width: 0px;
+  min-height: 48px;
+  border: 0px;
+  background: transparent;
+  font-size: 16px;
+}
+/* Currency picker: sorting chips and the lists in cards, like the other full-screen pickers */
+.currency-picker .picker-page-body {
+  padding-top: 8px;
+}
+.currency-picker .section-label {
+  margin: 14px 4px 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.currency-picker .select-card {
+  margin-bottom: 0px;
+}
+.currency-picker .select-main {
+  width: 100%;
 }

@@ -6,7 +6,7 @@ import { categoryById, convertCurrency, formatMoney, periodTitle } from "../doma
 import { budgetOperations, budgetState } from "../domain/budgets.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { dayGroup } from "./operations/list.js";
-import { currencyName, translate } from "../i18n/index.js";
+import { currencyName, translate, translateWith } from "../i18n/index.js";
 import { exactPercent, percentLabel } from "./accounts/progress.js";
 import { categorySelect } from "./category-select.js";
 import { amountPicker } from "../ui/number-picker.js";
@@ -33,12 +33,13 @@ const periodIcon = (period) =>
   `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
-// What a budget shows: title, what it counts, spent of the limit with the share, and what is left.
+// What a budget shows: title, what it counts, spent of the limit with the share, and by how much
+// the limit is passed. The percent counts what is spent, so the card tells what is spent, never what is left.
 const budgetBody = ({ b, used, left, share }, percent) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
-  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span><span class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, b.currency)}</span>`;
+  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${left < 0 ? `<span class="budget-left neg">${translateWith("Over by {amount}", { amount: formatMoney(-left, b.currency) })}</span>` : ""}`;
 };
 const budgetCard = (state) =>
   buttonHtml(
@@ -51,14 +52,12 @@ const budgetGroup = (period, states) => {
   const main = appData.settings.currency;
   const sum = (pick) =>
     states.reduce((total, st) => total + convertCurrency(pick(st), st.b.currency, main), 0);
-  const left = sum((st) => st.left);
-  return `<section class="budget-group"><div class="budget-group-head"><span class="budget-group-name">${periodIcon(period)}<span class="grow"><strong>${translate(BUDGET_PERIODS[period])}</strong><small>${periodTitle({ mode: period, anchor: uiState.period.anchor || TODAY })}</small></span></span><span class="budget-group-sum"><small>${formatMoney(
-    sum((st) => st.used),
-    main,
-  )} / ${formatMoney(
+  const spent = sum((st) => st.used),
+    limit = sum((st) => st.b.amount);
+  return `<section class="budget-group"><div class="budget-group-head"><span class="budget-group-name">${periodIcon(period)}<span class="grow"><strong>${translate(BUDGET_PERIODS[period])}</strong><small>${periodTitle({ mode: period, anchor: uiState.period.anchor || TODAY })}</small></span></span><span class="budget-group-sum"><small>${translate("Limit")} ${formatMoney(
     sum((st) => st.b.amount),
     main,
-  )}</small><strong class="budget-left ${left < 0 ? "neg" : ""}">${formatMoney(left, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
+  )}</small><strong class="budget-spent ${spent > limit ? "neg" : ""}">${formatMoney(spent, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
 };
 // A budget is looked at one month at a time, each budget in its own period around the month's
 // day. The page opens on a month (the shown one, or today after "All time" or a range), and the

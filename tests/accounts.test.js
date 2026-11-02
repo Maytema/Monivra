@@ -262,6 +262,11 @@ check("Progress of a goal and of a debt repayment", () => {
     b.left === -50000 &&
     c.percent === 95.98 &&
     c.left === 3011 &&
+    // the percent counts what is saved, paid back or used, and `done` is that amount
+    a.done === 50200 &&
+    b.done === 150000 &&
+    c.done === 71989 &&
+    accountProgress(card).done === 1500000 &&
     accountProgress(card).percent === 50 &&
     accountProgress(card).left === 1500000 &&
     accountProgress(free) === null

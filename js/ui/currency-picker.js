@@ -1,14 +1,13 @@
 /* Currency picker: one sheet for choosing a currency anywhere in the application */
 import { render } from "../app/shell.js";
-import { escapeHtml, iconSvg } from "../core/constants.js";
+import { escapeHtml } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { CURRENCIES, currencySymbol } from "../data/currencies.js";
 import { save } from "../data/storage.js";
 import { searchCurrencies } from "../domain/currency-search.js";
 import { currencyName, currentLocale, translate } from "../i18n/index.js";
 import { closeLayers, openSheet } from "./navigation.js";
-import { buttonHtml } from "./primitives.js";
-import { registerInput } from "./handlers.js";
+import { buttonHtml, iconButtonHtml, searchFieldHtml } from "./primitives.js";
 
 const POPULAR = ["USD", "EUR", "GBP", "CNY", "JPY", "CHF", "CAD", "AUD"];
 // Ways to order the list when nothing is typed: label of each.
@@ -56,7 +55,7 @@ const rowHtml = (code, selected, fn) => {
   return buttonHtml(
     `<span class="currency-sheet-radio ${selected ? "selected" : ""}"></span><span class="currency-sheet-name">${escapeHtml(name)}<small>${code}</small></span><span class="currency-sheet-symbol">${sign === code ? "" : escapeHtml(sign)}</span>`,
     fn,
-    "currency-sheet-row",
+    "select-main",
     `aria-label="${escapeHtml(name)} ${code}"`,
   );
 };
@@ -72,20 +71,14 @@ export function currencyPicker(value, fn) {
     () => {
       const by = appData.settings.currencySort;
       const shown = sections(text, by).filter(([, codes]) => codes.length);
-      return `<div class="currency-sheet"><div class="currency-sheet-head">${buttonHtml(iconSvg("close", 27), () => closeLayers(), "currency-sheet-close", 'aria-label="Close currency selection"')}<h2>${translate("Select currency")}</h2><span></span></div><div class="currency-sheet-search"><span>${iconSvg("search", 23)}</span><input aria-label="Code, name or country" placeholder="Code, name or country" value="${escapeHtml(text)}" autocomplete="off" data-input="${registerInput(
+      return `<div class="picker-page currency-picker"><div class="picker-page-head">${iconButtonHtml("close", "Close", () => closeLayers())}<h2>${translate("Select currency")}</h2><span></span></div>${searchFieldHtml(
+        "Code, name or country",
+        text,
         (v) => {
           text = v;
           render();
         },
-      )}">${buttonHtml(
-        iconSvg("close", 23),
-        () => {
-          text = "";
-          render();
-        },
-        "currency-sheet-clear",
-        'aria-label="Clear search"',
-      )}</div><div class="currency-sort" role="group" aria-label="${escapeHtml(translate("Order"))}">${SORTS.map(
+      )}<div class="currency-sort" role="group" aria-label="${escapeHtml(translate("Order"))}">${SORTS.map(
         ([id, label]) =>
           buttonHtml(
             translate(label),
@@ -97,10 +90,10 @@ export function currencyPicker(value, fn) {
             `currency-sort-option ${by === id ? "active" : ""}`,
             `aria-pressed="${by === id}"`,
           ),
-      ).join("")}</div><div class="currency-sheet-scroll">${shown
+      ).join("")}</div><div class="picker-page-body">${shown
         .map(
           ([title, codes]) =>
-            `${title ? `<h3>${translate(title)}</h3>` : ""}${codes.map((code) => rowHtml(code, code === value, choose(code))).join("")}`,
+            `${title ? `<h3 class="section-label">${translate(title)}</h3>` : ""}<section class="select-card">${codes.map((code) => rowHtml(code, code === value, choose(code))).join("")}</section>`,
         )
         .join(
           "",

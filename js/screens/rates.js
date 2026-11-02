@@ -9,8 +9,13 @@ import { searchCurrencies } from "../domain/currency-search.js";
 import { currencyName, translate } from "../i18n/index.js";
 import { confirmAction, showInfo } from "../ui/dialogs.js";
 import { numberPicker } from "../ui/number-picker.js";
-import { buttonHtml, menuRowHtml, toast, toggleRowHtml } from "../ui/primitives.js";
-import { registerInput } from "../ui/handlers.js";
+import {
+  buttonHtml,
+  menuRowHtml,
+  searchFieldHtml,
+  toast,
+  toggleRowHtml,
+} from "../ui/primitives.js";
 
 let query = "";
 const isFixed = (code) => appData.settings.fixedRates.includes(code);
@@ -90,12 +95,10 @@ export function ratesBody() {
       );
     }) +
     `<p class="rates-legend">${translate("Tick a currency to keep its rate out of the automatic update. An edited rate is ticked automatically.")}</p>` +
-    `<div class="rates-search"><span>${iconSvg("search", 22)}</span><input aria-label="${escapeHtml(translate("Code, name or country"))}" placeholder="${escapeHtml(translate("Code, name or country"))}" value="${escapeHtml(query)}" autocomplete="off" data-input="${registerInput(
-      (v) => {
-        query = v;
-        render();
-      },
-    )}"></div>` +
+    searchFieldHtml("Code, name or country", query, (v) => {
+      query = v;
+      render();
+    }) +
     codes.map(rateRow).join("") +
     (codes.length ? "" : `<div class="empty">${translate("No currencies found")}</div>`) +
     menuRowHtml("Restore example rates", "repeat", () =>

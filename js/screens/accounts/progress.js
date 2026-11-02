@@ -33,11 +33,12 @@ export function progressBlockHtml(a) {
   if (!p) return "";
   const money = (n) => formatMoney(n, a.currency);
   const say = (text, amount) => translateWith(text, { amount: money(amount) });
+  // The line under the meter tells what the percent counts, so the two never disagree.
   let status;
   if (p.kind === "limit") status = say("Used: {amount}", p.used);
   else if (p.kind === "debt")
-    status = p.left > 0 ? say("Left to repay: {amount}", p.left) : translate("Debt repaid");
-  else if (p.left > 0) status = say("Left: {amount}", p.left);
+    status = p.left > 0 ? say("Paid back: {amount}", p.done) : translate("Debt repaid");
+  else if (p.left > 0) status = say("Saved: {amount}", p.done);
   else if (p.left < 0) status = say("Goal exceeded by {amount}", -p.left);
   else status = translate("Goal reached");
   const title = { goal: "Goal", debt: "Total debt", limit: "Limit" }[p.kind];
