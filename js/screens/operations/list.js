@@ -250,7 +250,7 @@ export function filteredView() {
     ? `<div class="filtered-card"><span class="filtered-card-title">${translate("Sum of operations for the period")}</span><div class="filtered-card-body">${badgeHtml(c)}<div class="grow"><strong>${escapeHtml(c.name)}</strong><small>${translateWith("Operations: {n}", { n: categoryCount(c.id) })}</small></div><span class="money">${formatMoney(categoryTotalIn(c), c.currency)}</span></div></div>`
     : "";
   const empty = ops.length ? "" : emptyStateHtml("operations", "Empty", EMPTY_HINT);
-  return `${pageHeader("Filtered")}${periodBar()}<div class="content">${card}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>${operationsFab()}`;
+  return `${pageHeader("Filtered")}${swipePane(`${periodBar()}<div class="content">${card}${dates.map((date) => dayGroup(date, ops)).join("")}${empty}</div>`)}${operationsFab()}`;
 }
 
 // Toggle the operations search bar.

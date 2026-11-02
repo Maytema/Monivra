@@ -1,6 +1,9 @@
 /* Base: theme variables (colors, fonts) and element defaults.
    Files are loaded in the order listed in index.html; later files may override earlier ones. */
 :root {
+  --nav-height: 78px;
+  --edge-gap: 16px;
+  --fab-height: 62px;
   --bg: color-mix(in srgb, var(--accent) 2%, #ffffff);
   --ink: #252127;
   --muted: #6f6873;

@@ -1,4 +1,5 @@
-/* Swipe gestures: horizontal swipe between the four root tabs with a live page preview. */
+/* Swipe gestures: horizontal swipe between the root tabs, or through the periods on a screen with
+   a period bar, with a live page preview. */
 import { placeTabUnderline } from "./chrome.js";
 import { render, rootView } from "./shell.js";
 import { deepClone } from "../core/constants.js";
@@ -14,13 +15,17 @@ const swipeEase = "cubic-bezier(.22,1,.36,1)";
 function swipeSurface() {
   return document.querySelector("#base>.swipe-pane");
 }
+// The screen a swipe belongs to: the page on top, or else the root tab.
+const swipeScreen = () => uiState.pages.at(-1) ?? uiState.tab;
+// The accounts tab swipes between its own tabs instead of periods.
+const onAccountTabs = () => !uiState.pages.length && uiState.tab === "accounts";
 function swipeTabs() {
   return appData.accounts.some((a) => !a.archived && a.type === "Debt")
     ? ["Accounts", "Debts", "Total"]
     : ["Accounts", "Total"];
 }
 function swipeEdge(direction) {
-  if (uiState.tab === "accounts") {
+  if (onAccountTabs()) {
     const tabs = swipeTabs();
     return (
       tabs.indexOf(uiState.accountTab) + direction < 0 ||
@@ -30,7 +35,7 @@ function swipeEdge(direction) {
   return !canShiftPeriod();
 }
 function swipeAdvanceState(direction) {
-  if (uiState.tab === "accounts") {
+  if (onAccountTabs()) {
     const tabs = swipeTabs(),
       idx = tabs.indexOf(uiState.accountTab) + direction;
     if (idx < 0 || idx >= tabs.length) return false;
@@ -156,7 +161,7 @@ function swipeMove(s, dx) {
   const direction = dx < 0 ? 1 : -1;
   swipePrepare(s, direction);
   const width = s.width || s.el.getBoundingClientRect().width || innerWidth;
-  if (uiState.tab === "accounts") {
+  if (onAccountTabs()) {
     if (s.tabsGeometry === undefined) s.tabsGeometry = swipeTabsGeometry();
     const g = s.tabsGeometry;
     if (g && g.active >= 0) {
@@ -254,9 +259,10 @@ export function initSwipeGestures() {
     (e) => {
       if (
         e.touches.length !== 1 ||
-        uiState.pages.length ||
         uiState.layers.length ||
-        !["accounts", "categories", "operations", "statistics"].includes(uiState.tab)
+        !swipeSurface() ||
+        (!uiState.pages.length &&
+          !["accounts", "categories", "operations", "statistics"].includes(uiState.tab))
       )
         return;
       if (e.target.closest(".navbar,.overlay,input,textarea,select,[contenteditable],.hero-action"))
@@ -265,7 +271,7 @@ export function initSwipeGestures() {
       rootSwipe = {
         x: t.clientX,
         y: t.clientY,
-        tab: uiState.tab,
+        screen: swipeScreen(),
         at: performance.now(),
         el: swipeSurface(),
         axis: null,
@@ -280,7 +286,7 @@ export function initSwipeGestures() {
     "touchmove",
     (e) => {
       const s = rootSwipe;
-      if (!s || e.touches.length !== 1 || uiState.tab !== s.tab) return;
+      if (!s || e.touches.length !== 1 || swipeScreen() !== s.screen) return;
       const t = e.touches[0],
         dx = t.clientX - s.x,
         dy = t.clientY - s.y;
@@ -299,12 +305,7 @@ export function initSwipeGestures() {
       const s = rootSwipe;
       rootSwipe = null;
       if (!s) return;
-      if (
-        uiState.pages.length ||
-        uiState.layers.length ||
-        uiState.tab !== s.tab ||
-        e.changedTouches.length !== 1
-      ) {
+      if (uiState.layers.length || swipeScreen() !== s.screen || e.changedTouches.length !== 1) {
         swipeFinish(s, false);
         return;
       }

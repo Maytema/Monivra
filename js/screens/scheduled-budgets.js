@@ -132,6 +132,6 @@ export function scheduledView() {
             )
             .join("")
         : `<div class="more-empty">${iconSvg("calendar", 75)}<h2>Scheduled payments will be here</h2><p class="muted">Create your first scheduled payment</p>${buttonHtml("Create", scheduledCreate, "primary")}</div>`
-    }</div>${dates.length ? fabHtml("Add", scheduledCreate, "no-nav") : ""}`
+    }</div>${dates.length ? fabHtml("Add", scheduledCreate) : ""}`
   );
 }

@@ -119,47 +119,57 @@
   font-size: 13px;
   margin: 10px 0px;
 }
+/* The look both notices share: a soft tinted card with a thin outline of the theme colour. */
+#toast,
+#banner {
+  box-sizing: border-box;
+  color: var(--ink);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--sheet));
+  box-shadow:
+    0 6px 18px -8px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 2px 6px color-mix(in srgb, var(--black) 8%, transparent);
+}
+/* Short message over the bottom edge. */
 #toast {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 22px;
+  bottom: calc(var(--edge-gap) + env(safe-area-inset-bottom, 0px));
   text-align: center;
   z-index: 99;
-  color: white;
   pointer-events: none;
   opacity: 0;
   min-width: 0px;
-  max-width: min(78vw, 300px);
-  padding: 9px 15px;
-  border-radius: 11px;
-  font-size: 12px;
+  max-width: min(calc(100vw - 2 * var(--edge-gap)), 340px);
+  padding: 10px 16px;
+  font-size: 14px;
   line-height: 1.35;
-  background: color-mix(in srgb, var(--ink) 78%, transparent);
-  box-shadow: color-mix(in srgb, var(--black) 6%, transparent) 0px 3px 10px;
   transition:
     opacity 0.18s,
     translate 0.18s;
   translate: 0px 6px;
 }
-/* Banner over the top edge: icon and text on the sheet colour */
+/* Message that slides in from the top edge: the icon says what happened, and when a tap leads
+   on to the thing, an arrow ends it. */
 #banner {
   position: fixed;
-  top: 0px;
+  top: calc(10px + env(safe-area-inset-top, 0px));
   left: 50%;
   z-index: 99;
   display: flex;
   align-items: center;
-  gap: 14px;
-  box-sizing: border-box;
-  width: min(100%, 430px);
-  padding: 18px 20px;
-  background: var(--sheet);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--black) 14%, transparent);
+  gap: 12px;
+  width: min(calc(100% - 2 * var(--edge-gap)), 420px);
+  padding: 13px 16px;
+  font-size: 15px;
   pointer-events: none;
   transform: translateX(-50%);
-  translate: 0px -110%;
-  transition: translate 0.22s;
+  translate: 0px calc(-100% - 24px);
+  transition:
+    translate 0.22s,
+    scale 0.12s;
 }
 #banner.show {
   translate: 0px 0px;
@@ -167,6 +177,13 @@
 #banner.tappable {
   pointer-events: auto;
   cursor: pointer;
+}
+#banner.tappable:active {
+  scale: 0.97;
+}
+#banner.tappable > svg:last-child {
+  flex: none;
+  color: var(--accent-ink);
 }
 #banner.positive svg {
   color: var(--positive-ink);
@@ -177,9 +194,13 @@
 #banner.accent svg {
   color: var(--accent-ink);
 }
+/* Above the floating button instead of over it */
+body:has(.fab) #toast {
+  margin-bottom: calc(var(--fab-height) + 12px);
+}
 /* Above the bottom navigation bar instead of over its labels */
 body:has(.navbar) #toast {
-  bottom: 96px;
+  bottom: calc(var(--nav-height) + var(--edge-gap) + env(safe-area-inset-bottom, 0px));
 }
 @media (prefers-reduced-motion: reduce) {
   #toast,
