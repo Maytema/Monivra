@@ -63,7 +63,7 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 ## Symptoms and where they start
 
 | Symptom                                         | Start here                                                                                                 |
-| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
 | A photo does not attach, or an error about it   | `platform/photo.js` (reading, decoding, `PhotoError`), `operation-editor/extras.js` (`choosePhoto`)        |
 | Too many or too few photos                      | `MAX_PHOTOS` in `core/constants.js`; row width in `css/editor.css`                                         |
 | A sheet looks different from the others         | Build it from the shared pieces in `ui/primitives.js`; its frame is `.overlay .panel` in `components.css`  |
@@ -76,6 +76,7 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 | Data lost or not loading after an update        | `data/storage.js`, `completeData` in `data/defaults.js`; never rename the storage key                      |
 | Import or export fails                          | `data/import-export.js`, `data/csv.js`, `platform/files.js`                                                |
 | Debt or saving shows progress / "Completed"     | `accounts/list.js` (`isFinished`, `isCompleted`), `accounts/progress.js`                                   |
+| A notice after saving (quiet / important)       | `ui/primitives.js` (`notice`), `operation-editor/editor.js` (`commitOperation`)                            | `layout.css` (`#notice`) |
 | A percent is shown (rounding, format)           | `domain/percent.js` (`shownPercent`), `ui/percent.js` (`percentLabel`, `exactPercent`)                     |
 | Scheduled payment fires on the wrong date       | `domain/scheduled.js`, `screens/recurrence.js`                                                             |
 | Due payments posted on their own, the notice    | `screens/due-payments.js`, `domain/scheduled.js` (`postDue`)                                               |

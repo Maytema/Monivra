@@ -5,7 +5,7 @@ import { forgetDeleted, uiState } from "../../core/state.js";
 import { deleteOperation, earliestScheduleDate } from "../../domain/operations.js";
 import { processScheduled } from "../../domain/scheduled.js";
 import { confirmAction } from "../../ui/dialogs.js";
-import { banner, buttonHtml } from "../../ui/primitives.js";
+import { buttonHtml, notice } from "../../ui/primitives.js";
 
 const actionButton = (icon, label, onTap, tone = "") =>
   buttonHtml(`${iconSvg(icon, 28)}<span>${label}</span>`, onTap, tone);
@@ -16,7 +16,7 @@ export function compactActionsHtml(editor, duplicate) {
   const finish = (message, icon, tone) => {
     uiState.layers = [];
     render();
-    banner(message, icon, tone);
+    notice(message, { icon, tone });
   };
   const remove = () =>
     confirmAction(
