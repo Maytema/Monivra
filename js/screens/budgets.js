@@ -15,7 +15,6 @@ import { confirmAction, optionSheet } from "../ui/dialogs.js";
 import {
   badgeHtml,
   buttonHtml,
-  fabHtml,
   fieldButtonHtml,
   iconButtonHtml,
   meterHtml,
@@ -45,7 +44,7 @@ const budgetCard = (state) =>
   buttonHtml(
     budgetBody(state, percentLabel),
     () => openPage("budgetDetails", { id: state.b.id }),
-    "card budget-card",
+    "card budget-card " + (state.left < 0 ? "over" : ""),
   );
 // Budgets of one period under a heading that adds them up in the main currency.
 const budgetGroup = (period, states) => {
@@ -74,7 +73,10 @@ export function openBudgets() {
 export function budgetsView() {
   const states = appData.budgets.map(budgetState);
   return (
-    pageHeader("Budgets") +
+    pageHeader(
+      "Budgets",
+      iconButtonHtml("plus", "Create a budget", () => editBudget()),
+    ) +
     swipePane(
       periodBar(monthPicker) +
         `<div class="content">${
@@ -86,8 +88,7 @@ export function budgetsView() {
                 .join("")
             : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
         }</div>`,
-    ) +
-    (states.length ? fabHtml("Add", () => editBudget()) : "")
+    )
   );
 }
 
