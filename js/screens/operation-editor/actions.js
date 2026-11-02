@@ -53,5 +53,5 @@ export function compactActionsHtml(editor, duplicate) {
     ? actionTileHtml("close", "Skip", "var(--negative)", skip) +
       actionTileHtml("check", "Add now", "var(--positive)", addNow)
     : "";
-  return `<div class="sheet-actions" style="--cols:${scheduled ? 4 : 2}" role="group" aria-label="Operation actions">${actionTileHtml("trash", "Delete", "var(--negative)", remove)}${actionTileHtml("copy", "Duplicate", "#c04fd8", copy)}${payment}</div>`;
+  return `<div class="sheet-actions" style="--cols:2" role="group" aria-label="Operation actions">${actionTileHtml("trash", "Delete", "var(--negative)", remove)}${actionTileHtml("copy", "Duplicate", "#c04fd8", copy)}${payment}</div>`;
 }
