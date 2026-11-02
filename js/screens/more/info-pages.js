@@ -70,7 +70,7 @@ function sharedAccessPage() {
 }
 
 function aboutPage() {
-  const body = `<div class="about">${aboutArt}<p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;
+  const body = `<div class="about">${aboutArt}<div class="about-place">${iconSvg("pin", 22)}<span>${translate("Bishkek, Kyrgyzstan")}</span></div><p>${translateWith("The {app} team works every day to build a convenient and useful application for managing your finances.", { app: APP_NAME })}</p><p>${translate("We hope our work will help you manage your money better and reach your goals!")}</p></div>`;
   return { title: "About our team", body };
 }
 

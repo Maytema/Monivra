@@ -1,23 +1,52 @@
 /* Keyframe animations. */
-@keyframes balanceRise {
-  0% {
-    opacity: 0.45;
-    transform: translate3d(12px, 0px, 0px);
+/* Rolling digits of the total balance: each strip of numbers slides up (or down) and stops softly */
+.reel {
+  display: inline-block;
+  height: 1lh;
+  overflow: hidden;
+  vertical-align: top;
+}
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  animation-duration: calc(var(--ms) * 1ms);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: both;
+}
+.reel-strip > span {
+  height: 1lh;
+}
+.reel-up {
+  animation-name: reel-up;
+}
+.reel-down {
+  animation-name: reel-down;
+}
+@keyframes reel-up {
+  from {
+    transform: translateY(0px);
   }
-  100% {
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px);
+  to {
+    transform: translateY(calc(var(--steps) * -1lh));
   }
 }
-@keyframes balanceFall {
-  0% {
-    opacity: 0.45;
-    transform: translate3d(-12px, 0px, 0px);
+@keyframes reel-down {
+  from {
+    transform: translateY(calc(var(--steps) * -1lh));
   }
-  100% {
-    opacity: 1;
-    transform: translate3d(0px, 0px, 0px);
+  to {
+    transform: translateY(0px);
   }
+}
+/* Amounts of the category tiles settle in one after another when the tiles appear */
+@keyframes money-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.money-in {
+  animation: money-in 0.45s ease-out calc(var(--i) * 35ms) both;
 }
 /* Profile avatar: the particles circle slowly around it */
 .orbit-ring,
@@ -82,6 +111,7 @@
 @media (prefers-reduced-motion: reduce) {
   .orbit-ring,
   .orbit-particles,
+  .money-in,
   .spot {
     animation: none;
   }

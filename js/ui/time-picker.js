@@ -124,7 +124,7 @@ export function timePicker(time, fn) {
 
   // Typed mode: two number fields under the same big numbers.
   const field = (part, label, value) =>
-    `<label class="clock-field"><input class="clock-part chosen" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="${translate(label)}" value="${value}" data-input="${registerInput((v) => (state[part + "Text"] = v.replace(/\D/g, "")))}"><small>${translate(label)}</small></label>`;
+    `<label class="clock-field"><input inputmode="numeric" maxlength="2" autocomplete="off" aria-label="${translate(label)}" value="${value}" data-input="${registerInput((v) => (state[part + "Text"] = v.replace(/\D/g, "")))}"><small>${translate(label)}</small></label>`;
   const headHtml = () => {
     const parts = state.typing
       ? field("hour", "Hour", state.hourText) +
@@ -183,6 +183,8 @@ export function timePicker(time, fn) {
     state.typing = !state.typing;
     state.part = "hour";
     render();
+    // Typing starts at once, with the hour selected.
+    document.querySelector(".clock-field input")?.select();
   };
   const confirm = () => {
     if (state.typing) {

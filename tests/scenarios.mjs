@@ -13,12 +13,12 @@ const { server, address } = await serveApp();
 const browser = await chromium.launch();
 
 // A fresh phone-sized page with the sample data (plus whatever `adjust` changes in it) stored.
-async function openApp({ height = 700, adjust = () => {} } = {}) {
+async function openApp({ height = 700, adjust = () => {}, motion = false } = {}) {
   const context = await browser.newContext({
     viewport: { width: 360, height },
     isMobile: true,
     hasTouch: true,
-    reducedMotion: "reduce",
+    reducedMotion: motion ? "no-preference" : "reduce",
   });
   const page = await context.newPage();
   page.errors = [];
@@ -344,17 +344,18 @@ const scenarios = {
     await choose("By hand", "By schedule");
     expect(await shown()).toBe(all - 3);
   },
-  async "a budget opens its operations of the period, editing is a button, deleting returns to the list"(
+  async "a budget card opens its editor, the operations of the period are a button, deleting returns to the list"(
     page,
   ) {
     await tab(page, "More");
     await page.getByText("Budgets", { exact: true }).first().click();
     await page.locator(".budget-card").click();
+    await page.getByLabel("Operations of the budget").click();
     await page.locator(".op-row").first().waitFor();
     expect(await page.locator(".op-row").count()).toBe(2);
     await page.locator(".period-arrows").getByLabel("Previous period").click();
     expect(await page.locator(".op-row").count()).toBe(0);
-    await page.getByLabel("Edit budget").click();
+    await page.getByLabel("Back").click();
     await page.getByRole("button", { name: "Delete" }).click();
     await page.getByRole("button", { name: "Delete" }).last().click();
     await page.getByText("Budget deleted").waitFor();
@@ -449,6 +450,24 @@ const scenarios = {
     await page.waitForSelector(".navbar");
     await tab(page, "Operations");
     expect(await page.locator(".period .label").first().innerText()).toMatch(/All time/);
+  },
+  async "with motion: the digits of the balance roll and the plain text comes back"(page) {
+    // The balance rolls once when the application opens.
+    await page.waitForFunction(() => !document.querySelector(".hero .balance .reel"));
+    const text = await page.locator(".hero .balance").textContent();
+    const rolling = await page.evaluate(async () => {
+      const { rollNumber } = await import("/js/ui/reel.js");
+      const element = document.querySelector(".hero .balance");
+      rollNumber(element, null, true);
+      return element.querySelectorAll(".reel").length;
+    });
+    expect(rolling > 0).toBe(true);
+    await page.waitForFunction(() => !document.querySelector(".hero .balance .reel"));
+    expect(await page.locator(".hero .balance").textContent()).toBe(text);
+  },
+  async "with motion: the amounts of the category tiles settle in when the tab opens"(page) {
+    await tab(page, "Categories");
+    expect((await page.locator(".cat-tile .money.money-in").count()) > 0).toBe(true);
   },
   async "a swipe in the calendar moves by a month"(page) {
     await tab(page, "Operations");
@@ -601,7 +620,7 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
-  "a budget opens its operations of the period, editing is a button, deleting returns to the list":
+  "a budget card opens its editor, the operations of the period are a button, deleting returns to the list":
     (data) => {
       const base = data.ops.find((op) => op.type === "expense");
       const day = new Date().toLocaleDateString("en-CA");
@@ -657,6 +676,7 @@ let failures = 0;
 for (const [name, scenario] of Object.entries(scenarios)) {
   const page = await openApp({
     height: SHORT_SCREEN.some((start) => name.startsWith(start)) ? 540 : 700,
+    motion: name.startsWith("with motion"),
     adjust: adjustments[name] ?? (() => {}),
   });
   try {

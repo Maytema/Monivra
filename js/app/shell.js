@@ -10,15 +10,11 @@ import { appData, firstLaunch, locked, rememberPeriod, uiState } from "../core/s
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
+import { rollNumber } from "../ui/reel.js";
 import { accountEditView } from "../screens/accounts/edit.js";
 import { accountsView } from "../screens/accounts/list.js";
 import { accountTypeView } from "../screens/accounts/type.js";
-import {
-  categoriesView,
-  categoryEditView,
-  categoryManageView,
-  orderView,
-} from "../screens/categories.js";
+import { categoriesView, categoryEditView, categoryManageView } from "../screens/categories.js";
 import { lockView } from "../screens/more/lock.js";
 import { moreView } from "../screens/more/menu.js";
 import { settingsPage } from "../screens/more/settings-pages.js";
@@ -57,8 +53,6 @@ const PAGE_VIEWS = {
   accountEdit: accountEditView,
   accountType: accountTypeView,
   filtered: filteredView,
-  accountOrder: () => orderView("accounts"),
-  categoryOrder: () => orderView("categories"),
   categoryEdit: categoryEditView,
   categoryManage: categoryManageView,
   scheduled: scheduledView,
@@ -99,6 +93,8 @@ export function rootView() {
 }
 // Balance shown by the previous render, used to animate balance changes.
 let previousBalance = null;
+// Text of the balance as it was drawn last, so the digits that changed can roll from it.
+let balanceText = null;
 
 // HTML of the modal layers (sheets and dialogs) on top of the screen.
 function layersHtml() {
@@ -129,13 +125,30 @@ function applyAppearance() {
   root.lang = appData.settings.language;
 }
 
-// Play the rise/fall animation on the balance when it changed.
+// Roll the digits of the total balance when it appeared or changed.
 function animateBalance(before, now) {
-  if (before === null || before === now || appData.settings.hidden) return;
-  if (uiState.pages.length || uiState.layers.length) return;
-  document
-    .querySelector("#base .hero .balance")
-    ?.classList.add(now > before ? "balance-rise" : "balance-fall");
+  const element = document.querySelector("#base .hero .balance");
+  if (!element) return;
+  const text = element.textContent;
+  const changed = before === null || before !== now;
+  if (changed && !appData.settings.hidden && !uiState.pages.length && !uiState.layers.length)
+    rollNumber(element, balanceText, now >= (before ?? 0));
+  balanceText = text;
+}
+
+// Period the tiles were drawn for last; the amounts of the category tiles settle in when the tiles
+// appear on a screen or when the period changes.
+let tilesPeriod = null;
+const TILE_STAGGER_LIMIT = 12;
+function animateTileAmounts(screenChanged) {
+  const period = JSON.stringify(uiState.period);
+  const fresh = screenChanged || tilesPeriod !== period;
+  tilesPeriod = period;
+  if (!fresh || uiState.tab !== "categories" || uiState.pages.length) return;
+  document.querySelectorAll("#base .cat-tile .money").forEach((element, i) => {
+    element.style.setProperty("--i", Math.min(i, TILE_STAGGER_LIMIT));
+    element.classList.add("money-in");
+  });
 }
 
 // Scroll positions of the screens that are covered or left, by screen key.
@@ -213,6 +226,7 @@ export function render(top = false) {
   mountSwipeChrome();
   bindSheetSwipe();
   animateBalance(balanceBefore, previousBalance);
+  animateTileAmounts(screenChanged);
   // Restore focus (and caret) of the field that was being edited.
   if (focusLabel) {
     const field = [...app.querySelectorAll("input,textarea")].find(

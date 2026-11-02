@@ -1289,18 +1289,6 @@
   box-sizing: border-box;
   transition: none;
 }
-.hero .balance.balance-rise {
-  animation: 0.38s cubic-bezier(0.2, 0.7, 0.3, 1) 0s 1 normal both running balanceRise;
-}
-.hero .balance.balance-fall {
-  animation: 0.38s cubic-bezier(0.2, 0.7, 0.3, 1) 0s 1 normal both running balanceFall;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero .balance.balance-rise,
-  .hero .balance.balance-fall {
-    animation: auto ease 0s 1 normal none running none;
-  }
-}
 .customize-preview {
   height: 75px;
   display: flex;

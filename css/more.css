@@ -678,8 +678,8 @@
 .theme-colors {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  padding: 24px 8px;
+  gap: 24px 12px;
+  padding: 28px 12px;
   justify-items: center;
 }
 .theme-color {
@@ -688,7 +688,16 @@
   width: 62px;
   height: 62px;
   border-radius: 50%;
+  background: var(--c);
   color: var(--white);
+  /* A soft halo around every color; the chosen one gets a ring with a gap */
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 20%, transparent);
+  transition: box-shadow 0.2s ease;
+}
+.theme-color.is-selected {
+  box-shadow:
+    0 0 0 3px var(--bg),
+    0 0 0 6px var(--c);
 }
 /* Subscription: the heading sits in the content, the confirm button stays pinned */
 .sub-head {
@@ -794,13 +803,9 @@
   width: 100%;
   justify-content: center;
 }
-/* About page: the illustration and a short text */
+/* About page: the illustration, the place and a short text */
 .about {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px 24px 32px;
-  text-align: center;
+  padding: 8px var(--edge-gap) 32px;
 }
 .about p {
   margin: 0px 0px 16px;
@@ -808,11 +813,26 @@
   color: var(--ink-soft);
 }
 .about-art {
-  width: min(100%, 320px);
-  margin-bottom: 24px;
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 0px auto;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+.about-place {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0px 24px;
+  font-size: 18px;
+  color: var(--ink);
+}
+.about-place svg {
+  color: var(--accent-ink);
+  animation: about-bob 2.4s ease-in-out infinite;
 }
 .about-body {
   fill: var(--sheet);
@@ -823,19 +843,33 @@
 .about-row-note {
   fill: var(--line);
 }
-.about-heading,
+.about-hero {
+  fill: var(--soft);
+}
+.about-label,
 .about-row-title {
   fill: var(--muted);
   opacity: 0.55;
 }
+.about-balance {
+  fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: about-spend 5s ease-in-out infinite;
+}
+.about-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: about-pulse 5s ease-in-out infinite;
+}
 .about-track,
 .about-slice {
-  stroke-width: 12;
+  stroke-width: 9;
   transform: rotate(-90deg);
-  transform-origin: 160px 98px;
+  transform-origin: 204px 90px;
 }
 .about-track {
-  stroke: var(--tint);
+  stroke: var(--sheet);
 }
 .slice-main {
   stroke: var(--accent);
@@ -846,120 +880,117 @@
 .slice-loss {
   stroke: var(--negative);
 }
-.about-hub circle:first-child {
-  fill: var(--soft);
-}
-.about-hub circle:last-child {
-  fill: var(--accent);
+.about-row-card {
+  fill: var(--bg);
+  stroke: var(--line);
 }
 .about-row-icon {
-  fill: var(--soft);
+  fill: var(--tint);
 }
-.about-row-amount.row-gain {
-  fill: var(--positive);
-}
-.about-row-amount.row-loss {
+.about-row-amount {
   fill: var(--negative);
 }
-.about-rim {
-  fill: var(--sheet);
-  stroke: var(--accent);
-  stroke-width: 3;
+.about-fade-from {
+  stop-color: var(--bg);
+  stop-opacity: 0;
 }
-.about-face {
-  fill: var(--soft);
-  stroke: var(--accent);
-  stroke-width: 2;
+.about-fade-to {
+  stop-color: var(--bg);
 }
-.about-check circle {
-  fill: var(--positive);
+.about-chip circle {
+  fill: var(--negative);
 }
-.about-check path {
+.about-chip path {
   stroke: var(--white);
   stroke-width: 3;
 }
-.about-particle {
-  fill: var(--accent);
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  opacity: 0.35;
-  animation:
-    about-drift var(--time) ease-in-out var(--delay) infinite alternate,
-    about-twinkle var(--time) ease-in-out var(--delay) infinite alternate;
+/* One cycle: a coin flies to the list, a new row slides in and pushes the others down */
+.about-row {
+  animation: about-push 5s ease-in-out infinite;
 }
-/* The scene builds itself once; each part starts at its own time */
-.about-phone {
-  animation: about-rise 0.7s ease-out both;
+.about-new {
+  animation: about-enter 5s ease-out infinite;
 }
-.about-slice {
-  animation: about-draw 0.7s ease-out var(--at) both;
-}
-.about-hub,
-.about-check {
+.about-chip {
+  opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
+  animation: about-fly 5s ease-in infinite;
 }
-.about-hub {
-  animation: about-pop 0.5s ease-out 0.5s both;
-}
-.about-row {
-  animation: about-slide 0.5s ease-out var(--at) both;
-}
-.about-coin {
-  animation: about-drop 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) var(--at) both;
-}
-.about-check {
-  animation: about-pop 0.5s ease-out var(--at) both;
-}
-@keyframes about-rise {
-  from {
+@keyframes about-fly {
+  0% {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translate(90px, -80px) scale(0.5);
   }
-}
-@keyframes about-draw {
-  from {
-    stroke-dasharray: 0 100;
+  6% {
+    opacity: 1;
   }
-}
-@keyframes about-slide {
-  from {
+  22% {
+    opacity: 1;
+    transform: translate(0px, 0px) scale(1);
+  }
+  30%,
+  100% {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translate(0px, 0px) scale(0.3);
   }
 }
-@keyframes about-drop {
-  from {
+@keyframes about-push {
+  0%,
+  22% {
+    transform: translateY(0px);
+  }
+  38%,
+  100% {
+    transform: translateY(34px);
+  }
+}
+@keyframes about-enter {
+  0%,
+  22% {
     opacity: 0;
-    transform: translateY(-60px);
+    transform: translateX(28px);
+  }
+  38%,
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
   }
 }
-@keyframes about-pop {
-  from {
-    transform: scale(0);
+@keyframes about-spend {
+  0%,
+  22%,
+  100% {
+    transform: scaleX(1);
   }
-  60% {
-    transform: scale(1.2);
-  }
-}
-@keyframes about-drift {
-  to {
-    transform: translate(var(--dx), var(--dy));
+  36%,
+  70% {
+    transform: scaleX(0.86);
   }
 }
-@keyframes about-twinkle {
-  to {
-    opacity: 0.8;
+@keyframes about-pulse {
+  0%,
+  22%,
+  44%,
+  100% {
+    transform: scale(1);
+  }
+  32% {
+    transform: scale(1.08);
+  }
+}
+@keyframes about-bob {
+  50% {
+    transform: translateY(-3px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .about-phone,
-  .about-slice,
-  .about-hub,
+  .about-balance,
+  .about-ring,
   .about-row,
-  .about-coin,
-  .about-check,
-  .about-particle {
+  .about-new,
+  .about-chip,
+  .about-place svg {
     animation: none;
   }
 }

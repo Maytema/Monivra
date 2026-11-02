@@ -43,7 +43,7 @@ const budgetBody = ({ b, used, left, share }, percent) => {
 const budgetCard = (state) =>
   buttonHtml(
     budgetBody(state, percentLabel),
-    () => openPage("budgetDetails", { id: state.b.id }),
+    () => editBudget(state.b),
     "card budget-card " + (state.left < 0 ? "over" : ""),
   );
 // Budgets of one period under a heading that adds them up in the main currency.
@@ -107,17 +107,14 @@ function editBudget(b) {
         },
   });
 }
-// A budget on a page of its own: what is spent of it and the operations it counts in the period
-// of the period bar, so the figures can be checked and other months looked at.
+// What a budget counts: its figures and the operations of the period of the period bar, so the
+// figures can be checked and other months looked at. It is reached from the editor of the budget.
 export function budgetDetailsView(p) {
   const b = appData.budgets.find((x) => x.id === p.id);
   const ops = budgetOperations(b);
   const dates = [...new Set(ops.map((o) => o.date))];
   return (
-    pageHeader(
-      "Budget",
-      iconButtonHtml("edit", "Edit budget", () => editBudget(b)),
-    ) +
+    pageHeader("Budget") +
     swipePane(
       periodBar(monthPicker) +
         `<div class="content"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div>${
@@ -132,7 +129,14 @@ export function budgetDetailsView(p) {
 export function budgetView(p) {
   const b = p.draft;
   return (
-    pageHeader(b.id ? "Edit budget" : "Create a budget") +
+    pageHeader(
+      b.id ? "Edit budget" : "Create a budget",
+      b.id
+        ? iconButtonHtml("receipt", "Operations of the budget", () =>
+            openPage("budgetDetails", { id: b.id }),
+          )
+        : "",
+    ) +
     `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
       `<span class="period-value">${periodIcon(b.period)}${translate(BUDGET_PERIODS[b.period])}</span>`,
@@ -201,8 +205,6 @@ export function budgetView(p) {
                 "Delete this budget?",
                 () => {
                   appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
-                  // The page of the deleted budget goes too.
-                  if (uiState.pages.at(-2)?.kind === "budgetDetails") uiState.pages.splice(-2, 1);
                   finishFlow("Budget deleted");
                 },
                 true,

@@ -187,8 +187,8 @@ function colorThemePage() {
       buttonHtml(
         appData.settings.accent === c ? iconSvg("check", 26) : "",
         () => setting("accent", c),
-        "theme-color",
-        `style="background:${c}" aria-label="${c}"`,
+        "theme-color " + (appData.settings.accent === c ? "is-selected" : ""),
+        `style="--c:${c}" aria-label="${c}" aria-pressed="${appData.settings.accent === c}"`,
       ),
     ).join("")}</div></div>`
   );

@@ -47,14 +47,15 @@ export const SUPPORT_TOPICS = {
 export function instructionsPage() {
   const body = `<div class="help-intro">${translateWith("Learn the basics of {app}", { app: APP_NAME })}</div>${menuRowHtml(
     "Repeat hints",
-    "repeat",
+    null,
     () => {
       appData.settings.dismissedHints = [];
       save();
       toast("Hints will be shown again");
     },
     "Restart tooltips throughout the application",
-  )}${GUIDES.map((g) => menuRowHtml(g.title, g.icon, () => openPage("guide:" + g.id), g.about)).join("")}`;
+    "",
+  )}${GUIDES.map((g) => menuRowHtml(g.title, null, () => openPage("guide:" + g.id), g.about)).join("")}`;
   return { title: "Instructions", body };
 }
 
