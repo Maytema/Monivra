@@ -190,8 +190,7 @@ body:has(.fab) #notice {
   scale: 0.97;
 }
 #notice.quiet {
-  padding: 7px 14px;
-  border-radius: 999px;
+  padding: 10px 14px;
   font-size: 14px;
   white-space: nowrap;
 }
@@ -223,6 +222,11 @@ body:has(.fab) #notice {
 }
 #notice.accent > svg:first-child {
   color: var(--accent-ink);
+}
+/* A sheet or a dialog that opens (the next operation, say) is not covered by a notice. */
+body:has(.overlay) #notice {
+  opacity: 0;
+  pointer-events: none;
 }
 @media (prefers-reduced-motion: reduce) {
   #toast,

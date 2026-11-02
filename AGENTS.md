@@ -32,13 +32,16 @@ passed (`Over by`), a credit limit only that it is used up or exceeded.
 
 ## Notices
 
-What just happened is told by `notice` (`ui/primitives.js`), always at the bottom, above the
-navigation bar and the floating button, never over the balance. Two weights: `quiet` is a small
-pill (1.6 s, 3.2 s when a tap leads on) for what went as expected, such as a saved operation;
-`important` is a card with a second line (4.5 s) for what ended up somewhere else than one
-might think, such as a payment dated in the future that went to the scheduled payments. A new
-kind of notice picks one of the two; it does not get a form of its own. `toast` is for short text
-without an icon, mostly input mistakes.
+What just happened is told by `notice` (`ui/primitives.js`), at the bottom, above the navigation
+bar and the floating button, never over the balance. First ask whether it is needed: when the
+result is in front of the person (an operation saved on the list that shows it, a payment saved on
+the scheduled payments) the highlighted row is the answer and there is no notice. Otherwise there
+are two weights. `quiet` is as small as a toast with a check and, when a tap leads on, an arrow
+(3.2 s; 1.6 s without a tap), for what went as expected. `important` is a card with a second line
+(4.5 s) for what ended up somewhere else than one might think, such as a payment dated in the
+future that went to the scheduled payments. A new kind of notice picks one of the two; it does
+not get a form of its own. A notice is hidden while a sheet or a dialog is open, so the next
+operation is never covered. `toast` is for short text without an icon, mostly input mistakes.
 
 ## Before handing over
 

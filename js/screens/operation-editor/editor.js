@@ -102,24 +102,24 @@ export function commitOperation(editor) {
       });
     else if (planned) {
       // It is not in the history but among the scheduled payments: that is worth a longer look.
-      notice("Payment scheduled", {
-        icon: "calendar",
-        tone: "accent",
-        level: "important",
-        detail: translateWith("Will be added on {date}", { date: dateLabel(saved.date) }),
-        onTap: onScheduledPage ? null : () => showScheduled(saved.id),
-      });
+      // On the scheduled payments themselves the flash of the new row says it.
       if (onScheduledPage) spotlight([saved.id]);
-    } else {
-      // On the list that shows it the operation is just highlighted; elsewhere a tap leads to it.
-      const shown = operationShown(saved);
+      else
+        notice("Payment scheduled", {
+          icon: "calendar",
+          tone: "accent",
+          level: "important",
+          detail: translateWith("Will be added on {date}", { date: dateLabel(saved.date) }),
+          onTap: () => showScheduled(saved.id),
+        });
+    } else if (operationShown(saved)) spotlight([saved.id]);
+    // Where the operation is not shown, a quiet notice leads to it.
+    else
       notice("Operation saved", {
         icon: "circleCheck",
         tone: "positive",
-        onTap: shown ? null : () => showOperations([saved.id]),
+        onTap: () => showOperations([saved.id]),
       });
-      if (shown) spotlight([saved.id]);
-    }
   } catch (e) {
     toast(e.message);
   }

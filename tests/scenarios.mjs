@@ -563,7 +563,7 @@ const scenarios = {
     await page.locator(".op-row.spot").waitFor();
     expect(await page.locator(".op-row.spot").count()).toBe(1);
   },
-  async "an operation saved on the list that shows it is highlighted, the notice has no arrow"(
+  async "an operation saved on the list that shows it is only highlighted, there is no notice"(
     page,
   ) {
     await tab(page, "Operations");
@@ -571,51 +571,52 @@ const scenarios = {
     await page.locator(".add-item").first().click();
     await page.locator(".calc-key", { hasText: "5" }).first().click();
     await page.locator(".calc-confirm").click();
-    const notice = page.locator("#notice.show");
-    await notice.getByText("Operation saved").waitFor();
-    expect(await notice.locator("svg").count()).toBe(1);
     await page.locator(".op-row.spot").waitFor();
+    expect(await page.locator("#notice.show").count()).toBe(0);
   },
-  async "a saved operation gets a quiet notice at the bottom, a scheduled one an important notice that stays longer"(
+  async "a quiet notice for an operation seen elsewhere, an important one for a payment that stays longer"(
     page,
   ) {
-    await tab(page, "Operations");
+    await tab(page, "Categories");
     const save = async (nextDay) => {
-      await page.getByLabel("Add").first().click();
-      await page.locator(".add-item").first().click();
+      await page.locator(".cat-tile").first().click();
       await page.locator(".calc-key", { hasText: "5" }).first().click();
       if (nextDay) await page.getByLabel("Next day").click();
       await page.locator(".calc-confirm").click();
       await page.locator("#notice.show").waitFor();
     };
-    const where = () =>
+    const place = () =>
       page.evaluate(() => {
         const box = document.querySelector("#notice").getBoundingClientRect();
-        const balance = document.querySelector("#base .hero")?.getBoundingClientRect();
+        const bar = document.querySelector(".navbar").getBoundingClientRect();
+        const balance = document.querySelector("#base .hero").getBoundingClientRect();
         return {
-          low: box.top > window.innerHeight / 2,
-          covers: !!balance && box.top < balance.bottom,
+          aboveBar: box.bottom <= bar.top,
+          belowBalance: box.top > balance.bottom,
+          height: box.height,
         };
       });
     await save(false);
     expect(await page.locator("#notice.quiet").count()).toBe(1);
-    expect(await page.locator(".notice-detail").count()).toBe(0);
-    const quiet = await where();
-    expect(quiet.low).toBe(true);
-    expect(quiet.covers).toBe(false);
+    const quiet = await place();
+    expect(quiet.aboveBar && quiet.belowBalance).toBe(true);
+    // As small as a plain message.
+    expect(quiet.height < 46).toBe(true);
     await page.waitForFunction(
       () => !document.querySelector("#notice").classList.contains("show"),
       null,
-      {
-        timeout: 2600,
-      },
+      { timeout: 4000 },
     );
     await save(true);
     expect(await page.locator("#notice.important .notice-detail").count()).toBe(1);
-    expect((await where()).low).toBe(true);
+    const important = await place();
+    expect(important.aboveBar && important.belowBalance).toBe(true);
     // Still there when a quiet one would have gone.
-    await page.waitForTimeout(2800);
+    await page.waitForTimeout(3600);
     expect(await page.locator("#notice.show").count()).toBe(1);
+    // It leads to the payment.
+    await page.locator("#notice.show").click();
+    await page.locator(".scheduled-item.spot").waitFor();
   },
   async "the period of a filtered page is changed by a swipe"(page) {
     await page.evaluate(async () => {

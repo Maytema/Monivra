@@ -62,7 +62,7 @@ const NOTICE_MS = { quiet: 1600, quietTap: 3200, important: 4500 };
 export function notice(text, { icon, tone = "", level = "quiet", detail = "", onTap = null }) {
   const el = document.getElementById("notice");
   el.className = `show ${level} ${tone} ${onTap ? "tappable" : ""}`;
-  el.innerHTML = `${iconSvg(icon, level === "quiet" ? 20 : 28)}<span class="grow"><span class="notice-title">${escapeHtml(translate(text))}</span>${detail ? `<span class="notice-detail">${escapeHtml(detail)}</span>` : ""}</span>${onTap ? iconSvg("right", 20) : ""}`;
+  el.innerHTML = `${iconSvg(icon, level === "quiet" ? 16 : 28)}<span class="grow"><span class="notice-title">${escapeHtml(translate(text))}</span>${detail ? `<span class="notice-detail">${escapeHtml(detail)}</span>` : ""}</span>${onTap ? iconSvg("right", level === "quiet" ? 16 : 20) : ""}`;
   el.onclick = onTap
     ? () => {
         el.classList.remove("show");
