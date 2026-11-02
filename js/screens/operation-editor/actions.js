@@ -2,7 +2,7 @@
 import { render } from "../../app/shell.js";
 import { deepClone, iconSvg } from "../../core/constants.js";
 import { forgetDeleted, uiState } from "../../core/state.js";
-import { deleteOperation } from "../../domain/operations.js";
+import { deleteOperation, earliestScheduleDate } from "../../domain/operations.js";
 import { processScheduled } from "../../domain/scheduled.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { banner, buttonHtml } from "../../ui/primitives.js";
@@ -34,6 +34,8 @@ export function compactActionsHtml(editor, duplicate) {
     const clone = deepClone(draft);
     delete clone.id;
     delete clone.fromSchedule;
+    // A copy of a payment that is due or overdue starts on the first day a payment can.
+    if (scheduled && clone.date < earliestScheduleDate()) clone.date = earliestScheduleDate();
     duplicate(clone, scheduled);
   };
   const skip = () =>

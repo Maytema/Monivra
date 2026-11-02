@@ -27,8 +27,9 @@ const weekdayLetters = () => {
   );
 };
 // Month grid of the calendar dialog; `view.month` is the shown month. The title opens a grid
-// of years, the arrows move by a month, `pick(date)` handles a tap on a day.
-function monthGridHtml(view, chosen, pick) {
+// of years, the arrows move by a month, `pick(date)` handles a tap on a day. Days before `min`
+// cannot be chosen.
+function monthGridHtml(view, chosen, pick, min) {
   const first = parseDate(view.month + "-01"),
     lead = (first.getUTCDay() - appData.settings.weekStart + 7) % 7,
     days = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 0)).getUTCDate();
@@ -71,11 +72,12 @@ function monthGridHtml(view, chosen, pick) {
       String(i + 1),
       () => pick(date),
       `calendar-day ${date === TODAY ? "today" : ""} ${date === chosen ? "active" : ""}`,
+      min && date < min ? "disabled" : "",
     );
   }).join("")}</div>`;
 }
-// Calendar dialog for picking a date.
-export function calendar(value, done) {
+// Calendar dialog for picking a date; with `min`, earlier days are dimmed and cannot be chosen.
+export function calendar(value, done, min = null) {
   let chosen = value;
   const view = { month: value.slice(0, 7), years: false };
   openSheet(
@@ -87,16 +89,21 @@ export function calendar(value, done) {
           chosen = date;
           render();
         },
-      )}<div class="dialog-actions">${buttonHtml(
-        "Today",
-        () => {
-          chosen = TODAY;
-          view.month = TODAY.slice(0, 7);
-          view.years = false;
-          render();
-        },
-        "text-button calendar-today",
-      )}${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
+        min,
+      )}<div class="dialog-actions">${
+        min && min > TODAY
+          ? ""
+          : buttonHtml(
+              "Today",
+              () => {
+                chosen = TODAY;
+                view.month = TODAY.slice(0, 7);
+                view.years = false;
+                render();
+              },
+              "text-button calendar-today",
+            )
+      }${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
         "OK",
         () => {
           closeLayers();

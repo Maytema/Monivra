@@ -25,12 +25,28 @@ const interval = (n, unit) =>
     Months: translateCount("{n} month", "{n} months", n),
     Years: translateCount("{n} year", "{n} years", n),
   })[unit];
-// Text under the reminder row: "2 weeks before at 20:00".
+// Text under the reminder row: "2 weeks before at 20:00", "On the same day at 20:00".
 export const reminderLabel = (r) =>
-  translateWith("{interval} before at {time}", {
-    interval: interval(r.before, r.unit),
-    time: timeLabel(r.time),
-  });
+  r.before === 0
+    ? translateWith("On the same day at {time}", { time: timeLabel(r.time) })
+    : translateWith("{interval} before at {time}", {
+        interval: interval(r.before, r.unit),
+        time: timeLabel(r.time),
+      });
+
+// A reminder on the day of the payment has to come before the time of the payment.
+export const comesAfterPayment = (reminder, time) =>
+  !!reminder && !!time && reminder.before === 0 && reminder.time >= time;
+// Dialog that tells so; the payment time and the reminder time are never changed behind the back.
+export const reminderAfterPaymentDialog = (time) =>
+  errorDialog("Error: Wrong time", [
+    translateWith(
+      "A reminder on the day of the payment has to come before the payment time ({time}).",
+      {
+        time: timeLabel(time),
+      },
+    ),
+  ]);
 
 // Choice of the unit of time; `weekdays` tells that weeks can be narrowed to days of the week.
 function unitDialog(unit, fn, weekdays = false) {
@@ -207,6 +223,7 @@ export function reminder(d) {
               "The value 0 can only be used for days, not for months, weeks, or years!",
               "The value 0 days means the reminder will be set on the same day as the scheduled payment.",
             ]);
+          if (comesAfterPayment(r, d.time)) return reminderAfterPaymentDialog(d.time);
           d.reminder = r;
           closeLayers();
         },

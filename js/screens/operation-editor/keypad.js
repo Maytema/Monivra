@@ -9,7 +9,15 @@ import { timeLabel, timePicker } from "../../ui/time-picker.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { buttonHtml, menuRowHtml, toast } from "../../ui/primitives.js";
 import { feeDialog, feeLabel } from "../fees.js";
-import { recurLabel, recurrence, remainingLabel, reminder, reminderLabel } from "../recurrence.js";
+import {
+  comesAfterPayment,
+  recurLabel,
+  recurrence,
+  remainingLabel,
+  reminder,
+  reminderAfterPaymentDialog,
+  reminderLabel,
+} from "../recurrence.js";
 import { commitOperation } from "./editor.js";
 
 // A tap on the calculator key within this time of the previous one is a double tap.
@@ -57,6 +65,8 @@ function additionalOptions(editor, model) {
               "clock",
               () =>
                 timePicker(draft.time || timeNow(), (time) => {
+                  if (comesAfterPayment(draft.reminder, time))
+                    return reminderAfterPaymentDialog(time);
                   draft.time = time;
                   render();
                 }),

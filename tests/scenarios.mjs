@@ -395,36 +395,19 @@ const scenarios = {
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await page.getByText("Payment scheduled").waitFor();
   },
-  async "a scheduled payment made for a past day is added to the operations at once, with a notice that leads there"(
+  async "a scheduled payment can start tomorrow at the earliest, today and the past are dimmed"(
     page,
   ) {
     await tab(page, "More");
     await page.getByText("Scheduled payments", { exact: true }).first().click();
     await page.locator(".fab-add, .more-empty button").first().click();
-    await page
-      .locator(".calendar-day", { hasText: new RegExp(`^${new Date().getDate()}$`) })
-      .first()
-      .click();
+    await page.locator(".calendar-day.today").waitFor();
+    expect(await page.locator(".calendar-day.today").isDisabled()).toBe(true);
+    expect(await page.getByRole("button", { name: "Today", exact: true }).count()).toBe(0);
     await page.getByRole("button", { name: "OK", exact: true }).click();
     await page.getByRole("button", { name: "Complete", exact: true }).click();
     await page.locator(".add-item").first().click();
-    await page.locator(".calc-key", { hasText: "5" }).first().click();
-    for (let i = 0; i < 3; i++) await page.getByLabel("Previous day").click();
-    await page.locator(".calc-confirm").click();
-    const notice = page.locator("#banner.tappable");
-    await notice.getByText("Added to the operations").waitFor();
-    await notice.click();
-    await page.locator(".spot").waitFor();
-    const [ops, scheduled] = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
-      const day = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
-      return [
-        data.ops.filter((o) => o.date === day && o.fromSchedule).length,
-        data.scheduled.length,
-      ];
-    });
-    expect(ops).toBe(1);
-    expect(scheduled).toBe(0);
+    expect(await page.getByLabel("Previous day").isDisabled()).toBe(true);
   },
   async "a payment scheduled for the future shows a notice with an arrow that opens the scheduled payments"(
     page,
