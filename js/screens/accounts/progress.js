@@ -1,26 +1,8 @@
 /* Progress of a goal or a debt repayment: percent, meter and the block in the account sheet */
 import { accountProgress, debtDirection, formatMoney } from "../../domain/finance.js";
-import { currentLocale, translate, translateWith } from "../../i18n/index.js";
+import { translate, translateWith } from "../../i18n/index.js";
+import { percentLabel } from "../../ui/percent.js";
 import { meterHtml } from "../../ui/primitives.js";
-
-// From which percent on the figure is shortened.
-const COMPACT_FROM = 10000;
-const compactNumber = (n) =>
-  new Intl.NumberFormat(currentLocale(), { notation: "compact", maximumFractionDigits: 1 }).format(
-    n,
-  );
-// The exact percent, with its digits in full.
-export const exactPercent = (percent) =>
-  new Intl.NumberFormat(currentLocale(), { maximumFractionDigits: 2 }).format(percent) + "%";
-
-// Percent with up to two decimals, the digits after the point set smaller. A huge one is
-// shortened (2.4M); the exact figure is for the details.
-export function percentLabel(percent) {
-  if (percent >= COMPACT_FROM)
-    return `<span class="goal-pct-main">${compactNumber(percent)}</span><span class="goal-pct-unit">%</span>`;
-  const parts = percent.toFixed(2).replace(/0+$/, "").replace(/\.$/, "").split(".");
-  return `<span class="goal-pct-main">${parts[0]}</span>${parts[1] ? `<span class="goal-pct-frac">.${parts[1]}</span>` : ""}<span class="goal-pct-unit">%</span>`;
-}
 
 // A debt I still have to pay back is shown in a soft red, everything else in green.
 export const isOwed = (p, a) => p.kind === "debt" && p.left > 0 && debtDirection(a) === "I owe";
@@ -33,12 +15,16 @@ export function progressBlockHtml(a) {
   if (!p) return "";
   const money = (n) => formatMoney(n, a.currency);
   const say = (text, amount) => translateWith(text, { amount: money(amount) });
-  // The line under the meter tells what the percent counts, so the two never disagree.
+  // The card already shows the balance, so the line under the meter adds what the balance does
+  // not say: what is left of a goal, how much of a debt is paid, that a limit is used up.
   let status;
-  if (p.kind === "limit") status = say("Used: {amount}", p.used);
-  else if (p.kind === "debt")
+  if (p.kind === "limit") {
+    // The sheet shows the balance and what is available to spend, so only the extremes are said.
+    if (p.used > p.target) status = say("Limit exceeded by {amount}", p.used - p.target);
+    else if (p.left === 0) status = translate("Limit reached");
+  } else if (p.kind === "debt")
     status = p.left > 0 ? say("Paid back: {amount}", p.done) : translate("Debt repaid");
-  else if (p.left > 0) status = say("Saved: {amount}", p.done);
+  else if (p.left > 0) status = say("To goal: {amount}", p.left);
   else if (p.left < 0) status = say("Goal exceeded by {amount}", -p.left);
   else status = translate("Goal reached");
   const title = { goal: "Goal", debt: "Total debt", limit: "Limit" }[p.kind];

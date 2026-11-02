@@ -21,6 +21,15 @@ screen is drawn and [DEVELOPMENT.md](DEVELOPMENT.md) for conventions and checks.
 - Stored data keeps loading: do not rename the storage key or fields without a migration in
   `completeData`.
 
+## Percent and progress lines
+
+A percent is rounded once, in `domain/percent.js` (`shownPercent`: two decimals, rounded as usual,
+never 100 for a target that is not reached), and written by `ui/percent.js`; no screen rounds
+or formats a percent by itself. Whether a goal is reached is decided on the amounts, never on the
+rounded percent. The line under a meter must not repeat a figure the card already shows: a goal
+says what is left (`To goal`), a debt what is paid back, a budget what is left or by how much it is
+passed (`Over by`), a credit limit only that it is used up or exceeded.
+
 ## Before handing over
 
 Run `node tests/run.mjs`, `node tests/scenarios.mjs`, `npm run lint` and `npm run format:check`.

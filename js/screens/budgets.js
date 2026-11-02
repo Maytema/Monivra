@@ -7,7 +7,7 @@ import { budgetOperations, budgetState } from "../domain/budgets.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { dayGroup } from "./operations/list.js";
 import { currencyName, translate, translateWith } from "../i18n/index.js";
-import { exactPercent, percentLabel } from "./accounts/progress.js";
+import { exactPercent, percentLabel } from "../ui/percent.js";
 import { categorySelect } from "./category-select.js";
 import { amountPicker } from "../ui/number-picker.js";
 import { finishFlow, openPage } from "../ui/navigation.js";
@@ -33,13 +33,20 @@ const periodIcon = (period) =>
   `<span class="period-icon">${iconSvg("calendarBlank", 30)}<b>${PERIOD_DAYS[period]}</b></span>`;
 // Names of the budget periods.
 const BUDGET_PERIODS = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
-// What a budget shows: title, what it counts, spent of the limit with the share, and by how much
-// the limit is passed. The percent counts what is spent, so the card tells what is spent, never what is left.
+// What is left of a limit, or by how much it is passed, as a line under the figures.
+const remainderHtml = (left, currency) => {
+  const amount = formatMoney(Math.abs(left), currency);
+  if (left < 0)
+    return `<span class="budget-left neg">${translateWith("Over by {amount}", { amount })}</span>`;
+  return `<span class="budget-left">${left === 0 ? translate("Limit reached") : translateWith("Left: {amount}", { amount })}</span>`;
+};
+// What a budget shows: title, what it counts, spent of the limit with the share spent, and what
+// is left of the limit (or by how much it is passed).
 const budgetBody = ({ b, used, left, share }, percent) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
-  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${left < 0 ? `<span class="budget-left neg">${translateWith("Over by {amount}", { amount: formatMoney(-left, b.currency) })}</span>` : ""}`;
+  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${remainderHtml(left, b.currency)}`;
 };
 const budgetCard = (state) =>
   buttonHtml(
@@ -52,12 +59,14 @@ const budgetGroup = (period, states) => {
   const main = appData.settings.currency;
   const sum = (pick) =>
     states.reduce((total, st) => total + convertCurrency(pick(st), st.b.currency, main), 0);
-  const spent = sum((st) => st.used),
-    limit = sum((st) => st.b.amount);
-  return `<section class="budget-group"><div class="budget-group-head"><span class="budget-group-name">${periodIcon(period)}<span class="grow"><strong>${translate(BUDGET_PERIODS[period])}</strong><small>${periodTitle({ mode: period, anchor: uiState.period.anchor || TODAY })}</small></span></span><span class="budget-group-sum"><small>${translate("Limit")} ${formatMoney(
+  const left = sum((st) => st.left);
+  return `<section class="budget-group"><div class="budget-group-head"><span class="budget-group-name">${periodIcon(period)}<span class="grow"><strong>${translate(BUDGET_PERIODS[period])}</strong><small>${periodTitle({ mode: period, anchor: uiState.period.anchor || TODAY })}</small></span></span><span class="budget-group-sum"><small>${formatMoney(
+    sum((st) => st.used),
+    main,
+  )} / ${formatMoney(
     sum((st) => st.b.amount),
     main,
-  )}</small><strong class="budget-spent ${spent > limit ? "neg" : ""}">${formatMoney(spent, main)}</strong></span></div>${states.map(budgetCard).join("")}</section>`;
+  )}</small>${remainderHtml(left, main)}</span></div>${states.map(budgetCard).join("")}</section>`;
 };
 // A budget is looked at one month at a time, each budget in its own period around the month's
 // day. The page opens on a month (the shown one, or today after "All time" or a range), and the

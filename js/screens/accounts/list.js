@@ -24,7 +24,8 @@ import { openPage } from "../../ui/navigation.js";
 import { currencyPicker } from "../../ui/currency-picker.js";
 import { accountActions } from "./actions.js";
 import { editAccount } from "./edit.js";
-import { accountMeter, percentLabel } from "./progress.js";
+import { percentLabel } from "../../ui/percent.js";
+import { accountMeter } from "./progress.js";
 
 // Header block of the root screens: title, balance and action buttons.
 export function hero() {

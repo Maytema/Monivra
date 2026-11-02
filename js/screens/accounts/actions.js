@@ -35,7 +35,7 @@ export function accountActions(a) {
         },
         "account-favorite" + (a.favorite ? " is-favorite" : ""),
         'aria-label="Favorite"',
-      )}</div><div class="account-detail-figures">${figure("Current balance", n)}${available ? figure("Available balance", n + a.limit) : ""}</div>${progressBlockHtml(a)}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
+      )}</div><div class="account-detail-figures">${figure("Current balance", n)}${available ? figure("Available to spend", n + a.limit) : ""}</div>${progressBlockHtml(a)}</div><div class="sheet-actions" role="group" aria-label="Account actions">${act("edit", "Edit", "#c04fd8", () => editAccount(a))}${act(
         "archive",
         a.archived ? "Return from archive" : "Move to archive",
         "#7d7886",

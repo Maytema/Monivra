@@ -22,6 +22,7 @@ import { filterActive, filteredBannerHtml, openFilteredOperations } from "./oper
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { periodBar } from "../ui/period-picker.js";
+import { exactPercent } from "../ui/percent.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -139,7 +140,7 @@ export function statisticsView() {
         .join("")}</div></section>`,
     donut: () => `<section class="stats-card" data-stat="donut">${donut(groups)}</section>`,
     categories: () =>
-      `<section class="stats-card" data-stat="categories">${groups.map((g) => buttonHtml(`${badgeHtml(g, true)}<span class="grow"><span>${escapeHtml(g.name)}</span><span class="bar-track"><span style="width:${total ? (g.total / total) * 100 : 0}%;background:${g.color}"></span></span></span><span class="right"><span class="money ${uiState.catType === "expense" ? "neg" : "pos"}">${formatMoney(g.total)}</span><small>${total ? ((g.total / total) * 100).toFixed(1) : 0}%</small></span>`, () => statsDetail(g.id), "stats-category")).join("")}${!groups.length ? `<div class="empty">${translate("Empty")}</div>` : ""}</section>`,
+      `<section class="stats-card" data-stat="categories">${groups.map((g) => buttonHtml(`${badgeHtml(g, true)}<span class="grow"><span>${escapeHtml(g.name)}</span><span class="bar-track"><span style="width:${total ? (g.total / total) * 100 : 0}%;background:${g.color}"></span></span></span><span class="right"><span class="money ${uiState.catType === "expense" ? "neg" : "pos"}">${formatMoney(g.total)}</span><small>${exactPercent(total ? (g.total / total) * 100 : 0)}</small></span>`, () => statsDetail(g.id), "stats-category")).join("")}${!groups.length ? `<div class="empty">${translate("Empty")}</div>` : ""}</section>`,
     tags: () => {
       // Only tags that appear in the shown operations, the largest first.
       const rows = reportRows().filter((o) => o.reportType === uiState.catType);

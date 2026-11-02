@@ -76,6 +76,7 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 | Data lost or not loading after an update        | `data/storage.js`, `completeData` in `data/defaults.js`; never rename the storage key                      |
 | Import or export fails                          | `data/import-export.js`, `data/csv.js`, `platform/files.js`                                                |
 | Debt or saving shows progress / "Completed"     | `accounts/list.js` (`isFinished`, `isCompleted`), `accounts/progress.js`                                   |
+| A percent is shown (rounding, format)           | `domain/percent.js` (`shownPercent`), `ui/percent.js` (`percentLabel`, `exactPercent`)                     |
 | Scheduled payment fires on the wrong date       | `domain/scheduled.js`, `screens/recurrence.js`                                                             |
 | Due payments posted on their own, the notice    | `screens/due-payments.js`, `domain/scheduled.js` (`postDue`)                                               |
 | A notice that leads to a row, the row flashing  | `screens/operations/reveal.js` (`showOperations`), `ui/spotlight.js`, `domain/finance.js` (`periodAround`) |
