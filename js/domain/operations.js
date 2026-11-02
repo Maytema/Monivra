@@ -103,8 +103,12 @@ function planOperation(d) {
   appData.scheduled.push(d);
 }
 
+// The first day a scheduled payment can be set for: what is due today or earlier is an operation.
+export const earliestScheduleDate = () => addDays(today(), 1);
+
 // Validate and insert or update an operation (or a scheduled payment), then save. An operation
-// dated in the future becomes a one-time scheduled payment instead.
+// dated in the future becomes a one-time scheduled payment instead. A scheduled payment cannot be
+// created for, or moved to, a day that has come.
 export function putOperation(d, schedule = false) {
   d = deepClone(d);
   delete d.expr;
@@ -122,8 +126,11 @@ export function putOperation(d, schedule = false) {
   }
   const list = schedule ? appData.scheduled : appData.ops;
   const i = list.findIndex((o) => o.id === d.id);
-  if (schedule) keepRuleDay(d, list[i]);
-  else delete d.time;
+  if (schedule) {
+    if (d.date < earliestScheduleDate() && (i < 0 || list[i].date !== d.date))
+      throw Error("A scheduled payment starts tomorrow at the earliest");
+    keepRuleDay(d, list[i]);
+  } else delete d.time;
   if (i < 0) list.push(d);
   else list[i] = d;
   save();

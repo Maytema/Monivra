@@ -2,6 +2,7 @@
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { dateLabel, parseDate, toIsoDate } from "../../domain/finance.js";
+import { earliestScheduleDate } from "../../domain/operations.js";
 import { calendar } from "../../ui/calendar.js";
 import { buttonHtml, iconButtonHtml } from "../../ui/primitives.js";
 import { weekdayName } from "../recurrence.js";
@@ -15,17 +16,22 @@ import { describeParties, partiesHtml } from "./parties.js";
 
 const DAY_MS = 86400000;
 
-function dateRowHtml(draft) {
+// The date row; `earliest` is the first day that can be chosen, if there is one.
+function dateRowHtml(draft, earliest = null) {
   const shiftDay = (days) => {
     draft.date = toIsoDate(new Date(parseDate(draft.date).getTime() + days * DAY_MS));
     render();
   };
   const pickDate = () =>
-    calendar(draft.date, (value) => {
-      draft.date = value;
-      render();
-    });
-  return `<div class="calc-date">${iconButtonHtml("left", "Previous day", () => shiftDay(-1))}${buttonHtml(
+    calendar(
+      draft.date,
+      (value) => {
+        draft.date = value;
+        render();
+      },
+      earliest,
+    );
+  return `<div class="calc-date">${iconButtonHtml("left", "Previous day", () => shiftDay(-1), !!earliest && draft.date <= earliest)}${buttonHtml(
     iconSvg("calendar", 16) +
       " " +
       escapeHtml(
@@ -58,7 +64,7 @@ export function editorHtml(editor, duplicate) {
     dual ? model.sourceToReceive : (cents) => cents,
     render,
   );
-  return `<div class="calc-shell ${editor.compact ? "ops-compact-editor" : ""}"><div class="calc-top">${dateRowHtml(draft)}${partiesHtml(draft, parties)}${amountHtml(editor, parties, model)}${expandHint}${extrasHtml(draft)}${fees}</div>${
+  return `<div class="calc-shell ${editor.compact ? "ops-compact-editor" : ""}"><div class="calc-top">${dateRowHtml(draft, editor.scheduled ? earliestScheduleDate() : null)}${partiesHtml(draft, parties)}${amountHtml(editor, parties, model)}${expandHint}${extrasHtml(draft)}${fees}</div>${
     editor.compact ? compactActionsHtml(editor, duplicate) : keypadHtml(editor, parties, model)
   }</div>`;
 }

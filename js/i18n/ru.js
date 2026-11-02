@@ -730,6 +730,15 @@ export const russianStrings = {
   "{n} years": ["{n} год", "{n} года", "{n} лет"],
   "Remaining: {n}": "Осталось: {n}",
   "{interval} before at {time}": "За {interval} в {time}",
+  "On the same day at {time}": "В тот же день в {time}",
+  "Error: Wrong time": "Ошибка: неверное время",
+  "Reminder moved to {time}": "Напоминание перенесено на {time}",
+  "Reminder turned off: there is no time left before the payment":
+    "Напоминание выключено: до платежа не осталось времени в этот день",
+  "A reminder on the day of the payment has to come before the payment time ({time}).":
+    "Напоминание в день платежа должно быть раньше времени платежа ({time}).",
+  "A scheduled payment starts tomorrow at the earliest":
+    "Запланированный платёж можно назначить не раньше завтрашнего дня",
   "Choose time period": "Выберите период времени",
   "Additionally - by days of the week": "Дополнительно — по дням недели",
   "Days of the week": "Дни недели",

@@ -1,8 +1,9 @@
 /* Scheduled payments */
 import { render } from "../app/shell.js";
-import { escapeHtml, iconSvg, timeNow, TODAY } from "../core/constants.js";
+import { escapeHtml, iconSvg, timeNow } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { dateLabel, parseDate } from "../domain/finance.js";
+import { earliestScheduleDate } from "../domain/operations.js";
 import { translate } from "../i18n/index.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
@@ -13,6 +14,7 @@ import {
   remainingLabel,
   reminder,
   reminderLabel,
+  setPaymentTime,
   weekdayName,
 } from "./recurrence.js";
 import { calendar } from "../ui/calendar.js";
@@ -50,23 +52,24 @@ const dateTitle = (date) =>
   `${weekdayName(parseDate(date).getUTCDay(), "long")}, ${dateLabel(date, true)}`;
 // Create a scheduled payment: date, then repeat and reminder tiles, then the usual chooser.
 function scheduledCreate() {
-  const setup = { date: TODAY, time: timeNow(), recur: null, reminder: null };
+  const setup = { date: earliestScheduleDate(), time: timeNow(), recur: null, reminder: null };
   const tiles = () =>
     openSheet(
       () =>
         `<h2>${translate("Select date")}</h2><div class="schedule-tiles">${buttonHtml(
           `${iconSvg("calendar", 36)}<span>${escapeHtml(dateTitle(setup.date))}</span>`,
           () =>
-            calendar(setup.date, (v) => {
-              setup.date = v;
-              render();
-            }),
+            calendar(
+              setup.date,
+              (v) => {
+                setup.date = v;
+                render();
+              },
+              earliestScheduleDate(),
+            ),
           "schedule-tile schedule-date on",
         )}${tile("clock", "Time", timeLabel(setup.time), () =>
-          timePicker(setup.time, (time) => {
-            setup.time = time;
-            render();
-          }),
+          timePicker(setup.time, (time) => setPaymentTime(setup, time)),
         )}${tile("repeat", "Recur", setup.recur && recurLabel(setup.recur) + remainingLabel(setup.recur), () => recurrence(setup))}${tile("bell", "Reminder", setup.reminder && reminderLabel(setup.reminder), () => reminder(setup))}</div><div class="dialog-actions">${buttonHtml(
           "Complete",
           () => {
@@ -86,10 +89,14 @@ function scheduledCreate() {
       "Select date",
       "dialog",
     );
-  calendar(setup.date, (v) => {
-    setup.date = v;
-    tiles();
-  });
+  calendar(
+    setup.date,
+    (v) => {
+      setup.date = v;
+      tiles();
+    },
+    earliestScheduleDate(),
+  );
 }
 // Dialog with the order of the scheduled payments.
 const sortDialog = () =>

@@ -28,7 +28,9 @@ import { budgetOperations, budgetState } from "../js/domain/budgets.js";
 import {
   missedPayments,
   nextDate,
+  comesAfterPayment,
   postDue,
+  reminderForTime,
   processScheduled,
   settleMissed,
 } from "../js/domain/scheduled.js";
@@ -972,3 +974,56 @@ check("The period around posted days keeps the chosen one, else the month, else 
     wide.to === addDays(far, 40)
   );
 });
+
+check("A scheduled payment cannot be created for, or moved to, a day that has come", () => {
+  const base = appData.ops.find((o) => o.type === "expense");
+  const fresh = (date) => ({ ...JSON.parse(JSON.stringify(base)), id: "__new", date, recur: null });
+  const refuses = (fn) => {
+    try {
+      fn();
+      return false;
+    } catch (e) {
+      return e.message === "A scheduled payment starts tomorrow at the earliest";
+    }
+  };
+  const tomorrow = addDays(TODAY, 1);
+  appData.scheduled = [];
+  const today = refuses(() => putOperation(fresh(TODAY), true));
+  const past = refuses(() => putOperation(fresh(addDays(TODAY, -3)), true));
+  putOperation(fresh(tomorrow), true);
+  const moved = refuses(() => putOperation({ ...appData.scheduled[0], date: TODAY }, true));
+  // An overdue payment that waits for an answer can still be saved as it is.
+  const late = scheduledExpense(addDays(TODAY, -2), null);
+  putOperation({ ...late, comment: "kept" }, true);
+  return today && past && moved && appData.scheduled[0].comment === "kept";
+});
+
+check("A reminder on the day of the payment cannot come after the payment time", () => {
+  const same = { before: 0, unit: "Days", time: "20:00" };
+  return (
+    comesAfterPayment(same, "18:00") &&
+    comesAfterPayment(same, "20:00") &&
+    !comesAfterPayment(same, "21:00") &&
+    !comesAfterPayment({ ...same, before: 1 }, "18:00") &&
+    !comesAfterPayment(null, "18:00")
+  );
+});
+
+check(
+  "A reminder of the payment day follows the payment time, or goes when there is no room",
+  () => {
+    const same = { before: 0, unit: "Days", time: "16:00" };
+    const later = reminderForTime(same, "18:00", "19:00");
+    const moved = reminderForTime(same, "18:00", "15:00");
+    const dropped = reminderForTime(same, "18:00", "01:00");
+    const other = { before: 1, unit: "Days", time: "16:00" };
+    return (
+      later === same &&
+      moved.time === "13:00" &&
+      moved.before === 0 &&
+      dropped === null &&
+      reminderForTime(other, "18:00", "09:00") === other &&
+      reminderForTime(null, "18:00", "09:00") === null
+    );
+  },
+);

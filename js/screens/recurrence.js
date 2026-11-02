@@ -2,6 +2,7 @@
 import { render } from "../app/shell.js";
 import { deepClone, MAX_INTERVAL } from "../core/constants.js";
 import { currentLocale, translate, translateCount, translateWith } from "../i18n/index.js";
+import { comesAfterPayment, reminderForTime } from "../domain/scheduled.js";
 import { closeLayers, openSheet } from "../ui/navigation.js";
 import { numberPicker } from "../ui/number-picker.js";
 import { optionSheet } from "../ui/dialogs.js";
@@ -25,12 +26,38 @@ const interval = (n, unit) =>
     Months: translateCount("{n} month", "{n} months", n),
     Years: translateCount("{n} year", "{n} years", n),
   })[unit];
-// Text under the reminder row: "2 weeks before at 20:00".
+// Text under the reminder row: "2 weeks before at 20:00", "On the same day at 20:00".
 export const reminderLabel = (r) =>
-  translateWith("{interval} before at {time}", {
-    interval: interval(r.before, r.unit),
-    time: timeLabel(r.time),
-  });
+  r.before === 0
+    ? translateWith("On the same day at {time}", { time: timeLabel(r.time) })
+    : translateWith("{interval} before at {time}", {
+        interval: interval(r.before, r.unit),
+        time: timeLabel(r.time),
+      });
+
+// Dialog that tells why a reminder on the day of the payment is not accepted.
+export const reminderAfterPaymentDialog = (time) =>
+  errorDialog("Error: Wrong time", [
+    translateWith(
+      "A reminder on the day of the payment has to come before the payment time ({time}).",
+      { time: timeLabel(time) },
+    ),
+  ]);
+
+// Set the time of a payment. A reminder of the same day that would come after it moves along, or
+// is turned off when there is no room before the payment; the person is told either way.
+export function setPaymentTime(d, time) {
+  const kept = reminderForTime(d.reminder, d.time, time);
+  if (kept !== d.reminder)
+    toast(
+      kept
+        ? translateWith("Reminder moved to {time}", { time: timeLabel(kept.time) })
+        : "Reminder turned off: there is no time left before the payment",
+    );
+  d.reminder = kept;
+  d.time = time;
+  render();
+}
 
 // Choice of the unit of time; `weekdays` tells that weeks can be narrowed to days of the week.
 function unitDialog(unit, fn, weekdays = false) {
@@ -207,6 +234,7 @@ export function reminder(d) {
               "The value 0 can only be used for days, not for months, weeks, or years!",
               "The value 0 days means the reminder will be set on the same day as the scheduled payment.",
             ]);
+          if (comesAfterPayment(r, d.time)) return reminderAfterPaymentDialog(d.time);
           d.reminder = r;
           closeLayers();
         },

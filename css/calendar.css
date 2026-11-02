@@ -222,3 +222,7 @@
 .clock-actions {
   margin-top: 20px;
 }
+.calendar-day:disabled {
+  color: var(--muted);
+  opacity: 0.4;
+}
