@@ -43,6 +43,28 @@ const openEditorOn = async (page, categoryName) => {
   await page.locator(".cat-tile", { hasText: categoryName }).first().click();
   await page.waitForSelector(".calc-keypad");
 };
+const swipe = (page, selector, dx) =>
+  page.locator(selector).evaluate((el, shift) => {
+    const touch = (x) =>
+      new globalThis.Touch({
+        identifier: 1,
+        target: el,
+        clientX: x,
+        clientY: 200,
+        radiusX: 1,
+        radiusY: 1,
+      });
+    const send = (type, x) =>
+      el.dispatchEvent(
+        new globalThis.TouchEvent(type, {
+          bubbles: true,
+          touches: type === "touchend" ? [] : [touch(x)],
+          changedTouches: [touch(x)],
+        }),
+      );
+    send("touchstart", 200);
+    send("touchend", 200 + shift);
+  }, dx);
 const typeAmountAndSave = async (page, digit) => {
   await page.locator(".calc-key", { hasText: digit }).first().click();
   await page.locator(".calc-confirm").click();
@@ -391,7 +413,7 @@ const scenarios = {
     const notice = page.locator("#banner.tappable");
     await notice.getByText("Added to the operations").waitFor();
     await notice.click();
-    await page.locator(".period .label").first().waitFor();
+    await page.locator(".op-row.spot").waitFor();
     const [ops, scheduled] = await page.evaluate(() => {
       const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
       const day = new Date(Date.now() - 3 * 86400000).toLocaleDateString("en-CA");
@@ -421,6 +443,40 @@ const scenarios = {
     await notice.click();
     await page.getByText("Scheduled payments", { exact: true }).first().waitFor();
     expect(await page.locator(".scheduled-item").count()).toBe(before + 1);
+  },
+  async "the notice about a scheduled payment shows the payment itself, flashed"(page) {
+    await tab(page, "Operations");
+    await page.getByLabel("Add").first().click();
+    await page.locator(".add-item").first().click();
+    await page.locator(".calc-key", { hasText: "5" }).first().click();
+    await page.getByLabel("Next day").click();
+    await page.locator(".calc-confirm").click();
+    await page.locator("#banner.tappable").click();
+    const flashed = page.locator(".scheduled-item .op-row.spot");
+    await flashed.waitFor();
+    expect(await flashed.count()).toBe(1);
+  },
+  async "the period chosen stays after a reload"(page) {
+    await tab(page, "Operations");
+    expect(/All time/.test(await page.locator(".period .label").first().innerText())).toBe(false);
+    await page.locator(".period .label").first().click();
+    await page.getByText("All time", { exact: true }).first().click();
+    await page.reload();
+    await page.waitForSelector(".navbar");
+    await tab(page, "Operations");
+    expect(await page.locator(".period .label").first().innerText()).toMatch(/All time/);
+  },
+  async "a swipe in the calendar moves by a month"(page) {
+    await tab(page, "Operations");
+    await page.locator(".period .label").first().click();
+    await page.getByText("Choose a day", { exact: true }).click();
+    const title = page.locator(".calendar-title");
+    const before = await title.innerText();
+    await swipe(page, ".panel:has(.calendar-head)", -150);
+    const next = await title.innerText();
+    await swipe(page, ".panel:has(.calendar-head)", 150);
+    expect(next === before).toBe(false);
+    expect(await title.innerText()).toBe(before);
   },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");

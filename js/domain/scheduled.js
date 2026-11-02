@@ -58,9 +58,9 @@ const isPosted = (item, occurrence) =>
 // Record one occurrence of a scheduled payment as an operation of the given day. The operation
 // remembers the payment and the occurrence it settles, so it can be told apart from one entered by
 // hand, and tells a payment the person added ahead of time from one made on its day. An occurrence
-// is recorded only once.
+// is recorded only once. Returns the new operation, or nothing when it was recorded already.
 function postOccurrence(item, day, byHand = false) {
-  if (isPosted(item, item.date)) return false;
+  if (isPosted(item, item.date)) return null;
   const op = { ...deepClone(item), id: newId(), date: day };
   delete op.recur;
   delete op.reminder;
@@ -68,7 +68,7 @@ function postOccurrence(item, day, byHand = false) {
   delete op.anchorDay;
   op.fromSchedule = { id: item.id, date: item.date, ...(byHand && { byHand }) };
   putOperation(op);
-  return true;
+  return op;
 }
 
 // Post or skip a scheduled payment and schedule the next one.
@@ -81,11 +81,12 @@ export function processScheduled(id, post) {
 }
 
 // Move a payment on to its first occurrence after `day`, posting the ones in between or not;
-// returns how many were posted. A payment that has no occurrence left goes away.
+// returns the ids of the operations posted. A payment that has no occurrence left goes away.
 function catchUp(item, day, post) {
-  let posted = 0;
+  const posted = [];
   while (item.date <= day) {
-    if (post && postOccurrence(item, item.date)) posted++;
+    const op = post && postOccurrence(item, item.date);
+    if (op) posted.push(op.id);
     if (!advance(item)) {
       appData.scheduled = appData.scheduled.filter((o) => o !== item);
       break;
@@ -117,16 +118,16 @@ function dueEntries(day) {
 const needsAnswer = ({ count, since }, day) =>
   count > CATCH_UP_LIMIT || since < addDays(day, -CATCH_UP_DAYS);
 
-// Post every occurrence that came due up to `day` on the day it was due; returns how many. What
-// was posted before a failure stays posted and saved. A payment that is far behind waits for the
-// person's answer (`missedPayments`).
+// Post every occurrence that came due up to `day` on the day it was due; returns the ids of the
+// operations posted. What was posted before a failure stays posted and saved. A payment that is
+// far behind waits for the person's answer (`missedPayments`).
 export function postDue(day = today()) {
-  let posted = 0;
+  const posted = [];
   try {
     for (const entry of dueEntries(day))
-      if (!needsAnswer(entry, day)) posted += catchUp(entry.item, day, true);
+      if (!needsAnswer(entry, day)) posted.push(...catchUp(entry.item, day, true));
   } finally {
-    if (posted) save();
+    if (posted.length) save();
   }
   return posted;
 }
@@ -135,11 +136,11 @@ export function postDue(day = today()) {
 export const missedPayments = (day = today()) =>
   dueEntries(day).filter((entry) => needsAnswer(entry, day));
 
-// The answer about a payment far behind: add what was missed (returns how many), or let it go and
-// carry on from the next occurrence.
+// The answer about a payment far behind: add what was missed, or let it go and
+// carry on from the next occurrence. Returns the ids of the operations added.
 export function settleMissed(id, post, day = today()) {
   const item = appData.scheduled.find((o) => o.id === id);
-  if (!item) return 0;
+  if (!item) return [];
   const posted = catchUp(item, day, post);
   save();
   return posted;

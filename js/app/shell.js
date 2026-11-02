@@ -1,12 +1,12 @@
 /* App shell: navigation, root view, rendering */
-import { bindTabSwipe, mountSwipeChrome } from "./chrome.js";
+import { bindSheetSwipe, mountSwipeChrome } from "./chrome.js";
 import { initClockDial } from "./clock-dial.js";
 import { initColorWheel } from "./color-wheel.js";
 import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, firstLaunch, locked, uiState } from "../core/state.js";
+import { appData, firstLaunch, locked, rememberPeriod, uiState } from "../core/state.js";
 import { dataView } from "../data/import-export.js";
 import { overallBalance } from "../domain/finance.js";
 import { translate, translateMarkup } from "../i18n/index.js";
@@ -179,6 +179,7 @@ function restoreContainers(app, saved) {
 
 // Re-render the application and restore focus and scroll positions.
 export function render(top = false) {
+  rememberPeriod();
   resetHandlers();
   const baseAttrs = uiState.layers.length ? ' inert aria-hidden="true"' : "";
   const html = translateMarkup(`<div id="base"${baseAttrs}>${rootView()}</div>${layersHtml()}`);
@@ -210,7 +211,7 @@ export function render(top = false) {
   if (screenChanged) restoreContainers(app, screenScrolls.get(screen) || []);
   else if (!top) restoreContainers(app, scrolled);
   mountSwipeChrome();
-  bindTabSwipe();
+  bindSheetSwipe();
   animateBalance(balanceBefore, previousBalance);
   // Restore focus (and caret) of the field that was being edited.
   if (focusLabel) {

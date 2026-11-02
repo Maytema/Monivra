@@ -39,6 +39,15 @@
     transform: rotate(360deg);
   }
 }
+@keyframes spot-flash {
+  0%,
+  60% {
+    background: var(--tint);
+  }
+  100% {
+    background: transparent;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .orbit-ring,
   .orbit-particles {

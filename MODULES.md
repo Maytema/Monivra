@@ -59,7 +59,7 @@ Paths are under `js/`.
 (action/input registry), `ui/navigation.js` (pages and layers), `ui/dialogs.js` (messages,
 confirmations, prompts, option lists, menus), and pickers: `calendar`, `currency-picker`,
 `icon-picker`, `number-picker`, `period-picker`, `time-picker`. Also `empty-state`, `hint`,
-`rate-line`.
+`rate-line`, and `spotlight` (scrolls to operation rows and flashes them once).
 
 ## screens — one module per screen or flow
 

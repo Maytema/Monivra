@@ -247,6 +247,10 @@
     font-size: 14px;
   }
 }
+.op-row.spot {
+  border-radius: 13px;
+  animation: spot-flash 2.4s ease-out;
+}
 .op-row.selected .op-name {
   font-size: 15px;
   line-height: 1.2;
