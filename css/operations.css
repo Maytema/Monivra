@@ -247,9 +247,23 @@
     font-size: 14px;
   }
 }
+/* A row the person was led to: it lifts a little inside a thin accent outline with a soft tint. */
 .op-row.spot {
-  border-radius: 13px;
-  animation: spot-flash 2.4s ease-out;
+  position: relative;
+  isolation: isolate;
+  animation: spot-lift 2.6s ease-out;
+}
+.op-row.spot::before {
+  content: "";
+  position: absolute;
+  inset: -5px -9px;
+  z-index: -1;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg));
+  box-shadow: 0 8px 22px -12px color-mix(in srgb, var(--accent) 60%, transparent);
+  pointer-events: none;
+  animation: spot-glow 2.6s ease-out both;
 }
 .op-row.selected .op-name {
   font-size: 15px;
