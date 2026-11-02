@@ -67,7 +67,7 @@ confirmations, prompts, option lists, menus), and pickers: `calendar`, `currency
 | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `screens/accounts/`                               | `list` (tab), `actions` (account sheet), `edit`, `type`, `progress`, `currency-change`                         |
 | `screens/categories.js`                           | Categories tab, editor, subcategory menus, manage page                                                         |
-| `screens/operations/`                             | `list` (tab and filtered list), `add-menu`, `filters`, `bulk-edit`                                             |
+| `screens/operations/`                             | `list` (tab and filtered list), `add-menu`, `filters`, `bulk-edit`, `reveal`                                   |
 | `screens/operation-editor/`                       | `start` (open), `view` (compose), `parties`, `amount`, `keypad`, `extras`, `actions`, `editor` (state, saving) |
 | `screens/operation-title.js`                      | Title of an operation row                                                                                      |
 | `screens/pickers.js`                              | Account and category pickers used everywhere                                                                   |
