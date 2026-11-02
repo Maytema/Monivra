@@ -63,6 +63,7 @@ const swipe = (page, selector, dx) =>
         }),
       );
     send("touchstart", 200);
+    for (const step of [0.25, 0.5, 0.75, 1]) send("touchmove", 200 + shift * step);
     send("touchend", 200 + shift);
   }, dx);
 const typeAmountAndSave = async (page, digit) => {
@@ -351,7 +352,7 @@ const scenarios = {
     await page.locator(".budget-card").click();
     await page.locator(".op-row").first().waitFor();
     expect(await page.locator(".op-row").count()).toBe(2);
-    await page.getByLabel("Previous period").first().click();
+    await page.locator(".period-arrows").getByLabel("Previous period").click();
     expect(await page.locator(".op-row").count()).toBe(0);
     await page.getByLabel("Edit budget").click();
     await page.getByRole("button", { name: "Delete" }).click();
@@ -500,6 +501,19 @@ const scenarios = {
     await notice.getByText("Operation saved").waitFor();
     expect(await notice.locator("svg").count()).toBe(1);
     await page.locator(".op-row.spot").waitFor();
+  },
+  async "the period of a filtered page is changed by a swipe"(page) {
+    await page.evaluate(async () => {
+      const { openFilteredOperations } = await import("/js/screens/operations/list.js");
+      openFilteredOperations({ types: ["expense"] });
+    });
+    const title = page.locator(".swipe-pane .period .label");
+    const before = await title.innerText();
+    await swipe(page, "#base > .swipe-pane", 160);
+    await page.waitForFunction(
+      (t) => document.querySelector(".swipe-pane .period .label").innerText !== t,
+      before,
+    );
   },
   async "the arrows of the period are dimmed on All time"(page) {
     await tab(page, "Operations");

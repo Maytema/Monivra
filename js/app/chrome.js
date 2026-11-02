@@ -58,7 +58,7 @@ function bindFabCollapse(base) {
 export function mountSwipeChrome() {
   const base = document.getElementById("base");
   if (base) bindFabCollapse(base);
-  if (uiState.pages.length || uiState.layers.length) return;
+  if (uiState.layers.length) return;
   const pane = base?.querySelector(".swipe-pane");
   if (!pane) return;
   mountTabUnderline(base);

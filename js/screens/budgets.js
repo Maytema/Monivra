@@ -20,6 +20,7 @@ import {
   iconButtonHtml,
   meterHtml,
   pageHeader,
+  swipePane,
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
@@ -65,16 +66,19 @@ export function budgetsView() {
   const states = appData.budgets.map(budgetState);
   return (
     pageHeader("Budgets") +
-    periodBar() +
-    `<div class="content">${
-      states.length
-        ? Object.keys(BUDGET_PERIODS)
-            .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
-            .filter(({ list }) => list.length)
-            .map(({ period, list }) => budgetGroup(period, list))
-            .join("")
-        : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
-    }</div>${states.length ? fabHtml("Add", () => editBudget(), "no-nav") : ""}`
+    swipePane(
+      periodBar() +
+        `<div class="content">${
+          states.length
+            ? Object.keys(BUDGET_PERIODS)
+                .map((period) => ({ period, list: states.filter((st) => st.b.period === period) }))
+                .filter(({ list }) => list.length)
+                .map(({ period, list }) => budgetGroup(period, list))
+                .join("")
+            : `<div class="more-empty">${iconSvg("budget", 75)}<h2>Budgets will be here</h2><p class="muted">So far, it's empty. Create your first budget?</p>${buttonHtml("Create a budget", () => editBudget(), "primary")}</div>`
+        }</div>`,
+    ) +
+    (states.length ? fabHtml("Add", () => editBudget()) : "")
   );
 }
 
@@ -104,12 +108,14 @@ export function budgetDetailsView(p) {
       "Budget",
       iconButtonHtml("edit", "Edit budget", () => editBudget(b)),
     ) +
-    periodBar() +
-    `<div class="content"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div>${
-      ops.length
-        ? dates.map((date) => dayGroup(date, ops)).join("")
-        : emptyStateHtml("operations", "Empty", "No expenses of this budget in the period")
-    }</div>`
+    swipePane(
+      periodBar() +
+        `<div class="content"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div>${
+          ops.length
+            ? dates.map((date) => dayGroup(date, ops)).join("")
+            : emptyStateHtml("operations", "Empty", "No expenses of this budget in the period")
+        }</div>`,
+    )
   );
 }
 // Budget editor form.

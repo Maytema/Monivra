@@ -43,11 +43,11 @@ export const dropdownHtml = (shown, fn) =>
 export const sheetFooterHtml = (...buttons) =>
   `<div class="sheet-footer">${buttons.join("")}</div>`;
 // Floating "Add" button: the label folds away when the list under it is scrolled.
-export const fabHtml = (label, fn, extra = "") =>
+export const fabHtml = (label, fn) =>
   buttonHtml(
     iconSvg("plus", 26) + `<span class="fab-label"><span>${translate(label)}</span></span>`,
     fn,
-    "fab fab-add " + extra,
+    "fab fab-add",
     `aria-label="${escapeHtml(translate(label))}"`,
   );
 // Message that slides down from the top edge; the icon and the tone say what happened. With

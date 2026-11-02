@@ -313,7 +313,8 @@
 .content.flush {
   padding: 0px 0px 16px;
 }
-.content:has(~ .fab) {
+/* Room for the floating button at the end of a list. */
+#base:has(> .fab) .content {
   padding-bottom: 92px;
 }
 .section-label:first-child {
@@ -495,10 +496,12 @@
   gap: 12px;
   margin-top: 20px;
 }
+/* The button keeps the same gap from the edge of the free space on every screen: above the
+   navigation bar where there is one, above the bottom edge where there is none. */
 .fab {
   position: absolute;
-  bottom: 94px;
-  right: 16px;
+  bottom: calc(var(--edge-gap) + env(safe-area-inset-bottom, 0px));
+  right: var(--edge-gap);
   background: var(--tint);
   padding: 16px 19px;
   border-radius: 19px;
@@ -512,15 +515,13 @@
 #base > .fab {
   z-index: 8;
   position: fixed;
-  right: 16px;
-  bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+}
+#base:has(.navbar) > .fab {
+  bottom: calc(var(--nav-height) + var(--edge-gap) + env(safe-area-inset-bottom, 0px));
 }
 .pager-viewport .fab,
 .pager-viewport .period-arrows {
   display: none;
-}
-#base > .fab.no-nav {
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
 }
 .card {
   border: 1px solid var(--line);
