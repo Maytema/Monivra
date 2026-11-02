@@ -1,20 +1,22 @@
 /* Scheduled payments that came due are posted on their own; the person is told afterwards */
 import { render } from "../app/shell.js";
 import { iconSvg } from "../core/constants.js";
-import { uiState } from "../core/state.js";
-import { dateLabel } from "../domain/finance.js";
+import { appData, emptyFilters, uiState } from "../core/state.js";
+import { dateLabel, operationMatchesFilters, periodAround } from "../domain/finance.js";
 import { missedPayments, postDue, settleMissed } from "../domain/scheduled.js";
 import { translate, translateCount, translateWith } from "../i18n/index.js";
 import { confirmAction } from "../ui/dialogs.js";
 import { goHome } from "../ui/navigation.js";
 import { buttonHtml, iconButtonHtml } from "../ui/primitives.js";
+import { spotlight } from "../ui/spotlight.js";
 import { operationTitle } from "./operation-title.js";
 
-// Post what came due; the count is kept until the person has seen it. Returns how many were posted.
+// Post what came due; the operations are remembered until the person has seen them. Returns how
+// many were posted.
 export function postDuePayments() {
   const posted = postDue();
-  uiState.paymentsPosted += posted;
-  return posted;
+  uiState.paymentsPosted.push(...posted);
+  return posted.length;
 }
 
 // Ask about the payments that are far behind, one at a time: add what was missed to the operations,
@@ -26,7 +28,7 @@ export function askAboutMissed() {
   const { item, count, since } = entry;
   const answer = (post) => {
     asking = false;
-    uiState.paymentsPosted += settleMissed(item.id, post);
+    uiState.paymentsPosted.push(...settleMissed(item.id, post));
     render();
     askAboutMissed();
   };
@@ -45,22 +47,34 @@ export function askAboutMissed() {
 let asking = false;
 
 // After a scheduled payment was saved: what is due is posted at once, and what is far behind is
-// asked about. Returns how many were posted.
+// asked about. Returns the ids of the operations posted.
 export function settleDueNow() {
   const posted = postDue();
   askAboutMissed();
   return posted;
 }
 
+// The operations list as it shows the given operations: a period and filters that include them,
+// scrolled to them and flashed once.
+export function showOperations(ids) {
+  goHome("operations");
+  const shown = appData.ops.filter((o) => ids.includes(o.id));
+  if (!shown.length) return;
+  uiState.period = periodAround(shown.map((o) => o.date));
+  if (!shown.every((o) => operationMatchesFilters(o))) uiState.filters = emptyFilters();
+  render();
+  spotlight(ids);
+}
+
 // The notice is read: it goes away, and the tap that read it can go on to the operations.
 function dismiss() {
-  uiState.paymentsPosted = 0;
+  uiState.paymentsPosted = [];
   render();
 }
 
 // Notice on the main tabs: how many payments were posted; a tap shows them among the operations.
 export function postedNoticeHtml() {
-  const n = uiState.paymentsPosted;
+  const n = uiState.paymentsPosted.length;
   if (!n) return "";
   const text = translateCount(
     "{n} scheduled payment was added to the operations. Tap to view.",
@@ -68,8 +82,9 @@ export function postedNoticeHtml() {
     n,
   );
   const open = () => {
-    uiState.paymentsPosted = 0;
-    goHome("operations");
+    const ids = uiState.paymentsPosted;
+    uiState.paymentsPosted = [];
+    showOperations(ids);
   };
   return `<div class="hint-banner">${buttonHtml(`${iconSvg("bell", 20)}<span class="grow">${text}</span>`, open, "hint-text")}${iconButtonHtml("close", "Dismiss", dismiss)}</div>`;
 }

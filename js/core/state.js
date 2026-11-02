@@ -34,12 +34,37 @@ export const emptyFilters = () => ({
   // How operations were added ("manual", "schedule"); null is all.
   origin: null,
 });
+// The period chosen in this session lives until the application is closed; a new session shows
+// the current month.
+const PERIOD_KEY = "monivra.session.period";
+const PERIOD_MODES = ["day", "week", "month", "year", "range", "all"];
+const currentMonth = () => ({ mode: "month", anchor: TODAY });
+function sessionPeriod() {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(PERIOD_KEY));
+    const date = /^\d{4}-\d{2}-\d{2}$/;
+    const valid =
+      PERIOD_MODES.includes(stored?.mode) &&
+      date.test(stored.anchor) &&
+      (stored.mode !== "range" || (date.test(stored.from) && date.test(stored.to)));
+    return valid ? stored : currentMonth();
+  } catch {
+    return currentMonth();
+  }
+}
+export function rememberPeriod() {
+  try {
+    sessionStorage.setItem(PERIOD_KEY, JSON.stringify(uiState.period));
+  } catch {
+    // Without session storage the period simply starts from the current month next time.
+  }
+}
 // Transient UI state: active tab, period, filters, page/sheet stacks, selection.
 export const uiState = {
   tab: "accounts",
   accountTab: "Accounts",
   catType: "expense",
-  period: { mode: "month", anchor: TODAY },
+  period: sessionPeriod(),
   openFolders: {},
   manageArchive: false,
   selected: [],
@@ -47,8 +72,8 @@ export const uiState = {
   search: false,
   filters: emptyFilters(),
   donut: null,
-  // Scheduled payments posted on their own since the person last looked.
-  paymentsPosted: 0,
+  // Ids of the operations scheduled payments posted on their own since the person last looked.
+  paymentsPosted: [],
   pages: [],
   layers: [],
   reorder: false,

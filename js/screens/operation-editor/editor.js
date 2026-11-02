@@ -11,8 +11,9 @@ import {
 import { isFarDate, isPlanned, putOperation } from "../../domain/operations.js";
 import { translateWith } from "../../i18n/index.js";
 import { confirmAction } from "../../ui/dialogs.js";
-import { goHome, openPage } from "../../ui/navigation.js";
-import { settleDueNow } from "../due-payments.js";
+import { openPage } from "../../ui/navigation.js";
+import { spotlight } from "../../ui/spotlight.js";
+import { settleDueNow, showOperations } from "../due-payments.js";
 import { banner, toast } from "../../ui/primitives.js";
 
 // The state of one open editor: the operation being edited and how it is being edited.
@@ -51,7 +52,11 @@ function applyEntryCurrency(draft) {
 }
 
 // The list of scheduled payments, where a notice about a new one leads.
-const openScheduled = () => openPage("scheduled");
+// The scheduled payments page with the payment just saved flashed.
+const showScheduled = (id) => {
+  openPage("scheduled");
+  spotlight([id]);
+};
 
 export function commitOperation(editor) {
   const { draft } = editor;
@@ -81,18 +86,24 @@ export function commitOperation(editor) {
       );
     // A date in the future makes it a scheduled payment, whichever way it was opened.
     const planned = editor.scheduled || isPlanned(draft);
-    putOperation(draft, editor.scheduled);
+    const saved = putOperation(draft, editor.scheduled);
     const onScheduledPage = uiState.pages.at(-1)?.kind === "scheduled";
     uiState.layers = [];
     // A scheduled payment dated today or earlier is due at once.
-    const posted = editor.scheduled ? settleDueNow() : 0;
+    const posted = editor.scheduled ? settleDueNow() : [];
     save();
     render();
-    if (posted)
-      banner("Added to the operations", "circleCheck", "positive", () => goHome("operations"));
-    else if (planned)
-      banner("Payment scheduled", "calendar", "accent", onScheduledPage ? null : openScheduled);
-    else toast("Operation saved");
+    if (posted.length)
+      banner("Added to the operations", "circleCheck", "positive", () => showOperations(posted));
+    else if (planned) {
+      banner(
+        "Payment scheduled",
+        "calendar",
+        "accent",
+        onScheduledPage ? null : () => showScheduled(saved.id),
+      );
+      if (onScheduledPage) spotlight([saved.id]);
+    } else toast("Operation saved");
   } catch (e) {
     toast(e.message);
   }

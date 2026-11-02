@@ -10,6 +10,8 @@ import {
   categoryFamily,
   categoryTotal,
   categoryTotalIn,
+  periodAround,
+  periodBounds,
   canShiftPeriod,
   operationMatchesFilters,
   shiftPeriod,
@@ -276,11 +278,11 @@ check("Payments that came due are posted on the day they were due", () => {
   const posted = postDue();
   const days = appData.ops.slice(count).map((o) => o.date);
   return (
-    posted === 3 &&
+    posted.length === 3 &&
     days.join() === [-2, -1, 0].map((n) => addDays(TODAY, n)).join() &&
     item.date === addDays(TODAY, 1) &&
     item.recur.remaining === 2 &&
-    postDue() === 0
+    postDue().length === 0
   );
 });
 
@@ -288,10 +290,10 @@ check("A one-time payment that came due is posted once and leaves the list", () 
   scheduledExpense(addDays(TODAY, -1), null);
   const count = appData.ops.length;
   return (
-    postDue() === 1 &&
+    postDue().length === 1 &&
     appData.ops.length === count + 1 &&
     appData.scheduled.length === 0 &&
-    postDue() === 0
+    postDue().length === 0
   );
 });
 
@@ -299,7 +301,7 @@ check("A payment that is not due yet stays untouched", () => {
   const later = addDays(TODAY, 3);
   const item = scheduledExpense(later, { every: 1, unit: "Days", remaining: null, days: [] });
   const count = appData.ops.length;
-  return postDue() === 0 && appData.ops.length === count && item.date === later;
+  return postDue().length === 0 && appData.ops.length === count && item.date === later;
 });
 
 check(
@@ -344,12 +346,12 @@ check(
     const count = appData.ops.length;
     const skipped = settleMissed(again.id, false);
     return (
-      posted === 0 &&
+      posted.length === 0 &&
       kept &&
-      added === 41 &&
+      added.length === 41 &&
       afterAdd === 41 &&
       next === addDays(TODAY, 1) &&
-      skipped === 0 &&
+      skipped.length === 0 &&
       appData.ops.length === count &&
       again.date === addDays(TODAY, 1) &&
       missedPayments().length === 0
@@ -360,14 +362,14 @@ check(
 check("A single payment dated more than a year ago waits for an answer too", () => {
   scheduledExpense(addDays(TODAY, -400), null);
   const before = appData.ops.length;
-  return postDue() === 0 && appData.ops.length === before && missedPayments().length === 1;
+  return postDue().length === 0 && appData.ops.length === before && missedPayments().length === 1;
 });
 
 check("A scheduled payment dated today or a few days ago is posted at once", () => {
   scheduledExpense(addDays(TODAY, -20), null);
   const before = appData.ops.length;
   return (
-    postDue() === 1 &&
+    postDue().length === 1 &&
     appData.ops.at(-1).date === addDays(TODAY, -20) &&
     appData.ops.length === before + 1 &&
     appData.scheduled.length === 0
@@ -451,7 +453,7 @@ check(
     appData.scheduled.push(b, c);
     const posted = postDue();
     return (
-      posted === 1 &&
+      posted.length === 1 &&
       missedPayments()
         .map((e) => e.item.id)
         .sort()
@@ -940,5 +942,33 @@ check("Storing a category applies the planned changes of its subcategories", () 
     removed.operations.join() === "__o3" &&
     removed.categories.includes("__s1") &&
     removed.categories.includes("__s3")
+  );
+});
+
+check("The ids of the operations a payment posted are handed back", () => {
+  const item = scheduledExpense(addDays(TODAY, -2), {
+    every: 1,
+    unit: "Days",
+    remaining: null,
+    days: [],
+  });
+  const ids = postDue();
+  return ids.length === 3 && ids.every((id) => postedOf(item).some((o) => o.id === id));
+});
+
+check("The period around posted days keeps the chosen one, else the month, else a range", () => {
+  const month = { mode: "month", anchor: TODAY };
+  const [from] = periodBounds(month);
+  const inside = periodAround([from], month);
+  const far = addDays(from, -45);
+  const other = periodAround([far], month);
+  const wide = periodAround([far, addDays(far, 40)], month);
+  return (
+    inside === month &&
+    other.mode === "month" &&
+    other.anchor === far &&
+    wide.mode === "range" &&
+    wide.from === far &&
+    wide.to === addDays(far, 40)
   );
 });

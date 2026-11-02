@@ -39,9 +39,53 @@
     transform: rotate(360deg);
   }
 }
+@property --spot-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes spot-sweep {
+  0% {
+    --spot-angle: 0deg;
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    --spot-angle: 360deg;
+    opacity: 0;
+  }
+}
+@keyframes spot-glow {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes spot-lift {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  10%,
+  70% {
+    transform: scale(1.012);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .orbit-ring,
-  .orbit-particles {
+  .orbit-particles,
+  .spot {
     animation: none;
+  }
+  .spot::after {
+    display: none;
   }
 }

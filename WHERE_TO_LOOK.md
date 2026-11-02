@@ -75,6 +75,7 @@ How the pieces work together is in [ARCHITECTURE.md](ARCHITECTURE.md); what ever
 | Debt or saving shows progress / "Completed"     | `accounts/list.js` (`isFinished`, `isCompleted`), `accounts/progress.js`                                  |
 | Scheduled payment fires on the wrong date       | `domain/scheduled.js`, `screens/recurrence.js`                                                            |
 | Due payments posted on their own, the notice    | `screens/due-payments.js`, `domain/scheduled.js` (`postDue`)                                              |
+| A notice that leads to a row, the row flashing  | `screens/due-payments.js` (`showOperations`), `ui/spotlight.js`, `domain/finance.js` (`periodAround`)     |
 | Text not translated                             | Add the English text as a key in `i18n/ru.js`                                                             |
 | The new version does not show on a phone        | The browser caches the modules: reload the page fully or clear the site data                              |
 | Page scrolls back to the top after a change     | Scroll restoration in `app/shell.js` (`render`)                                                           |

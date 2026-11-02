@@ -157,6 +157,21 @@ export const dateLabel = (s, short = false) =>
       });
 
 // Start and end dates of the selected statistics/operations period.
+// The period that shows the given days: the one chosen when it already does, else the month of the
+// first day, else everything from the first to the last day.
+export function periodAround(days, period = uiState.period) {
+  const [first, last] = [
+    days.reduce((a, b) => (a < b ? a : b)),
+    days.reduce((a, b) => (a > b ? a : b)),
+  ];
+  const shows = (p) => {
+    const [from, to] = periodBounds(p);
+    return from <= first && last <= to;
+  };
+  const month = { mode: "month", anchor: first };
+  if (shows(period)) return period;
+  return shows(month) ? month : { mode: "range", from: first, to: last, anchor: first };
+}
 export function periodBounds(p = uiState.period) {
   const d = parseDate(p.anchor),
     y = d.getUTCFullYear(),
