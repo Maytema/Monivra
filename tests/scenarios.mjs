@@ -171,6 +171,25 @@ const scenarios = {
     await page.locator(".op-row.selected").waitFor();
     expect(await page.locator("#base .content").evaluate((el) => el.scrollTop > 0)).toBe(true);
   },
+  async "the chosen period comes back from the operations of an account and of a category"(page) {
+    const label = async () => (await page.locator("#base .period .label").textContent()).trim();
+    await tab(page, "Statistics");
+    const chosen = await label();
+    await page.locator(".account-group, .navbar").first().waitFor();
+    await tab(page, "Accounts");
+    await page.locator(".account-group button").first().click();
+    await page.locator(".sheet-action", { hasText: "Operations" }).click();
+    expect(await label()).toBe("All time");
+    await page.getByLabel("Back").click();
+    await tab(page, "Statistics");
+    expect(await label()).toBe(chosen);
+    await page.locator(".stats-category").first().click();
+    await page.locator(".sheet-action", { hasText: "Operations" }).click();
+    await page.locator(".period-arrows").getByLabel("Previous period").click();
+    expect((await label()) === chosen).toBe(false);
+    await page.getByLabel("Back").click();
+    expect(await label()).toBe(chosen);
+  },
   async "the comment field opens with the caret after the text"(page) {
     await openEditorOn(page, "Food");
     await page.getByLabel("Comment").first().click();
@@ -894,11 +913,9 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
-  "a long press selects an operation without moving the list": (data) => {
-    const base = data.ops.find((op) => op.type === "expense");
-    const day = new Date().toLocaleDateString("en-CA");
-    data.ops = Array.from({ length: 12 }, (_, i) => ({ ...base, id: `many-${i}`, date: day }));
-  },
+  "a long press selects an operation without moving the list": manyOperationsToday,
+  "the chosen period comes back from the operations of an account and of a category":
+    manyOperationsToday,
   "the figures of a budget stay above the scrolling operations": budgetWithOperations,
   "partial deletion removes the records and keeps the settings, deleting local data starts from scratch":
     (data) => {
@@ -921,6 +938,12 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// Twelve expenses today, so the month has enough to scroll and to show in the statistics.
+function manyOperationsToday(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const day = new Date().toLocaleDateString("en-CA");
+  data.ops = Array.from({ length: 12 }, (_, i) => ({ ...base, id: `many-${i}`, date: day }));
+}
 // A budget with two of the three operations of the month in its category.
 function budgetWithOperations(data) {
   const base = data.ops.find((op) => op.type === "expense");

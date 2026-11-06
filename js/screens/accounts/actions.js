@@ -1,14 +1,14 @@
 /* Sheet with the actions of an account (new operation, transfer, favorite, edit) and its progress */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, TODAY } from "../../core/constants.js";
-import { uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { accountBalance, moneySpanHtml } from "../../domain/finance.js";
 import { toggleFavoriteAccount } from "../../domain/accounts.js";
 import { translate } from "../../i18n/index.js";
 import { operationStart } from "../operation-editor/start.js";
+import { openFilteredOperations } from "../operations/list.js";
 import { actionTileHtml, badgeHtml, buttonHtml } from "../../ui/primitives.js";
-import { closeLayers, goHome, openSheet } from "../../ui/navigation.js";
+import { closeLayers, openSheet } from "../../ui/navigation.js";
 import { editAccount } from "./edit.js";
 import { progressBlockHtml } from "./progress.js";
 
@@ -44,11 +44,9 @@ export function accountActions(a) {
           save();
           closeLayers();
         },
-      )}${act("receipt", "Operations", "#1f8fe0", () => {
-        uiState.filters.accounts = [a.id];
-        uiState.period = { mode: "all", anchor: TODAY };
-        goHome("operations");
-      })}${act("income", "Top up", "#22b573", () => startFromAccount({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", "#f2a313", () => startFromAccount({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", "#e5384f", () => startFromAccount({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
+      )}${act("receipt", "Operations", "#1f8fe0", () =>
+        openFilteredOperations({ accounts: [a.id] }, { mode: "all", anchor: TODAY }),
+      )}${act("income", "Top up", "#22b573", () => startFromAccount({ type: "income", to: a.id, accountAction: "topup" }))}${act("transfer", "Transfer", "#f2a313", () => startFromAccount({ type: "transfer", from: a.id, accountAction: "transfer" }))}${act("expense", "Debit", "#e5384f", () => startFromAccount({ type: "expense", from: a.id, accountAction: "debit" }))}</div>`,
     a.name,
   );
 }
