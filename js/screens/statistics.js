@@ -6,6 +6,7 @@ import { save } from "../data/storage.js";
 import {
   accountById,
   categoryById,
+  categoryFamily,
   convertCurrency,
   formatMoney,
   moneySpanHtml,
@@ -15,6 +16,7 @@ import {
   totalByType,
   visibleOperations,
 } from "../domain/finance.js";
+import { donutSlices, OTHER_SLICE } from "../domain/chart.js";
 import { currentLocale, translate, translateWith } from "../i18n/index.js";
 import { hero } from "./accounts/list.js";
 import { categoryActions, sumTabs } from "./categories.js";
@@ -58,7 +60,11 @@ function statsGroups(type = uiState.catType) {
   return [...groups.values()].sort((a, b) => b.total - a.total);
 }
 // Open the operations list filtered by a category.
-function statsDetail(id) {
+function statsDetail(id, members = []) {
+  if (id === OTHER_SLICE)
+    return openFilteredOperations({
+      categories: members.flatMap((g) => (categoryById(g.id) ? categoryFamily(g.id) : [g.id])),
+    });
   const c = categoryById(id);
   if (c) categoryActions(c, uiState.period);
   else openFilteredOperations({ categories: [id] });
@@ -91,15 +97,18 @@ function chartBars() {
     w = 320 / bins;
   return `<svg class="chart" viewBox="0 0 340 144" role="img" aria-label="Income and expense chart"><path d="M10 124H334" stroke="var(--line)"/>${inc.map((n, i) => `<rect opacity="${uiState.catType === "income" ? 1 : 0}" x="${10 + i * w}" y="${124 - (n / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(n / max) * 105}" rx="1" fill="var(--positive)"/><rect opacity="${uiState.catType === "expense" ? 1 : 0}" x="${10 + i * w + w * 0.4}" y="${124 - (exp[i] / max) * 105}" width="${Math.max(2, w * 0.36)}" height="${(exp[i] / max) * 105}" rx="1" fill="var(--negative)"/>`).join("")}<text x="10" y="141" fill="var(--muted)" font-size="10">${escapeHtml(axisDate(start))}</text><text x="334" y="141" fill="var(--muted)" font-size="10" text-anchor="end">${escapeHtml(axisDate(end))}</text></svg>`;
 }
-// Donut chart.
+// Donut chart: a slice for every category, the narrow ones together (see donutSlices).
 function donut(groups) {
-  const total = groups.reduce((s, x) => s + x.total, 0);
+  const slices = donutSlices(groups);
+  const total = slices.reduce((s, x) => s + x.total, 0);
+  const chosen = slices.find((g) => g.id === uiState.donut);
+  const label = (g) => (g.id === OTHER_SLICE ? translate(g.name) : g.name);
   let offset = 0;
   const circ = 2 * Math.PI * 68;
-  return `<div class="donut-wrap"><svg viewBox="0 0 190 190" role="img" aria-label="Category distribution"><circle cx="95" cy="95" r="68" fill="none" stroke="var(--line)" stroke-width="28"/>${groups
+  return `<div class="donut-wrap"><svg viewBox="0 0 190 190" role="img" aria-label="Category distribution"><circle cx="95" cy="95" r="68" fill="none" stroke="var(--line)" stroke-width="28"/>${slices
     .map((g) => {
       const length = total ? (g.total / total) * circ : 0;
-      const out = `<circle role="button" tabindex="0" aria-label="${escapeHtml(g.name)}" data-action="${registerAction(
+      const out = `<circle role="button" tabindex="0" aria-label="${escapeHtml(label(g))}" data-action="${registerAction(
         () => {
           uiState.donut = uiState.donut === g.id ? null : g.id;
           render();
@@ -110,7 +119,7 @@ function donut(groups) {
     })
     .join(
       "",
-    )}</svg><div class="donut-center"><small>${escapeHtml(groups.find((g) => g.id === uiState.donut)?.name || translate("Not selected"))}</small><strong>${uiState.donut ? (total ? Math.round(((groups.find((g) => g.id === uiState.donut)?.total || 0) / total) * 100) : 0) + "%" : formatMoney(total)}</strong>${uiState.donut ? buttonHtml("Operations", () => statsDetail(uiState.donut), "text-button") : ""}</div></div>`;
+    )}</svg><div class="donut-center"><small>${escapeHtml(chosen ? label(chosen) : translate("Not selected"))}</small><strong>${chosen ? exactPercent(total ? (chosen.total / total) * 100 : 0) : formatMoney(total)}</strong>${chosen ? buttonHtml("Operations", () => statsDetail(chosen.id, chosen.members), "text-button") : ""}</div></div>`;
 }
 // Statistics tab.
 export function statisticsView() {

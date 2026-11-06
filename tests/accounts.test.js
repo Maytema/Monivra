@@ -19,6 +19,7 @@ import {
   changeMainCurrency,
   planCurrencyChange,
 } from "../js/domain/currency-change.js";
+import { donutSlices, OTHER_SLICE } from "../js/domain/chart.js";
 import { reorderedList } from "../js/domain/ordering.js";
 import { shownPercent } from "../js/domain/percent.js";
 import { exactPercent, percentLabel } from "../js/ui/percent.js";
@@ -542,3 +543,29 @@ check("A debt operation with a missing counterpart is refused before anything ch
     return error.message === "Select a different account" && appData.accounts.length === count;
   }
 });
+
+// The category donut gathers the narrow slices so each slice can be tapped.
+const donutGroup = (id, total) => ({ id, name: id, color: "#123456", total });
+const donutOf = (totals) => donutSlices(totals.map((n, i) => donutGroup("c" + i, n)));
+check("narrow categories become one slice that keeps its members", () => {
+  const slices = donutOf([60, 20, 8, 5, 3, 1.5, 1, 0.8, 0.7]);
+  const other = slices.find((s) => s.id === OTHER_SLICE);
+  return slices.length === 7 && other.members.length === 3 && Math.abs(other.total - 2.5) < 1e-9;
+});
+check("the donut slices still add up to the whole", () => {
+  const slices = donutOf([60, 20, 8, 5, 3, 1.5, 1, 0.8, 0.7]);
+  return Math.abs(slices.reduce((s, x) => s + x.total, 0) - 100) < 1e-9;
+});
+check(
+  "a single narrow category is not hidden in 'Other'",
+  () => donutOf([60, 20, 8, 5, 3, 2.5, 1]).length === 7,
+);
+check(
+  "the biggest six categories always keep their own slice",
+  () => donutOf(Array(30).fill(1)).filter((s) => s.id !== OTHER_SLICE).length === 6,
+);
+check(
+  "a category with nothing in the period has no slice",
+  () => donutOf([5, 0, 3, 0]).length === 2,
+);
+check("an empty period has no slices", () => donutOf([0, 0]).length === 0);

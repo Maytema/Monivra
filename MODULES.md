@@ -46,6 +46,7 @@ Paths are under `js/`.
 | `domain/operations.js`      | Check, store, delete, bulk-change operations                                       |
 | `domain/scheduled.js`       | Next date of a recurring payment, "Add now", "Skip", posting what came due         |
 | `domain/budgets.js`         | Spent and left of a budget in its period, the operations it counts                 |
+| `domain/chart.js`           | Slices of the category donut: narrow ones gathered into "Other"                    |
 | `domain/accounts.js`        | Account form state, checks, storing, favorite, deletion                            |
 | `domain/categories.js`      | Storing with subcategory changes, deleting, moving, merging                        |
 | `domain/currency-change.js` | Plan and apply a currency change of an account or of the application               |
