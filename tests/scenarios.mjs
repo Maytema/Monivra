@@ -162,6 +162,34 @@ const scenarios = {
     expect(short.join()).toBe(tall.join());
     expect(tall[2]).toBe(56);
   },
+  async "a long press selects an operation without moving the list"(page) {
+    await tab(page, "Operations");
+    await page.locator(".op-row").first().waitFor();
+    const row = page.locator(".op-row").nth(2);
+    await page.locator("#base .content").evaluate((el) => (el.scrollTop = 150));
+    await row.dispatchEvent("pointerdown", { pointerId: 1, pointerType: "touch" });
+    await page.locator(".op-row.selected").waitFor();
+    expect(await page.locator("#base .content").evaluate((el) => el.scrollTop > 0)).toBe(true);
+  },
+  async "the chosen period comes back from the operations of an account and of a category"(page) {
+    const label = async () => (await page.locator("#base .period .label").textContent()).trim();
+    await tab(page, "Statistics");
+    const chosen = await label();
+    await page.locator(".account-group, .navbar").first().waitFor();
+    await tab(page, "Accounts");
+    await page.locator(".account-group button").first().click();
+    await page.locator(".sheet-action", { hasText: "Operations" }).click();
+    expect(await label()).toBe("All time");
+    await page.getByLabel("Back").click();
+    await tab(page, "Statistics");
+    expect(await label()).toBe(chosen);
+    await page.locator(".stats-category").first().click();
+    await page.locator(".sheet-action", { hasText: "Operations" }).click();
+    await page.locator(".period-arrows").getByLabel("Previous period").click();
+    expect((await label()) === chosen).toBe(false);
+    await page.getByLabel("Back").click();
+    expect(await label()).toBe(chosen);
+  },
   async "the comment field opens with the caret after the text"(page) {
     await openEditorOn(page, "Food");
     await page.getByLabel("Comment").first().click();
@@ -371,22 +399,39 @@ const scenarios = {
     await choose("By hand", "By schedule");
     expect(await shown()).toBe(all - 3);
   },
-  async "a budget card opens its editor, the operations of the period are a button, deleting returns to the list"(
+  async "a budget card shows its operations, the pencil opens the editor, deleting returns to the list"(
     page,
   ) {
     await tab(page, "More");
     await page.getByText("Budgets", { exact: true }).first().click();
     await page.locator(".budget-card").click();
-    await page.getByLabel("Operations of the budget").click();
     await page.locator(".op-row").first().waitFor();
     expect(await page.locator(".op-row").count()).toBe(2);
     await page.locator(".period-arrows").getByLabel("Previous period").click();
     expect(await page.locator(".op-row").count()).toBe(0);
-    await page.getByLabel("Back").click();
+    await page.getByLabel("Edit budget").click();
     await page.getByRole("button", { name: "Delete" }).click();
     await page.getByRole("button", { name: "Delete" }).last().click();
     await page.getByText("Budget deleted").waitFor();
     expect(await page.getByText("Budgets will be here").count()).toBe(1);
+  },
+  async "a long press on a budget card offers to edit or delete it"(page) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    const card = page.locator(".budget-card").first();
+    const box = await card.boundingBox();
+    await card.dispatchEvent("pointerdown", {
+      pointerId: 1,
+      clientX: box.x + 40,
+      clientY: box.y + 30,
+      pointerType: "touch",
+    });
+    await page.locator(".popup-item", { hasText: "Edit" }).waitFor();
+    await page.locator(".popup-item", { hasText: "Delete" }).waitFor();
+    await page.locator(".popup-item", { hasText: "Edit" }).click();
+    await page.getByLabel("Title").waitFor();
+    await page.getByLabel("Back").click();
+    expect(await page.locator(".budget-card").count()).toBe(1);
   },
   async "a payment far behind is asked about: adding posts what was missed, skipping does not"(
     page,
@@ -544,7 +589,6 @@ const scenarios = {
     await tab(page, "More");
     await page.getByText("Budgets", { exact: true }).first().click();
     await page.locator(".budget-card").click();
-    await page.getByLabel("Operations of the budget").click();
     expect(await page.locator(".content .budget-card").count()).toBe(0);
     expect(await page.locator(".budget-pinned .budget-card").count()).toBe(1);
   },
@@ -795,11 +839,11 @@ const scenarios = {
     await page.locator(".empty-state").getByRole("button", { name: "Create" }).click();
     expect((await page.locator(".calc-keypad, input").count()) > 0).toBe(true);
   },
-  async "the deletion page says how much is stored and each way names what goes"(page) {
+  async "each way on the deletion page shows how much it deletes"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
     await page.getByText("Delete my data", { exact: true }).click();
-    expect(await page.locator(".deletion-intro").textContent()).toMatch(/\d+ accounts/);
+    expect(await page.locator(".row .sub").nth(1).textContent()).toMatch(/\d+ accounts/);
     expect(await page.locator("#base .row").count()).toBe(4);
     await page.getByText("Delete operations", { exact: true }).click();
     expect(await page.locator(".confirm-message").textContent()).toMatch(/^\d+ operations will be/);
@@ -869,13 +913,17 @@ const adjustments = {
       { ...base, id: "plan-c", date: day, fromSchedule: { id: "plan2", date: day, byHand: true } },
     );
   },
+  "a long press selects an operation without moving the list": manyOperationsToday,
+  "the chosen period comes back from the operations of an account and of a category":
+    manyOperationsToday,
   "the figures of a budget stay above the scrolling operations": budgetWithOperations,
   "partial deletion removes the records and keeps the settings, deleting local data starts from scratch":
     (data) => {
       data.settings.accent = "#0b6aa8";
     },
-  "a budget card opens its editor, the operations of the period are a button, deleting returns to the list":
+  "a budget card shows its operations, the pencil opens the editor, deleting returns to the list":
     budgetWithOperations,
+  "a long press on a budget card offers to edit or delete it": budgetWithOperations,
   "a payment far behind is asked about: adding posts what was missed, skipping does not":
     addOverdue,
   "skipping the missed payments adds nothing": addOverdue,
@@ -890,6 +938,12 @@ const adjustments = {
     data.categories.find((category) => category.name === "Food").currency = "USD";
   },
 };
+// Twelve expenses today, so the month has enough to scroll and to show in the statistics.
+function manyOperationsToday(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const day = new Date().toLocaleDateString("en-CA");
+  data.ops = Array.from({ length: 12 }, (_, i) => ({ ...base, id: `many-${i}`, date: day }));
+}
 // A budget with two of the three operations of the month in its category.
 function budgetWithOperations(data) {
   const base = data.ops.find((op) => op.type === "expense");

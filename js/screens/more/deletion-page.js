@@ -1,4 +1,4 @@
-/* Deletion page: the ways to delete data, each with what exactly goes and how much of it there is */
+/* Deletion page: the ways to delete data, each with how much of it goes */
 import { appData, setAppData } from "../../core/state.js";
 import { createEmptyData, withoutFinanceData } from "../../data/defaults.js";
 import { save } from "../../data/storage.js";
@@ -29,32 +29,30 @@ const countedList = (data, kinds) => {
 };
 
 const FINANCE = ["accounts", "categories", "ops", "scheduled", "budgets"];
-// Each way: what it removes (kinds), the line under its title and the data that is left.
+// Each way: what it removes (kinds), the line under its title (what goes, counted) and the data
+// that is left.
 const DELETIONS = [
   {
     title: "Delete operations",
-    note: "Only the operations are deleted. Accounts, categories, budgets and scheduled payments stay.",
     kinds: ["ops"],
     result: (data) => ({ ...data, ops: [] }),
     backupFirst: true,
   },
   {
     title: "Partial deletion",
-    note: "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.",
     kinds: FINANCE,
     result: withoutFinanceData,
     backupFirst: true,
   },
   {
     title: "Delete backups",
-    note: "Saved backups are deleted. Your data and settings stay.",
     kinds: ["backups"],
     result: (data) => ({ ...data, backups: [] }),
     backupFirst: false,
   },
   {
     title: "Delete local data",
-    note: "Everything stored on this device is deleted: the data, backups, settings and reminders. The application starts from scratch.",
+    note: "Everything: the data, backups, settings and reminders",
     kinds: [...FINANCE, "backups"],
     settings: true,
     result: createEmptyData,
@@ -88,18 +86,15 @@ function askToDelete({ kinds, result, backupFirst, settings = false }) {
   );
 }
 
+// The line under a way: its own text, or what it deletes with the counts.
+const noteOf = (way) =>
+  way.note || countedList(appData, way.kinds) || translate("There is nothing to delete");
+
 export function deletionView() {
-  const held = countedList(appData, [...FINANCE, "backups"]);
   return (
     pageHeader("Deletion") +
-    `<div class="content flush"><p class="deletion-intro">${
-      held
-        ? translateWith("Stored on this device: {list}. Deleted data cannot be restored.", {
-            list: held,
-          })
-        : translate("Nothing is stored on this device.")
-    }</p>${DELETIONS.map((way) =>
-      menuRowHtml(way.title, "trash", () => askToDelete(way), way.note, ""),
+    `<div class="content flush"><p class="deletion-intro">${translate("Deleted data cannot be restored.")}</p>${DELETIONS.map(
+      (way) => menuRowHtml(way.title, "trash", () => askToDelete(way), noteOf(way), ""),
     ).join("")}</div>`
   );
 }

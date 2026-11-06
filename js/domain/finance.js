@@ -194,9 +194,11 @@ export function periodBounds(p = uiState.period) {
 // Can the period be moved to the neighbouring one? "All time" has none.
 export const canShiftPeriod = (p = uiState.period) => p.mode !== "all";
 // Move the period one step forward (1) or back (-1): a day, week, month or year, or a range by
-// its own length.
-export function shiftPeriod(n, p = uiState.period) {
-  if (!canShiftPeriod(p)) return false;
+// its own length. The shown period becomes a new object, so a period kept elsewhere (the one a
+// page returns to) is never moved with it.
+export function shiftPeriod(n) {
+  if (!canShiftPeriod()) return false;
+  const p = { ...uiState.period };
   if (p.mode === "range") {
     const days = Math.round((parseDate(p.to) - parseDate(p.from)) / 86400000) + 1;
     p.from = addDays(p.from, n * days);
@@ -207,6 +209,7 @@ export function shiftPeriod(n, p = uiState.period) {
     d.setUTCMonth(d.getUTCMonth() + n * (p.mode === "year" ? 12 : 1));
     p.anchor = toIsoDate(d);
   } else p.anchor = addDays(p.anchor, n * (p.mode === "week" ? 7 : 1));
+  uiState.period = p;
   return true;
 }
 

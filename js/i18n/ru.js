@@ -292,24 +292,16 @@ export const russianStrings = {
   Deletion: "Удаление",
   "Partial deletion": "Частичное удаление",
   "Delete operations": "Удалить операции",
-  "Only the operations are deleted. Accounts, categories, budgets and scheduled payments stay.":
-    "Удаляются только операции. Счета, категории, бюджеты и запланированные платежи остаются.",
-  "Accounts, categories, operations, budgets and scheduled payments are deleted. Settings and backups stay.":
-    "Удаляются счета, категории, операции, бюджеты и запланированные платежи. Настройки и копии остаются.",
   "Delete backups": "Удалить копии",
-  "Saved backups are deleted. Your data and settings stay.":
-    "Удаляются сохранённые копии. Данные и настройки остаются.",
   "Delete local data": "Удалить локальные данные",
-  "Everything stored on this device is deleted: the data, backups, settings and reminders. The application starts from scratch.":
-    "Удаляется всё, что хранится на этом устройстве: данные, копии, настройки и напоминания. Приложение начнёт с чистого листа.",
+  "Everything: the data, backups, settings and reminders":
+    "Всё: данные, копии, настройки и напоминания",
   "{list} will be deleted. This cannot be undone.": "Будет удалено: {list}. Это нельзя отменить.",
   "{list}, settings and reminders will be deleted. This cannot be undone.":
     "Будет удалено: {list}, настройки и напоминания. Это нельзя отменить.",
   "Settings and reminders will be deleted. This cannot be undone.":
     "Будут удалены настройки и напоминания. Это нельзя отменить.",
-  "Stored on this device: {list}. Deleted data cannot be restored.":
-    "На устройстве: {list}. Удалённые данные восстановить нельзя.",
-  "Nothing is stored on this device.": "На устройстве ничего не хранится.",
+  "Deleted data cannot be restored.": "Удалённые данные восстановить нельзя.",
   "There is nothing to delete": "Удалять нечего",
   and: "и",
   "{n} scheduled payments": [
@@ -379,7 +371,6 @@ export const russianStrings = {
   "Backups deleted": "Копии удалены",
   "Delete all local backups from storage. Deleted data cannot be restored.":
     "Удалить все локальные копии из хранилища. Удалённые данные восстановить нельзя.",
-  "Operations of the budget": "Операции бюджета",
   "Missed payments": "Пропущенные платежи",
   "“{name}” has not been added since {date} (payments: {n}). Add them to the operations?":
     "Платёж «{name}» не добавлялся с {date} (платежей: {n}). Добавить их в операции?",

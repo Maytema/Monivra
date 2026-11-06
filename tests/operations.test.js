@@ -723,19 +723,29 @@ check(
 );
 
 check('The period steps by its own length, and "All time" has no neighbours', () => {
-  const month = { mode: "month", anchor: "2026-01-31" };
-  const range = { mode: "range", from: "2026-03-01", to: "2026-03-10" };
-  const all = { mode: "all", anchor: "2026-01-31" };
-  shiftPeriod(1, month);
-  shiftPeriod(-1, range);
-  return (
-    month.anchor === "2026-02-01" &&
-    range.from === "2026-02-19" &&
-    range.to === "2026-02-28" &&
-    !canShiftPeriod(all) &&
-    shiftPeriod(1, all) === false &&
-    all.anchor === "2026-01-31"
-  );
+  const before = uiState.period;
+  try {
+    const month = { mode: "month", anchor: "2026-01-31" };
+    uiState.period = month;
+    shiftPeriod(1);
+    const stepped = uiState.period;
+    uiState.period = { mode: "range", from: "2026-03-01", to: "2026-03-10" };
+    shiftPeriod(-1);
+    const range = uiState.period;
+    const all = { mode: "all", anchor: "2026-01-31" };
+    uiState.period = all;
+    return (
+      stepped.anchor === "2026-02-01" &&
+      month.anchor === "2026-01-31" &&
+      range.from === "2026-02-19" &&
+      range.to === "2026-02-28" &&
+      !canShiftPeriod(all) &&
+      shiftPeriod(1) === false &&
+      uiState.period === all
+    );
+  } finally {
+    uiState.period = before;
+  }
 });
 
 check("Filters combine: subcategory under its own parent, account, type and tags", () => {

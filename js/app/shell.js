@@ -187,15 +187,22 @@ function scrolledContainers(app) {
       base: !!el.closest("#base"),
     }));
 }
+// The element a scrolled container became: the one at the same place in the page, or, when the
+// markup around it changed (a header appeared above the list), the only one with the same classes.
+function findContainer(app, { path, className }) {
+  let el = app;
+  for (const i of path) el = el?.children[i];
+  if (el && el.className === className) return el;
+  if (!className) return null;
+  const same = [...app.querySelectorAll("*")].filter((x) => x.className === className);
+  return same.length === 1 ? same[0] : null;
+}
 function restoreContainers(app, saved) {
-  for (const { path, className, top, left } of saved) {
-    let el = app;
-    for (const i of path) el = el?.children[i];
-    // A different element at that place means the screen was rebuilt: leave it alone.
-    if (el && el.className === className) {
-      el.scrollTop = top;
-      el.scrollLeft = left;
-    }
+  for (const container of saved) {
+    const el = findContainer(app, container);
+    if (!el) continue;
+    el.scrollTop = container.top;
+    el.scrollLeft = container.left;
   }
 }
 

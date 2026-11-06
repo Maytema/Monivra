@@ -1,5 +1,6 @@
 /* Budgets: list, details of one budget and the editor */
 import { render } from "../app/shell.js";
+import { registerAction } from "../ui/handlers.js";
 import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { categoryById, convertCurrency, formatMoney, periodTitle } from "../domain/finance.js";
@@ -10,8 +11,9 @@ import { currencyName, translate, translateWith } from "../i18n/index.js";
 import { exactPercent, percentLabel } from "../ui/percent.js";
 import { categorySelect } from "./category-select.js";
 import { amountPicker } from "../ui/number-picker.js";
+import { save } from "../data/storage.js";
 import { finishFlow, openPage } from "../ui/navigation.js";
-import { confirmAction, optionSheet } from "../ui/dialogs.js";
+import { confirmAction, optionSheet, popupMenu } from "../ui/dialogs.js";
 import {
   badgeHtml,
   buttonHtml,
@@ -48,11 +50,18 @@ const budgetBody = ({ b, used, left, share }, percent) => {
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
   return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${remainderHtml(left, b.currency)}`;
 };
+// A tap shows the operations the budget counts; a long press offers to change or delete it.
 const budgetCard = (state) =>
   buttonHtml(
     budgetBody(state, percentLabel),
-    () => editBudget(state.b),
+    () => openPage("budgetDetails", { id: state.b.id }),
     "card budget-card " + (state.left < 0 ? "over" : ""),
+    `data-hold="${registerAction((card) =>
+      popupMenu(card, [
+        ["Edit", () => editBudget(state.b)],
+        ["Delete", () => deleteBudget(state.b)],
+      ]),
+    )}"`,
   );
 // Budgets of one period under a heading that adds them up in the main currency.
 const budgetGroup = (period, states) => {
@@ -120,14 +129,33 @@ function editBudget(b) {
         },
   });
 }
+// Ask, then delete a budget and leave its pages (the editor, and the operations under it).
+function deleteBudget(b) {
+  confirmAction(
+    "Delete this budget?",
+    () => {
+      appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
+      uiState.pages = uiState.pages.filter((page) => page.id !== b.id && page.draft?.id !== b.id);
+      uiState.layers = [];
+      save();
+      render();
+      toast("Budget deleted");
+    },
+    true,
+    "Delete",
+  );
+}
 // What a budget counts: its figures and the operations of the period of the period bar, so the
-// figures can be checked and other months looked at. It is reached from the editor of the budget.
+// figures can be checked and other months looked at. Its editor is the pencil in the header.
 export function budgetDetailsView(p) {
   const b = appData.budgets.find((x) => x.id === p.id);
   const ops = budgetOperations(b);
   const dates = [...new Set(ops.map((o) => o.date))];
   return (
-    pageHeader("Budget") +
+    pageHeader(
+      "Budget",
+      iconButtonHtml("edit", "Edit budget", () => editBudget(b)),
+    ) +
     swipePane(
       periodBar(monthPicker) +
         // The figures stay in view while the operations under them scroll.
@@ -143,14 +171,7 @@ export function budgetDetailsView(p) {
 export function budgetView(p) {
   const b = p.draft;
   return (
-    pageHeader(
-      b.id ? "Edit budget" : "Create a budget",
-      b.id
-        ? iconButtonHtml("receipt", "Operations of the budget", () =>
-            openPage("budgetDetails", { id: b.id }),
-          )
-        : "",
-    ) +
+    pageHeader(b.id ? "Edit budget" : "Create a budget") +
     `<div class="content"><div class="fields">${textFieldHtml("Title", b.name, (v) => (b.name = v), "Enter the title")}${fieldButtonHtml(
       "Time period",
       `<span class="period-value">${periodIcon(b.period)}${translate(BUDGET_PERIODS[b.period])}</span>`,
@@ -210,23 +231,6 @@ export function budgetView(p) {
         finishFlow("Budget saved");
       },
       "primary",
-    )}${
-      b.id
-        ? buttonHtml(
-            "Delete",
-            () =>
-              confirmAction(
-                "Delete this budget?",
-                () => {
-                  appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
-                  finishFlow("Budget deleted");
-                },
-                true,
-                "Delete",
-              ),
-            "outline",
-          )
-        : ""
-    }</div>`
+    )}${b.id ? buttonHtml("Delete", () => deleteBudget(b), "outline") : ""}</div>`
   );
 }
