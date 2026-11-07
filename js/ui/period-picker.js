@@ -16,11 +16,11 @@ export function periodBar(picker = periodPicker) {
   const fixed = !canShiftPeriod();
   return `<div class="period">${iconButtonHtml("left", "Previous period", () => stepPeriod(-1), fixed)}${buttonHtml(escapeHtml(periodTitle()) + " " + iconSvg("down", 14), picker, "label")}${iconButtonHtml("right", "Next period", () => stepPeriod(1), fixed)}</div>`;
 }
-// For screens that count by whole months (budgets): the title opens the calendar, and the month of
-// the day chosen is shown.
-export function monthPicker() {
+// For screens that look at one period at a time (budgets): the title opens the calendar, and the
+// period around the day chosen is shown, of the same kind as before.
+export function dayPicker() {
   calendar(uiState.period.anchor, (day) => {
-    uiState.period = { mode: "month", anchor: day };
+    uiState.period = { ...uiState.period, anchor: day };
     render();
   });
 }

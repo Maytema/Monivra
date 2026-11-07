@@ -415,6 +415,21 @@ const scenarios = {
     await page.getByText("Budget deleted").waitFor();
     expect(await page.getByText("Budgets will be here").count()).toBe(1);
   },
+  async "a daily budget shows one day, and the arrows move it by a day"(page) {
+    await tab(page, "More");
+    await page.getByText("Budgets", { exact: true }).first().click();
+    await page.locator(".budget-card").click();
+    await page.locator(".op-row").first().waitFor();
+    const title = async () => (await page.locator(".period .label").first().innerText()).trim();
+    const today = await title();
+    expect(await page.locator(".op-row").count()).toBe(2);
+    await page.locator(".period-arrows").getByLabel("Previous period").click();
+    expect(await page.locator(".op-row").count()).toBe(1);
+    expect((await title()) === today).toBe(false);
+    await page.locator(".period-arrows").getByLabel("Next period").click();
+    expect(await page.locator(".op-row").count()).toBe(2);
+    expect((await title()) === today).toBe(true);
+  },
   async "a long press on a budget card offers to edit or delete it"(page) {
     await tab(page, "More");
     await page.getByText("Budgets", { exact: true }).first().click();
@@ -923,6 +938,7 @@ const adjustments = {
     },
   "a budget card shows its operations, the pencil opens the editor, deleting returns to the list":
     budgetWithOperations,
+  "a daily budget shows one day, and the arrows move it by a day": dailyBudgetWithOperations,
   "a long press on a budget card offers to edit or delete it": budgetWithOperations,
   "a payment far behind is asked about: adding posts what was missed, skipping does not":
     addOverdue,
@@ -960,6 +976,24 @@ function budgetWithOperations(data) {
     currency: data.settings.currency,
     amount: 100000000,
     period: "month",
+    categories: [base.category],
+  });
+}
+// A budget of one day with two operations today and one yesterday in its category.
+function dailyBudgetWithOperations(data) {
+  const base = data.ops.find((op) => op.type === "expense");
+  const day = (back) => new Date(Date.now() - back * 86400000).toLocaleDateString("en-CA");
+  data.ops = [
+    { ...base, id: "t1", date: day(0) },
+    { ...base, id: "t2", date: day(0) },
+    { ...base, id: "t3", date: day(1) },
+  ];
+  data.budgets.push({
+    id: "daily",
+    name: "Daily",
+    currency: data.settings.currency,
+    amount: 100000000,
+    period: "day",
     categories: [base.category],
   });
 }
