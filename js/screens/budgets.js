@@ -25,7 +25,7 @@ import {
   textFieldHtml,
   toast,
 } from "../ui/primitives.js";
-import { monthPicker, periodBar } from "../ui/period-picker.js";
+import { dayPicker, periodBar } from "../ui/period-picker.js";
 import { currencyPicker } from "../ui/currency-picker.js";
 
 // Days a budget period lasts, as the calendar icon of the period says.
@@ -43,18 +43,25 @@ const remainderHtml = (left, currency) => {
   return `<span class="budget-left">${left === 0 ? translate("Limit reached") : translateWith("Left: {amount}", { amount })}</span>`;
 };
 // What a budget shows: title, what it counts, spent of the limit with the share spent, and what
-// is left of the limit (or by how much it is passed).
-const budgetBody = ({ b, used, left, share }, percent) => {
+// is left of the limit (or by how much it is passed). Pinned above its operations, the title and
+// what is left share a line to take less room.
+const budgetBody = ({ b, used, left, share }, percent, pinned = false) => {
   const scope = b.categories
     ? `<span class="budget-categories">${b.categories.map((id) => badgeHtml(categoryById(id), true)).join("")}</span>`
     : `<span class="budget-scope">${translate("Categories")}: ${translate("Entire expenses")}</span>`;
-  return `<strong class="budget-title">${escapeHtml(b.name)}</strong>${scope}<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span><span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>${remainderHtml(left, b.currency)}`;
+  const title = `<strong class="budget-title">${escapeHtml(b.name)}</strong>`;
+  const sum = `<span class="budget-sum">${formatMoney(used, b.currency)} / ${formatMoney(b.amount, b.currency)}</span>`;
+  const progress = `<span class="budget-progress">${meterHtml(share, left < 0)}<span class="budget-percent">${percent(share)}</span></span>`;
+  const remainder = remainderHtml(left, b.currency);
+  return pinned
+    ? `<span class="budget-head">${title}${remainder}</span>${scope}${sum}${progress}`
+    : `${title}${scope}${sum}${progress}${remainder}`;
 };
 // A tap shows the operations the budget counts; a long press offers to change or delete it.
 const budgetCard = (state) =>
   buttonHtml(
     budgetBody(state, percentLabel),
-    () => openPage("budgetDetails", { id: state.b.id }),
+    () => openBudgetDetails(state.b),
     "card budget-card " + (state.left < 0 ? "over" : ""),
     `data-hold="${registerAction((card) =>
       popupMenu(card, [
@@ -95,7 +102,7 @@ export function budgetsView() {
       iconButtonHtml("plus", "Create a budget", () => editBudget()),
     ) +
     swipePane(
-      periodBar(monthPicker) +
+      periodBar(dayPicker) +
         `<div class="content">${
           states.length
             ? Object.keys(BUDGET_PERIODS)
@@ -129,13 +136,25 @@ function editBudget(b) {
         },
   });
 }
+// A budget is looked at in its own period: a day, a week, a month or a year, around the day of the
+// bar, which steps and swipes by that period. Leaving the page brings the list's month back, on
+// the day the page ended on.
+function openBudgetDetails(b) {
+  const before = uiState.period;
+  uiState.period = { mode: b.period, anchor: before.anchor };
+  openPage("budgetDetails", {
+    id: b.id,
+    restore: () => (uiState.period = { ...before, anchor: uiState.period.anchor }),
+  });
+}
 // Ask, then delete a budget and leave its pages (the editor, and the operations under it).
 function deleteBudget(b) {
   confirmAction(
     "Delete this budget?",
     () => {
       appData.budgets = appData.budgets.filter((x) => x.id !== b.id);
-      uiState.pages = uiState.pages.filter((page) => page.id !== b.id && page.draft?.id !== b.id);
+      const first = uiState.pages.findIndex((page) => page.id === b.id || page.draft?.id === b.id);
+      if (first >= 0) while (uiState.pages.length > first) uiState.pages.pop().restore?.();
       uiState.layers = [];
       save();
       render();
@@ -157,9 +176,9 @@ export function budgetDetailsView(p) {
       iconButtonHtml("edit", "Edit budget", () => editBudget(b)),
     ) +
     swipePane(
-      periodBar(monthPicker) +
+      periodBar(dayPicker) +
         // The figures stay in view while the operations under them scroll.
-        `<div class="budget-pinned"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)))}</div></div><div class="content">${
+        `<div class="budget-pinned"><div class="card budget-card">${budgetBody(budgetState(b), (share) => escapeHtml(exactPercent(share)), true)}</div></div><div class="content">${
           ops.length
             ? dates.map((date) => dayGroup(date, ops)).join("")
             : emptyStateHtml("operations", "Empty", "No expenses of this budget in the period")
@@ -228,6 +247,9 @@ export function budgetView(p) {
             b,
           );
         else appData.budgets.push({ ...b, id: newId() });
+        // The page of this budget that lies under the editor follows a change of its period.
+        if (uiState.pages.some((page) => page.id === b.id))
+          uiState.period = { ...uiState.period, mode: b.period };
         finishFlow("Budget saved");
       },
       "primary",

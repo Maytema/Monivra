@@ -748,6 +748,34 @@ check('The period steps by its own length, and "All time" has no neighbours', ()
   }
 });
 
+check("Each step lands on the neighbouring period, whichever day of it was chosen", () => {
+  const before = uiState.period;
+  const monthStart = appData.settings.monthStart;
+  const step = (period, n) => {
+    uiState.period = period;
+    shiftPeriod(n);
+    return periodBounds(uiState.period).join(" ");
+  };
+  try {
+    // A month that starts on the 15th, entered through its last days, still moves on by one month.
+    appData.settings.monthStart = 15;
+    const late = { mode: "month", anchor: "2026-11-20" };
+    const lateSteps = [step(late, 1), step(late, -1)];
+    appData.settings.monthStart = 1;
+    return (
+      lateSteps[0] === "2026-12-15 2027-01-14" &&
+      lateSteps[1] === "2026-10-15 2026-11-14" &&
+      step({ mode: "week", anchor: "2026-11-04" }, 1) ===
+        periodBounds({ mode: "week", anchor: "2026-11-11" }).join(" ") &&
+      step({ mode: "day", anchor: "2026-03-01" }, -1) === "2026-02-28 2026-02-28" &&
+      step({ mode: "year", anchor: "2026-06-15" }, 1) === "2027-01-01 2027-12-31"
+    );
+  } finally {
+    appData.settings.monthStart = monthStart;
+    uiState.period = before;
+  }
+});
+
 check("Filters combine: subcategory under its own parent, account, type and tags", () => {
   const parents = appData.categories.filter((c) => c.type === "expense" && !c.parent);
   const [first, second] = parents;
