@@ -66,8 +66,10 @@ shows what the data holds now and what it will hold.
 
 **Merge data.** The backup is added to the data:
 
-- records are matched by **id**; where both have the id the **backup's version wins**, records only
-  one side has stay; so a backup merged twice adds nothing the second time;
+- records are matched by **id**; where both have the id **the version on this device stays** by
+  default (a backup has no time of editing, so it cannot be called newer), or the backup's version
+  when "Use the backup's version" is chosen; records only one side has stay; so a backup merged
+  twice adds nothing the second time. The page shows how many records differ and, on demand, which;
 - the settings of this device and its exchange rates win; the backup only adds currencies this
   device has no rate for;
 - tags are united;
