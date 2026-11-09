@@ -7,5 +7,6 @@ import "./report.test.js";
 import "./restore.test.js";
 import "./deletion.test.js";
 import "./premerge.test.js";
+import "./stress.test.js";
 
 export { runChecks } from "./harness.js";

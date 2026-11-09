@@ -67,6 +67,24 @@ export function progressForBalance(a, balance) {
     percent: ((kind === "limit" ? Math.max(0, done) : done) / target) * 100,
   };
 }
+// What a card's single balance means (net ledger, see docs/CREDIT_MODEL.md). Nothing is stored:
+// the parts are derived from the balance `B` and the limit `L`, so editing or deleting an old
+// operation always gives the same parts as replaying everything. A positive balance is the card's
+// own money; a negative one is credit used up to the limit, and what is beyond the limit is
+// over-limit debt. `utilization` is the share of the limit in use and may pass 1 (100%). `available`
+// is what can still be spent: own money plus unused credit. Limit 0 is a plain account (null).
+export function cardState(a, balance = accountBalance(a.id)) {
+  if (a.type !== "Regular" || !(a.limit > 0)) return null;
+  const debt = Math.max(0, -balance);
+  return {
+    limit: a.limit,
+    own: Math.max(0, balance),
+    creditUsed: Math.min(debt, a.limit),
+    overLimit: Math.max(0, debt - a.limit),
+    available: Math.max(0, a.limit + balance),
+    utilization: debt / a.limit,
+  };
+}
 // Groups of accounts shown together in pickers and filters, in the order of the Accounts screen.
 export const ACCOUNT_GROUPS = [
   ["Accounts", (a) => a.type === "Regular"],
@@ -298,12 +316,17 @@ export function operationMatchesFilters(o, f = uiState.filters) {
     (!f.origin || f.origin.includes(o.fromSchedule ? "schedule" : "manual"))
   );
 }
+// Newest first by the day and the time of day; a payment posted late keeps the time it was set for.
+export const newestFirst = (a, b) =>
+  b.date.localeCompare(a.date) ||
+  (b.time || "").localeCompare(a.time || "") ||
+  b.id.localeCompare(a.id);
 // Operations that pass the active filters and period, newest first.
 export function visibleOperations(filters = uiState.filters) {
   const [a, b] = periodBounds();
   return appData.ops
     .filter((o) => o.date >= a && o.date <= b && operationMatchesFilters(o, filters))
-    .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+    .sort(newestFirst);
 }
 // Flat rows used by CSV export and the printable report.
 export function reportRows(ops = visibleOperations()) {

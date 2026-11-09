@@ -31,6 +31,7 @@ import {
   reportRows,
   toIsoDate,
   transferRoles,
+  newestFirst,
 } from "./finance.js";
 import { translate, translateWith, currentLocale } from "../i18n/index.js";
 
@@ -43,7 +44,7 @@ export function scopeOperations(filters, period) {
   const [from, to] = periodBounds(period);
   return appData.ops
     .filter((o) => o.date >= from && o.date <= to && operationMatchesFilters(o, filters))
-    .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+    .sort(newestFirst);
 }
 
 // Balance of an account at the end of a day: the opening balance and every operation up to then.

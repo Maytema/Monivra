@@ -476,10 +476,13 @@ check("Skipping one-time and repeating payments from the past leaves no operatio
   );
 });
 
-check("A payment dated today is posted at once, whatever its time of day", () => {
-  const item = startedAgo(0, null, { time: "23:59" });
-  postDue();
-  return postedOf(item).length === 1 && !postedOf(item)[0].time && appData.scheduled.length === 0;
+check("A payment dated today waits for its time and is posted with it", () => {
+  const item = startedAgo(0, null, { time: "18:30" });
+  postDue(TODAY, "18:29");
+  const early = postedOf(item).length === 0 && appData.scheduled.length === 1;
+  postDue(TODAY, "18:30");
+  const [op] = postedOf(item);
+  return early && postedOf(item).length === 1 && op.time === "18:30" && !appData.scheduled.length;
 });
 
 check("A deleted operation of a payment is not posted again", () => {

@@ -1,7 +1,7 @@
 /* Budgets: what is spent of a budget in its period */
 import { today } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
-import { categoryById, convertCurrency, periodBounds, reportRows } from "./finance.js";
+import { categoryById, newestFirst, convertCurrency, periodBounds, reportRows } from "./finance.js";
 
 // Does a budget count a row of the report? A budget takes expenses of its categories (and their
 // subcategories), or all expenses when it has no categories.
@@ -22,7 +22,7 @@ const periodOperations = (b, anchor = uiState.period.anchor || today()) => {
 export const budgetOperations = (b) =>
   periodOperations(b)
     .filter((o) => reportRows([o]).some((row) => budgetTakes(b, row)))
-    .sort((a, c) => c.date.localeCompare(a.date) || c.id.localeCompare(a.id));
+    .sort(newestFirst);
 
 // Amount spent in a budget's period. The rows are the ones the statistics count: fees taken into
 // account, debt payments included when they count as expenses (only a budget for all expenses

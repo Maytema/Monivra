@@ -1,5 +1,5 @@
 /* Scheduled payments: the next date and posting a due payment */
-import { deepClone, newId, today } from "../core/constants.js";
+import { deepClone, newId, timeNow, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { planFutureOperations, putOperation } from "./operations.js";
@@ -74,6 +74,13 @@ function advance(item) {
   return true;
 }
 
+// Is an occurrence due: its day came, and when it has a time, that time too. `now` is the moment
+// being checked, local day and time.
+export const isDue = (item, day, time) =>
+  item.date < day || (item.date === day && (!item.time || item.time <= time));
+// The time of day to check against: the real one for today, the end of any other day.
+const clockFor = (day) => (day === today() ? timeNow() : "23:59");
+
 // Was this occurrence of the payment already recorded (here or by another device)?
 const isPosted = (item, occurrence) =>
   appData.ops.some((o) => o.fromSchedule?.id === item.id && o.fromSchedule.date === occurrence);
@@ -87,9 +94,15 @@ function postOccurrence(item, day, byHand = false) {
   const op = { ...deepClone(item), id: newId(), date: day };
   delete op.recur;
   delete op.reminder;
-  delete op.time;
   delete op.anchorDay;
-  op.fromSchedule = { id: item.id, date: item.date, ...(byHand && { byHand }) };
+  // The operation keeps the day and time the payment was set for; `postedAt` is when it was done.
+  if (item.time) op.time = item.time;
+  op.fromSchedule = {
+    id: item.id,
+    date: item.date,
+    postedAt: new Date().toISOString(),
+    ...(byHand && { byHand }),
+  };
   putOperation(op);
   return op;
 }
@@ -105,9 +118,9 @@ export function processScheduled(id, post) {
 
 // Move a payment on to its first occurrence after `day`, posting the ones in between or not;
 // returns the ids of the operations posted. A payment that has no occurrence left goes away.
-function catchUp(item, day, post) {
+function catchUp(item, day, post, time = clockFor(day)) {
   const posted = [];
-  while (item.date <= day) {
+  while (isDue(item, day, time)) {
     const op = post && postOccurrence(item, item.date);
     if (op) posted.push(op.id);
     if (!advance(item)) {
@@ -125,13 +138,13 @@ const CATCH_UP_DAYS = 365;
 
 // What is due up to `day` and not posted yet: each payment with how many occurrences that are and
 // the day of the first.
-function dueEntries(day) {
+function dueEntries(day, time = clockFor(day)) {
   return appData.scheduled
-    .filter((item) => item.date <= day)
+    .filter((item) => isDue(item, day, time))
     .map((item) => {
       const probe = deepClone(item);
       let count = 0;
-      while (probe.date <= day) {
+      while (isDue(probe, day, time)) {
         count++;
         if (!advance(probe)) break;
       }
@@ -144,13 +157,21 @@ const needsAnswer = ({ count, since }, day) =>
 // Post every occurrence that came due up to `day` on the day it was due; returns the ids of the
 // operations posted. What was posted before a failure stays posted and saved. A payment that is
 // far behind waits for the person's answer (`missedPayments`).
-export function postDue(day = today()) {
+export function postDue(day = today(), time = clockFor(day)) {
   const posted = [];
   // Operations dated ahead that came from a backup or a file wait for their day like any payment.
   const moved = planFutureOperations();
   try {
-    for (const entry of dueEntries(day))
-      if (!needsAnswer(entry, day)) posted.push(...catchUp(entry.item, day, true));
+    for (const entry of dueEntries(day, time)) {
+      if (needsAnswer(entry, day)) continue;
+      // One payment that cannot be posted (its category or account is gone) stays where it is,
+      // nothing of it is half done, and the others carry on.
+      try {
+        posted.push(...catchUp(entry.item, day, true, time));
+      } catch (error) {
+        console.error("Scheduled payment not posted", entry.item.id, error);
+      }
+    }
   } finally {
     if (posted.length || moved) save();
   }

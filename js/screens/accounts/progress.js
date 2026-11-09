@@ -1,5 +1,5 @@
 /* Progress of a goal or a debt repayment: percent, meter and the block in the account sheet */
-import { accountProgress, debtDirection, formatMoney } from "../../domain/finance.js";
+import { accountProgress, cardState, debtDirection, formatMoney } from "../../domain/finance.js";
 import { translate, translateWith } from "../../i18n/index.js";
 import { percentLabel } from "../../ui/percent.js";
 import { meterHtml } from "../../ui/primitives.js";
@@ -19,9 +19,15 @@ export function progressBlockHtml(a) {
   // not say: what is left of a goal, how much of a debt is paid, that a limit is used up.
   let status;
   if (p.kind === "limit") {
-    // The sheet shows the balance and what is available to spend, so only the extremes are said.
-    if (p.left < 0) status = say("Limit exceeded by {amount}", -p.left);
-    else if (p.left === 0) status = translate("Limit reached");
+    // Own money, credit used and what is beyond the limit; each only when there is some.
+    const c = cardState(a);
+    status = [
+      c.own > 0 && say("Own funds: {amount}", c.own),
+      c.creditUsed > 0 && say("Credit used: {amount}", c.creditUsed),
+      c.overLimit > 0 && say("Over limit by {amount}", c.overLimit),
+    ]
+      .filter(Boolean)
+      .join(" · ");
   } else if (p.kind === "debt")
     status =
       p.left > 0

@@ -99,3 +99,13 @@ data file afterwards).
 | Test notification                                                        | real: sends a system notification, or shows the reminder in the app when blocked                                       |
 | Biometric unlock                                                         | not available, no pretending (`platform/biometric.js` is the boundary a native shell fills)                            |
 | Native sharing                                                           | web share sheet where the browser supports the file type; JSON falls back to Save                                      |
+
+
+## Credit cards and scheduled payments (model update)
+
+- A card's parts (own funds, credit used, over limit, available, utilization) are derived from the
+  one balance; see `docs/CREDIT_MODEL.md`. Nothing new is stored.
+- A scheduled payment is due when its date has come and, if it has a time, that time too. When it is
+  posted late it keeps its own date and time (`date`, `time`); `fromSchedule.postedAt` records the
+  real moment. Lists sort by date, then time.
+- A payment that cannot be posted (its category or account is gone) stays pending; the others go on.

@@ -151,7 +151,7 @@ export function putOperation(d, schedule = false) {
     if (d.date < earliestScheduleDate() && (i < 0 || list[i].date !== d.date))
       throw Error("A scheduled payment starts tomorrow at the earliest");
     keepRuleDay(d, list[i]);
-  } else delete d.time;
+  } else if (!d.fromSchedule) delete d.time;
   if (i < 0) list.push(d);
   else list[i] = d;
   save();
