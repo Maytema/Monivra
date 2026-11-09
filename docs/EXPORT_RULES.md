@@ -146,3 +146,10 @@ at a preview never saves, shares or changes anything.
 - **Size.** About 60 KB for a summary and about 125 KB for 34 pages of 469 operations (measured in
   `tests/scenarios.mjs`, "a large report is real searchable text"); the generation takes under a second.
 - **Print** opens the print dialog with the pictures of the same pages.
+
+## Column `counted_as`
+
+The CSV has a last column, `counted_as`: "expense" or "income" for a transfer to or from a debt account that
+counts as one in the reports (as set in the account), empty otherwise. Add the `amount` of rows of type
+`expense` or `income` and of transfers by `counted_as` to get the totals of the Detailed report. The import
+ignores the column. See [FINANCIAL_RULES.md](FINANCIAL_RULES.md).

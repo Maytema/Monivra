@@ -1195,6 +1195,10 @@ export const russianStrings = {
   "Notification sent": "Уведомление отправлено",
   "Scheduled payment": "Плановый платёж",
   "{title} is due on {date}": "{title}: срок {date}",
+  "Transfer · counted as expense": "Перевод · как расход",
+  "Transfer · counted as income": "Перевод · как доход",
+  "{n} transfers to or from debt accounts are counted as expenses or incomes, as set for those accounts; the totals include them.":
+    "Переводов на долговые счета и с них, учтённых как расходы или доходы по настройкам этих счетов: {n}; в итоги они входят.",
   "Details of this backup": "Подробности о копии",
   "and {n} more": "и ещё {n}",
   "{n} already here": "уже есть: {n}",

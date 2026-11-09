@@ -199,7 +199,7 @@ check("The CSV file is read back by a separate reader as the same operations", (
   const wantLong = appData.ops.find((o) => o.comment?.length > 1000);
   return (
     header.join() ===
-      "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency" &&
+      "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency,counted_as" &&
     body.length === appData.ops.length &&
     body.every((r) => r.length === header.length) &&
     body.some((r) => r[at("comment")] === wantLong.comment) &&
@@ -223,7 +223,37 @@ check("The CSV of the chosen parts has only those columns, and the date always",
   const columns = (parts) => csvTable(appData.ops.slice(0, 2), parts).columns.join();
   return (
     columns({ comment: false, tags: false }) ===
-      "type,date,amount,currency,from,to,category,to_amount,to_currency" &&
+      "type,date,amount,currency,from,to,category,to_amount,to_currency,counted_as" &&
     columns({ type: false, accounts: false, amount: false, comment: false, tags: false }) === "date"
   );
 });
+
+check(
+  "The totals of the detailed report are the sums of the CSV rows, read with the counted_as column",
+  () => {
+    setAppData(createReportFixture());
+    const rows = parseCsv(csvText(appData.ops));
+    const [header, ...body] = rows;
+    const col = (r, name) => r[header.indexOf(name)];
+    const sums = { income: {}, expense: {} };
+    for (const r of body) {
+      const kind = r[header.indexOf("type")] === "transfer" ? col(r, "counted_as") : col(r, "type");
+      if (kind !== "income" && kind !== "expense") continue;
+      const currency = col(r, "currency");
+      sums[kind][currency] =
+        (sums[kind][currency] || 0) + Math.round(Number(col(r, "amount")) * 100);
+    }
+    const model = detailModel({ filters: {}, period: { mode: "all" } });
+    const same = model.totals.every(
+      (t) =>
+        (sums.income[t.currency] || 0) === t.income &&
+        (sums.expense[t.currency] || 0) === t.expense,
+    );
+    // The debt transfer is named in the type column of the report and counted in the file.
+    const marked = model.rows.some((r) => /counted as expense/.test(r.cells.type));
+    const flagged = body.some(
+      (r) => col(r, "type") === "transfer" && col(r, "counted_as") === "expense",
+    );
+    return model.totals.length > 0 && same && marked && flagged;
+  },
+);

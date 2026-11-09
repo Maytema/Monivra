@@ -531,6 +531,15 @@ const accountsOf = (o) =>
 
 // The model of the detailed list: a row per operation with the columns chosen in `parts`, and the
 // totals per currency (never mixed).
+// The type of an operation as a cell: a transfer to or from a debt account that counts as an expense
+// or an income says so, because the totals include it.
+function typeCell(o) {
+  const { expense, income } = transferRoles(o);
+  if (expense) return translate("Transfer · counted as expense");
+  if (income) return translate("Transfer · counted as income");
+  return translate(TYPE_NAMES[o.type]);
+}
+
 export function detailModel({ filters, period, parts = {} }) {
   const meta = metaOf({ title: "Detailed transactions", filters, period });
   const ops = scopeOperations(filters, period);
@@ -549,7 +558,7 @@ export function detailModel({ filters, period, parts = {} }) {
       o.type === "income" || (o.type === "adjustment" && o.to) ? 1 : o.type === "transfer" ? 0 : -1,
     cells: {
       date: dateLabelCompact(o.date),
-      type: translate(TYPE_NAMES[o.type]),
+      type: typeCell(o),
       subject: subjectOf(o),
       detail: accountsOf(o),
       comment: o.comment || "",
@@ -568,6 +577,10 @@ export function detailModel({ filters, period, parts = {} }) {
         net: (flow.income.get(currency) || 0) - (flow.expense.get(currency) || 0),
       }))
     : [];
+  const counted = ops.filter((o) => {
+    const { expense, income } = transferRoles(o);
+    return expense || income;
+  }).length;
   const counts = {
     all: ops.length,
     transfers: ops.filter((o) => o.type === "transfer").length,
@@ -584,7 +597,12 @@ export function detailModel({ filters, period, parts = {} }) {
       translate(
         "Transfers between your own accounts are not income or expenses; adjustments are not counted.",
       ),
-    ],
+      counted &&
+        translateWith(
+          "{n} transfers to or from debt accounts are counted as expenses or incomes, as set for those accounts; the totals include them.",
+          { n: counted },
+        ),
+    ].filter(Boolean),
     showDetail: on("accounts"),
   };
 }

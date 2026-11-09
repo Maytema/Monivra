@@ -1,6 +1,6 @@
 /* Operations as CSV: writing, reading, and turning rows into operations */
 import { appData } from "../core/state.js";
-import { accountById, categoryById } from "../domain/finance.js";
+import { accountById, categoryById, transferRoles } from "../domain/finance.js";
 
 const COLUMNS = [
   "type",
@@ -14,6 +14,7 @@ const COLUMNS = [
   "tags",
   "to_amount",
   "to_currency",
+  "counted_as",
 ];
 // Subcategories are written as "Parent / Sub".
 const SEPARATOR = " / ";
@@ -36,6 +37,7 @@ const COLUMN_PART = {
   tags: "tags",
   to_amount: "amount",
   to_currency: "amount",
+  counted_as: "type",
 };
 // A cell that starts with = + - @ or a tab or return would be taken for a formula by a spreadsheet:
 // it is written with a leading apostrophe, which the import takes away again.
@@ -64,6 +66,9 @@ function cellsOf(o) {
     tags: (o.tags || []).join("|"),
     to_amount: crossCurrency ? money(o.receive) : "",
     to_currency: crossCurrency ? to.currency : "",
+    // A transfer to or from a debt account may count as an expense or an income in the reports:
+    // the file says so, to be added up the way the reports do. The import ignores this column.
+    counted_as: transferRoles(o).expense ? "expense" : transferRoles(o).income ? "income" : "",
   };
 }
 
