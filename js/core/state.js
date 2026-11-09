@@ -1,24 +1,53 @@
 /* Application state: persistent data (appData) and UI state (uiState) */
 import { STORAGE_KEY, TODAY } from "./constants.js";
 import { completeData, createEmptyData } from "../data/defaults.js";
-import { isValidData } from "../data/storage.js";
+import { findDataProblem } from "../data/storage.js";
+import { isSupportedLanguage } from "../i18n/index.js";
 
 // Nothing is installed on the first launch: the welcome screen asks whether to start
-// empty or with a basic set. Stored datasets are never replaced.
+// empty or with a basic set. Stored data is never replaced silently: when it cannot be read, the
+// original text is kept in `loadProblem` and in storage until the person decides (see
+// `resolveLoadProblem`), and nothing is written over it meanwhile.
 export let appData;
 export let firstLaunch = false;
+export let loadProblem = null;
+const DAMAGED_KEY = STORAGE_KEY + ".damaged";
 try {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === null) {
     appData = createEmptyData();
     firstLaunch = true;
   } else {
-    appData = JSON.parse(stored);
-    if (!isValidData(appData)) appData = createEmptyData();
-    completeData(appData);
+    let parsed = null;
+    try {
+      parsed = JSON.parse(stored);
+    } catch {
+      loadProblem = {
+        raw: stored,
+        problem: { what: "File", number: 0, reason: "the file is damaged or is not a JSON file" },
+      };
+    }
+    const found = loadProblem ? null : findDataProblem(parsed);
+    if (found) loadProblem = { raw: stored, problem: found };
+    appData = loadProblem ? createEmptyData() : completeData(parsed);
+    // The screen for data that cannot be read still speaks the language that was chosen, when the
+    // text says it.
+    const chosen = loadProblem && /"language"\s*:\s*"([a-z]{2})"/.exec(stored)?.[1];
+    if (chosen && isSupportedLanguage(chosen)) appData.settings.language = chosen;
   }
 } catch {
   appData = createEmptyData();
+}
+// The person has decided what to do with data that could not be read: a copy of its text stays in
+// storage under a name of its own, and from now on saving is allowed.
+export function resolveLoadProblem() {
+  if (!loadProblem) return;
+  try {
+    localStorage.setItem(DAMAGED_KEY, loadProblem.raw);
+  } catch {
+    // The copy is a courtesy: when storage is full the person has already been offered a file.
+  }
+  loadProblem = null;
 }
 // The welcome screen disappears once a start option has been chosen.
 export function setFirstLaunch(value) {

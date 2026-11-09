@@ -172,7 +172,7 @@ function bindDuePayments() {
 function backUpOncePerDay() {
   const today = new Date().toISOString().slice(0, 10);
   if (appData.settings.autoBackup && !appData.backups.some((b) => b.at.slice(0, 10) === today))
-    createBackup();
+    createBackup("auto");
 }
 
 // Attach global handlers (clicks, inputs, swipe gestures, hash routing) and render.

@@ -25,12 +25,14 @@ npm run format:check
 
 ## Documents
 
-| Document                                                     | What it is                                              |
-| ------------------------------------------------------------ | ------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)                                       | Rules of the work and where to start, for an agent      |
-| [WHERE_TO_LOOK.md](WHERE_TO_LOOK.md)                         | A screen, a look or a symptom → the file to open        |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                           | Layers, how a screen is drawn, where data lives         |
-| [MODULES.md](MODULES.md)                                     | What every folder and module is for                     |
-| [DEVELOPMENT.md](DEVELOPMENT.md)                             | Conventions, how to add a screen, a language, a check   |
-| [REFACTOR_REPORT.md](REFACTOR_REPORT.md)                     | What the architecture clean-up changed and what is left |
-| [tools/visual-regression](tools/visual-regression/README.md) | Screenshot comparison of every screen state             |
+| Document                                                     | What it is                                                        |
+| ------------------------------------------------------------ | ----------------------------------------------------------------- |
+| [AGENTS.md](AGENTS.md)                                       | Rules of the work and where to start, for an agent                |
+| [WHERE_TO_LOOK.md](WHERE_TO_LOOK.md)                         | A screen, a look or a symptom → the file to open                  |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                           | Layers, how a screen is drawn, where data lives                   |
+| [MODULES.md](MODULES.md)                                     | What every folder and module is for                               |
+| [DEVELOPMENT.md](DEVELOPMENT.md)                             | Conventions, how to add a screen, a language, a check             |
+| [docs/DATA_SECTION.md](docs/DATA_SECTION.md)                 | The Data section: backups, restore, import, export, deletion      |
+| [docs/EXPORT_RULES.md](docs/EXPORT_RULES.md)                 | What each figure of an export means and which operations it takes |
+| [REFACTOR_REPORT.md](REFACTOR_REPORT.md)                     | What the architecture clean-up changed and what is left           |
+| [tools/visual-regression](tools/visual-regression/README.md) | Screenshot comparison of every screen state                       |

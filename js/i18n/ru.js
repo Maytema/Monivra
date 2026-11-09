@@ -610,6 +610,16 @@ export const russianStrings = {
   "Credit limit cannot be negative": "Кредитный лимит не может быть отрицательным",
   "Currencies used": "Используемые валюты",
   "Current database:": "Текущая база:",
+  "Accounts and savings will be here": "Здесь будут счета и накопления",
+  "So far, there is not a single financial or savings account. Create your first financial or savings account?":
+    "Пока нет ни одного счёта или накопления. Создать первый счёт или накопление?",
+  "Categories will be here": "Здесь будут категории",
+  "So far, it's empty. Create your first category?": "Пока пусто. Создать первую категорию?",
+  "Your database already contains records. To protect them, sample data cannot be installed over existing data.":
+    "В базе уже есть записи. Чтобы их защитить, примеры нельзя установить поверх существующих данных.",
+  "30 seconds": "30 секунд",
+  "1 minute": "1 минута",
+  "5 minutes": "5 минут",
   "Customize icon": "Настроить значок",
   "Data imported": "Данные импортированы",
   "Data safety": "Безопасность данных",
@@ -1113,4 +1123,346 @@ export const russianStrings = {
   "Prices are indicative and payments are not available yet. Plans and prices may change before launch.":
     "Цены ориентировочные, платежи пока недоступны. Тарифы и цены могут измениться до запуска.",
   "Store billing is not connected yet.": "Оплата через магазин пока не подключена.",
+
+  // Data section: recovery, backups, files
+  "The file cannot be used": "Файл нельзя использовать",
+  "Start with empty data? What could not be read stays on this device as a separate copy, but this application will no longer use it.":
+    "Начать с пустыми данными? То, что не удалось прочитать, останется на этом устройстве отдельной копией, но приложение больше не будет её использовать.",
+  "Your data could not be read": "Не удалось прочитать данные",
+  "{app} found data saved on this device but cannot open it. Nothing has been changed or deleted.":
+    "{app} нашло сохранённые на этом устройстве данные, но не может их открыть. Ничего не изменено и не удалено.",
+  "First save a copy of the data, then choose how to continue.":
+    "Сначала сохраните копию данных, затем выберите, как продолжить.",
+  "Save a copy of the data": "Сохранить копию данных",
+  "Share the copy": "Поделиться копией",
+  "Restore the newest backup kept inside ({date})":
+    "Восстановить самую свежую копию внутри данных ({date})",
+  "Backup kept inside the data": "Копия внутри данных",
+  "Restore from a data file": "Восстановить из файла данных",
+  "Start with empty data": "Начать с пустыми данными",
+  "The file is too large or too deeply nested to be a backup.":
+    "Файл слишком большой или слишком вложенный для резервной копии.",
+  "The file contains names that a backup never has.":
+    "В файле есть названия, которых не бывает в резервной копии.",
+  "The file was made by a newer version of the application.":
+    "Файл создан более новой версией приложения.",
+  "The data could not be stored, so nothing was changed.":
+    "Данные не удалось сохранить, поэтому ничего не изменилось.",
+  "Automatic backup": "Автоматическая копия",
+  "Backup before a change": "Копия перед изменением",
+  "To see what is in a backup and restore it, select one of the previous backups":
+    "Чтобы посмотреть содержимое копии и восстановить её, выберите одну из прежних копий",
+  Created: "Создана",
+  "Data format version": "Версия формата данных",
+  "Application build": "Сборка приложения",
+  "{n} regular": ["{n} обычный счёт", "{n} обычных счёта", "{n} обычных счетов"],
+  "{n} credit cards": ["{n} кредитная карта", "{n} кредитные карты", "{n} кредитных карт"],
+  "{n} savings accounts": ["{n} счёт накоплений", "{n} счёта накоплений", "{n} счетов накоплений"],
+  "{n} debts": ["{n} долговой счёт", "{n} долговых счёта", "{n} долговых счетов"],
+  "{n} subcategories": ["{n} подкатегория", "{n} подкатегории", "{n} подкатегорий"],
+  Currencies: "Валюты",
+  "{n} new": "новых: {n}",
+  "{n} updated from the backup": "обновится из копии: {n}",
+  "{n} already here": "уже есть: {n}",
+  "The backup holds no records.": "В копии нет записей.",
+  "{n} operations look like operations you already have (same day, amount, accounts, category and comment) but are recorded under another id. They are added too.":
+    "Операций, похожих на уже имеющиеся (тот же день, сумма, счета, категория и комментарий), но записанных под другим номером: {n}. Они тоже будут добавлены.",
+  "{n} accounts have the name and currency of accounts you already have. They are added as separate accounts.":
+    "Счетов с названием и валютой, как у уже имеющихся: {n}. Они будут добавлены как отдельные счета.",
+  "{accounts} accounts, {categories} categories, {ops} operations":
+    "счетов: {accounts}, категорий: {categories}, операций: {ops}",
+  Now: "Сейчас",
+  After: "После",
+  "Settings and exchange rates are taken from the backup.":
+    "Настройки и курсы валют берутся из копии.",
+  "{n} current scheduled payments refer to accounts or categories the backup does not have and are let go.":
+    "Текущих запланированных платежей, которые ссылаются на счета или категории, которых нет в копии, и поэтому будут убраны: {n}.",
+  "A backup of the current data is made first.": "Сначала будет сделана копия текущих данных.",
+  "This cannot be restored in this way:": "Так восстановить нельзя:",
+  unknown: "неизвестно",
+  "Import failed:": "Не удалось импортировать:",
+
+  // Saving, sharing, printing
+  "File saved": "Файл сохранён",
+  "File shared": "Файл отправлен",
+  "This browser cannot send files to other apps. The file has not been saved. Save it on the device instead?":
+    "Этот браузер не умеет отправлять файлы в другие приложения. Файл не сохранён. Сохранить его на устройстве?",
+  "Save file": "Сохранить файл",
+  "Sharing is not available": "Отправка недоступна",
+  "The browser needs a new tap to open the share sheet. The file is ready: tap Share again.":
+    "Браузеру нужно новое нажатие, чтобы открыть окно отправки. Файл готов: нажмите «Поделиться» ещё раз.",
+  "Tap Share again": "Нажмите «Поделиться» ещё раз",
+  "The share sheet could not be opened. The file has not been saved or sent.":
+    "Не удалось открыть окно отправки. Файл не сохранён и не отправлен.",
+  "Preparing…": "Подготовка…",
+  "Page {n} of {total}": "Страница {n} из {total}",
+  Share: "Поделиться",
+  "Share of total": "Доля",
+  "{n} more characters are in the CSV file": "Ещё символов: {n} — они есть в файле CSV",
+  Print: "Печать",
+  Preview: "Предпросмотр",
+
+  // Export
+  "Financial summary": "Финансовая сводка",
+  "Detailed transactions": "Подробный список операций",
+  "Charts and trends": "Графики и динамика",
+  "PDF · overview, charts, accounts, budgets": "PDF · обзор, графики, счета, бюджеты",
+  "PDF · every operation in a table": "PDF · каждая операция в таблице",
+  "CSV file": "Файл CSV",
+  "A table for spreadsheets and other applications":
+    "Таблица для электронных таблиц и других приложений",
+  "Preparing the report": "Готовим отчёт",
+  "The file could not be prepared": "Не удалось подготовить файл",
+  "Export failed:": "Не удалось экспортировать:",
+  "Preview failed:": "Не удалось показать предпросмотр:",
+  "Preview of your data · {pages}": "Предпросмотр ваших данных · {pages}",
+  "{n} pages": ["{n} страница", "{n} страницы", "{n} страниц"],
+  "There are no operations in this scope. The file holds only the column names.":
+    "В этой выборке нет операций. В файле будут только названия столбцов.",
+  "Preview of your data · the first {shown} of {total} rows are shown; the file holds all {total}":
+    "Предпросмотр ваших данных · показаны первые {shown} из {total} строк; в файле будут все {total}",
+  "Preview of your data · all {total} rows": "Предпросмотр ваших данных · все строки: {total}",
+
+  // The report
+  "Credit card": "Кредитная карта",
+  Period: "Период",
+  "Operations: {n} (incomes {income}, expenses {expense}, transfers {transfers}, adjustments {adjustments})":
+    "Операций: {n} (доходов {income}, расходов {expense}, переводов {transfers}, корректировок {adjustments})",
+  Overview: "Обзор",
+  "Net cash flow": "Чистый денежный поток",
+  "{n} incomes, {m} expenses": "Доходов: {n}, расходов: {m}",
+  "Balance at end": "Баланс на конец",
+  "at the start": "на начало",
+  "Change of balance": "Изменение баланса",
+  "Spent on credit cards": "Потрачено с кредитных карт",
+  "part of the expenses": "входит в расходы",
+  Trends: "Динамика",
+  "Income and expenses": "Доходы и расходы",
+  "by day": "по дням",
+  "by week": "по неделям",
+  "by month": "по месяцам",
+  "by year": "по годам",
+  "Where the money went": "Куда ушли деньги",
+  "Where the income came from": "Откуда пришли доходы",
+  "At the start": "На начало",
+  Change: "Изменение",
+  "At the end": "На конец",
+  "Total of the accounts counted": "Итого по учитываемым счетам",
+  "* not counted in the total (excluded or archived)": "* не входит в итог (исключён или в архиве)",
+  "Other movements of money": "Другие движения денег",
+  Kind: "Вид",
+  "{amount} to the goal": "{amount} до цели",
+  "goal reached": "цель достигнута",
+  "No total amount set": "Общая сумма не задана",
+  settled: "погашено",
+  "{amount} left": "осталось {amount}",
+  "over by {amount}": "превышено на {amount}",
+  Notes: "Примечания",
+  "Totals by currency": "Итоги по валютам",
+  "There are no operations in this scope.": "В этой выборке нет операций.",
+  Generated: "Создано",
+  Expense: "Расход",
+  "Category / accounts": "Категория / счета",
+  "Transfers between your accounts": "Переводы между вашими счетами",
+  "Paid into savings": "Внесено в накопления",
+  "Taken from savings": "Снято с накоплений",
+  "Paid into debt accounts": "Внесено на долговые счета",
+  "Taken from debt accounts": "Снято с долговых счетов",
+  "Transfers across the chosen accounts": "Переводы через границу выбранных счетов",
+  "Balance adjustments": "Корректировки баланса",
+  "Figures in {currency} are converted at the exchange rates set in the application: {rates}.":
+    "Суммы в {currency} пересчитаны по курсам, заданным в приложении: {rates}.",
+  "Transfers between your own accounts are not income or expenses.":
+    "Переводы между вашими счетами не являются доходами или расходами.",
+  "Money paid to debt accounts that count as an expense is included in the expenses: {amount}.":
+    "Деньги, внесённые на долговые счета, которые считаются расходом, включены в расходы: {amount}.",
+  "Money received from debt accounts that count as an income is included in the incomes: {amount}.":
+    "Деньги, полученные с долговых счетов, которые считаются доходом, включены в доходы: {amount}.",
+  "Income and expenses follow all the filters; balances follow only the chosen accounts.":
+    "Доходы и расходы учитывают все фильтры; балансы — только выбранные счета.",
+  "Budgets are shown for their own period around the end of the report and do not follow the filters.":
+    "Бюджеты показаны за их собственный период около конца отчёта и не зависят от фильтров.",
+  "The balance trend uses the opening balances and the recorded operations, converted at today’s rates.":
+    "Динамика баланса построена по начальным остаткам и записанным операциям, пересчитанным по сегодняшним курсам.",
+  "Transfers between your own accounts are not income or expenses; adjustments are not counted.":
+    "Переводы между вашими счетами не являются доходами или расходами; корректировки не учитываются.",
+
+  // Import of a CSV file
+  "This is not a text file.": "Это не текстовый файл.",
+  "The file has too many rows.": "В файле слишком много строк.",
+  "A cell of the file is too long.": "Ячейка в файле слишком длинная.",
+  "The file ends inside a quoted text: a closing quote is missing.":
+    "Файл заканчивается внутри текста в кавычках: не хватает закрывающей кавычки.",
+  "There is nothing to import.": "Импортировать нечего.",
+  "the date is missing": "не указана дата",
+  "the amount is missing": "не указана сумма",
+  "the amount has more than two decimals": "в сумме больше двух знаков после запятой",
+  "the amount is too large": "сумма слишком большая",
+  "a transfer needs two accounts": "для перевода нужны два счёта",
+  "an adjustment needs one account": "для корректировки нужен один счёт",
+  "the linked account no longer exists": "выбранного счёта больше нет",
+  "the linked category no longer exists": "выбранной категории больше нет",
+  "the currency {code} is not the currency of the account {name}":
+    "валюта {code} не совпадает с валютой счёта «{name}»",
+  "unknown type {type}": "неизвестный тип «{type}»",
+  "Amount received": "Получено (сумма)",
+  "Currency received": "Получено (валюта)",
+  "Empty template": "Пустой шаблон",
+  "Only the names of the columns, to fill in": "Только названия столбцов, чтобы заполнить",
+  "Template with examples": "Шаблон с примерами",
+  "A row of every kind of operation to change": "По строке каждого вида операций, чтобы изменить",
+  "View example": "Посмотреть пример",
+  "You choose which column of the file is which, link its accounts and categories to yours and see what would be added before anything changes.":
+    "Вы сами выбираете, какой столбец что означает, связываете счета и категории файла со своими и видите, что будет добавлено, до любых изменений.",
+  "Rows that are already in your data are left out. Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.":
+    "Строки, которые уже есть в данных, пропускаются. Перед сохранением импортированных данных делается копия текущих. Из неё можно будет восстановить данные.",
+  "Match columns": "Столбцы файла",
+  "Choose which column of the file holds each part of an operation. Columns named as in the file of this application are matched already.":
+    "Выберите, в каком столбце файла что лежит. Столбцы с такими же названиями, как в файле этого приложения, уже сопоставлены.",
+  "Some characters could not be read. If the text looks wrong, choose another file encoding below.":
+    "Часть символов не удалось прочитать. Если текст выглядит неправильно, выберите ниже другую кодировку файла.",
+  "Rows with a different number of cells than the first row: {n}. Missing cells are taken as empty, extra ones are left out.":
+    "Строк с другим числом ячеек, чем в первой строке: {n}. Недостающие ячейки считаются пустыми, лишние отбрасываются.",
+  "The dates can be read as day and month or as month and day. Check the examples below.":
+    "Даты можно прочитать как «день и месяц» или как «месяц и день». Проверьте примеры ниже.",
+  "The file has column names but no rows.": "В файле есть названия столбцов, но нет строк.",
+  "{file} · {rows} · separator: {delimiter}": "{file} · {rows} · разделитель: {delimiter}",
+  "{n} rows": ["{n} строка", "{n} строки", "{n} строк"],
+  comma: "запятая",
+  semicolon: "точка с запятой",
+  tab: "табуляция",
+  "Choose the columns for: {fields}": "Выберите столбцы: {fields}",
+  Required: "Обязательно",
+  "Not used": "Не используется",
+  "Column {n}": "Столбец {n}",
+  "How the file is written": "Как записан файл",
+  "Date order": "Порядок даты",
+  "Year, month, day": "Год, месяц, день",
+  "Day, month, year": "День, месяц, год",
+  "Month, day, year": "Месяц, день, год",
+  "Decimal point": "Десятичный знак",
+  "A point": "Точка",
+  "A comma": "Запятая",
+  "Used when a number such as 1,234 could be read both ways":
+    "Нужен, когда число вроде 1,234 можно прочитать двояко",
+  "File encoding": "Кодировка файла",
+  "Windows-1251 (Cyrillic)": "Windows-1251 (кириллица)",
+  "How the first rows are read": "Как читаются первые строки",
+  "Your file · the first rows as they will be understood":
+    "Ваш файл · первые строки так, как они будут поняты",
+  Line: "Строка",
+  Next: "Далее",
+  "Choose the account or category of yours that each name in the file stands for. What is not found is created when you import.":
+    "Выберите свой счёт или категорию для каждого названия из файла. Чего нет, то создастся при импорте.",
+  "To be created: {n}": "Будет создано: {n}",
+  "Create a new account": "Создать новый счёт",
+  "Create new": "Создать новый",
+  "Import preview": "Предпросмотр импорта",
+  "Rows in the file": "Строк в файле",
+  "To be added": "Будет добавлено",
+  "Already in your data, left out": "Уже есть в данных, пропущено",
+  "With problems, left out": "С ошибками, пропущено",
+  "New accounts": "Новых счетов",
+  "New categories": "Новых категорий",
+  "New tags": "Новых тегов",
+  "Rows that repeat another row of the file: {n}. They are added as separate operations.":
+    "Строк, повторяющих другую строку файла: {n}. Они добавятся как отдельные операции.",
+  "Income rows with a minus sign: {n}. The sign is ignored.":
+    "Строк дохода со знаком минус: {n}. Знак игнорируется.",
+  "Nothing from this file can be added.": "Из этого файла ничего нельзя добавить.",
+  "Operations to be added": "Операции, которые будут добавлены",
+  "Your file · the first {shown} of {total} operations":
+    "Ваш файл · первые {shown} из {total} операций",
+  "Your file · all {total} operations": "Ваш файл · все операции: {total}",
+  "Rows that are left out": "Пропущенные строки",
+  "Line {line}: {reason}": "Строка {line}: {reason}",
+  "…and {n} more": "…и ещё {n}",
+  "Save the list of these rows": "Сохранить список этих строк",
+  "Add {n} operations to your data? A backup of the current data is made first.":
+    "Добавить операции в данные: {n}? Сначала будет сделана копия текущих данных.",
+  Import: "Импортировать",
+  "Import {n} operations": "Импортировать операции: {n}",
+  "Import finished": "Импорт завершён",
+  "Operations added": "Операций добавлено",
+  "Accounts created": "Счетов создано",
+  "Categories created": "Категорий создано",
+  "Left out as already there": "Пропущено как уже имеющиеся",
+  "Left out with problems": "Пропущено с ошибками",
+  "A copy of your data from before the import is kept in Saved backups.":
+    "Копия данных до импорта хранится в разделе «Сохранённые копии».",
+  "Show operations": "Показать операции",
+  "Take back this import": "Отменить этот импорт",
+  "Take back this import? The operations, accounts and categories it added are removed.":
+    "Отменить этот импорт? Добавленные им операции, счета и категории будут удалены.",
+  "Take back": "Отменить",
+  "Import taken back": "Импорт отменён",
+  "Example of a CSV file": "Пример файла CSV",
+  "This is how a file for the import is written. Each row is one operation; the first row holds the names of the columns.":
+    "Так записывается файл для импорта. Каждая строка — одна операция; в первой строке названия столбцов.",
+  "Sample rows": "Строки-примеры",
+  "Sample values for illustration. They are not your data.":
+    "Примерные значения для наглядности. Это не ваши данные.",
+  Columns: "Столбцы",
+  "Kind of operation": "Вид операции",
+  "income, expense, transfer or adjustment. Left empty, the sign of the amount decides: a minus is an expense.":
+    "income, expense, transfer или adjustment. Если пусто, решает знак суммы: минус — расход.",
+  "Day of the operation": "День операции",
+  "2026-03-01 (year, month, day). Other orders such as 01.03.2026 are read when you choose them while importing.":
+    "2026-03-01 (год, месяц, день). Другой порядок, например 01.03.2026, читается, если выбрать его при импорте.",
+  "Amount, in the currency of the account": "Сумма в валюте счёта",
+  "12.50 · a point or a comma before the cents, at most two decimals.":
+    "12.50 · точка или запятая перед копейками, не больше двух знаков.",
+  "Currency of the account": "Валюта счёта",
+  "Three letters, such as USD. Left empty, the currency of the account is used, or the main currency for a new one.":
+    "Три буквы, например USD. Если пусто, берётся валюта счёта, а для нового счёта — основная валюта.",
+  "Account the money leaves": "Счёт, с которого уходят деньги",
+  "For an expense, a transfer and a decrease of the balance.":
+    "Для расхода, перевода и уменьшения баланса.",
+  "Account the money goes to": "Счёт, на который приходят деньги",
+  "For an income, a transfer and an increase of the balance.":
+    "Для дохода, перевода и увеличения баланса.",
+  Note: "Заметка",
+  "Any text.": "Любой текст.",
+  "Several tags are separated by |, such as work|lunch.":
+    "Несколько тегов разделяются знаком |, например work|lunch.",
+  "Amount received and its currency": "Полученная сумма и её валюта",
+  "Only for a transfer between accounts in different currencies.":
+    "Только для перевода между счетами в разных валютах.",
+  "Food / Lunch means the subcategory Lunch of Food. Not used for transfers and adjustments.":
+    "Food / Lunch — это подкатегория Lunch категории Food. Для переводов и корректировок не используется.",
+  "Good to know": "Полезно знать",
+  "Columns may be separated by commas, semicolons or tabs. The text should be UTF-8; other encodings can be chosen while importing.":
+    "Столбцы могут разделяться запятыми, точками с запятой или табуляцией. Текст лучше в UTF-8; другую кодировку можно выбрать при импорте.",
+  "You can import a file with other column names: you choose which column is which.":
+    "Можно импортировать файл с другими названиями столбцов: вы сами выбираете, какой столбец что означает.",
+  "Accounts and categories that are not found are created. Before anything is added you see what will happen and can link each name to an account or category you have.":
+    "Счета и категории, которых нет, создаются. Перед добавлением вы увидите, что произойдёт, и сможете связать каждое название со своим счётом или категорией.",
+  "A row that is already in your data (same day, amount, accounts, category and comment) is left out, so importing a file twice does not add its operations twice.":
+    "Строка, которая уже есть в данных (тот же день, сумма, счета, категория и комментарий), пропускается, поэтому повторный импорт файла не добавит операции дважды.",
+  "A transfer between your accounts is neither an income nor an expense.":
+    "Перевод между вашими счетами — не доход и не расход.",
+  "A text that begins with = + - or @ is written with a leading apostrophe by this application so that spreadsheets do not take it for a formula. The apostrophe is removed when the file is imported.":
+    "Текст, начинающийся с = + - или @, это приложение записывает с апострофом в начале, чтобы таблицы не приняли его за формулу. При импорте апостроф убирается.",
+  "Download example file": "Скачать файл-пример",
+  "Download empty template": "Скачать пустой шаблон",
+  "{n} tags": ["{n} тег", "{n} тега", "{n} тегов"],
+  DELETE: "УДАЛИТЬ",
+  "To go on, write {word}": "Чтобы продолжить, напишите {word}",
+  "Confirmation word": "Слово подтверждения",
+  "Save a data file first": "Сначала сохранить файл данных",
+  "The data could not be stored, so nothing was deleted.":
+    "Данные не удалось записать, поэтому ничего не удалено.",
+  "The balances of the accounts go back to their opening balances.":
+    "Балансы счетов вернутся к начальным остаткам.",
+  "Accounts, categories, tags, budgets and scheduled payments stay, and so do the backups.":
+    "Счета, категории, теги, бюджеты и запланированные платежи останутся, как и копии.",
+  "The settings, the exchange rates and the backups stay. A backup that holds this data can bring it back.":
+    "Настройки, курсы валют и копии останутся. Копия, в которой есть эти данные, сможет их вернуть.",
+  "The data stays as it is.": "Данные останутся как есть.",
+  "The data can no longer be brought back from these copies.":
+    "Из этих копий данные больше нельзя будет вернуть.",
+  "Nothing is left on this device, and the backups go too.":
+    "На этом устройстве ничего не останется, копии тоже удалятся.",
+  "Data files saved outside the application are not touched.":
+    "Файлы данных, сохранённые вне приложения, не затрагиваются.",
 };

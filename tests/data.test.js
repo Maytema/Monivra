@@ -1,9 +1,7 @@
 import { check } from "./harness.js";
 import { addAccount } from "./helpers.js";
 import { rootView } from "../js/app/shell.js";
-import { TODAY } from "../js/core/constants.js";
 import { appData, uiState } from "../js/core/state.js";
-import { parseCSV, prepareCSV } from "../js/data/csv.js";
 import { CURRENCIES, defaultRates } from "../js/data/currencies.js";
 import { completeData } from "../js/data/defaults.js";
 import { isValidData } from "../js/data/storage.js";
@@ -22,14 +20,6 @@ check("More root navigation", () => {
   uiState.pages = oldPages;
   return view.includes("more-menu") && view.includes('class="navbar');
 });
-
-check(
-  "CSV escaped fields",
-  () =>
-    parseCSV(
-      'type,date,amount,currency,from,to,category,comment\nexpense,2026-10-12,1,KGS,Wallet,,Food,"a,b"',
-    )[0].comment === "a,b",
-);
 
 check("Every currency has a positive fixed rate", () => {
   const rates = defaultRates();
@@ -150,37 +140,4 @@ check("Only the ten latest backups are kept", () => {
   appData.backups = [];
   for (let n = 0; n < 12; n++) createBackup();
   return appData.backups.length === 10;
-});
-
-check("A CSV file becomes operations with the accounts and categories they need", () => {
-  appData.ops = [];
-  const header = "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency";
-  const currency = appData.settings.currency;
-  const text = [
-    header,
-    `expense,${TODAY},12.50,${currency},Imported cash,,Food / Cafe,lunch,a|b,,`,
-    `income,${TODAY},"1000,00",${currency},,Imported cash,Salary,,,,`,
-  ].join("\n");
-  const first = prepareCSV(text);
-  appData.accounts.push(...first.created.accounts);
-  appData.categories.push(...first.created.categories);
-  appData.ops.push(...first.ops);
-  const again = prepareCSV(text);
-  let message = "";
-  try {
-    prepareCSV(`${header}\nexpense,${TODAY},abc,${currency},Imported cash,,Food,,,,`);
-  } catch (error) {
-    message = error.message;
-  }
-  return (
-    first.ops.length === 2 &&
-    first.ops[0].amount === 1250 &&
-    first.ops[0].tags.join() === "a,b" &&
-    first.ops[1].amount === 100000 &&
-    first.created.accounts.length === 1 &&
-    first.created.categories.some((c) => c.name === "Cafe") &&
-    again.duplicates === 2 &&
-    again.ops.length === 0 &&
-    message.includes("2")
-  );
 });

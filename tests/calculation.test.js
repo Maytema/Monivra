@@ -27,6 +27,17 @@ check("Keypad editing", () => {
   return typed === "0" && typeKey("0", ".") === "0." && typeKey("12", "5", true) === "5";
 });
 
+check("A number on the keypad has one decimal point", () => {
+  const type = (...keys) => keys.reduce((expr, k) => typeKey(expr, k), "0");
+  return (
+    type("1", ".", "5", ".", "3") === "1.53" &&
+    type("1", ".", "5", "+", ".") === "1.5+0." &&
+    type("1", ".", "5", "+", "2", ".", "5", ".") === "1.5+2.5" &&
+    type(".") === "0." &&
+    evaluateExpression(type("1", ".", "5", ".", "5", "+", "1")) === 255
+  );
+});
+
 check("Reject division by zero", () => {
   try {
     evaluateExpression("1/0");

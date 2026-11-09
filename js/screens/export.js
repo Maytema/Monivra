@@ -1,14 +1,14 @@
-/* Export of data: a PDF report or a CSV file of the operations of a period, with filters and parts */
-import { APP_ID, iconSvg } from "../core/constants.js";
+/* Export of data in three ways: a financial summary (PDF), the detailed list of operations (PDF) and
+   a CSV file of the operations. Each has its own settings, a preview, and Save, Share and (for PDF)
+   Print. The period and the filters are shared. */
+import { iconSvg } from "../core/constants.js";
 import { emptyFilters, uiState } from "../core/state.js";
-import { csvText } from "../data/csv.js";
-import { printReport } from "../data/report.js";
-import { saveTextFile, shareTextFile } from "../platform/files.js";
-import { visibleOperations } from "../domain/finance.js";
+import { buildCsvJob, buildReportJob, releaseJob } from "../data/report-job.js";
 import { render } from "../app/shell.js";
 import { openPage } from "../ui/navigation.js";
 import { periodBar } from "../ui/period-picker.js";
-import { buttonHtml, pageHeader, swipePane, tabsHtml, toast } from "../ui/primitives.js";
+import { printDelivery, saveDelivery, shareDelivery, withProgress } from "../ui/file-actions.js";
+import { buttonHtml, pageHeader, swipePane, toast } from "../ui/primitives.js";
 import { checkboxHtml } from "./operations/filter-parts.js";
 import { filterFieldRows } from "./operations/filters.js";
 import { translate } from "../i18n/index.js";
@@ -20,27 +20,39 @@ const OPERATION_PARTS = [
   ["comment", "Comment"],
   ["tags", "Tags"],
 ];
-const ACCOUNT_PARTS = [
-  ["balance", "Balance"],
-  ["goal", "Goal"],
-  ["debt", "Debt"],
+// The parts of the financial summary that can be left out.
+const SUMMARY_SECTIONS = [
+  ["charts", "Charts and trends", "stats"],
+  ["accounts", "Accounts", "wallet"],
+  ["savings", "Savings", "pig"],
+  ["debts", "Debts", "debt"],
+  ["budgets", "Budgets", "budget"],
+];
+// The three ways to export: title, a line about each and its icon.
+const MODES = [
+  ["summary", "Financial summary", "PDF · overview, charts, accounts, budgets", "pie"],
+  ["detail", "Detailed transactions", "PDF · every operation in a table", "receipt"],
+  ["csv", "CSV file", "A table for spreadsheets and other applications", "document"],
 ];
 
 // The page opens on all time; the period shown before comes back when the page is left.
 export function openExport() {
   const before = uiState.period;
   uiState.period = { ...before, mode: "all" };
-  openPage("export", {
-    restore: () => (uiState.period = before),
+  const page = {
+    cache: null,
     draft: {
-      format: "pdf",
+      mode: "summary",
       filters: emptyFilters(),
-      sections: { operations: true, accounts: true },
-      parts: Object.fromEntries(
-        [...OPERATION_PARTS, ...ACCOUNT_PARTS].map(([part]) => [part, true]),
-      ),
+      sections: Object.fromEntries(SUMMARY_SECTIONS.map(([key]) => [key, true])),
+      parts: Object.fromEntries(OPERATION_PARTS.map(([part]) => [part, true])),
     },
-  });
+  };
+  page.restore = () => {
+    uiState.period = before;
+    releaseJob(page.cache?.job);
+  };
+  openPage("export", page);
 }
 
 // A row of the filters: what is chosen, with its icon; "All categories (All subcategories)" gets
@@ -54,8 +66,8 @@ function filterRow(label, value, open, icon) {
     `aria-label="${translate(label)}"`,
   );
 }
-// A row with a checkbox that turns one thing of the report on or off; a row with an icon is a
-// part of the report, one without is a field of it.
+// A row with a checkbox that turns one thing of the export on or off; a row with an icon is a part
+// of the report, one without is a field of it.
 function choice(label, flags, key, icon = "") {
   return buttonHtml(
     `${icon ? iconSvg(icon, 24) : ""}<span class="grow">${translate(label)}</span>${checkboxHtml(flags[key])}`,
@@ -67,58 +79,84 @@ function choice(label, flags, key, icon = "") {
   );
 }
 
-const CSV_TYPE = "text/csv;charset=utf-8";
-// Writes a file into the downloads of the device and says so.
-function saveFile(name, content, type) {
-  saveTextFile(name, content, type);
-  toast("File prepared");
+// What the export is now, as the job needs it.
+const configOf = (page) => ({ ...page.draft, period: uiState.period });
+
+// The prepared export of the page for what is chosen now: the one made before when nothing has
+// changed since, otherwise a new one (a PDF takes a moment, so a dialog says what is going on).
+export async function exportJob(page) {
+  const config = configOf(page);
+  const signature = JSON.stringify(config);
+  if (page.cache?.signature === signature) return page.cache.job;
+  releaseJob(page.cache?.job);
+  page.cache = null;
+  const job =
+    config.mode === "csv"
+      ? buildCsvJob(config)
+      : await withProgress("Preparing the report", (onPage) => buildReportJob(config, onPage));
+  page.cache = { signature, job };
+  return job;
 }
 
-// What is exported: the operations in the period that pass the filters, as the report or the file.
-function exportNow(draft, deliver) {
-  const ops = visibleOperations(draft.filters);
-  if (draft.format === "csv")
-    return deliver(`${APP_ID}-operations.csv`, "\ufeff" + csvText(ops, draft.parts), CSV_TYPE);
-  if (!draft.sections.operations && !draft.sections.accounts) return toast("Choose what to export");
-  printReport({ ops, sections: draft.sections, parts: draft.parts });
+// Runs an action on the prepared file; a failure is told to the person, not shown as an error.
+export function deliver(getJob, action) {
+  return async () => {
+    try {
+      await action(await getJob());
+    } catch (error) {
+      toast("The file could not be prepared");
+      console.error("Export failed:", error);
+    }
+  };
 }
+
+// Share, Save and Print as one row of buttons; the same in every export and in the preview.
+export function fileActionsHtml(getJob, { print }) {
+  const action = (label, icon, fn) =>
+    buttonHtml(
+      `${iconSvg(icon, 22)}<span>${translate(label)}</span>`,
+      deliver(getJob, fn),
+      "file-action",
+    );
+  return `<div class="file-actions ${print ? "three" : ""}">${action("Share", "share", (job) => shareDelivery(job.file))}${action("Save", "save", (job) => saveDelivery(job.file))}${print ? action("Print", "print", (job) => printDelivery(job.pages)) : ""}</div>`;
+}
+
+// A card that chooses the way to export.
+const modeCard = (draft, [id, title, line, icon]) =>
+  buttonHtml(
+    `${iconSvg(icon, 26)}<span class="grow"><span class="export-mode-title">${translate(title)}</span><small>${translate(line)}</small></span>`,
+    () => {
+      draft.mode = id;
+      render();
+    },
+    `export-mode ${draft.mode === id ? "on" : ""}`,
+    `aria-pressed="${draft.mode === id}"`,
+  );
 
 // Export page.
 export function exportView(p) {
   const { draft } = p;
-  const pdf = draft.format === "pdf";
-  const operations = pdf ? draft.sections.operations : true;
+  const csv = draft.mode === "csv";
+  const summary = draft.mode === "summary";
+  const preview = async () => {
+    try {
+      const job = await exportJob(p);
+      openPage("exportPreview", { owner: p, job });
+    } catch (error) {
+      toast("The file could not be prepared");
+      console.error("Preview failed:", error);
+    }
+  };
   return (
     pageHeader("Export data") +
     swipePane(
       periodBar() +
-        `<div class="content export-content">${tabsHtml(
-          [
-            ["pdf", "PDF"],
-            ["csv", "CSV"],
-          ],
-          draft.format,
-          (id) => (draft.format = id),
-          "segmented",
-        )}<div class="export-rows">${filterFieldRows(draft.filters, ["accounts", "categories", "types", "tags"], filterRow)}</div>${
-          pdf
-            ? `<h3 class="export-heading">${translate("Include in report")}</h3>${choice("Operations", draft.sections, "operations", "receipt")}${choice("Accounts", draft.sections, "accounts", "wallet")}`
-            : ""
-        }<h3 class="export-heading">${translate("Fields to include")}</h3>${
-          operations
-            ? `<p class="export-group">${translate("Operations")}</p>${OPERATION_PARTS.map(([key, label]) => choice(label, draft.parts, key)).join("")}`
-            : ""
-        }${
-          pdf && draft.sections.accounts
-            ? `<p class="export-group">${translate("Accounts")}</p>${ACCOUNT_PARTS.map(([key, label]) => choice(label, draft.parts, key)).join("")}`
-            : ""
+        `<div class="content export-content"><div class="export-modes">${MODES.map((m) => modeCard(draft, m)).join("")}</div><div class="export-rows">${filterFieldRows(draft.filters, ["accounts", "categories", "types", "tags"], filterRow)}</div>${
+          summary
+            ? `<h3 class="export-heading">${translate("Include in report")}</h3>${SUMMARY_SECTIONS.map(([key, label, icon]) => choice(label, draft.sections, key, icon)).join("")}`
+            : `<h3 class="export-heading">${translate("Fields to include")}</h3>${OPERATION_PARTS.map(([key, label]) => choice(label, draft.parts, key)).join("")}`
         }</div>`,
     ) +
-    `<div class="page-footer">${
-      pdf
-        ? buttonHtml("Save as PDF", () => exportNow(draft, saveFile), "primary")
-        : buttonHtml("Export and share", () => exportNow(draft, shareTextFile), "primary") +
-          buttonHtml("Export and save", () => exportNow(draft, saveFile), "secondary")
-    }</div>`
+    `<div class="page-footer">${buttonHtml("Preview", preview, "primary")}${fileActionsHtml(() => exportJob(p), { print: !csv })}</div>`
   );
 }

@@ -1,4 +1,4 @@
-// User scenarios in a phone-sized browser: node tests/scenarios.mjs
+// User scenarios in a phone-sized browser: node tests/scenarios.mjs (ONLY=text for some of them)
 import { readFile } from "node:fs/promises";
 import { chromium } from "playwright";
 import { serveApp } from "./server.mjs";
@@ -38,6 +38,18 @@ async function openApp({ height = 700, adjust = () => {}, motion = false } = {})
   return page;
 }
 const tab = (page, name) => page.locator(".navbar").getByText(name, { exact: true }).click();
+// Opens a page of the Data section from any tab.
+const openData = async (page, name) => {
+  await tab(page, "More");
+  await page.getByText("Data", { exact: true }).first().click();
+  await page.getByText(name, { exact: true }).click();
+};
+// The downloads the page has started so far: a way to check that something was not saved.
+const watchDownloads = (page) => {
+  const seen = [];
+  page.on("download", (download) => seen.push(download.suggestedFilename()));
+  return seen;
+};
 const openEditorOn = async (page, categoryName) => {
   await tab(page, "Categories");
   await page.locator(".cat-tile", { hasText: categoryName }).first().click();
@@ -589,9 +601,52 @@ const scenarios = {
     await page.getByText("Data", { exact: true }).first().click();
     await page.getByText("Delete my data", { exact: true }).click();
     await page.getByText("Delete local data", { exact: true }).click();
+    await page.getByLabel("Confirmation word").fill("DELETE");
     await page.getByRole("button", { name: "Delete", exact: true }).click();
     await page.getByText("Data deleted").waitFor();
     expect((await stored())[2]).toBe("#a000b8");
+  },
+  async "a deletion offers a copy and a file first, and deleting everything asks for a word"(page) {
+    const downloads = watchDownloads(page);
+    const stored = () =>
+      page.evaluate(() => {
+        const data = JSON.parse(localStorage.getItem("monivra.offline.2026.v1"));
+        return [data.accounts.length, data.ops.length, data.backups.length];
+      });
+    await openData(page, "Delete my data");
+    await page.getByText("Partial deletion", { exact: true }).click();
+    // What it does to the rest is told, a copy in the backups is on, a data file can be saved first.
+    expect(await page.locator(".restore-changes").textContent()).toMatch(/backups stay/);
+    expect(await page.getByLabel("Create a backup first").isChecked()).toBe(true);
+    expect(await page.getByLabel("Confirmation word").count()).toBe(0);
+    const [file] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByRole("button", { name: "Save a data file first" }).click(),
+    ]);
+    expect(file.suggestedFilename()).toMatch(/^monivra-backup-/);
+    expect(downloads.length).toBe(1);
+    await page.getByRole("button", { name: "Delete", exact: true }).click();
+    await page.getByText("Data deleted").waitFor();
+    expect(await stored()).toEqual([0, 0, 1]);
+    // The copy made before the deletion brings the data back.
+    await openData(page, "Saved backups");
+    await page.locator(".backup-card").click();
+    await page.getByRole("button", { name: "Replace data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+    expect((await stored())[1] > 0).toBe(true);
+    // Everything: the button waits for the word, and the backups go too.
+    await openData(page, "Delete my data");
+    await page.getByText("Delete local data", { exact: true }).click();
+    const remove = page.getByRole("button", { name: "Delete", exact: true });
+    expect(await remove.isDisabled()).toBe(true);
+    await page.getByLabel("Confirmation word").fill("remove");
+    expect(await remove.isDisabled()).toBe(true);
+    await page.getByLabel("Confirmation word").fill("delete");
+    expect(await remove.isDisabled()).toBe(false);
+    await remove.click();
+    await page.getByText("Data deleted").waitFor();
+    expect(await stored()).toEqual([0, 0, 0]);
   },
   async "the button of a support page is pinned under the scrolling text"(page) {
     await tab(page, "More");
@@ -760,37 +815,169 @@ const scenarios = {
     await page.locator(".sheet-footer").last().getByRole("button", { name: "Apply" }).click();
     expect(await page.locator(".op-row").count()).toBe(before - 1);
   },
-  async "exported data is accepted again by the import"(page) {
-    await tab(page, "More");
-    await page.getByText("Data", { exact: true }).first().click();
-    await page.getByText("Data file", { exact: true }).click();
+  async "the data file is saved with a dated name and brought back from the file"(page) {
+    const downloads = watchDownloads(page);
+    await openData(page, "Data file");
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByRole("button", { name: "Export and save" }).click(),
+      page.getByRole("button", { name: "Save", exact: true }).click(),
     ]);
-    expect(download.suggestedFilename()).toBe("monivra-data.json");
+    expect(download.suggestedFilename()).toMatch(/^monivra-backup-\d{4}-\d\d-\d\d\.json$/);
     const buffer = await readFile(await download.path());
+    const file = JSON.parse(buffer.toString("utf8"));
+    expect(file.schema).toBe(1);
+    expect(file.meta.app).toBe("Monivra");
+    expect(file.accounts.length > 0 && file.ops.length > 0).toBe(true);
+    expect(downloads.length).toBe(1);
+    // The file is looked at before anything changes: what it holds and the two ways to bring it back.
     const [chooser] = await Promise.all([
       page.waitForEvent("filechooser"),
       page.getByRole("button", { name: "Restore from file" }).click(),
     ]);
-    await chooser.setFiles({ name: "monivra-data.json", mimeType: "application/json", buffer });
-    await page.getByText("Replace existing data", { exact: false }).waitFor();
-    await page.getByText("Apply", { exact: true }).click();
-    await page.getByText("Data imported").waitFor();
+    await chooser.setFiles({ name: "data.json", mimeType: "application/json", buffer });
+    await page.getByText("Replace data", { exact: true }).first().waitFor();
+    expect(await page.locator(".restore-facts").textContent()).toMatch(/Operations/);
+    await page.getByRole("button", { name: "Replace data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+    expect(downloads.length).toBe(1);
   },
-  async "the CSV export leaves out what is turned off and the whole file is accepted by the import"(
+  async "a file that is not a data file is refused with a sentence and nothing changes"(page) {
+    await openData(page, "Data file");
+    const before = await page.evaluate(() => localStorage.getItem("monivra.offline.2026.v1"));
+    for (const [text, message] of [
+      ["not json at all", /damaged|not a JSON/],
+      ['{"schema":1,"accounts":[]}', /missing or damaged/],
+      ['{"schema":9}', /newer version/],
+    ]) {
+      const [chooser] = await Promise.all([
+        page.waitForEvent("filechooser"),
+        page.getByRole("button", { name: "Restore from file" }).click(),
+      ]);
+      await chooser.setFiles({
+        name: "bad.json",
+        mimeType: "application/json",
+        buffer: Buffer.from(text),
+      });
+      await page.locator(".overlay").getByText(message).waitFor();
+      await page.locator(".overlay").getByRole("button", { name: "OK" }).click();
+    }
+    expect(await page.evaluate(() => localStorage.getItem("monivra.offline.2026.v1"))).toBe(before);
+  },
+  async "sharing opens the share sheet with the file and saves nothing; without it nothing is saved until asked"(
     page,
   ) {
-    await tab(page, "More");
-    await page.getByText("Data", { exact: true }).first().click();
-    await page.getByText("Export data", { exact: true }).click();
-    await page.getByRole("button", { name: "CSV", exact: true }).click();
+    const downloads = watchDownloads(page);
+    await page.evaluate(() => {
+      window.__shared = [];
+      Object.defineProperty(navigator, "canShare", { value: () => true, configurable: true });
+      Object.defineProperty(navigator, "share", {
+        value: async ({ files }) => {
+          window.__shared.push(
+            ...files.map((file) => `${file.name}:${file.type}:${file.size > 100}`),
+          );
+        },
+        configurable: true,
+      });
+    });
+    await openData(page, "Data file");
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.getByText("File shared").waitFor();
+    const shared = await page.evaluate(() => window.__shared);
+    expect(shared.length).toBe(1);
+    expect(shared[0]).toMatch(/^monivra-backup-.*\.json:application\/json:true$/);
+    expect(downloads.length).toBe(0);
+    // Chrome shares only some kinds of files (PDF, CSV, text, pictures), not JSON: the data file then
+    // goes as the same text under a name that ends in .txt.
+    await page.evaluate(() => {
+      window.__shared = [];
+      Object.defineProperty(navigator, "canShare", {
+        value: ({ files }) => files.every((file) => file.type !== "application/json"),
+        configurable: true,
+      });
+    });
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.waitForFunction(() => window.__shared.length === 1);
+    expect((await page.evaluate(() => window.__shared))[0]).toMatch(
+      /^monivra-backup-.*\.json\.txt:text\/plain:true$/,
+    );
+    expect(downloads.length).toBe(0);
+    // The browser cannot send files: the person is told, and the file is saved only on the answer.
+    await page.evaluate(() =>
+      Object.defineProperty(navigator, "canShare", { value: undefined, configurable: true }),
+    );
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.getByText("Sharing is not available").waitFor();
+    expect(await page.locator(".confirm-message").textContent()).toMatch(/has not been saved/);
+    expect(downloads.length).toBe(0);
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByRole("button", { name: "Save file" }).click(),
+    ]);
+    expect(download.suggestedFilename()).toMatch(/\.json$/);
+    expect(downloads.length).toBe(1);
+  },
+  async "a PDF report is previewed in the application, then saved as a real PDF, and printing is not saving"(
+    page,
+  ) {
+    const downloads = watchDownloads(page);
+    await page.evaluate(() => {
+      window.__printed = [];
+      new MutationObserver((records) => {
+        for (const node of records.flatMap((r) => [...r.addedNodes]))
+          if (node.tagName === "IFRAME")
+            node.contentWindow.print = () =>
+              window.__printed.push(node.contentDocument.images.length);
+      }).observe(document.body, { childList: true });
+    });
+    await openData(page, "Export data");
+    for (const [mode, name] of [
+      ["Financial summary", /^monivra-financial-summary-all-time\.pdf$/],
+      ["Detailed transactions", /^monivra-transactions-all-time\.pdf$/],
+    ]) {
+      const started = downloads.length;
+      await page.getByRole("button", { name: new RegExp(mode) }).click();
+      await page.getByRole("button", { name: "Preview", exact: true }).click();
+      await page.locator(".report-pages img").first().waitFor();
+      const pages = await page.locator(".report-pages img").count();
+      expect(pages > 0).toBe(true);
+      expect(downloads.length).toBe(started);
+      const [download] = await Promise.all([
+        page.waitForEvent("download"),
+        page.getByRole("button", { name: "Save", exact: true }).click(),
+      ]);
+      expect(download.suggestedFilename()).toMatch(name);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
+      expect(bytes.toString("latin1").includes("%%EOF")).toBe(true);
+      expect((bytes.toString("latin1").match(/\/Type \/Page\b/g) || []).length).toBe(pages);
+      const before = downloads.length;
+      await page.getByRole("button", { name: "Print", exact: true }).click();
+      await page.waitForFunction(() => window.__printed.length > 0);
+      expect((await page.evaluate(() => window.__printed.at(-1))) > 0).toBe(true);
+      expect(downloads.length).toBe(before);
+      await page.locator(".icon-button[title=Back]").click();
+    }
+  },
+  async "the CSV export leaves out what is turned off, previews without a download and imports back"(
+    page,
+  ) {
+    const downloads = watchDownloads(page);
+    await openData(page, "Export data");
+    await page.getByRole("button", { name: /CSV file/ }).click();
+    // Settings of the other kinds of export are not shown.
+    expect(await page.getByText("Include in report").count()).toBe(0);
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.locator(".csv-preview table").waitFor();
+    expect(downloads.length).toBe(0);
+    expect(await page.locator(".csv-preview th").allTextContents()).toContain("comment");
+    await page.locator(".icon-button[title=Back]").click();
     const save = async () => {
       const [download] = await Promise.all([
         page.waitForEvent("download"),
-        page.getByRole("button", { name: "Export and save" }).click(),
+        page.getByRole("button", { name: "Save", exact: true }).click(),
       ]);
+      expect(download.suggestedFilename()).toBe("monivra-operations-all-time.csv");
       return readFile(await download.path(), "utf8");
     };
     await page.locator(".export-option", { hasText: "Comment" }).click();
@@ -798,8 +985,9 @@ const scenarios = {
     expect(without.split("\r\n")[0].includes("comment")).toBe(false);
     await page.locator(".export-option", { hasText: "Comment" }).click();
     const whole = await save();
+    expect(whole.startsWith("\ufeff")).toBe(true);
     expect(whole.split("\r\n")[0].includes("comment")).toBe(true);
-    await page.getByLabel("Back").click();
+    await page.locator(".icon-button[title=Back]").click();
     await page.getByText("Import data", { exact: true }).click();
     const [chooser] = await Promise.all([
       page.waitForEvent("filechooser"),
@@ -810,8 +998,90 @@ const scenarios = {
       mimeType: "text/csv",
       buffer: Buffer.from(whole),
     });
-    await page.getByText("Apply", { exact: true }).click();
-    await page.getByText("CSV imported").waitFor();
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    // The file written by the application is all in the data already: nothing would be added.
+    await page.getByRole("button", { name: "Import 0 operations" }).waitFor();
+    expect(await page.getByRole("button", { name: "Import 0 operations" }).isDisabled()).toBe(true);
+  },
+  async "a CSV file is matched, looked at and added once, and importing it again adds nothing"(
+    page,
+  ) {
+    const example = await page.evaluate(async () => (await import("/js/data/csv.js")).csvExample());
+    const count = () =>
+      page.evaluate(async () => (await import("/js/core/state.js")).appData.ops.length);
+    const start = await count();
+    const choose = async () => {
+      await page.getByText("Import data", { exact: true }).click();
+      const [chooser] = await Promise.all([
+        page.waitForEvent("filechooser"),
+        page.getByRole("button", { name: "Select CSV file" }).click(),
+      ]);
+      await chooser.setFiles({
+        name: "bank.csv",
+        mimeType: "text/csv",
+        buffer: Buffer.from(example),
+      });
+    };
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    // The example is in the application, with the rules, and nothing is added by looking at it.
+    await page.getByText("Import data", { exact: true }).click();
+    await page.getByRole("button", { name: "View example" }).click();
+    await page.getByText("Example of a CSV file").waitFor();
+    await page.locator(".icon-button[title=Back]").click();
+    await page.locator(".icon-button[title=Back]").click();
+    expect(await count()).toBe(start);
+    await choose();
+    await page.getByText("Match columns").waitFor();
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByText("Accounts and categories").first().waitFor();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.getByRole("button", { name: "Import 6 operations" }).click();
+    expect(await count()).toBe(start);
+    await page.getByRole("button", { name: "Import", exact: true }).click();
+    await page.getByText("Import finished").waitFor();
+    expect(await count()).toBe(start + 6);
+    await page.locator(".icon-button[title=Back]").click();
+    await page.locator(".icon-button[title=Back]").click();
+    await choose();
+    await page.getByRole("button", { name: "Next" }).click();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    expect(await page.getByRole("button", { name: "Import 0 operations" }).isDisabled()).toBe(true);
+    expect(await count()).toBe(start + 6);
+  },
+  async "the screen for data that cannot be read speaks the language that was chosen"(page) {
+    const damaged = '{"schema":1,"settings":{"language":"ru"},"accounts":"broken"';
+    await page.evaluate((text) => localStorage.setItem("monivra.offline.2026.v1", text), damaged);
+    await page.reload();
+    await page.getByText("Не удалось прочитать данные").waitFor();
+    expect(await page.getByRole("button", { name: "Сохранить копию данных" }).count()).toBe(1);
+  },
+  async "data the application cannot read is kept, and the person chooses what to do with it"(
+    page,
+  ) {
+    const downloads = watchDownloads(page);
+    const garbage = '{"schema":1,"accounts":"broken"';
+    await page.evaluate((text) => localStorage.setItem("monivra.offline.2026.v1", text), garbage);
+    await page.reload();
+    await page.getByText("Your data could not be read").waitFor();
+    expect(await page.locator(".navbar").count()).toBe(0);
+    expect(await page.evaluate(() => localStorage.getItem("monivra.offline.2026.v1"))).toBe(
+      garbage,
+    );
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByRole("button", { name: "Save a copy of the data" }).click(),
+    ]);
+    expect((await readFile(await download.path(), "utf8")) === garbage).toBe(true);
+    expect(downloads.length).toBe(1);
+    await page.getByRole("button", { name: "Start with empty data" }).click();
+    await page.getByRole("button", { name: "Start empty" }).click();
+    await page.getByText("Your data could not be read").waitFor({ state: "detached" });
+    // What was there is not lost: a copy stays in the storage of the browser.
+    expect(await page.evaluate(() => localStorage.getItem("monivra.offline.2026.v1.damaged"))).toBe(
+      garbage,
+    );
   },
   async "a saved backup is made on its page and brought back by merging or replacing"(page) {
     await tab(page, "More");
@@ -875,16 +1145,41 @@ const scenarios = {
     });
     expect(formatted).toBe("0 KGS | 500 KGS | 500.50 KGS");
   },
-  async "the report holds the parts that are chosen"(page) {
-    await tab(page, "More");
-    await page.getByText("Data", { exact: true }).first().click();
-    await page.getByText("Export data", { exact: true }).click();
-    await page.evaluate(() => (window.print = () => {}));
-    await page.locator(".export-option", { hasText: "Accounts" }).first().click();
-    await page.getByRole("button", { name: "Save as PDF" }).click();
-    const report = await page.locator("#printout").innerHTML();
-    expect(report.includes("<th>Date</th>")).toBe(true);
-    expect(report.includes("<th>Balance</th>")).toBe(false);
+  async "in Russian the buttons to share, save and print fit the screen, and so does the page"(
+    page,
+  ) {
+    await tab(page, "Ещё");
+    await page.getByText("Данные", { exact: true }).first().click();
+    await page.getByText("Экспорт данных", { exact: true }).click();
+    const fits = () =>
+      page.evaluate(() => ({
+        page: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+        buttons: [...document.querySelectorAll(".file-action")].every((b) => {
+          const r = b.getBoundingClientRect();
+          return r.left >= 0 && r.right <= innerWidth && b.scrollWidth <= b.clientWidth;
+        }),
+        count: document.querySelectorAll(".file-action").length,
+      }));
+    expect(await fits()).toEqual({ page: true, buttons: true, count: 3 });
+    await page.getByRole("button", { name: "Предпросмотр", exact: true }).click();
+    await page.locator(".report-pages img").first().waitFor();
+    expect(await fits()).toEqual({ page: true, buttons: true, count: 3 });
+  },
+  async "the summary leaves out the parts that are turned off, so its page count changes"(page) {
+    await openData(page, "Export data");
+    const pagesOf = async () => {
+      await page.getByRole("button", { name: "Preview", exact: true }).click();
+      await page.locator(".report-pages img").first().waitFor();
+      const n = await page.locator(".report-pages img").count();
+      await page.locator(".icon-button[title=Back]").click();
+      return n;
+    };
+    const all = await pagesOf();
+    for (const part of ["Charts and trends", "Accounts", "Savings", "Debts", "Budgets"])
+      await page.locator(".export-part", { hasText: part }).click();
+    const least = await pagesOf();
+    expect(least <= all).toBe(true);
+    expect(least > 0).toBe(true);
   },
 };
 
@@ -895,13 +1190,29 @@ const expect = (actual) => ({
   toMatch(pattern) {
     if (!pattern.test(actual)) throw Error(`expected ${actual} to match ${pattern}`);
   },
+  toContain(item) {
+    if (!actual.includes(item)) throw Error(`expected ${actual} to contain ${item}`);
+  },
+  toEqual(expected) {
+    if (JSON.stringify(actual) !== JSON.stringify(expected))
+      throw Error(`expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+  },
 });
 
+// No accounts and no categories, and nothing that would point at them.
 const withoutRecords = (data) => {
   data.accounts = [];
   data.categories = [];
+  data.ops = [];
+  data.scheduled = [];
+  data.budgets = [];
 };
 const adjustments = {
+  "in Russian the buttons to share, save and print fit the screen, and so does the page": (
+    data,
+  ) => {
+    data.settings.language = "ru";
+  },
   "an account list that is empty offers to create the first account": withoutRecords,
   "empty categories show an illustration with a button that creates the first one": withoutRecords,
   "a subcategory can be left out of the category filter and all can be folded": (data) => {
@@ -1016,8 +1327,11 @@ function addSubcategories(data) {
 }
 
 const SHORT_SCREEN = ["photos", "a page keeps"];
+// ONLY=text node tests/scenarios.mjs runs the scenarios whose names have the text.
+const only = process.env.ONLY;
 let failures = 0;
 for (const [name, scenario] of Object.entries(scenarios)) {
+  if (only && !name.includes(only)) continue;
   const page = await openApp({
     height: SHORT_SCREEN.some((start) => name.startsWith(start)) ? 540 : 700,
     motion: name.startsWith("with motion"),

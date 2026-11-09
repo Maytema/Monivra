@@ -108,6 +108,10 @@ const ICONS = {
   download: "M12 2v14m-5-5 5 5 5-5M3 18v4h18v-4",
   upload: "M12 17V3m-5 5 5-5 5 5M3 18v4h18v-4",
   save: "M3 3h15l3 3v15H3zm4 0v6h10V3M7 21v-8h10v8",
+  share:
+    "M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm12 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 10.5l6.8-4M8.6 13.5l6.8 4",
+  print:
+    "M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z",
   play: "M2 4h20v15H2zm7 4 7 4-7 4zM8 22h8",
   transfer: "M2 7h19l-5-5M22 17H3l5 5",
   income: "M12 2v19m-7-7 7 7 7-7",
@@ -295,7 +299,7 @@ export const ICON_GROUPS = [
 ];
 // Render an icon from ICONS as an <svg> string.
 // Release stamp shown in More, so it is easy to see which version is open.
-export const APP_BUILD = "2026-10-30.6";
+export const APP_BUILD = "2026-11-09.1";
 export const iconSvg = (name, size = 24) =>
   `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${name === "more" || name === "apps" ? 3.8 : 1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICONS[name] || ICONS.wallet}"/></svg>`;
 // Colors of the application theme (4 × 4 as on the color theme page).

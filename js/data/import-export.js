@@ -1,41 +1,26 @@
-/* Import and export (JSON, CSV) */
-import { render } from "../app/shell.js";
-import { APP_ID, deepClone } from "../core/constants.js";
-import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
-import { csvTemplate, prepareCSV } from "./csv.js";
-import { completeData } from "./defaults.js";
-import { pickFile, saveTextFile, shareTextFile } from "../platform/files.js";
-import { findDataProblem, save } from "./storage.js";
-import { createBackup, dataSnapshot } from "../domain/backups.js";
-import { translate, translateWith } from "../i18n/index.js";
-import { goHome, openPage } from "../ui/navigation.js";
-import { confirmAction, showInfo } from "../ui/dialogs.js";
-import { buttonHtml, menuRowHtml, pageHeader, toast } from "../ui/primitives.js";
+/* The Data section: its menu page, the data file page, and the import of a CSV file */
+import { csvExample, csvTemplate } from "./csv.js";
+import { MAX_FILE_BYTES, parseBackupFile } from "./backup-file.js";
+import { makeFile, pickFile } from "../platform/files.js";
+import { openPage } from "../ui/navigation.js";
+import { optionSheet, showInfo } from "../ui/dialogs.js";
+import { dataFile, saveDelivery, shareDelivery } from "../ui/file-actions.js";
+import { buttonHtml, menuRowHtml, pageHeader } from "../ui/primitives.js";
 import { openExport } from "../screens/export.js";
+import { openFileRestore } from "../screens/more/backup-pages.js";
+import { startImport } from "../screens/import-wizard.js";
+import { APP_ID } from "../core/constants.js";
 
-function download(name, content, type) {
-  saveTextFile(name, content, type);
-  toast("File prepared");
-}
-// Export the whole dataset as a JSON backup.
-const backupText = () => JSON.stringify(dataSnapshot(), null, 2);
-function exportJSON() {
-  download(`${APP_ID}-data.json`, backupText(), "application/json");
-}
-const MAX_IMPORT_BYTES = 20 * 1024 * 1024;
-
-// Let the person choose a data file (JSON backup or CSV) and offer to import it.
-async function importFile(kind) {
-  const file = await pickFile({ accept: kind === "csv" ? ".csv" : ".json" });
+// Lets the person choose a data file (JSON); it opens the page where it is looked at and restored.
+async function restoreFromFile() {
+  const file = await pickFile({ accept: ".json,.txt,application/json,text/plain" });
   if (!file) return;
-  if (file.size > MAX_IMPORT_BYTES)
+  if (file.size > MAX_FILE_BYTES)
     return showInfo("The file is larger than the 20 MB import limit.", "Import failed");
   try {
-    const text = await file.text();
-    if (kind === "csv") offerCsvImport(text);
-    else offerBackupImport(text);
+    openFileRestore({ name: file.name, ...parseBackupFile(await file.text()) });
   } catch (error) {
-    showInfo(error.message, "Import failed");
+    showInfo(error.message, "The file cannot be used");
     console.error("Import failed:", error);
   }
 }
@@ -70,93 +55,26 @@ export function dataView() {
 export function dataFileView() {
   return (
     pageHeader("Data file") +
-    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Export and share", () => shareTextFile(`${APP_ID}-data.json`, backupText(), "application/json"), "secondary")}${buttonHtml("Export and save", exportJSON, "secondary")}<hr>${buttonHtml("Restore from file", () => importFile("json"), "outline")}</div>`
+    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Share", () => shareDelivery(dataFile()), "secondary")}${buttonHtml("Save", () => saveDelivery(dataFile()), "secondary")}<hr>${buttonHtml("Restore from file", restoreFromFile, "outline")}</div>`
   );
 }
+// What the file of a template holds: the column names alone, or a few rows as examples.
+const TEMPLATES = [
+  ["empty", "Empty template", "Only the names of the columns, to fill in"],
+  ["example", "Template with examples", "A row of every kind of operation to change"],
+];
+const downloadTemplate = (kind) =>
+  saveDelivery(
+    makeFile(
+      `${APP_ID}-${kind === "empty" ? "template" : "import-example"}.csv`,
+      "\ufeff" + (kind === "empty" ? csvTemplate() : csvExample()),
+      "text/csv;charset=utf-8",
+    ),
+  );
 // Page of the import of operations from another application as a CSV file.
 export function importDataView() {
   return (
     pageHeader("Import data") +
-    `<div class="content info-text roomy tight"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><hr><p>Importing may create duplicate operations, accounts and categories.</p><p>Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", () => importFile("csv"), "primary")}${buttonHtml("Download template", () => download(`${APP_ID}-template.csv`, "\ufeff" + csvTemplate(), "text/csv;charset=utf-8"), "outline")}</div>`
-  );
-}
-// The reason of a damaged backup as one short sentence for the person.
-// Headings of the backup sections, as the person sees them elsewhere in the app.
-const SECTION_NAMES = {
-  accounts: "Accounts",
-  categories: "Categories",
-  ops: "Operations",
-  tags: "Tags",
-  scheduled: "Scheduled payments",
-  budgets: "Budgets",
-  backups: "Backups",
-};
-function describeProblem({ what, number, reason }) {
-  const text = translate(reason);
-  if (what === "File") return text.charAt(0).toUpperCase() + text.slice(1);
-  if (SECTION_NAMES[number])
-    return `${translate(what)} «${translate(SECTION_NAMES[number])}»: ${text}`;
-  return `${translate(what)} ${number || ""}`.trim() + ": " + text;
-}
-// Read a JSON backup; a damaged or foreign file is explained and refused.
-function parseBackup(text) {
-  if (!text.trim()) throw Error(translate("The file is empty."));
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw Error(translate("The file is damaged or is not a JSON file."));
-  }
-  const found = findDataProblem(data);
-  if (found) throw Error(describeProblem(found));
-  return data;
-}
-function offerCsvImport(text) {
-  const { ops, created, duplicates } = prepareCSV(text);
-  const createdCount = created.accounts.length + created.categories.length;
-  confirmAction(
-    translateWith("Append {n} operations from this CSV?", { n: ops.length }) +
-      (createdCount
-        ? " " + translateWith("{n} accounts and categories will be created.", { n: createdCount })
-        : "") +
-      (duplicates ? " " + translateWith("{n} duplicates are skipped.", { n: duplicates }) : ""),
-    () => {
-      createBackup();
-      appData.accounts.push(...created.accounts);
-      appData.categories.push(...created.categories);
-      appData.ops.push(...ops);
-      for (const op of ops)
-        for (const tag of op.tags) if (!appData.tags.includes(tag)) appData.tags.push(tag);
-      save();
-      toast("CSV imported");
-      render();
-    },
-    false,
-    "Apply",
-  );
-}
-
-function offerBackupImport(text) {
-  const data = parseBackup(text);
-  confirmAction(
-    translateWith(
-      "Replace existing data with {accounts} accounts, {categories} categories and {ops} operations from this file?",
-      {
-        accounts: data.accounts.length,
-        categories: data.categories.length,
-        ops: data.ops.length,
-      },
-    ),
-    () => {
-      const backups = deepClone(appData.backups);
-      setAppData(completeData(deepClone(data)));
-      appData.backups = backups;
-      uiState.filters = emptyFilters();
-      save();
-      goHome("more");
-      toast("Data imported");
-    },
-    true,
-    "Apply",
+    `<div class="content info-text roomy tight"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><hr><p>You choose which column of the file is which, link its accounts and categories to yours and see what would be added before anything changes.</p><p>Rows that are already in your data are left out. Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", startImport, "primary")}${buttonHtml("View example", () => openPage("importExample"), "outline")}${buttonHtml("Download template", () => optionSheet("Download template", TEMPLATES, "", downloadTemplate), "outline")}</div>`
   );
 }

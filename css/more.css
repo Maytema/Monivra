@@ -968,6 +968,112 @@
   content: "✓";
   margin-right: 8px;
 }
+.export-modes {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.export-mode {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 62px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  text-align: left;
+}
+.export-mode.on {
+  border-color: var(--accent);
+  background: var(--soft);
+}
+.export-mode-title {
+  display: block;
+  font-weight: 500;
+}
+.export-mode small {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+/* Share, Save and Print side by side */
+.file-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.file-actions.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.file-actions .file-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0px 8px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+/* Three buttons are narrow: the icon goes above the word, so a long word (in Russian) still fits. */
+.file-actions.three .file-action {
+  flex-direction: column;
+  gap: 2px;
+  min-height: 56px;
+  padding: 6px 4px;
+  font-size: 13px;
+  line-height: 1.2;
+  border-radius: 20px;
+}
+.preview-content {
+  padding-top: 8px;
+}
+.preview-note {
+  margin: 0px 0px 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.report-pages figure {
+  margin: 0px 0px 14px;
+}
+.report-pages img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  background: var(--white);
+  box-shadow: 0px 1px 6px color-mix(in srgb, var(--ink) 28%, transparent);
+}
+.report-pages figcaption {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.csv-preview {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.csv-preview table {
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.csv-preview th,
+.csv-preview td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+.csv-preview th {
+  background: var(--soft);
+  font-weight: 600;
+}
 .export-rows {
   display: grid;
   gap: 2px;
@@ -1077,6 +1183,49 @@
   font-size: 12px;
   font-weight: 500;
 }
+/* Page of one backup or data file: what it holds and what each way of restoring would change */
+.restore-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  margin: 0px 0px 18px;
+  font-size: 14px;
+}
+.restore-facts dt {
+  color: var(--muted);
+}
+.restore-facts dd {
+  margin: 0px;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+.restore-way {
+  margin: 0px 0px 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--soft);
+}
+.restore-way h3 {
+  margin: 0px 0px 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.restore-changes {
+  margin: 0px;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.restore-warning,
+.restore-note {
+  margin: 8px 0px 0px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.recovery .caution {
+  margin: 0px 0px 20px;
+  text-align: left;
+}
 .info-text.tight {
   padding-inline: 16px;
 }
@@ -1140,5 +1289,96 @@
   margin-bottom: 0px;
 }
 .currency-picker .select-main {
+  width: 100%;
+}
+
+/* Import of a CSV file: the pages of the wizard */
+.import-content {
+  padding: 8px 24px 16px;
+}
+.import-explain {
+  margin: 0px 0px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.import-fields {
+  display: grid;
+  gap: 8px;
+}
+.import-content .caution {
+  margin: 0px 0px 12px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.import-content .restore-facts dd.strong {
+  font-weight: 700;
+}
+.csv-preview .problem {
+  color: var(--negative);
+}
+.csv-preview.wrap table {
+  white-space: normal;
+}
+.csv-preview.wrap td,
+.csv-preview.wrap th {
+  min-width: 96px;
+  vertical-align: top;
+}
+.csv-preview code {
+  font-size: 12px;
+}
+.footer-note {
+  margin: 0px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+.import-content > button {
+  margin-top: 12px;
+}
+.import-value {
+  flex: 0 1 auto;
+  max-width: 48%;
+  overflow: hidden;
+  color: var(--accent-ink);
+  font-size: 15px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.export-row .chevron {
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+.column-help {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.column-help h4 {
+  margin: 0px 0px 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.column-help p {
+  margin: 0px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.confirm-message + .restore-changes {
+  margin: 0px 0px 14px;
+  text-align: left;
+  color: var(--ink-soft);
+}
+.confirm-word {
+  display: block;
+  margin: 0px 0px 12px;
+  text-align: left;
+}
+.confirm-word small {
+  display: block;
+  margin-bottom: 6px;
+}
+.confirm-word input {
   width: 100%;
 }

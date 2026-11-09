@@ -1,6 +1,6 @@
 /* Data validation and persistence */
 import { MAX_INTERVAL, STORAGE_KEY } from "../core/constants.js";
-import { appData } from "../core/state.js";
+import { appData, loadProblem } from "../core/state.js";
 import { isSupportedLanguage } from "../i18n/index.js";
 import { toast } from "../ui/primitives.js";
 
@@ -170,6 +170,8 @@ export const isValidData = (x) => !findDataProblem(x);
 
 // Persist appData to localStorage.
 export function save() {
+  // Data that could not be read is kept as it is until the person decides what to do with it.
+  if (loadProblem) return false;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     return true;

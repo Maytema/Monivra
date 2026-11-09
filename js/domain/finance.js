@@ -42,8 +42,9 @@ export function debtDirection(a) {
 // passes 100 with it; it goes below zero when the balance does. It is rounded only when shown
 // (shownPercent). A debt counts from the side it was taken on (`debt` of the account), so the
 // overpaid part is what the other side owes afterwards. Null when there is no target.
-export function accountProgress(a) {
-  const balance = accountBalance(a.id);
+export const accountProgress = (a) => progressForBalance(a, accountBalance(a.id));
+// The same for a balance the account had or will have, e.g. at the end of a report period.
+export function progressForBalance(a, balance) {
   let kind, target, done;
   if (a.type === "Regular" && a.limit > 0) {
     [kind, target, done] = ["limit", a.limit, -balance];
@@ -112,15 +113,19 @@ export function formatNumber(n, format, group, least, most = least) {
     .replace("-", "\u2212")
     .replace(/[,.]/g, (c) => (c === "," ? groupSign : decimalSign));
 }
-// Format an amount in minor units (cents) honoring the formatting settings; masks it when values are hidden.
-export function formatMoney(n, currency = appData.settings.currency, isBalance = false) {
-  if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
-    return "•••• " + escapeHtml(currency);
+// An amount in minor units (cents) written as plain text with the formatting settings; never masked.
+export function formatAmountText(n, currency = appData.settings.currency) {
   const s = appData.settings;
   // "Two decimal places" writes both digits of the cents that exist; a whole amount has none.
   const fixed = s.decimal && !s.hideCents && n % 100 !== 0 ? 2 : 0;
   const text = formatNumber(n, s.numberFormat, s.groupDigits, fixed, s.hideCents ? 0 : 2);
-  return escapeHtml(appData.settings.currencyFirst ? currency + " " + text : text + " " + currency);
+  return s.currencyFirst ? currency + " " + text : text + " " + currency;
+}
+// Format an amount in minor units (cents) honoring the formatting settings; masks it when values are hidden.
+export function formatMoney(n, currency = appData.settings.currency, isBalance = false) {
+  if (appData.settings.hidden && (appData.settings.hiddenValues !== "Balances only" || isBalance))
+    return "•••• " + escapeHtml(currency);
+  return escapeHtml(formatAmountText(n, currency));
 }
 // Amount wrapped in a <span> colored by sign.
 export const moneySpanHtml = (n, c, sign = false, isBalance = false) =>
@@ -149,6 +154,16 @@ export const dateLabel = (s, short = false) =>
         ...(short
           ? { month: "long", day: "numeric" }
           : { year: "numeric", month: "long", day: "numeric" }),
+      });
+// The same with a short month name, for tables: "Nov 4, 2026".
+export const dateLabelCompact = (s) =>
+  appData.settings.dateFormat === "iso"
+    ? s
+    : parseDate(s).toLocaleDateString(dateLocale(), {
+        timeZone: "UTC",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       });
 
 // Start and end dates of the selected statistics/operations period.
@@ -295,15 +310,16 @@ export function reportRows(ops = visibleOperations()) {
     if (o.type === "adjustment") continue;
     if (o.type !== "transfer") {
       const a = accountById(o.from || o.to);
+      const nativeAmount = o.type === "expense" ? netAmount(o) : o.amount;
+      const nativeCurrency = a?.currency || appData.settings.currency;
       out.push({
         ...o,
         reportType: o.type,
         // The category records what is left after fees on an expense.
-        reportAmount: convertCurrency(
-          o.type === "expense" ? netAmount(o) : o.amount,
-          a?.currency || appData.settings.currency,
-          appData.settings.currency,
-        ),
+        reportAmount: convertCurrency(nativeAmount, nativeCurrency, appData.settings.currency),
+        // The same amount in the currency of the account, before it is converted.
+        nativeAmount,
+        nativeCurrency,
       });
     } else {
       const { expense, income } = transferRoles(o),
@@ -318,6 +334,8 @@ export function reportRows(ops = visibleOperations()) {
             category: "debt:" + debt.id,
             reportType,
             reportAmount: convertCurrency(o.amount, source.currency, appData.settings.currency),
+            nativeAmount: o.amount,
+            nativeCurrency: source.currency,
           });
     }
   }

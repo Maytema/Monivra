@@ -10,13 +10,19 @@ python3 -m http.server 8000
 
 ## Checks
 
-| Command                 | What it does                                                          |
-| ----------------------- | --------------------------------------------------------------------- |
-| `node tests/run.mjs`    | Opens the app in Chromium and runs the in-page checks (`tests/*.test.js`) |
-| `node tests/scenarios.mjs` | Drives the app like a person in a 360 px wide browser            |
-| `npm run lint`          | ESLint (`eslint.config.js`): undefined and unused names, `prefer-const`, `===` … |
-| `npm run format:check`  | Prettier, `printWidth` 100                                            |
-| `tools/visual-regression` | Compares screenshots of every reachable screen with a trusted version |
+| Command                    | What it does                                                                     |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| `node tests/run.mjs`       | Opens the app in Chromium and runs the in-page checks (`tests/*.test.js`)        |
+| `node tests/scenarios.mjs` | Drives the app like a person in a 360 px wide browser                            |
+| `npm run lint`             | ESLint (`eslint.config.js`): undefined and unused names, `prefer-const`, `===` … |
+| `npm run format:check`     | Prettier, `printWidth` 100                                                       |
+| `tools/visual-regression`  | Compares screenshots of every reachable screen with a trusted version            |
+
+`ONLY=part-of-a-name node tests/scenarios.mjs` runs only the scenarios whose names have that text.
+The checks of the reports use `tests/report-fixture.js`: synthetic data (three currencies, a card,
+savings, a debt, Russian text, very long comments) whose totals are counted again in the checks
+without the application's own code. Never run a destructive check on real data; the checks use their
+own copies and the scenarios their own browser storage.
 
 Run all of them before a pull request. Behaviour that moved to the domain gets a check in
 `tests/*.test.js`; behaviour a person sees gets a scenario in `tests/scenarios.mjs`.

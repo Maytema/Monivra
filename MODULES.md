@@ -18,21 +18,27 @@ Paths are under `js/`.
 
 ## core, data, i18n, platform
 
-| Module                   | Purpose                                                                          |
-| ------------------------ | -------------------------------------------------------------------------------- |
-| `core/constants.js`      | Storage key, limits, dates, icons, palette, small helpers                        |
-| `core/state.js`          | `appData`, `uiState`, lock state, `forgetDeleted`                                |
-| `core/color.js`          | Text colour that reads on a background                                           |
-| `data/defaults.js`       | Empty data, blank records, `completeData` (fills in and migrates)                |
-| `data/storage.js`        | Validation of a data document, `save()`                                          |
-| `data/import-export.js`  | The data page: JSON and CSV export and import                                    |
-| `data/csv.js`            | Operations as CSV: writing, reading, rows → operations                           |
-| `data/report.js`         | Printable report of a period                                                     |
-| `data/sample.js`         | Sample dataset                                                                   |
-| `data/currencies.js`     | Currencies, default fixed rates                                                  |
-| `i18n/index.js`, `ru.js` | `translate`, `translateWith`, `translateCount`, `translateMarkup`; Russian table |
-| `platform/files.js`      | Save a text file, pick a file, print                                             |
-| `platform/photo.js`      | Shrink a picked image to a small JPEG data URL                                   |
+| Module                      | Purpose                                                                          |
+| --------------------------- | -------------------------------------------------------------------------------- |
+| `core/constants.js`         | Storage key, limits, dates, icons, palette, small helpers                        |
+| `core/state.js`             | `appData`, `uiState`, lock state, `forgetDeleted`                                |
+| `core/color.js`             | Text colour that reads on a background                                           |
+| `data/defaults.js`          | Empty data, blank records, `completeData` (fills in and migrates)                |
+| `data/storage.js`           | Validation of a data document, `save()`                                          |
+| `data/import-export.js`     | The pages of the Data menu, the data file and the CSV import (entry)             |
+| `data/backup-file.js`       | The data file: written, read back, checked as untrusted input                    |
+| `data/problems.js`          | A problem found in data, as a sentence for the person                            |
+| `data/csv.js`               | Operations as CSV: writing (with formula protection), template and example       |
+| `data/csv-import.js`        | Reading a CSV file, guessing columns, matching, planning and applying an import  |
+| `data/report-job.js`        | Prepares an export: report pages and PDF file, or CSV file with a preview sample |
+| `data/report-layout.js`     | Lays a report model out on A4 pages as drawing commands                          |
+| `data/sample.js`            | Sample dataset                                                                   |
+| `data/currencies.js`        | Currencies, default fixed rates                                                  |
+| `i18n/index.js`, `ru.js`    | `translate`, `translateWith`, `translateCount`, `translateMarkup`; Russian table |
+| `platform/files.js`         | Make, save, pick and share a file; print pages                                   |
+| `platform/pdf.js`           | Writes a PDF from page pictures (no library)                                     |
+| `platform/report-render.js` | Draws the pages of a report as pictures                                          |
+| `platform/photo.js`         | Shrink a picked image to a small JPEG data URL                                   |
 
 ## domain — rules and commands (no DOM)
 
@@ -52,6 +58,9 @@ Paths are under `js/`.
 | `domain/currency-change.js` | Plan and apply a currency change of an account or of the application               |
 | `domain/ordering.js`        | Manual order of accounts and categories                                            |
 | `domain/backups.js`         | Snapshot, create, restore, delete backups                                          |
+| `domain/restore.js`         | What a restore (merge or replace) would do, worked out before anything changes     |
+| `domain/report-model.js`    | Everything an exported report says, from the data and the scope                    |
+| `domain/deletion.js`        | The ways to delete data and the command that does it                               |
 | `domain/currency-search.js` | Find a currency while typing                                                       |
 
 ## ui — reusable pieces

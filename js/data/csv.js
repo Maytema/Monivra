@@ -1,10 +1,6 @@
 /* Operations as CSV: writing, reading, and turning rows into operations */
-import { newId, PALETTE } from "../core/constants.js";
 import { appData } from "../core/state.js";
-import { blankAccount, blankCategory } from "./defaults.js";
 import { accountById, categoryById } from "../domain/finance.js";
-import { validateOp } from "../domain/operations.js";
-import { translate, translateWith } from "../i18n/index.js";
 
 const COLUMNS = [
   "type",
@@ -19,7 +15,6 @@ const COLUMNS = [
   "to_amount",
   "to_currency",
 ];
-const REQUIRED = ["type", "date", "amount", "currency", "from", "to", "category"];
 // Subcategories are written as "Parent / Sub".
 const SEPARATOR = " / ";
 
@@ -42,7 +37,13 @@ const COLUMN_PART = {
   to_amount: "amount",
   to_currency: "amount",
 };
-const quote = (s) => '"' + String(s ?? "").replace(/"/g, '""') + '"';
+// A cell that starts with = + - @ or a tab or return would be taken for a formula by a spreadsheet:
+// it is written with a leading apostrophe, which the import takes away again.
+const FORMULA_START = /^[=+\-@\t\r]/;
+export const protectCell = (s) => (FORMULA_START.test(s) ? `'${s}` : s);
+export const unprotectCell = (s) =>
+  s.startsWith("'") && FORMULA_START.test(s.slice(1)) ? s.slice(1) : s;
+const quote = (s) => '"' + protectCell(String(s ?? "")).replace(/"/g, '""') + '"';
 const money = (n) => (n / 100).toFixed(2);
 
 // Cells of one operation by column name.
@@ -66,173 +67,46 @@ function cellsOf(o) {
   };
 }
 
-// CSV text of the operations with the parts chosen in `parts` ({ type, accounts, amount, comment,
-// tags }, all by default); written with all parts it can be read back by `prepareCSV`.
-export function csvText(ops = appData.ops, parts = {}) {
+// The columns and the rows of the file for the operations with the parts chosen in `parts` ({ type,
+// accounts, amount, comment, tags }, all by default), as plain text cells.
+export function csvTable(ops = appData.ops, parts = {}) {
   const columns = COLUMNS.filter((c) => c === "date" || parts[COLUMN_PART[c]] !== false);
-  return [
-    columns.join(","),
-    ...ops.map((o) => {
+  return {
+    columns,
+    rows: ops.map((o) => {
       const cells = cellsOf(o);
-      return columns.map((c) => quote(cells[c])).join(",");
+      return columns.map((c) => String(cells[c] ?? ""));
     }),
-  ].join("\r\n");
+  };
 }
+
+// CSV text of the operations with the parts chosen; written with all parts it can be read back by
+// the import (More > Data > Import data).
+export function csvText(ops = appData.ops, parts = {}) {
+  const { columns, rows } = csvTable(ops, parts);
+  return [columns.join(","), ...rows.map((row) => row.map(quote).join(","))].join("\r\n");
+}
+
+// Rows of text as the lines of a CSV file, each cell quoted and protected from being a formula.
+export const csvLines = (rows) => rows.map((row) => row.map(quote).join(",")).join("\r\n");
 
 // A file with the columns of the operations and no rows, to be filled in and imported.
 export const csvTemplate = () => COLUMNS.join(",");
 
-// Parse CSV text (commas or semicolons) into one object per row.
-export function parseCSV(text) {
-  text = text.replace(/^﻿/, "");
-  const delimiter = text.split(/\r?\n/, 1)[0].includes(";") ? ";" : ",";
-  const rows = [];
-  let row = [],
-    cell = "",
-    quoted = false;
-  const endRow = () => {
-    row.push(cell);
-    if (row.some(Boolean)) rows.push(row);
-    row = [];
-    cell = "";
-  };
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (c === '"') {
-      if (quoted && text[i + 1] === '"') {
-        cell += '"';
-        i++;
-      } else quoted = !quoted;
-    } else if (c === delimiter && !quoted) {
-      row.push(cell);
-      cell = "";
-    } else if ((c === "\n" || c === "\r") && !quoted) {
-      if (c === "\r" && text[i + 1] === "\n") i++;
-      endRow();
-    } else cell += c;
-  }
-  if (quoted) throw Error("Unclosed CSV quote");
-  endRow();
-  if (!rows.length) throw Error("CSV is empty");
-  const headers = rows.shift().map((h) => h.trim());
-  if (!REQUIRED.every((x) => headers.includes(x)))
-    throw Error(
-      translateWith("The first row must contain: {columns}", { columns: REQUIRED.join(", ") }),
-    );
-  return rows.map((values) => Object.fromEntries(headers.map((h, i) => [h, values[i] || ""])));
-}
-
-const rowError = (index, message) =>
-  Error(translateWith("CSV row {row}: {message}", { row: index + 2, message: translate(message) }));
-
-// Finds the account of a row by name and currency, or creates it (the list `created` collects those).
-function accountResolver(accounts, created) {
-  return (name, currency, index) => {
-    if (!name) throw rowError(index, "account is missing");
-    if (!(appData.rates[currency] > 0))
-      throw rowError(index, translateWith("unknown currency {code}", { code: currency }));
-    let account = accounts.find((x) => x.name === name && x.currency === currency);
-    if (!account) {
-      account = blankAccount({ name, currency, color: PALETTE[accounts.length % PALETTE.length] });
-      accounts.push(account);
-      created.accounts.push(account);
-    }
-    return account;
-  };
-}
-
-// Finds the category of a row ("Category / Subcategory"), or creates what is missing.
-function categoryResolver(categories, created) {
-  return (cell, type, index) => {
-    const [top, sub] = cell.split(SEPARATOR).map((x) => x.trim());
-    if (!top) throw rowError(index, "category is missing");
-    const find = (name, parent) =>
-      categories.find((c) => c.name === name && c.type === type && (c.parent || null) === parent);
-    const make = (name, parent) => {
-      const category = blankCategory({
-        name,
-        type,
-        parent,
-        currency: appData.settings.currency,
-        color: PALETTE[categories.length % PALETTE.length],
-      });
-      categories.push(category);
-      created.categories.push(category);
-      return category;
-    };
-    const parent = find(top, null) || make(top, null);
-    return sub ? find(sub, parent.id) || make(sub, parent.id) : parent;
-  };
-}
-
-const MINOR_UNITS = 100;
-const toMinorUnits = (text) => Math.round(Number(text.replace(",", ".")) * MINOR_UNITS);
-
-// The operation described by one row of the file.
-function operationFromRow(row, index, accountFor, categoryFor) {
-  if (!["income", "expense", "transfer", "adjustment"].includes(row.type))
-    throw rowError(index, "invalid type");
-  if (!/^\d+(\.\d{1,2})?$/.test(row.amount.replace(",", ".")))
-    throw rowError(index, "invalid amount");
-  const op = {
-    id: newId(),
-    type: row.type,
-    date: row.date,
-    amount: toMinorUnits(row.amount),
-    comment: row.comment,
-    tags: row.tags ? row.tags.split("|") : [],
-  };
-  // Income has no source and expense no destination; an adjustment has exactly one side.
-  if (row.type !== "income" && (row.type !== "adjustment" || row.from))
-    op.from = accountFor(row.from, row.currency, index).id;
-  if (row.type !== "expense" && (row.type !== "adjustment" || row.to))
-    op.to = accountFor(
-      row.to,
-      row.type === "transfer" && row.to_currency ? row.to_currency : row.currency,
-      index,
-    ).id;
-  if (row.type === "income" || row.type === "expense")
-    op.category = categoryFor(row.category, row.type, index).id;
-  if (row.type === "transfer" && row.to_amount) {
-    op.receive = toMinorUnits(row.to_amount);
-    op.receiveManual = true;
-  }
-  return op;
-}
-
-// Operations for the rows, plus the accounts and categories they need that do not exist yet.
-export function prepareCSV(text) {
-  const rows = parseCSV(text);
-  const accounts = [...appData.accounts];
-  const categories = [...appData.categories];
-  const created = { accounts: [], categories: [] };
-  const accountFor = accountResolver(accounts, created);
-  const categoryFor = categoryResolver(categories, created);
-  const known = new Set(appData.ops.map(duplicateKey));
-  const ops = [];
-  let duplicates = 0;
-  for (const [index, row] of rows.entries()) {
-    const op = operationFromRow(row, index, accountFor, categoryFor);
-    if (known.has(duplicateKey(op))) duplicates++;
-    else ops.push({ row: index, op });
-  }
-  // Validate against the accounts and categories that will exist after the import.
-  const lookup = {
-    account: (id) => accounts.find((x) => x.id === id),
-    category: (id) => categories.find((x) => x.id === id),
-  };
-  for (const { row, op } of ops)
-    try {
-      if (op.type === "adjustment") {
-        if (Boolean(op.from) === Boolean(op.to)) throw Error("Choose an account");
-      } else validateOp(op, lookup);
-    } catch (error) {
-      throw rowError(row, error.message);
-    }
-  return { ops: ops.map((x) => x.op), created, duplicates };
-}
-
-// Operations with the same key are taken for the same record.
-function duplicateKey(o) {
-  return [o.type, o.date, o.amount, o.from, o.to, o.category, o.comment].join("|");
-}
+// The same with a few rows of every kind of operation, to show how each is written. The rows are
+// examples: they name accounts and categories that are made when the file is imported.
+export const csvExample = () =>
+  [
+    COLUMNS.join(","),
+    "expense,2026-03-01,12.50,USD,Wallet,,Food / Lunch,Lunch with a friend,work|lunch,,",
+    "expense,2026-03-02,45.00,USD,Wallet,,Transport,Taxi,,,",
+    "income,2026-03-05,2500.00,USD,,Wallet,Salary,March salary,,,",
+    "transfer,2026-03-06,300.00,USD,Wallet,Savings,,Monthly saving,,,",
+    "transfer,2026-03-07,100.00,USD,Wallet,Euro wallet,,Exchange,,92.00,EUR",
+    "adjustment,2026-03-08,5.00,USD,,Wallet,,Found in a coat,,,",
+  ].join("\r\n");
+// The rows of the example as cells, for showing them in a table.
+export const csvExampleRows = () =>
+  csvExample()
+    .split("\r\n")
+    .map((line) => line.split(","));

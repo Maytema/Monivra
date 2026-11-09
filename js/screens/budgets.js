@@ -95,7 +95,7 @@ export function openBudgets() {
 }
 // Budgets list page: budgets grouped by period.
 export function budgetsView() {
-  const states = appData.budgets.map(budgetState);
+  const states = appData.budgets.map((b) => budgetState(b));
   return (
     pageHeader(
       "Budgets",

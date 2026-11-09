@@ -5,7 +5,7 @@ import { appData, setAppData, uiState } from "../../core/state.js";
 import { aboutArt } from "../about-art.js";
 import { createSampleData } from "../../data/sample.js";
 import { save } from "../../data/storage.js";
-import { translate, translateWith } from "../../i18n/index.js";
+import { translate, translateCount, translateWith } from "../../i18n/index.js";
 import { goBack, goHome } from "../../ui/navigation.js";
 import { confirmAction, showInfo } from "../../ui/dialogs.js";
 import { buttonHtml, iconButtonHtml, pageHeader, toast } from "../../ui/primitives.js";
@@ -86,7 +86,7 @@ function termsPage() {
 
 function sampleDataPage() {
   const hasData = !!(appData.accounts.length || appData.categories.length || appData.ops.length);
-  const body = `<div class="info-card"><h2>Sample accounts and categories</h2><p>Install 5 example accounts, 14 categories and sample transactions for testing. All items will behave like ordinary records: you can edit or delete them.</p><p><strong>Current database:</strong> ${appData.accounts.length} accounts · ${appData.categories.length} categories · ${appData.ops.length} operations.</p>${
+  const body = `<div class="info-card"><h2>Sample accounts and categories</h2><p>Install 5 example accounts, 14 categories and sample transactions for testing. All items will behave like ordinary records: you can edit or delete them.</p><p><strong>Current database:</strong> ${[translateCount("{n} account", "{n} accounts", appData.accounts.length), translateCount("{n} category", "{n} categories", appData.categories.length), translateCount("{n} operation", "{n} operations", appData.ops.length)].join(" · ")}.</p>${
     hasData
       ? `<p class="caution">Your database already contains records. To protect them, sample data cannot be installed over existing data.</p>${buttonHtml(
           "Replace with sample data",

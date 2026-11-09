@@ -53,7 +53,7 @@ function that builds their HTML, so they are redrawn with the rest. Pages are lo
 
 All changes to the data go through domain functions (`putOperation`, `storeAccount`,
 `storeCategory`, `deleteCategory`, `applyBulkChanges`, `changeAccountCurrency`,
-`restoreBackup` …). They throw `Error` with a message meant for the person when the input
+`restoreBackup`, `deleteData`, `applyImport` …). They throw `Error` with a message meant for the person when the input
 is not acceptable; the click handler in `startup.js` shows it as a toast. A command that
 deletes records returns what disappeared and the screen calls `forgetDeleted` so the selection
 and the filters stop referring to it.
@@ -63,8 +63,8 @@ when the person confirms; nothing is written to `appData` while typing.
 
 ## Ready for what comes next
 
-- **Native shells (Android, iOS):** everything that needs the browser's file, print or camera
-  APIs is in `js/platform`. A shell replaces those modules; nothing else knows about them.
+- **Native shells (Android, iOS):** everything that needs the browser's file, share, print or camera
+  APIs is in `js/platform` (`files.js` makes, saves, picks and shares files and prints pages). A shell replaces those modules; nothing else knows about them.
 - **Accounts and cloud sync:** the data is one serializable document with a version in its
   storage key, and every change goes through a command. Sync can wrap the commands or watch
   `save()`. Nothing is connected yet; the profile and subscription pages say so.

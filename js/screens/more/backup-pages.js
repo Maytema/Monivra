@@ -1,9 +1,12 @@
-/* Saved backups: the list with the button that makes one, and the page that brings one back */
+/* Saved backups: the list with the button that makes one, and the page of one copy or file with what
+   it holds and what bringing it back would change. A data file is brought back on the same page. */
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData } from "../../core/state.js";
-import { createBackup, restoreBackup } from "../../domain/backups.js";
-import { currentLocale, translate, translateWith } from "../../i18n/index.js";
+import { createBackup, restoreData } from "../../domain/backups.js";
+import { describeProblem } from "../../data/problems.js";
+import { contentsOf, planRestore } from "../../domain/restore.js";
+import { currentLocale, translate, translateCount, translateWith } from "../../i18n/index.js";
 import { confirmAction, optionSheet } from "../../ui/dialogs.js";
 import { goHome, openPage } from "../../ui/navigation.js";
 import { buttonHtml, pageHeader, toast } from "../../ui/primitives.js";
@@ -16,8 +19,15 @@ const contents = (data) =>
     categories: data.categories.length,
     ops: data.ops.length,
   });
-const madeAt = (backup) =>
-  new Date(backup.at).toLocaleString(currentLocale(), { dateStyle: "medium", timeStyle: "short" });
+const when = (iso) =>
+  new Date(iso).toLocaleString(currentLocale(), { dateStyle: "medium", timeStyle: "short" });
+const madeAt = (backup) => when(backup.at);
+// Why a backup was made, as its title.
+const BACKUP_TITLES = {
+  auto: "Automatic backup",
+  safety: "Backup before a change",
+};
+const backupTitle = (backup) => translate(BACKUP_TITLES[backup.reason] || "Local backup");
 
 // The ways to treat the scheduled payments of a backup: name and what it does.
 const SCHEDULED_WAYS = [
@@ -46,11 +56,15 @@ export function savedBackupsView() {
         toast("Backup saved");
       },
       "primary compact",
-    )}<p class="backups-hint">${translate("To restore, select one of the previous backups")}</p></div><div class="content backups-list"><h3 class="backups-heading">${translate("Previous backups")}</h3>${appData.backups
+    )}<p class="backups-hint">${translate("To see what is in a backup and restore it, select one of the previous backups")}</p></div><div class="content backups-list"><h3 class="backups-heading">${translate("Previous backups")}</h3>${appData.backups
       .map((backup) =>
         buttonHtml(
-          `<strong>${translate("Local backup")}</strong><small>${escapeHtml(madeAt(backup))}</small><small>${escapeHtml(contents(backup.data))}</small>`,
-          () => openPage("restoreBackup", { id: backup.id, scheduled: "count" }),
+          `<strong>${escapeHtml(backupTitle(backup))}</strong><small>${escapeHtml(madeAt(backup))}</small><small>${escapeHtml(contents(backup.data))}</small>`,
+          () =>
+            openPage("restoreBackup", {
+              source: { kind: "backup", id: backup.id },
+              scheduled: "count",
+            }),
           "card backup-card",
         ),
       )
@@ -58,27 +72,160 @@ export function savedBackupsView() {
   );
 }
 
-// Page of one backup: what is in it and how to bring it back.
+// Brings a data file the person chose to the page where it is looked at and restored.
+export const openFileRestore = (source) =>
+  openPage("restoreBackup", { source: { kind: "file", ...source }, scheduled: "count" });
+
+// The data of a page's source, with what to tell about where it comes from.
+function sourceOf(p) {
+  const { source } = p;
+  if (source.kind === "backup") {
+    const backup = appData.backups.find((b) => b.id === source.id);
+    return {
+      data: backup.data,
+      title: "Restore from backup",
+      rows: [
+        ["Type", backupTitle(backup)],
+        ["Created", madeAt(backup)],
+        ["Data format version", String(backup.schema ?? backup.data.schema)],
+        ["Application build", backup.build || translate("unknown")],
+      ],
+    };
+  }
+  return {
+    data: source.data,
+    title: "Restore from file",
+    rows: [
+      ["File", source.name],
+      ["Created", source.meta?.exportedAt ? when(source.meta.exportedAt) : translate("unknown")],
+      ["Data format version", String(source.data.schema)],
+      ["Application build", source.meta?.build || translate("unknown")],
+    ],
+  };
+}
+
+// "3 regular · 1 credit card · 1 savings": the kinds of accounts that exist, none for zero.
+const accountKinds = (c) =>
+  [
+    c.regular && translateCount("{n} regular", "{n} regular", c.regular),
+    c.cards && translateCount("{n} credit card", "{n} credit cards", c.cards),
+    c.savings && translateCount("{n} savings account", "{n} savings accounts", c.savings),
+    c.debts && translateCount("{n} debt", "{n} debts", c.debts),
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+// The facts of a backup: what it says about itself, then what it holds.
+function factsHtml(rows, data) {
+  const c = contentsOf(data);
+  const held = [
+    ["Accounts", `${c.accounts}${c.accounts ? ` (${accountKinds(c)})` : ""}`],
+    [
+      "Categories",
+      `${c.categories}${c.subcategories ? ` + ${translateCount("{n} subcategory", "{n} subcategories", c.subcategories)}` : ""}`,
+    ],
+    ["Operations", String(c.ops)],
+    ["Scheduled payments", String(c.scheduled)],
+    ["Budgets", String(c.budgets)],
+    ["Tags", String(c.tags)],
+    ["Currencies", c.currencies.join(", ") || "–"],
+  ];
+  return `<dl class="restore-facts">${[...rows, ...held]
+    .map(([label, value]) => `<dt>${translate(label)}</dt><dd>${escapeHtml(value)}</dd>`)
+    .join("")}</dl>`;
+}
+
+const LIST_NAMES = {
+  accounts: "Accounts",
+  categories: "Categories",
+  ops: "Operations",
+  scheduled: "Scheduled payments",
+  budgets: "Budgets",
+  tags: "Tags",
+};
+// What a merge would do, one line per kind of record that is touched.
+function mergeLines(summary) {
+  const lines = Object.entries(summary.merge).flatMap(([list, r]) => {
+    const parts = [
+      r.added && translateWith("{n} new", { n: r.added }),
+      r.changed && translateWith("{n} updated from the backup", { n: r.changed }),
+      r.same && translateWith("{n} already here", { n: r.same }),
+    ].filter(Boolean);
+    return parts.length ? [`${translate(LIST_NAMES[list])}: ${parts.join(", ")}`] : [];
+  });
+  return lines.length ? lines : [translate("The backup holds no records.")];
+}
+// Warnings that a merge may bring in what looks like the same thing twice.
+function mergeWarnings(summary) {
+  return [
+    summary.lookAlike &&
+      translateWith(
+        "{n} operations look like operations you already have (same day, amount, accounts, category and comment) but are recorded under another id. They are added too.",
+        { n: summary.lookAlike },
+      ),
+    summary.sameAccountNames &&
+      translateWith(
+        "{n} accounts have the name and currency of accounts you already have. They are added as separate accounts.",
+        { n: summary.sameAccountNames },
+      ),
+  ].filter(Boolean);
+}
+// What a replace would do: what the data holds now and what it will hold.
+function replaceLines(summary) {
+  const counts = (c) =>
+    translateWith("{accounts} accounts, {categories} categories, {ops} operations", {
+      accounts: c.accounts,
+      categories: c.categories + c.subcategories,
+      ops: c.ops,
+    });
+  return [
+    `${translate("Now")}: ${counts(summary.current)}`,
+    `${translate("After")}: ${counts(summary.incoming)}`,
+    translate("Settings and exchange rates are taken from the backup."),
+    summary.scheduledLetGo &&
+      translateWith(
+        "{n} current scheduled payments refer to accounts or categories the backup does not have and are let go.",
+        { n: summary.scheduledLetGo },
+      ),
+  ].filter(Boolean);
+}
+const listHtml = (lines, cls = "") =>
+  `<ul class="restore-changes ${cls}">${lines.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
+
+// Page of one backup or data file: what is in it, what each way of restoring would change, and the
+// buttons to merge or replace.
 export function restoreBackupView(p) {
-  const backup = appData.backups.find((b) => b.id === p.id);
+  const { data, title, rows } = sourceOf(p);
+  const options = { scheduled: p.scheduled };
+  const merge = planRestore(appData, data, { mode: "merge", ...options });
+  const replace = planRestore(appData, data, { mode: "replace", ...options });
   const way = SCHEDULED_WAYS.find(([id]) => id === p.scheduled);
   const restore = (mode) =>
     confirmAction(
-      mode === "replace"
-        ? "Replace current data with this backup?"
-        : "Merge this backup into the current data?",
+      `${translate(
+        mode === "replace"
+          ? "Replace current data with this backup?"
+          : "Merge this backup into the current data?",
+      )} ${translate("A backup of the current data is made first.")}`,
       () => {
-        restoreBackup(backup, { mode, scheduled: p.scheduled });
+        restoreData(data, { mode, scheduled: p.scheduled, safety: true });
         goHome("more");
         postDuePayments();
         toast("Backup restored");
       },
-      true,
+      false,
       "Confirm",
     );
+  const card = (heading, plan, lines, warnings = []) =>
+    `<section class="restore-way"><h3>${translate(heading)}</h3>${
+      plan.problem
+        ? `<p class="caution">${translate("This cannot be restored in this way:")} ${escapeHtml(describeProblem(plan.problem))}</p>`
+        : listHtml(lines) +
+          warnings.map((w) => `<p class="restore-warning">${escapeHtml(w)}</p>`).join("")
+    }</section>`;
   return (
-    pageHeader("Restore from backup") +
-    `<div class="content info-text roomy"><p>${translate("Backup made")}: <strong>${escapeHtml(madeAt(backup))}</strong><br><small class="backup-contents">${escapeHtml(contents(backup.data))}</small></p><p>${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p><p>${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p><h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
+    pageHeader(title) +
+    `<div class="content info-text roomy">${factsHtml(rows, data)}<p>${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary))}<p>${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
       `${iconSvg("check", 22)}<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
       () =>
         optionSheet(
@@ -92,6 +239,6 @@ export function restoreBackupView(p) {
           "dialog",
         ),
       "dropdown chosen",
-    )}</div><div class="page-footer">${buttonHtml("Merge data", () => restore("merge"), "primary")}${buttonHtml("Replace data", () => restore("replace"), "outline")}</div>`
+    )}<p class="restore-note">${translate(way[2])}</p></div><div class="page-footer">${buttonHtml("Merge data", () => restore("merge"), "primary", merge.problem ? "disabled" : "")}${buttonHtml("Replace data", () => restore("replace"), "outline", replace.problem ? "disabled" : "")}</div>`
   );
 }

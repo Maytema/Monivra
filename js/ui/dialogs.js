@@ -27,7 +27,7 @@ export function confirmAction(message, fn, backupOption = true, label = "Confirm
       `<div class="confirm-icon ${notice ? "notice" : "warning"}">${iconSvg(notice ? "info" : "warning", 32)}</div><h2>${translate(title)}</h2><p class="confirm-message">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
         label,
         () => {
-          if (doBackup) createBackup();
+          if (doBackup) createBackup("safety");
           closeLayers();
           try {
             fn();

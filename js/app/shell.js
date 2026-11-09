@@ -6,7 +6,14 @@ import { initDragReorder } from "./drag-reorder.js";
 import { initOperationLongPress } from "./long-press.js";
 import { mix, readableOver, textOn } from "../core/color.js";
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { appData, firstLaunch, locked, rememberPeriod, uiState } from "../core/state.js";
+import {
+  appData,
+  firstLaunch,
+  loadProblem,
+  locked,
+  rememberPeriod,
+  uiState,
+} from "../core/state.js";
 import { dataFileView, dataView, importDataView } from "../data/import-export.js";
 import { deletionView } from "../screens/more/deletion-page.js";
 import { exportView } from "../screens/export.js";
@@ -27,6 +34,9 @@ import { budgetDetailsView, budgetsView, budgetView } from "../screens/budgets.j
 import { scheduledView } from "../screens/scheduled-budgets.js";
 import { SETTINGS_TREE_KINDS, settingsTreePage, settingsView } from "../screens/settings.js";
 import { statisticsView } from "../screens/statistics.js";
+import { exportPreviewView } from "../screens/export-preview.js";
+import { IMPORT_VIEWS } from "../screens/import-wizard.js";
+import { recoveryView } from "../screens/recovery.js";
 import { welcomeView } from "../screens/welcome.js";
 import { goHome } from "../ui/navigation.js";
 import { resetHandlers } from "../ui/handlers.js";
@@ -70,6 +80,8 @@ const PAGE_VIEWS = {
   export: exportView,
   savedBackups: savedBackupsView,
   restoreBackup: restoreBackupView,
+  exportPreview: exportPreviewView,
+  ...IMPORT_VIEWS,
 };
 const SETTINGS_PAGE_KINDS = ["backups", "notifications", "security", "privacy", "rates"];
 // Root tabs.
@@ -92,6 +104,7 @@ function pageView(page) {
 // HTML of the whole screen: current root tab or the top page, plus layers.
 export function rootView() {
   if (locked) return lockView();
+  if (loadProblem && !uiState.pages.length) return recoveryView();
   if (firstLaunch) return welcomeView();
   const page = uiState.pages.at(-1);
   if (page) return pageView(page);

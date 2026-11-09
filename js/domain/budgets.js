@@ -13,11 +13,8 @@ const budgetTakes = (b, row) =>
 
 // The operations of a budget's period, the period being the one around the day shown by the period
 // bar.
-const periodOperations = (b) => {
-  const [from, to] = periodBounds({
-    mode: b.period || "month",
-    anchor: uiState.period.anchor || TODAY,
-  });
+const periodOperations = (b, anchor = uiState.period.anchor || TODAY) => {
+  const [from, to] = periodBounds({ mode: b.period || "month", anchor });
   return appData.ops.filter((o) => o.date >= from && o.date <= to);
 };
 
@@ -30,8 +27,8 @@ export const budgetOperations = (b) =>
 // Amount spent in a budget's period. The rows are the ones the statistics count: fees taken into
 // account, debt payments included when they count as expenses (only a budget for all expenses
 // takes those).
-function budgetSpend(b) {
-  return reportRows(periodOperations(b))
+function budgetSpend(b, anchor) {
+  return reportRows(periodOperations(b, anchor))
     .filter((row) => budgetTakes(b, row))
     .reduce(
       (sum, row) => sum + convertCurrency(row.reportAmount, appData.settings.currency, b.currency),
@@ -40,7 +37,8 @@ function budgetSpend(b) {
 }
 
 // A budget with what is spent of it, what is left and the share spent.
-export function budgetState(b) {
-  const used = budgetSpend(b);
+// The period is the one around `anchor`, by default the day shown by the period bar.
+export function budgetState(b, anchor) {
+  const used = budgetSpend(b, anchor);
   return { b, used, left: b.amount - used, share: b.amount ? (used / b.amount) * 100 : 0 };
 }

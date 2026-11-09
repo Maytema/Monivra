@@ -16,5 +16,11 @@ export function typeKey(expr, key, fresh = false) {
   if (key === "C") return "0";
   if (key === "=") return String(evaluateExpression(expr) / 100);
   const base = fresh ? "0" : String(expr);
+  // A number has one decimal point: a second one is ignored, one after an operator starts "0.".
+  if (key === ".") {
+    const number = base.split(/[+−×÷*/-]/).at(-1);
+    if (number.includes(".")) return base;
+    return base + (number === "" ? "0." : ".");
+  }
   return (base === "0" && /[0-9]/.test(key) ? "" : base) + key;
 }

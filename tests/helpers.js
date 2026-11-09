@@ -5,6 +5,7 @@ export const addAccount = (fields) => {
   const a = {
     id: "__t" + appData.accounts.length,
     name: "T",
+    color: "#a000b8",
     type: "Regular",
     currency: appData.settings.currency,
     opening: 0,
