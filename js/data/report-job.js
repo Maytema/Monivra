@@ -1,9 +1,11 @@
 /* Prepares what an export is: the pages of a report as pictures and a PDF file, or a CSV file with a
    sample of its rows for the preview. The same job serves the preview, saving, sharing and printing. */
 import { APP_ID } from "../core/constants.js";
+import { appData } from "../core/state.js";
 import { detailModel, scopeOperations, summaryModel } from "../domain/report-model.js";
 import { periodBounds } from "../domain/finance.js";
 import { buildPdf } from "../platform/pdf.js";
+import { loadReportFonts } from "../platform/report-font.js";
 import { makeFile } from "../platform/files.js";
 import { measuringContext, renderPages } from "../platform/report-render.js";
 import { csvTable, csvText } from "./csv.js";
@@ -30,9 +32,14 @@ export async function buildReportJob({ mode, filters, period, sections, parts },
   const model = summary
     ? summaryModel({ filters, period, sections })
     : detailModel({ filters, period, parts });
+  const fonts = await loadReportFonts();
   const pages = (summary ? layoutSummary : layoutDetail)(model, measuringContext());
   const rendered = await renderPages(pages, onPage);
-  const bytes = buildPdf(rendered, { title: `${model.meta.title} · ${model.meta.periodShort}` });
+  const bytes = await buildPdf(pages, fonts, {
+    title: `${model.meta.title} · ${model.meta.periodShort}`,
+    subject: "Monivra",
+    language: appData.settings.language,
+  });
   return {
     mode,
     pageCount: rendered.length,

@@ -1,5 +1,8 @@
 // User scenarios in a phone-sized browser: node tests/scenarios.mjs (ONLY=text for some of them)
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { chromium } from "playwright";
 import { serveApp } from "./server.mjs";
 
@@ -887,8 +890,8 @@ const scenarios = {
     expect(shared.length).toBe(1);
     expect(shared[0]).toMatch(/^monivra-backup-.*\.json:application\/json:true$/);
     expect(downloads.length).toBe(0);
-    // Chrome shares only some kinds of files (PDF, CSV, text, pictures), not JSON: the data file then
-    // goes as the same text under a name that ends in .txt.
+    // Chrome does not hand JSON to the share sheet: nothing is renamed or turned into text, nothing is
+    // downloaded; the person is told and can save the real .json file.
     await page.evaluate(() => {
       window.__shared = [];
       Object.defineProperty(navigator, "canShare", {
@@ -897,18 +900,19 @@ const scenarios = {
       });
     });
     await page.getByRole("button", { name: "Share", exact: true }).click();
-    await page.waitForFunction(() => window.__shared.length === 1);
-    expect((await page.evaluate(() => window.__shared))[0]).toMatch(
-      /^monivra-backup-.*\.json\.txt:text\/plain:true$/,
-    );
+    await page.getByText("Sharing is not available").waitFor();
+    expect((await page.evaluate(() => window.__shared)).length).toBe(0);
     expect(downloads.length).toBe(0);
+    await page.getByRole("button", { name: "Cancel" }).click();
     // The browser cannot send files: the person is told, and the file is saved only on the answer.
     await page.evaluate(() =>
       Object.defineProperty(navigator, "canShare", { value: undefined, configurable: true }),
     );
     await page.getByRole("button", { name: "Share", exact: true }).click();
     await page.getByText("Sharing is not available").waitFor();
-    expect(await page.locator(".confirm-message").textContent()).toMatch(/has not been saved/);
+    expect(await page.locator(".confirm-message").textContent()).toMatch(
+      /Save the \.json file, then share it from your phone's Files app/,
+    );
     expect(downloads.length).toBe(0);
     const [download] = await Promise.all([
       page.waitForEvent("download"),
@@ -951,6 +955,11 @@ const scenarios = {
       expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
       expect(bytes.toString("latin1").includes("%%EOF")).toBe(true);
       expect((bytes.toString("latin1").match(/\/Type \/Page\b/g) || []).length).toBe(pages);
+      // Real text, not pictures: the file holds fonts with a map back to Unicode and no image at all.
+      const text = bytes.toString("latin1");
+      expect(text.includes("/ToUnicode")).toBe(true);
+      expect(text.includes("/Subtype /Image")).toBe(false);
+      expect(text.includes("/FontFile2")).toBe(true);
       const before = downloads.length;
       await page.getByRole("button", { name: "Print", exact: true }).click();
       await page.waitForFunction(() => window.__printed.length > 0);
@@ -958,6 +967,42 @@ const scenarios = {
       expect(downloads.length).toBe(before);
       await page.locator(".icon-button[title=Back]").click();
     }
+  },
+  async "a large report is real searchable text: names, Cyrillic, amounts and a huge comment are all found"(
+    page,
+  ) {
+    const result = await page.evaluate(async () => {
+      const { createReportFixture } = await import("/tests/report-fixture.js");
+      const state = await import("/js/core/state.js");
+      const { buildReportJob } = await import("/js/data/report-job.js");
+      Object.assign(state.appData, createReportFixture());
+      const huge = `${"Очень длинный комментарий. ".repeat(900)}КОНЕЦ-ТЕКСТА`;
+      state.appData.ops[3].comment = huge;
+      const started = performance.now();
+      const job = await buildReportJob({ mode: "detail", filters: {}, period: { mode: "all" } });
+      const bytes = new Uint8Array(await job.file.arrayBuffer());
+      let binary = "";
+      for (let i = 0; i < bytes.length; i += 8192)
+        binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+      return { base64: btoa(binary), pages: job.pageCount, ms: performance.now() - started };
+    });
+    const file = join(await mkdtemp(join(tmpdir(), "monivra-pdf-")), "big.pdf");
+    await writeFile(file, Buffer.from(result.base64, "base64"));
+    const size = Buffer.from(result.base64, "base64").length;
+    expect(size < 1_000_000).toBe(true);
+    let text;
+    try {
+      text = execFileSync("pdftotext", [file, "-"], { encoding: "utf8", maxBuffer: 1 << 28 });
+    } catch {
+      console.log("skip pdftotext is not installed; text extraction not checked");
+      return;
+    }
+    for (const word of ["Наличные", "Карта Visa", "Dollars", "КОНЕЦ-ТЕКСТА", "Page 1 of"])
+      expect(text.includes(word)).toBe(true);
+    // The huge comment is complete in the appendix, not cut.
+    expect((text.match(/Очень длинный комментарий\./g) || []).length >= 900).toBe(true);
+    expect(text.includes("?")).toBe(false);
+    console.log(`     ${result.pages} pages, ${size} bytes, ${Math.round(result.ms)} ms`);
   },
   async "the CSV export leaves out what is turned off, previews without a download and imports back"(
     page,

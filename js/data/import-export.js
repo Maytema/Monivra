@@ -13,7 +13,7 @@ import { APP_ID } from "../core/constants.js";
 
 // Lets the person choose a data file (JSON); it opens the page where it is looked at and restored.
 async function restoreFromFile() {
-  const file = await pickFile({ accept: ".json,.txt,application/json,text/plain" });
+  const file = await pickFile({ accept: ".json,application/json" });
   if (!file) return;
   if (file.size > MAX_FILE_BYTES)
     return showInfo("The file is larger than the 20 MB import limit.", "Import failed");

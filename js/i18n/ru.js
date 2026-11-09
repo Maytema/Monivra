@@ -1185,8 +1185,10 @@ export const russianStrings = {
   // Saving, sharing, printing
   "File saved": "Файл сохранён",
   "File shared": "Файл отправлен",
-  "This browser cannot send files to other apps. The file has not been saved. Save it on the device instead?":
-    "Этот браузер не умеет отправлять файлы в другие приложения. Файл не сохранён. Сохранить его на устройстве?",
+  "Sharing this backup isn't available in your browser. Save the .json file, then share it from your phone's Files app.":
+    "В вашем браузере нельзя отправить эту копию. Сохраните файл .json и отправьте его из приложения «Файлы» на телефоне.",
+  "Sharing this file isn't available in your browser. Save it, then share it from your phone's Files app.":
+    "В вашем браузере нельзя отправить этот файл. Сохраните его и отправьте из приложения «Файлы» на телефоне.",
   "Save file": "Сохранить файл",
   "Sharing is not available": "Отправка недоступна",
   "The browser needs a new tap to open the share sheet. The file is ready: tap Share again.":
@@ -1198,7 +1200,8 @@ export const russianStrings = {
   "Page {n} of {total}": "Страница {n} из {total}",
   Share: "Поделиться",
   "Share of total": "Доля",
-  "{n} more characters are in the CSV file": "Ещё символов: {n} — они есть в файле CSV",
+  "… full text: appendix, note {n}": "… полный текст: приложение, заметка {n}",
+  "Appendix: full texts": "Приложение: полные тексты",
   Print: "Печать",
   Preview: "Предпросмотр",
 

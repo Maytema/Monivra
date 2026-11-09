@@ -17,9 +17,16 @@ The code is `platform/files.js` (the browser calls) and `ui/file-actions.js` (th
 dialogs). A native shell replaces `platform/files.js`.
 
 **JSON and the share sheet.** Chromium hands only some kinds of files to the share sheet (PDF, CSV, text,
-pictures); `canShare` is false for `application/json`. The data file is therefore shared, when it
-cannot go as it is, as the same text named `monivra-backup-YYYY-MM-DD.json.txt` (type `text/plain`).
-Restoring accepts `.json` and `.txt` files. Saving always writes the plain `.json` file.
+pictures); `canShare` is false for `application/json`. The backup file is **never** renamed (no `.txt`, no
+double extension) and never sent as plain text. When the browser cannot share it, Share shows a short
+message ("Sharing this backup isn't available in your browser. Save the .json file, then share it from
+your phone's Files app.") with an explicit **Save file** button. Nothing is downloaded until that button is
+tapped. Saving always writes the original `.json`, `.csv` or `.pdf`. Restoring accepts `.json` files.
+
+**Native shell.** All browser calls for files are in `platform/files.js` (`makeFile`, `saveFile`,
+`pickFile`, `canShareFile`, `shareFile`, `printPages`); `ui/file-actions.js` only decides wording and
+dialogs from the results `shared / cancelled / unsupported / blocked / failed`. A React Native/Expo
+adapter must provide the same functions; web sharing code is not assumed to carry over.
 
 **Verified and not verified.** The tests run in a desktop Chromium with `navigator.share` replaced by a
 stand-in that records the files it is given, so that Share is proven to hand over the real file and

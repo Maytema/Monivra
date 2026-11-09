@@ -2,7 +2,7 @@
 import { render } from "../app/shell.js";
 import { uiState } from "../core/state.js";
 import { translate, translateWith } from "../i18n/index.js";
-import { canShareFile, makeFile, printPages, saveFile, shareFile } from "../platform/files.js";
+import { makeFile, printPages, saveFile, shareFile } from "../platform/files.js";
 import { backupFileName, backupFileText, BACKUP_TYPE } from "../data/backup-file.js";
 import { confirmAction, showInfo } from "./dialogs.js";
 import { openSheet } from "./navigation.js";
@@ -18,21 +18,16 @@ export function saveDelivery(file) {
   toast("File saved");
 }
 
-// Browsers hand only some kinds of files to the share sheet (PDF, CSV, text, pictures), not JSON.
-// A data file that cannot go as it is goes as the same text under a name that ends in .txt.
-const shareableForm = (file) =>
-  canShareFile(file) || file.type !== "application/json"
-    ? file
-    : makeFile(`${file.name}.txt`, file, "text/plain");
-
 // Opens the share sheet with the file attached. Where the browser cannot share files, the person
 // is told so and offered saving as a separate, visible choice; nothing is saved on its own.
 export async function shareDelivery(file) {
-  const result = await shareFile(shareableForm(file));
+  const result = await shareFile(file);
   if (result === "shared") toast("File shared");
   else if (result === "unsupported")
     confirmAction(
-      "This browser cannot send files to other apps. The file has not been saved. Save it on the device instead?",
+      file.name.endsWith(".json")
+        ? "Sharing this backup isn't available in your browser. Save the .json file, then share it from your phone's Files app."
+        : "Sharing this file isn't available in your browser. Save it, then share it from your phone's Files app.",
       () => saveDelivery(file),
       false,
       "Save file",

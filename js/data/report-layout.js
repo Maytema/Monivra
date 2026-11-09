@@ -10,7 +10,7 @@ const MARGIN = 40;
 const TOP = 74;
 const BOTTOM = PAGE.height - 56;
 const WIDTH = PAGE.width - MARGIN * 2;
-export const FONT_FAMILY = 'Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif';
+export const FONT_FAMILY = "MonivraReport";
 
 // Colors of the paper: dark text on white whatever the theme of the screen, with the accent of the
 // application as the one decoration.
@@ -69,6 +69,7 @@ class Layout {
   constructor(ctx) {
     this.ctx = ctx;
     this.pages = [];
+    this.appendix = [];
     this.palette = theme();
     this.newPage();
   }
@@ -185,6 +186,16 @@ class Layout {
     this.y += this.text(text, options);
   }
 
+  // A long text that may continue over as many pages as it needs, line by line.
+  flow(text, { size = 9, color = INK } = {}) {
+    const step = size * 1.35;
+    for (const line of this.wrap(text, size, 400, WIDTH)) {
+      this.ensure(step);
+      this.text(line, { size, color, width: WIDTH });
+      this.y += step;
+    }
+  }
+
   rect(x, y, w, h, fill, radius = 0, stroke = null) {
     this.add({ t: "rect", x, y, w, h, fill, radius, stroke });
   }
@@ -287,26 +298,32 @@ class Layout {
   // A table. `columns`: [{ label, width (a share), align }]; `rows`: arrays of cells, a cell being a
   // text or { text, color, weight, lines: [{ text, size, color, weight }] }. The heading repeats on
   // every page; a row that fits on a page is never cut by its end, a taller one continues on the next pages.
-  table(columns, rows, { footer = null, fontSize = 9, pad = 5 } = {}) {
+  table(columns, rows, { footer = null, fontSize = 9, pad = 5, appendix = null } = {}) {
     const total = columns.reduce((s, c) => s + c.weight, 0);
     const widths = columns.map((c) => (c.weight / total) * WIDTH);
     const xs = widths.reduce((acc, w, i) => [...acc, acc[i] + w], [MARGIN]);
-    // A text this long is cut, and the cell says how much is missing; the CSV file holds it all.
-    const CELL_LIMIT = 6000;
-    const cellLines = (cell, i) => {
+    // A cell longer than LINE_CAP lines shows its start and points to the appendix, which holds the
+    // whole text: nothing is cut, and one huge comment cannot take over the table.
+    const LINE_CAP = 10;
+    const cellLines = (cell, i, rowIndex) => {
       const inner = widths[i] - 12;
       const parts = typeof cell === "string" ? [{ text: cell }] : cell.lines || [cell];
       return parts.flatMap((part) => {
-        const long = part.text.length > CELL_LIMIT;
-        const text = long
-          ? `${part.text.slice(0, CELL_LIMIT)}… ${translateWith("{n} more characters are in the CSV file", { n: part.text.length - CELL_LIMIT })}`
-          : part.text;
-        return this.wrap(text, part.size ?? fontSize, part.weight ?? 400, inner).map((line) => ({
-          text: line,
-          size: part.size ?? fontSize,
-          color: part.color ?? INK,
-          weight: part.weight ?? 400,
-        }));
+        const size = part.size ?? fontSize;
+        const weight = part.weight ?? 400;
+        let lines = this.wrap(part.text, size, weight, inner);
+        if (appendix && lines.length > LINE_CAP) {
+          const ref = this.appendix.push({ title: appendix(rowIndex), text: part.text });
+          const mark = translateWith("… full text: appendix, note {n}", { n: ref });
+          lines = [...lines.slice(0, LINE_CAP - 1), ...this.wrap(mark, size, 600, inner)];
+          return lines.map((line, k) => ({
+            text: line,
+            size,
+            color: k < LINE_CAP - 1 ? (part.color ?? INK) : this.palette.strong,
+            weight: k < LINE_CAP - 1 ? weight : 600,
+          }));
+        }
+        return lines.map((line) => ({ text: line, size, color: part.color ?? INK, weight }));
       });
     };
     const heading = () => {
@@ -354,7 +371,7 @@ class Layout {
     };
     // A row stays whole when it fits on a page; a taller one continues on the next pages.
     const drawRow = (cells, index, bold = false) => {
-      let cols = cells.map(cellLines);
+      let cols = cells.map((cell, i) => cellLines(cell, i, index));
       const pageRoom = BOTTOM - TOP - 30;
       if (this.y + heightOf(cols) > BOTTOM && heightOf(cols) <= pageRoom) {
         this.newPage();
@@ -928,9 +945,23 @@ export function layoutDetail(model, ctx) {
         return text;
       }),
     );
-    L.table(columns, rows, { fontSize: 8.5, pad: 4.5 });
+    L.table(columns, rows, {
+      fontSize: 8.5,
+      pad: 4.5,
+      appendix: (i) =>
+        [model.rows[i].cells.date, model.rows[i].cells.subject].filter(Boolean).join(" · "),
+    });
   }
   for (const note of model.notes) L.paragraph(note, { size: 8, color: MUTED });
+  if (L.appendix.length) {
+    L.section(translate("Appendix: full texts"), 90);
+    L.appendix.forEach(({ title, text }, i) => {
+      L.ensure(60);
+      L.y += L.text(`${i + 1}. ${title}`, { size: 9.5, weight: 600, color: INK, width: WIDTH });
+      L.flow(text);
+      L.gap(8);
+    });
+  }
   return finish(L, meta);
 }
 

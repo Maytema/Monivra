@@ -24,7 +24,7 @@ const damagedFile = () =>
 
 // Lets the person choose a data file to bring the data back from.
 async function chooseFile() {
-  const file = await pickFile({ accept: ".json,.txt,application/json,text/plain" });
+  const file = await pickFile({ accept: ".json,application/json" });
   if (!file) return;
   try {
     openFileRestore({ name: file.name, ...parseBackupFile(await file.text()) });

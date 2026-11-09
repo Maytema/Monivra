@@ -1,6 +1,7 @@
 /* Draws the pages of a report (lists of drawing commands) as pictures. The same pictures are shown in
    the preview, printed, and put into the PDF. */
 import { PAGE } from "../data/report-layout.js";
+import { ASCENT } from "./report-font.js";
 
 // Pixels per point: 2 gives 1190 × 1684 for A4, enough for sharp text on paper and on a phone.
 export const SCALE = 2;
@@ -23,8 +24,10 @@ function draw(ctx, c) {
     ctx.font = c.font;
     ctx.fillStyle = c.color;
     ctx.textAlign = c.align;
-    ctx.textBaseline = "top";
-    ctx.fillText(c.s, c.x, c.y);
+    ctx.textBaseline = "alphabetic";
+    ctx.fontKerning = "none";
+    // The same baseline the PDF uses, so the preview and the file agree.
+    ctx.fillText(c.s, c.x, c.y + Number(/([\d.]+)px/.exec(c.font)[1]) * ASCENT);
   } else if (c.t === "rect") {
     roundedRect(ctx, c.x, c.y, c.w, c.h, c.radius || 0);
     ctx.fillStyle = c.fill;
@@ -76,7 +79,11 @@ function draw(ctx, c) {
 }
 
 // A canvas to measure text with when laying a report out.
-export const measuringContext = () => document.createElement("canvas").getContext("2d");
+export function measuringContext() {
+  const ctx = document.createElement("canvas").getContext("2d");
+  ctx.fontKerning = "none";
+  return ctx;
+}
 
 // Draws the pages one after another, handing each finished picture over (`onPage(done, total)`
 // tells the progress) so that no more than one canvas is alive at a time.
