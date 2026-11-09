@@ -1162,7 +1162,11 @@ export const russianStrings = {
   "{n} subcategories": ["{n} подкатегория", "{n} подкатегории", "{n} подкатегорий"],
   Currencies: "Валюты",
   "{n} new": "новых: {n}",
-  "{n} updated from the backup": "обновится из копии: {n}",
+  "{n} replaced by the backup version (also where the current one is newer)":
+    "заменится версией из копии: {n} (и там, где текущая новее)",
+  "Show the records that would be replaced": "Показать записи, которые будут заменены",
+  "Details of this backup": "Подробности о копии",
+  "and {n} more": "и ещё {n}",
   "{n} already here": "уже есть: {n}",
   "The backup holds no records.": "В копии нет записей.",
   "{n} operations look like operations you already have (same day, amount, accounts, category and comment) but are recorded under another id. They are added too.":
@@ -1462,10 +1466,10 @@ export const russianStrings = {
   "The settings, the exchange rates and the backups stay. A backup that holds this data can bring it back.":
     "Настройки, курсы валют и копии останутся. Копия, в которой есть эти данные, сможет их вернуть.",
   "The data stays as it is.": "Данные останутся как есть.",
-  "The data can no longer be brought back from these copies.":
-    "Из этих копий данные больше нельзя будет вернуть.",
-  "Nothing is left on this device, and the backups go too.":
-    "На этом устройстве ничего не останется, копии тоже удалятся.",
-  "Data files saved outside the application are not touched.":
-    "Файлы данных, сохранённые вне приложения, не затрагиваются.",
+  "These are the copies kept inside the application. Data files you saved elsewhere are not touched.":
+    "Это копии внутри приложения. Файлы данных, сохранённые в другом месте, не затрагиваются.",
+  "Nothing is left on this device. The backups kept inside the application are erased too.":
+    "На этом устройстве ничего не останется. Копии внутри приложения тоже стираются.",
+  "Data files you saved outside the application (in Files or the cloud) are not touched: keep one if you may need the data back.":
+    "Файлы данных, сохранённые вне приложения (в «Файлах» или в облаке), не затрагиваются: сохраните такой файл, если данные могут понадобиться.",
 };

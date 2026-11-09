@@ -37,12 +37,15 @@ export function contentsOf(data) {
 // the current data has stay. `report` counts what happened to the backup's records.
 function mergeList(current, incoming) {
   const byId = new Map(current.map((x) => [x.id, x]));
-  const report = { added: 0, changed: 0, same: 0 };
+  const report = { added: 0, changed: 0, same: 0, items: [] };
   for (const record of incoming) {
     const have = byId.get(record.id);
     if (!have) report.added++;
     else if (stable(have) === stable(record)) report.same++;
-    else report.changed++;
+    else {
+      report.changed++;
+      report.items.push({ now: have, backup: record });
+    }
   }
   const merged = [...current.filter((x) => !incoming.some((y) => y.id === x.id)), ...incoming];
   return { merged, report };

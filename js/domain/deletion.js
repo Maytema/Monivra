@@ -39,7 +39,7 @@ export const DELETIONS = {
     result: (data) => ({ ...data, backups: [] }),
     effects: [
       "The data stays as it is.",
-      "The data can no longer be brought back from these copies.",
+      "These are the copies kept inside the application. Data files you saved elsewhere are not touched.",
     ],
   },
   everything: {
@@ -49,8 +49,8 @@ export const DELETIONS = {
     settings: true,
     result: createEmptyData,
     effects: [
-      "Nothing is left on this device, and the backups go too.",
-      "Data files saved outside the application are not touched.",
+      "Nothing is left on this device. The backups kept inside the application are erased too.",
+      "Data files you saved outside the application (in Files or the cloud) are not touched: keep one if you may need the data back.",
     ],
     file: true,
     typed: true,

@@ -102,8 +102,10 @@ with zeros. The parts of the summary can be turned off on the Export page.
 The text of a cell is wrapped to the width of its column. A row that is taller than the rest of the
 page is split between pages line by line (a short cell such as the amount is written on the first
 part); the header is repeated.
-A single cell longer than **6000 characters** is cut in the PDF with a note saying how much was left
-out; the CSV file always holds the whole text. A word without spaces (a link) is broken at the edge
+A cell that needs more than **10 lines** shows its first lines and ends with "… full text: appendix,
+note N". The **appendix** at the end of the Detailed report holds the whole text of every such cell,
+under the date and name of its operation, flowing over as many pages as it needs. Nothing is cut: the
+PDF and the CSV file hold the same text. A word without spaces (a link) is broken at the edge
 of the column. A tag longer than the column is wrapped the same way. No cell may overlap another or
 leave the page, and one long comment never hides an amount.
 
@@ -124,7 +126,23 @@ leave the page, and one long comment never hides an amount.
 
 ## Preview
 
-The preview of a PDF is the pages of the very file that is saved: the job (`data/report-job.js`)
-draws the pages once from the report model and the preview, Save, Share and Print all use that
-result. The preview of a CSV is a table of the first 20 rows with the number of all rows. Looking
+The preview of a PDF and the PDF file are made from the same layout: the job
+(`data/report-job.js`) lays the report out once from the report model; the preview shows those pages
+drawn as pictures, and the file is written from the very same drawing commands. The text of the file
+is real text. Save, Share and Print use that job. The preview of a CSV is a table of the first 20 rows with the number of all rows. Looking
 at a preview never saves, shares or changes anything.
+
+## The PDF as a document
+
+- **Real text.** Every word, date and amount is text in the file (embedded Liberation Sans, SIL OFL 1.1,
+  Latin and Cyrillic, subsetted to the characters used, with a map back to Unicode), so it can be
+  selected, searched and copied. Cards, bars, lines and charts are vector drawing built afresh from the
+  data of every report. There are no images in the file.
+- **Characters the font lacks** (for example Chinese or emoji) are written as "?" in the PDF; the CSV
+  keeps every character.
+- **Metadata.** Title ("Financial summary · period"), producer, language of the application and the
+  title shown by readers. The file is not tagged for screen readers; the CSV is the accessible form of
+  the figures.
+- **Size.** About 60 KB for a summary and about 125 KB for 34 pages of 469 operations (measured in
+  `tests/scenarios.mjs`, "a large report is real searchable text"); the generation takes under a second.
+- **Print** opens the print dialog with the pictures of the same pages.

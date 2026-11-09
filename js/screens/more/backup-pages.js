@@ -130,9 +130,24 @@ function factsHtml(rows, data) {
     ["Tags", String(c.tags)],
     ["Currencies", c.currencies.join(", ") || "–"],
   ];
-  return `<dl class="restore-facts">${[...rows, ...held]
-    .map(([label, value]) => `<dt>${translate(label)}</dt><dd>${escapeHtml(value)}</dd>`)
-    .join("")}</dl>`;
+  const facts = (list) =>
+    `<dl class="restore-facts">${list
+      .map(([label, value]) => `<dt>${translate(label)}</dt><dd>${escapeHtml(value)}</dd>`)
+      .join("")}</dl>`;
+  // The two lines a person needs first; everything else is a tap away.
+  const created = rows.find(([label]) => label === "Created");
+  const headline = [
+    created && `${translate("Created")}: ${created[1]}`,
+    translateWith("{accounts} accounts, {categories} categories, {ops} operations", {
+      accounts: c.accounts,
+      categories: c.categories + c.subcategories,
+      ops: c.ops,
+    }),
+  ]
+    .filter(Boolean)
+    .map((line) => `<p class="restore-headline">${escapeHtml(line)}</p>`)
+    .join("");
+  return `${headline}<details class="restore-conflicts"><summary>${translate("Details of this backup")}</summary>${facts([...rows, ...held])}</details>`;
 }
 
 const LIST_NAMES = {
@@ -148,12 +163,44 @@ function mergeLines(summary) {
   const lines = Object.entries(summary.merge).flatMap(([list, r]) => {
     const parts = [
       r.added && translateWith("{n} new", { n: r.added }),
-      r.changed && translateWith("{n} updated from the backup", { n: r.changed }),
+      r.changed &&
+        translateWith("{n} replaced by the backup version (also where the current one is newer)", {
+          n: r.changed,
+        }),
       r.same && translateWith("{n} already here", { n: r.same }),
     ].filter(Boolean);
     return parts.length ? [`${translate(LIST_NAMES[list])}: ${parts.join(", ")}`] : [];
   });
   return lines.length ? lines : [translate("The backup holds no records.")];
+}
+// A short name of a record for the list of what a merge replaces.
+function recordName(list, record) {
+  if (list === "ops")
+    return [record.date, (record.amount / 100).toLocaleString(), record.comment]
+      .filter(Boolean)
+      .join(" · ")
+      .slice(0, 70);
+  return record.name || record.title || record.id;
+}
+// On demand: the records the backup would overwrite, by list, a few of each.
+function conflictsHtml(summary) {
+  const SHOWN = 15;
+  const groups = Object.entries(summary.merge).filter(([, r]) => r.changed);
+  if (!groups.length) return "";
+  return `<details class="restore-conflicts"><summary>${translate("Show the records that would be replaced")}</summary>${groups
+    .map(
+      ([list, r]) =>
+        `<h4>${translate(LIST_NAMES[list])}</h4><ul class="restore-changes">${r.items
+          .slice(0, SHOWN)
+          .map(
+            ({ now, backup }) =>
+              `<li>${escapeHtml(recordName(list, now))}${recordName(list, now) === recordName(list, backup) ? "" : ` → ${escapeHtml(recordName(list, backup))}`}</li>`,
+          )
+          .join(
+            "",
+          )}${r.changed > SHOWN ? `<li>${escapeHtml(translateWith("and {n} more", { n: r.changed - SHOWN }))}</li>` : ""}</ul>`,
+    )
+    .join("")}</details>`;
 }
 // Warnings that a merge may bring in what looks like the same thing twice.
 function mergeWarnings(summary) {
@@ -216,16 +263,17 @@ export function restoreBackupView(p) {
       false,
       "Confirm",
     );
-  const card = (heading, plan, lines, warnings = []) =>
+  const card = (heading, plan, lines, warnings = [], extra = "") =>
     `<section class="restore-way"><h3>${translate(heading)}</h3>${
       plan.problem
         ? `<p class="caution">${translate("This cannot be restored in this way:")} ${escapeHtml(describeProblem(plan.problem))}</p>`
         : listHtml(lines) +
-          warnings.map((w) => `<p class="restore-warning">${escapeHtml(w)}</p>`).join("")
+          warnings.map((w) => `<p class="restore-warning">${escapeHtml(w)}</p>`).join("") +
+          extra
     }</section>`;
   return (
     pageHeader(title) +
-    `<div class="content info-text roomy">${factsHtml(rows, data)}<p>${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary))}<p>${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
+    `<div class="content info-text roomy">${factsHtml(rows, data)}<p class="restore-meaning">${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary), merge.problem ? "" : conflictsHtml(merge.summary))}<p class="restore-meaning">${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
       `${iconSvg("check", 22)}<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
       () =>
         optionSheet(

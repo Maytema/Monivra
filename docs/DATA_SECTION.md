@@ -159,12 +159,13 @@ Three ways, each with its own settings, Preview, Share, Save (and Print for the 
 Settings that do not belong to the chosen way are not shown. The meaning of every figure and the
 filter rules are in [EXPORT_RULES.md](EXPORT_RULES.md).
 
-**The PDF.** `data/report-layout.js` lays the report out on A4 pages as drawing commands,
-`platform/report-render.js` draws them on a canvas, and `platform/pdf.js` writes a PDF by hand with
-one picture per page (no library, nothing leaves the device). The preview, Save, Share and Print use
-the same pictures. A consequence: the **text of the PDF cannot be selected or searched**; it is an
-image. A page picture is 1190 × 1684 pixels (JPEG), so a long report is large. Print opens the print dialog of the browser with the same pictures; it is separate from Save
-and Share, and the report can be saved and shared without the print dialog.
+**The PDF.** `data/report-layout.js` lays the report out on A4 pages as drawing commands.
+`platform/report-render.js` draws them on a canvas for the preview and for printing, and
+`platform/pdf.js` writes the PDF file from the **same commands** (no library, nothing leaves the device):
+text is real, selectable and searchable text in an embedded Latin + Cyrillic font
+(`platform/report-font.js`, `assets/fonts/`, licence in `assets/fonts/LICENSE.txt`), and the charts and
+boxes are vector drawing. Save and Share hand over that file; Print opens the print dialog with the
+page pictures and is separate from Save and Share. Details are in [EXPORT_RULES.md](EXPORT_RULES.md).
 
 A report with hidden balances in the application still shows the real values (it is a file of
 the person's own data); there is no switch for it.

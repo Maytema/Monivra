@@ -200,3 +200,27 @@ check("A replace makes a backup of the data first and a failed one changes nothi
   const safety = appData.backups.find((b) => b.reason === "safety");
   return thrown && untouched && safety?.data.ops.length === held && appData.ops.length > held;
 });
+
+check(
+  "A merge counts the records a backup version overwrites, even where the current one is newer",
+  () => {
+    const fixture = createReportFixture();
+    setAppData(fixture);
+    createBackup("manual");
+    const [backup] = appData.backups;
+    // Three records are edited after the backup was made: the backup would overwrite them.
+    appData.ops[0].comment = "edited later";
+    appData.ops[1].amount += 100;
+    appData.accounts[0].name = "Renamed later";
+    const { summary } = planRestore(appData, backup.data, { mode: "merge", scheduled: "count" });
+    const { ops, accounts } = summary.merge;
+    return (
+      ops.changed === 2 &&
+      accounts.changed === 1 &&
+      ops.items.length === 2 &&
+      ops.items[0].now.comment === "edited later" &&
+      ops.items[0].backup.comment !== "edited later" &&
+      summary.merge.categories.changed === 0
+    );
+  },
+);

@@ -1382,3 +1382,29 @@
 .confirm-word input {
   width: 100%;
 }
+.restore-conflicts {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.restore-conflicts summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+.restore-conflicts h4 {
+  margin: 8px 0px 4px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.restore-headline {
+  margin: 0px 0px 4px;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.restore-meaning {
+  margin: 16px 0px 8px;
+  font-weight: 600;
+}
