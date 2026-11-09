@@ -32,6 +32,18 @@ adapter must provide the same functions; web sharing code is not assumed to carr
 stand-in that records the files it is given, so that Share is proven to hand over the real file and
 to save nothing. The real share sheet of Android or iOS has **not** been exercised on a device.
 
+**Android check of the share sheet (UNVERIFIED on a device; do by hand before release).**
+
+1. Open the application in Chrome on an Android phone (HTTPS). Export → Financial summary → Share:
+   the system share sheet opens with `monivra-financial-summary-….pdf`; sending it to Files or a
+   messenger delivers a PDF that opens and whose text can be selected. Nothing appears in Downloads.
+2. Same for Detailed transactions (PDF) and the CSV file (`.csv`).
+3. Data → Data file → Share: expected today, Chrome does not share JSON, so the message "Sharing this
+   backup isn't available in your browser…" appears with **Save file**; nothing is downloaded before
+   that button is tapped. If a Chrome version does share it, the file must be named `….json`.
+4. Close the share sheet without sending: no message of success, nothing saved.
+5. Save on each of the three: the file lands in Downloads with its own extension.
+
 ## Saved backups
 
 A backup is a copy of all the data kept inside the data (`backups`, the ten latest). It holds
