@@ -1,5 +1,5 @@
 /* Accounts: the form state, storing, favorite, records and deletion */
-import { deepClone, newId, TODAY } from "../core/constants.js";
+import { deepClone, newId, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { changeAccountCurrency } from "./currency-change.js";
@@ -134,7 +134,7 @@ function checkDebtOperation(draft, change) {
 // brings the account to the balance that was typed.
 function recordDebtOperation(account, counterpartId, change) {
   const other = accountById(counterpartId);
-  const op = { type: "transfer", date: TODAY, comment: "Debt balance adjustment", tags: [] };
+  const op = { type: "transfer", date: today(), comment: "Debt balance adjustment", tags: [] };
   if (change > 0) {
     op.from = other.id;
     op.to = account.id;
@@ -175,7 +175,7 @@ export function storeAccount(draft, mode) {
     appData.ops.push({
       id: newId(),
       type: "adjustment",
-      date: TODAY,
+      date: today(),
       from: change < 0 ? account.id : null,
       to: change > 0 ? account.id : null,
       amount: Math.abs(change),

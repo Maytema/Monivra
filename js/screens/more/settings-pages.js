@@ -7,6 +7,14 @@ import { timeLabel, timePicker } from "../../ui/time-picker.js";
 import { ratesBody } from "../rates.js";
 import { settingOptions, switchSetting } from "../settings.js";
 import { closeLayers, openPage, openSheet } from "../../ui/navigation.js";
+import { reminderText } from "../../app/reminders.js";
+import {
+  askNotificationPermission,
+  notificationStatus,
+  showSystemNotification,
+} from "../../platform/notify.js";
+import { makePin, pinLength, pinMatches } from "../../platform/pin.js";
+import { translate } from "../../i18n/index.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { numberFieldHtml } from "../../ui/number-picker.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast, toggleRowHtml } from "../../ui/primitives.js";
@@ -25,7 +33,7 @@ function pinSetup(remove) {
     second = "";
   openSheet(
     () => {
-      const size = remove ? appData.settings.pin.length : Math.max(...PIN_LENGTHS);
+      const size = remove ? pinLength(appData.settings.pin) : Math.max(...PIN_LENGTHS);
       const hint = "Enter 4 or 6 digits";
       return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${numberFieldHtml(
         remove ? "Current PIN" : "New PIN",
@@ -44,12 +52,12 @@ function pinSetup(remove) {
         "Save",
         () => {
           if (remove) {
-            if (first !== appData.settings.pin) return toast("Incorrect PIN");
+            if (!pinMatches(appData.settings.pin, first)) return toast("Incorrect PIN");
             appData.settings.pin = false;
           } else {
             if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
             if (first !== second) return toast("PINs do not match");
-            appData.settings.pin = first;
+            appData.settings.pin = makePin(first);
           }
           save();
           closeLayers();
@@ -61,14 +69,37 @@ function pinSetup(remove) {
     "dialog",
   );
 }
+// What the browser says about notifications, in words for the person.
+const NOTIFICATION_STATES = {
+  granted: "Allowed: reminders come as notifications of the device while the app is open.",
+  default: "Not asked yet: allow notifications when you switch them on.",
+  denied:
+    "Blocked in the browser settings: reminders are shown inside the app. Allow them in the browser settings for this site to get notifications.",
+  unsupported: "This browser cannot show notifications: reminders are shown inside the app.",
+};
 function notificationsSettings() {
+  const status = notificationStatus();
   const body =
-    switchSetting("Notifications", "notifications") +
+    toggleRowHtml("Notifications", appData.settings.notifications, async () => {
+      const turnOn = !appData.settings.notifications;
+      appData.settings.notifications = turnOn;
+      save();
+      render();
+      if (turnOn && notificationStatus() === "default") {
+        await askNotificationPermission();
+        render();
+      }
+    }) +
+    `<p class="footnote">${translate(NOTIFICATION_STATES[status])}</p>` +
     switchSetting("Periodic reminders", "periodic") +
     menuRowHtml("Time", null, () => timeDialog(), timeLabel(appData.settings.notificationTime)) +
     settingOptions("Frequency", "notificationFrequency", ["Every day", "Weekdays", "Weekends"]) +
-    menuRowHtml("Test notification", "bell", () => toast("Enter today’s operations")) +
-    '<p class="footnote">Reminders are shown only while the app is open.</p>';
+    menuRowHtml("Test notification", "bell", async () => {
+      const [title, text] = reminderText({ kind: "periodic" });
+      const system = await showSystemNotification(title, text, "test");
+      toast(system ? "Notification sent" : `${title}: ${text}`);
+    }) +
+    `<p class="footnote">${translate("Reminders appear only while the app is open or in the background of the browser. A closed app cannot remind you: that needs the mobile app.")}</p>`;
   return { title: "Notifications", body };
 }
 

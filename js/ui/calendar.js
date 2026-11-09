@@ -1,6 +1,6 @@
 /* Calendar dialogs: one date and a range of dates */
 import { render } from "../app/shell.js";
-import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
+import { escapeHtml, iconSvg, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { dateLabel, parseDate, toIsoDate } from "../domain/finance.js";
 import { currentLocale, translate } from "../i18n/index.js";
@@ -71,7 +71,7 @@ function monthGridHtml(view, chosen, pick, min) {
     return buttonHtml(
       String(i + 1),
       () => pick(date),
-      `calendar-day ${date === TODAY ? "today" : ""} ${date === chosen ? "active" : ""}`,
+      `calendar-day ${date === today() ? "today" : ""} ${date === chosen ? "active" : ""}`,
       min && date < min ? "disabled" : "",
     );
   }).join("")}</div>`;
@@ -91,13 +91,13 @@ export function calendar(value, done, min = null) {
         },
         min,
       )}<div class="dialog-actions">${
-        min && min > TODAY
+        min && min > today()
           ? ""
           : buttonHtml(
               "Today",
               () => {
-                chosen = TODAY;
-                view.month = TODAY.slice(0, 7);
+                chosen = today();
+                view.month = today().slice(0, 7);
                 view.years = false;
                 render();
               },
@@ -121,7 +121,7 @@ export function rangeDialog(from, to, done) {
     buttonHtml(
       `${iconSvg("calendar", 28)}<small>${translate(label)}</small><strong>${date ? escapeHtml(dateLabel(date, true)) : translate("Select date")}</strong>`,
       () =>
-        calendar(date || TODAY, (picked) => {
+        calendar(date || today(), (picked) => {
           set(picked);
           render();
         }),

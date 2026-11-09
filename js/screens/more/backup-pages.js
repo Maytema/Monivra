@@ -164,9 +164,12 @@ function mergeLines(summary) {
     const parts = [
       r.added && translateWith("{n} new", { n: r.added }),
       r.changed &&
-        translateWith("{n} replaced by the backup version (also where the current one is newer)", {
-          n: r.changed,
-        }),
+        translateWith(
+          summary.conflicts === "keep"
+            ? "{n} differ and stay as they are here"
+            : "{n} replaced by the backup version (also where the current one is newer)",
+          { n: r.changed },
+        ),
       r.same && translateWith("{n} already here", { n: r.same }),
     ].filter(Boolean);
     return parts.length ? [`${translate(LIST_NAMES[list])}: ${parts.join(", ")}`] : [];
@@ -187,7 +190,7 @@ function conflictsHtml(summary) {
   const SHOWN = 15;
   const groups = Object.entries(summary.merge).filter(([, r]) => r.changed);
   if (!groups.length) return "";
-  return `<details class="restore-conflicts"><summary>${translate("Show the records that would be replaced")}</summary>${groups
+  return `<details class="restore-conflicts"><summary>${translate("Show the records that differ")}</summary>${groups
     .map(
       ([list, r]) =>
         `<h4>${translate(LIST_NAMES[list])}</h4><ul class="restore-changes">${r.items
@@ -239,11 +242,43 @@ function replaceLines(summary) {
 const listHtml = (lines, cls = "") =>
   `<ul class="restore-changes ${cls}">${lines.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>`;
 
+const CONFLICT_WAYS = [
+  ["keep", "Keep the version on this device", "Records that are in both stay as they are here."],
+  [
+    "backup",
+    "Use the backup's version",
+    "Records that are in both are taken from the backup, also where they were changed here later.",
+  ],
+];
+// Shown only when some record differs: which version stays. One tap opens the two choices.
+function conflictChoiceHtml(p, summary) {
+  if (!Object.values(summary.merge).some((r) => r.changed)) return "";
+  const way = CONFLICT_WAYS.find(([id]) => id === p.conflicts);
+  return `<p class="restore-note">${translate("A record that is in both the data here and the backup:")}</p>${buttonHtml(
+    `<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
+    () =>
+      optionSheet(
+        "Which version stays?",
+        CONFLICT_WAYS,
+        p.conflicts,
+        (id) => {
+          p.conflicts = id;
+          render();
+        },
+        "dialog",
+      ),
+    "dropdown chosen",
+  )}`;
+}
+
 // Page of one backup or data file: what is in it, what each way of restoring would change, and the
 // buttons to merge or replace.
 export function restoreBackupView(p) {
   const { data, title, rows } = sourceOf(p);
-  const options = { scheduled: p.scheduled };
+  // Where a record is in both the data here and the backup, the version here stays unless the person
+  // asks for the backup's: a backup has no time of editing, so it cannot be told which is newer.
+  p.conflicts ??= "keep";
+  const options = { scheduled: p.scheduled, conflicts: p.conflicts };
   const merge = planRestore(appData, data, { mode: "merge", ...options });
   const replace = planRestore(appData, data, { mode: "replace", ...options });
   const way = SCHEDULED_WAYS.find(([id]) => id === p.scheduled);
@@ -255,7 +290,7 @@ export function restoreBackupView(p) {
           : "Merge this backup into the current data?",
       )} ${translate("A backup of the current data is made first.")}`,
       () => {
-        restoreData(data, { mode, scheduled: p.scheduled, safety: true });
+        restoreData(data, { mode, scheduled: p.scheduled, conflicts: p.conflicts, safety: true });
         goHome("more");
         postDuePayments();
         toast("Backup restored");
@@ -273,7 +308,7 @@ export function restoreBackupView(p) {
     }</section>`;
   return (
     pageHeader(title) +
-    `<div class="content info-text roomy">${factsHtml(rows, data)}<p class="restore-meaning">${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary), merge.problem ? "" : conflictsHtml(merge.summary))}<p class="restore-meaning">${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
+    `<div class="content info-text roomy">${factsHtml(rows, data)}<p class="restore-meaning">${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary), merge.problem ? "" : conflictChoiceHtml(p, merge.summary) + conflictsHtml(merge.summary))}<p class="restore-meaning">${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
       `${iconSvg("check", 22)}<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
       () =>
         optionSheet(

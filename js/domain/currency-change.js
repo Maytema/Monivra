@@ -44,9 +44,21 @@ export function planCurrencyChange(id, currency, mode) {
     for (const c of changes)
       if (c.op.from === id && c.receive !== undefined)
         others.set(c.op.to, (others.get(c.op.to) || 0) + c.receive - c.op.receive);
-  const opening = mode === "all" ? conv(a.opening || 0) - (a.opening || 0) : 0;
   const before = accountBalance(id);
+  // Converting every amount on its own rounds each one, and the roundings add up. In mode "all" the
+  // balance has to be what the old balance is worth at the rate, so the leftover difference (a few
+  // minor units at most) goes into the opening balance, which is the one amount that is not a record
+  // of something that happened.
+  let openingAfter = a.opening || 0,
+    opening = 0;
+  if (mode === "all") {
+    const exact = conv(before);
+    openingAfter =
+      conv(a.opening || 0) + (exact - (before + delta + (conv(a.opening || 0) - (a.opening || 0))));
+    opening = openingAfter - (a.opening || 0);
+  }
   return {
+    openingAfter,
     changes,
     taken: taken.length,
     spentBefore: taken.reduce((n, c) => n + c.op.amount, 0),
@@ -64,8 +76,10 @@ export function changeAccountCurrency(id, currency, mode) {
   const a = accountById(id),
     plan = planCurrencyChange(id, currency, mode);
   const conv = (n) => convertCurrency(n, a.currency, currency);
-  if (mode === "all")
-    for (const key of ["opening", "goal", "limit", "totalDebt"]) if (a[key]) a[key] = conv(a[key]);
+  if (mode === "all") {
+    for (const key of ["goal", "limit", "totalDebt"]) if (a[key]) a[key] = conv(a[key]);
+    a.opening = plan.openingAfter;
+  }
   for (const { op: o, amount, receive } of plan.changes) {
     const was =
       o.from === id || (o.type !== "transfer" && !(o.type === "adjustment" && o.receive))

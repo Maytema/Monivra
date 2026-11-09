@@ -2,7 +2,7 @@
 import { deepClone, newId, today } from "../core/constants.js";
 import { appData } from "../core/state.js";
 import { save } from "../data/storage.js";
-import { putOperation } from "./operations.js";
+import { planFutureOperations, putOperation } from "./operations.js";
 import { addDays, parseDate, toIsoDate } from "./finance.js";
 
 const toMinutes = (time) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
@@ -146,11 +146,13 @@ const needsAnswer = ({ count, since }, day) =>
 // far behind waits for the person's answer (`missedPayments`).
 export function postDue(day = today()) {
   const posted = [];
+  // Operations dated ahead that came from a backup or a file wait for their day like any payment.
+  const moved = planFutureOperations();
   try {
     for (const entry of dueEntries(day))
       if (!needsAnswer(entry, day)) posted.push(...catchUp(entry.item, day, true));
   } finally {
-    if (posted.length) save();
+    if (posted.length || moved) save();
   }
   return posted;
 }

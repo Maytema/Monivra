@@ -961,7 +961,6 @@ export const russianStrings = {
   "the period is not valid": "неверный период",
   "a category is not found": "категория не найдена",
   Operation: "Операция",
-  "Scheduled payment": "Плановый платёж",
   "Incorrect PIN": "Неверный PIN",
   "PINs do not match": "PIN-коды не совпадают",
   "Set PIN": "Установить PIN",
@@ -984,6 +983,11 @@ export const russianStrings = {
   "Edit amount in {currency}": "Изменить сумму в {currency}",
   "Current debt": "Текущий долг",
   "Total debt": "Общая сумма долга",
+  "{n} accounts are not counted here: they are switched off in “Include in overall balance”.": [
+    "{n} счёт не учтён здесь: он выключен в настройке «Включать в общий баланс».",
+    "{n} счёта не учтены здесь: они выключены в настройке «Включать в общий баланс».",
+    "{n} счетов не учтены здесь: они выключены в настройке «Включать в общий баланс».",
+  ],
   "{n} accounts": ["{n} счёт", "{n} счёта", "{n} счетов"],
   "{n} scheduled payments were added to the operations. Tap to view.": [
     "Добавлен {n} платёж по расписанию. Нажмите, чтобы посмотреть.",
@@ -1164,7 +1168,33 @@ export const russianStrings = {
   "{n} new": "новых: {n}",
   "{n} replaced by the backup version (also where the current one is newer)":
     "заменится версией из копии: {n} (и там, где текущая новее)",
-  "Show the records that would be replaced": "Показать записи, которые будут заменены",
+  "Rows dated in the future: {n}. They are added as scheduled payments and happen on their day.":
+    "Строк с датой в будущем: {n}. Они добавятся как плановые платежи и выполнятся в свой день.",
+  "Show the records that differ": "Показать записи, которые отличаются",
+  "{n} differ and stay as they are here": "отличаются и останутся как здесь: {n}",
+  "Keep the version on this device": "Оставить версию на этом устройстве",
+  "Records that are in both stay as they are here.":
+    "Записи, которые есть и тут, и в копии, остаются как на этом устройстве.",
+  "Use the backup's version": "Взять версию из копии",
+  "Records that are in both are taken from the backup, also where they were changed here later.":
+    "Такие записи берутся из копии, даже если на устройстве их потом изменили.",
+  "A record that is in both the data here and the backup:":
+    "Запись, которая есть и здесь, и в копии:",
+  "Which version stays?": "Какая версия останется?",
+  "Too many attempts. Try again in {n} s.": "Слишком много попыток. Повторите через {n} с.",
+  "Allowed: reminders come as notifications of the device while the app is open.":
+    "Разрешено: напоминания приходят как уведомления устройства, пока приложение открыто.",
+  "Not asked yet: allow notifications when you switch them on.":
+    "Ещё не спрашивали: разрешите уведомления при включении.",
+  "Blocked in the browser settings: reminders are shown inside the app. Allow them in the browser settings for this site to get notifications.":
+    "Запрещено в настройках браузера: напоминания показываются внутри приложения. Разрешите уведомления для этого сайта в настройках браузера.",
+  "This browser cannot show notifications: reminders are shown inside the app.":
+    "Этот браузер не умеет показывать уведомления: напоминания показываются внутри приложения.",
+  "Reminders appear only while the app is open or in the background of the browser. A closed app cannot remind you: that needs the mobile app.":
+    "Напоминания приходят только пока приложение открыто или работает в фоне браузера. Закрытое приложение напомнить не может: для этого нужно мобильное приложение.",
+  "Notification sent": "Уведомление отправлено",
+  "Scheduled payment": "Плановый платёж",
+  "{title} is due on {date}": "{title}: срок {date}",
   "Details of this backup": "Подробности о копии",
   "and {n} more": "и ещё {n}",
   "{n} already here": "уже есть: {n}",

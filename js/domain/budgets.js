@@ -1,5 +1,5 @@
 /* Budgets: what is spent of a budget in its period */
-import { TODAY } from "../core/constants.js";
+import { today } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { categoryById, convertCurrency, periodBounds, reportRows } from "./finance.js";
 
@@ -13,7 +13,7 @@ const budgetTakes = (b, row) =>
 
 // The operations of a budget's period, the period being the one around the day shown by the period
 // bar.
-const periodOperations = (b, anchor = uiState.period.anchor || TODAY) => {
+const periodOperations = (b, anchor = uiState.period.anchor || today()) => {
   const [from, to] = periodBounds({ mode: b.period || "month", anchor });
   return appData.ops.filter((o) => o.date >= from && o.date <= to);
 };

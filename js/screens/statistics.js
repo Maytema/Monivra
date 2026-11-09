@@ -1,6 +1,6 @@
 /* Statistics screens and charts */
 import { render } from "../app/shell.js";
-import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
+import { escapeHtml, iconSvg, today } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import {
@@ -79,8 +79,8 @@ function chartBars() {
   let start = a,
     end = b;
   if (uiState.period.mode === "all") {
-    start = appData.ops.reduce((s, o) => (o.date < s ? o.date : s), TODAY);
-    end = TODAY;
+    start = appData.ops.reduce((s, o) => (o.date < s ? o.date : s), today());
+    end = today();
   }
   const days = Math.max(1, Math.round((parseDate(end) - parseDate(start)) / 86400000) + 1),
     bins = Math.min(30, days),
@@ -128,8 +128,8 @@ export function statisticsView() {
     groups = statsGroups(),
     total = groups.reduce((s, g) => s + g.total, 0);
   let [a, b] = periodBounds();
-  if (a.startsWith("0000")) a = appData.ops.reduce((s, o) => (o.date < s ? o.date : s), TODAY);
-  if (b > TODAY) b = TODAY;
+  if (a.startsWith("0000")) a = appData.ops.reduce((s, o) => (o.date < s ? o.date : s), today());
+  if (b > today()) b = today();
   const days = Math.max(1, Math.round((parseDate(b) - parseDate(a)) / 86400000) + 1);
   const blocks = {
     flow: () =>

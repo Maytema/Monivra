@@ -10,7 +10,7 @@ import { findDataProblem, save } from "./storage.js";
 import { unprotectCell } from "./csv.js";
 import { createBackup } from "../domain/backups.js";
 import { parseDate, toIsoDate } from "../domain/finance.js";
-import { validateOp } from "../domain/operations.js";
+import { isPlanned, scheduledForm, validateOp } from "../domain/operations.js";
 import { translate, translateWith } from "../i18n/index.js";
 
 // The most rows one import takes, and the longest text of a cell; a file beyond these is refused.
@@ -438,7 +438,8 @@ export function planImport(records, links) {
   const tree = new Map();
   for (const c of appData.categories) if (!tree.has(treeKey(c))) tree.set(treeKey(c), c);
   const known = new Map();
-  for (const o of appData.ops) known.set(duplicateKey(o), (known.get(duplicateKey(o)) ?? 0) + 1);
+  for (const o of [...appData.ops, ...appData.scheduled])
+    known.set(duplicateKey(o), (known.get(duplicateKey(o)) ?? 0) + 1);
   const knownTags = new Set(appData.tags);
   const plan = {
     total: records.length,
@@ -448,6 +449,7 @@ export function planImport(records, links) {
     duplicates: 0,
     repeated: 0,
     ignoredSigns: 0,
+    future: 0,
     created,
     newTags: [],
   };
@@ -561,6 +563,7 @@ export function planImport(records, links) {
         tree.set(treeKey(c), c);
       }
       plan.ops.push(op);
+      if (isPlanned(op)) plan.future++;
       plan.lines.push(r.line);
       if (r.ignoredSign) plan.ignoredSigns++;
       for (const tag of op.tags)
@@ -584,11 +587,14 @@ export function applyImport(plan) {
   if (!plan.ops.length) throw Error(translate("There is nothing to import."));
   createBackup("safety");
   const before = appData;
+  // What is dated ahead is not done yet: it is added as a scheduled payment, like one entered by hand.
+  const planned = plan.ops.filter(isPlanned);
   const next = {
     ...before,
     accounts: [...before.accounts, ...plan.created.accounts],
     categories: [...before.categories, ...plan.created.categories],
-    ops: [...before.ops, ...plan.ops],
+    ops: [...before.ops, ...plan.ops.filter((o) => !isPlanned(o))],
+    scheduled: [...before.scheduled, ...planned.map(scheduledForm)],
     tags: [...before.tags, ...plan.newTags],
   };
   const problem = findDataProblem(next);
@@ -611,6 +617,7 @@ export function applyImport(plan) {
 export function undoImport(added) {
   const gone = new Set(added.ops);
   appData.ops = appData.ops.filter((o) => !gone.has(o.id));
+  appData.scheduled = appData.scheduled.filter((o) => !gone.has(o.id));
   const used = (key, id) =>
     [...appData.ops, ...appData.scheduled].some(
       (o) => o[key] === id || (key === "from" && o.to === id),

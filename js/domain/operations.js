@@ -93,14 +93,35 @@ function keepRuleDay(d, previous) {
   else d.anchorDay = parseDate(d.date).getUTCDate();
 }
 
-// Turn an operation into a one-time scheduled payment; it can then be given a repeat and a reminder.
+// The form of an operation as a one-time scheduled payment; it can then be given a repeat and a
+// reminder.
+export function scheduledForm(op) {
+  const d = { ...op, recur: null, reminder: null, time: op.time || timeNow() };
+  delete d.fromSchedule;
+  return d;
+}
+
+// Turn an operation into a one-time scheduled payment.
 function planOperation(d) {
   appData.ops = appData.ops.filter((o) => o.id !== d.id);
-  delete d.fromSchedule;
-  d.recur = null;
-  d.reminder = null;
-  d.time = d.time || timeNow();
-  appData.scheduled.push(d);
+  appData.scheduled.push(scheduledForm(d));
+}
+
+// Operations dated after today that came in from outside (a backup, a file, an older version) are
+// not done yet: they move to the scheduled payments, where they wait for their day exactly as one
+// entered by hand. Nothing is lost and nothing happens twice; returns how many were moved.
+export function planFutureOperations() {
+  const future = appData.ops.filter(isPlanned);
+  if (!future.length) return 0;
+  const taken = new Set(appData.scheduled.map((o) => o.id));
+  appData.ops = appData.ops.filter((o) => !isPlanned(o));
+  for (const op of future) {
+    const item = scheduledForm(op);
+    if (taken.has(item.id)) item.id = newId();
+    taken.add(item.id);
+    appData.scheduled.push(item);
+  }
+  return future.length;
 }
 
 // The first day a scheduled payment can be set for: what is due today or earlier is an operation.

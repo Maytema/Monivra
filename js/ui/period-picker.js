@@ -1,6 +1,6 @@
 /* The period shown by the statistics and lists: its bar, picker and the month start setting */
 import { render } from "../app/shell.js";
-import { escapeHtml, iconSvg, TODAY } from "../core/constants.js";
+import { escapeHtml, iconSvg, today } from "../core/constants.js";
 import { appData, uiState } from "../core/state.js";
 import { save } from "../data/storage.js";
 import { canShiftPeriod, periodBounds, periodTitle, shiftPeriod } from "../domain/finance.js";
@@ -59,7 +59,7 @@ export function monthStartDialog(onDone) {
 // Small caption of an interval tile: the range it would select right now.
 function intervalNote(mode) {
   if (!["week", "today", "year", "month"].includes(mode)) return "";
-  const period = { mode: mode === "today" ? "day" : mode, anchor: TODAY };
+  const period = { mode: mode === "today" ? "day" : mode, anchor: today() };
   return periodTitle(period);
 }
 // Sheet for choosing the period mode and range.
@@ -96,7 +96,7 @@ function periodPicker() {
               else {
                 uiState.period = {
                   mode: mode === "today" ? "day" : mode,
-                  anchor: TODAY,
+                  anchor: today(),
                 };
                 closeLayers();
               }

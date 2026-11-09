@@ -1,4 +1,5 @@
 /* Default data: settings, rates and the two ways to begin (empty or a basic set) */
+import { protectedPin } from "../platform/pin.js";
 import { newId } from "../core/constants.js";
 import { defaultRates } from "./currencies.js";
 import { isSupportedLanguage, translate } from "../i18n/index.js";
@@ -90,6 +91,10 @@ export function completeData(data) {
   const fresh = createEmptyData();
   data.settings = { ...fresh.settings, ...data.settings };
   numericSettings(data.settings, fresh.settings);
+  // An earlier version kept the PIN itself; only its hash is kept now.
+  data.settings.pin = protectedPin(data.settings.pin);
+  for (const backup of data.backups || [])
+    if (backup.data?.settings) backup.data.settings.pin = protectedPin(backup.data.settings.pin);
   data.rates = { ...fresh.rates, ...data.rates };
   // Earlier versions kept a single photo.
   for (const o of [...(data.ops || []), ...(data.scheduled || [])]) {

@@ -1,7 +1,7 @@
 /* Categories screens */
 import { emptyStateHtml } from "../ui/empty-state.js";
 import { render } from "../app/shell.js";
-import { deepClone, escapeHtml, iconSvg, newId, TODAY } from "../core/constants.js";
+import { deepClone, escapeHtml, iconSvg, newId, today } from "../core/constants.js";
 import { appData, forgetDeleted, uiState } from "../core/state.js";
 import {
   categoryById,
@@ -111,7 +111,7 @@ export function categoriesView() {
 }
 // Action sheet shown on a long press of a category: figures for the period and two actions;
 // "Operations" lists the category over `period` (all time by default).
-export function categoryActions(c, period = { mode: "all", anchor: TODAY }) {
+export function categoryActions(c, period = { mode: "all", anchor: today() }) {
   const share = Math.round(categoryShare(c.id, c.type) * 100),
     count = categoryCount(c.id, c.type);
   openSheet(

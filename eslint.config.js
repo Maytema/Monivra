@@ -2,6 +2,7 @@ const browserGlobals = Object.fromEntries(
   [
     "window",
     "FontFace",
+    "Notification",
     "CompressionStream",
     "Response",
     "document",

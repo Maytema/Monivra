@@ -3,12 +3,14 @@ import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
 import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { createBackup } from "../domain/backups.js";
+import { save } from "../data/storage.js";
 import { categoryById } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
 import { askAboutMissed, postDuePayments } from "../screens/due-payments.js";
 import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";
 import { toast } from "../ui/primitives.js";
+import { showDueReminders } from "./reminders.js";
 
 const HOME_TABS = ["accounts", "categories", "operations", "statistics", "more"];
 // Long press on a category tile opens its sheet; small finger movements do not cancel it.
@@ -161,9 +163,19 @@ function bindHashRoute() {
 // Post the scheduled payments that came due, at launch and whenever the app comes back to the screen.
 function bindDuePayments() {
   postDuePayments();
+  showDueReminders();
+  // What comes due while the application stays open, and what came due while it was in the
+  // background, is posted when the application is looked at again and once a minute while it is
+  // open. A closed browser cannot run anything: the payments due meanwhile are posted at the next
+  // start, once each.
+  const tick = () => {
+    if (postDuePayments()) render();
+    showDueReminders();
+  };
+  setInterval(tick, 60000);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) return;
-    if (postDuePayments()) render();
+    tick();
     askAboutMissed();
   });
 }
@@ -194,7 +206,11 @@ export function startup() {
   bindSystemBack();
   backUpOncePerDay();
   bindDuePayments();
-  if (appData.settings.pin) setLocked(true);
+  if (appData.settings.pin) {
+    // An earlier version stored the PIN itself; loading has turned it into a hash, now it is kept so.
+    save();
+    setLocked(true);
+  }
   bindHashRoute();
   render();
   askAboutMissed();

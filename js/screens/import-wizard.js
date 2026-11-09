@@ -418,6 +418,13 @@ export function importPreviewView(p) {
         { n: plan.repeated },
       ),
     );
+  if (plan.future)
+    warnings.push(
+      translateWith(
+        "Rows dated in the future: {n}. They are added as scheduled payments and happen on their day.",
+        { n: plan.future },
+      ),
+    );
   if (plan.ignoredSigns)
     warnings.push(
       translateWith("Income rows with a minus sign: {n}. The sign is ignored.", {

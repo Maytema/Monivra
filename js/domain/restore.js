@@ -33,9 +33,9 @@ export function contentsOf(data) {
   };
 }
 
-// The records of a list by id: the backup's version where both have the id, and the records only
-// the current data has stay. `report` counts what happened to the backup's records.
-function mergeList(current, incoming) {
+// The records of a list by id: the backup's version where both have the id (or the current one
+// with `keepCurrent`), and the records only the current data has stay. `report` counts what happened to the backup's records.
+function mergeList(current, incoming, keepCurrent = false) {
   const byId = new Map(current.map((x) => [x.id, x]));
   const report = { added: 0, changed: 0, same: 0, items: [] };
   for (const record of incoming) {
@@ -47,7 +47,10 @@ function mergeList(current, incoming) {
       report.items.push({ now: have, backup: record });
     }
   }
-  const merged = [...current.filter((x) => !incoming.some((y) => y.id === x.id)), ...incoming];
+  // Where both have the id, one version stays: the backup's, or the one here when asked.
+  const merged = keepCurrent
+    ? [...current, ...incoming.filter((x) => !byId.has(x.id))]
+    : [...current.filter((x) => !incoming.some((y) => y.id === x.id)), ...incoming];
   return { merged, report };
 }
 
@@ -66,13 +69,15 @@ function missingReferences(item, accountIds, categoryIds) {
 
 // Works out the dataset after a restore, and what it changes, without touching `current`.
 //   mode "replace": the data becomes the incoming data; "merge": the incoming data is added.
+//   conflicts "backup" | "keep" (merge only): which version stays where the same id is in both; the
+//   backup carries no time of editing, so neither can be told to be the newer one.
 //   scheduled "count" | "skip": the scheduled payments of the incoming data are taken over;
 //   "none": the current scheduled payments stay (those that point to something that is gone are let go).
 // Returns { next, summary, problem }: `problem` is set when the result would not be valid data, and
 // then nothing may be applied.
-export function planRestore(current, incoming, { mode, scheduled }) {
+export function planRestore(current, incoming, { mode, scheduled, conflicts = "backup" }) {
   const source = deepClone(incoming);
-  const summary = { mode, incoming: contentsOf(source), current: contentsOf(current) };
+  const summary = { mode, conflicts, incoming: contentsOf(source), current: contentsOf(current) };
   let next;
   if (mode === "replace") {
     next = {
@@ -92,7 +97,11 @@ export function planRestore(current, incoming, { mode, scheduled }) {
     next = deepClone(current);
     for (const list of LISTS) {
       if (list === "scheduled" && scheduled === "none") continue;
-      const { merged, report: counts } = mergeList(current[list], source[list]);
+      const { merged, report: counts } = mergeList(
+        current[list],
+        source[list],
+        conflicts === "keep",
+      );
       next[list] = merged;
       report[list] = counts;
     }

@@ -12,7 +12,8 @@ import {
   moneySpanHtml,
   overallBalance,
 } from "../../domain/finance.js";
-import { translate } from "../../i18n/index.js";
+
+import { translate, translateCount } from "../../i18n/index.js";
 import { filters } from "../operations/filters.js";
 import { toggleOperationSearch } from "../operations/list.js";
 import { hintHtml } from "../../ui/hint.js";
@@ -153,7 +154,7 @@ export function accountsView() {
   const groups = uiState.accountTab === "Debts" ? ["Owe me", "I owe"] : ["Regular", "Savings"];
   const body =
     uiState.accountTab === "Total"
-      ? accountTotals(live)
+      ? accountTotals(live.filter((a) => a.include))
       : groups
           .map((type) => {
             const rows = open.filter((a) =>
@@ -212,36 +213,42 @@ export function accountsView() {
 
 // Totals strip: all accounts, regular, savings and debt.
 function accountTotals(list) {
-  return ["Total", "Regular", "Savings", "Debt"]
-    .map((type) => {
-      const rows = list.filter((a) => type === "Total" || a.type === type),
-        currencies = [...new Set(rows.map((a) => a.currency))];
-      if (!rows.length) return "";
-      const to = appData.settings.totalCurrency?.[type] || appData.settings.currency;
-      return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type === "Debt" ? "Debts" : type)}</span></div><div class="total-card">${currencies
-        .map(
-          (c) =>
-            `<div class="row"><span class="grow">${c}</span>${moneySpanHtml(
-              rows.filter((a) => a.currency === c).reduce((n, a) => n + accountBalance(a.id), 0),
-              c,
-            )}</div>`,
-        )
-        .join("")}${buttonHtml(
-        moneySpanHtml(
-          rows.reduce((n, a) => n + convertCurrency(accountBalance(a.id), a.currency, to), 0),
-          to,
-        ),
-        () =>
-          currencyPicker(to, (v) => {
-            appData.settings.totalCurrency = {
-              ...appData.settings.totalCurrency,
-              [type]: v,
-            };
-            save();
-            render();
-          }),
-        "converted-total",
-      )}</div>`;
-    })
-    .join("");
+  const excluded = appData.accounts.filter((a) => !a.archived && !a.include).length;
+  const note = excluded
+    ? `<p class="hint-line">${escapeHtml(translateCount("{n} account is not counted here: it is switched off in “Include in overall balance”.", "{n} accounts are not counted here: they are switched off in “Include in overall balance”.", excluded))}</p>`
+    : "";
+  return (
+    ["Total", "Regular", "Savings", "Debt"]
+      .map((type) => {
+        const rows = list.filter((a) => type === "Total" || a.type === type),
+          currencies = [...new Set(rows.map((a) => a.currency))];
+        if (!rows.length) return "";
+        const to = appData.settings.totalCurrency?.[type] || appData.settings.currency;
+        return `<div class="section-label account-section-heading"><span>${translate(type === "Regular" ? "Accounts" : type === "Debt" ? "Debts" : type)}</span></div><div class="total-card">${currencies
+          .map(
+            (c) =>
+              `<div class="row"><span class="grow">${c}</span>${moneySpanHtml(
+                rows.filter((a) => a.currency === c).reduce((n, a) => n + accountBalance(a.id), 0),
+                c,
+              )}</div>`,
+          )
+          .join("")}${buttonHtml(
+          moneySpanHtml(
+            rows.reduce((n, a) => n + convertCurrency(accountBalance(a.id), a.currency, to), 0),
+            to,
+          ),
+          () =>
+            currencyPicker(to, (v) => {
+              appData.settings.totalCurrency = {
+                ...appData.settings.totalCurrency,
+                [type]: v,
+              };
+              save();
+              render();
+            }),
+          "converted-total",
+        )}</div>`;
+      })
+      .join("") + note
+  );
 }

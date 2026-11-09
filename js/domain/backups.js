@@ -42,8 +42,8 @@ export function createBackup(reason = "manual") {
 // backups stays as it is, and so do the settings after a merge.
 // The result is checked as a whole before anything changes; `safety` makes a backup of the current
 // data first. If the result cannot be stored, the data stays as it was and an error is thrown.
-export function restoreData(incoming, { mode, scheduled, safety = false }) {
-  const plan = planRestore(appData, incoming, { mode, scheduled });
+export function restoreData(incoming, { mode, scheduled, conflicts, safety = false }) {
+  const plan = planRestore(appData, incoming, { mode, scheduled, conflicts });
   if (plan.problem) throw Error(describeProblem(plan.problem));
   const before = appData;
   const { next } = plan;

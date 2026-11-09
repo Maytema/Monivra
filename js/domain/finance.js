@@ -39,7 +39,8 @@ export function debtDirection(a) {
 // is saved, paid back or used (never below zero). `left` is what remains to the target, below zero
 // by as much as the target is passed: a goal that is exceeded, a debt that is paid back with more
 // than it was, a card limit that is overrun. `percent` is the exact share of the target and
-// passes 100 with it; it goes below zero when the balance does. It is rounded only when shown
+// passes 100 with it; it goes below zero when a goal's or debt's balance does, but never for a card
+// limit (own funds on a card use no credit). It is rounded only when shown
 // (shownPercent). A debt counts from the side it was taken on (`debt` of the account), so the
 // overpaid part is what the other side owes afterwards. Null when there is no target.
 export const accountProgress = (a) => progressForBalance(a, accountBalance(a.id));
@@ -62,7 +63,8 @@ export function progressForBalance(a, balance) {
     target,
     left: target - done,
     done: Math.max(0, done),
-    percent: (done / target) * 100,
+    // The used part of a card limit is never negative: money of the card's own is not credit used.
+    percent: ((kind === "limit" ? Math.max(0, done) : done) / target) * 100,
   };
 }
 // Groups of accounts shown together in pickers and filters, in the order of the Accounts screen.
