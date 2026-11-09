@@ -93,7 +93,6 @@ export const russianStrings = {
   "To goal: {amount}": "До цели: {amount}",
   "Own funds: {amount}": "Свои деньги: {amount}",
   "Credit used: {amount}": "Использовано кредита: {amount}",
-  "Over limit by {amount}": "Сверх лимита: {amount}",
   "Limit reached": "Лимит исчерпан",
   Limit: "Лимит",
   "Over by {amount}": "Превышение на {amount}",

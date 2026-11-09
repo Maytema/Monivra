@@ -69,18 +69,20 @@ export function progressForBalance(a, balance) {
 }
 // What a card's single balance means (net ledger, see docs/CREDIT_MODEL.md). Nothing is stored:
 // the parts are derived from the balance `B` and the limit `L`, so editing or deleting an old
-// operation always gives the same parts as replaying everything. A positive balance is the card's
-// own money; a negative one is credit used up to the limit, and what is beyond the limit is
-// over-limit debt. `utilization` is the share of the limit in use and may pass 1 (100%). `available`
-// is what can still be spent: own money plus unused credit. Limit 0 is a plain account (null).
+// operation always gives the same parts as replaying everything. Spending takes the card's own
+// money first, then credit up to the limit, and only then the card's own balance goes below zero
+// (negative balances are allowed on every account). So `own` is positive money of the card, zero
+// while credit is in use, or negative once the limit is used up; `creditUsed` is never negative and
+// never above the limit. `own - creditUsed` is always the balance. `utilization` is the share of the
+// limit in use and may pass 1. `available` is what can still be spent without going below the
+// limit. Limit 0 is a plain account (null).
 export function cardState(a, balance = accountBalance(a.id)) {
   if (a.type !== "Regular" || !(a.limit > 0)) return null;
   const debt = Math.max(0, -balance);
   return {
     limit: a.limit,
-    own: Math.max(0, balance),
+    own: balance >= -a.limit ? Math.max(0, balance) : balance + a.limit,
     creditUsed: Math.min(debt, a.limit),
-    overLimit: Math.max(0, debt - a.limit),
     available: Math.max(0, a.limit + balance),
     utilization: debt / a.limit,
   };

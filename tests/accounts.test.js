@@ -327,7 +327,7 @@ check(
       line(card(-14927)) === "Credit used: 149.27" &&
       line(card(0)) === undefined &&
       line(card(-300000)) === "Credit used: 3,000" &&
-      line(card(-310000)).endsWith("Over limit by 100") &&
+      line(card(-310000)).startsWith("Own funds: −100") &&
       line(debt(-608000)) === "Paid back: 8,920" &&
       // paid back with more than it was: 105 of 100 is 105 percent and 5 is overpaid, either side
       line(debt(500)) === "Overpaid by 5" &&

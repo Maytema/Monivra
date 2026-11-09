@@ -47,12 +47,11 @@ const clean = () => {
 function refCard(balance, limit) {
   if (!(limit > 0)) return null;
   let own = 0,
-    used = 0,
-    over = 0;
+    used = 0;
   if (balance >= 0) own = balance;
   else if (-balance <= limit) used = -balance;
-  else [used, over] = [limit, -balance - limit];
-  return { own, used, over, avail: own + (limit - used) };
+  else [used, own] = [limit, balance + limit];
+  return { own, used, avail: limit - used + (own > 0 ? own : 0) };
 }
 const partsOk = (a, expectedBalance) => {
   const s = cardState(a),
@@ -62,12 +61,10 @@ const partsOk = (a, expectedBalance) => {
   return (
     s.own === r.own &&
     s.creditUsed === r.used &&
-    s.overLimit === r.over &&
     s.available === r.avail &&
     s.creditUsed >= 0 &&
-    s.overLimit >= 0 &&
-    s.own * (s.creditUsed + s.overLimit) === 0 && // own money and used credit never coexist
-    s.own - s.creditUsed - s.overLimit === expectedBalance && // nothing created or lost
+    (s.own <= 0 || s.creditUsed === 0) && // positive own money and used credit never coexist
+    s.own - s.creditUsed === expectedBalance && // nothing created or lost
     Math.abs(s.utilization - Math.max(0, -expectedBalance) / a.limit) < 1e-12
   );
 };
@@ -92,22 +89,17 @@ check("Card: 5 starting states x 8 spends match the reference parts", () => {
 
 check("Card: the example 5,000 own / 20,000 limit follows the net-ledger rule", () => {
   const want = [
-    [300000, { own: 200000, used: 0, over: 0, avail: 2200000 }],
-    [1000000, { own: 0, used: 500000, over: 0, avail: 1500000 }],
-    [2500000, { own: 0, used: 2000000, over: 0, avail: 0 }],
-    [3000000, { own: 0, used: 2000000, over: 500000, avail: 0 }],
+    [300000, { own: 200000, used: 0, avail: 2200000 }],
+    [1000000, { own: 0, used: 500000, avail: 1500000 }],
+    [2500000, { own: 0, used: 2000000, avail: 0 }],
+    [3000000, { own: -500000, used: 2000000, avail: 0 }],
   ];
   return want.every(([amount, w]) => {
     clean();
     const a = addAccount({ opening: 500000, limit: 2000000 });
     putOperation(spend(a, amount));
     const s = cardState(a);
-    return (
-      s.own === w.own &&
-      s.creditUsed === w.used &&
-      s.overLimit === w.over &&
-      s.available === w.avail
-    );
+    return s.own === w.own && s.creditUsed === w.used && s.available === w.avail;
   });
 });
 
@@ -165,14 +157,14 @@ check("Card: lowering the limit below what is used or removing it moves no money
   const before = [accountBalance(a.id), overallBalance()];
   a.limit = 1000000; // below usage
   const low = cardState(a);
-  const lowOk = low.creditUsed === 1000000 && low.overLimit === 500000 && low.utilization === 1.5;
+  const lowOk = low.creditUsed === 1000000 && low.own === -500000 && low.utilization === 1.5;
   a.limit = 0; // a plain account
   const none = cardState(a) === null;
   a.limit = 2000000;
   return (
     lowOk &&
     none &&
-    cardState(a).overLimit === 0 &&
+    cardState(a).own === 0 &&
     [accountBalance(a.id), overallBalance()].join() === before.join()
   );
 });
@@ -181,16 +173,16 @@ check("Card: boundary amounts around zero, the limit and one unit beyond it", ()
   clean();
   const a = addAccount({ opening: 100, limit: 1000 });
   const rows = [
-    [100, { own: 0, used: 0, over: 0 }],
-    [101, { own: 0, used: 1, over: 0 }],
-    [1100, { own: 0, used: 1000, over: 0 }],
-    [1101, { own: 0, used: 1000, over: 1 }],
+    [100, { own: 0, used: 0 }],
+    [101, { own: 0, used: 1 }],
+    [1100, { own: 0, used: 1000 }],
+    [1101, { own: -1, used: 1000 }],
   ];
   return rows.every(([amount, w]) => {
     clean();
     putOperation(spend(a, amount));
     const s = cardState(a);
-    return s.own === w.own && s.creditUsed === w.used && s.overLimit === w.over;
+    return s.own === w.own && s.creditUsed === w.used;
   });
 });
 

@@ -19,12 +19,11 @@ export function progressBlockHtml(a) {
   // not say: what is left of a goal, how much of a debt is paid, that a limit is used up.
   let status;
   if (p.kind === "limit") {
-    // Own money, credit used and what is beyond the limit; each only when there is some.
+    // Own money (below zero once the limit is used up) and credit used; each only when there is some.
     const c = cardState(a);
     status = [
-      c.own > 0 && say("Own funds: {amount}", c.own),
+      c.own !== 0 && say("Own funds: {amount}", c.own),
       c.creditUsed > 0 && say("Credit used: {amount}", c.creditUsed),
-      c.overLimit > 0 && say("Over limit by {amount}", c.overLimit),
     ]
       .filter(Boolean)
       .join(" · ");
