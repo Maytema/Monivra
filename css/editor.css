@@ -104,6 +104,10 @@
   .counterparty-categories .cat-tile {
     gap: 7px;
   }
+  /* The amount of a tile has to fit whole: 8,800 KGS is cut at 320 px at the size of wider phones */
+  .counterparty-categories .cat-tile .money {
+    font-size: 12.5px;
+  }
   .counterparty-categories .cat-tile .badge {
     width: 35px;
     height: 40px;

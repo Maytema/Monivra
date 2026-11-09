@@ -16,9 +16,9 @@ const { server, address } = await serveApp();
 const browser = await chromium.launch();
 
 // A fresh phone-sized page with the sample data (plus whatever `adjust` changes in it) stored.
-async function openApp({ height = 700, adjust = () => {}, motion = false } = {}) {
+async function openApp({ width = 360, height = 700, adjust = () => {}, motion = false } = {}) {
   const context = await browser.newContext({
-    viewport: { width: 360, height },
+    viewport: { width, height },
     isMobile: true,
     hasTouch: true,
     reducedMotion: motion ? "no-preference" : "reduce",
@@ -37,7 +37,7 @@ async function openApp({ height = 700, adjust = () => {}, motion = false } = {})
   }, `(${adjust})(data)`);
   if (!stored) throw Error("The data was not stored");
   await page.reload();
-  await page.waitForSelector(".navbar");
+  await page.waitForSelector(".navbar, .pin");
   return page;
 }
 const tab = (page, name) => page.locator(".navbar").getByText(name, { exact: true }).click();
@@ -1128,6 +1128,129 @@ const scenarios = {
       garbage,
     );
   },
+  async "a PIN of an earlier version is stored as a hash, unlocks the app, and guessing is slowed down"(
+    page,
+  ) {
+    const stored = await page.evaluate(() => localStorage.getItem("monivra.offline.2026.v1"));
+    expect(stored.includes('"pin":"1234"')).toBe(false);
+    expect(stored.includes('"hash"')).toBe(true);
+    await page.waitForSelector(".pin");
+    const type = async (digits) => {
+      for (const digit of digits)
+        await page.locator(".key", { hasText: new RegExp(`^${digit}$`) }).click();
+      await page.waitForTimeout(450);
+    };
+    await type("9999");
+    await page.getByText("Incorrect PIN").waitFor();
+    await type("1234");
+    await page.waitForSelector(".navbar");
+    // Locked again by hand, then five wrong PINs in a row make the keys wait, even for the right one.
+    await page.evaluate(async () => {
+      const state = await import("/js/core/state.js");
+      state.setLocked(true);
+      state.setPinEntry("");
+      (await import("/js/app/shell.js")).render();
+    });
+    for (let i = 0; i < 5; i++) await type("0000");
+    await page.getByText(/Too many attempts/).waitFor();
+    await type("1234");
+    expect(await page.locator(".navbar").count()).toBe(0);
+  },
+  async "the Total tab counts only the accounts of the overall balance and says how many are left out"(
+    page,
+  ) {
+    await tab(page, "Accounts");
+    await page.locator(".tabs button", { hasText: "Total" }).click();
+    const shown = await page.locator(".converted-total").first().textContent();
+    const expected = await page.evaluate(async () => {
+      const finance = await import("/js/domain/finance.js");
+      const state = await import("/js/core/state.js");
+      return finance.formatAmountText(finance.overallBalance(), state.appData.settings.currency);
+    });
+    expect(shown.replace(/\s/g, "")).toBe(expected.replace(/\s/g, ""));
+    await page.getByText(/not counted here/).waitFor();
+  },
+  async "notifications: blocked in the browser they stay honest and show reminders inside the app"(
+    page,
+  ) {
+    // Headless Chromium reports the permission as denied: the real fallback path runs here.
+    await tab(page, "More");
+    await page.getByText("Settings", { exact: true }).first().click();
+    await page.getByText("Notifications", { exact: true }).first().click();
+    await page.getByText(/Blocked in the browser settings/).waitFor();
+    await page.getByRole("switch", { name: "Notifications" }).click();
+    expect(
+      await page.getByRole("switch", { name: "Notifications" }).getAttribute("aria-checked"),
+    ).toBe("true");
+    await page.getByText("Test notification", { exact: true }).click();
+    // No fake success: the reminder is shown inside the app instead.
+    await page.locator("#toast.show", { hasText: "Enter today’s operations" }).waitFor();
+    expect(await page.getByText("Notification sent").count()).toBe(0);
+  },
+  async "notifications: when the browser allows them the system API is called (mock, not a device)"(
+    page,
+  ) {
+    // A mock proves only that the API is invoked with the reminder; delivery on a device is unverified.
+    await page.evaluate(() => {
+      window.__notified = [];
+      Object.defineProperty(Notification, "permission", { get: () => "granted" });
+      globalThis.ServiceWorkerRegistration.prototype.showNotification = async function (
+        title,
+        options,
+      ) {
+        window.__notified.push([title, options.body]);
+      };
+    });
+    await tab(page, "More");
+    await page.getByText("Settings", { exact: true }).first().click();
+    await page.getByText("Notifications", { exact: true }).first().click();
+    await page.getByText(/Allowed: reminders come/).waitFor();
+    await page.getByText("Test notification", { exact: true }).click();
+    await page.getByText("Notification sent").waitFor();
+    expect(await page.evaluate(() => window.__notified.length)).toBe(1);
+  },
+  async "a merge keeps the version on this device of a record that differs, unless the backup's is chosen"(
+    page,
+  ) {
+    await tab(page, "More");
+    await page.getByText("Data", { exact: true }).first().click();
+    await page.getByText("Saved backups", { exact: true }).click();
+    await page.getByRole("button", { name: "Create a backup" }).click();
+    await page.getByText("Backup saved").waitFor();
+    await page.evaluate(async () => {
+      const state = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      state.appData.ops[0].comment = "edited after the backup";
+      save();
+    });
+    await page.locator(".backup-card").click();
+    await page.getByText("Keep the version on this device").waitFor();
+    await page
+      .getByText(/differ and stay as they are here/)
+      .first()
+      .waitFor();
+    await page.getByRole("button", { name: "Merge data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+    const comment = await page.evaluate(async () => {
+      const state = await import("/js/core/state.js");
+      return state.appData.ops.some((o) => o.comment === "edited after the backup");
+    });
+    expect(comment).toBe(true);
+  },
+  async "at 320 px the amounts in the tiles of the category chooser fit whole"(page) {
+    await tab(page, "Categories");
+    await page.locator(".cat-tile").first().click();
+    await page.waitForSelector(".calc-keypad");
+    await page.locator(".calc-parties button").nth(1).click();
+    await page.waitForSelector(".counterparty-categories .cat-tile .money");
+    const clipped = await page
+      .locator(".counterparty-categories .cat-tile .money")
+      .evaluateAll((items) =>
+        items.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.textContent),
+      );
+    expect(clipped.length).toBe(0);
+  },
   async "a saved backup is made on its page and brought back by merging or replacing"(page) {
     await tab(page, "More");
     await page.getByText("Data", { exact: true }).first().click();
@@ -1304,6 +1427,24 @@ const adjustments = {
     const dueDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA");
     data.scheduled.push({ ...base, id: "due", date: dueDate, recur: null, reminder: null });
   },
+  "a PIN of an earlier version is stored as a hash, unlocks the app, and guessing is slowed down": (
+    data,
+  ) => {
+    data.settings.pin = "1234";
+  },
+  "the Total tab counts only the accounts of the overall balance and says how many are left out": (
+    data,
+  ) => {
+    data.accounts[0].include = false;
+  },
+  "at 320 px the amounts in the tiles of the category chooser fit whole": (data) => {
+    // Amounts like 8,800 KGS in every category of the month.
+    const base = data.ops.find((op) => op.type === "expense");
+    const day = new Date().toLocaleDateString("en-CA");
+    data.ops = data.categories
+      .filter((c) => c.type === "expense")
+      .map((c, i) => ({ ...base, id: `wide-${i}`, category: c.id, amount: 880000, date: day }));
+  },
   "a subcategory is chosen on a row and shows in the history": addSubcategories,
   "a subcategory has no tile of its own in the category chooser": addSubcategories,
   "an amount in another currency is edited on both sides": (data) => {
@@ -1371,6 +1512,7 @@ function addSubcategories(data) {
     data.categories.push({ ...food, id: `sub-${name}`, name, parent: food.id });
 }
 
+const NARROW_SCREEN = ["at 320"];
 const SHORT_SCREEN = ["photos", "a page keeps"];
 // ONLY=text node tests/scenarios.mjs runs the scenarios whose names have the text.
 const only = process.env.ONLY;
@@ -1378,6 +1520,7 @@ let failures = 0;
 for (const [name, scenario] of Object.entries(scenarios)) {
   if (only && !name.includes(only)) continue;
   const page = await openApp({
+    width: NARROW_SCREEN.some((start) => name.startsWith(start)) ? 320 : 360,
     height: SHORT_SCREEN.some((start) => name.startsWith(start)) ? 540 : 700,
     motion: name.startsWith("with motion"),
     adjust: adjustments[name] ?? (() => {}),
