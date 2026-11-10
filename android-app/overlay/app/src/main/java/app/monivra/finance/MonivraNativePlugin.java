@@ -53,6 +53,21 @@ public class MonivraNativePlugin extends Plugin {
         });
     }
 
+    // The window loses the screen the moment the recent-apps screen opens, before it is stopped, and
+    // Capacitor's own "app state" event only fires on stop. These two events say it at once, so a lock
+    // that is set to engage when the app is left also engages when the app is left through Recents.
+    @Override
+    protected void handleOnPause() {
+        super.handleOnPause();
+        notifyListeners("activityPause", new JSObject());
+    }
+
+    @Override
+    protected void handleOnResume() {
+        super.handleOnResume();
+        notifyListeners("activityResume", new JSObject());
+    }
+
     private static void deleteContents(File dir) {
         File[] children = dir.listFiles();
         if (children == null) return;

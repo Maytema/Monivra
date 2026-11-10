@@ -491,10 +491,14 @@ await step(
         const { save } = await import('/js/data/storage.js');
         appData.settings.relock = ${relock}; appData.settings.lockDelay = ${delay}; save();
       })()`);
+    let hide = false;
     const awayAndBack = async (how) => {
       if (how === "home") sh("input keyevent KEYCODE_HOME");
-      else if (how === "recents") sh("input keyevent KEYCODE_APP_SWITCH");
-      else sh("am start -W -a android.settings.SETTINGS"); // another app in front
+      else if (how === "recents") {
+        sh("input keyevent KEYCODE_APP_SWITCH");
+        await sleep(2000);
+        screenshot(`04c-recents-hide-preview-${hide ? "on" : "off"}`);
+      } else sh("am start -W -a android.settings.SETTINGS"); // another app in front
       await sleep(1500);
       return how;
     };
@@ -526,6 +530,27 @@ await step(
     seen.push("screen lock: locked");
     await typePin("1234");
     await waitFor(`!!document.querySelector('.navbar')`, "the main screen after the screen lock");
+    // The same Recents screen with "Hide preview" on: the picture of the app has to be covered.
+    await ev(`(async () => {
+      const { appData } = await import('/js/core/state.js');
+      const { save } = await import('/js/data/storage.js');
+      const { render } = await import('/js/app/shell.js');
+      appData.settings.hidePreview = true; save(); render();
+    })()`);
+    hide = true;
+    await sleep(500);
+    await awayAndBack("recents");
+    await comeBack();
+    assert(await ev(`!!document.querySelector('.pin')`), "no lock screen after recents (hidden)");
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen after recents (hidden)");
+    await ev(`(async () => {
+      const { appData } = await import('/js/core/state.js');
+      const { save } = await import('/js/data/storage.js');
+      const { render } = await import('/js/app/shell.js');
+      appData.settings.hidePreview = false; save(); render();
+    })()`);
+    hide = false;
     // A timed lock: back at once stays open.
     await setLock(true, 60);
     await awayAndBack("home");

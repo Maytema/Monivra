@@ -130,20 +130,26 @@ async function openNative({ data = seedJson, saves = 0, bridge = makeBridge(), w
       window.Capacitor = {
         isNativePlatform: () => true,
         Plugins: {
-          MonivraNative: proxy("MonivraNative", [
-            "saveDocument",
-            "shareDocument",
-            "printPdf",
-            "biometricStatus",
-            "biometricAuthenticate",
-            "secureSet",
-            "secureGet",
-            "secureRemove",
-            "mirrorWrite",
-            "mirrorRead",
-            "setSystemBars",
-            "setPrivacyScreen",
-          ]),
+          MonivraNative: {
+            ...proxy("MonivraNative", [
+              "saveDocument",
+              "shareDocument",
+              "printPdf",
+              "biometricStatus",
+              "biometricAuthenticate",
+              "secureSet",
+              "secureGet",
+              "secureRemove",
+              "mirrorWrite",
+              "mirrorRead",
+              "setSystemBars",
+              "setPrivacyScreen",
+            ]),
+            addListener: (event, fn) => {
+              (listeners[event] ||= []).push(fn);
+              return Promise.resolve({ remove() {} });
+            },
+          },
           App: {
             ...proxy("App", ["minimizeApp"]),
             addListener: (event, fn) => {
@@ -319,6 +325,38 @@ const scenarios = {
     expect(await page.locator(".navbar").count(), "content behind the lock").toBe(0);
     await typePin(page, "1234");
     await page.waitForSelector(".navbar");
+  },
+
+  async "MOCK: the recent-apps screen only pauses the window (no app-state event): returning from it still asks for the PIN"(
+    open,
+  ) {
+    const page = await open({ bridge: makeBridge() });
+    await setPinInApp(page, "1234");
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      appData.settings.relock = true;
+      appData.settings.lockDelay = 0;
+      save();
+    });
+    await settle(page, 400);
+    await page.reload();
+    await page.waitForSelector(".pin");
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+    await page.evaluate(() => window.__listeners.activityPause.forEach((f) => f({})));
+    await page.evaluate(() => window.__listeners.activityResume.forEach((f) => f({})));
+    await page.waitForSelector(".pin", { timeout: 3000 });
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+    // Pause and stop of the same leaving are one leaving: the timed lock counts from the first.
+    await page.evaluate(() => {
+      window.__listeners.activityPause.forEach((f) => f({}));
+      window.__listeners.appStateChange.forEach((f) => f({ isActive: false }));
+      window.__listeners.appStateChange.forEach((f) => f({ isActive: true }));
+      window.__listeners.activityResume.forEach((f) => f({}));
+    });
+    await page.waitForSelector(".pin", { timeout: 3000 });
   },
 
   async "MOCK: a timed lock is respected: back before the delay stays open, after it asks for the PIN; with the switch off it never locks"(
