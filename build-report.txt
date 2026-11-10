@@ -1,11 +1,12 @@
-version name: 0.1.0-build.13   version code: 13
-signing: PUBLIC internal test key (signing/README.md)
-git commit: d1da6d0d9eec28cc5bbbae4c2c33e41d30b1a30d
+version name: 0.1.0-build.14   version code: 14
+signing: EPHEMERAL one-run key (no owner key in the secrets): for the emulator test only, not for phones
+application id: app.monivra.finance.dev
+git commit: 8f8ff6954415eda3916a717af8af3d016a4959b0
 
-=== monivra-0.1.0-build.13-debuggable.apk
-size: 4632268 bytes
-sha256: c83c4e9c49086d089c21c3fdc427462ee816e4641395b98b00572ef98c3ef59f
-  package: name='app.monivra.finance' versionCode='13' versionName='0.1.0-build.13' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.14-debuggable.apk
+size: 4632692 bytes
+sha256: e150ff0e3ff9a81b784b4006a4c7ac1cf3e13540a48d460c6c1b862fca55a7c7
+  package: name='app.monivra.finance.dev' versionCode='14' versionName='0.1.0-build.14' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -13,7 +14,7 @@ sha256: c83c4e9c49086d089c21c3fdc427462ee816e4641395b98b00572ef98c3ef59f
   uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
   uses-permission: name='android.permission.WAKE_LOCK'
   uses-permission: name='android.permission.POST_NOTIFICATIONS'
-  uses-permission: name='app.monivra.finance.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
   application-label:'Monivra'
   application-debuggable
   launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
@@ -25,14 +26,14 @@ sha256: c83c4e9c49086d089c21c3fdc427462ee816e4641395b98b00572ef98c3ef59f
     Verified using v3.1 scheme (APK Signature Scheme v3.1): false
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
-    V2 Signer: certificate DN: CN=Monivra internal test key (public), O=Monivra
-    V2 Signer: certificate SHA-256 digest: 0fde2942e171f817c86391f97da3a0268df03e87b7def0d82b1d70ff211be091
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 00da2f5c24d9b78484bed481386c6455bd26a2f175e14779ccf23e25be4eabd2
   debuggable: yes (test build only)
 
-=== monivra-0.1.0-build.13.apk
-size: 3680870 bytes
-sha256: 7d7a28a1b306fda9e1ca964c526ecdf6b97536c1eb01a6f3c00b75895c3f1194
-  package: name='app.monivra.finance' versionCode='13' versionName='0.1.0-build.13' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.14.apk
+size: 3681307 bytes
+sha256: 22ad00e609308206c31d00c94d84d0e5b549fd7767111055c37545de30e39942
+  package: name='app.monivra.finance.dev' versionCode='14' versionName='0.1.0-build.14' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -40,7 +41,7 @@ sha256: 7d7a28a1b306fda9e1ca964c526ecdf6b97536c1eb01a6f3c00b75895c3f1194
   uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
   uses-permission: name='android.permission.WAKE_LOCK'
   uses-permission: name='android.permission.POST_NOTIFICATIONS'
-  uses-permission: name='app.monivra.finance.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
   application-label:'Monivra'
   launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
   signature:
@@ -51,14 +52,14 @@ sha256: 7d7a28a1b306fda9e1ca964c526ecdf6b97536c1eb01a6f3c00b75895c3f1194
     Verified using v3.1 scheme (APK Signature Scheme v3.1): false
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
-    V2 Signer: certificate DN: CN=Monivra internal test key (public), O=Monivra
-    V2 Signer: certificate SHA-256 digest: 0fde2942e171f817c86391f97da3a0268df03e87b7def0d82b1d70ff211be091
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 00da2f5c24d9b78484bed481386c6455bd26a2f175e14779ccf23e25be4eabd2
   debuggable: no
 
 === upgrade-test-debuggable.apk
-size: 4632269 bytes
-sha256: 9afa3ce57f0f4d750f4cfa75cfa59dfe55021560ecac86a37c85544e5ad25fd6
-  package: name='app.monivra.finance' versionCode='14' versionName='0.1.0-build.13-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+size: 4632706 bytes
+sha256: c03d8325dc62357618c623c2e236fa553dbe4cbc8e0eb59244b8ac93998f1015
+  package: name='app.monivra.finance.dev' versionCode='15' versionName='0.1.0-build.14-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -66,7 +67,7 @@ sha256: 9afa3ce57f0f4d750f4cfa75cfa59dfe55021560ecac86a37c85544e5ad25fd6
   uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
   uses-permission: name='android.permission.WAKE_LOCK'
   uses-permission: name='android.permission.POST_NOTIFICATIONS'
-  uses-permission: name='app.monivra.finance.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
   application-label:'Monivra'
   application-debuggable
   launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
@@ -78,6 +79,6 @@ sha256: 9afa3ce57f0f4d750f4cfa75cfa59dfe55021560ecac86a37c85544e5ad25fd6
     Verified using v3.1 scheme (APK Signature Scheme v3.1): false
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
-    V2 Signer: certificate DN: CN=Monivra internal test key (public), O=Monivra
-    V2 Signer: certificate SHA-256 digest: 0fde2942e171f817c86391f97da3a0268df03e87b7def0d82b1d70ff211be091
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 00da2f5c24d9b78484bed481386c6455bd26a2f175e14779ccf23e25be4eabd2
   debuggable: yes (test build only)

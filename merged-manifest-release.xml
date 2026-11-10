@@ -10,9 +10,9 @@
      Exact alarms are removed on purpose: reminders are delivered by the system as inexact alarms.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="app.monivra.finance"
-    android:versionCode="13"
-    android:versionName="0.1.0-build.13" >
+    package="app.monivra.finance.dev"
+    android:versionCode="14"
+    android:versionName="0.1.0-build.14" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -26,10 +26,10 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <permission
-        android:name="app.monivra.finance.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="app.monivra.finance.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:allowBackup="false"
@@ -59,7 +59,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="app.monivra.finance.fileprovider"
+            android:authorities="app.monivra.finance.dev.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true" >
             <meta-data
@@ -82,7 +82,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="app.monivra.finance.androidx-startup"
+            android:authorities="app.monivra.finance.dev.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
