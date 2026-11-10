@@ -1,12 +1,12 @@
-version name: 0.1.0-build.18   version code: 18
+version name: 0.1.0-build.19   version code: 19
 signing: EPHEMERAL one-run key (no owner key in the secrets): for the emulator test only, not for phones
 application id: app.monivra.finance.dev
-git commit: e90c04f1e6801323da36f0d9aedb49e11f66ab16
+git commit: aabb36d20ff317cc7de62fca88d7755bbc1c6fe5
 
-=== monivra-0.1.0-build.18-debuggable.apk
-size: 4716751 bytes
-sha256: 14170a5f8c5b1b7aaddead5a3761fd9a563848966bdc37235d94f2422e75d73f
-  package: name='app.monivra.finance.dev' versionCode='18' versionName='0.1.0-build.18' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.19-debuggable.apk
+size: 4716753 bytes
+sha256: 19d359c7b5a21604d59a330de64288e9027ca07e6284cdfb65f9f55fcdd1f02c
+  package: name='app.monivra.finance.dev' versionCode='19' versionName='0.1.0-build.19' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -27,13 +27,13 @@ sha256: 14170a5f8c5b1b7aaddead5a3761fd9a563848966bdc37235d94f2422e75d73f
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: 4c4f5c3caf2ad410d5bf4522c3abe2c9e0beac8d5ed5954b8b5740cfaecd4a4e
+    V2 Signer: certificate SHA-256 digest: e2d55d7e06234ac8288d91ef24f7843f91574eea5f047fd3add9006d891ab84e
   debuggable: yes (test build only)
 
-=== monivra-0.1.0-build.18.apk
-size: 3765606 bytes
-sha256: de86a3ec22945449d9baea99d32487e5d6246d17c67f9ccc7b950c1690a4ca3f
-  package: name='app.monivra.finance.dev' versionCode='18' versionName='0.1.0-build.18' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.19.apk
+size: 3765596 bytes
+sha256: d88241443c746391436f43b30a56c30f5fdb1bd8a4935620ff75a4bf000c558b
+  package: name='app.monivra.finance.dev' versionCode='19' versionName='0.1.0-build.19' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -53,13 +53,13 @@ sha256: de86a3ec22945449d9baea99d32487e5d6246d17c67f9ccc7b950c1690a4ca3f
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: 4c4f5c3caf2ad410d5bf4522c3abe2c9e0beac8d5ed5954b8b5740cfaecd4a4e
+    V2 Signer: certificate SHA-256 digest: e2d55d7e06234ac8288d91ef24f7843f91574eea5f047fd3add9006d891ab84e
   debuggable: no
 
 === upgrade-test-debuggable.apk
-size: 4716757 bytes
-sha256: 672ec08d5274555104270daa9d243e8b16800b5058212ba8e0b977d8a26ce888
-  package: name='app.monivra.finance.dev' versionCode='19' versionName='0.1.0-build.18-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+size: 4716755 bytes
+sha256: 1d703117d9245897c76985a322d333d2a12c775caccaea6f724aaf7a38a417e1
+  package: name='app.monivra.finance.dev' versionCode='20' versionName='0.1.0-build.19-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -80,5 +80,5 @@ sha256: 672ec08d5274555104270daa9d243e8b16800b5058212ba8e0b977d8a26ce888
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: 4c4f5c3caf2ad410d5bf4522c3abe2c9e0beac8d5ed5954b8b5740cfaecd4a4e
+    V2 Signer: certificate SHA-256 digest: e2d55d7e06234ac8288d91ef24f7843f91574eea5f047fd3add9006d891ab84e
   debuggable: yes (test build only)
