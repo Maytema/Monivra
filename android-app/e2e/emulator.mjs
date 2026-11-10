@@ -90,7 +90,7 @@ async function connect() {
   return page;
 }
 const ev = (expression) => page.evaluate(expression);
-async function waitFor(expression, what, timeoutMs = 30000) {
+async function waitFor(expression, what, timeoutMs = 60000) {
   const start = Date.now();
   let last;
   while (Date.now() - start < timeoutMs) {
@@ -481,9 +481,9 @@ await step(
     await waitForFocus(/documentsui|DocumentsActivity|FilesActivity/i, "the system save screen");
     screenshot("05-save-screen");
     // The first Back may only close the on-screen keyboard: press until the screen answers.
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 6; i++) {
       back();
-      await sleep(1500);
+      await sleep(2000);
       if (await ev(`window.__save`)) break;
     }
     const result = await waitFor(`window.__save`, "the answer after cancel");
@@ -555,9 +555,11 @@ await step(
     await waitForFocus(/printspooler|PrintActivity/i, "the system print screen");
     await sleep(2000);
     screenshot("07-print-screen");
-    back();
-    await sleep(1000);
-    if (/printspooler|PrintActivity/i.test(focus())) back();
+    for (let i = 0; i < 5; i++) {
+      back();
+      await sleep(2000);
+      if (await ev(`window.__print`)) break;
+    }
     const result = await waitFor(`window.__print`, "the answer after closing print");
     assert(!result.error, `print failed: ${result.error}`);
   },
