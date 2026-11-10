@@ -1421,3 +1421,16 @@
   font-size: 11px;
   font-weight: 400;
 }
+/* The PIN dialog of the settings: the active field is marked, the keypad is the only one */
+.pin-field.active {
+  outline: 2px solid var(--tint);
+  outline-offset: -2px;
+}
+.pin-field-dots {
+  letter-spacing: 0.25em;
+}
+.pin-setup-pad {
+  grid-template-columns: repeat(3, 1fr);
+  margin: 12px 0 0;
+  gap: 10px;
+}

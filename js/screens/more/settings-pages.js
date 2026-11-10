@@ -1,5 +1,6 @@
 /* Settings sub-pages of the More tab */
 import { render } from "../../app/shell.js";
+import { iconSvg } from "../../core/constants.js";
 import { appData, setLocked, setPinEntry } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { deleteAllBackups } from "../../domain/backups.js";
@@ -19,7 +20,6 @@ import { biometricState, verifyBiometric } from "../../platform/biometric.js";
 import { translate } from "../../i18n/index.js";
 import { biometricTexts } from "./lock.js";
 import { confirmAction } from "../../ui/dialogs.js";
-import { numberFieldHtml } from "../../ui/number-picker.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast, toggleRowHtml } from "../../ui/primitives.js";
 
 // Time of the periodic reminder.
@@ -30,48 +30,64 @@ const timeDialog = () =>
   });
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
-// Set or remove the PIN: the digits are typed on the digit keypad.
+// Set or remove the PIN. One dialog: the fields show the typed digits as dots, the one keypad below
+// types into the field that is active (tap a field to make it active). Nothing opens over the dialog.
 function pinSetup(remove) {
-  let first = "",
-    second = "";
+  const values = { first: "", second: "" };
+  let active = "first";
+  const size = () => (remove ? pinLength(appData.settings.pin) : Math.max(...PIN_LENGTHS));
+  const field = (name, label, hint) => {
+    const shown = "•".repeat(values[name].length);
+    return buttonHtml(
+      `<span class="field-label">${translate(label)}</span><span class="value pin-field-dots">${shown || (hint ? `<small class="field-hint">${translate(hint)}</small>` : "—")}</span>`,
+      () => {
+        active = name;
+        render();
+      },
+      `field pin-field ${active === name ? "active" : ""}`,
+      `aria-label="${translate(label)}" aria-pressed="${active === name}"`,
+    );
+  };
+  const press = (k) => {
+    const text = values[active];
+    if (k === "⌫") values[active] = text.slice(0, -1);
+    else if (text.length < size()) values[active] = text + k;
+    // A full first PIN passes on to the confirmation by itself.
+    if (!remove && active === "first" && values.first.length === size()) active = "second";
+    render();
+  };
+  // Built at each render: the handlers of a render are valid for that render only.
+  const pad = () => {
+    const keys = [..."123456789"].map((k) => buttonHtml(k, () => press(k), "key")).join("");
+    return `<div class="keypad pin-setup-pad">${keys}<span></span>${buttonHtml("0", () => press("0"), "key")}${buttonHtml(
+      iconSvg("backspace", 26),
+      () => press("⌫"),
+      "key plain",
+      `aria-label="${translate("Backspace")}"`,
+    )}</div>`;
+  };
+  const save_ = () => {
+    const { first, second } = values;
+    if (remove) {
+      if (!pinMatches(appData.settings.pin, first)) return toast("Incorrect PIN");
+      appData.settings.pin = false;
+      appData.settings.biometric = false;
+    } else {
+      if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
+      if (first !== second) return toast("PINs do not match");
+      // A person who turns the lock on expects the app to lock when it is left, so a new PIN also
+      // switches that on; a PIN that already exists keeps the person's own choice.
+      if (!appData.settings.pin) appData.settings.relock = true;
+      appData.settings.pin = makePin(first);
+    }
+    save();
+    closeLayers();
+  };
   openSheet(
-    () => {
-      const size = remove ? pinLength(appData.settings.pin) : Math.max(...PIN_LENGTHS);
-      const hint = "Enter 4 or 6 digits";
-      return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${numberFieldHtml(
-        remove ? "Current PIN" : "New PIN",
-        first,
-        (v) => (first = v),
-        { mask: true, maxLength: size, hint: remove ? "" : hint },
-      )}${
-        remove
-          ? ""
-          : numberFieldHtml("Confirm PIN", second, (v) => (second = v), {
-              mask: true,
-              maxLength: size,
-              hint,
-            })
-      }<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml(
-        "Save",
-        () => {
-          if (remove) {
-            if (!pinMatches(appData.settings.pin, first)) return toast("Incorrect PIN");
-            appData.settings.pin = false;
-            appData.settings.biometric = false;
-          } else {
-            if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
-            if (first !== second) return toast("PINs do not match");
-            // A person who turns the lock on expects the app to lock when it is left, so a new PIN also
-            // switches that on; a PIN that already exists keeps the person's own choice.
-            if (!appData.settings.pin) appData.settings.relock = true;
-            appData.settings.pin = makePin(first);
-          }
-          save();
-          closeLayers();
-        },
-        "primary",
-      )}</div>`;
-    },
+    () =>
+      `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${field("first", remove ? "Current PIN" : "New PIN", remove ? "" : "Enter 4 or 6 digits")}${
+        remove ? "" : field("second", "Confirm PIN", "Enter 4 or 6 digits")
+      }${pad()}<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml("Save", save_, "primary")}</div>`,
     "PIN",
     "dialog",
   );
