@@ -4,7 +4,7 @@ import { appData, emptyFilters, setAppData, uiState } from "../core/state.js";
 import { createEmptyData, withoutFinanceData } from "../data/defaults.js";
 import { save } from "../data/storage.js";
 import { translate } from "../i18n/index.js";
-import { createBackup } from "./backups.js";
+import { BACKUP_NOT_STORED, createBackup } from "./backups.js";
 
 const FINANCE = ["accounts", "categories", "ops", "tags", "scheduled", "budgets"];
 
@@ -59,7 +59,7 @@ export const DELETIONS = {
 // When the result cannot be stored nothing is changed and an error is thrown.
 export function deleteData(id, { backup = false } = {}) {
   const way = DELETIONS[id];
-  if (backup && way.backup) createBackup("safety");
+  if (backup && way.backup && !createBackup("safety")) throw Error(translate(BACKUP_NOT_STORED));
   const before = appData;
   setAppData(way.result(before));
   if (!save()) {

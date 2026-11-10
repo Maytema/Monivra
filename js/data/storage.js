@@ -3,6 +3,7 @@ import { MAX_INTERVAL, SAVE_COUNT_KEY, STORAGE_KEY } from "../core/constants.js"
 import { appData, loadProblem } from "../core/state.js";
 import { isSupportedLanguage } from "../i18n/index.js";
 import { toast } from "../ui/primitives.js";
+import { clearSaveFailure, showSaveFailure } from "../ui/save-alert.js";
 
 const COLOR = /^#[a-f0-9]{6}$/i;
 const knownRate = (x, code) => Number.isFinite(x.rates[code]) && x.rates[code] > 0;
@@ -198,9 +199,27 @@ export function save() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     if (saveCount !== null) localStorage.setItem(SAVE_COUNT_KEY, String(++saveCount));
     afterSave();
+    clearSaveFailure();
     return true;
   } catch {
     toast("Storage is unavailable or full. Export a data file to keep changes.");
+    showSaveFailure();
     return false;
   }
+}
+
+// How much of the browser storage the data takes. The limit is what the engine of the WebView allows
+// (about 5.2 million characters, measured); it is an estimate, not a promise.
+export const STORAGE_LIMIT_CHARS = 5_000_000;
+export function storageUsage() {
+  let used = 0;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      used += key.length + (localStorage.getItem(key) ?? "").length;
+    }
+  } catch {
+    return { used: 0, limit: STORAGE_LIMIT_CHARS, share: 0 };
+  }
+  return { used, limit: STORAGE_LIMIT_CHARS, share: used / STORAGE_LIMIT_CHARS };
 }

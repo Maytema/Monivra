@@ -827,6 +827,17 @@ export const russianStrings = {
   Report: "Отчёт",
   "Closed Beta": "Закрытая бета",
   "Coming soon": "Скоро",
+  "Your latest changes are NOT saved: the storage is full or unavailable. Save a data file now, then free space by deleting old backups or photos.":
+    "Последние изменения НЕ сохранены: хранилище заполнено или недоступно. Сохраните файл данных сейчас, затем освободите место: удалите старые копии или фото.",
+  "Save a data file": "Сохранить файл данных",
+  "The backup could not be stored because the storage is full. Nothing was changed. Save a data file instead, or delete older backups.":
+    "Копию не удалось сохранить: хранилище заполнено. Ничего не изменилось. Сохраните файл данных или удалите старые копии.",
+  "Backup not made": "Копия не создана",
+  "The daily backup was not made: the storage is full.": "Ежедневная копия не создана: хранилище заполнено.",
+  "Storage on this phone: about {p}% full ({n} thousand of about 5000 thousand characters).":
+    "Хранилище на телефоне: заполнено примерно на {p}% ({n} тыс. из примерно 5000 тыс. символов).",
+  "Save a data file and delete old backups or photos before it fills up.":
+    "Сохраните файл данных и удалите старые копии или фото, пока оно не заполнилось.",
   "The app asks for the PIN only when it starts. Turn on “Lock after leaving” to lock it when you switch to another app or to the home screen; the delay below then applies.":
     "Приложение спрашивает PIN только при запуске. Включите «Блокировать при выходе», чтобы оно блокировалось, когда вы переключаетесь на другое приложение или на главный экран; тогда действует задержка ниже.",
   build: "сборка",
@@ -1217,7 +1228,8 @@ export const russianStrings = {
   "Fingerprint or face could not be used. Use your PIN.":
     "Отпечаток или лицо недоступны. Введите PIN.",
   "Payment reminders": "Напоминания о платежах",
-  "Your latest changes were recovered from the internal copy on this device.": "Последние изменения восстановлены из внутренней копии на этом устройстве.",
+  "Your latest changes were recovered from the internal copy on this device.":
+    "Последние изменения восстановлены из внутренней копии на этом устройстве.",
   "Notification sent": "Уведомление отправлено",
   "Scheduled payment": "Плановый платёж",
   "{title} is due on {date}": "{title}: срок {date}",

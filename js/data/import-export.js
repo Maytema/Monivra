@@ -2,7 +2,8 @@
 import { MAX_FILE_BYTES, parseBackupFile } from "./backup-file.js";
 import { pickFile } from "../platform/files.js";
 import { iconSvg } from "../core/constants.js";
-import { translate } from "../i18n/index.js";
+import { translate, translateWith } from "../i18n/index.js";
+import { storageUsage } from "./storage.js";
 import { openPage } from "../ui/navigation.js";
 import { showInfo } from "../ui/dialogs.js";
 import { dataFile, saveDelivery, shareDelivery } from "../ui/file-actions.js";
@@ -26,8 +27,12 @@ async function restoreFromFile() {
 }
 // Data page: backups, data file export/import and reset.
 export function dataView() {
+  const { used, share } = storageUsage();
+  const percent = Math.round(share * 100);
+  const usage = `<p class="${share >= 0.7 ? "caution" : "footnote"}">${translateWith("Storage on this phone: about {p}% full ({n} thousand of about 5000 thousand characters).", { p: percent, n: Math.round(used / 1000) })}${share >= 0.7 ? " " + translate("Save a data file and delete old backups or photos before it fills up.") : ""}</p>`;
   return (
     pageHeader("Data") +
+    usage +
     `<div class="content flush data-menu">${menuRowHtml("Saved backups", "archive", () => openPage("savedBackups"), "Create and restore data from automatic local copies")}${menuRowHtml(
       "Data file",
       "receipt",

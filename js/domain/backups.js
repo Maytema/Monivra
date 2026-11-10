@@ -3,6 +3,7 @@ import { APP_BUILD, deepClone, newId, today } from "../core/constants.js";
 import { appData, emptyFilters, resolveLoadProblem, setAppData, uiState } from "../core/state.js";
 import { describeProblem } from "../data/problems.js";
 import { save } from "../data/storage.js";
+import { clearSaveFailure } from "../ui/save-alert.js";
 import { translate } from "../i18n/index.js";
 import { planRestore } from "./restore.js";
 import { settleMissed } from "./scheduled.js";
@@ -28,11 +29,20 @@ const backupEntry = (reason) => ({
 });
 const withEntry = (backups, entry) => [entry, ...backups].slice(0, MAX_BACKUPS);
 
-// Store a snapshot of the dataset in the backup list.
+// Store a snapshot of the dataset in the backup list. Returns false, with the list as it was, when
+// the copy does not fit the storage: a backup that was not stored must not be reported as made.
 export function createBackup(reason = "manual") {
-  appData.backups = withEntry(appData.backups, backupEntry(reason));
-  save();
+  const before = appData.backups;
+  appData.backups = withEntry(before, backupEntry(reason));
+  if (save()) return true;
+  appData.backups = before;
+  // Nothing is lost: what is on the screen is what is stored, so the "not saved" alert goes.
+  clearSaveFailure();
+  return false;
 }
+
+export const BACKUP_NOT_STORED =
+  "The backup could not be stored because the storage is full. Nothing was changed. Save a data file instead, or delete older backups.";
 
 // Bring data back. `incoming` is the data of a backup or of a data file, validated beforehand.
 // "replace" makes the data the incoming data; "merge" adds it to the data (the incoming version of

@@ -8,7 +8,7 @@ import { blankAccount, blankCategory } from "./defaults.js";
 import { describeProblem } from "./problems.js";
 import { findDataProblem, save } from "./storage.js";
 import { unprotectCell } from "./csv.js";
-import { createBackup } from "../domain/backups.js";
+import { BACKUP_NOT_STORED, createBackup } from "../domain/backups.js";
 import { parseDate, toIsoDate } from "../domain/finance.js";
 import { isPlanned, scheduledForm, validateOp } from "../domain/operations.js";
 import { translate, translateWith } from "../i18n/index.js";
@@ -585,7 +585,7 @@ export function planImport(records, links) {
 // thrown. Returns what was added, which `undoImport` takes away again.
 export function applyImport(plan) {
   if (!plan.ops.length) throw Error(translate("There is nothing to import."));
-  createBackup("safety");
+  if (!createBackup("safety")) throw Error(translate(BACKUP_NOT_STORED));
   const before = appData;
   // What is dated ahead is not done yet: it is added as a scheduled payment, like one entered by hand.
   const planned = plan.ops.filter(isPlanned);

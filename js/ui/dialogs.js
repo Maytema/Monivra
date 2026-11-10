@@ -1,6 +1,6 @@
 /* Dialogs: messages, confirmations, text prompts, option lists and small menus */
 import { escapeHtml, iconSvg } from "../core/constants.js";
-import { createBackup } from "../domain/backups.js";
+import { BACKUP_NOT_STORED, createBackup } from "../domain/backups.js";
 import { translate } from "../i18n/index.js";
 import { buttonHtml, toast } from "./primitives.js";
 import { registerInput } from "./handlers.js";
@@ -27,7 +27,10 @@ export function confirmAction(message, fn, backupOption = true, label = "Confirm
       `<div class="confirm-icon ${notice ? "notice" : "warning"}">${iconSvg(notice ? "info" : "warning", 32)}</div><h2>${translate(title)}</h2><p class="confirm-message">${escapeHtml(message)}</p>${backupOption ? `<label class="checkrow"><input type="checkbox" data-input="${registerInput((v) => (doBackup = v))}"><span>${translate("Create a backup first")}</span></label>` : ""}${buttonHtml(
         label,
         () => {
-          if (doBackup) createBackup("safety");
+          if (doBackup && !createBackup("safety")) {
+            closeLayers();
+            return showInfo(BACKUP_NOT_STORED, "Backup not made");
+          }
           closeLayers();
           try {
             fn();

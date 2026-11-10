@@ -3,11 +3,11 @@
 import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { appData } from "../../core/state.js";
-import { createBackup, restoreData } from "../../domain/backups.js";
+import { BACKUP_NOT_STORED, createBackup, restoreData } from "../../domain/backups.js";
 import { describeProblem } from "../../data/problems.js";
 import { contentsOf, planRestore } from "../../domain/restore.js";
 import { currentLocale, translate, translateCount, translateWith } from "../../i18n/index.js";
-import { confirmAction, optionSheet } from "../../ui/dialogs.js";
+import { confirmAction, optionSheet, showInfo } from "../../ui/dialogs.js";
 import { goHome, openPage } from "../../ui/navigation.js";
 import { buttonHtml, pageHeader, toast } from "../../ui/primitives.js";
 import { postDuePayments } from "../due-payments.js";
@@ -51,7 +51,7 @@ export function savedBackupsView() {
     `<div class="backups-top"><p class="backups-note">${translate("Backups are made automatically once a day when Save locally is on, and you can make one yourself at any time.")}</p>${buttonHtml(
       "Create a backup",
       () => {
-        createBackup();
+        if (!createBackup()) return showInfo(BACKUP_NOT_STORED, "Backup not made");
         render();
         toast("Backup saved");
       },
