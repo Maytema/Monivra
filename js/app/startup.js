@@ -12,7 +12,7 @@ import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";
 import { toast } from "../ui/primitives.js";
 import { showDueReminders, scheduleReminders, scheduleRemindersSoon } from "./reminders.js";
-import { isNative } from "../platform/native.js";
+import { isNative, native } from "../platform/native.js";
 import { leaveApp, onSystemBack, onVisibility } from "../platform/lifecycle.js";
 import { flushMirror, mirrorSoon } from "../platform/native-sync.js";
 import { boot } from "../platform/native-boot.js";
@@ -263,6 +263,13 @@ function nativeNotices() {
   }
 }
 
+// The Android splash is held until the first screen has really been painted (two frames after it
+// was drawn), and goes at once after; nothing waits for a timer.
+function tellFirstScreenDrawn() {
+  if (!isNative) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => native?.appReady?.().catch(() => {})));
+}
+
 export function startup() {
   initSwipeGestures();
   bindClicks();
@@ -285,4 +292,5 @@ export function startup() {
   render();
   nativeNotices();
   askAboutMissed();
+  tellFirstScreenDrawn();
 }

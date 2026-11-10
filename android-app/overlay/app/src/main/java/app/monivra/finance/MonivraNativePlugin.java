@@ -382,6 +382,14 @@ public class MonivraNativePlugin extends Plugin {
 
     // ---- System bars and the recents preview ----
 
+    // The page has drawn its first screen: the splash can go.
+    @PluginMethod
+    public void appReady(PluginCall call) {
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) ((MainActivity) activity).markWebReady();
+        call.resolve();
+    }
+
     @PluginMethod
     public void setSystemBars(PluginCall call) {
         String color = call.getString("color");

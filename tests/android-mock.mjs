@@ -144,6 +144,7 @@ async function openNative({ data = seedJson, saves = 0, bridge = makeBridge(), w
               "mirrorRead",
               "setSystemBars",
               "setPrivacyScreen",
+              "appReady",
             ]),
             addListener: (event, fn) => {
               (listeners[event] ||= []).push(fn);
@@ -222,6 +223,15 @@ const openDataPage = async (page, name) => {
 
 const scenarios = {
   // ---------- data survives, and is restored only when it is gone ----------
+  async "MOCK: the shell is told once that the first screen is drawn, so the splash goes at once"(
+    open,
+  ) {
+    const bridge = makeBridge({});
+    const page = await open({ bridge });
+    await page.waitForSelector(".navbar, .pin");
+    await page.waitForTimeout(300);
+    expect(bridge.count("MonivraNative.appReady"), "appReady calls").toBe(1);
+  },
   async "MOCK: stored data is left alone when the internal copy is the same or older"(open) {
     const older = seedJson.replace('"Cash"', '"Other"');
     for (const [saves, mirrorSeq] of [
