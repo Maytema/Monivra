@@ -269,7 +269,7 @@ const scenarios = {
     open,
   ) {
     const bridge = makeBridge();
-    let page = await open({ bridge });
+    const page = await open({ bridge });
     await setPinInApp(page, "1234");
     await settle(page, 400);
     const text = await stored(page);
@@ -349,7 +349,7 @@ const scenarios = {
     const bridge = makeBridge({ biometric: "available", biometricResult: "cancelled" });
     const data = JSON.parse(seedJson);
     data.settings.biometric = true;
-    let page = await open({ data: JSON.stringify(data), bridge });
+    const page = await open({ data: JSON.stringify(data), bridge });
     await setPinInApp(page, "1234");
     await settle(page, 400);
     await page.reload();
