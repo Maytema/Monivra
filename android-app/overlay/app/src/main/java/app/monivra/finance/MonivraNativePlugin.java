@@ -386,17 +386,34 @@ public class MonivraNativePlugin extends Plugin {
     public void setSystemBars(PluginCall call) {
         String color = call.getString("color");
         boolean dark = Boolean.TRUE.equals(call.getBoolean("dark", false));
+        // The navigation bar may have its own color (the tabs at the bottom of the screen).
+        String navColor = call.getString("navColor", color);
+        boolean navDark = Boolean.TRUE.equals(call.getBoolean("navDark", dark));
         getActivity().runOnUiThread(() -> {
             try {
                 int c = android.graphics.Color.parseColor(color);
+                int n = android.graphics.Color.parseColor(navColor);
                 Window window = getActivity().getWindow();
-                window.getDecorView().setBackgroundColor(c);
+                // Behind the bars the window shows the color of the screen next to them: from Android 15
+                // the bars are see-through, so the bottom strip gets the navigation color here.
+                android.graphics.drawable.LayerDrawable layers =
+                    new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[] {
+                        new android.graphics.drawable.ColorDrawable(c),
+                        new android.graphics.drawable.ColorDrawable(n)
+                    });
+                androidx.core.view.WindowInsetsCompat root =
+                    androidx.core.view.ViewCompat.getRootWindowInsets(window.getDecorView());
+                int bottom = root == null ? 0 : root.getInsets(
+                    androidx.core.view.WindowInsetsCompat.Type.systemBars()).bottom;
+                layers.setLayerGravity(1, android.view.Gravity.BOTTOM);
+                layers.setLayerHeight(1, Math.max(bottom, 1));
+                window.getDecorView().setBackground(layers);
                 window.setStatusBarColor(c);
-                window.setNavigationBarColor(c);
+                window.setNavigationBarColor(n);
                 WindowInsetsControllerCompat controller =
                     WindowCompat.getInsetsController(window, window.getDecorView());
                 controller.setAppearanceLightStatusBars(!dark);
-                controller.setAppearanceLightNavigationBars(!dark);
+                controller.setAppearanceLightNavigationBars(!navDark);
                 call.resolve();
             } catch (RuntimeException e) {
                 call.reject("bad color");

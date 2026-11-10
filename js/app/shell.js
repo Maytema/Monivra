@@ -147,7 +147,7 @@ function applyAppearance() {
   root.style.setProperty("--accent-ink", readableOver(accent, background));
   root.lang = appData.settings.language;
   // The system bars and the recents preview of the Android shell follow the theme and the privacy setting.
-  applySystemBars(dark);
+  applySystemBars();
   applyPrivacyScreen(Boolean(appData.settings.hidePreview));
 }
 
