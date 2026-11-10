@@ -8,6 +8,9 @@ import { isNative, plugin } from "./native.js";
 const local = isNative ? plugin("LocalNotifications") : null;
 // The channel of the reminders (the person can mute or change it in the system settings).
 export const REMINDER_CHANNEL = "payments";
+// Large icon of a notification (a resource of the Android shell): the full-colour launcher tile; the
+// small icon in the status bar is the one-colour mark set in the Capacitor configuration.
+const LARGE_ICON = "ic_notification_large";
 // The permission as last asked of the system (it cannot be read without waiting).
 let permission = "default";
 const fromSystem = (display) =>
@@ -71,7 +74,15 @@ export async function showSystemNotification(title, body, tag) {
   if (local) {
     try {
       await local.schedule({
-        notifications: [{ id: notificationId(tag), title, body, channelId: REMINDER_CHANNEL }],
+        notifications: [
+          {
+            id: notificationId(tag),
+            title,
+            body,
+            channelId: REMINDER_CHANNEL,
+            largeIcon: LARGE_ICON,
+          },
+        ],
       });
       return true;
     } catch {
@@ -112,6 +123,7 @@ export function scheduleNotifications(items) {
             id: notificationId(key),
             title,
             body,
+            largeIcon: LARGE_ICON,
             channelId: REMINDER_CHANNEL,
             schedule: { at, allowWhileIdle: true },
           })),

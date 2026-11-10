@@ -1121,7 +1121,7 @@ export const russianStrings = {
     "Команда {app} каждый день создаёт удобное и полезное приложение для управления вашими финансами.",
   "We hope our work will help you manage your money better and reach your goals!":
     "Надеемся, наша работа поможет вам лучше управлять деньгами и достигать целей!",
-  "Enter today’s operations": "Внесите сегодняшние операции",
+  "Enter today’s operations": "Запишите сегодняшние траты и доходы",
   "Reminders are shown only while the app is open.":
     "Напоминания показываются, только пока приложение открыто.",
   "The PIN only hides the screen; data on the device is not encrypted.":
@@ -1237,11 +1237,12 @@ export const russianStrings = {
   "Fingerprint or face could not be used. Use your PIN.":
     "Отпечаток или лицо недоступны. Введите PIN.",
   "Payment reminders": "Напоминания о платежах",
+  Premium: "Премиум",
   "Your latest changes were recovered from the internal copy on this device.":
     "Последние изменения восстановлены из внутренней копии на этом устройстве.",
   "Notification sent": "Уведомление отправлено",
-  "Scheduled payment": "Плановый платёж",
-  "{title} is due on {date}": "{title}: срок {date}",
+  "Scheduled payment": "Напоминание о платеже",
+  "{title} is due on {date}": "{title}: платёж запланирован на {date}",
   "Transfer · counted as expense": "Перевод · как расход",
   "Transfer · counted as income": "Перевод · как доход",
   "{n} transfers to or from debt accounts are counted as expenses or incomes, as set for those accounts; the totals include them.":

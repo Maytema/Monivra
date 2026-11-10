@@ -280,21 +280,32 @@
   letter-spacing: 0px;
 }
 .more-menu-logo {
-  font-weight: 600;
-  display: inline-block;
-  transform: rotate(-10deg);
-  font-size: 37px;
-  margin-right: 0px;
-  line-height: 1;
+  display: inline-flex;
+  flex: none;
+  line-height: 0;
+}
+/* The mark keeps its own colours: on a dark theme it sits on a light tile so the charcoal stays visible. */
+.dark .more-menu-logo {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 3px 4px;
+}
+.more-menu-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .more-menu-pro {
+  flex: none;
   background: var(--black);
   color: var(--white);
   font-weight: 500;
-  font-size: 28px;
-  line-height: 1.08;
-  padding: 1px 9px 4px;
+  font-size: 18px;
+  line-height: 1.2;
+  padding: 3px 10px 4px;
   border-radius: 9px;
+  white-space: nowrap;
 }
 .more-menu-sync {
   display: flex;
@@ -350,7 +361,17 @@
 }
 @media (max-width: 380px) {
   .more-menu-brand {
-    font-size: 26px;
+    font-size: 24px;
+    gap: 8px;
+    padding: 0px 12px;
+  }
+  .more-menu-logo svg {
+    height: 32px;
+    width: auto;
+  }
+  .more-menu-pro {
+    font-size: 14px;
+    padding: 3px 8px;
   }
   .more-menu-item {
     font-size: 16px;
