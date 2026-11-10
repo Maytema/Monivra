@@ -430,6 +430,7 @@ await step(
   async () => {
     await restart();
     assert(await ev(`!!document.querySelector('.pin')`), "no lock screen");
+    await sleep(1200); // the screen fades in; a picture at once may show it half drawn
     screenshot("04-lock-screen");
     await typePin("1111");
     await waitFor(`document.body.innerText.includes('Incorrect PIN')`, "the wrong-PIN message");
