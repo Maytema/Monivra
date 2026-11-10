@@ -14,13 +14,13 @@
   {
     "name": "installed package facts: ID, version, SDKs, permissions, not debuggable, no network permission",
     "status": "pass",
-    "note": "version 0.1.0-build.3, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
+    "note": "version 0.1.0-build.4, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
     "seconds": 0
   },
   {
     "name": "the release APK starts offline (airplane mode) and stays running",
     "status": "pass",
-    "note": "running, pid 3236, no crash",
+    "note": "running, pid 2690, no crash",
     "seconds": 13
   },
   {
@@ -33,13 +33,13 @@
     "name": "a new install shows the welcome screen and no data",
     "status": "pass",
     "note": "",
-    "seconds": 0
+    "seconds": 1
   },
   {
     "name": "data is created by the application's own code and stored",
     "status": "pass",
     "note": "5 accounts, 44 operations",
-    "seconds": 1
+    "seconds": 2
   },
   {
     "name": "every save is copied to the internal copy in the private folder, checked by a hash",
@@ -51,25 +51,31 @@
     "name": "data survives the process being killed and restarted",
     "status": "pass",
     "note": "",
-    "seconds": 3
+    "seconds": 4
   },
   {
     "name": "stored data lost, application installed: the internal copy restores it, with a notice",
     "status": "pass",
-    "note": "restored (the notice had already gone)",
-    "seconds": 4
+    "note": "restored; notice shown",
+    "seconds": 13
   },
   {
     "name": "a damaged stored dataset is not overwritten by the internal copy",
-    "status": "FAIL",
-    "note": "the damaged text was replaced",
-    "seconds": 3
+    "status": "pass",
+    "note": "",
+    "seconds": 20
+  },
+  {
+    "name": "durability: a change made a moment before the process is killed is still there",
+    "status": "pass",
+    "note": "change kept; boot: kept",
+    "seconds": 5
   },
   {
     "name": "a PIN: its hash is in the keystore storage, not in the data, the copy or the log",
     "status": "pass",
     "note": "marker only in the data and copy; sealed file is not text",
-    "seconds": 5
+    "seconds": 6
   },
   {
     "name": "after a restart the lock screen asks for the PIN: wrong refused, right opens",
@@ -85,27 +91,27 @@
   },
   {
     "name": "Save: the system 'save as' screen opens and a cancel is reported as cancelled, nothing written",
-    "status": "pass",
-    "note": "",
-    "seconds": 4
+    "status": "FAIL",
+    "note": "timed out waiting for the answer after cancel (last: null)",
+    "seconds": 34
   },
   {
     "name": "Save: confirming in the system screen writes the file with the given content",
-    "status": "warn",
-    "note": "the saved file was not found",
+    "status": "pass",
+    "note": "written to /sdcard/Download/monivra-e2e.json",
     "seconds": 5
   },
   {
     "name": "Share: the system share sheet opens with the file (content address, no storage permission)",
     "status": "pass",
     "note": "",
-    "seconds": 8
+    "seconds": 10
   },
   {
     "name": "Print: the system print screen opens with the PDF and closing it answers the call",
     "status": "pass",
     "note": "",
-    "seconds": 4
+    "seconds": 3
   },
   {
     "name": "Android Back: closes a page, then at the first screen sends the app to the background (alive)",
@@ -127,27 +133,27 @@
   },
   {
     "name": "update: a build with a higher version code installed over this one keeps data, PIN and lock",
-    "status": "FAIL",
-    "note": "the data changed by the update",
-    "seconds": 5
+    "status": "pass",
+    "note": "versionCode=4 minSdk=23 targetSdk=35 → versionCode=5 minSdk=23 targetSdk=35; 44 operations unchanged",
+    "seconds": 7
   },
   {
     "name": "a build signed with another key is refused over this one (data stays)",
-    "status": "FAIL",
-    "note": "data changed",
+    "status": "pass",
+    "note": "refused: INSTALL_FAILED_UPDATE_INCOMPATIBLE",
     "seconds": 2
   },
   {
     "name": "a scheduled payment reminder is registered with Android's alarm manager",
     "status": "FAIL",
     "note": "no alarm of the application is registered",
-    "seconds": 10
+    "seconds": 11
   },
   {
     "name": "the reminder is delivered while the application is closed, and the payment is not posted until it is opened",
     "status": "warn",
-    "note": "the process is still running",
-    "seconds": 2
+    "note": "Command failed: adb shell pidof app.monivra.finance",
+    "seconds": 5
   },
   {
     "name": "opening the application after the due time posts the payment once, with its own date and time",
@@ -156,9 +162,15 @@
     "seconds": 0
   },
   {
+    "name": "a data file exported by the web app: previewed, a corrupt one refused with data untouched, a valid one restored",
+    "status": "FAIL",
+    "note": "Cannot read properties of null (reading 'evaluate')",
+    "seconds": 0
+  },
+  {
     "name": "the log holds no financial data and no crash",
-    "status": "pass",
-    "note": "1799 lines of the application checked",
+    "status": "FAIL",
+    "note": "data in the log: 11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Defa",
     "seconds": 0
   }
 ]

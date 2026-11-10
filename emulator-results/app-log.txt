@@ -1,400 +1,400 @@
-11-10 09:59:22.305   518   571 D PackageInstallerSession: Marking session 1682354886 as failed: INSTALL_FAILED_UPDATE_INCOMPATIBLE: Existing package app.monivra.finance signatures do not match newer version; ignoring!
-11-10 09:59:22.352   518   571 W PackageManager: Existing package app.monivra.finance signatures do not match newer version; ignoring!
-11-10 09:59:22.352   518   571 D PackageInstallerSession: Marking session 714163871 as failed: INSTALL_FAILED_UPDATE_INCOMPATIBLE: Existing package app.monivra.finance signatures do not match newer version; ignoring!
-11-10 09:59:22.636   518   893 I ActivityManager: Force stopping app.monivra.finance appid=10192 user=0: from pid 6363
-11-10 09:59:22.639   518   893 I ActivityManager: Killing 6188:app.monivra.finance/u0a192 (adj 0): stop app.monivra.finance due to from pid 6363
-11-10 09:59:22.644   518   893 I ActivityManager: Killing 6244:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a192i9 (adj 0): isolated not needed
-11-10 09:59:22.644   518   893 W ActivityTaskManager: Force removing ActivityRecord{6d09122 u0 app.monivra.finance/.MainActivity t15 f}}: app died, no saved state
-11-10 09:59:22.645   829   863 V WindowManagerShell: Transition requested: android.os.BinderProxy@17fe180 TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=15 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=app.monivra.finance/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} numActivities=0 lastActiveTime=125479 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@32833b9} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
-11-10 09:59:22.681   518  1748 I ImeTracker: app.monivra.finance:cc8aa9b8: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
-11-10 09:59:22.682   518  1106 I WindowManager: WIN DEATH: Window{27fe2c8 u0 app.monivra.finance/app.monivra.finance.MainActivity}
-11-10 09:59:22.682   518  1106 W InputManager-JNI: Input channel object '27fe2c8 app.monivra.finance/app.monivra.finance.MainActivity (client)' was disposed without first being removed with the input manager!
-11-10 09:59:22.682   518  1748 I ImeTracker: app.monivra.finance:cc8aa9b8: onCancelled at PHASE_SERVER_SHOULD_HIDE
-11-10 09:59:22.682   518  1106 W WindowManager: Failed to deliver inset control state change to w=Window{27fe2c8 u0 app.monivra.finance/app.monivra.finance.MainActivity EXITING}
-11-10 09:59:22.706   518  2525 V ActivityManager: Got obituary of 6188:app.monivra.finance
-11-10 09:59:22.729  1038  1038 D CarrierSvcBindHelper: onHandleForceStop: [app.monivra.finance]
-11-10 09:59:22.812   518   537 V WindowManager: Sent Transition #37 createdAt=11-10 09:59:22.644 via request=TransitionRequestInfo { type = CLOSE, triggerTask = TaskInfo{userId=0 taskId=15 displayId=0 isRunning=false baseIntent=Intent { flg=0x10000000 cmp=app.monivra.finance/.MainActivity } baseActivity=null topActivity=null origActivity=null realActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} numActivities=0 lastActiveTime=125479 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{b2165da Task{55257b3 #15 type=standard A=10192:app.monivra.finance}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=null topActivityInfo=null launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=true isVisible=true isVisibleRequested=true isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
-11-10 09:59:22.814   518   537 V WindowManager:     info={id=37 t=CLOSE f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{b2165da Task{55257b3 #15 type=standard A=10192:app.monivra.finance}}} m=CLOSE f=NONE leash=Surface(name=Task=15)/@0x6956ace sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{86ace13 Task{a02a348 #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xa10f37a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{8ee32d2 token=android.os.Binder@da795d})/@0xb421658 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
-11-10 09:59:22.838   518   541 W WindowManager: Failed to deliver inset control state change to w=Window{27fe2c8 u0 app.monivra.finance/app.monivra.finance.MainActivity EXITING}
-11-10 09:59:22.840   518  2525 W WindowManager: Exception thrown during dispatchAppVisibility Window{27fe2c8 u0 app.monivra.finance/app.monivra.finance.MainActivity EXITING}
-11-10 09:59:23.055  1827  2101 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
-11-10 09:59:23.055  1827  2101 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
-11-10 09:59:23.076  1827  2099 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
-11-10 09:59:23.753   518  2509 V SplashScreenExceptionList: SplashScreen checking exception for package app.monivra.finance (target sdk:35) -> false
-11-10 09:59:23.754   518  2509 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=app.monivra.finance/.MainActivity} with LAUNCH_SINGLE_TASK from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
-11-10 09:59:23.767   829   863 V WindowManagerShell: Transition requested: android.os.BinderProxy@cf9a861 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=16 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=app.monivra.finance/.MainActivity } baseActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} topActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} origActivity=null realActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} numActivities=1 lastActiveTime=133903 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@3a06f86} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 128 - 0, 0) topActivityInfo=ActivityInfo{4ee8047 app.monivra.finance.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
-11-10 09:59:23.784   518   548 I ActivityManager: Start proc 6386:app.monivra.finance/u0a192 for next-top-activity {app.monivra.finance/app.monivra.finance.MainActivity}
-11-10 09:59:23.797   518  1083 D CoreBackPreview: Window{15efc38 u0 Splash Screen app.monivra.finance}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@7bd9b77, mPriority=0, mIsAnimationCallback=false}
-11-10 09:59:23.909  6386  6386 I monivra.finance: Late-enabling -Xcheck:jni
-11-10 09:59:23.941  6386  6386 I monivra.finance: Using CollectorTypeCC GC.
-11-10 09:59:23.942  6386  6386 W monivra.finance: Unexpected CPU variant for x86: x86_64.
-11-10 09:59:23.942  6386  6386 W monivra.finance: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
-11-10 09:59:23.960   518   537 V WindowManager: Sent Transition #38 createdAt=11-10 09:59:23.750 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=16 displayId=0 isRunning=true baseIntent=Intent { flg=0x10000000 cmp=app.monivra.finance/.MainActivity } baseActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} topActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} origActivity=null realActivity=ComponentInfo{app.monivra.finance/app.monivra.finance.MainActivity} numActivities=1 lastActiveTime=133903 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{b6c014e Task{6c7b74c #16 type=standard A=10192:app.monivra.finance}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 128 - 0, 0) topActivityInfo=ActivityInfo{5b6826f app.monivra.finance.MainActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
-11-10 09:59:23.962   518   537 V WindowManager:     info={id=38 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{b6c014e Task{6c7b74c #16 type=standard A=10192:app.monivra.finance}}} m=OPEN f=NONE leash=Surface(name=Task=16)/@0x623a3e4 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{86ace13 Task{a02a348 #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xa10f37a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
-11-10 09:59:24.113  6386  6386 W ziparchive: Unable to open '/data/app/~~ldu9V14rBKQNoMPQ3u0vNg==/app.monivra.finance-YhFEYMgMHh6FZ7Aze8_0OQ==/base.dm': No such file or directory
-11-10 09:59:24.113  6386  6386 W ziparchive: Unable to open '/data/app/~~ldu9V14rBKQNoMPQ3u0vNg==/app.monivra.finance-YhFEYMgMHh6FZ7Aze8_0OQ==/base.dm': No such file or directory
-11-10 09:59:24.261  6386  6386 D nativeloader: Configuring clns-6 for other apk /data/app/~~ldu9V14rBKQNoMPQ3u0vNg==/app.monivra.finance-YhFEYMgMHh6FZ7Aze8_0OQ==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~ldu9V14rBKQNoMPQ3u0vNg==/app.monivra.finance-YhFEYMgMHh6FZ7Aze8_0OQ==/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/app.monivra.finance
-11-10 09:59:24.279  6386  6386 V GraphicsEnvironment: ANGLE GameManagerService for app.monivra.finance: false
-11-10 09:59:24.279  6386  6386 V GraphicsEnvironment: app.monivra.finance is not listed in per-application setting
-11-10 09:59:24.354  6386  6386 W monivra.finance: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (unsupported, reflection, allowed)
-11-10 09:59:24.362  6386  6386 W monivra.finance: Entry not found
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{712d468 com.android.cts.priv.ctsshim/10182} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{2c5081 com.google.android.youtube/10139} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{82bc526 com.android.internal.display.cutout.emulation.corner/10025} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{218b567 com.android.internal.display.cutout.emulation.double/10048} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ef4ad64 com.google.android.googlequicksearchbox/10132} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{359c880 com.google.android.onetimeinitializer/10126} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b518eb9 com.google.android.ext.shared/10100} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{74c52fe com.android.internal.systemui.navbar.gestural_wide_back/10007} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b3cea5f com.android.virtualmachine.res/10172} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cd2ecac com.google.android.federatedcompute/10170} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{596a10a com.android.managedprovisioning.auto_generated_rro_product__/10024} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{defcd7b com.android.carrierconfig.auto_generated_rro_vendor__/10078} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7d82798 com.android.systemui.emulation.pixel_3_xl/10034} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{523c657 com.android.systemui.emulation.pixel_4_xl/10059} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4f42544 com.android.systemui.emulation.pixel_fold/10009} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{5e6c62d com.android.simappdialog.auto_generated_rro_product__/10030} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7724762 com.android.htmlviewer/10114} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{53470f3 com.google.android.health.connect.backuprestore/10175} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b051b0 com.android.systemui.auto_generated_rro_product__/10031} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{428f6f3 com.google.android.apps.messaging/10129} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{eb177ae com.google.android.soundpicker/10137} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{29b294f com.google.android.marvin.talkbackoverlay/10077} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4c0d8dc com.google.android.configupdater/10130} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e578de5 com.android.internal.emulation.pixel_3a_xl/10044} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ca160ba com.android.internal.emulation.pixel_6_pro/10018} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{60b0b6b com.android.internal.emulation.pixel_7_pro/10004} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ff0a6c8 com.android.internal.emulation.pixel_8_pro/10058} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{2f82361 com.android.internal.emulation.pixel_3a/10053} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{c74ce86 com.android.internal.emulation.pixel_4a/10011} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{64cf347 com.android.internal.emulation.pixel_6a/10023} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cd6774 com.android.internal.emulation.pixel_7a/10033} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4b2949d com.google.android.overlay.googlewebview/10049} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7bf4d12 com.google.android.hotspot2.osulogin/10188} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{3db7ce3 com.android.simappdialog/10111} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{f1386e0 com.android.internal.display.cutout.emulation.hole/10073} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{fa8dd99 com.android.internal.display.cutout.emulation.tall/10065} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{bc1285e com.android.internal.systemui.navbar.threebutton/10068} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{23f043f com.android.camera2/10145} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{fda310c com.android.systemui.auto_generated_rro_vendor__/10076} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{620ba55 com.google.android.deskclock/10152} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7736c6a com.android.internal.systemui.navbar.twobutton/10020} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b29a55b com.google.android.as/10125} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ca2bace com.google.android.gm/10142} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{effa6d1 com.android.internal.systemui.navbar.gestural_extra_wide_back/10045} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e53e536 com.android.systemui.emulation.pixel_3/10015} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7533c37 com.android.systemui.emulation.pixel_4/10037} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{45395a4 com.android.systemui.emulation.pixel_5/10071} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{6df0d com.android.systemui.emulation.pixel_6/10074} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{bf11ec2 com.android.systemui.emulation.pixel_7/10072} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{91564d3 com.android.systemui.emulation.pixel_8/10070} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{1066810 com.android.nfc.auto_generated_rro_product__/10027} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{fcf5f09 com.android.printspooler/10103} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{436650e com.android.emergency.auto_generated_rro_product__/10041} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4c77b2f com.google.android.connectivity.resources.goldfish.overlay/10079} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{5d1f53c com.android.dreams.basic/10104} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b85e2c5 com.google.android.networkstack.tethering.emulator/10022} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{c77c41a com.android.providers.settings.auto_generated_rro_product__/10002} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{2da9b4b com.google.android.as.oss/10122} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9672928 com.android.traceur.auto_generated_rro_product__/10005} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{c66e641 com.google.android.devicelockcontroller/10189} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{93e07e6 com.google.android.dialer/10128} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7b5a127 com.android.internal.emulation.pixel_3/10046} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{a99afd4 com.android.internal.emulation.pixel_4/10060} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{8faa57d com.android.internal.emulation.pixel_5/10012} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cd2bc72 com.android.internal.emulation.pixel_6/10038} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{d5128c3 com.android.internal.emulation.pixel_7/10067} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{fcbf540 com.android.internal.emulation.pixel_8/10039} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e111c79 com.google.android.captiveportallogin/10113} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{28c2dbe com.android.musicfx/10088} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{befe97f com.google.android.apps.docs/10153} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{1320a99 com.google.android.apps.maps/10154} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{11b256c com.google.android.modulemetadata/10147} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b7e0735 com.google.android.markup/10135} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{2d967ca com.android.providers.settings.auto_generated_rro_vendor__/10080} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{46ced3b com.google.android.rkpdapp/10191} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9ecf3d1 com.google.android.contacts/10155} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{94e1b1 com.android.server.telecom.auto_generated_rro_product__/10032} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{c0e3696 com.google.android.overlay.googleconfig/10055} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4b32217 com.android.chrome/10150} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{972b604 com.android.bips.auto_generated_rro_product__/10035} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{464e7ed com.google.android.apps.customization.pixel/10144} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{bef2622 com.google.android.tag/10082} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{2bdc8b3 com.google.android.overlay.permissioncontroller/10003} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b672e70 com.google.android.partnersetup/10124} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{5b515e9 com.google.android.apps.wallpaper.nexus/10141} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{5fd826e com.google.android.apps.nexuslauncher/10169} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9c23d0f com.google.android.nearby.halfsheet/10181} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ee8c19c com.android.theme.font.notoserifsource/10066} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{ec027a5 com.google.android.safetycenter.resources/10184} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{283577a com.android.internal.display.cutout.emulation.waterfall/10040} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{8ef9b2b com.android.internal.systemui.navbar.transparent/10029} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{d8e5b88 com.google.android.connectivity.resources/10180} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{8b09921 com.android.providers.contacts.auto_generated_rro_product__/10019} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{25f7146 com.google.android.feedback/10162} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{94abf07 com.google.android.printservice.recommendation/10109} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{171a834 com.google.android.apps.photos/10140} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{412f19d com.google.android.calendar/10146} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{adca65d com.google.android.documentsui/10098} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{3915bd2 com.android.systemui.emulation.pixel_3a_xl/10021} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{54a44a3 com.android.systemui.emulation.pixel_6_pro/10063} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{a9b13a0 com.android.systemui.emulation.pixel_7_pro/10054} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{1c24b59 com.android.systemui.emulation.pixel_8_pro/10001} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{285631e com.google.mainline.telemetry/10151} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e3287ff com.android.carrierconfig.auto_generated_rro_product__/10064} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{f2dc9cc com.android.providers.partnerbookmarks/10101} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9c34415 com.android.wallpaper.livepicker/10090} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{420932a com.android.providers.telephony.auto_generated_rro_product__/10062} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{b31a51b com.android.phone.auto_generated_rro_vendor__/10081} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{253b6b8 com.google.mainline.adservices/10136} BLOCKED
-11-10 09:59:24.366   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9a10c91 com.android.imsserviceentitlement/10117} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{48cb7f6 com.google.android.healthconnect.controller/10174} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e3b77f7 com.android.internal.emulation.pixel_2_xl/10016} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{de98664 com.android.internal.emulation.pixel_3_xl/10056} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{8b8e0cd com.android.internal.emulation.pixel_4_xl/10047} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{6c45d82 com.android.internal.emulation.pixel_fold/10006} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{aa59c93 com.android.bookmarkprovider/10115} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{aeaa4d0 com.google.android.overlay.pixelconfigcommon/10014} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cffbcc9 com.android.systemui.accessibility.accessibilitymenu.auto_generated_rro_product__/10050} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{decfce com.android.systemui.emulation.pixel_3a/10013} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{9836eef com.android.systemui.emulation.pixel_4a/10000} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{49d3dfc com.android.systemui.emulation.pixel_6a/10042} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cbe5c85 com.android.systemui.emulation.pixel_7a/10017} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{11c1ada com.google.android.settings.intelligence/10118} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{eca2429 com.google.android.projection.gearhead/10123} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7c20b0b com.google.android.uwb.resources/10179} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{5cd827d com.android.cts.ctsshim/10183} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{27e3de8 com.google.android.wifi.resources/10186} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{d3c01 com.google.android.wifi.dialog/10187} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{7b10aa6 com.google.android.apps.wallpaper/10161} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{a044ce7 com.google.android.odad/10121} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4ed5094 com.android.settings.auto_generated_rro_product__/10028} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e10973d com.android.internal.systemui.navbar.gestural/10051} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{1532b32 com.google.android.apps.youtube.music/10156} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{23ed083 com.android.bluetoothmidiservice/10108} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{98e200 com.android.storagemanager.auto_generated_rro_product__/10026} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{1f46a39 com.google.android.cellbroadcastreceiver/10173} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{e84c87e com.android.phone.auto_generated_rro_product__/10061} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{313f1df android.auto_generated_rro_product__/10069} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{4aa1e2c com.android.internal.systemui.navbar.gestural_narrow_back/10052} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{3a870f5 com.google.android.inputmethod.latin/10143} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{3a0ee8a android.auto_generated_rro_vendor__/10075} BLOCKED
-11-10 09:59:24.367   518   893 I AppsFilter: interaction: PackageSetting{ca9ce14 app.monivra.finance/10192} -> PackageSetting{cefccfb com.google.android.apps.restore/10120} BLOCKED
-11-10 09:59:24.381  6386  6386 W monivra.finance: Accessing hidden method Landroid/os/Trace;->isTagEnabled(J)Z (unsupported, reflection, allowed)
-11-10 09:59:24.381  6386  6386 W monivra.finance: Accessing hidden method Landroid/os/Trace;->traceBegin(JLjava/lang/String;)V (unsupported, reflection, allowed)
-11-10 09:59:24.381  6386  6386 W monivra.finance: Accessing hidden method Landroid/os/Trace;->traceEnd(J)V (unsupported, reflection, allowed)
-11-10 09:59:24.381  6386  6386 W monivra.finance: Accessing hidden method Landroid/os/Trace;->asyncTraceBegin(JLjava/lang/String;I)V (unsupported, reflection, allowed)
-11-10 09:59:24.381  6386  6386 W monivra.finance: Accessing hidden method Landroid/os/Trace;->asyncTraceEnd(JLjava/lang/String;I)V (unsupported, reflection, allowed)
-11-10 09:59:24.389  6386  6410 I cr_VariationsUtils: Failed reading seed file "/data/user/0/app.monivra.finance/app_webview/variations_seed_new"
-11-10 09:59:24.428   518   548 I ActivityManager: Start proc 6414:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0i10 for  {app.monivra.finance/org.chromium.content.app.SandboxedProcessService0:0}
-11-10 09:59:24.432  6386  6426 W chromium: [WARNING:dns_config_service_android.cc(115)] Failed to read DnsConfig.
-11-10 09:59:24.442  6414  6414 I cr_WebViewApkApp: Launched version=113.0.5672.136 minSdkVersion=29 isBundle=false processName=com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
-11-10 09:59:24.476  6386  6386 D Capacitor: Starting BridgeActivity
-11-10 09:59:24.498  6386  6386 D Capacitor: Registering plugin instance: CapacitorCookies
-11-10 09:59:24.500  6386  6386 D Capacitor: Registering plugin instance: WebView
-11-10 09:59:24.502  6386  6386 D Capacitor: Registering plugin instance: CapacitorHttp
-11-10 09:59:24.503  6386  6386 D Capacitor: Registering plugin instance: MonivraNative
-11-10 09:59:24.505  6386  6386 D Capacitor: Registering plugin instance: App
-11-10 09:59:24.507  6386  6386 D Capacitor: Registering plugin instance: LocalNotifications
-11-10 09:59:24.529  6386  6386 W Capacitor: Unable to read file at path public/plugins
-11-10 09:59:24.532  6386  6386 D Capacitor: Loading app at https://localhost
-11-10 09:59:24.550  6386  6386 D Capacitor: App started
-11-10 09:59:24.552  6386  6386 D Capacitor/AppPlugin: Firing change: true
-11-10 09:59:24.552  6386  6386 V Capacitor/AppPlugin: Notifying listeners for event appStateChange
-11-10 09:59:24.552  6386  6386 D Capacitor/AppPlugin: No listeners found for event appStateChange
-11-10 09:59:24.552  6386  6386 D Capacitor: App resumed
-11-10 09:59:24.562  6386  6427 D Capacitor: Handling local request: https://localhost/
-11-10 09:59:24.567   518  2525 D CoreBackPreview: Window{988387d u0 app.monivra.finance/app.monivra.finance.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@3e04b1, mPriority=0, mIsAnimationCallback=false}
-11-10 09:59:24.795   518   537 W ziparchive: Unable to open '/data/app/~~ldu9V14rBKQNoMPQ3u0vNg==/app.monivra.finance-YhFEYMgMHh6FZ7Aze8_0OQ==/base.dm': No such file or directory
-11-10 09:59:24.795   518   537 I ActivityTaskManager: Displayed app.monivra.finance/.MainActivity for user 0: +1s46ms
-11-10 09:59:24.820   518  2509 D CoreBackPreview: Window{15efc38 u0 Splash Screen app.monivra.finance EXITING}: Setting back callback null
-11-10 09:59:24.820   518   893 W InputManager-JNI: Input channel object '15efc38 Splash Screen app.monivra.finance (client)' was disposed without first being removed with the input manager!
-11-10 09:59:24.892  6386  6429 D Capacitor: Handling local request: https://localhost/css/base.css
-11-10 09:59:24.907  6386  6431 D Capacitor: Handling local request: https://localhost/css/layout.css
-11-10 09:59:24.927  6386  6427 D Capacitor: Handling local request: https://localhost/css/navbar.css
-11-10 09:59:24.956  6386  6442 D Capacitor: Handling local request: https://localhost/css/components.css
-11-10 09:59:24.957  6386  6434 D Capacitor: Handling local request: https://localhost/css/accounts.css
-11-10 09:59:25.033  6386  6426 D Capacitor: Handling local request: https://localhost/css/categories.css
-11-10 09:59:25.046   518  2509 I ImeTracker: app.monivra.finance:87481020: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
-11-10 09:59:25.046   518  2509 I ImeTracker: app.monivra.finance:87481020: onCancelled at PHASE_SERVER_SHOULD_HIDE
-11-10 09:59:25.049  1534  1534 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x12000000 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=app.monivra.finance fieldId=0 fieldName=null extras=null}, false)
-11-10 09:59:25.193  6386  6442 D Capacitor: Handling local request: https://localhost/css/calendar.css
-11-10 09:59:25.195  6386  6434 D Capacitor: Handling local request: https://localhost/css/editor.css
-11-10 09:59:25.195  6386  6427 W monivra.finance: Long monitor contention with owner ThreadPoolForeg (6429) at java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get()(MimeMap.java:475) waiters=3 in java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get() for 167ms
-11-10 09:59:25.196  6386  6429 D Capacitor: Handling local request: https://localhost/css/fab.css
-11-10 09:59:25.197  6386  6426 D Capacitor: Handling local request: https://localhost/css/empty-state.css
-11-10 09:59:25.197  6386  6429 D Capacitor: Handling local request: https://localhost/css/scheduled.css
-11-10 09:59:25.197  6386  6431 D Capacitor: Handling local request: https://localhost/css/operations.css
-11-10 09:59:25.198  6386  6429 D Capacitor: Handling local request: https://localhost/css/statistics.css
-11-10 09:59:25.199  6386  6442 D Capacitor: Handling local request: https://localhost/css/animations.css
-11-10 09:59:25.204  6386  6431 D Capacitor: Handling local request: https://localhost/css/more.css
-11-10 09:59:25.207  6386  6429 D Capacitor: Handling local request: https://localhost/js/app/main-native.js
-11-10 09:59:25.226  6386  6426 D Capacitor: Handling local request: https://localhost/js/platform/native-boot.js
-11-10 09:59:25.233  6386  6431 D Capacitor: Handling local request: https://localhost/js/platform/native.js
-11-10 09:59:25.238  6386  6427 D Capacitor: Handling local request: https://localhost/js/platform/secure-pin.js
-11-10 09:59:25.239  6386  6434 D Capacitor: Handling local request: https://localhost/js/platform/biometric.js
-11-10 09:59:25.239  6386  6431 D Capacitor: Handling local request: https://localhost/js/platform/native-sync.js
-11-10 09:59:25.240  6386  6442 D Capacitor: Handling local request: https://localhost/js/platform/notify.js
-11-10 09:59:25.249  6386  6426 D Capacitor: Handling local request: https://localhost/js/core/constants.js
-11-10 09:59:25.265  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676165, pluginId: MonivraNative, methodName: secureGet
-11-10 09:59:25.265  6386  6386 V Capacitor: callback: 3676165, pluginId: MonivraNative, methodName: secureGet, methodData: {"key":"pin"}
-11-10 09:59:25.266  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676166, pluginId: MonivraNative, methodName: biometricStatus
-11-10 09:59:25.266  6386  6386 V Capacitor: callback: 3676166, pluginId: MonivraNative, methodName: biometricStatus, methodData: {}
-11-10 09:59:25.267  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676167, pluginId: LocalNotifications, methodName: checkPermissions
-11-10 09:59:25.268  6386  6386 V Capacitor: callback: 3676167, pluginId: LocalNotifications, methodName: checkPermissions, methodData: {}
-11-10 09:59:25.269   518   967 D BiometricService/PreAuthInfo: Package: app.monivra.finance Sensor ID: 4 Modality: 8 Status: 7
-11-10 09:59:25.269   518   967 D BiometricService/PreAuthInfo: Package: app.monivra.finance Sensor ID: 0 Modality: 2 Status: 7
-11-10 09:59:25.270  6386  6426 D Capacitor: Handling local request: https://localhost/favicon.ico
-11-10 09:59:25.281  6386  6426 D Capacitor: Handling local request: https://localhost/js/app/startup.js
-11-10 09:59:25.285  6386  6426 D Capacitor: Handling local request: https://localhost/js/app/shell.js
-11-10 09:59:25.285  6386  6427 D Capacitor: Handling local request: https://localhost/js/app/swipe.js
-11-10 09:59:25.286  6386  6429 D Capacitor: Handling local request: https://localhost/js/core/state.js
-11-10 09:59:25.290  6386  6427 D Capacitor: Handling local request: https://localhost/js/data/storage.js
-11-10 09:59:25.292  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/categories.js
-11-10 09:59:25.293  6386  6431 D Capacitor: Handling local request: https://localhost/js/ui/handlers.js
-11-10 09:59:25.294  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/finance.js
-11-10 09:59:25.295  6386  6426 D Capacitor: Handling local request: https://localhost/js/domain/backups.js
-11-10 09:59:25.295  6386  6442 D Capacitor: Handling local request: https://localhost/js/ui/navigation.js
-11-10 09:59:25.296  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/due-payments.js
-11-10 09:59:25.296  6386  6426 D Capacitor: Handling local request: https://localhost/js/ui/primitives.js
-11-10 09:59:25.297  6386  6434 D Capacitor: Handling local request: https://localhost/js/platform/lifecycle.js
-11-10 09:59:25.297  6386  6442 D Capacitor: Handling local request: https://localhost/js/app/reminders.js
-11-10 09:59:25.301  6386  6426 D Capacitor: Handling local request: https://localhost/js/app/native-pin.js
-11-10 09:59:25.304  6386  6426 D Capacitor: Handling local request: https://localhost/js/i18n/index.js
-11-10 09:59:25.312  6386  6429 D Capacitor: Handling local request: https://localhost/js/app/chrome.js
-11-10 09:59:25.313  6386  6427 D Capacitor: Handling local request: https://localhost/js/app/clock-dial.js
-11-10 09:59:25.313  6386  6426 D Capacitor: Handling local request: https://localhost/js/platform/system-bars.js
-11-10 09:59:25.316  6386  6426 D Capacitor: Handling local request: https://localhost/js/app/color-wheel.js
-11-10 09:59:25.317  6386  6429 D Capacitor: Handling local request: https://localhost/js/app/drag-reorder.js
-11-10 09:59:25.320  6386  6429 D Capacitor: Handling local request: https://localhost/js/core/color.js
-11-10 09:59:25.321  6386  6431 D Capacitor: Handling local request: https://localhost/js/data/import-export.js
-11-10 09:59:25.322  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/more/deletion-page.js
-11-10 09:59:25.322  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/export.js
-11-10 09:59:25.323  6386  6427 D Capacitor: Handling local request: https://localhost/js/app/long-press.js
-11-10 09:59:25.325  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/more/backup-pages.js
-11-10 09:59:25.327  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/accounts/edit.js
-11-10 09:59:25.329  6386  6427 D Capacitor: Handling local request: https://localhost/js/ui/reel.js
-11-10 09:59:25.331  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/accounts/type.js
-11-10 09:59:25.333  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/more/lock.js
-11-10 09:59:25.334  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/more/menu.js
-11-10 09:59:25.335  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/more/settings-pages.js
-11-10 09:59:25.338  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/operations/list.js
-11-10 09:59:25.341  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/more/info-pages.js
-11-10 09:59:25.341  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/budgets.js
-11-10 09:59:25.342  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/scheduled-budgets.js
-11-10 09:59:25.344  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/settings.js
-11-10 09:59:25.345  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/statistics.js
-11-10 09:59:25.345  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/export-preview.js
-11-10 09:59:25.346  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/import-wizard.js
-11-10 09:59:25.348  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/welcome.js
-11-10 09:59:25.349  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/recovery.js
-11-10 09:59:25.349  6386  6431 D Capacitor: Handling local request: https://localhost/js/data/problems.js
-11-10 09:59:25.350  6386  6442 D Capacitor: Handling local request: https://localhost/js/domain/restore.js
-11-10 09:59:25.351  6386  6434 D Capacitor: Handling local request: https://localhost/js/domain/scheduled.js
-11-10 09:59:25.352  6386  6431 D Capacitor: Handling local request: https://localhost/js/data/defaults.js
-11-10 09:59:25.353  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/fees.js
-11-10 09:59:25.355  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/accounts/list.js
-11-10 09:59:25.355  6386  6434 D Capacitor: Handling local request: https://localhost/js/ui/empty-state.js
-11-10 09:59:25.357  6386  6427 D Capacitor: Handling local request: https://localhost/js/screens/accounts/actions.js
-11-10 09:59:25.359  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/categories.js
-11-10 09:59:25.361  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/pickers.js
-11-10 09:59:25.361  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/start.js
-11-10 09:59:25.363  6386  6431 D Capacitor: Handling local request: https://localhost/js/ui/period-picker.js
-11-10 09:59:25.365  6386  6429 D Capacitor: Handling local request: https://localhost/js/ui/currency-picker.js
-11-10 09:59:25.365  6386  6426 D Capacitor: Handling local request: https://localhost/js/ui/icon-picker.js
-11-10 09:59:25.365  6386  6434 D Capacitor: Handling local request: https://localhost/js/ui/dialogs.js
-11-10 09:59:25.366  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/operations/reveal.js
-11-10 09:59:25.367  6386  6427 D Capacitor: Handling local request: https://localhost/js/screens/operation-title.js
-11-10 09:59:25.368  6386  6426 D Capacitor: Handling local request: https://localhost/js/domain/reminders.js
-11-10 09:59:25.369  6386  6434 D Capacitor: Handling local request: https://localhost/js/platform/pin.js
-11-10 09:59:25.369  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/reminder-plan.js
-11-10 09:59:25.371  6386  6427 D Capacitor: Handling local request: https://localhost/js/i18n/ru.js
-11-10 09:59:25.373  6386  6442 D Capacitor: Handling local request: https://localhost/js/domain/ordering.js
-11-10 09:59:25.374  6386  6427 D Capacitor: Handling local request: https://localhost/js/platform/files.js
-11-10 09:59:25.375  6386  6431 D Capacitor: Handling local request: https://localhost/js/ui/file-actions.js
-11-10 09:59:25.376  6386  6434 D Capacitor: Handling local request: https://localhost/js/domain/deletion.js
-11-10 09:59:25.378  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/operations/filter-parts.js
-11-10 09:59:25.379  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/operations/filters.js
-11-10 09:59:25.380  6386  6431 D Capacitor: Handling local request: https://localhost/js/domain/accounts.js
-11-10 09:59:25.381  6386  6426 D Capacitor: Handling local request: https://localhost/js/data/backup-file.js
-11-10 09:59:25.381  6386  6427 D Capacitor: Handling local request: https://localhost/js/data/report-cache.js
-11-10 09:59:25.382  6386  6427 D Capacitor: Handling local request: https://localhost/js/ui/number-picker.js
-11-10 09:59:25.383  6386  6427 D Capacitor: Handling local request: https://localhost/js/screens/accounts/currency-change.js
-11-10 09:59:25.387  6386  6442 D Capacitor: Handling local request: https://localhost/js/ui/hint.js
-11-10 09:59:25.388  6386  6431 D Capacitor: Handling local request: https://localhost/js/ui/time-picker.js
-11-10 09:59:25.389  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/rates.js
-11-10 09:59:25.415  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/about-art.js
-11-10 09:59:25.418  6386  6427 D Capacitor: Handling local request: https://localhost/js/data/sample.js
-11-10 09:59:25.419  6386  6434 D Capacitor: Handling local request: https://localhost/js/screens/operations/bulk-edit.js
-11-10 09:59:25.420  6386  6427 D Capacitor: Handling local request: https://localhost/js/domain/budgets.js
-11-10 09:59:25.420  6386  6434 D Capacitor: Handling local request: https://localhost/js/ui/percent.js
-11-10 09:59:25.420  6386  6442 D Capacitor: Handling local request: https://localhost/js/screens/more/support.js
-11-10 09:59:25.421  6386  6431 D Capacitor: Handling local request: https://localhost/js/ui/rate-line.js
-11-10 09:59:25.421  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/operations/add-menu.js
-11-10 09:59:25.423  6386  6427 D Capacitor: Handling local request: https://localhost/js/screens/category-select.js
-11-10 09:59:25.423  6386  6434 D Capacitor: Handling local request: https://localhost/js/ui/csv-table.js
-11-10 09:59:25.424  6386  6431 D Capacitor: Handling local request: https://localhost/js/screens/fees.js
-11-10 09:59:25.424  6386  6431 D Capacitor: Handling local request: https://localhost/js/domain/chart.js
-11-10 09:59:25.425  6386  6426 D Capacitor: Handling local request: https://localhost/js/ui/calendar.js
-11-10 09:59:25.426  6386  6426 D Capacitor: Handling local request: https://localhost/js/data/csv.js
-11-10 09:59:25.430  6386  6427 D Capacitor: Handling local request: https://localhost/js/domain/currency-change.js
-11-10 09:59:25.431  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/recurrence.js
-11-10 09:59:25.432  6386  6442 D Capacitor: Handling local request: https://localhost/js/domain/operations.js
-11-10 09:59:25.432  6386  6431 D Capacitor: Handling local request: https://localhost/js/data/csv-import.js
-11-10 09:59:25.442  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/accounts/progress.js
-11-10 09:59:25.444  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/editor.js
-11-10 09:59:25.446  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/parties.js
-11-10 09:59:25.449  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/view.js
-11-10 09:59:25.450  6386  6427 D Capacitor: Handling local request: https://localhost/js/data/currencies.js
-11-10 09:59:25.450  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/currency-search.js
-11-10 09:59:25.453  6386  6427 D Capacitor: Handling local request: https://localhost/js/ui/spotlight.js
-11-10 09:59:25.456  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/operations/category-filter.js
-11-10 09:59:25.458  6386  6427 D Capacitor: Handling local request: https://localhost/js/data/report-job.js
-11-10 09:59:25.458  6386  6426 D Capacitor: Handling local request: https://localhost/js/domain/keypad.js
-11-10 09:59:25.461  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/guides.js
-11-10 09:59:25.462  6386  6427 D Capacitor: Handling local request: https://localhost/js/domain/percent.js
-11-10 09:59:25.462  6386  6429 D Capacitor: Handling local request: https://localhost/js/domain/sides.js
-11-10 09:59:25.465  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/actions.js
-11-10 09:59:25.468  6386  6427 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/amount.js
-11-10 09:59:25.469  6386  6442 D Capacitor: Handling local request: https://localhost/js/platform/report-font.js
-11-10 09:59:25.470  6386  6426 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/extras.js
-11-10 09:59:25.471  6386  6429 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/keypad.js
-11-10 09:59:25.471  6386  6431 D Capacitor: Handling local request: https://localhost/js/domain/report-model.js
-11-10 09:59:25.472  6386  6434 D Capacitor: Handling local request: https://localhost/js/platform/pdf.js
-11-10 09:59:25.472  6386  6431 D Capacitor: Handling local request: https://localhost/js/data/report-layout.js
-11-10 09:59:25.472  6386  6442 D Capacitor: Handling local request: https://localhost/js/platform/report-render.js
-11-10 09:59:25.480  6386  6426 D Capacitor: Handling local request: https://localhost/js/domain/dual-amount.js
-11-10 09:59:25.482  6386  6427 D Capacitor: Handling local request: https://localhost/js/platform/photo.js
-11-10 09:59:25.489  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676168, pluginId: App, methodName: addListener
-11-10 09:59:25.489  6386  6386 V Capacitor: callback: 3676168, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
-11-10 09:59:25.490  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676169, pluginId: App, methodName: addListener
-11-10 09:59:25.490  6386  6386 V Capacitor: callback: 3676169, pluginId: App, methodName: addListener, methodData: {"eventName":"backButton"}
-11-10 09:59:25.491  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676170, pluginId: App, methodName: addListener
-11-10 09:59:25.491  6386  6386 V Capacitor: callback: 3676170, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
-11-10 09:59:25.491  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676171, pluginId: App, methodName: addListener
-11-10 09:59:25.491  6386  6386 V Capacitor: callback: 3676171, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
-11-10 09:59:25.492  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676172, pluginId: LocalNotifications, methodName: checkPermissions
-11-10 09:59:25.492  6386  6386 V Capacitor: callback: 3676172, pluginId: LocalNotifications, methodName: checkPermissions, methodData: {}
-11-10 09:59:25.495  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676173, pluginId: MonivraNative, methodName: setSystemBars
-11-10 09:59:25.495  6386  6386 V Capacitor: callback: 3676173, pluginId: MonivraNative, methodName: setSystemBars, methodData: {"color":"#e6e1e8","dark":true}
-11-10 09:59:25.499  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676174, pluginId: MonivraNative, methodName: setPrivacyScreen
-11-10 09:59:25.499  6386  6386 V Capacitor: callback: 3676174, pluginId: MonivraNative, methodName: setPrivacyScreen, methodData: {"on":false}
-11-10 09:59:25.508  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676175, pluginId: LocalNotifications, methodName: createChannel
-11-10 09:59:25.509  6386  6386 V Capacitor: callback: 3676175, pluginId: LocalNotifications, methodName: createChannel, methodData: {"id":"payments","name":"Напоминания о платежах","importance":4}
-11-10 09:59:25.511  6386  6386 I Capacitor/Console: File:  - Line 333 - Msg: undefined
-11-10 09:59:25.515  6386  6386 I Capacitor/Console: File:  - Line 333 - Msg: undefined
-11-10 09:59:25.516  6386  6386 I Capacitor/Console: File:  - Line 333 - Msg: undefined
-11-10 09:59:25.517  6386  6386 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 3676176, pluginId: LocalNotifications, methodName: getPending
-11-10 09:59:25.517  6386  6386 V Capacitor: callback: 3676176, pluginId: LocalNotifications, methodName: getPending, methodData: {}
-11-10 09:59:30.509  6386  6499 D ProfileInstaller: Installing profile for app.monivra.finance
-11-10 09:59:32.732  6386  6386 V Capacitor/AppPlugin: Notifying listeners for event pause
-11-10 09:59:32.733  6386  6386 D Capacitor/AppPlugin: No listeners found for event pause
-11-10 09:59:32.733  6386  6386 D Capacitor: App paused
-11-10 09:59:32.844   518   537 V WindowManager:     info={id=39 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{86ace13 Task{a02a348 #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0xa10f37a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{b6c014e Task{6c7b74c #16 type=standard A=10192:app.monivra.finance}}} m=TO_BACK f=NONE leash=Surface(name=Task=16)/@0x623a3e4 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{8ee32d2 token=android.os.Binder@da795d})/@0xb421658 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
-11-10 09:59:33.000  1827  2101 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
-11-10 09:59:33.004  1827  2101 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
-11-10 09:59:33.039  6386  6386 D Capacitor/AppPlugin: Firing change: false
-11-10 09:59:33.039  6386  6386 V Capacitor/AppPlugin: Notifying listeners for event appStateChange
-11-10 09:59:33.040  6386  6386 D Capacitor: App stopped
-11-10 09:59:33.041  6386  6386 D Capacitor: Saving instance state!
-11-10 09:59:33.254  1827  2101 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{6dacf4b com.android.simappdialog.auto_generated_rro_product__/10030} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{5554d28 com.android.htmlviewer/10115} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7c43a41 com.google.android.health.connect.backuprestore/10174} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{792cbe6 com.android.systemui.auto_generated_rro_product__/10031} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{6e669cb com.google.android.apps.messaging/10129} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{14613d4 com.google.android.soundpicker/10137} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{ed9397d com.google.android.marvin.talkbackoverlay/10077} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{5afc072 com.google.android.configupdater/10130} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2a3dcc3 com.android.internal.emulation.pixel_3a_xl/10044} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{eda9940 com.android.internal.emulation.pixel_6_pro/10018} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{544f079 com.android.internal.emulation.pixel_7_pro/10004} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{63571be com.android.internal.emulation.pixel_8_pro/10058} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{45d821f com.android.internal.emulation.pixel_3a/10053} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{c70096c com.android.internal.emulation.pixel_4a/10011} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{41b1b35 com.android.internal.emulation.pixel_6a/10023} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2e2213b com.android.internal.emulation.pixel_7a/10033} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{f0a5058 com.google.android.overlay.googlewebview/10049} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7ef35b1 com.google.android.hotspot2.osulogin/10178} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b1bfa96 com.android.simappdialog/10112} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7479617 com.android.internal.display.cutout.emulation.hole/10073} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{6001a04 com.android.internal.display.cutout.emulation.tall/10065} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9107bed com.android.internal.systemui.navbar.threebutton/10068} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7faeaa8 com.android.camera2/10146} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{8152a22 com.android.systemui.auto_generated_rro_vendor__/10076} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{c257cb3 com.google.android.deskclock/10152} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{d66d270 com.android.internal.systemui.navbar.twobutton/10020} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b85e9e9 com.google.android.as/10125} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{f4549c1 com.google.android.gm/10143} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{87fc66e com.android.internal.systemui.navbar.gestural_extra_wide_back/10045} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3f1310f com.android.systemui.emulation.pixel_3/10015} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b3ea59c com.android.systemui.emulation.pixel_4/10037} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2ca3ba5 com.android.systemui.emulation.pixel_5/10071} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{4e5db7a com.android.systemui.emulation.pixel_6/10074} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{919cf2b com.android.systemui.emulation.pixel_7/10072} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{35e7f88 com.android.systemui.emulation.pixel_8/10070} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{547ed21 com.android.nfc.auto_generated_rro_product__/10027} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2663546 com.android.printspooler/10104} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3e43307 com.android.emergency.auto_generated_rro_product__/10041} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e200c34 com.google.android.connectivity.resources.goldfish.overlay/10079} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b953a5d com.android.dreams.basic/10103} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7405fd2 com.google.android.networkstack.tethering.emulator/10022} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{206f8a3 com.android.providers.settings.auto_generated_rro_product__/10002} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{dcbb7a0 com.google.android.as.oss/10122} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7701f59 com.android.traceur.auto_generated_rro_product__/10005} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{93f6566 com.google.android.devicelockcontroller/10189} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{c20a71e com.google.android.dialer/10128} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{c067bff com.android.internal.emulation.pixel_3/10046} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{ec4adcc com.android.internal.emulation.pixel_4/10060} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e7a5815 com.android.internal.emulation.pixel_5/10012} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{62c172a com.android.internal.emulation.pixel_6/10038} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{450d91b com.android.internal.emulation.pixel_7/10067} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e74dab8 com.android.internal.emulation.pixel_8/10039} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{4b56091 com.google.android.captiveportallogin/10113} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{5cc7bf6 com.android.musicfx/10088} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{ad17f3a com.google.android.apps.docs/10153} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2f6f1a6 com.google.android.apps.maps/10155} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3ca90c9 com.google.android.modulemetadata/10147} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9d313ce com.google.android.markup/10135} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e3c62ef com.android.providers.settings.auto_generated_rro_vendor__/10080} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3c770a7 com.google.android.rkpdapp/10183} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9f07613 com.google.android.contacts/10154} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9b521fc com.android.server.telecom.auto_generated_rro_product__/10032} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7627085 com.google.android.overlay.googleconfig/10055} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{f109eda com.android.chrome/10149} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{1163f0b com.android.bips.auto_generated_rro_product__/10035} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b3061e8 com.google.android.apps.customization.pixel/10145} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2de9001 com.google.android.tag/10082} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{a69cea6 com.google.android.overlay.permissioncontroller/10003} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{667c0e7 com.google.android.partnersetup/10124} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9db494 com.google.android.apps.wallpaper.nexus/10142} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{ea32b3d com.google.android.apps.nexuslauncher/10169} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{d42f32 com.google.android.nearby.halfsheet/10186} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3658483 com.android.theme.font.notoserifsource/10066} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{eb8600 com.google.android.safetycenter.resources/10190} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b1c3e39 com.android.internal.display.cutout.emulation.waterfall/10040} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{f120c7e com.android.internal.systemui.navbar.transparent/10029} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{1f1e5df com.google.android.connectivity.resources/10185} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{183022c com.android.providers.contacts.auto_generated_rro_product__/10019} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{97984f5 com.google.android.feedback/10163} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9be728a com.google.android.printservice.recommendation/10109} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{db900fb com.google.android.apps.photos/10140} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e0191da com.google.android.calendar/10144} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3341518 com.google.android.documentsui/10098} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{42a7b71 com.android.systemui.emulation.pixel_3a_xl/10021} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2192d56 com.android.systemui.emulation.pixel_6_pro/10063} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{70cb1d7 com.android.systemui.emulation.pixel_7_pro/10054} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{1e16ac4 com.android.systemui.emulation.pixel_8_pro/10001} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{31a5dad com.google.mainline.telemetry/10151} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b92c8e2 com.android.carrierconfig.auto_generated_rro_product__/10064} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7809473 com.android.providers.partnerbookmarks/10101} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{2ec6f30 com.android.wallpaper.livepicker/10090} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7ac27a9 com.android.providers.telephony.auto_generated_rro_product__/10062} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e18912e com.android.phone.auto_generated_rro_vendor__/10081} BLOCKED
+11-10 10:13:13.329   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{44604cf com.google.mainline.adservices/10136} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e614e5c com.android.imsserviceentitlement/10117} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{c769565 com.google.android.healthconnect.controller/10173} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{120923a com.android.internal.emulation.pixel_2_xl/10016} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{a481eeb com.android.internal.emulation.pixel_3_xl/10056} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{ee2f448 com.android.internal.emulation.pixel_4_xl/10047} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{4c022e1 com.android.internal.emulation.pixel_fold/10006} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b759806 com.android.bookmarkprovider/10114} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7bec7 com.google.android.overlay.pixelconfigcommon/10014} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{4570cf4 com.android.systemui.accessibility.accessibilitymenu.auto_generated_rro_product__/10050} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7bb0c1d com.android.systemui.emulation.pixel_3a/10013} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3c32e92 com.android.systemui.emulation.pixel_4a/10000} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9378063 com.android.systemui.emulation.pixel_6a/10042} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{5520460 com.android.systemui.emulation.pixel_7a/10017} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{21bc0fd com.google.android.settings.intelligence/10118} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3ea9a0b com.google.android.projection.gearhead/10123} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3814d19 com.google.android.uwb.resources/10182} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{587053a com.android.cts.ctsshim/10181} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{de1a1de com.google.android.wifi.resources/10176} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{817bfbf com.google.android.wifi.dialog/10177} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b43068c com.google.android.apps.wallpaper/10161} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{3d0a1d5 com.google.android.odad/10121} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e1fdea com.android.settings.auto_generated_rro_product__/10028} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{89298db com.android.internal.systemui.navbar.gestural/10051} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{b4c71f2 com.google.android.apps.youtube.music/10156} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{55fff78 com.android.bluetoothmidiservice/10107} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{8868651 com.android.storagemanager.auto_generated_rro_product__/10026} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{1da0eb6 com.google.android.cellbroadcastreceiver/10170} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{117e7b7 com.android.phone.auto_generated_rro_product__/10061} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{e519b24 android.auto_generated_rro_product__/10069} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{7dc368d com.android.internal.systemui.navbar.gestural_narrow_back/10052} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{f706042 com.google.android.inputmethod.latin/10141} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{5394853 android.auto_generated_rro_vendor__/10075} BLOCKED
+11-10 10:13:13.330   518   907 I AppsFilter: interaction: PackageSetting{d557129 app.monivra.finance/10192} -> PackageSetting{9f4590 com.google.android.apps.restore/10120} BLOCKED
+11-10 10:13:13.337  6617  6617 W monivra.finance: Accessing hidden method Landroid/os/Trace;->isTagEnabled(J)Z (unsupported, reflection, allowed)
+11-10 10:13:13.337  6617  6617 W monivra.finance: Accessing hidden method Landroid/os/Trace;->traceBegin(JLjava/lang/String;)V (unsupported, reflection, allowed)
+11-10 10:13:13.337  6617  6617 W monivra.finance: Accessing hidden method Landroid/os/Trace;->traceEnd(J)V (unsupported, reflection, allowed)
+11-10 10:13:13.337  6617  6617 W monivra.finance: Accessing hidden method Landroid/os/Trace;->asyncTraceBegin(JLjava/lang/String;I)V (unsupported, reflection, allowed)
+11-10 10:13:13.337  6617  6617 W monivra.finance: Accessing hidden method Landroid/os/Trace;->asyncTraceEnd(JLjava/lang/String;I)V (unsupported, reflection, allowed)
+11-10 10:13:13.343  6617  6641 I cr_VariationsUtils: Failed reading seed file "/data/user/0/app.monivra.finance/app_webview/variations_seed_new"
+11-10 10:13:13.344  6617  6641 I cr_VariationsUtils: Failed reading seed file "/data/user/0/app.monivra.finance/app_webview/variations_seed"
+11-10 10:13:13.374  6617  6658 W chromium: [WARNING:dns_config_service_android.cc(115)] Failed to read DnsConfig.
+11-10 10:13:13.374   518   548 I ActivityManager: Start proc 6646:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0i12 for  {app.monivra.finance/org.chromium.content.app.SandboxedProcessService0:0}
+11-10 10:13:13.384  6646  6646 I cr_WebViewApkApp: Launched version=113.0.5672.136 minSdkVersion=29 isBundle=false processName=com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/9312c0923f4bff51_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/c1ba92777e3b5a48_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/8a6779c42f737e4a_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/400692cf0b7fb8b0_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/c61d2623dc44a695_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/daff7000ba7f7d68_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/e5ebab10fedf4fa3_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/e8a01632232770f0_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/67b1ded85355aad4_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/20dcdbc3a79d7cc4_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/97bf632874ba6358_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/26b65c7259fc27a9_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/16cc7830551b34a0_0
+11-10 10:13:13.396  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/cc8e45dbe806b194_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/54bb7ee2b19d4887_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/477b64fb31a5e99b_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/1080b6f71f02f6eb_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/19e79c696ef9d0f8_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/ff8b2ecec3929348_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/db7ccd5d875b675a_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/fb55e579ba6c64cc_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/8a0fc9c2295e58d2_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/a853fded42cb2075_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/c75fca71a204054a_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/b5905a5fe5441d82_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/ae47b39f04537a68_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/d2fcf6a7b0013b49_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/9f7984e9866554b6_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/a77d5a9fcbcf92d3_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/f66b067e75e3e6ec_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/d6d11f34675b4f4c_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/24ac075436c99afa_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/4d08becd333400d5_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/b6fe00a7567ca671_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/706582aa8d7448f1_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/3b9d52998f172f96_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/34ca6b5b6d951bfd_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/46caa85f3d590ad1_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/052d401cf0bf1e16_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/929c10d4636e2d6b_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/51eec323822fe1bd_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/5e796ba11319760d_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/73467f42748bc0a5_0
+11-10 10:13:13.397  6617  6656 E chromium: [ERROR:simple_file_enumerator.cc(58)] Could not get file info for /data/user/0/app.monivra.finance/cache/WebView/Default/HTTP Cache/Code Cache/js/6b7ff00e26c891ec_0
+11-10 10:13:13.416  6617  6617 D Capacitor: Starting BridgeActivity
+11-10 10:13:13.436  6617  6617 D Capacitor: Registering plugin instance: CapacitorCookies
+11-10 10:13:13.438  6617  6617 D Capacitor: Registering plugin instance: WebView
+11-10 10:13:13.439  6617  6617 D Capacitor: Registering plugin instance: CapacitorHttp
+11-10 10:13:13.440  6617  6617 D Capacitor: Registering plugin instance: MonivraNative
+11-10 10:13:13.442  6617  6617 D Capacitor: Registering plugin instance: App
+11-10 10:13:13.443  6617  6617 D Capacitor: Registering plugin instance: LocalNotifications
+11-10 10:13:13.465  6617  6617 W Capacitor: Unable to read file at path public/plugins
+11-10 10:13:13.467  6617  6617 D Capacitor: Loading app at https://localhost
+11-10 10:13:13.495   518  2507 W ProcessStats: Tracking association SourceState{9b333a9 app.monivra.finance/10192 BTop #6699} whose proc state 2 is better than process ProcessState{1535f06 com.google.android.gms.persistent/10131 pkg=com.google.android.gms} proc state 4 (1617 skipped)
+11-10 10:13:13.503  6617  6617 D Capacitor: App started
+11-10 10:13:13.509  6617  6617 D Capacitor/AppPlugin: Firing change: true
+11-10 10:13:13.509  6617  6617 V Capacitor/AppPlugin: Notifying listeners for event appStateChange
+11-10 10:13:13.509  6617  6617 D Capacitor/AppPlugin: No listeners found for event appStateChange
+11-10 10:13:13.509  6617  6617 D Capacitor: App resumed
+11-10 10:13:13.524  6617  6652 D Capacitor: Handling local request: https://localhost/
+11-10 10:13:13.529  1407  1505 W FontLog : No resolver, short-circuit {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} for app.monivra.finance to failure [CONTEXT service_id=132 ]
+11-10 10:13:13.550  6617  6656 D Capacitor: Handling local request: https://localhost/css/base.css
+11-10 10:13:13.554  6617  6658 D Capacitor: Handling local request: https://localhost/css/layout.css
+11-10 10:13:13.556  6617  6665 D Capacitor: Handling local request: https://localhost/css/navbar.css
+11-10 10:13:13.559  6617  6664 D Capacitor: Handling local request: https://localhost/css/components.css
+11-10 10:13:13.561  6617  6652 D Capacitor: Handling local request: https://localhost/css/accounts.css
+11-10 10:13:13.584   518   907 D CoreBackPreview: Window{676081e u0 app.monivra.finance/app.monivra.finance.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@5c3f282, mPriority=0, mIsAnimationCallback=false}
+11-10 10:13:13.613  6617  6645 D Capacitor: Handling local request: https://localhost/css/categories.css
+11-10 10:13:13.817   518   537 W ziparchive: Unable to open '/data/app/~~t3k1CYL4PQFDg9yC7xy5kw==/app.monivra.finance-lu5GzROle8vQh84cg9IiCA==/base.dm': No such file or directory
+11-10 10:13:13.818   518   537 I ActivityTaskManager: Displayed app.monivra.finance/.MainActivity for user 0: +926ms
+11-10 10:13:13.839   518   907 D CoreBackPreview: Window{6cb7cbd u0 Splash Screen app.monivra.finance EXITING}: Setting back callback null
+11-10 10:13:13.839   518   907 W InputManager-JNI: Input channel object '6cb7cbd Splash Screen app.monivra.finance (client)' was disposed without first being removed with the input manager!
+11-10 10:13:13.934   518  1658 I ImeTracker: app.monivra.finance:8d2c2948: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+11-10 10:13:13.935   518  1658 I ImeTracker: app.monivra.finance:8d2c2948: onCancelled at PHASE_SERVER_SHOULD_HIDE
+11-10 10:13:13.951  6617  6664 W monivra.finance: Long monitor contention with owner ThreadPoolForeg (6656) at java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get()(MimeMap.java:475) waiters=2 in java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get() for 392ms
+11-10 10:13:13.952  6617  6652 W monivra.finance: Long monitor contention with owner ThreadPoolForeg (6656) at java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get()(MimeMap.java:475) waiters=3 in java.lang.Object libcore.content.type.MimeMap$MemoizingSupplier.get() for 389ms
+11-10 10:13:13.952  6617  6658 D Capacitor: Handling local request: https://localhost/css/calendar.css
+11-10 10:13:13.962  6617  6652 D Capacitor: Handling local request: https://localhost/css/editor.css
+11-10 10:13:13.967  1557  1557 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x12000000 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=app.monivra.finance fieldId=0 fieldName=null extras=null}, false)
+11-10 10:13:13.971  6617  6656 D Capacitor: Handling local request: https://localhost/css/operations.css
+11-10 10:13:13.975  6617  6656 D Capacitor: Handling local request: https://localhost/css/fab.css
+11-10 10:13:13.976  6617  6652 D Capacitor: Handling local request: https://localhost/css/empty-state.css
+11-10 10:13:13.977  6617  6652 D Capacitor: Handling local request: https://localhost/css/scheduled.css
+11-10 10:13:13.977  6617  6652 D Capacitor: Handling local request: https://localhost/css/statistics.css
+11-10 10:13:13.978  6617  6652 D Capacitor: Handling local request: https://localhost/css/more.css
+11-10 10:13:13.980  6617  6658 D Capacitor: Handling local request: https://localhost/js/app/main-native.js
+11-10 10:13:14.012  6617  6652 D Capacitor: Handling local request: https://localhost/css/animations.css
+11-10 10:13:14.072  1407  1505 W FontLog : No resolver, short-circuit {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} for app.monivra.finance to failure [CONTEXT service_id=132 ]
+11-10 10:13:14.080  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/native-boot.js
+11-10 10:13:14.091  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/native.js
+11-10 10:13:14.093  6617  6652 D Capacitor: Handling local request: https://localhost/js/platform/native-sync.js
+11-10 10:13:14.095  6617  6656 D Capacitor: Handling local request: https://localhost/js/platform/secure-pin.js
+11-10 10:13:14.096  6617  6658 D Capacitor: Handling local request: https://localhost/js/platform/notify.js
+11-10 10:13:14.097  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/biometric.js
+11-10 10:13:14.100  6617  6645 D Capacitor: Handling local request: https://localhost/js/core/constants.js
+11-10 10:13:14.124  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366551, pluginId: MonivraNative, methodName: mirrorRead
+11-10 10:13:14.124  6617  6617 V Capacitor: callback: 12366551, pluginId: MonivraNative, methodName: mirrorRead, methodData: {}
+11-10 10:13:14.131  6617  6645 D Capacitor: Handling local request: https://localhost/favicon.ico
+11-10 10:13:14.160  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366552, pluginId: MonivraNative, methodName: secureGet
+11-10 10:13:14.160  6617  6617 V Capacitor: callback: 12366552, pluginId: MonivraNative, methodName: secureGet, methodData: {"key":"pin"}
+11-10 10:13:14.160  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366553, pluginId: MonivraNative, methodName: biometricStatus
+11-10 10:13:14.160  6617  6617 V Capacitor: callback: 12366553, pluginId: MonivraNative, methodName: biometricStatus, methodData: {}
+11-10 10:13:14.161  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366554, pluginId: LocalNotifications, methodName: checkPermissions
+11-10 10:13:14.161  6617  6617 V Capacitor: callback: 12366554, pluginId: LocalNotifications, methodName: checkPermissions, methodData: {}
+11-10 10:13:14.162   518  2495 D BiometricService/PreAuthInfo: Package: app.monivra.finance Sensor ID: 4 Modality: 8 Status: 7
+11-10 10:13:14.162   518  2495 D BiometricService/PreAuthInfo: Package: app.monivra.finance Sensor ID: 0 Modality: 2 Status: 7
+11-10 10:13:14.168  6617  6645 D Capacitor: Handling local request: https://localhost/js/app/startup.js
+11-10 10:13:14.172  6617  6652 D Capacitor: Handling local request: https://localhost/js/app/shell.js
+11-10 10:13:14.172  6617  6652 D Capacitor: Handling local request: https://localhost/js/app/swipe.js
+11-10 10:13:14.174  6617  6656 D Capacitor: Handling local request: https://localhost/js/core/state.js
+11-10 10:13:14.174  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/categories.js
+11-10 10:13:14.175  6617  6664 D Capacitor: Handling local request: https://localhost/js/domain/finance.js
+11-10 10:13:14.175  6617  6658 D Capacitor: Handling local request: https://localhost/js/domain/backups.js
+11-10 10:13:14.178  6617  6656 D Capacitor: Handling local request: https://localhost/js/screens/due-payments.js
+11-10 10:13:14.178  6617  6665 D Capacitor: Handling local request: https://localhost/js/data/storage.js
+11-10 10:13:14.180  6617  6645 D Capacitor: Handling local request: https://localhost/js/ui/navigation.js
+11-10 10:13:14.180  6617  6652 D Capacitor: Handling local request: https://localhost/js/ui/handlers.js
+11-10 10:13:14.181  6617  6656 D Capacitor: Handling local request: https://localhost/js/ui/primitives.js
+11-10 10:13:14.184  6617  6652 D Capacitor: Handling local request: https://localhost/js/app/reminders.js
+11-10 10:13:14.184  6617  6665 D Capacitor: Handling local request: https://localhost/js/platform/lifecycle.js
+11-10 10:13:14.184  6617  6658 D Capacitor: Handling local request: https://localhost/js/app/native-pin.js
+11-10 10:13:14.186  6617  6658 D Capacitor: Handling local request: https://localhost/js/i18n/index.js
+11-10 10:13:14.190  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/system-bars.js
+11-10 10:13:14.192  6617  6645 D Capacitor: Handling local request: https://localhost/js/app/chrome.js
+11-10 10:13:14.193  6617  6652 D Capacitor: Handling local request: https://localhost/js/app/clock-dial.js
+11-10 10:13:14.194  6617  6656 D Capacitor: Handling local request: https://localhost/js/app/color-wheel.js
+11-10 10:13:14.195  6617  6652 D Capacitor: Handling local request: https://localhost/js/app/drag-reorder.js
+11-10 10:13:14.195  6617  6656 D Capacitor: Handling local request: https://localhost/js/app/long-press.js
+11-10 10:13:14.196  6617  6652 D Capacitor: Handling local request: https://localhost/js/core/color.js
+11-10 10:13:14.196  6617  6665 D Capacitor: Handling local request: https://localhost/js/data/import-export.js
+11-10 10:13:14.198  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/more/deletion-page.js
+11-10 10:13:14.198  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/export.js
+11-10 10:13:14.199  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/more/backup-pages.js
+11-10 10:13:14.200  6617  6656 D Capacitor: Handling local request: https://localhost/js/ui/reel.js
+11-10 10:13:14.201  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/accounts/edit.js
+11-10 10:13:14.202  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/accounts/list.js
+11-10 10:13:14.203  6617  6656 D Capacitor: Handling local request: https://localhost/js/screens/more/lock.js
+11-10 10:13:14.204  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/more/menu.js
+11-10 10:13:14.205  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/more/info-pages.js
+11-10 10:13:14.206  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/budgets.js
+11-10 10:13:14.206  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/more/settings-pages.js
+11-10 10:13:14.206  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/scheduled-budgets.js
+11-10 10:13:14.207  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/operations/list.js
+11-10 10:13:14.208  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/accounts/type.js
+11-10 10:13:14.208  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/settings.js
+11-10 10:13:14.208  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/statistics.js
+11-10 10:13:14.209  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/export-preview.js
+11-10 10:13:14.209  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/import-wizard.js
+11-10 10:13:14.210  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/recovery.js
+11-10 10:13:14.211  6617  6652 D Capacitor: Handling local request: https://localhost/js/data/defaults.js
+11-10 10:13:14.212  6617  6656 D Capacitor: Handling local request: https://localhost/js/data/problems.js
+11-10 10:13:14.212  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/welcome.js
+11-10 10:13:14.214  6617  6656 D Capacitor: Handling local request: https://localhost/js/domain/restore.js
+11-10 10:13:14.215  6617  6652 D Capacitor: Handling local request: https://localhost/js/domain/fees.js
+11-10 10:13:14.215  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/accounts/actions.js
+11-10 10:13:14.215  6617  6665 D Capacitor: Handling local request: https://localhost/js/domain/categories.js
+11-10 10:13:14.216  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/empty-state.js
+11-10 10:13:14.217  6617  6645 D Capacitor: Handling local request: https://localhost/js/domain/scheduled.js
+11-10 10:13:14.217  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/start.js
+11-10 10:13:14.218  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/pickers.js
+11-10 10:13:14.218  6617  6665 D Capacitor: Handling local request: https://localhost/js/ui/dialogs.js
+11-10 10:13:14.219  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/icon-picker.js
+11-10 10:13:14.220  6617  6664 D Capacitor: Handling local request: https://localhost/js/ui/period-picker.js
+11-10 10:13:14.220  6617  6652 D Capacitor: Handling local request: https://localhost/js/ui/currency-picker.js
+11-10 10:13:14.222  6617  6652 D Capacitor: Handling local request: https://localhost/js/domain/reminders.js
+11-10 10:13:14.222  6617  6664 D Capacitor: Handling local request: https://localhost/js/domain/reminder-plan.js
+11-10 10:13:14.222  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/operation-title.js
+11-10 10:13:14.223  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/operations/reveal.js
+11-10 10:13:14.223  6617  6658 D Capacitor: Handling local request: https://localhost/js/i18n/ru.js
+11-10 10:13:14.224  6617  6664 D Capacitor: Handling local request: https://localhost/js/platform/pin.js
+11-10 10:13:14.246  6617  6645 D Capacitor: Handling local request: https://localhost/js/domain/ordering.js
+11-10 10:13:14.247  6617  6645 D Capacitor: Handling local request: https://localhost/js/data/backup-file.js
+11-10 10:13:14.252  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/files.js
+11-10 10:13:14.253  6617  6645 D Capacitor: Handling local request: https://localhost/js/ui/file-actions.js
+11-10 10:13:14.254  6617  6652 D Capacitor: Handling local request: https://localhost/js/domain/deletion.js
+11-10 10:13:14.255  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operations/filter-parts.js
+11-10 10:13:14.256  6617  6645 D Capacitor: Handling local request: https://localhost/js/data/report-cache.js
+11-10 10:13:14.258  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operations/filters.js
+11-10 10:13:14.258  6617  6656 D Capacitor: Handling local request: https://localhost/js/domain/accounts.js
+11-10 10:13:14.259  6617  6652 D Capacitor: Handling local request: https://localhost/js/ui/number-picker.js
+11-10 10:13:14.260  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/accounts/currency-change.js
+11-10 10:13:14.261  6617  6652 D Capacitor: Handling local request: https://localhost/js/ui/hint.js
+11-10 10:13:14.263  6617  6656 D Capacitor: Handling local request: https://localhost/js/ui/percent.js
+11-10 10:13:14.263  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/accounts/progress.js
+11-10 10:13:14.263  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/more/support.js
+11-10 10:13:14.264  6617  6658 D Capacitor: Handling local request: https://localhost/js/domain/budgets.js
+11-10 10:13:14.265  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/category-select.js
+11-10 10:13:14.266  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/time-picker.js
+11-10 10:13:14.266  6617  6665 D Capacitor: Handling local request: https://localhost/js/data/sample.js
+11-10 10:13:14.267  6617  6658 D Capacitor: Handling local request: https://localhost/js/domain/operations.js
+11-10 10:13:14.267  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/fees.js
+11-10 10:13:14.267  6617  6658 D Capacitor: Handling local request: https://localhost/js/screens/operations/add-menu.js
+11-10 10:13:14.268  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/recurrence.js
+11-10 10:13:14.268  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/calendar.js
+11-10 10:13:14.268  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/about-art.js
+11-10 10:13:14.269  6617  6656 D Capacitor: Handling local request: https://localhost/js/screens/rates.js
+11-10 10:13:14.270  6617  6656 D Capacitor: Handling local request: https://localhost/js/domain/chart.js
+11-10 10:13:14.270  6617  6664 D Capacitor: Handling local request: https://localhost/js/data/csv.js
+11-10 10:13:14.271  6617  6656 D Capacitor: Handling local request: https://localhost/js/data/csv-import.js
+11-10 10:13:14.271  6617  6664 D Capacitor: Handling local request: https://localhost/js/ui/csv-table.js
+11-10 10:13:14.271  6617  6656 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/editor.js
+11-10 10:13:14.272  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/rate-line.js
+11-10 10:13:14.272  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/operations/bulk-edit.js
+11-10 10:13:14.273  6617  6665 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/view.js
+11-10 10:13:14.274  6617  6656 D Capacitor: Handling local request: https://localhost/js/domain/currency-search.js
+11-10 10:13:14.274  6617  6658 D Capacitor: Handling local request: https://localhost/js/ui/spotlight.js
+11-10 10:13:14.275  6617  6664 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/parties.js
+11-10 10:13:14.275  6617  6652 D Capacitor: Handling local request: https://localhost/js/domain/currency-change.js
+11-10 10:13:14.277  6617  6645 D Capacitor: Handling local request: https://localhost/js/data/currencies.js
+11-10 10:13:14.316  6617  6645 D Capacitor: Handling local request: https://localhost/js/domain/keypad.js
+11-10 10:13:14.318  6617  6645 D Capacitor: Handling local request: https://localhost/js/data/report-job.js
+11-10 10:13:14.319  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operations/category-filter.js
+11-10 10:13:14.321  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/guides.js
+11-10 10:13:14.321  6617  6645 D Capacitor: Handling local request: https://localhost/js/domain/percent.js
+11-10 10:13:14.322  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/actions.js
+11-10 10:13:14.323  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/amount.js
+11-10 10:13:14.324  6617  6645 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/extras.js
+11-10 10:13:14.326  6617  6665 D Capacitor: Handling local request: https://localhost/js/platform/pdf.js
+11-10 10:13:14.327  6617  6664 D Capacitor: Handling local request: https://localhost/js/platform/report-font.js
+11-10 10:13:14.327  6617  6665 D Capacitor: Handling local request: https://localhost/js/platform/report-render.js
+11-10 10:13:14.327  6617  6664 D Capacitor: Handling local request: https://localhost/js/data/report-layout.js
+11-10 10:13:14.328  6617  6652 D Capacitor: Handling local request: https://localhost/js/screens/operation-editor/keypad.js
+11-10 10:13:14.328  6617  6656 D Capacitor: Handling local request: https://localhost/js/domain/sides.js
+11-10 10:13:14.328  6617  6658 D Capacitor: Handling local request: https://localhost/js/domain/report-model.js
+11-10 10:13:14.341  6617  6645 D Capacitor: Handling local request: https://localhost/js/domain/dual-amount.js
+11-10 10:13:14.342  6617  6645 D Capacitor: Handling local request: https://localhost/js/platform/photo.js
+11-10 10:13:14.349  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366555, pluginId: App, methodName: addListener
+11-10 10:13:14.349  6617  6617 V Capacitor: callback: 12366555, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
+11-10 10:13:14.350  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366556, pluginId: App, methodName: addListener
+11-10 10:13:14.350  6617  6617 V Capacitor: callback: 12366556, pluginId: App, methodName: addListener, methodData: {"eventName":"backButton"}
+11-10 10:13:14.351  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366557, pluginId: App, methodName: addListener
+11-10 10:13:14.351  6617  6617 V Capacitor: callback: 12366557, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
+11-10 10:13:14.352  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366558, pluginId: App, methodName: addListener
+11-10 10:13:14.352  6617  6617 V Capacitor: callback: 12366558, pluginId: App, methodName: addListener, methodData: {"eventName":"appStateChange"}
+11-10 10:13:14.353  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366559, pluginId: LocalNotifications, methodName: checkPermissions
+11-10 10:13:14.353  6617  6617 V Capacitor: callback: 12366559, pluginId: LocalNotifications, methodName: checkPermissions, methodData: {}
+11-10 10:13:14.356  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366560, pluginId: MonivraNative, methodName: setSystemBars
+11-10 10:13:14.357  6617  6617 V Capacitor: callback: 12366560, pluginId: MonivraNative, methodName: setSystemBars, methodData: {"color":"#e6e1e8","dark":false}
+11-10 10:13:14.359  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366561, pluginId: MonivraNative, methodName: setPrivacyScreen
+11-10 10:13:14.360  6617  6617 V Capacitor: callback: 12366561, pluginId: MonivraNative, methodName: setPrivacyScreen, methodData: {"on":false}
+11-10 10:13:14.380  6617  6617 V Capacitor/Plugin: To native (Capacitor plugin): callbackId: 12366562, pluginId: LocalNotifications, methodName: createChannel
+11-10 10:13:14.381  6617  6617 V Capacitor: callback: 12366562, pluginId: LocalNotifications, methodName: createChannel, methodData: {"id":"payments","name":"Payment reminders","importance":4}
+11-10 10:13:14.381  6617  6617 I Capacitor/Console: File:  - Line 333 - Msg: undefined
+11-10 10:13:14.398  6617  6617 I Capacitor/Console: File:  - Line 333 - Msg: undefined
+11-10 10:13:14.410  6617  6617 I Capacitor/Console: File:  - Line 333 - Msg: undefined
+11-10 10:13:14.411  6617  6617 E Capacitor/Console: File: https://localhost/js/domain/reminders.js - Line 27 - Msg: Uncaught (in promise) TypeError: now.getFullYear is not a function
+11-10 10:13:19.172  6617  6711 D ProfileInstaller: Installing profile for app.monivra.finance
+11-10 10:13:21.551  6617  6617 V Capacitor/AppPlugin: Notifying listeners for event pause
+11-10 10:13:21.551  6617  6617 D Capacitor/AppPlugin: No listeners found for event pause
+11-10 10:13:21.552  6617  6617 D Capacitor: App paused
+11-10 10:13:21.657   518   537 V WindowManager:     info={id=41 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{22771d4 Task{f60d4ff #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x8cf3af3 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{bf42498 Task{79cc981 #18 type=standard A=10192:app.monivra.finance}}} m=TO_BACK f=NONE leash=Surface(name=Task=18)/@0xf3827b9 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{8d91a7e token=android.os.Binder@e7ec439})/@0x3da9df sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+11-10 10:13:21.740  1758  2392 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+11-10 10:13:21.744  1758  2392 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+11-10 10:13:21.938  1758  2392 W A       : 	at org.chromium.net.impl.CronetUrlRequest.onError(:com.google.android.gms.dynamite_cronetdynamite@231818047@23.18.18 (190800-0):5)
+11-10 10:13:22.742  6617  6617 D Capacitor/AppPlugin: Firing change: false
+11-10 10:13:22.742  6617  6617 V Capacitor/AppPlugin: Notifying listeners for event appStateChange
+11-10 10:13:22.747  6617  6617 D Capacitor: App stopped
+11-10 10:13:22.748  6617  6617 D Capacitor: Saving instance state!
+11-10 10:13:24.083   518   747 I ActivityManager: Process app.monivra.finance (pid 6617) has died: prev LAST
+11-10 10:13:24.083   518   747 I ActivityManager: Killing 6646:com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/u0a192i12 (adj 0): isolated not needed
+11-10 10:13:24.083   518  1658 I WindowManager: WIN DEATH: Window{676081e u0 app.monivra.finance/app.monivra.finance.MainActivity}
+11-10 10:13:24.084   518  1658 W InputManager-JNI: Input channel object '676081e app.monivra.finance/app.monivra.finance.MainActivity (client)' was disposed without first being removed with the input manager!
+11-10 10:13:24.088   518   546 W UsageStatsService: Unexpected activity event reported! (app.monivra.finance/app.monivra.finance.MainActivity event : 23 instanceId : 233654822)
