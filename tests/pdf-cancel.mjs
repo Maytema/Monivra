@@ -39,7 +39,8 @@ const check = async (name, fn) => {
       const original = window.HTMLCanvasElement.prototype.toBlob;
       window.HTMLCanvasElement.prototype.toBlob = function (...args) {
         window.__pages++;
-        return original.apply(this, args);
+        // Each page takes a little longer, so the job lasts whatever the speed of the machine.
+        setTimeout(() => original.apply(this, args), 40);
       };
       const { render } = await import("/js/app/shell.js");
       render();
@@ -48,9 +49,6 @@ const check = async (name, fn) => {
     await page.getByText("Data", { exact: true }).first().click();
     await page.getByText("Export data", { exact: true }).click();
     await page.getByRole("button", { name: /Detailed transactions/ }).click();
-    // A slower processor (like a phone) so that the job lasts long enough to be tapped on.
-    const client = await page.context().newCDPSession(page);
-    await client.send("Emulation.setCPUThrottlingRate", { rate: 10 });
     await fn(page);
     if (errors.length) throw Error(errors[0]);
     console.log(`ok   ${name}`);
@@ -76,12 +74,11 @@ await check(
       (await preview.getAttribute("aria-busy")) === "true",
       "the button gives no busy feedback",
     );
-    // repeated taps (this button and another) make no second job
-    await preview.click({ force: true }).catch(() => {});
-    await page
-      .getByRole("button", { name: "Save", exact: true })
-      .click({ force: true })
-      .catch(() => {});
+    // repeated taps, made straight on the page because the dialog covers it: no second job
+    await page.evaluate(() => {
+      document.querySelector(".page-footer button.primary").click();
+      document.querySelectorAll(".file-action")[1].click();
+    });
     // a tap outside the dialog panel (on the dimmed area)
     await page.mouse.click(5, 5);
     assert(
@@ -106,6 +103,14 @@ await check(
     await preview.click();
     await page.locator(".report-pages img").first().waitFor({ timeout: 90000 });
     assert((await builds(page)) === 2, "the second request did not make a new job");
+    const total = await page.locator(".report-pages img").count();
+    assert(
+      atCancel < total,
+      `Cancel came after all ${total} pages were drawn: the test proves nothing`,
+    );
+    console.log(
+      `     pages: ${atCancel} drawn when Cancel was tapped, ${total} in the whole report`,
+    );
   },
 );
 
