@@ -252,8 +252,10 @@ function nativeNotices() {
     toast(
       translate("The internal copy of the data could not be read. Save a data file when you can."),
     );
-  if (takePinDropped())
+  if (takePinDropped()) {
+    save(); // the lock is off in the data too, not only in memory
     toast(translate("The PIN could not be read on this device and was turned off. Set it again."));
+  }
 }
 
 export function startup() {

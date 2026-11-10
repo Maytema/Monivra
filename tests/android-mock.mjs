@@ -198,6 +198,11 @@ const setPinInApp = (page, pin) =>
 const typePin = async (page, digits) => {
   for (const d of digits) await page.locator(".keypad .key", { hasText: d }).click();
 };
+const openSettings = async (page, section) => {
+  await tab(page, "More");
+  await page.getByText("Settings", { exact: true }).first().click();
+  await page.getByText(section, { exact: true }).first().click();
+};
 const openDataPage = async (page, name) => {
   await tab(page, "More");
   await page.getByText("Data", { exact: true }).first().click();
@@ -335,8 +340,7 @@ const scenarios = {
   ) {
     const page = await open({ bridge: makeBridge({ biometric: "unsupported" }) });
     await setPinInApp(page, "1234");
-    await tab(page, "More");
-    await page.getByText("Security", { exact: true }).click();
+    await openSettings(page, "Security");
     expect(await page.getByText("Unlock with fingerprint or face").count(), "setting").toBe(0);
   },
   async "MOCK: biometrics set up: the prompt opens on the lock screen, success unlocks, cancel leaves the PIN keys working"(
@@ -383,8 +387,7 @@ const scenarios = {
   async "MOCK: switching biometrics on needs a PIN and a fingerprint set up on the phone"(open) {
     const bridge = makeBridge({ biometric: "not_enrolled" });
     const page = await open({ bridge });
-    await tab(page, "More");
-    await page.getByText("Security", { exact: true }).click();
+    await openSettings(page, "Security");
     await page.getByText("Unlock with fingerprint or face").waitFor();
     await page.getByText("Unlock with fingerprint or face").click();
     await page.getByText("Set a PIN first").waitFor();
@@ -404,7 +407,7 @@ const scenarios = {
     open,
   ) {
     const page = await open();
-    await openDataPage(page, "Data files");
+    await openDataPage(page, "Data file");
     const save = page.getByRole("button", { name: "Save", exact: true });
     await save.dblclick();
     await settle(page, 600);
@@ -420,7 +423,7 @@ const scenarios = {
   ) {
     const bridge = makeBridge({ saveResult: "cancelled" });
     const page = await open({ bridge });
-    await openDataPage(page, "Data files");
+    await openDataPage(page, "Data file");
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await settle(page, 600);
     expect(await page.getByText("File saved").count(), "toast after cancel").toBe(0);
@@ -435,7 +438,7 @@ const scenarios = {
   },
   async "MOCK: sharing the data file opens the share sheet once however fast the taps"(open) {
     const page = await open();
-    await openDataPage(page, "Data files");
+    await openDataPage(page, "Data file");
     const share = page.getByRole("button", { name: "Share", exact: true });
     await share.click();
     await share.click();
@@ -511,13 +514,14 @@ const scenarios = {
     const bridge = makeBridge({ notifications: "prompt" });
     const page = await open({ data: JSON.stringify(data), bridge });
     expect(bridge.count("LocalNotifications.requestPermissions"), "asked at launch").toBe(0);
-    await tab(page, "More");
-    await page.getByText("Notifications", { exact: true }).first().click();
+    await openSettings(page, "Notifications");
     await page.getByText("Notifications", { exact: true }).last().click();
     await settle(page, 2200);
     expect(bridge.count("LocalNotifications.requestPermissions"), "asked on switching on").toBe(1);
     expect(bridge.pending.length, "reminders handed to the system").toBe(1);
     expect(bridge.pending[0].schedule.allowWhileIdle, "allowed while idle").toBe(true);
+    const firstAt = new Date(bridge.pending[0].schedule.at);
+    expect(firstAt.getHours() * 60 + firstAt.getMinutes(), "reminder time").toBe(9 * 60);
     expect(bridge.pending[0].channelId, "channel").toBe("payments");
     const first = bridge.pending[0].id;
     // A change of the payment replaces the reminder; nothing stays from the old one.
@@ -530,7 +534,8 @@ const scenarios = {
     await settle(page, 2200);
     expect(bridge.pending.length, "one reminder after the change").toBe(1);
     expect(bridge.pending[0].id === first, "same payment, same number").toBe(true);
-    expect(bridge.pending[0].schedule.at.includes("T08:00") || true, "time").toBe(true);
+    const at = new Date(bridge.pending[0].schedule.at);
+    expect(at.getHours() * 60 + at.getMinutes(), "reminder time after the change").toBe(8 * 60);
     // Deleting the payment leaves no reminder behind.
     await page.evaluate(async () => {
       const { appData } = await import("/js/core/state.js");

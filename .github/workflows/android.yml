@@ -33,6 +33,7 @@ jobs:
           npx eslint js tests 2>&1 | tee results/lint.log
           node tests/run.mjs 2>&1 | tee results/unit.log
           node tests/scenarios.mjs 2>&1 | tee results/scenarios.log
+          node tests/android-mock.mjs 2>&1 | tee results/android-mock.log
       - name: Publish test log
         if: always()
         uses: actions/upload-artifact@v4
