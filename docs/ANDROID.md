@@ -176,11 +176,18 @@ Not present: `INTERNET`, storage, contacts, location, camera, SMS, accessibility
 | -------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Unit checks (browser, 216)             | `node tests/run.mjs`            | financial rules (unchanged) + reminder planning, notification ids, PIN marker, bar color                                                                                                                                                                                                                                   |
 | Browser scenarios (80)                 | `node tests/scenarios.mjs`      | the web UI incl. the Data section, unchanged                                                                                                                                                                                                                                                                               |
-| **Mock-bridge scenarios (20)**         | `node tests/android-mock.mjs`   | The app calls the bridge correctly and reacts to its answers. **A mock, not Android**                                                                                                                                                                                                                                      |
+| **Mock-bridge scenarios (23)**         | `node tests/android-mock.mjs`   | The app calls the bridge correctly and reacts to its answers. **A mock, not Android**                                                                                                                                                                                                                                      |
 | **Real Android system (emulator, CI)** | `android-app/e2e/emulator.mjs`  | install, offline launch, persistence across kill, internal-copy restore, damaged data untouched, Keystore PIN, real system save/share/print screens, Back, rotation, alarm registration and notification delivery with the app closed, exactly-once posting, update keeps data, foreign signature refused, web-file import |
 | Real phone                             | `ANDROID_PHONE_CHECKLIST_RU.md` | Not done by me: fingerprint, real printer, your Android's behaviour, reboot reminders                                                                                                                                                                                                                                      |
 
 Results of the latest run are in branch `android-builds` (`build-report.txt`, `emulator-results/report.txt`).
+
+Last full run (build 11, commit `2e657dc`): web tests 216/216 units, 80/80 scenarios, 23/23 mock scenarios;
+emulator (Android 14, API 34, x86_64) **29 passed, 0 failed**. The emulator runs on shared CI machines and
+is sometimes slow or drops out (twice the emulator process itself went offline mid-run; those runs were
+repeated, not counted as passes). Two real defects were found by it and fixed with regression tests: the
+last saves lost on a hard kill (save counter + internal copy) and the reminders not being handed to the
+system at launch.
 
 ## Limitations (honest list)
 
