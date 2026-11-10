@@ -755,6 +755,11 @@
 }
 /* About page: the illustration, the place and a short text */
 .about {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
   padding: 8px var(--edge-gap) 32px;
 }
 .about p {
@@ -764,8 +769,9 @@
 }
 .about-art {
   display: block;
+  flex: none;
   width: 100%;
-  max-width: 360px;
+  max-width: 400px;
   margin: 0px auto;
   fill: none;
   stroke-linecap: round;
@@ -776,13 +782,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin: 8px 0px 24px;
+  margin: 12px 0px 28px;
   font-size: 18px;
   color: var(--ink);
 }
 .about-place svg {
   color: var(--accent-ink);
-  animation: about-bob 2.4s ease-in-out infinite;
+  animation: about-bob 2.4s ease-in-out 5s infinite;
 }
 .about-body {
   fill: var(--sheet);
@@ -805,12 +811,12 @@
   fill: var(--accent);
   transform-box: fill-box;
   transform-origin: left center;
-  animation: about-spend 5s ease-in-out infinite;
+  animation: about-spend 5s ease-in-out 1;
 }
 .about-ring {
   transform-box: fill-box;
   transform-origin: center;
-  animation: about-pulse 5s ease-in-out infinite;
+  animation: about-pulse 5s ease-in-out 1;
 }
 .about-track,
 .about-slice {
@@ -856,16 +862,54 @@
 }
 /* One cycle: a coin flies to the list, a new row slides in and pushes the others down */
 .about-row {
-  animation: about-push 5s ease-in-out infinite;
+  animation: about-push 5s ease-in-out 1 forwards;
 }
 .about-new {
-  animation: about-enter 5s ease-out infinite;
+  animation: about-enter 5s ease-out 1 forwards;
 }
 .about-chip {
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: about-fly 5s ease-in infinite;
+  animation: about-fly 5s ease-in 1 forwards;
+}
+/* The finished picture: what the introduction ends with. Used when the page is drawn again and for
+   people who asked for less motion. */
+.about-art.settled .about-row {
+  animation: none;
+  transform: translateY(34px);
+}
+.about-art.settled .about-new {
+  animation: none;
+  transform: none;
+}
+.about-art.settled .about-chip,
+.about-art.settled .about-balance,
+.about-art.settled .about-ring {
+  animation: none;
+}
+/* Ambient drift after the introduction: a few small shapes move up and down very slowly (only
+   transform and opacity, so the work is done by the compositor). */
+.about-float {
+  fill: var(--accent);
+  opacity: 0;
+  animation: about-drift 7s ease-in-out 5s infinite alternate;
+}
+.about-art.settled .about-float {
+  animation-delay: 0s;
+}
+.about-art[data-paused="true"] * {
+  animation-play-state: paused;
+}
+@keyframes about-drift {
+  from {
+    opacity: 0.25;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 0.55;
+    transform: translateY(-8px);
+  }
 }
 @keyframes about-fly {
   0% {
@@ -940,8 +984,18 @@
   .about-row,
   .about-new,
   .about-chip,
+  .about-float,
   .about-place svg {
     animation: none;
+  }
+  .about-row {
+    transform: translateY(34px);
+  }
+  .about-new {
+    transform: none;
+  }
+  .about-float {
+    opacity: 0.35;
   }
 }
 /* Deletion page: a short line before the ways to delete */

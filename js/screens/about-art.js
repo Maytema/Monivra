@@ -1,5 +1,5 @@
 /* Illustration for the "About our team" page: the top of a phone showing the main screen, where
-   an expense is added every few seconds. The phone runs off the bottom and fades into the page. */
+   an expense is added once, then small shapes drift. The phone runs off the bottom and fades into the page. */
 
 const ROW_STEP = 34;
 // Rows of the list; they all look alike so that the loop restarts without a visible jump.
@@ -19,6 +19,17 @@ const ring = SLICES.map(
     `<circle class="about-slice ${tone}" cx="204" cy="90" r="24" pathLength="100" stroke-dasharray="${length} ${100 - length}" stroke-dashoffset="${-start}"/>`,
 ).join("");
 
+// Small shapes beside the phone that drift slowly once the introduction is over; [x, y, size, delay s].
+const FLOATERS = [
+  [34, 70, 5, 0],
+  [286, 108, 4, 1.7],
+  [42, 176, 3.5, 3.1],
+];
+const floaters = FLOATERS.map(
+  ([x, y, r, delay]) =>
+    `<circle class="about-float" cx="${x}" cy="${y}" r="${r}" style="animation-delay:${delay}s"/>`,
+).join("");
+
 export const aboutArt = `<svg class="about-art" viewBox="0 0 320 252" aria-hidden="true">
 <defs><linearGradient id="about-fade" x1="0" y1="0" x2="0" y2="1"><stop class="about-fade-from" offset="0"/><stop class="about-fade-to" offset="1"/></linearGradient></defs>
 <g class="about-phone"><rect class="about-body" x="70" y="24" width="180" height="330" rx="30"/><rect class="about-speaker" x="140" y="34" width="40" height="5" rx="2.5"/>
@@ -26,5 +37,5 @@ export const aboutArt = `<svg class="about-art" viewBox="0 0 320 252" aria-hidde
 <g class="about-ring"><circle class="about-track" cx="204" cy="90" r="24" pathLength="100"/>${ring}</g>
 ${rows}${row(FIRST_ROW, "about-row about-new")}</g>
 <rect class="about-fade" x="0" y="164" width="320" height="88" fill="url(#about-fade)"/>
-<g class="about-chip"><circle cx="100" cy="${FIRST_ROW + 14}" r="11"/><path d="M95 ${FIRST_ROW + 14}h10"/></g>
+${floaters}<g class="about-chip"><circle cx="100" cy="${FIRST_ROW + 14}" r="11"/><path d="M95 ${FIRST_ROW + 14}h10"/></g>
 </svg>`;

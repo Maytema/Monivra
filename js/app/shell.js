@@ -1,6 +1,7 @@
 /* App shell: navigation, root view, rendering */
 import { applyPrivacyScreen, applySystemBars } from "../platform/system-bars.js";
 import { bindSheetSwipe, mountSwipeChrome } from "./chrome.js";
+import { initAboutMotion } from "./about-motion.js";
 import { initClockDial } from "./clock-dial.js";
 import { initColorWheel } from "./color-wheel.js";
 import { initDragReorder } from "./drag-reorder.js";
@@ -252,6 +253,7 @@ export function render(top = false) {
   initDragReorder();
   initColorWheel();
   initClockDial();
+  initAboutMotion();
   applyAppearance();
   // A screen that comes back finds its scroll where it was left; a re-render keeps everything.
   if (screenChanged) restoreContainers(app, screenScrolls.get(screen) || []);
