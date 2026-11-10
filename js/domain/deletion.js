@@ -17,8 +17,8 @@ export const DELETIONS = {
     title: "Delete operations",
     kinds: ["ops"],
     result: (data) => ({ ...data, ops: [] }),
+    message: "All operations will be deleted. Balances go back to the opening balances.",
     effects: [
-      "The balances of the accounts go back to their opening balances.",
       "Accounts, categories, tags, budgets and scheduled payments stay, and so do the backups.",
     ],
     backup: true,
@@ -27,9 +27,9 @@ export const DELETIONS = {
     title: "Partial deletion",
     kinds: FINANCE,
     result: withoutFinanceData,
-    effects: [
-      "The settings, the exchange rates and the backups stay. A backup that holds this data can bring it back.",
-    ],
+    message:
+      "Accounts, categories, operations, tags, budgets and scheduled payments will be deleted. Settings, exchange rates and backups stay.",
+    effects: ["A backup that holds this data can bring it back."],
     backup: true,
     file: true,
   },
@@ -37,10 +37,9 @@ export const DELETIONS = {
     title: "Delete backups",
     kinds: ["backups"],
     result: (data) => ({ ...data, backups: [] }),
-    effects: [
-      "The data stays as it is.",
-      "These are the copies kept inside the application. Data files you saved elsewhere are not touched.",
-    ],
+    message: "The backups kept inside the app will be deleted. Your data stays.",
+    outside: true,
+    effects: [],
   },
   everything: {
     title: "Delete local data",
@@ -48,10 +47,9 @@ export const DELETIONS = {
     kinds: [...FINANCE, "backups"],
     settings: true,
     result: createEmptyData,
-    effects: [
-      "Nothing is left on this device. The backups kept inside the application are erased too.",
-      "Data files you saved outside the application (in Files or the cloud) are not touched: keep one if you may need the data back.",
-    ],
+    message: "All local app data, including internal backups, will be permanently deleted.",
+    outside: true,
+    effects: [],
     file: true,
     typed: true,
   },

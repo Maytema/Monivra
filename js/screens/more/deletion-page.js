@@ -4,6 +4,8 @@ import { escapeHtml, iconSvg } from "../../core/constants.js";
 import { DELETIONS, deleteData } from "../../domain/deletion.js";
 import { translate, translateCount, translateWith } from "../../i18n/index.js";
 import { dataFile, saveDelivery } from "../../ui/file-actions.js";
+import { render } from "../../app/shell.js";
+import { checkboxHtml } from "../operations/filter-parts.js";
 import { registerInput } from "../../ui/handlers.js";
 import { closeLayers, goHome, openSheet } from "../../ui/navigation.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast } from "../../ui/primitives.js";
@@ -30,16 +32,6 @@ const countedList = (data, kinds) => {
   return `${parts.slice(0, -1).join(", ")} ${translate("and")} ${parts.at(-1)}`;
 };
 
-// The text of the question: what goes, with the counts, and the settings when they go too.
-function questionText(list, settings) {
-  if (!settings) return translateWith("{list} will be deleted. This cannot be undone.", { list });
-  return list
-    ? translateWith("{list}, settings and reminders will be deleted. This cannot be undone.", {
-        list,
-      })
-    : translate("Settings and reminders will be deleted. This cannot be undone.");
-}
-
 // The dialog before a deletion: what goes, what it does to the rest, and the safeguards that fit
 // the way. Where nothing can bring the data back the person has to write a word to go on.
 function askToDelete(id) {
@@ -62,11 +54,27 @@ function askToDelete(id) {
       toast(error.message);
     }
   };
+  const details = [countedList(appData, way.kinds), ...way.effects.map((line) => translate(line))]
+    .filter(Boolean)
+    .map((line) => `<p>${escapeHtml(line)}</p>`)
+    .join("");
   openSheet(
     () =>
-      `<div class="confirm-icon warning">${iconSvg("warning", 32)}</div><h2>${translate(way.title)}</h2><p class="confirm-message">${escapeHtml(questionText(list, way.settings))}</p><ul class="restore-changes">${way.effects.map((line) => `<li>${translate(line)}</li>`).join("")}</ul>${
+      `<div class="confirm-icon warning">${iconSvg("warning", 32)}</div><h2>${translate(way.title)}</h2><p class="confirm-message">${translate(way.message)}</p>${
+        way.outside
+          ? `<p class="confirm-aside">${translate("Files you saved outside the app are not touched.")}</p>`
+          : ""
+      }<details class="restore-conflicts"><summary>${translate("Details")}</summary>${details}</details>${
         way.backup
-          ? `<label class="checkrow"><input type="checkbox" ${backup ? "checked" : ""} data-input="${registerInput((v) => (backup = v))}"><span>${translate("Create a backup first")}</span></label>`
+          ? buttonHtml(
+              `<span class="grow">${translate("Create a backup first")}</span>${checkboxHtml(backup)}`,
+              () => {
+                backup = !backup;
+                render();
+              },
+              `export-option ${backup ? "on" : ""}`,
+              `role="checkbox" aria-checked="${backup}"`,
+            )
           : ""
       }${way.file ? buttonHtml("Save a data file first", () => saveDelivery(dataFile()), "outline") : ""}${
         way.typed

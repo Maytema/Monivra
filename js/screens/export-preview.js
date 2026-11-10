@@ -2,8 +2,9 @@
    file. Nothing is downloaded by looking. */
 import { escapeHtml } from "../core/constants.js";
 import { translate, translateCount, translateWith } from "../i18n/index.js";
+import { csvTableHtml } from "../ui/csv-table.js";
 import { pageHeader } from "../ui/primitives.js";
-import { exportJob, fileActionsHtml } from "./export.js";
+import { fileActionsHtml } from "./export.js";
 
 // The pictures of the pages, with a line that says how many there are.
 function pagesHtml(job) {
@@ -27,9 +28,7 @@ function rowsHtml(job) {
             { shown, total: job.total },
           )
         : translateWith("Preview of your data · all {total} rows", { total: job.total });
-  return `<p class="preview-note">${note}</p><div class="csv-preview"><table><thead><tr>${job.columns.map((c) => `<th>${escapeHtml(c)}</th>`).join("")}</tr></thead><tbody>${job.rows
-    .map((row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`)
-    .join("")}</tbody></table></div>`;
+  return `<p class="preview-note">${note}</p><p class="preview-note">${translate("The small names under the headings are the column names written in the file.")}</p>${csvTableHtml(job.columns, job.rows)}`;
 }
 
 // Preview page: `p.job` is the prepared export, `p.owner` the export page it belongs to.
@@ -37,6 +36,6 @@ export function exportPreviewView(p) {
   const csv = p.job.mode === "csv";
   return (
     pageHeader("Preview") +
-    `<div class="content preview-content">${csv ? rowsHtml(p.job) : pagesHtml(p.job)}</div><div class="page-footer">${fileActionsHtml(() => exportJob(p.owner), { print: !csv })}</div>`
+    `<div class="content preview-content">${csv ? rowsHtml(p.job) : pagesHtml(p.job)}</div><div class="page-footer">${fileActionsHtml(p, p.owner, { print: !csv })}</div>`
   );
 }

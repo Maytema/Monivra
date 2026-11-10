@@ -458,7 +458,10 @@
 .checkbox {
   display: inline-grid;
   place-items: center;
+  box-sizing: border-box;
   flex: 0 0 23px;
+  width: 23px;
+  min-width: 23px;
   height: 23px;
   border: 2px solid var(--muted);
   border-radius: 6px;

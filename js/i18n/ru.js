@@ -1507,4 +1507,48 @@ export const russianStrings = {
     "На этом устройстве ничего не останется. Копии внутри приложения тоже стираются.",
   "Data files you saved outside the application (in Files or the cloud) are not touched: keep one if you may need the data back.":
     "Файлы данных, сохранённые вне приложения (в «Файлах» или в облаке), не затрагиваются: сохраните такой файл, если данные могут понадобиться.",
+  Details: "Подробности",
+  "A backup that holds this data can bring it back.": "Копия с этими данными вернёт их.",
+  "Accounts, categories, operations, tags, budgets and scheduled payments will be deleted. Settings, exchange rates and backups stay.":
+    "Счета, категории, операции, теги, бюджеты и запланированные платежи будут удалены. Настройки, курсы валют и копии останутся.",
+  "All local app data, including internal backups, will be permanently deleted.":
+    "Все локальные данные приложения, включая внутренние копии, будут удалены навсегда.",
+  "All operations will be deleted. Balances go back to the opening balances.":
+    "Все операции будут удалены. Балансы вернутся к начальным.",
+  "Amount and currency; for a transfer between currencies, what arrived":
+    "Сумма и валюта; для перевода между валютами — что поступило",
+  "Blank template": "Пустой шаблон",
+  "Bring operations from another application as a CSV file. Before exporting there, switch that application to English: translated headers and names may not be recognised.":
+    "Перенесите операции из другого приложения в файле CSV. Перед экспортом переключите то приложение на английский: переведённые заголовки и названия могут не распознаться.",
+  "Counted in reports as": "Учтено в отчётах как",
+  "Download CSV": "Скачать CSV",
+  "Example with sample rows": "Пример со строками",
+  "Files you saved outside the app are not touched.":
+    "Файлы, сохранённые вне приложения, не затрагиваются.",
+  "From account, to account, category": "Со счёта, на счёт, категория",
+  "Keep a copy of your data, or move it to another device. The file opens in Monivra only; to use your data in a spreadsheet, choose Export data.":
+    "Сохраните копию данных или перенесите их на другое устройство. Файл открывается только в Monivra; для таблицы выберите «Экспорт данных».",
+  "One row is one operation; the first row names the columns.":
+    "Одна строка — одна операция; первая строка называет столбцы.",
+  "Received in currency": "Получено в валюте",
+  "The backups kept inside the app will be deleted. Your data stays.":
+    "Копии внутри приложения будут удалены. Данные останутся.",
+  "The small names under the headings are the column names written in the file.":
+    "Мелкие названия под заголовками — имена столбцов, записанные в файле.",
+  "This backup cannot be merged: some of its records do not fit the data here. Replacing the data is possible.":
+    "Эту копию нельзя объединить: часть её записей не подходит к данным здесь. Заменить данные можно.",
+  "This file has a record that does not pass the checks, so it cannot be restored.":
+    "В файле есть запись, не прошедшая проверку, поэтому восстановить его нельзя.",
+  "Type, and how a transfer to a debt is counted": "Тип и то, как учтён перевод на долг",
+  "What each column means": "Что значит каждый столбец",
+  "You match the columns and your accounts and categories, and see what will be added before anything changes. Rows already in your data are skipped, and a backup is made before the import.":
+    "Вы сопоставляете столбцы, свои счета и категории и видите, что добавится, до любых изменений. Строки, которые уже есть, пропускаются, а перед импортом делается копия.",
+  "Some categories of the backup have the same id as categories here but are the other kind (income or expense). They are added as separate categories, and their operations keep their kind.":
+    "Некоторые категории копии имеют тот же id, что и категории здесь, но другого вида (доход или расход). Они добавляются как отдельные категории, а их операции сохраняют свой вид.",
+  "Merge keeps what is on this device and adds the records of the backup.":
+    "Объединение сохраняет то, что на этом устройстве, и добавляет записи копии.",
+  "Replace deletes what is on this device and uses only the backup.":
+    "Замена удаляет то, что на этом устройстве, и оставляет только копию.",
+  "Net cash flow counts income and expenses only. The change of balance also includes adjustments, transfers to or from accounts outside the total, and currency conversion.":
+    "Чистый денежный поток учитывает только доходы и расходы. Изменение баланса включает также корректировки, переводы со счетов и на счета вне итога и пересчёт валют.",
 };

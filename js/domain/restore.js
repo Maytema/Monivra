@@ -33,6 +33,43 @@ export function contentsOf(data) {
   };
 }
 
+// A category of the backup that has the id of a category here but is the other kind (an income
+// category where this device has an expense one, say) cannot be the same category: taking either
+// would leave operations with a category that does not fit them. In a merge it is kept as a category
+// of its own under a new id, and what points to it (operations, scheduled payments, budgets, its
+// subcategories) follows. The new id is made from the old one, so merging the same backup again finds
+// it and adds nothing twice. No operation changes its kind, amount or date. Returns how many moved.
+function separateCategories(current, source) {
+  const have = new Map(current.categories.map((c) => [c.id, c]));
+  const moved = new Map();
+  for (const c of source.categories) {
+    const there = have.get(c.id);
+    if (there && there.type !== c.type) moved.set(c.id, `${c.id}~${c.type}`);
+  }
+  // A subcategory of a category that moved moves too when its own id is taken here.
+  for (let more = true; more; ) {
+    more = false;
+    for (const c of source.categories)
+      if (c.parent && moved.has(c.parent) && have.has(c.id) && !moved.has(c.id)) {
+        moved.set(c.id, `${c.id}~${c.type}`);
+        more = true;
+      }
+  }
+  if (!moved.size) return 0;
+  const to = (id) => moved.get(id) ?? id;
+  source.categories = source.categories.map((c) => ({
+    ...c,
+    id: to(c.id),
+    ...(c.parent && { parent: to(c.parent) }),
+  }));
+  for (const list of ["ops", "scheduled"])
+    source[list] = source[list].map((x) => (x.category ? { ...x, category: to(x.category) } : x));
+  source.budgets = source.budgets.map((b) =>
+    b.categories ? { ...b, categories: b.categories.map(to) } : b,
+  );
+  return moved.size;
+}
+
 // The records of a list by id: the backup's version where both have the id (or the current one
 // with `keepCurrent`), and the records only the current data has stay. `report` counts what happened to the backup's records.
 function mergeList(current, incoming, keepCurrent = false) {
@@ -94,6 +131,7 @@ export function planRestore(current, incoming, { mode, scheduled, conflicts = "b
     }
   } else {
     const report = {};
+    summary.categoriesSeparated = separateCategories(current, source);
     next = deepClone(current);
     for (const list of LISTS) {
       if (list === "scheduled" && scheduled === "none") continue;

@@ -168,8 +168,13 @@ export function findDataProblem(x) {
 // Check that an object matches the stored dataset schema (also used for imports).
 export const isValidData = (x) => !findDataProblem(x);
 
+// Counts every save, so that anything prepared from the data (a report) knows when it is out of date.
+let revision = 0;
+export const dataRevision = () => revision;
+
 // Persist appData to localStorage.
 export function save() {
+  revision++;
   // Data that could not be read is kept as it is until the person decides what to do with it.
   if (loadProblem) return false;
   try {

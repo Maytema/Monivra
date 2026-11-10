@@ -208,6 +208,10 @@ function conflictsHtml(summary) {
 // Warnings that a merge may bring in what looks like the same thing twice.
 function mergeWarnings(summary) {
   return [
+    summary.categoriesSeparated &&
+      translate(
+        "Some categories of the backup have the same id as categories here but are the other kind (income or expense). They are added as separate categories, and their operations keep their kind.",
+      ),
     summary.lookAlike &&
       translateWith(
         "{n} operations look like operations you already have (same day, amount, accounts, category and comment) but are recorded under another id. They are added too.",
@@ -298,17 +302,24 @@ export function restoreBackupView(p) {
       false,
       "Confirm",
     );
-  const card = (heading, plan, lines, warnings = [], extra = "") =>
+  // Why a way is not possible, in plain words, with the exact record behind a Details line.
+  const refusal = (plan, other) =>
+    `<p class="caution">${translate(
+      other.problem || plan.summary.mode === "replace"
+        ? "This file has a record that does not pass the checks, so it cannot be restored."
+        : "This backup cannot be merged: some of its records do not fit the data here. Replacing the data is possible.",
+    )}</p><details class="restore-conflicts"><summary>${translate("Details")}</summary><p>${escapeHtml(describeProblem(plan.problem))}</p></details>`;
+  const card = (heading, plan, lines, warnings = [], extra = "", other = {}) =>
     `<section class="restore-way"><h3>${translate(heading)}</h3>${
       plan.problem
-        ? `<p class="caution">${translate("This cannot be restored in this way:")} ${escapeHtml(describeProblem(plan.problem))}</p>`
+        ? refusal(plan, other)
         : listHtml(lines) +
           warnings.map((w) => `<p class="restore-warning">${escapeHtml(w)}</p>`).join("") +
           extra
     }</section>`;
   return (
     pageHeader(title) +
-    `<div class="content info-text roomy">${factsHtml(rows, data)}<p class="restore-meaning">${translate("To keep the data created on this device, choose Merge data: it is added to the data of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary), merge.problem ? "" : conflictChoiceHtml(p, merge.summary) + conflictsHtml(merge.summary))}<p class="restore-meaning">${translate("To delete the data created on this device, choose Replace data: it is fully replaced by the data of the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary))}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
+    `<div class="content info-text roomy">${factsHtml(rows, data)}<p class="restore-meaning">${translate("Merge keeps what is on this device and adds the records of the backup.")}</p>${card("Merge data", merge, merge.problem ? [] : mergeLines(merge.summary), merge.problem ? [] : mergeWarnings(merge.summary), merge.problem ? "" : conflictChoiceHtml(p, merge.summary) + conflictsHtml(merge.summary), replace)}<p class="restore-meaning">${translate("Replace deletes what is on this device and uses only the backup.")}</p>${card("Replace data", replace, replace.problem ? [] : replaceLines(replace.summary), [], "", merge)}<h3 class="backups-subject">${translate("Scheduled payments")}</h3>${buttonHtml(
       `${iconSvg("check", 22)}<span class="grow">${translate(way[1])}</span>${iconSvg("down", 20)}`,
       () =>
         optionSheet(

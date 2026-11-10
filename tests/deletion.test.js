@@ -1,4 +1,5 @@
 import { check } from "./harness.js";
+import { createSampleData } from "../js/data/sample.js";
 import { createReportFixture } from "./report-fixture.js";
 import { appData, setAppData, uiState } from "../js/core/state.js";
 import { findDataProblem } from "../js/data/storage.js";
@@ -146,7 +147,15 @@ check(
   () => {
     const ways = Object.values(DELETIONS);
     return (
-      ways.every((w) => w.title && w.kinds.length && w.effects.length) &&
+      ways.every((w) => w.title && w.kinds.length && w.message) &&
+      // A backup is offered exactly where the backups survive the deletion: a copy that the deletion
+      // itself erases would protect nothing.
+      ways.every((w) => {
+        const left = w.result({ ...createSampleData(), backups: [{ id: "b" }] }).backups.length;
+        return (
+          Boolean(w.backup) === (left > 0 && w.kinds.some((k) => k !== "backups") && !w.settings)
+        );
+      }) &&
       ways
         .filter((w) => w.typed)
         .map((w) => w.title)

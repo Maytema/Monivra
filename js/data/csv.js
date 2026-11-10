@@ -16,6 +16,22 @@ const COLUMNS = [
   "to_currency",
   "counted_as",
 ];
+// What a column is called for the person; the names in the file stay as they are, in English, so
+// that other programs and the import find them.
+export const COLUMN_LABELS = {
+  type: "Type",
+  date: "Date",
+  amount: "Amount",
+  currency: "Currency",
+  from: "From account",
+  to: "To account",
+  category: "Category",
+  comment: "Comment",
+  tags: "Tags",
+  to_amount: "Amount received",
+  to_currency: "Received in currency",
+  counted_as: "Counted in reports as",
+};
 // Subcategories are written as "Parent / Sub".
 const SEPARATOR = " / ";
 
@@ -103,12 +119,12 @@ export const csvTemplate = () => COLUMNS.join(",");
 export const csvExample = () =>
   [
     COLUMNS.join(","),
-    "expense,2026-03-01,12.50,USD,Wallet,,Food / Lunch,Lunch with a friend,work|lunch,,",
-    "expense,2026-03-02,45.00,USD,Wallet,,Transport,Taxi,,,",
-    "income,2026-03-05,2500.00,USD,,Wallet,Salary,March salary,,,",
-    "transfer,2026-03-06,300.00,USD,Wallet,Savings,,Monthly saving,,,",
-    "transfer,2026-03-07,100.00,USD,Wallet,Euro wallet,,Exchange,,92.00,EUR",
-    "adjustment,2026-03-08,5.00,USD,,Wallet,,Found in a coat,,,",
+    "expense,2026-03-01,12.50,USD,Wallet,,Food / Lunch,Lunch with a friend,work|lunch,,,",
+    "expense,2026-03-02,45.00,USD,Wallet,,Transport,Taxi,,,,",
+    "income,2026-03-05,2500.00,USD,,Wallet,Salary,March salary,,,,",
+    "transfer,2026-03-06,300.00,USD,Wallet,Savings,,Monthly saving,,,,",
+    "transfer,2026-03-07,100.00,USD,Wallet,Euro wallet,,Exchange,,92.00,EUR,",
+    "adjustment,2026-03-08,5.00,USD,,Wallet,,Found in a coat,,,,",
   ].join("\r\n");
 // The rows of the example as cells, for showing them in a table.
 export const csvExampleRows = () =>

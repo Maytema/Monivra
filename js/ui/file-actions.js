@@ -23,6 +23,7 @@ export function saveDelivery(file) {
 export async function shareDelivery(file) {
   const result = await shareFile(file);
   if (result === "shared") toast("File shared");
+  else if (result === "busy") return;
   else if (result === "unsupported")
     confirmAction(
       file.name.endsWith(".json")

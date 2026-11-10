@@ -27,6 +27,7 @@ import { formatAmountText } from "../domain/finance.js";
 import { translate, translateCount, translateWith } from "../i18n/index.js";
 import { makeFile, pickFile } from "../platform/files.js";
 import { confirmAction, optionSheet, showInfo } from "../ui/dialogs.js";
+import { csvTableHtml } from "../ui/csv-table.js";
 import { saveDelivery } from "../ui/file-actions.js";
 import { closeLayers, goHome, openPage, openSheet } from "../ui/navigation.js";
 import { buttonHtml, pageHeader, toast } from "../ui/primitives.js";
@@ -575,21 +576,31 @@ const COLUMN_HELP = [
   ],
 ];
 
+// The two files that can be downloaded from the example: the sample rows, or the column names alone.
+const DOWNLOADS = [
+  ["example", "Example with sample rows", "A row of every kind of operation to change"],
+  ["empty", "Blank template", "Only the names of the columns, to fill in"],
+];
+const downloadCsv = (kind) =>
+  saveDelivery(
+    makeFile(
+      `${APP_ID}-${kind === "empty" ? "import-template" : "import-example"}.csv`,
+      "\ufeff" + (kind === "empty" ? csvTemplate() : csvExample()),
+      "text/csv;charset=utf-8",
+    ),
+  );
+
 // Page that shows how a file for the import is written, with a sample that is not the person's data.
 export function importExampleView() {
   const [head, ...rows] = csvExampleRows();
   return (
     pageHeader("Example of a CSV file") +
-    `<div class="content info-text roomy"><p>This is how a file for the import is written. Each row is one operation; the first row holds the names of the columns.</p><h3 class="export-heading">Sample rows</h3><p class="preview-note">${translate("Sample values for illustration. They are not your data.")}</p><div class="csv-preview"><table><thead><tr>${head.map((h) => `<th>${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${rows
-      .map((row) => `<tr>${row.map((c) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`)
-      .join(
-        "",
-      )}</tbody></table></div><h3 class="export-heading">Columns</h3><div class="column-help">${COLUMN_HELP.map(
+    `<div class="content info-text roomy"><p>One row is one operation; the first row names the columns.</p><p class="preview-note">${translate("Sample values for illustration. They are not your data.")}</p>${csvTableHtml(head, rows)}<details class="restore-conflicts"><summary>${translate("What each column means")}</summary><div class="column-help">${COLUMN_HELP.map(
       ([name, what, how]) =>
         `<div><h4><code>${escapeHtml(name)}</code> · ${translate(what)}</h4><p>${translate(how)}</p></div>`,
     ).join(
       "",
-    )}</div><h3 class="export-heading">Good to know</h3><p>Columns may be separated by commas, semicolons or tabs. The text should be UTF-8; other encodings can be chosen while importing.</p><p>You can import a file with other column names: you choose which column is which.</p><p>Accounts and categories that are not found are created. Before anything is added you see what will happen and can link each name to an account or category you have.</p><p>A row that is already in your data (same day, amount, accounts, category and comment) is left out, so importing a file twice does not add its operations twice.</p><p>A transfer between your accounts is neither an income nor an expense.</p><p>A text that begins with = + - or @ is written with a leading apostrophe by this application so that spreadsheets do not take it for a formula. The apostrophe is removed when the file is imported.</p></div><div class="page-footer">${buttonHtml("Download example file", () => saveDelivery(makeFile(`${APP_ID}-import-example.csv`, "﻿" + csvExample(), "text/csv;charset=utf-8")), "outline")}${buttonHtml("Download empty template", () => saveDelivery(makeFile(`${APP_ID}-import-template.csv`, "﻿" + csvTemplate(), "text/csv;charset=utf-8")), "outline")}</div>`
+    )}</div></details><details class="restore-conflicts"><summary>${translate("Good to know")}</summary><p>Columns may be separated by commas, semicolons or tabs. The text should be UTF-8; other encodings can be chosen while importing.</p><p>You can import a file with other column names: you choose which column is which.</p><p>Accounts and categories that are not found are created. Before anything is added you see what will happen and can link each name to an account or category you have.</p><p>A row that is already in your data (same day, amount, accounts, category and comment) is left out, so importing a file twice does not add its operations twice.</p><p>A transfer between your accounts is neither an income nor an expense.</p><p>A text that begins with = + - or @ is written with a leading apostrophe by this application so that spreadsheets do not take it for a formula. The apostrophe is removed when the file is imported.</p></details></div><div class="page-footer">${buttonHtml("Download CSV", () => optionSheet("Download CSV", DOWNLOADS, "", downloadCsv), "primary")}</div>`
   );
 }
 

@@ -1011,13 +1011,19 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 48px;
+  min-height: 56px;
   padding: 0px 8px;
   border: 1px solid var(--line);
   border-radius: 24px;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
+}
+/* While an action is being prepared the button looks busy and takes no second tap; nothing moves. */
+.file-action.busy,
+.page-footer button.busy {
+  opacity: 0.6;
+  cursor: progress;
 }
 /* Three buttons are narrow: the icon goes above the word, so a long word (in Russian) still fits. */
 .file-actions.three .file-action {
@@ -1121,7 +1127,12 @@
   background: var(--soft);
 }
 .export-option .checkbox {
-  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+.export-option small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 13px;
 }
 /* Pages that explain something and keep their buttons at the bottom */
 .info-text {
@@ -1412,4 +1423,12 @@
   margin: 12px 4px 0px;
   font-size: 13px;
   color: var(--ink-soft);
+}
+
+/* The name a column has in the file, under its heading */
+.csv-preview th small {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 400;
 }

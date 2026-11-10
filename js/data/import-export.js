@@ -1,15 +1,15 @@
 /* The Data section: its menu page, the data file page, and the import of a CSV file */
-import { csvExample, csvTemplate } from "./csv.js";
 import { MAX_FILE_BYTES, parseBackupFile } from "./backup-file.js";
-import { makeFile, pickFile } from "../platform/files.js";
+import { pickFile } from "../platform/files.js";
+import { iconSvg } from "../core/constants.js";
+import { translate } from "../i18n/index.js";
 import { openPage } from "../ui/navigation.js";
-import { optionSheet, showInfo } from "../ui/dialogs.js";
+import { showInfo } from "../ui/dialogs.js";
 import { dataFile, saveDelivery, shareDelivery } from "../ui/file-actions.js";
 import { buttonHtml, menuRowHtml, pageHeader } from "../ui/primitives.js";
 import { openExport } from "../screens/export.js";
 import { openFileRestore } from "../screens/more/backup-pages.js";
 import { startImport } from "../screens/import-wizard.js";
-import { APP_ID } from "../core/constants.js";
 
 // Lets the person choose a data file (JSON); it opens the page where it is looked at and restored.
 async function restoreFromFile() {
@@ -55,26 +55,13 @@ export function dataView() {
 export function dataFileView() {
   return (
     pageHeader("Data file") +
-    `<div class="content info-text"><p>Back up your data to keep it safe or move it to another device.</p><p>This file format is specific to this application: other applications cannot open it. To use your data elsewhere, go to Export data.</p></div><div class="page-footer">${buttonHtml("Share", () => shareDelivery(dataFile()), "secondary")}${buttonHtml("Save", () => saveDelivery(dataFile()), "secondary")}<hr>${buttonHtml("Restore from file", restoreFromFile, "outline")}</div>`
+    `<div class="content info-text"><p>Keep a copy of your data, or move it to another device. The file opens in Monivra only; to use your data in a spreadsheet, choose Export data.</p></div><div class="page-footer">${buttonHtml("Restore from file", restoreFromFile, "primary")}<div class="file-actions">${buttonHtml(`${iconSvg("share", 22)}<span>${translate("Share")}</span>`, () => shareDelivery(dataFile()), "file-action")}${buttonHtml(`${iconSvg("save", 22)}<span>${translate("Save")}</span>`, () => saveDelivery(dataFile()), "file-action")}</div></div>`
   );
 }
-// What the file of a template holds: the column names alone, or a few rows as examples.
-const TEMPLATES = [
-  ["empty", "Empty template", "Only the names of the columns, to fill in"],
-  ["example", "Template with examples", "A row of every kind of operation to change"],
-];
-const downloadTemplate = (kind) =>
-  saveDelivery(
-    makeFile(
-      `${APP_ID}-${kind === "empty" ? "template" : "import-example"}.csv`,
-      "\ufeff" + (kind === "empty" ? csvTemplate() : csvExample()),
-      "text/csv;charset=utf-8",
-    ),
-  );
 // Page of the import of operations from another application as a CSV file.
 export function importDataView() {
   return (
     pageHeader("Import data") +
-    `<div class="content info-text roomy tight"><p>Before exporting data from another application, we recommend switching that application to English.</p><p>Some applications translate the data they export (headers, names of operation types and so on). This may interfere with correct recognition of the data.</p><hr><p>You choose which column of the file is which, link its accounts and categories to yours and see what would be added before anything changes.</p><p>Rows that are already in your data are left out. Before the imported data is saved, a backup of the current data is made. You will be able to restore the data from it.</p></div><div class="page-footer">${buttonHtml("Select CSV file", startImport, "primary")}${buttonHtml("View example", () => openPage("importExample"), "outline")}${buttonHtml("Download template", () => optionSheet("Download template", TEMPLATES, "", downloadTemplate), "outline")}</div>`
+    `<div class="content info-text roomy tight"><p>Bring operations from another application as a CSV file. Before exporting there, switch that application to English: translated headers and names may not be recognised.</p><p>You match the columns and your accounts and categories, and see what will be added before anything changes. Rows already in your data are skipped, and a backup is made before the import.</p></div><div class="page-footer">${buttonHtml("Select CSV file", startImport, "primary")}${buttonHtml("View example", () => openPage("importExample"), "outline")}</div>`
   );
 }

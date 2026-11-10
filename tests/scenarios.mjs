@@ -619,8 +619,12 @@ const scenarios = {
     await openData(page, "Delete my data");
     await page.getByText("Partial deletion", { exact: true }).click();
     // What it does to the rest is told, a copy in the backups is on, a data file can be saved first.
-    expect(await page.locator(".restore-changes").textContent()).toMatch(/backups stay/);
-    expect(await page.getByLabel("Create a backup first").isChecked()).toBe(true);
+    expect(await page.locator(".confirm-message").textContent()).toMatch(/backups stay/);
+    expect(
+      await page
+        .getByRole("checkbox", { name: "Create a backup first" })
+        .getAttribute("aria-checked"),
+    ).toBe("true");
     expect(await page.getByLabel("Confirmation word").count()).toBe(0);
     const [file] = await Promise.all([
       page.waitForEvent("download"),
@@ -641,6 +645,13 @@ const scenarios = {
     // Everything: the button waits for the word, and the backups go too.
     await openData(page, "Delete my data");
     await page.getByText("Delete local data", { exact: true }).click();
+    // Short and plain: internal backups go too, files outside the app stay; no backup is offered
+    // because the deletion would erase it.
+    expect(await page.locator(".confirm-message").textContent()).toBe(
+      "All local app data, including internal backups, will be permanently deleted.",
+    );
+    expect(await page.locator(".confirm-aside").textContent()).toMatch(/outside the app/);
+    expect(await page.getByRole("checkbox", { name: "Create a backup first" }).count()).toBe(0);
     const remove = page.getByRole("button", { name: "Delete", exact: true });
     expect(await remove.isDisabled()).toBe(true);
     await page.getByLabel("Confirmation word").fill("remove");
@@ -1015,7 +1026,8 @@ const scenarios = {
     await page.getByRole("button", { name: "Preview", exact: true }).click();
     await page.locator(".csv-preview table").waitFor();
     expect(downloads.length).toBe(0);
-    expect(await page.locator(".csv-preview th").allTextContents()).toContain("comment");
+    const headings = await page.locator(".csv-preview th").allTextContents();
+    expect(headings.some((h) => h === "Commentcomment")).toBe(true); // its name, and the one in the file
     await page.locator(".icon-button[title=Back]").click();
     const save = async () => {
       const [download] = await Promise.all([
@@ -1299,7 +1311,9 @@ const scenarios = {
     expect(await page.locator(".row .sub").nth(1).textContent()).toMatch(/\d+ accounts/);
     expect(await page.locator("#base .row").count()).toBe(4);
     await page.getByText("Delete operations", { exact: true }).click();
-    expect(await page.locator(".confirm-message").textContent()).toMatch(/^\d+ operations will be/);
+    expect(await page.locator(".confirm-message").textContent()).toMatch(/^All operations will be/);
+    await page.locator(".overlay details summary").click();
+    expect(await page.locator(".overlay details").textContent()).toMatch(/\d+ operations/);
   },
   async "a whole amount never gets zero cents, even with two decimal places turned on"(page) {
     await page.evaluate(async () => {
@@ -1349,6 +1363,416 @@ const scenarios = {
     expect(least <= all).toBe(true);
     expect(least > 0).toBe(true);
   },
+  // ---- Data section: reliability and layout (see docs/DATA_UX_REPORT.md) ----
+  async "repeated taps on Print make one print dialog, and leaving the page cancels a pending one"(
+    page,
+  ) {
+    await page.evaluate(async () => {
+      window.__printed = 0;
+      new MutationObserver((records) => {
+        for (const node of records.flatMap((r) => [...r.addedNodes]))
+          if (node.tagName === "IFRAME")
+            node.contentWindow.print = () => {
+              window.__printed++;
+              setTimeout(() => node.contentWindow.dispatchEvent(new Event("afterprint")), 50);
+            };
+      }).observe(document.body, { childList: true });
+      // A slow report: every page takes a moment to make.
+      const toBlob = globalThis.HTMLCanvasElement.prototype.toBlob;
+      globalThis.HTMLCanvasElement.prototype.toBlob = function (...args) {
+        setTimeout(() => toBlob.apply(this, args), 120);
+      };
+    });
+    await openData(page, "Export data");
+    await page.getByRole("button", { name: /Detailed transactions/ }).click();
+    const tapPrint = () =>
+      page.evaluate(() => {
+        const button = [...document.querySelectorAll(".file-action")].at(-1);
+        for (let n = 0; n < 6; n++) button.click();
+      });
+    await tapPrint();
+    await page.waitForFunction(() => window.__printed > 0);
+    await page.waitForTimeout(800);
+    expect(await page.evaluate(() => window.__printed)).toBe(1);
+    const builds = await page.evaluate(
+      async () => (await import("/js/data/report-cache.js")).cacheStats.builds,
+    );
+    expect(builds).toBe(1);
+    // The button is free again; a new request uses the report made before.
+    await tapPrint();
+    await page.waitForFunction(() => window.__printed === 2);
+    expect(
+      await page.evaluate(async () => (await import("/js/data/report-cache.js")).cacheStats.builds),
+    ).toBe(1);
+    // Leaving the page while a different report is being made: no dialog appears afterwards.
+    await page.getByRole("button", { name: /Financial summary/ }).click();
+    await tapPrint();
+    await page.evaluate(() => document.querySelector(".icon-button[title=Back]").click());
+    await page.waitForTimeout(2500);
+    expect(await page.evaluate(() => window.__printed)).toBe(2);
+    expect(await page.locator("iframe").count()).toBe(0);
+    // Changing a choice while the report is being made drops the request in the same way.
+    await page.getByText("Export data", { exact: true }).click();
+    await tapPrint();
+    await page.evaluate(() => document.querySelector(".export-part").click());
+    await page.waitForTimeout(2500);
+    expect(await page.evaluate(() => window.__printed)).toBe(2);
+  },
+  async "a prepared report is used again, made again after a change, and waited for when asked twice"(
+    page,
+  ) {
+    const stats = () =>
+      page.evaluate(async () => ({ ...(await import("/js/data/report-cache.js")).cacheStats }));
+    await openData(page, "Export data");
+    const started = Date.now();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.locator(".report-pages img").first().waitFor();
+    const first = Date.now() - started;
+    expect((await stats()).builds).toBe(1);
+    await page.locator(".icon-button[title=Back]").click();
+    const again = Date.now();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.locator(".report-pages img").first().waitFor();
+    const second = Date.now() - again;
+    const used = await stats();
+    expect([used.builds, used.hits]).toEqual([1, 1]);
+    console.log(`     first preview ${first} ms, second (prepared) ${second} ms`);
+    await page.locator(".icon-button[title=Back]").click();
+    // Saving uses the same prepared file.
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByRole("button", { name: "Save", exact: true }).click(),
+    ]);
+    expect(download.suggestedFilename()).toMatch(/\.pdf$/);
+    expect((await stats()).builds).toBe(1);
+    // A choice of the report makes it again; the change of the data does too.
+    await page.locator(".export-part").first().click();
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.locator(".report-pages img").first().waitFor();
+    expect((await stats()).builds).toBe(2);
+    await page.locator(".icon-button[title=Back]").click();
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      appData.accounts[0].name += "!";
+      save();
+    });
+    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    await page.locator(".report-pages img").first().waitFor();
+    expect((await stats()).builds).toBe(3);
+    // Two requests at once for the same report make one.
+    const joined = await page.evaluate(async () => {
+      const cache = await import("/js/data/report-cache.js");
+      const { emptyFilters } = await import("/js/core/state.js");
+      const config = {
+        mode: "detail",
+        filters: emptyFilters(),
+        period: { mode: "all" },
+        sections: {},
+        parts: { type: true, accounts: true, amount: true, comment: true, tags: true },
+      };
+      const before = cache.cacheStats.builds;
+      const [a, b] = await Promise.all([cache.preparedJob(config), cache.preparedJob(config)]);
+      return [a === b, cache.cacheStats.builds - before];
+    });
+    expect(joined).toEqual([true, 1]);
+  },
+  async "sharing: a second tap while the sheet is open does nothing, a refused tap is told, a missing share is never a download"(
+    page,
+  ) {
+    const downloads = watchDownloads(page);
+    await page.evaluate(() => {
+      window.__shares = 0;
+      window.__mode = "slow";
+      Object.defineProperty(navigator, "canShare", { value: () => true, configurable: true });
+      Object.defineProperty(navigator, "share", {
+        value: async () => {
+          window.__shares++;
+          if (window.__mode === "blocked")
+            throw new globalThis.DOMException("no activation", "NotAllowedError");
+          await new Promise((done) => setTimeout(done, 600));
+        },
+        configurable: true,
+      });
+    });
+    await openData(page, "Data file");
+    await page.evaluate(() => {
+      const button = [...document.querySelectorAll(".file-action")][0];
+      button.click();
+      button.click();
+      button.click();
+    });
+    await page.getByText("File shared").waitFor();
+    expect(await page.evaluate(() => window.__shares)).toBe(1);
+    // The browser asks for a new tap: said once, nothing saved.
+    await page.evaluate(() => (window.__mode = "blocked"));
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.getByRole("heading", { name: "Tap Share again" }).waitFor();
+    await page.getByRole("button", { name: "OK" }).click();
+    expect(downloads.length).toBe(0);
+    // Rejected by the system (it cannot open): told, nothing saved.
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "share", {
+        value: async () => {
+          throw new globalThis.DOMException("broken", "DataError");
+        },
+        configurable: true,
+      });
+    });
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.getByText("The share sheet could not be opened").waitFor();
+    expect(downloads.length).toBe(0);
+  },
+  async "the checkboxes of the export keep their size and place when they are turned off"(page) {
+    await openData(page, "Export data");
+    const measure = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll(".export-option")].map((row) => {
+          const r = row.getBoundingClientRect();
+          const c = row.querySelector(".checkbox").getBoundingClientRect();
+          return [r.width, r.height, c.x - r.x, c.width, c.height].map((n) => Math.round(n * 10));
+        }),
+      );
+    const before = await measure();
+    for (const row of await page.locator(".export-option").all()) await row.click();
+    expect(await measure()).toEqual(before);
+    expect(await page.locator(".export-option.on").count()).toBe(0);
+    await page.getByRole("button", { name: /CSV file/ }).click();
+    const csvBefore = await measure();
+    for (const row of await page.locator(".export-option").all()) await row.click();
+    expect(await measure()).toEqual(csvBefore);
+  },
+  async "at 320 the footer of the export keeps its height and place when the format changes"(page) {
+    await openData(page, "Export data");
+    const footer = () =>
+      page.evaluate(() => {
+        const box = document.querySelector(".page-footer").getBoundingClientRect();
+        const preview = [
+          ...document.querySelectorAll(".page-footer button"),
+        ][0].getBoundingClientRect();
+        return [
+          box.y,
+          box.height,
+          preview.y,
+          preview.height,
+          document.documentElement.scrollWidth <= innerWidth,
+        ].map((n) => (typeof n === "number" ? Math.round(n) : n));
+      });
+    const pdf = await footer();
+    await page.getByRole("button", { name: /CSV file/ }).click();
+    expect(await footer()).toEqual(pdf);
+    await page.getByRole("button", { name: /Detailed transactions/ }).click();
+    expect(await footer()).toEqual(pdf);
+    expect(pdf[4]).toBe(true);
+  },
+  async "the CSV import starts with two buttons and one download offers the example or the blank file"(
+    page,
+  ) {
+    const downloads = watchDownloads(page);
+    await openData(page, "Import data");
+    expect(await page.locator(".page-footer button").allTextContents()).toEqual([
+      "Select CSV file",
+      "View example",
+    ]);
+    await page.getByRole("button", { name: "View example" }).click();
+    expect(await page.locator(".page-footer button").allTextContents()).toEqual(["Download CSV"]);
+    expect(await page.locator(".content .csv-preview th").first().textContent()).toBe("Typetype");
+    await page.getByRole("button", { name: "Download CSV" }).click();
+    const [example] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator(".overlay .row", { hasText: "Example with sample rows" }).click(),
+    ]);
+    expect(example.suggestedFilename()).toBe("monivra-import-example.csv");
+    expect((await readFile(await example.path(), "utf8")).split("\r\n").length > 3).toBe(true);
+    expect(downloads.length).toBe(1);
+    await page.getByRole("button", { name: "Download CSV" }).click();
+    const [blank] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator(".overlay .row", { hasText: "Blank template" }).click(),
+    ]);
+    expect(blank.suggestedFilename()).toBe("monivra-import-template.csv");
+    const text = (await readFile(await blank.path(), "utf8")).replace("﻿", "");
+    expect(text).toBe(
+      "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency,counted_as",
+    );
+    expect(downloads.length).toBe(2);
+  },
+  async "on the data file page Restore is the main button and Share and Save sit side by side"(
+    page,
+  ) {
+    await openData(page, "Data file");
+    const boxes = await page.evaluate(() =>
+      [...document.querySelectorAll(".page-footer button")].map((b) => {
+        const r = b.getBoundingClientRect();
+        return [b.textContent.trim(), Math.round(r.x), Math.round(r.y), Math.round(r.height)];
+      }),
+    );
+    const [restore, share, save] = boxes;
+    expect(restore[0]).toBe("Restore from file");
+    expect(share[2]).toBe(save[2]); // the same row
+    expect(share[1] < save[1]).toBe(true);
+    expect(share[3] >= 48 && restore[3] >= 48).toBe(true);
+    expect(restore[2] < share[2]).toBe(true);
+  },
+  async "a backup whose category clashes with one here is merged with its own category; a broken file is refused with a reason"(
+    page,
+  ) {
+    const file = await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { backupFileText } = await import("/js/data/backup-file.js");
+      const category = appData.categories.find((c) => c.type === "expense" && !c.parent);
+      const copy = JSON.parse(backupFileText());
+      copy.categories = copy.categories
+        .filter((c) => c.parent !== category.id)
+        .map((c) => (c.id === category.id ? { ...c, type: "income", name: "Bonus" } : c));
+      copy.ops = copy.ops
+        .filter(
+          (o) =>
+            o.category !== category.id &&
+            !appData.categories.some((c) => c.parent === category.id && c.id === o.category),
+        )
+        .concat({
+          id: "clash-op",
+          type: "income",
+          amount: 12345,
+          date: "2026-01-02",
+          comment: "from backup",
+          tags: [],
+          to: copy.accounts[0].id,
+          category: category.id,
+        });
+      return JSON.stringify(copy);
+    });
+    await openData(page, "Data file");
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Restore from file" }).click(),
+    ]);
+    await chooser.setFiles({
+      name: "clash.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(file),
+    });
+    await page.getByText("Merge data", { exact: true }).first().waitFor();
+    expect(await page.getByText(/same id as categories here/).count()).toBe(1);
+    expect(await page.getByRole("button", { name: "Merge data" }).isDisabled()).toBe(false);
+    await page.getByRole("button", { name: "Merge data" }).click();
+    await page.getByRole("button", { name: "Confirm" }).click();
+    await page.getByText("Backup restored").waitFor();
+    const result = await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const added = appData.ops.find((o) => o.id === "clash-op");
+      const category = appData.categories.find((c) => c.id === added.category);
+      return [added.type, added.amount, category.type, category.id.includes("~")];
+    });
+    expect(result).toEqual(["income", 12345, "income", true]);
+    // A file that is wrong in itself is refused when it is opened, with the reason in a sentence.
+    const broken = JSON.parse(file);
+    broken.ops.find((o) => o.id === "clash-op").type = "expense";
+    await page.evaluate(() => document.querySelector(".icon-button[title=Back]")?.click());
+    await openData(page, "Data file").catch(() => {});
+    const [second] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Restore from file" }).click(),
+    ]);
+    await second.setFiles({
+      name: "broken.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(broken)),
+    });
+    await page
+      .locator(".overlay")
+      .getByText(/does not fit the type/)
+      .waitFor();
+    await page.locator(".overlay").getByRole("button", { name: "OK" }).click();
+  },
+  async "a merge that cannot be done says why in plain words, keeps Replace and looks disabled"(
+    page,
+  ) {
+    // The backup is sound on its own, but with the backup's version of "Food" (a subcategory there)
+    // the subcategories of "Food" here would hang under a subcategory.
+    const file = await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { backupFileText } = await import("/js/data/backup-file.js");
+      const food = appData.categories.find((c) => c.name === "Food" && !c.parent);
+      const other = appData.categories.find(
+        (c) => c.type === "expense" && !c.parent && c.id !== food.id,
+      );
+      const copy = JSON.parse(backupFileText());
+      const subs = copy.categories.filter((c) => c.parent === food.id).map((c) => c.id);
+      copy.categories = copy.categories
+        .filter((c) => !subs.includes(c.id))
+        .map((c) => (c.id === food.id ? { ...c, parent: other.id } : c));
+      copy.ops = copy.ops.filter((o) => !subs.includes(o.category));
+      copy.scheduled = copy.scheduled.filter((o) => !subs.includes(o.category));
+      copy.budgets = copy.budgets.map((b) => ({
+        ...b,
+        categories: b.categories && b.categories.filter((id) => !subs.includes(id)),
+      }));
+      return JSON.stringify(copy);
+    });
+    await openData(page, "Data file");
+    const [chooser] = await Promise.all([
+      page.waitForEvent("filechooser"),
+      page.getByRole("button", { name: "Restore from file" }).click(),
+    ]);
+    await chooser.setFiles({
+      name: "odd.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(file),
+    });
+    await page.getByText("Merge data", { exact: true }).first().waitFor();
+    // Keeping the version here, the merge is possible; taking the backup's version is not.
+    expect(await page.getByRole("button", { name: "Merge data" }).isDisabled()).toBe(false);
+    await page.getByText("Keep the version on this device").click();
+    await page.locator(".overlay .row", { hasText: "Use the backup's version" }).click();
+    await page.getByText(/This backup cannot be merged/).waitFor();
+    const merge = page.getByRole("button", { name: "Merge data" });
+    expect(await merge.isDisabled()).toBe(true);
+    expect(await merge.evaluate((b) => Number(getComputedStyle(b).opacity) < 1)).toBe(true);
+    expect(await page.getByRole("button", { name: "Replace data" }).isDisabled()).toBe(false);
+    await page.locator(".restore-way details summary").first().click();
+    expect(await page.locator(".restore-way details").first().textContent()).toMatch(
+      /parent category/,
+    );
+  },
+  async "in Russian at 320 the new Data screens fit and the partial deletion dialog is short"(
+    page,
+  ) {
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      appData.settings.language = "ru";
+      save();
+    });
+    await page.reload();
+    await page.waitForSelector(".navbar");
+    const fits = () =>
+      page.evaluate(
+        () => `${document.documentElement.scrollWidth}/${document.body.scrollWidth}/${innerWidth}`,
+      );
+    const wide = async (label) => {
+      const [root, body, inner] = (await fits()).split("/").map(Number);
+      if (root > inner || body > inner)
+        throw Error(`${label}: ${root}/${body} wider than ${inner}`);
+    };
+    await tab(page, "Ещё");
+    await page.getByText("Данные", { exact: true }).first().click();
+    await page.getByText("Файл данных", { exact: true }).click();
+    await wide("data file");
+    await page.locator(".icon-button[title=Назад]").click();
+    await page.getByText("Импорт данных", { exact: true }).click();
+    await wide("import");
+    await page.getByRole("button", { name: "Посмотреть пример" }).click();
+    await wide("example");
+    await page.locator(".icon-button[title=Назад]").click();
+    await page.locator(".icon-button[title=Назад]").click();
+    await page.getByText("Удалить мои данные", { exact: true }).click();
+    await page.getByText("Частичное удаление", { exact: true }).click();
+    const sheet = await page.locator(".overlay.dialog .panel").boundingBox();
+    if (sheet.height >= 560) throw Error(`the dialog is ${sheet.height}px tall`);
+    await wide("deletion dialog");
+  },
 };
 
 const expect = (actual) => ({
@@ -1376,6 +1800,8 @@ const withoutRecords = (data) => {
   data.budgets = [];
 };
 const adjustments = {
+  "a merge that cannot be done says why in plain words, keeps Replace and looks disabled":
+    addSubcategories,
   "in Russian the buttons to share, save and print fit the screen, and so does the page": (
     data,
   ) => {
@@ -1512,7 +1938,7 @@ function addSubcategories(data) {
     data.categories.push({ ...food, id: `sub-${name}`, name, parent: food.id });
 }
 
-const NARROW_SCREEN = ["at 320"];
+const NARROW_SCREEN = ["at 320", "in Russian at 320"];
 const SHORT_SCREEN = ["photos", "a page keeps"];
 // ONLY=text node tests/scenarios.mjs runs the scenarios whose names have the text.
 const only = process.env.ONLY;

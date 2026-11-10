@@ -687,6 +687,13 @@ export function layoutSummary(model, ctx) {
       sub: translate("part of the expenses"),
     });
   if (second.length) L.cards(second);
+  if (shown.accounts)
+    L.text(
+      translate(
+        "Net cash flow counts income and expenses only. The change of balance also includes adjustments, transfers to or from accounts outside the total, and currency conversion.",
+      ),
+      { size: 8.5, color: MUTED },
+    );
   if (
     overview.byCurrency.length > 1 ||
     (overview.byCurrency.length === 1 && overview.byCurrency[0].currency !== main)

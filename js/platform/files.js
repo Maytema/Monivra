@@ -6,8 +6,14 @@
 export const makeFile = (name, content, type) =>
   new File([content], name, { type: type.split(";")[0] });
 
-// Writes the file into the downloads of the device.
+// Writes the file into the downloads of the device. A second tap on the same file within a second
+// is the same request and is ignored.
+let lastSave = { key: "", at: 0 };
 export function saveFile(file) {
+  const now = Date.now();
+  const key = `${file.name}|${file.size}`;
+  if (lastSave.key === key && now - lastSave.at < 1000) return;
+  lastSave = { key, at: now };
   const url = URL.createObjectURL(file);
   const link = document.createElement("a");
   link.href = url;
@@ -45,10 +51,14 @@ export const canShareFile = (file) => Boolean(navigator.canShare?.({ files: [fil
 //   "cancelled"   the person closed the sheet,
 //   "unsupported" this browser cannot share files; nothing was done,
 //   "blocked"     the browser wants a fresh tap (the file took too long to prepare); nothing was done,
-//   "failed"      the sheet could not be opened.
+//   "failed"      the sheet could not be opened,
+//   "busy"        a share sheet is already open; nothing was done.
 // A file is never saved by this function: the caller offers saving as a visible choice.
+let sharing = false;
 export async function shareFile(file) {
+  if (sharing) return "busy";
   if (!canShareFile(file)) return "unsupported";
+  sharing = true;
   try {
     await navigator.share({ files: [file], title: file.name });
     return "shared";
@@ -57,15 +67,22 @@ export async function shareFile(file) {
     if (error.name === "NotAllowedError") return "blocked";
     console.error("Sharing failed:", error);
     return "failed";
+  } finally {
+    sharing = false;
   }
 }
 
-// Opens the print dialog with the pictures of the pages, one page of paper each.
+// Opens the print dialog with the pictures of the pages, one page of paper each. There is one print
+// frame at most: asking again while one is open does nothing. Resolves when the dialog is closed (or
+// after half a minute, so that nothing stays waiting for a browser that never says).
+let printFrame = null;
 export function printPages(urls) {
+  if (printFrame) return Promise.resolve();
   const frame = document.createElement("iframe");
   frame.setAttribute("aria-hidden", "true");
   frame.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0";
   document.body.append(frame);
+  printFrame = frame;
   const doc = frame.contentDocument;
   doc.open();
   doc.write(
@@ -78,9 +95,19 @@ export function printPages(urls) {
       image.complete ? 1 : new Promise((done) => image.addEventListener("load", done)),
     ),
   );
-  ready.then(() => {
-    frame.contentWindow.addEventListener("afterprint", () => frame.remove());
-    frame.contentWindow.focus();
-    frame.contentWindow.print();
+  return new Promise((done) => {
+    const finish = () => {
+      clearTimeout(timer);
+      frame.remove();
+      if (printFrame === frame) printFrame = null;
+      done();
+    };
+    const timer = setTimeout(finish, 30000);
+    ready.then(() => {
+      if (printFrame !== frame) return;
+      frame.contentWindow.addEventListener("afterprint", finish);
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+    });
   });
 }
