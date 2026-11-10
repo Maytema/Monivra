@@ -24,8 +24,12 @@ export function closeLayers(n = 1) {
 // Go back one step: close the top layer, otherwise pop the top page.
 export function goBack() {
   if (locked) return;
-  if (uiState.layers.length) uiState.layers.pop();
-  else if (uiState.pages.length) uiState.pages.pop().restore?.();
+  if (uiState.layers.length) {
+    const top = uiState.layers.at(-1);
+    // A dialog of work in progress is left by cancelling the work, which then closes it.
+    if (top.cancel) return top.cancel();
+    uiState.layers.pop();
+  } else if (uiState.pages.length) uiState.pages.pop().restore?.();
   else if (uiState.selection) {
     uiState.selection = false;
     uiState.selected = [];

@@ -52,8 +52,10 @@ function bindClicks() {
     } else if (
       event.target.classList.contains("overlay") &&
       Number(event.target.dataset.layer) === uiState.layers.length - 1
-    )
-      closeLayers();
+    ) {
+      // A dialog of work in progress is not dismissed by a tap outside it: only its Cancel ends it.
+      if (!uiState.layers.at(-1)?.cancel) closeLayers();
+    }
   });
 }
 

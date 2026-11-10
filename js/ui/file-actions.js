@@ -1,3 +1,4 @@
+/* global DOMException */
 /* Save, share and print of a prepared file, with the same wording and feedback everywhere */
 import { render } from "../app/shell.js";
 import { uiState } from "../core/state.js";
@@ -7,7 +8,7 @@ import { backupFileName, backupFileText, BACKUP_TYPE } from "../data/backup-file
 import { confirmAction, showInfo } from "./dialogs.js";
 import { openSheet } from "./navigation.js";
 import { escapeHtml } from "../core/constants.js";
-import { toast } from "./primitives.js";
+import { buttonHtml, toast } from "./primitives.js";
 
 // The data file as a file ready to be saved or shared.
 export const dataFile = () => makeFile(backupFileName(), backupFileText(), BACKUP_TYPE);
@@ -61,21 +62,26 @@ export async function printDelivery(urls, file = null) {
 }
 
 // Runs a task that takes a while behind a small dialog that says what is going on; `task` is given a
-// function to report the page it has reached. The dialog goes away when the task ends.
+// function to report the page it has reached and a signal that aborts. The dialog does not close by a
+// tap outside it: it has a Cancel button (also the system Back key), and cancelling really stops the
+// work (the task rejects with an AbortError). The dialog goes away when the task ends.
 export async function withProgress(title, task) {
   let text = translate("Preparing…");
+  const stop = new AbortController();
+  const cancel = () => stop.abort(new DOMException("Cancelled", "AbortError"));
   openSheet(
     () =>
-      `<h2>${escapeHtml(translate(title))}</h2><p class="confirm-message">${escapeHtml(text)}</p>`,
+      `<h2>${escapeHtml(translate(title))}</h2><p class="confirm-message" role="status" aria-live="polite">${escapeHtml(text)}</p><div class="dialog-actions">${buttonHtml("Cancel", cancel, "text-button")}</div>`,
     title,
     "dialog",
   );
   const layer = uiState.layers.at(-1);
+  layer.cancel = cancel; // Back and Escape cancel the work; a tap outside does nothing
   try {
     return await task((done, total) => {
       text = translateWith("Page {n} of {total}", { n: done, total });
       render();
-    });
+    }, stop.signal);
   } finally {
     uiState.layers = uiState.layers.filter((l) => l !== layer);
     render();

@@ -27,19 +27,32 @@ const fileName = (what, period, extension) =>
   `${APP_ID}-${what}-${periodSlug(period)}.${extension}`;
 
 // The report as pictures of pages and a PDF. `onPage(done, total)` tells the progress.
-export async function buildReportJob({ mode, filters, period, sections, parts }, onPage) {
+export async function buildReportJob(
+  { mode, filters, period, sections, parts },
+  onPage,
+  signal = null,
+) {
   const summary = mode === "summary";
   const model = summary
     ? summaryModel({ filters, period, sections })
     : detailModel({ filters, period, parts });
   const fonts = await loadReportFonts();
+  signal?.throwIfAborted();
   const pages = (summary ? layoutSummary : layoutDetail)(model, measuringContext());
-  const rendered = await renderPages(pages, onPage);
-  const bytes = await buildPdf(pages, fonts, {
-    title: `${model.meta.title} · ${model.meta.periodShort}`,
-    subject: "Monivra",
-    language: appData.settings.language,
-  });
+  const rendered = await renderPages(pages, onPage, signal);
+  let bytes;
+  try {
+    signal?.throwIfAborted();
+    bytes = await buildPdf(pages, fonts, {
+      title: `${model.meta.title} · ${model.meta.periodShort}`,
+      subject: "Monivra",
+      language: appData.settings.language,
+    });
+    signal?.throwIfAborted();
+  } catch (error) {
+    for (const page of rendered) URL.revokeObjectURL(page.url);
+    throw error;
+  }
   return {
     mode,
     pageCount: rendered.length,

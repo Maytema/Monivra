@@ -1,3 +1,4 @@
+/* global DOMException */
 /* The prepared exports of this session. A PDF of a long report takes a while to make, so the one made
    for the choices of the person is kept and used again by Preview, Save, Share and Print; asking for
    it while it is being made waits for that one instead of starting another. Only a few are kept (the
@@ -41,7 +42,7 @@ export const isPreparing = (config) => Boolean(entries.get(signatureOf(config))?
 
 // Resolves with the prepared export for these choices, making it only when it does not exist yet.
 // `onPage(done, total)` tells the progress of a PDF; everyone waiting for the same one is told.
-export function preparedJob(config, onPage = () => {}) {
+export function preparedJob(config, onPage = () => {}, signal = null) {
   dropStale();
   const key = signatureOf(config);
   const known = entries.get(key);
@@ -54,18 +55,27 @@ export function preparedJob(config, onPage = () => {}) {
   if (known?.pending) {
     cacheStats.joined++;
     known.listeners.add(onPage);
-    return known.pending;
+    return follow(known, onPage, signal);
   }
   cacheStats.builds++;
-  const entry = { version: versionOf(), job: null, listeners: new Set([onPage]), pending: null };
+  const entry = {
+    version: versionOf(),
+    job: null,
+    listeners: new Set([onPage]),
+    pending: null,
+    stop: new AbortController(),
+    waiting: 0,
+  };
   entry.pending = (async () => {
     await null; // always asynchronous, so that `pending` is set before anything finishes
     try {
       const job =
         config.mode === "csv"
           ? buildCsvJob(config)
-          : await buildReportJob(config, (done, total) =>
-              entry.listeners.forEach((listener) => listener(done, total)),
+          : await buildReportJob(
+              config,
+              (done, total) => entry.listeners.forEach((listener) => listener(done, total)),
+              entry.stop.signal,
             );
       entry.job = job;
       return job;
@@ -77,6 +87,7 @@ export function preparedJob(config, onPage = () => {}) {
     }
   })();
   entries.set(key, entry);
+  entry.pending.catch(() => {}); // a cancelled job is not an error nobody handles
   entry.pending.then(
     () => {
       while ([...entries.values()].filter((e) => e.job).length > CACHE_LIMIT) {
@@ -87,7 +98,33 @@ export function preparedJob(config, onPage = () => {}) {
     },
     () => {},
   );
-  return entry.pending;
+  return follow(entry, onPage, signal);
+}
+
+// What one caller gets of a job being made: the job, or an AbortError the moment `signal` aborts.
+// The work itself stops (and its pictures are let go) when the last caller waiting for it has given
+// up; nobody waiting means nobody to show it to, so it never opens later by itself.
+function follow(entry, onPage, signal) {
+  entry.waiting++;
+  let release = () => {};
+  const gone = new Promise((_, reject) => {
+    const abort = () => {
+      entry.listeners.delete(onPage);
+      if (--entry.waiting === 0) {
+        entry.stop.abort();
+        for (const [key, e] of entries) if (e === entry) entries.delete(key);
+      }
+      reject(signal.reason ?? new DOMException("Cancelled", "AbortError"));
+    };
+    if (!signal) return;
+    if (signal.aborted) return abort();
+    signal.addEventListener("abort", abort, { once: true });
+    release = () => signal.removeEventListener("abort", abort);
+  });
+  return Promise.race([entry.pending, gone]).finally(() => {
+    release();
+    if (entry.job) entry.waiting = Math.max(0, entry.waiting - 1);
+  });
 }
 
 // Lets go of everything (when the data is replaced or erased).

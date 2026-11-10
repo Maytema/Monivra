@@ -88,29 +88,38 @@ export function measuringContext() {
 // Draws the pages one after another, handing each finished picture over (`onPage(done, total)`
 // tells the progress) so that no more than one canvas is alive at a time.
 // Resolves with [{ bytes, width, height, url }] (JPEG).
-export async function renderPages(pages, onPage = () => {}) {
+export async function renderPages(pages, onPage = () => {}, signal = null) {
   await document.fonts?.ready;
   const result = [];
   const canvas = document.createElement("canvas");
   canvas.width = PAGE.width * SCALE;
   canvas.height = PAGE.height * SCALE;
   const ctx = canvas.getContext("2d");
-  for (const [index, commands] of pages.entries()) {
-    ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, PAGE.width, PAGE.height);
-    for (const command of commands) draw(ctx, command);
-    const blob = await new Promise((done) => canvas.toBlob(done, "image/jpeg", QUALITY));
-    result.push({
-      bytes: new Uint8Array(await blob.arrayBuffer()),
-      width: canvas.width,
-      height: canvas.height,
-      url: URL.createObjectURL(blob),
-    });
-    onPage(index + 1, pages.length);
-    // Let the screen breathe between pages.
-    await new Promise((resume) => setTimeout(resume, 0));
+  try {
+    for (const [index, commands] of pages.entries()) {
+      // A cancelled job stops here, between two pages, and lets go of the pictures made so far.
+      signal?.throwIfAborted();
+      ctx.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, PAGE.width, PAGE.height);
+      for (const command of commands) draw(ctx, command);
+      const blob = await new Promise((done) => canvas.toBlob(done, "image/jpeg", QUALITY));
+      result.push({
+        bytes: new Uint8Array(await blob.arrayBuffer()),
+        width: canvas.width,
+        height: canvas.height,
+        url: URL.createObjectURL(blob),
+      });
+      onPage(index + 1, pages.length);
+      // Let the screen breathe between pages.
+      await new Promise((resume) => setTimeout(resume, 0));
+    }
+    signal?.throwIfAborted();
+  } catch (error) {
+    for (const page of result) URL.revokeObjectURL(page.url);
+    throw error;
+  } finally {
+    canvas.width = canvas.height = 1;
   }
-  canvas.width = canvas.height = 1;
   return result;
 }

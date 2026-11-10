@@ -92,7 +92,7 @@ export function exportJob(page) {
   if (ready) return preparedJob(config); // counts as a use of the prepared file
   return config.mode === "csv"
     ? preparedJob(config)
-    : withProgress("Preparing the report", (onPage) => preparedJob(config, onPage));
+    : withProgress("Preparing the report", (onPage, signal) => preparedJob(config, onPage, signal));
 }
 
 // Runs an action of `host` (a page) on the prepared file of `owner` (the export page). One action at
@@ -111,6 +111,8 @@ export function deliver(host, owner, name, action) {
       if (host.alive === false || signatureOf(configOf(owner)) !== asked) return;
       await action(job);
     } catch (error) {
+      // Cancelled by the person: nothing to tell, nothing opens later.
+      if (error?.name === "AbortError") return;
       if (host.alive !== false) toast("The file could not be prepared");
       console.error("Export failed:", error);
     } finally {
