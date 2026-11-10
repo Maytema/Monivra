@@ -740,7 +740,13 @@ await step("a scheduled payment reminder is registered with Android's alarm mana
     return { scheduled: appData.scheduled.length, notifications: appData.settings.notifications,
       planned: upcomingReminders(appData).length, now: new Date().toString() };
   })()`);
+  const probe =
+    await ev(`Capacitor.Plugins.LocalNotifications.schedule({ notifications: [{ id: 4242,
+    title: 'probe', body: 'probe', channelId: 'payments',
+    schedule: { at: new Date(Date.now() + 600000), allowWhileIdle: true } }] })
+    .then(() => 'ok', (e) => 'error: ' + (e && e.message))`);
   const diagnostics = JSON.stringify({
+    probe,
     permission,
     pending,
     state,

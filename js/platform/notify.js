@@ -118,6 +118,10 @@ export function scheduleNotifications(items) {
         });
       return true;
     })
-    .catch(() => false);
+    .catch((error) => {
+      // Only the reason is logged, never the reminders (they name payments).
+      console.warn("Monivra: the reminders could not be handed to the system:", error?.message);
+      return false;
+    });
   return queue;
 }
