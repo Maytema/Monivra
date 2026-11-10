@@ -6,15 +6,20 @@
 //
 // Usage: node e2e/emulator.mjs <release.apk> <debuggable.apk> <next-debuggable.apk> <results-dir>
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { createSampleData } from "../../tests/fixtures/sample-data.js";
 
 const [releaseApk, debugApk, nextApk, outDir] = process.argv.slice(2);
 mkdirSync(outDir, { recursive: true });
 // The test builds use their own application id (so they never replace the real app); the activity
 // keeps the code package of the project.
+// The synthetic data of the tests is a fixture; it is loaded into the page as a module from its source
+// (its import of the app's defaults points at the page's own copy), never shipped in the app.
+const SAMPLE_SOURCE = readFileSync(
+  new URL("../../tests/fixtures/sample-data.js", import.meta.url),
+  "utf8",
+).replace('"../../js/data/defaults.js"', '"https://localhost/js/data/defaults.js"');
 const PKG = process.env.MONIVRA_APPLICATION_ID || "app.monivra.finance.dev";
 const ACTIVITY = "app.monivra.finance.MainActivity";
 const KEY = "monivra.offline.2026.v1";
@@ -302,7 +307,10 @@ await step("the release APK starts offline (airplane mode) and stays running", a
   assert(pid, `the process is not running after ${attempts} starts: ${why.slice(0, 300)}`);
   const log = tryAdb("logcat", "-d", "-b", "crash");
   assert(!/FATAL EXCEPTION/.test(log), `crash: ${log.slice(0, 400)}`);
-  await waitForFocus(new RegExp(`${PKG}/app\\.monivra\\.finance\\.MainActivity|${PKG}`), "the application window");
+  await waitForFocus(
+    new RegExp(`${PKG}/app\\.monivra\\.finance\\.MainActivity|${PKG}`),
+    "the application window",
+  );
   screenshot("01-release-first-launch");
   return attempts > 1
     ? `running, pid ${pid}, no crash — but the FIRST start did not stay running (see first-start-attempt-1.txt)`
@@ -328,7 +336,8 @@ await step("synthetic test data (a fixture of the tests, not of the app) is stor
     const { setAppData, setFirstLaunch } = await import('/js/core/state.js');
     const { save } = await import('/js/data/storage.js');
     const { render } = await import('/js/app/shell.js');
-    setAppData(${JSON.stringify(createSampleData())}); setFirstLaunch(false); save(); render();
+    const fixture = await import(URL.createObjectURL(new Blob([${JSON.stringify(SAMPLE_SOURCE)}], { type: 'text/javascript' })));
+    setAppData(fixture.createSampleData()); setFirstLaunch(false); save(); render();
   })()`);
   await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
   before = await stateOfData();
