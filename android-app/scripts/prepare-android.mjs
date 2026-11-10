@@ -51,10 +51,18 @@ const patch = (what, pattern, replacement) => {
   }
   gradle = gradle.replace(pattern, replacement);
 };
+// Test builds carry their own application id, so they install beside the real app and never replace
+// it. The code package (and the project) stays app.monivra.finance; the production id is passed
+// explicitly (MONIVRA_APPLICATION_ID=app.monivra.finance) only when the production app is built.
+const applicationId = process.env.MONIVRA_APPLICATION_ID || "app.monivra.finance.dev";
+if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(applicationId)) {
+  console.error(`not a valid application id: ${applicationId}`);
+  process.exit(1);
+}
 patch(
   "applicationId",
   /applicationId\s+"app\.monivra\.finance"/,
-  'applicationId "app.monivra.finance"',
+  `applicationId "${applicationId}"`,
 );
 patch(
   "versionCode",

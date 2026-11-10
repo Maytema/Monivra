@@ -28,7 +28,15 @@ if [ -n "${PUBLISH_DIR:-}" ]; then
 else
   find . -maxdepth 1 -type f ! -name '.git*' -delete
   DIST="$GITHUB_WORKSPACE/android-app/dist"
-  [ -d "$DIST" ] && cp "$DIST"/* . 2>/dev/null || true
+  if [ -d "$DIST" ]; then
+    if [ -f "$DIST/.owner-signed" ]; then
+      cp "$DIST"/* . 2>/dev/null || true
+    else
+      # Not signed with the owner's key: the reports go out, the APKs do not.
+      for f in "$DIST"/*; do case "$f" in *.apk) ;; *) cp "$f" . 2>/dev/null || true ;; esac; done
+      echo "APKs not published: this build was not signed with the owner key." > NO-APK.txt
+    fi
+  fi
   # The tail of the log is what matters when a build fails.
   tail -n 600 "$GITHUB_WORKSPACE/build.log" > build-log-tail.txt 2>/dev/null || echo "no log" > build-log-tail.txt
   {

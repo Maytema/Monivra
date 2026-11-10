@@ -13,7 +13,10 @@ import { createSampleData } from "../../tests/fixtures/sample-data.js";
 
 const [releaseApk, debugApk, nextApk, outDir] = process.argv.slice(2);
 mkdirSync(outDir, { recursive: true });
-const PKG = "app.monivra.finance";
+// The test builds use their own application id (so they never replace the real app); the activity
+// keeps the code package of the project.
+const PKG = process.env.MONIVRA_APPLICATION_ID || "app.monivra.finance.dev";
+const ACTIVITY = "app.monivra.finance.MainActivity";
 const KEY = "monivra.offline.2026.v1";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -107,7 +110,7 @@ async function waitFor(expression, what, timeoutMs = 60000) {
 }
 const launch = async () => {
   page?.close();
-  sh(`am start -W -n ${PKG}/.MainActivity`);
+  sh(`am start -W -n ${PKG}/${ACTIVITY}`);
   await connect();
   await waitFor(
     `!!document.querySelector('.navbar, .pin, .welcome, .recovery')`,
@@ -281,7 +284,7 @@ await step("the release APK starts offline (airplane mode) and stays running", a
   let why = "";
   while (!pid && attempts < 2) {
     attempts++;
-    sh(`am start -W -n ${PKG}/.MainActivity`);
+    sh(`am start -W -n ${PKG}/${ACTIVITY}`);
     await sleep(8000);
     pid = tryAdb("shell", `pidof ${PKG}`).trim();
     if (!pid) {
@@ -299,7 +302,7 @@ await step("the release APK starts offline (airplane mode) and stays running", a
   assert(pid, `the process is not running after ${attempts} starts: ${why.slice(0, 300)}`);
   const log = tryAdb("logcat", "-d", "-b", "crash");
   assert(!/FATAL EXCEPTION/.test(log), `crash: ${log.slice(0, 400)}`);
-  await waitForFocus(new RegExp(`${PKG}/${PKG}\\.MainActivity|${PKG}`), "the application window");
+  await waitForFocus(new RegExp(`${PKG}/app\\.monivra\\.finance\\.MainActivity|${PKG}`), "the application window");
   screenshot("01-release-first-launch");
   return attempts > 1
     ? `running, pid ${pid}, no crash — but the FIRST start did not stay running (see first-start-attempt-1.txt)`
@@ -668,7 +671,7 @@ await step(
     const pid = sh(`pidof ${PKG}`).trim();
     assert(pid, "the process ended");
     assert(
-      !new RegExp(`${PKG}/${PKG}\\.MainActivity`).test(focus()),
+      !new RegExp(`${PKG}/app\\.monivra\\.finance\\.MainActivity`).test(focus()),
       "the application is still in front",
     );
     screenshot("08-after-back");
@@ -1015,6 +1018,43 @@ await step(
     );
     return `refused: ${result.refused.map((m) => m.slice(0, 40)).join(" | ")}; restored 7 operations; the PIN of the file is sealed`;
   },
+);
+
+await step(
+  "a 94-page report in the real WebView: time of each stage and how many page pictures the preview loads (measurement, not a limit)",
+  async () => {
+    const out = await ev(`(async () => {
+      const t = () => performance.now();
+      const { setAppData, appData, emptyFilters } = await import('/js/core/state.js');
+      const d = JSON.parse(JSON.stringify(appData));
+      const exp = d.categories.find((c) => c.type === 'expense');
+      for (let i = 0; i < 2000; i++)
+        d.ops.push({ id: 'p' + i, type: 'expense', amount: 100 + (i % 977), date: '202' + (i % 6) + '-0' + (1 + (i % 9)) + '-1' + (i % 9), comment: 'Purchase number ' + i + ' at the shop', tags: [], from: d.accounts[0].id, category: exp.id });
+      setAppData(d);
+      const { detailModel } = await import('/js/domain/report-model.js');
+      const { layoutDetail } = await import('/js/data/report-layout.js');
+      const { loadReportFonts } = await import('/js/platform/report-font.js');
+      const { measuringContext, renderPages } = await import('/js/platform/report-render.js');
+      const { buildPdf } = await import('/js/platform/pdf.js');
+      const times = {};
+      let s = t();
+      const model = detailModel({ filters: emptyFilters(), period: { ...appData.settings, mode: 'all' }, parts: { type: true, accounts: true, amount: true, comment: true, tags: true } });
+      times.model = t() - s; s = t();
+      const fonts = await loadReportFonts();
+      const pages = layoutDetail(model, measuringContext());
+      times.layout = t() - s; s = t();
+      const marks = [];
+      const rendered = await renderPages(pages, (done) => marks.push(Math.round(t() - s)));
+      times.render = t() - s; s = t();
+      const bytes = await buildPdf(pages, fonts, { title: 't', subject: 'Monivra', language: 'en' });
+      times.pdf = t() - s;
+      for (const r of rendered) URL.revokeObjectURL(r.url);
+      const r = (n) => Math.round(n);
+      return JSON.stringify({ pages: pages.length, model: r(times.model), layout: r(times.layout), render: r(times.render), first5pagesMs: marks.slice(0, 5), pdf: r(times.pdf), pdfKB: r(bytes.length / 1024) });
+    })()`);
+    return String(out);
+  },
+  { required: false },
 );
 
 await step("the log holds no financial data and no crash", async () => {

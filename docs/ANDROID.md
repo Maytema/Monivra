@@ -42,7 +42,7 @@ android-app/
   scripts/emulator-test.sh, e2e/emulator.mjs   end-to-end test on a real Android system
   overlay/                     what Android adds: manifest, MainActivity, MonivraNativePlugin, SecureStore,
                                DataMirror, PdfPrintAdapter, icons, themes, FileProvider paths
-  signing/                     PUBLIC internal test key (see Signing)
+  signing/                     how test builds are signed (no key is kept here)
   icon-source/                 the supplied SVG artwork (master); PNGs made by scripts/make-icons.py
 .github/workflows/android.yml  web tests, APK build, emulator test; results go to branch android-builds
 ```
@@ -91,13 +91,15 @@ file is moved into the Keystore-encrypted storage on restore.
 
 ## Signing, application ID and updates
 
-- Application ID `app.monivra.finance` (fixed from now on). `versionCode` = CI run number (grows with each
-  build), `versionName` = `0.1.0-build.N`.
-- Every build is signed with `android-app/signing/monivra-internal-test.keystore`. **This key is public
-  on purpose** (like the Android SDK's debug key): it only makes the test builds update over each other.
-  Never publish an APK signed with it. If the repository secrets `MONIVRA_KEYSTORE_B64`,
-  `MONIVRA_KEYSTORE_PASSWORD`, `MONIVRA_KEY_ALIAS`, `MONIVRA_KEY_PASSWORD` exist, the workflow signs with
-  that private key instead. (This sandbox cannot create repository secrets, so they were not set up.)
+- Test builds use the application ID `app.monivra.finance.dev` (set by `MONIVRA_APPLICATION_ID`, which
+  defaults to it); `app.monivra.finance` is kept for the production app. The code package stays
+  `app.monivra.finance`. `versionCode` = CI run number (grows with each build), `versionName` =
+  `0.1.0-build.N`.
+- No signing key is kept in the repository. The earlier public test key is compromised (it stays in the
+  history). Test builds are signed with the owner's test key from the repository secrets
+  `MONIVRA_KEYSTORE_B64`, `MONIVRA_KEYSTORE_PASSWORD`, `MONIVRA_KEY_ALIAS`, `MONIVRA_KEY_PASSWORD`, which
+  the owner also keeps offline (`signing/README.md`). Without the secrets CI signs with a one-run key for
+  the emulator test only and publishes no APK.
 - Changing the key or the ID later means Android refuses to install over the old app. Then: save a data file
   outside the app, uninstall, install, restore. The emulator test checks that a build signed with another key
   is refused and leaves the data alone.
@@ -162,7 +164,7 @@ Not present: `INTERNET`, storage, contacts, location, camera, SMS, accessibility
 
 - Dependencies are the five listed above and their AndroidX/Capacitor transitive libraries (lockfile committed).
   No telemetry, advertising or crash-reporting SDK; no network endpoints; no `INTERNET` permission.
-- No secrets in the repository except the deliberately public test key (`signing/README.md`).
+- No secrets or keys in the repository (`signing/README.md`).
 - Logging: the native plugin logs nothing; the web code logs only error messages, never data. The emulator test
   scans the app's log for data and PIN hash markers.
 - `allowBackup=false`; data-extraction rules exclude everything. WebView debugging is on only in the
@@ -198,5 +200,5 @@ system at launch.
   covered by the mock and the phone checklist only.
 - Taking a photo straight from the camera is not offered (no camera permission); choose from the gallery.
 - Needs a WebView with top-level `await` (Chromium 89+, i.e. any phone with updated "Android System WebView").
-- Test signing key is public; production signing and Play listing are not done.
+- Production signing and the Play listing are not done.
 - Phone data cannot move to another phone automatically; use the data file.

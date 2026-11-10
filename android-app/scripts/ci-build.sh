@@ -15,6 +15,7 @@ echo "::group::web files"
 node scripts/build-web.mjs
 echo "::endgroup::"
 
+export MONIVRA_APPLICATION_ID="${MONIVRA_APPLICATION_ID:-app.monivra.finance.dev}"
 echo "::group::android project"
 rm -rf android
 npx cap add android
@@ -22,17 +23,24 @@ node scripts/prepare-android.mjs
 npx cap sync android
 echo "::endgroup::"
 
-# Signing: the production key from the secrets when given, the public internal test key otherwise.
+# Signing. The owner's test key comes from the repository secrets (MONIVRA_KEYSTORE_B64 and its
+# password, alias and key password); nothing about a key is kept in the repository. Without those
+# secrets the build is signed with a key made for this run only: such an APK can be checked on the
+# emulator but is never published (see publish-build.sh), because nobody could update it later.
+TMP="${RUNNER_TEMP:-$(mktemp -d)}"
 if [ -n "${MONIVRA_KEYSTORE_B64:-}" ]; then
-  echo "$MONIVRA_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/monivra.keystore"
-  export MONIVRA_KEYSTORE_FILE="$RUNNER_TEMP/monivra.keystore"
-  SIGNING="production key from the repository secrets"
+  echo "$MONIVRA_KEYSTORE_B64" | base64 -d > "$TMP/monivra.keystore"
+  export MONIVRA_KEYSTORE_FILE="$TMP/monivra.keystore"
+  SIGNING="owner test key from the repository secrets"
+  OWNER_SIGNED=1
 else
-  export MONIVRA_KEYSTORE_FILE="$PWD/signing/monivra-internal-test.keystore"
-  export MONIVRA_KEYSTORE_PASSWORD="monivra-test"
-  export MONIVRA_KEY_ALIAS="monivra-test"
-  export MONIVRA_KEY_PASSWORD="monivra-test"
-  SIGNING="PUBLIC internal test key (signing/README.md)"
+  PASS="$(openssl rand -hex 16)"
+  keytool -genkeypair -keystore "$TMP/ephemeral.jks" -alias monivra-ci -keyalg RSA -keysize 2048 \
+    -validity 2 -storepass "$PASS" -keypass "$PASS" -dname "CN=Monivra CI one-run key" >/dev/null 2>&1
+  export MONIVRA_KEYSTORE_FILE="$TMP/ephemeral.jks"
+  export MONIVRA_KEYSTORE_PASSWORD="$PASS" MONIVRA_KEY_ALIAS="monivra-ci" MONIVRA_KEY_PASSWORD="$PASS"
+  SIGNING="EPHEMERAL one-run key (no owner key in the secrets): for the emulator test only, not for phones"
+  OWNER_SIGNED=0
 fi
 VERSION="$(node -p "require('./package.json').version")"
 export MONIVRA_VERSION_NAME="${VERSION}-build.${GITHUB_RUN_NUMBER:-0}"
@@ -60,6 +68,7 @@ BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
 {
   echo "version name: $MONIVRA_VERSION_NAME   version code: $MONIVRA_VERSION_CODE"
   echo "signing: $SIGNING"
+  echo "application id: $MONIVRA_APPLICATION_ID"
   echo "git commit: ${GITHUB_SHA:-local}"
   for apk in "$OUT"/*.apk; do
     echo; echo "=== $(basename "$apk")"
@@ -71,3 +80,5 @@ BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
   done
 } | tee "$OUT/build-report.txt"
 (cd "$OUT" && sha256sum *.apk > SHA256SUMS.txt)
+# The publisher reads this: only builds signed with the owner key may leave the run.
+[ "$OWNER_SIGNED" = 1 ] && echo owner > "$OUT/.owner-signed" || true

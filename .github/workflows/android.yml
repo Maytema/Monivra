@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write # only to publish build results to the `android-builds` branch
+  contents: read # the jobs that publish build results ask for more themselves
 
 concurrency:
   group: android-build
@@ -19,6 +19,8 @@ jobs:
   web-tests:
     name: Web tests (shared code)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # runs the repository's own code and npm packages: no write access
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -45,6 +47,8 @@ jobs:
   build:
     name: Build APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to publish results to the `android-builds` branch
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -83,6 +87,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write # to publish the emulator results to the `android-builds` branch
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
