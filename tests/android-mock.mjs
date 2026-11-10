@@ -26,6 +26,7 @@ const STORAGE_KEY = "monivra.offline.2026.v1";
 function makeBridge(options = {}) {
   const s = {
     mirror: options.mirror ?? null,
+    mirrorSeq: options.mirrorSeq ?? 0,
     secure: { ...(options.secure ?? {}) },
     secureBroken: options.secureBroken ?? false,
     biometric: options.biometric ?? "unsupported",
@@ -50,9 +51,12 @@ function makeBridge(options = {}) {
     switch (name) {
       case "MonivraNative.mirrorWrite":
         s.mirror = args.text;
+        s.mirrorSeq = args.seq ?? 0;
         return { status: "ok" };
       case "MonivraNative.mirrorRead":
-        return s.mirror === null ? { status: "missing" } : { status: "ok", text: s.mirror };
+        return s.mirror === null
+          ? { status: "missing" }
+          : { status: "ok", text: s.mirror, seq: s.mirrorSeq };
       case "MonivraNative.secureSet":
         s.secure[args.key] = args.value;
         return { status: "ok" };
@@ -102,7 +106,7 @@ function makeBridge(options = {}) {
 
 // A phone-sized page whose Capacitor is the mock; `data` is stored before the application starts
 // (null: nothing stored). The page loads index.html with the Android entry, as the APK does.
-async function openNative({ data = seedJson, bridge = makeBridge(), width = 360 } = {}) {
+async function openNative({ data = seedJson, saves = 0, bridge = makeBridge(), width = 360 } = {}) {
   const context = await browser.newContext({
     viewport: { width, height: 700 },
     isMobile: true,
@@ -113,9 +117,10 @@ async function openNative({ data = seedJson, bridge = makeBridge(), width = 360 
     bridge.handle(plugin, method, args ?? {}),
   );
   await context.addInitScript(
-    ([key, text]) => {
+    ([key, text, count]) => {
       if (text !== null && !sessionStorage.getItem("seeded")) {
         localStorage.setItem(key, text);
+        localStorage.setItem(`${key}.saves`, String(count));
         sessionStorage.setItem("seeded", "1");
       }
       const listeners = {};
@@ -157,7 +162,7 @@ async function openNative({ data = seedJson, bridge = makeBridge(), width = 360 
         },
       };
     },
-    [STORAGE_KEY, data],
+    [STORAGE_KEY, data, saves],
   );
   const page = await context.newPage();
   page.errors = [];
@@ -211,12 +216,33 @@ const openDataPage = async (page, name) => {
 
 const scenarios = {
   // ---------- data survives, and is restored only when it is gone ----------
-  async "MOCK: stored data is left alone and the internal copy is not used"(open) {
+  async "MOCK: stored data is left alone when the internal copy is the same or older"(open) {
+    const older = seedJson.replace('"Cash"', '"Other"');
+    for (const [saves, mirrorSeq] of [
+      [5, 5],
+      [5, 3],
+    ]) {
+      const page = await open({ saves, bridge: makeBridge({ mirror: older, mirrorSeq }) });
+      expect(await stored(page), `stored data (${saves}/${mirrorSeq})`).toBe(seedJson);
+      expect(await page.getByText("latest changes were recovered").count(), "notice").toBe(0);
+    }
+  },
+  async "MOCK: a newer internal copy replaces stored data the WebView had not written yet, and says so"(
+    open,
+  ) {
+    const newer = seedJson.replace('"Cash"', '"Other"');
+    const page = await open({ saves: 4, bridge: makeBridge({ mirror: newer, mirrorSeq: 9 }) });
+    await page.getByText("latest changes were recovered").waitFor();
+    expect(await stored(page), "stored data").toBe(newer);
+  },
+  async "MOCK: damaged stored data is never replaced by the internal copy"(open) {
     const page = await open({
-      bridge: makeBridge({ mirror: seedJson.replace('"Cash"', '"Other"') }),
+      data: "{damaged",
+      saves: 1,
+      bridge: makeBridge({ mirror: seedJson, mirrorSeq: 50 }),
     });
-    expect(await stored(page), "stored data").toBe(seedJson);
-    expect(page.bridge.count("MonivraNative.mirrorRead"), "copy read").toBe(0);
+    await page.waitForSelector(".recovery, .welcome, .navbar");
+    expect(await stored(page), "stored data").toBe("{damaged");
   },
   async "MOCK: when the stored data is gone the application restores it from the internal copy and says so"(
     open,

@@ -248,6 +248,8 @@ function nativeNotices() {
   if (!isNative) return;
   if (boot.data === "restored")
     toast(translate("Your data was restored from the internal copy on this device."));
+  else if (boot.data === "newer")
+    toast(translate("Your latest changes were recovered from the internal copy on this device."));
   else if (boot.data === "unreadable")
     toast(
       translate("The internal copy of the data could not be read. Save a data file when you can."),

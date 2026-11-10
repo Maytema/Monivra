@@ -1,5 +1,5 @@
 /* Data validation and persistence */
-import { MAX_INTERVAL, STORAGE_KEY } from "../core/constants.js";
+import { MAX_INTERVAL, SAVE_COUNT_KEY, STORAGE_KEY } from "../core/constants.js";
 import { appData, loadProblem } from "../core/state.js";
 import { isSupportedLanguage } from "../i18n/index.js";
 import { toast } from "../ui/primitives.js";
@@ -175,8 +175,18 @@ export const dataRevision = () => revision;
 // Something to do after each successful save (the Android shell copies the data and rebuilds the
 // system's reminders); nothing in a browser.
 let afterSave = () => {};
+// Where the shell keeps a second copy, each save is numbered, so that after the application was killed
+// the newer of the two copies can be told (the WebView writes `localStorage` to disk some seconds after
+// `setItem`, the second copy is written within a second). A browser has no second copy, so it has no
+// numbers either.
+let saveCount = null;
 export const onSaved = (fn) => {
   afterSave = fn;
+  try {
+    saveCount = Number(localStorage.getItem(SAVE_COUNT_KEY)) || 0;
+  } catch {
+    saveCount = 0;
+  }
 };
 
 // Persist appData to localStorage.
@@ -186,6 +196,7 @@ export function save() {
   if (loadProblem) return false;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    if (saveCount !== null) localStorage.setItem(SAVE_COUNT_KEY, String(++saveCount));
     afterSave();
     return true;
   } catch {

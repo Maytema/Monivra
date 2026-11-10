@@ -6,7 +6,7 @@
    lost its storage), the data is brought back from it at the start. It never replaces data that is
    there, and it is not a backup: both are deleted with the application, and a data file saved outside
    the application is the only copy that survives an uninstall. */
-import { STORAGE_KEY } from "../core/constants.js";
+import { SAVE_COUNT_KEY, STORAGE_KEY } from "../core/constants.js";
 import { native } from "./native.js";
 
 let timer = 0;
@@ -20,14 +20,16 @@ export function flushMirror() {
   if (!native || !dirty) return chain;
   dirty = false;
   let text = null;
+  let seq = 0;
   try {
     text = localStorage.getItem(STORAGE_KEY);
+    seq = Number(localStorage.getItem(SAVE_COUNT_KEY)) || 0;
   } catch {
     // Nothing to copy.
   }
   if (text === null) return chain;
   chain = chain
-    .then(() => native.mirrorWrite({ text }))
+    .then(() => native.mirrorWrite({ text, seq }))
     .catch(() => {
       dirty = true; // tried again at the next save or when the application leaves the screen
     });
@@ -54,22 +56,37 @@ const looksLikeData = (text) => {
   }
 };
 
-// At the start, before the data is read: when the application has no stored data but the internal
-// copy has, the stored data is restored from the copy. Resolves "restored", "kept" (stored data is
-// there, nothing is touched), "none" (nothing anywhere: a new install) or "unreadable" (the copy
-// exists but cannot be used; it is left as it is).
+// At the start, before the data is read, the stored data and the internal copy are compared:
+//   no stored data, a usable copy      → the copy is restored ("restored");
+//   stored data, and the copy is a later save of it (its save number is higher: the application was
+//   stopped before the WebView wrote the last saves to disk) → the copy is taken ("newer");
+//   anything else → the stored data is left alone ("kept"), whether it is damaged (the recovery screen
+//   deals with it) or the copy is the same or older.
+// "none" means nothing anywhere (a new install); "unreadable" that the copy exists but cannot be used,
+// and it is left as it is.
 export async function restoreFromMirror() {
   if (!native) return "none";
   let stored = null;
+  let storedSaves = 0;
   try {
     stored = localStorage.getItem(STORAGE_KEY);
+    storedSaves = Number(localStorage.getItem(SAVE_COUNT_KEY)) || 0;
   } catch {
     return "kept";
   }
-  if (stored !== null) return "kept";
+  if (stored !== null && !looksLikeData(stored)) return "kept";
   const copy = await native.mirrorRead();
-  if (copy.status === "missing") return "none";
-  if (copy.status !== "ok" || !looksLikeData(copy.text)) return "unreadable";
-  localStorage.setItem(STORAGE_KEY, copy.text);
-  return "restored";
+  if (copy.status === "missing") return stored === null ? "none" : "kept";
+  if (copy.status !== "ok" || !looksLikeData(copy.text)) return stored === null ? "unreadable" : "kept";
+  if (stored === null) {
+    localStorage.setItem(STORAGE_KEY, copy.text);
+    localStorage.setItem(SAVE_COUNT_KEY, String(copy.seq ?? 0));
+    return "restored";
+  }
+  if ((copy.seq ?? 0) > storedSaves) {
+    localStorage.setItem(STORAGE_KEY, copy.text);
+    localStorage.setItem(SAVE_COUNT_KEY, String(copy.seq));
+    return "newer";
+  }
+  return "kept";
 }

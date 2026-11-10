@@ -8,6 +8,8 @@ export const APP_ID = APP_NAME.toLowerCase();
 // Photos that can be attached to one operation.
 export const MAX_PHOTOS = 5;
 export const STORAGE_KEY = `${APP_ID}.offline.2026.v1`;
+// Counts the saves in the Android shell (see data/storage.js).
+export const SAVE_COUNT_KEY = `${STORAGE_KEY}.saves`;
 // Largest count of days, weeks, months or years of a repeat or reminder rule.
 export const MAX_INTERVAL = 365;
 // Today's date as YYYY-MM-DD (local time).

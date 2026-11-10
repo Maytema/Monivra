@@ -7,6 +7,7 @@
 // Usage: node e2e/emulator.mjs <release.apk> <debuggable.apk> <next-debuggable.apk> <results-dir>
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const [releaseApk, debugApk, nextApk, outDir] = process.argv.slice(2);
@@ -119,6 +120,10 @@ const restart = async () => {
   await sleep(1000);
   await launch();
 };
+// The WebView writes localStorage to disk some seconds after a change; a test that edits it
+// directly and then kills the process has to wait, or it tests the WebView's delay and not the app.
+const persist = () => sleep(7000);
+const bootData = () => ev(`import('/js/platform/native-boot.js').then((m) => m.boot.data)`);
 const screenshot = (name) => {
   try {
     const png = execFileSync("adb", ["exec-out", "screencap", "-p"], {
@@ -335,8 +340,12 @@ await step("data survives the process being killed and restarted", async () => {
 await step(
   "stored data lost, application installed: the internal copy restores it, with a notice",
   async () => {
-    await ev(`localStorage.removeItem(${JSON.stringify(KEY)})`);
+    await ev(
+      `localStorage.removeItem(${JSON.stringify(KEY)}); localStorage.removeItem(${JSON.stringify(KEY + ".saves")})`,
+    );
+    await persist();
     await restart();
+    assert((await bootData()) === "restored", `boot said: ${await bootData()}`);
     const after = await stateOfData();
     assert(after && after.hash === before.hash, "the data was not restored");
     const toastSeen = await ev(
@@ -348,6 +357,7 @@ await step(
 
 await step("a damaged stored dataset is not overwritten by the internal copy", async () => {
   await ev(`localStorage.setItem(${JSON.stringify(KEY)}, '{"damaged": true')`);
+  await persist();
   await restart();
   const raw = await ev(`localStorage.getItem(${JSON.stringify(KEY)})`);
   assert(raw === '{"damaged": true', "the damaged text was replaced");
@@ -355,10 +365,27 @@ await step("a damaged stored dataset is not overwritten by the internal copy", a
   // put the good data back for the next steps
   const wrapper = JSON.parse(runAs("cat files/mirror/data.json"));
   await ev(`localStorage.setItem(${JSON.stringify(KEY)}, ${JSON.stringify(wrapper.text)})`);
+  await persist();
   await restart();
   const after = await stateOfData();
   assert(after && after.hash === before.hash, "the data was not back");
 });
+
+await step(
+  "durability: a change made a moment before the process is killed is still there",
+  async () => {
+    await ev(`(async () => {
+      const { appData } = await import('/js/core/state.js');
+      const { save } = await import('/js/data/storage.js');
+      appData.settings.lockDelay = 37; save();
+    })()`);
+    await sleep(1800); // the internal copy is written within about a second; the WebView needs longer
+    await restart();
+    const value = await ev(`import('/js/core/state.js').then((m) => m.appData.settings.lockDelay)`);
+    assert(value === 37, `the change was lost (value ${value}); boot said ${await bootData()}`);
+    return `change kept; boot: ${await bootData()}`;
+  },
+);
 
 await step(
   "a PIN: its hash is in the keystore storage, not in the data, the copy or the log",
@@ -465,7 +492,7 @@ await step(
     sh(`input tap ${Math.round(x)} ${Math.round(y)}`);
     const result = await waitFor(`window.__save`, "the answer after saving");
     assert(result.status === "saved", `got ${JSON.stringify(result)}`);
-    const found = sh("find /sdcard -name 'monivra-e2e*.json' 2>/dev/null").trim().split("\n")[0];
+    const found = sh("find /sdcard/ -name 'monivra-e2e*.json' 2>/dev/null").trim().split("\n")[0];
     assert(found, "the saved file was not found");
     assert(sh(`cat '${found}'`).trim() === '{"e2e":1}', "the saved file has other content");
     return `written to ${found}`;
@@ -593,6 +620,7 @@ await step(
   async () => {
     before = await stateOfData();
     const oldCode = sh(`dumpsys package ${PKG} | grep versionCode | head -1`).trim();
+    await sleep(1800); // the last save reaches the internal copy
     page?.close();
     sh(`am force-stop ${PKG}`);
     const out = adb("install", "-r", nextApk);
@@ -617,7 +645,7 @@ await step(
 
 await step("a build signed with another key is refused over this one (data stays)", async () => {
   // Re-sign the APK with a throw-away key and try to install it over the installed app.
-  const dir = join(outDir, "foreign");
+  const dir = join(tmpdir(), "monivra-foreign-key");
   mkdirSync(dir, { recursive: true });
   execFileSync(
     "keytool",
@@ -684,6 +712,7 @@ await step("a scheduled payment reminder is registered with Android's alarm mana
   })()`);
   const [day, due, remind] = await ev(`window.__due`);
   // The permission is read when the application starts: restart so it sees the grant.
+  await sleep(1800); // the changes reach the internal copy before the process is stopped
   await restart();
   if (await ev(`!!document.querySelector('.pin')`)) {
     await typePin("1234");
@@ -709,7 +738,11 @@ await step(
     page?.close();
     page = null;
     sh("input keyevent KEYCODE_HOME");
-    sh(`am kill ${PKG}`); // ends the background process only; alarms stay
+    await sleep(2500);
+    // Ends the process the way the system does when it needs memory; unlike a force stop it keeps the
+    // alarms the application handed to the system.
+    const pid = sh(`pidof ${PKG}`).trim();
+    if (pid) runAs(`kill -9 ${pid}`);
     await sleep(2000);
     assert(!sh(`pidof ${PKG}`).trim(), "the process is still running");
     const start = Date.now();
@@ -785,6 +818,73 @@ await step(
     );
     assert(!left, "the posted payment is still scheduled");
     return `posted once as ${posted[0].date} ${posted[0].time}`;
+  },
+);
+
+await step(
+  "a data file exported by the web app: previewed, a corrupt one refused with data untouched, a valid one restored",
+  async () => {
+    const before = await stateOfData();
+    const result = await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { backupFileText, parseBackupFile } = await import('/js/data/backup-file.js');
+    const { openFileRestore } = await import('/js/screens/more/backup-pages.js');
+    const { restoreData } = await import('/js/domain/backups.js');
+    const { makePin } = await import('/js/platform/pin.js');
+    // A file as the web app writes it: no marker for a PIN kept by the system, a PIN hash instead.
+    const web = JSON.parse(backupFileText());
+    web.accounts[0].name = 'From the web';
+    web.ops = web.ops.slice(0, 7);
+    web.scheduled = [];
+    web.settings.pin = makePin('9999');
+    const text = JSON.stringify(web);
+    const out = {};
+    const refused = [];
+    for (const bad of [text.slice(0, 300), '', '{"schema":1,"accounts":"x"}', JSON.stringify({ ...web, schema: 2 })]) {
+      try { parseBackupFile(bad); refused.push('accepted'); } catch (e) { refused.push(e.message); }
+    }
+    out.refused = refused;
+    out.unchangedAfterRefusal = appData.ops.length;
+    const parsed = parseBackupFile(text);
+    openFileRestore({ name: 'monivra-backup-web.json', ...parsed });
+    await new Promise((r) => setTimeout(r, 800));
+    out.previewShown = /From the web|Restore|backup/i.test(document.body.innerText);
+    out.opsBeforeConfirm = appData.ops.length;
+    const { closeLayers, goBack } = await import('/js/ui/navigation.js');
+    closeLayers(); goBack();
+    restoreData(parsed.data, { mode: 'replace', scheduled: 'none', conflicts: 'backup' });
+    await new Promise((r) => setTimeout(r, 3000));
+    out.opsAfter = appData.ops.length;
+    out.firstAccount = appData.accounts[0].name;
+    out.pinInData = JSON.stringify(appData.settings.pin);
+    out.stored = localStorage.getItem(${JSON.stringify(KEY)});
+    return out;
+  })()`);
+    assert(
+      result.refused.every((m) => m !== "accepted"),
+      `a corrupt file was accepted: ${JSON.stringify(result.refused)}`,
+    );
+    assert(result.unchangedAfterRefusal === before.ops, "data changed by refused files");
+    assert(result.previewShown, "no preview page for a valid file");
+    assert(result.opsBeforeConfirm === before.ops, "data changed before the person confirmed");
+    assert(
+      result.opsAfter === 7 && result.firstAccount === "From the web",
+      `the restore did not apply: ${result.opsAfter} ${result.firstAccount}`,
+    );
+    const pin = JSON.parse(result.stored).settings.pin;
+    assert(
+      pin && pin.native === true && !result.stored.includes('"salt"'),
+      `the web PIN hash stayed in the data: ${result.pinInData}`,
+    );
+    assert(runAs("ls files/secure").includes("pin.bin"), "no sealed PIN file");
+    await restart();
+    assert(await ev(`!!document.querySelector('.pin')`), "no lock screen after the restore");
+    await typePin("9999");
+    await waitFor(
+      `!!document.querySelector('.navbar')`,
+      "the main screen with the PIN of the web file",
+    );
+    return `refused: ${result.refused.map((m) => m.slice(0, 40)).join(" | ")}; restored 7 operations; the PIN of the file is sealed`;
   },
 );
 

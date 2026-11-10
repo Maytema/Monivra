@@ -20,10 +20,12 @@ final class DataMirror {
     static final class Copy {
         final String text;
         final long savedAt;
+        final long seq;
         final String source;
-        Copy(String text, long savedAt, String source) {
+        Copy(String text, long savedAt, long seq, String source) {
             this.text = text;
             this.savedAt = savedAt;
+            this.seq = seq;
             this.source = source;
         }
     }
@@ -49,13 +51,14 @@ final class DataMirror {
         }
     }
 
-    synchronized void write(String text) throws IOException {
+    synchronized void write(String text, long seq) throws IOException {
         if (!dir.isDirectory() && !dir.mkdirs()) throw new IOException("cannot create folder");
         byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
         try {
             JSONObject wrapper = new JSONObject();
             wrapper.put("v", 1);
             wrapper.put("savedAt", System.currentTimeMillis());
+            wrapper.put("seq", seq);
             wrapper.put("sha256", sha256(bytes));
             wrapper.put("text", text);
             try (FileOutputStream out = new FileOutputStream(temp())) {
@@ -81,7 +84,7 @@ final class DataMirror {
             String text = wrapper.getString("text");
             if (!sha256(text.getBytes(StandardCharsets.UTF_8)).equals(wrapper.getString("sha256")))
                 return null;
-            return new Copy(text, wrapper.getLong("savedAt"), source);
+            return new Copy(text, wrapper.getLong("savedAt"), wrapper.optLong("seq", 0), source);
         } catch (IOException | JSONException e) {
             return null;
         }
@@ -94,7 +97,8 @@ final class DataMirror {
         Copy best = null;
         for (Copy c : new Copy[] {
             read(current(), "current"), read(previous(), "previous"), read(temp(), "temp") }) {
-            if (c != null && (best == null || c.savedAt > best.savedAt)) best = c;
+            if (c != null && (best == null || c.seq > best.seq
+                || (c.seq == best.seq && c.savedAt > best.savedAt))) best = c;
         }
         if (best == null) throw new IOException("no copy checks out");
         return best;

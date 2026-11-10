@@ -8,7 +8,8 @@ import { loadSealedPin } from "./secure-pin.js";
 import { refreshBiometric } from "./biometric.js";
 import { refreshNotificationPermission } from "./notify.js";
 
-// What happened to the data at the start, for the person to be told once ("restored", "unreadable").
+// What happened to the data at the start, for the person to be told once ("restored", "newer",
+// "unreadable").
 export const boot = { data: "none" };
 
 export async function prepareNative() {

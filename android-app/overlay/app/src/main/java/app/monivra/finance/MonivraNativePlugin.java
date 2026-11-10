@@ -328,13 +328,14 @@ public class MonivraNativePlugin extends Plugin {
     @PluginMethod
     public void mirrorWrite(PluginCall call) {
         String text = call.getString("text");
+        long seq = call.getInt("seq", 0);
         if (text == null) {
             call.reject("text is required");
             return;
         }
         executor.execute(() -> {
             try {
-                mirror.write(text);
+                mirror.write(text, seq);
                 call.resolve(status("ok"));
             } catch (IOException e) {
                 call.reject("could not write the copy");
@@ -353,6 +354,7 @@ public class MonivraNativePlugin extends Plugin {
                     o.put("status", "ok");
                     o.put("text", copy.text);
                     o.put("savedAt", copy.savedAt);
+                    o.put("seq", copy.seq);
                     o.put("source", copy.source);
                 }
             } catch (IOException e) {

@@ -1224,6 +1224,7 @@ export const russianStrings = {
   "Fingerprint or face could not be used. Use your PIN.":
     "Отпечаток или лицо недоступны. Введите PIN.",
   "Payment reminders": "Напоминания о платежах",
+  "Your latest changes were recovered from the internal copy on this device.": "Последние изменения восстановлены из внутренней копии на этом устройстве.",
   "Notification sent": "Уведомление отправлено",
   "Scheduled payment": "Плановый платёж",
   "{title} is due on {date}": "{title}: срок {date}",
