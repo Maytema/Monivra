@@ -35,9 +35,14 @@ export async function shareDelivery(file) {
       { tone: "info", title: "Sharing is not available" },
     );
   else if (result === "blocked")
-    showInfo(
-      "The browser needs a new tap to open the share sheet. The file is ready: tap Share again.",
-      "Tap Share again",
+    // The browser lets a share start only from a tap made a moment ago, and preparing took longer.
+    // The file is ready, so this tap (a fresh one) shares it: one more tap, never a loop.
+    confirmAction(
+      "The file is ready. The browser asks for one more tap to open the share sheet.",
+      () => shareDelivery(file),
+      false,
+      "Share",
+      { tone: "info", title: "Ready to share" },
     );
   else if (result === "failed")
     showInfo("The share sheet could not be opened. The file has not been saved or sent.");

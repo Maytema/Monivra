@@ -54,21 +54,25 @@ export const canShareFile = (file) => Boolean(navigator.canShare?.({ files: [fil
 //   "failed"      the sheet could not be opened,
 //   "busy"        a share sheet is already open; nothing was done.
 // A file is never saved by this function: the caller offers saving as a visible choice.
-let sharing = false;
+// A second tap while the sheet is being opened is the same request. A sheet that never reports back
+// (some browsers leave the promise open after the person picked an app) must not block later taps, so
+// only a tap within a moment of the last one is a repeat.
+let shareStartedAt = 0;
 export async function shareFile(file) {
-  if (sharing) return "busy";
+  if (Date.now() - shareStartedAt < 1500) return "busy";
   if (!canShareFile(file)) return "unsupported";
-  sharing = true;
+  shareStartedAt = Date.now();
   try {
     await navigator.share({ files: [file], title: file.name });
     return "shared";
   } catch (error) {
     if (error.name === "AbortError") return "cancelled";
     if (error.name === "NotAllowedError") return "blocked";
+    if (error.name === "InvalidStateError") return "busy"; // a sheet is already open
     console.error("Sharing failed:", error);
     return "failed";
   } finally {
-    sharing = false;
+    shareStartedAt = Math.min(shareStartedAt, Date.now() - 1500); // free again once it has answered
   }
 }
 

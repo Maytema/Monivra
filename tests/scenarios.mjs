@@ -1507,9 +1507,31 @@ const scenarios = {
     // The browser asks for a new tap: said once, nothing saved.
     await page.evaluate(() => (window.__mode = "blocked"));
     await page.getByRole("button", { name: "Share", exact: true }).click();
-    await page.getByRole("heading", { name: "Tap Share again" }).waitFor();
-    await page.getByRole("button", { name: "OK" }).click();
+    await page.getByRole("heading", { name: "Ready to share" }).waitFor();
     expect(downloads.length).toBe(0);
+    // The tap on Share in that dialog is a fresh one: it opens the sheet at once.
+    await page.evaluate(() => (window.__mode = "slow"));
+    const before = await page.evaluate(() => window.__shares);
+    await page.locator(".overlay").getByRole("button", { name: "Share", exact: true }).click();
+    await page.getByText("File shared").waitFor();
+    expect(await page.evaluate(() => window.__shares)).toBe(before + 1);
+    // A sheet that never reports back does not block the next tap.
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "share", {
+        value: () => {
+          window.__shares++;
+          return new Promise(() => {});
+        },
+        configurable: true,
+      });
+    });
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.waitForTimeout(1800);
+    const hung = await page.evaluate(() => window.__shares);
+    await page.getByRole("button", { name: "Share", exact: true }).click();
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => window.__shares)).toBe(hung + 1);
+    await page.waitForTimeout(1600);
     // Rejected by the system (it cannot open): told, nothing saved.
     await page.evaluate(() => {
       Object.defineProperty(navigator, "share", {

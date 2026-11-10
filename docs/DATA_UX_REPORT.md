@@ -47,3 +47,10 @@ First Preview 165 ms, second (prepared) 40 ms. A 34-page report builds in about 
 
 - A full redesign of the PDF first page and of the restore cards' tint: not needed for correctness.
 - A real recording of the interactions: screenshots only (`monivra-dataux-shots.zip`).
+
+## Sharing after the first report (follow-up)
+
+- A refused share (the tap expired while a long PDF was prepared) now opens a dialog "Ready to share"
+  whose Share button is a fresh tap, so one more tap always works; it cannot loop.
+- A sheet that never answers no longer blocks the next tap.
+- What the browser forces is listed in `docs/BROWSER_LIMITS.md` for a native version.

@@ -1232,7 +1232,7 @@ export const russianStrings = {
   "Sharing is not available": "Отправка недоступна",
   "The browser needs a new tap to open the share sheet. The file is ready: tap Share again.":
     "Браузеру нужно новое нажатие, чтобы открыть окно отправки. Файл готов: нажмите «Поделиться» ещё раз.",
-  "Tap Share again": "Нажмите «Поделиться» ещё раз",
+  "Ready to share": "Готово к отправке",
   "The share sheet could not be opened. The file has not been saved or sent.":
     "Не удалось открыть окно отправки. Файл не сохранён и не отправлен.",
   "Preparing…": "Подготовка…",
@@ -1551,4 +1551,6 @@ export const russianStrings = {
     "Замена удаляет то, что на этом устройстве, и оставляет только копию.",
   "Net cash flow counts income and expenses only. The change of balance also includes adjustments, transfers to or from accounts outside the total, and currency conversion.":
     "Чистый денежный поток учитывает только доходы и расходы. Изменение баланса включает также корректировки, переводы со счетов и на счета вне итога и пересчёт валют.",
+  "The file is ready. The browser asks for one more tap to open the share sheet.":
+    "Файл готов. Браузер просит ещё одно нажатие, чтобы открыть окно отправки.",
 };
