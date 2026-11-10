@@ -156,9 +156,23 @@ function selectionHeader(ops) {
     uiState.selected = [];
     render();
   });
-  const selectAll = iconButtonHtml("check", "Select all", () => {
-    setSelected(uiState.selected.length === ops.length ? [] : ops.map((o) => o.id));
-  });
+  // Select all / deselect all concerns the period on the screen only: what is selected in other days
+  // and months stays as it is, whichever way the box is toggled.
+  const here = ops.map((o) => o.id);
+  const chosen = here.filter((id) => uiState.selected.includes(id)).length;
+  const state = !here.length || !chosen ? "none" : chosen === here.length ? "all" : "some";
+  const label = translate(
+    state === "all" ? "Deselect all in this period" : "Select all in this period",
+  );
+  const selectAll = buttonHtml(
+    `<span class="checkbox ${state === "none" ? "" : "on"} ${state}">${state === "all" ? "✓" : state === "some" ? "–" : ""}</span><small>${chosen}/${here.length}</small>`,
+    () => {
+      const keep = uiState.selected.filter((id) => !here.includes(id));
+      setSelected(state === "all" ? keep : [...keep, ...here]);
+    },
+    "ops-select-period",
+    `role="checkbox" aria-checked="${state === "all" ? "true" : state === "some" ? "mixed" : "false"}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"${here.length ? "" : " disabled"}`,
+  );
   return `<div class="ops-selection-header">${exit}<strong>${translateWith("Selected: {n}", { n: uiState.selected.length })}</strong>${selectAll}</div>`;
 }
 

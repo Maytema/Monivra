@@ -179,7 +179,37 @@ export const emptyBulkChanges = () => ({
 // Replace the operations with the given ids by copies with the changes applied.
 // A balance adjustment has no category and keeps its direction; only its account may change.
 // Nothing is replaced if one of the copies turns out invalid.
+// The account an operation takes its amount from (the one its amount is counted in).
+const amountAccountId = (op) =>
+  op.type === "transfer"
+    ? op.from
+    : op.type === "income"
+      ? op.to
+      : op.type === "adjustment"
+        ? op.to || op.from
+        : op.from;
+
+// Moving an operation to an account of another currency would read its amount in that currency
+// (money created or lost), so the account of the amount may be replaced only by one in the same
+// currency. The receiving side of a transfer is recalculated at the rate, so it is free.
+export function bulkAccountProblem(ids, accountId, role = "sender") {
+  const target = accountById(accountId);
+  if (!target) return "Select an account";
+  const clash = appData.ops.some((op) => {
+    if (!ids.includes(op.id)) return false;
+    if (op.type === "transfer" && role === "receiver") return false;
+    return accountById(amountAccountId(op))?.currency !== target.currency;
+  });
+  return clash
+    ? "Operations in another currency cannot be moved to this account. Choose an account in the same currency."
+    : null;
+}
+
 export function applyBulkChanges(ids, changes) {
+  if (changes.account) {
+    const problem = bulkAccountProblem(ids, changes.account, changes.role);
+    if (problem) throw Error(problem);
+  }
   const replacements = appData.ops
     .filter((op) => ids.includes(op.id))
     .map((original) => {
@@ -193,9 +223,11 @@ export function applyBulkChanges(ids, changes) {
         op.to = op.type === "income" ? account : null;
       }
       if (changes.account) {
-        if (op.type === "transfer")
+        if (op.type === "transfer") {
           op[changes.role === "receiver" ? "to" : "from"] = changes.account;
-        else if (adjustment) op[op.to ? "to" : "from"] = changes.account;
+          // A new receiver may count in another currency: the received amount follows the rate.
+          if (changes.role === "receiver") delete op.receiveManual;
+        } else if (adjustment) op[op.to ? "to" : "from"] = changes.account;
         else if (op.type === "income") op.to = changes.account;
         else op.from = changes.account;
       }

@@ -1068,3 +1068,120 @@ check(
     );
   },
 );
+
+// ---- bulk change of the account: what is reassigned, and that no money is made or lost ----
+const totalOf = () =>
+  appData.accounts.filter((a) => !a.archived).reduce((sum, a) => sum + accountBalance(a.id), 0);
+const spend = (account, type, amount, id) => {
+  const category = appData.categories.find((c) => c.type === type);
+  appData.ops.push({
+    id,
+    type,
+    amount,
+    date: TODAY,
+    comment: "",
+    tags: [],
+    from: type === "expense" ? account.id : null,
+    to: type === "income" ? account.id : null,
+    category: category.id,
+  });
+};
+
+check(
+  "A bulk change of the account moves expenses and incomes and the total stays the same",
+  () => {
+    const one = addAccount({ opening: 100000 });
+    const two = addAccount({ opening: 5000 });
+    spend(one, "expense", 1234, "__be1");
+    spend(one, "income", 777, "__bi1");
+    const total = totalOf();
+    const before = [accountBalance(one.id), accountBalance(two.id)];
+    applyBulkChanges(["__be1", "__bi1"], { ...emptyBulkChanges(), account: two.id });
+    const e = appData.ops.find((o) => o.id === "__be1");
+    const i = appData.ops.find((o) => o.id === "__bi1");
+    return (
+      e.from === two.id &&
+      i.to === two.id &&
+      totalOf() === total &&
+      accountBalance(one.id) === before[0] + 1234 - 777 &&
+      accountBalance(two.id) === before[1] - 1234 + 777
+    );
+  },
+);
+
+check("A bulk change of the account of a transfer replaces the sender or the receiver", () => {
+  const a = addAccount({ opening: 90000 });
+  const b = addAccount({ opening: 0 });
+  const c = addAccount({ opening: 0 });
+  appData.ops.push({
+    id: "__bt",
+    type: "transfer",
+    from: a.id,
+    to: b.id,
+    amount: 4000,
+    receive: 4000,
+    date: TODAY,
+    comment: "",
+    tags: [],
+  });
+  const total = totalOf();
+  applyBulkChanges(["__bt"], { ...emptyBulkChanges(), account: c.id, role: "receiver" });
+  const t = appData.ops.find((o) => o.id === "__bt");
+  const afterReceiver = t.to === c.id && t.from === a.id && totalOf() === total;
+  applyBulkChanges(["__bt"], { ...emptyBulkChanges(), account: b.id, role: "sender" });
+  const t2 = appData.ops.find((o) => o.id === "__bt");
+  return afterReceiver && t2.from === b.id && t2.to === c.id && totalOf() === total;
+});
+
+check("A bulk move to an account of another currency is refused and changes nothing", () => {
+  const one = addAccount({ opening: 100000, currency: "KGS" });
+  const usd = addAccount({ opening: 0, currency: "USD" });
+  spend(one, "expense", 5000, "__bx1");
+  const snapshot = JSON.stringify(appData.ops);
+  let refused = false;
+  try {
+    applyBulkChanges(["__bx1"], { ...emptyBulkChanges(), account: usd.id });
+  } catch {
+    refused = true;
+  }
+  return refused && JSON.stringify(appData.ops) === snapshot;
+});
+
+check(
+  "A refused bulk move is all or nothing: one bad operation leaves the others as they were",
+  () => {
+    const kgs = addAccount({ opening: 100000, currency: "KGS" });
+    const kgs2 = addAccount({ opening: 0, currency: "KGS" });
+    const usd = addAccount({ opening: 100000, currency: "USD" });
+    spend(kgs, "expense", 100, "__bm1");
+    spend(usd, "expense", 100, "__bm2");
+    const snapshot = JSON.stringify(appData.ops);
+    let refused = false;
+    try {
+      applyBulkChanges(["__bm1", "__bm2"], { ...emptyBulkChanges(), account: kgs2.id });
+    } catch {
+      refused = true;
+    }
+    return refused && JSON.stringify(appData.ops) === snapshot;
+  },
+);
+
+check(
+  "A bulk comment replaces the comment of every selected operation, an empty one removes it",
+  () => {
+    const acc = addAccount({ opening: 100000 });
+    spend(acc, "expense", 100, "__bc1");
+    spend(acc, "expense", 200, "__bc2");
+    appData.ops.find((o) => o.id === "__bc1").comment = "old";
+    applyBulkChanges(["__bc1", "__bc2"], { ...emptyBulkChanges(), comment: "new" });
+    const replaced = ["__bc1", "__bc2"].every(
+      (id) => appData.ops.find((o) => o.id === id).comment === "new",
+    );
+    applyBulkChanges(["__bc1"], { ...emptyBulkChanges(), comment: "" });
+    return (
+      replaced &&
+      appData.ops.find((o) => o.id === "__bc1").comment === "" &&
+      appData.ops.find((o) => o.id === "__bc2").comment === "new"
+    );
+  },
+);

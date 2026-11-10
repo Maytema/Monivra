@@ -696,3 +696,37 @@
   color: var(--muted);
   font-size: 13px;
 }
+
+/* Select all / deselect all of the period on the screen */
+.ops-select-period {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0 8px;
+  background: none;
+  border: 0;
+  color: inherit;
+}
+.ops-select-period small {
+  font-size: 13px;
+  opacity: 0.75;
+}
+.ops-select-period .checkbox {
+  pointer-events: none;
+}
+.bulk-tag-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+.bulk-tag-group small {
+  opacity: 0.7;
+}
+.tag-chip.removed {
+  text-decoration: line-through;
+  opacity: 0.8;
+}

@@ -827,6 +827,15 @@ export const russianStrings = {
   Report: "Отчёт",
   "Closed Beta": "Закрытая бета",
   "Coming soon": "Скоро",
+  "same date": "та же дата",
+  "{n} days later": ["{n} день позже", "{n} дня позже", "{n} дней позже"],
+  "{n} days earlier": ["{n} день раньше", "{n} дня раньше", "{n} дней раньше"],
+  "The comment replaces the existing comment of every selected operation.":
+    "Комментарий заменит прежний комментарий у всех выбранных операций.",
+  "Operations in another currency cannot be moved to this account. Choose an account in the same currency.":
+    "Операции в другой валюте нельзя перенести на этот счёт. Выберите счёт в той же валюте.",
+  "Select all in this period": "Выбрать все операции этого периода",
+  "Deselect all in this period": "Снять выбор с операций этого периода",
   "Your latest changes are NOT saved: the storage is full or unavailable. Save a data file now, then free space by deleting old backups or photos.":
     "Последние изменения НЕ сохранены: хранилище заполнено или недоступно. Сохраните файл данных сейчас, затем освободите место: удалите старые копии или фото.",
   "Save a data file": "Сохранить файл данных",

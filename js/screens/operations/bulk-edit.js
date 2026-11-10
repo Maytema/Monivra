@@ -3,8 +3,8 @@ import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, TODAY } from "../../core/constants.js";
 import { appData, uiState } from "../../core/state.js";
 import { save } from "../../data/storage.js";
-import { accountById, categoryById, dateLabel } from "../../domain/finance.js";
-import { applyBulkChanges, emptyBulkChanges } from "../../domain/operations.js";
+import { accountById, categoryById, dateLabelCompact } from "../../domain/finance.js";
+import { applyBulkChanges, bulkAccountProblem, emptyBulkChanges } from "../../domain/operations.js";
 import { translate, translateCount } from "../../i18n/index.js";
 import { accountPicker, categoryPicker } from "../pickers.js";
 import { calendar } from "../../ui/calendar.js";
@@ -57,14 +57,40 @@ function bulkDeleteOperations() {
 
 const tagsSummary = (changes) => {
   if (changes.clearTags) return translate("Clear all");
-  return [...changes.addTags.map((t) => "+" + t), ...changes.removeTags.map((t) => "−" + t)].join(
-    ", ",
-  );
+  return [...changes.addTags, ...changes.removeTags].join(", ");
 };
 
+// The tags to add and to remove as separate readable chips (the values are shown as they are).
+const tagsSummaryHtml = (changes) => {
+  if (changes.clearTags) return escapeHtml(translate("Clear all"));
+  const group = (label, tags, cls) =>
+    tags.length
+      ? `<span class="bulk-tag-group"><small>${translate(label)}</small>${tags.map((t) => `<span class="tag-chip ${cls}">${escapeHtml(t)}</span>`).join("")}</span>`
+      : "";
+  return group("Add", changes.addTags, "") + group("Remove", changes.removeTags, "removed");
+};
+
+const DAY_MS = 86400000;
+// The target date of a bulk date change: a short date and, when all the selected operations have
+// one date, how far it is from it. With different dates there is no single direction to name, so
+// only the target date is shown.
+function dateSummary(date, selected) {
+  if (!date) return "";
+  const shown = dateLabelCompact(date);
+  const originals = [...new Set(selected.map((o) => o.date))];
+  if (originals.length !== 1) return shown;
+  const days = Math.round((Date.parse(date) - Date.parse(originals[0])) / DAY_MS);
+  if (!days) return `${shown} · ${translate("same date")}`;
+  return `${shown} · ${
+    days > 0
+      ? translateCount("{n} day later", "{n} days later", days)
+      : translateCount("{n} day earlier", "{n} days earlier", -days)
+  }`;
+}
+
 // Row with a title, the chosen value (or "No changes") and a cross that clears it.
-function changeRowHtml(label, icon, value, open, clear) {
-  const shown = value ? escapeHtml(value) : translate("No changes");
+function changeRowHtml(label, icon, value, open, clear, valueHtml = null) {
+  const shown = value ? (valueHtml ?? escapeHtml(value)) : translate("No changes");
   const clearButton = value
     ? iconButtonHtml("close", "Clear", () => {
         clear();
@@ -81,8 +107,13 @@ function changeRowHtml(label, icon, value, open, clear) {
 // Which account of a transfer is replaced.
 function askTransferRole(changes) {
   const choose = (role) => () => {
-    changes.role = role;
+    const problem = bulkAccountProblem(uiState.selected, changes.account, role);
     closeLayers();
+    if (problem) {
+      changes.account = null;
+      return toast(problem);
+    }
+    changes.role = role;
   };
   const cancel = () => {
     changes.account = null;
@@ -184,7 +215,7 @@ function chooseComment(changes) {
   };
   openSheet(
     () =>
-      `<h2>${translate("Comment")}</h2><label><small>${translate("Add a comment")}</small><input aria-label="${escapeHtml(translate("Comment"))}" value="${escapeHtml(text)}" data-input="${registerInput((value) => (text = value))}"></label>${sheetFooterHtml(
+      `<h2>${translate("Comment")}</h2><p class="muted">${translate("The comment replaces the existing comment of every selected operation.")}</p><label><small>${translate("Add a comment")}</small><input aria-label="${escapeHtml(translate("Comment"))}" value="${escapeHtml(text)}" data-input="${registerInput((value) => (text = value))}"></label>${sheetFooterHtml(
         buttonHtml(
           `${iconSvg("trash", 14)} ${translate("Remove comments")}`,
           removeComments,
@@ -208,8 +239,14 @@ function bulkEdit() {
       render();
     });
   const chooseAccount = () =>
+    // The picker closes itself: closing here too would close this window and lose the choice.
     accountPicker(changes.account, (id) => {
-      closeLayers();
+      const problem = bulkAccountProblem(
+        uiState.selected,
+        id,
+        hasTransfers ? "receiver" : "sender",
+      );
+      if (problem && !hasTransfers) return toast(problem);
       changes.account = id;
       if (hasTransfers) askTransferRole(changes);
       else render();
@@ -238,17 +275,19 @@ function bulkEdit() {
       true,
       "Confirm",
     );
-  const commentShown =
+  // Computed at every render: the sheet is drawn again after each choice, so a value fixed once
+  // would stay "No changes".
+  const commentShown = () =>
     changes.comment === null ? "" : changes.comment || translate("Remove comments");
   openSheet(
     () =>
       `<h2>${translate("Bulk edit")}</h2>${changeRowHtml("Category", "categories", categoryById(changes.category)?.name, chooseCategory, () => (changes.category = null))}${changeRowHtml("Account", "wallet", accountById(changes.account)?.name, chooseAccount, () => (changes.account = null))}${changeRowHtml(
         "Comment",
         "comment",
-        commentShown,
+        commentShown(),
         () => chooseComment(changes),
         () => (changes.comment = null),
-      )}${changeRowHtml("Tags", "tag", tagsSummary(changes), () => chooseTags(changes, selected), clearTags)}${changeRowHtml("Date", "calendar", changes.date ? dateLabel(changes.date) : "", chooseDate, () => (changes.date = null))}${sheetFooterHtml(
+      )}${changeRowHtml("Tags", "tag", tagsSummary(changes), () => chooseTags(changes, selected), clearTags, tagsSummaryHtml(changes))}${changeRowHtml("Date", "calendar", dateSummary(changes.date, selected), chooseDate, () => (changes.date = null))}${sheetFooterHtml(
         buttonHtml("Cancel", () => closeLayers(), "outline"),
         buttonHtml("Confirm", confirm, "primary"),
       )}`,
