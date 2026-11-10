@@ -886,9 +886,11 @@ await step(
     closeLayers(); goBack();
     restoreData(parsed.data, { mode: 'replace', scheduled: 'none', conflicts: 'backup' });
     await new Promise((r) => setTimeout(r, 3000));
-    out.opsAfter = appData.ops.length;
-    out.firstAccount = appData.accounts[0].name;
-    out.pinInData = JSON.stringify(appData.settings.pin);
+    // The restore replaces the data object: read it again from the module, not the old reference.
+    const now = (await import('/js/core/state.js')).appData;
+    out.opsAfter = now.ops.length;
+    out.firstAccount = now.accounts[0].name;
+    out.pinInData = JSON.stringify(now.settings.pin);
     out.stored = localStorage.getItem(${JSON.stringify(KEY)});
     return out;
   })()`);
