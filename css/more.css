@@ -1504,8 +1504,11 @@
 .pin-field-dots {
   letter-spacing: 0.25em;
 }
-.pin-setup-pad {
-  grid-template-columns: repeat(3, 1fr);
-  margin: 12px 0 0;
-  gap: 10px;
+.pin-field.invalid {
+  outline-color: var(--negative);
+}
+.field-error {
+  margin: 4px 16px 0px;
+  color: var(--negative);
+  font-size: 14px;
 }

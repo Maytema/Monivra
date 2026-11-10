@@ -8,6 +8,7 @@ import { translate } from "../i18n/index.js";
 import { feeLinesHtml } from "./fees.js";
 import { operationsAddMenu } from "./operations/add-menu.js";
 import { opRow } from "./operations/list.js";
+import { operationStart } from "./operation-editor/start.js";
 import { emptyStateHtml } from "../ui/empty-state.js";
 import {
   recurLabel,
@@ -33,10 +34,11 @@ function scheduleDetails(o) {
     o.recur ? line(iconSvg("repeat", 18), recurLabel(o.recur) + remainingLabel(o.recur)) : "",
     o.reminder ? line(iconSvg("bell", 18), reminderLabel(o.reminder)) : "",
   ].join("");
-  return (
+  const details =
     (o.fees?.length ? feeLinesHtml(o) : "") +
-    (rule ? `<div class="detail-lines accent-lines">${rule}</div>` : "")
-  );
+    (rule ? `<div class="detail-lines accent-lines">${rule}</div>` : "");
+  // The lines under the row belong to the card: a tap on them opens the payment like a tap above.
+  return details ? buttonHtml(details, () => operationStart(o, true), "scheduled-details") : "";
 }
 // Day title of the list: the date and the day of the week.
 const dayTitle = (date) =>

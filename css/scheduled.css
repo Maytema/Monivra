@@ -90,6 +90,12 @@
 .scheduled-item {
   margin-bottom: 8px;
 }
+/* The whole card opens the payment: the lines under the row are part of its button. */
+.scheduled-details {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
 .detail-lines {
   margin: -4px 0px 8px 64px;
   font-size: 14px;

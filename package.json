@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Offline personal finance tracker. The application itself has no dependencies and no build step; these packages are only for checking it.",
   "scripts": {
-    "test": "node tests/run.mjs && node tests/scenarios.mjs && node tests/android-mock.mjs && node tests/storage-limits.mjs && node tests/selection.mjs && node tests/pin.mjs && node tests/pdf-cancel.mjs && node tests/statistics.mjs",
+    "test": "node tests/run.mjs && node tests/scenarios.mjs && node tests/android-mock.mjs && node tests/storage-limits.mjs && node tests/selection.mjs && node tests/pin.mjs && node tests/pdf-cancel.mjs && node tests/statistics.mjs && node tests/scheduled-ui.mjs",
     "lint": "eslint js tests",
     "format": "prettier --write js tests css",
     "format:check": "prettier --check js tests css"

@@ -263,6 +263,33 @@ check("Skip moves the date and posts nothing", () => {
   return appData.ops.length === count && item.date === "2026-11-26" && item.recur.remaining === 2;
 });
 
+check("Skip and Add now deal with one occurrence of one payment and leave the others alone", () => {
+  const first = scheduledExpense("2026-11-19", { every: 2, unit: "Days", remaining: 5, days: [] });
+  const second = { ...JSON.parse(JSON.stringify(first)), id: "__due2" };
+  const third = { ...JSON.parse(JSON.stringify(first)), id: "__due3", recur: null };
+  appData.scheduled = [first, second, third];
+  const count = appData.ops.length;
+  processScheduled("__due", false); // one occurrence of the first is skipped
+  const skipped =
+    first.date === "2026-11-21" &&
+    first.recur.remaining === 4 &&
+    second.date === "2026-11-19" &&
+    second.recur.remaining === 5 &&
+    appData.ops.length === count;
+  processScheduled("__due2", true); // one occurrence of the second is added
+  const added =
+    second.date === "2026-11-21" &&
+    second.recur.remaining === 4 &&
+    appData.ops.length === count + 1;
+  processScheduled("__due3", true); // a payment without a repeat is done once and goes
+  return (
+    skipped &&
+    added &&
+    appData.scheduled.map((x) => x.id).join() === "__due,__due2" &&
+    appData.ops.length === count + 2
+  );
+});
+
 check("The last repetition leaves the list", () => {
   scheduledExpense("2026-11-19", { every: 1, unit: "Days", remaining: 1, days: [] });
   processScheduled("__due", true);

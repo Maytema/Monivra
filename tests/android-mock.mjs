@@ -68,6 +68,8 @@ function makeBridge(options = {}) {
       case "MonivraNative.secureRemove":
         delete s.secure[args.key];
         return { status: "ok" };
+      case "MonivraNative.timeFormat":
+        return { is24: s.is24 ?? true };
       case "MonivraNative.biometricStatus":
         return { status: s.biometric };
       case "MonivraNative.biometricAuthenticate":
@@ -145,6 +147,7 @@ async function openNative({ data = seedJson, saves = 0, bridge = makeBridge(), w
               "setSystemBars",
               "setPrivacyScreen",
               "appReady",
+              "timeFormat",
             ]),
             addListener: (event, fn) => {
               (listeners[event] ||= []).push(fn);
@@ -231,6 +234,25 @@ const scenarios = {
     await page.waitForSelector(".navbar, .pin");
     await page.waitForTimeout(300);
     expect(bridge.count("MonivraNative.appReady"), "appReady calls").toBe(1);
+  },
+  async "MOCK: the time is written as the device is set (24 hours or AM and PM), not by the language"(
+    open,
+  ) {
+    for (const [is24, pattern] of [
+      [false, /AM|PM/],
+      [true, /^\d\d:\d\d$/],
+    ]) {
+      const bridge = makeBridge({});
+      bridge.is24 = is24;
+      const page = await open({ bridge });
+      await page.waitForSelector(".navbar, .pin");
+      await settle(page, 300);
+      const label = await page.evaluate(async () => {
+        const { timeLabel } = await import("/js/ui/time-picker.js");
+        return timeLabel("20:05");
+      });
+      expect(pattern.test(label), `${is24 ? "24" : "12"}-hour setting gave ${label}`).toBe(true);
+    }
   },
   async "MOCK: stored data is left alone when the internal copy is the same or older"(open) {
     const older = seedJson.replace('"Cash"', '"Other"');

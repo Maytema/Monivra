@@ -1238,6 +1238,7 @@ export const russianStrings = {
     "Отпечаток или лицо недоступны. Введите PIN.",
   "Payment reminders": "Напоминания о платежах",
   Premium: "Премиум",
+  "Options set: {n}": "Выбрано настроек: {n}",
   "Your latest changes were recovered from the internal copy on this device.":
     "Последние изменения восстановлены из внутренней копии на этом устройстве.",
   "Notification sent": "Уведомление отправлено",

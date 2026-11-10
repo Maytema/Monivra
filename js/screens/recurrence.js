@@ -112,6 +112,7 @@ export function recurrence(d) {
             },
             DIGITS,
           ),
+        { atMin: r.every <= 1, atMax: r.every >= MAX_INTERVAL },
       )}${dropdownHtml(unitName(r.unit, r.every), () =>
         unitDialog(
           r.unit,
@@ -137,6 +138,7 @@ export function recurrence(d) {
             },
             DIGITS,
           ),
+        { atMin: r.remaining === null, atMax: r.remaining !== null && r.remaining >= MAX_INTERVAL },
       )}${actionsHtml(
         () => {
           d.recur = null;
@@ -213,6 +215,7 @@ export function reminder(d) {
             },
             DIGITS,
           ),
+        { atMin: r.before <= 0, atMax: r.before >= MAX_INTERVAL },
       )}${dropdownHtml(unitName(r.unit, r.before), () =>
         unitDialog(r.unit, (unit) => {
           r.unit = unit;

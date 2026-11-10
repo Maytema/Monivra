@@ -380,6 +380,14 @@ public class MonivraNativePlugin extends Plugin {
         });
     }
 
+    // The time format of the device: 24 hours or AM and PM, as set in the Android settings.
+    @PluginMethod
+    public void timeFormat(PluginCall call) {
+        JSObject result = new JSObject();
+        result.put("is24", android.text.format.DateFormat.is24HourFormat(getContext()));
+        call.resolve(result);
+    }
+
     // ---- System bars and the recents preview ----
 
     // The page has drawn its first screen: the splash can go.

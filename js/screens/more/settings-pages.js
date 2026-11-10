@@ -1,6 +1,5 @@
 /* Settings sub-pages of the More tab */
 import { render } from "../../app/shell.js";
-import { iconSvg } from "../../core/constants.js";
 import { appData, setLocked, setPinEntry } from "../../core/state.js";
 import { save } from "../../data/storage.js";
 import { deleteAllBackups } from "../../domain/backups.js";
@@ -18,6 +17,7 @@ import { makePin, pinLength, pinMatches } from "../../platform/pin.js";
 import { isNative } from "../../platform/native.js";
 import { biometricState, verifyBiometric } from "../../platform/biometric.js";
 import { translate } from "../../i18n/index.js";
+import { digitPadHtml } from "../../ui/number-picker.js";
 import { biometricTexts } from "./lock.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast, toggleRowHtml } from "../../ui/primitives.js";
@@ -30,51 +30,46 @@ const timeDialog = () =>
   });
 // PIN lengths that are accepted.
 const PIN_LENGTHS = [4, 6];
-// Set or remove the PIN. One dialog: the fields show the typed digits as dots, the one keypad below
-// types into the field that is active (tap a field to make it active). Nothing opens over the dialog.
+// Set or remove the PIN. One bottom sheet like the amount keypad of an operation: the fields on top
+// show the typed digits as dots, the keypad below types into the field that is active (tap a field to
+// choose it); nothing opens over it. Only digits, at most six; a wrong count or a wrong confirmation
+// is said at once, not when the second field is full.
 function pinSetup(remove) {
   const values = { first: "", second: "" };
   let active = "first";
+  let tried = false; // the confirm key was pressed with the first PIN of a wrong length
   const size = () => (remove ? pinLength(appData.settings.pin) : Math.max(...PIN_LENGTHS));
+  // The problem with what is typed, said under the fields, or "" when there is none.
+  const problem = () => {
+    if (remove) return "";
+    const { first, second } = values;
+    if (first && !PIN_LENGTHS.includes(first.length) && (tried || first.length === 5))
+      return "Enter 4 or 6 digits";
+    if (second && second.length >= first.length && second !== first) return "PINs do not match";
+    return "";
+  };
   const field = (name, label, hint) => {
     const shown = "•".repeat(values[name].length);
+    const bad =
+      (name === "first" && values.first && problem() === "Enter 4 or 6 digits") ||
+      (name === "second" && problem() === "PINs do not match");
     return buttonHtml(
       `<span class="field-label">${translate(label)}</span><span class="value pin-field-dots">${shown || (hint ? `<small class="field-hint">${translate(hint)}</small>` : "—")}</span>`,
       () => {
         active = name;
         render();
       },
-      `field pin-field ${active === name ? "active" : ""}`,
-      `aria-label="${translate(label)}" aria-pressed="${active === name}"`,
+      `field pin-field ${active === name ? "active" : ""} ${bad ? "invalid" : ""}`,
+      `aria-label="${translate(label)}" aria-pressed="${active === name}"${bad ? ' aria-invalid="true"' : ""}`,
     );
   };
-  const press = (k) => {
-    const text = values[active];
-    if (k === "⌫") values[active] = text.slice(0, -1);
-    else if (text.length < size()) values[active] = text + k;
-    // A full first PIN passes on to the confirmation by itself.
-    if (!remove && active === "first" && values.first.length === size()) active = "second";
-    render();
-  };
-  // Built at each render: the handlers of a render are valid for that render only.
-  const pad = () => {
-    const keys = [..."123456789"].map((k) => buttonHtml(k, () => press(k), "key")).join("");
-    return `<div class="keypad pin-setup-pad">${keys}<span></span>${buttonHtml("0", () => press("0"), "key")}${buttonHtml(
-      iconSvg("backspace", 26),
-      () => press("⌫"),
-      "key plain",
-      `aria-label="${translate("Backspace")}"`,
-    )}</div>`;
-  };
-  const save_ = () => {
-    const { first, second } = values;
+  const finish = () => {
+    const { first } = values;
     if (remove) {
       if (!pinMatches(appData.settings.pin, first)) return toast("Incorrect PIN");
       appData.settings.pin = false;
       appData.settings.biometric = false;
     } else {
-      if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
-      if (first !== second) return toast("PINs do not match");
       // A person who turns the lock on expects the app to lock when it is left, so a new PIN also
       // switches that on; a PIN that already exists keeps the person's own choice.
       if (!appData.settings.pin) appData.settings.relock = true;
@@ -83,13 +78,38 @@ function pinSetup(remove) {
     save();
     closeLayers();
   };
+  // The confirm key: on the first PIN it passes to the confirmation, on the last field it saves.
+  const confirm = () => {
+    if (!remove && active === "first") {
+      if (!PIN_LENGTHS.includes(values.first.length)) {
+        tried = true;
+        return render();
+      }
+      active = "second";
+      return render();
+    }
+    if (!remove && values.second !== values.first) return render();
+    if (remove && !values.first) return toast("Enter 4 or 6 digits");
+    finish();
+  };
+  const press = (k) => {
+    const text = values[active];
+    if (k === "⌫") values[active] = text.slice(0, -1);
+    else if (/^\d$/.test(k) && text.length < size()) values[active] = text + k;
+    tried = false;
+    // A full first PIN passes on to the confirmation by itself.
+    if (!remove && active === "first" && values.first.length === size()) active = "second";
+    render();
+  };
   openSheet(
-    () =>
-      `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${field("first", remove ? "Current PIN" : "New PIN", remove ? "" : "Enter 4 or 6 digits")}${
+    () => {
+      const message = problem();
+      return `<h2>${remove ? "Turn off PIN" : "Set PIN"}</h2>${field("first", remove ? "Current PIN" : "New PIN", remove ? "" : "Enter 4 or 6 digits")}${
         remove ? "" : field("second", "Confirm PIN", "Enter 4 or 6 digits")
-      }${pad()}<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p><div class="dialog-actions">${buttonHtml("Cancel", () => closeLayers(), "text-button")}${buttonHtml("Save", save_, "primary")}</div>`,
+      }${message ? `<p class="field-error" role="alert">${translate(message)}</p>` : ""}${digitPadHtml(press, confirm, false)}<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p>`;
+    },
     "PIN",
-    "dialog",
+    "sheet",
   );
 }
 // What the browser says about notifications, in words for the person.

@@ -37,8 +37,9 @@ export const fieldButtonHtml = (label, value, fn, hint = "") =>
     `aria-label="${escapeHtml(translate(label))}"`,
   );
 // A value between two arrows: the arrows change it by one, tapping the value types it in.
-export const stepperHtml = (label, shown, step, edit) =>
-  `<div class="field-title">${translate(label)}</div><div class="stepper">${iconButtonHtml("left", "Decrease", () => step(-1))}${buttonHtml(escapeHtml(String(shown)), edit, "stepper-value", `aria-label="${escapeHtml(translate(label))}"`)}${iconButtonHtml("right", "Increase", () => step(1))}</div>`;
+// `limits` ({ atMin, atMax }) dim an arrow that cannot go further.
+export const stepperHtml = (label, shown, step, edit, limits = {}) =>
+  `<div class="field-title">${translate(label)}</div><div class="stepper">${iconButtonHtml("left", "Decrease", () => step(-1), Boolean(limits.atMin))}${buttonHtml(escapeHtml(String(shown)), edit, "stepper-value", `aria-label="${escapeHtml(translate(label))}"`)}${iconButtonHtml("right", "Increase", () => step(1), Boolean(limits.atMax))}</div>`;
 // Outlined button that shows the current choice of a list and opens the list.
 export const dropdownHtml = (shown, fn) =>
   buttonHtml(`<span>${translate(shown)}</span>${iconSvg("down", 20)}`, fn, "dropdown");

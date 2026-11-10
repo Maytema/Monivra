@@ -44,7 +44,7 @@ export function amountPicker(title, value, fn, allowNegative = false, currency =
 // Digit keypad of the number sheet: the digits and a backspace
 // in four columns, the tall confirm key at the right, the zero filling the last row
 // (next to the dot when decimals are allowed; the dot is off once the number has one).
-function digitPadHtml(press, confirm, decimal, text = "") {
+export function digitPadHtml(press, confirm, decimal, text = "") {
   const digits = keypadDigits();
   const digit = (i) => buttonHtml(digits[i], () => press(digits[i]), "key");
   return `<div class="keypad digit-pad ${decimal ? "has-dot" : ""}">${digit(0)}${digit(1)}${digit(2)}${buttonHtml(

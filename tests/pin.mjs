@@ -89,7 +89,7 @@ await test("set a PIN: one keypad, digits appear masked in the field, nothing in
     !(await page.locator(".overlay").innerText()).includes("4827"),
     "digits shown in plain text",
   );
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator(".overlay .key.ok").click();
   const data = await stored(page);
   // a bare search for the digits could meet them inside a hash or an id: look at the stored PIN itself
   const pin = JSON.parse(data).settings.pin;
@@ -100,20 +100,40 @@ await test("set a PIN: one keypad, digits appear masked in the field, nothing in
   assert(data.includes('"hash"'), "the PIN is not stored as a hash");
 });
 
-await test("different confirmation is refused; backspace edits; wrong length is refused", async (page) => {
+await test("a wrong count and a wrong confirmation are told at once; backspace edits; nothing is saved", async (page) => {
   await openPinDialog(page);
+  const error = page.locator(".overlay .field-error");
   await typeDigits(page, "123");
   await page.locator(".overlay .key[aria-label='Backspace']").click();
   const t = await page.getByRole("button", { name: "New PIN" }).innerText();
   assert(t.includes("••") && !t.includes("•••"), "backspace did not remove a digit");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.locator("#toast", { hasText: "Enter 4 or 6 digits" }).waitFor();
+  assert((await error.count()) === 0, "an error before anything was tried");
+  // the confirm key with two digits: the error is there at once, the second field is not reached
+  await page.locator(".overlay .key.ok").click();
+  assert((await error.innerText()).includes("4 or 6"), "no error for a short PIN");
   await typeDigits(page, "34");
-  await page.getByRole("button", { name: "Confirm PIN" }).click();
+  assert((await error.count()) === 0, "the error stayed with four digits");
+  // five digits are wrong at once, without pressing anything
+  await typeDigits(page, "5");
+  assert((await error.innerText()).includes("4 or 6"), "no error for five digits");
+  await page.locator(".overlay .key[aria-label='Backspace']").click();
+  await page.locator(".overlay .key.ok").click(); // four digits: on to the confirmation
   await typeDigits(page, "1235");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
-  await page.locator("#toast", { hasText: "PINs do not match" }).waitFor();
+  assert(
+    (await error.innerText()).includes("do not match"),
+    "a different confirmation is not told",
+  );
+  await page.locator(".overlay .key.ok").click();
   assert(!(await stored(page)).includes('"hash"'), "a PIN was saved");
+});
+
+await test("at most six digits, digits only", async (page) => {
+  await openPinDialog(page);
+  await typeDigits(page, "1234567");
+  const first = await page.getByRole("button", { name: "New PIN" }).innerText();
+  assert((first.match(/•/g) ?? []).length === 6, `the first field holds ${first}`);
+  const keys = await page.locator(".overlay .key").allInnerTexts();
+  assert(!keys.some((k) => /[a-z.]/i.test(k.trim())), "a key that is not a digit");
 });
 
 await test("a six-digit PIN moves to the confirmation by itself; change and turn off need the right current PIN", async (page) => {
@@ -121,17 +141,17 @@ await test("a six-digit PIN moves to the confirmation by itself; change and turn
   await typeDigits(page, "135790");
   // the full PIN passes on: the next digits go to the confirmation
   await typeDigits(page, "135790");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator(".overlay .key.ok").click();
   assert((await stored(page)).includes('"hash"'), "the six-digit PIN was not saved");
   // turn off: wrong, then right
   await page.getByText("PIN code", { exact: true }).click();
   await typeDigits(page, "111111");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator(".overlay .key.ok").click();
   await page.locator("#toast", { hasText: "Incorrect PIN" }).waitFor();
   assert((await stored(page)).includes('"hash"'), "the PIN was removed by a wrong PIN");
   for (let i = 0; i < 6; i++) await page.locator(".overlay .key[aria-label='Backspace']").click();
   await typeDigits(page, "135790");
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+  await page.locator(".overlay .key.ok").click();
   assert(!(await stored(page)).includes('"hash"'), "the right PIN did not turn the lock off");
 });
 

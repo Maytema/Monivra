@@ -49,7 +49,7 @@ function monthGridHtml(view, chosen, pick, min) {
   );
   const head = view.years
     ? `<div class="calendar-head">${title}</div>`
-    : `<div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1))}${title}${iconButtonHtml("right", "Next month", () => move(1))}</div>`;
+    : `<div class="calendar-head">${iconButtonHtml("left", "Previous month", () => move(-1), Boolean(min) && view.month <= min.slice(0, 7))}${title}${iconButtonHtml("right", "Next month", () => move(1))}</div>`;
   if (view.years)
     return `${head}<div class="calendar-years">${Array.from({ length: 21 }, (_, i) => year - 10 + i)
       .map((y) =>

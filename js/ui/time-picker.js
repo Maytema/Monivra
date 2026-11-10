@@ -2,6 +2,7 @@
 import { render } from "../app/shell.js";
 import { currentLocale, translate } from "../i18n/index.js";
 import { buttonHtml, iconButtonHtml, toast } from "./primitives.js";
+import { systemHour24 } from "../platform/time-format.js";
 import { registerAction, registerInput } from "./handlers.js";
 import { closeLayers, openSheet } from "./navigation.js";
 
@@ -12,11 +13,14 @@ const INNER_RADIUS = 64;
 // Pointer closer to the centre than this share of the dial picks the inner ring.
 const INNER_SHARE = 0.62;
 
-// Whether the language of the application writes the time with AM and PM.
-const twelveHour = () =>
-  /^h1[12]$/.test(
-    new Intl.DateTimeFormat(currentLocale(), { hour: "numeric" }).resolvedOptions().hourCycle,
-  );
+// Whether the time is written with AM and PM: as the device is set when it says so, otherwise as the
+// language of the application writes it.
+export const twelveHour = () =>
+  systemHour24() !== null
+    ? !systemHour24()
+    : /^h1[12]$/.test(
+        new Intl.DateTimeFormat(currentLocale(), { hour: "numeric" }).resolvedOptions().hourCycle,
+      );
 
 // "08:00 PM" or "20:00": a stored "HH:MM" as the language writes it.
 export const timeLabel = (time) => {
@@ -25,6 +29,7 @@ export const timeLabel = (time) => {
     timeZone: "UTC",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: twelveHour(),
   });
 };
 

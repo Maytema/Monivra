@@ -181,7 +181,7 @@ export function extrasHtml(draft) {
     render();
   };
   const comment = draft.comment
-    ? `<div class="calc-comment">${buttonHtml(escapeHtml(draft.comment), editComment, "calc-comment-text", 'aria-label="Comment"')}${iconButtonHtml("close", "Clear comment", clearComment)}</div>`
+    ? `<div class="calc-comment"><div class="calc-comment-scroll">${buttonHtml(escapeHtml(draft.comment), editComment, "calc-comment-text", 'aria-label="Comment"')}</div>${iconButtonHtml("close", "Clear comment", clearComment)}</div>`
     : "";
   const tags = draft.tags?.length
     ? buttonHtml(

@@ -3,7 +3,7 @@ import { render } from "../../app/shell.js";
 import { escapeHtml, iconSvg, timeNow } from "../../core/constants.js";
 import { accountBalance, accountById } from "../../domain/finance.js";
 import { keypadDigits } from "../../domain/keypad.js";
-import { translate } from "../../i18n/index.js";
+import { translate, translateWith } from "../../i18n/index.js";
 import { currencyPicker } from "../../ui/currency-picker.js";
 import { timeLabel, timePicker } from "../../ui/time-picker.js";
 import { closeLayers, openSheet } from "../../ui/navigation.js";
@@ -126,10 +126,18 @@ function currencyKeyHtml(editor, parties) {
   );
 }
 
+// How many of the additional options are set: a reminder, a repeat, each tax or commission.
+export const optionsSet = (draft) =>
+  (draft.reminder ? 1 : 0) + (draft.recur ? 1 : 0) + (draft.fees?.length ?? 0);
+
 function modeKeyHtml(editor, model) {
   const on = editor.calculatorOn;
+  const count = optionsSet(editor.draft);
+  const badge = count
+    ? `<span class="calc-count" aria-label="${translateWith("Options set: {n}", { n: count })}">${count}</span>`
+    : "";
   return buttonHtml(
-    `${iconSvg("calculator", 26)}<span class="mode-indicator ${on ? "is-active" : ""}" aria-hidden="true"></span>`,
+    `${iconSvg("calculator", 26)}<span class="mode-indicator ${on ? "is-active" : ""}" aria-hidden="true"></span>${badge}`,
     () => tapModeKey(editor, model),
     `calc-key calc-toggle${on ? " is-on" : ""}`,
     `aria-label="Additionally" aria-pressed="${on}" title="${translate("Tap: more options. Double tap: calculator")}"`,

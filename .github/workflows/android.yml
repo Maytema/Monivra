@@ -37,7 +37,7 @@ jobs:
           node tests/scenarios.mjs 2>&1 | tee results/scenarios.log
           node tests/android-mock.mjs 2>&1 | tee results/android-mock.log
           node tests/storage-limits.mjs 2>&1 | tee results/storage-limits.log
-          for t in selection pin pdf-cancel statistics; do node tests/$t.mjs 2>&1 | tee results/$t.log || exit 1; done
+          for t in selection pin pdf-cancel statistics scheduled-ui; do node tests/$t.mjs 2>&1 | tee results/$t.log || exit 1; done
       - name: Publish test log
         if: always()
         uses: actions/upload-artifact@v4

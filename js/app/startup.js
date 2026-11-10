@@ -17,6 +17,7 @@ import { leaveApp, onSystemBack, onVisibility } from "../platform/lifecycle.js";
 import { flushMirror, mirrorSoon } from "../platform/native-sync.js";
 import { boot } from "../platform/native-boot.js";
 import { refreshBiometric } from "../platform/biometric.js";
+import { refreshTimeFormat } from "../platform/time-format.js";
 import { refreshNotificationPermission } from "../platform/notify.js";
 import { takePinDropped } from "../platform/secure-pin.js";
 import { adoptNativePin } from "./native-pin.js";
@@ -236,6 +237,7 @@ function bindNative() {
     if (hidden) return flushMirror();
     Promise.allSettled([
       refreshBiometric(),
+      refreshTimeFormat(),
       refreshNotificationPermission(translate("Payment reminders")),
     ]).then(() => {
       scheduleReminders();
@@ -244,6 +246,7 @@ function bindNative() {
   });
   refreshNotificationPermission(translate("Payment reminders")).then(() => scheduleReminders());
   adoptNativePin();
+  refreshTimeFormat().then((changed) => changed && render());
 }
 
 // Things the person is told once at the start of the Android shell.
