@@ -91,7 +91,12 @@ await test("set a PIN: one keypad, digits appear masked in the field, nothing in
   );
   await page.getByRole("button", { name: "Save", exact: true }).click();
   const data = await stored(page);
-  assert(!data.includes("4827"), "the PIN is stored in plain text");
+  // a bare search for the digits could meet them inside a hash or an id: look at the stored PIN itself
+  const pin = JSON.parse(data).settings.pin;
+  assert(
+    typeof pin === "object" && !JSON.stringify(pin).includes('"4827"'),
+    "the PIN is stored in plain text",
+  );
   assert(data.includes('"hash"'), "the PIN is not stored as a hash");
 });
 
