@@ -9,18 +9,18 @@
     "name": "the release APK installs",
     "status": "pass",
     "note": "",
-    "seconds": 4
+    "seconds": 3
   },
   {
     "name": "installed package facts: ID, version, SDKs, permissions, not debuggable, no network permission",
     "status": "pass",
-    "note": "version 0.1.0-build.11, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
+    "note": "version 0.1.0-build.12, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
     "seconds": 0
   },
   {
     "name": "the release APK starts offline (airplane mode) and stays running",
     "status": "pass",
-    "note": "running, pid 2777, no crash",
+    "note": "running, pid 3399, no crash",
     "seconds": 12
   },
   {
@@ -33,7 +33,7 @@
     "name": "a new install shows the welcome screen and no data",
     "status": "pass",
     "note": "",
-    "seconds": 1
+    "seconds": 0
   },
   {
     "name": "data is created by the application's own code and stored",
@@ -51,7 +51,7 @@
     "name": "data survives the process being killed and restarted",
     "status": "pass",
     "note": "",
-    "seconds": 3
+    "seconds": 4
   },
   {
     "name": "stored data lost, application installed: the internal copy restores it, with a notice",
@@ -134,8 +134,8 @@
   {
     "name": "update: a build with a higher version code installed over this one keeps data, PIN and lock",
     "status": "pass",
-    "note": "versionCode=11 minSdk=23 targetSdk=35 → versionCode=12 minSdk=23 targetSdk=35; 44 operations unchanged",
-    "seconds": 7
+    "note": "versionCode=12 minSdk=23 targetSdk=35 → versionCode=13 minSdk=23 targetSdk=35; 44 operations unchanged",
+    "seconds": 6
   },
   {
     "name": "a build signed with another key is refused over this one (data stays)",
@@ -146,26 +146,26 @@
   {
     "name": "a scheduled payment reminder is registered with Android's alarm manager",
     "status": "pass",
-    "note": "payment 2026-11-10 11:59, reminder 11:57; 3 alarm line(s) of the application",
+    "note": "payment 2026-11-10 12:16, reminder 12:14; 3 alarm line(s) of the application",
     "seconds": 11
   },
   {
     "name": "the reminder is delivered while the application is closed, and the payment is not posted until it is opened",
     "status": "pass",
-    "note": "delivered after 105 s with the application closed",
-    "seconds": 110
+    "note": "delivered after 135 s with the application closed",
+    "seconds": 140
   },
   {
     "name": "opening the application after the due time posts the payment once, with its own date and time",
     "status": "pass",
-    "note": "posted once as 2026-11-10 11:59",
-    "seconds": 207
+    "note": "posted once as 2026-11-10 12:16",
+    "seconds": 197
   },
   {
     "name": "a data file exported by the web app: previewed, a corrupt one refused with data untouched, a valid one restored",
     "status": "pass",
     "note": "refused: The file is damaged or is not a JSON fil | The file is empty. | Section «Accounts»: the section is missi | The file was made by a newer version of ; restored 7 operations; the PIN of the file is sealed",
-    "seconds": 8
+    "seconds": 9
   },
   {
     "name": "the log holds no financial data and no crash",
