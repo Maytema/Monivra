@@ -1,0 +1,65 @@
+::group::npm install
+
+added 95 packages in 4s
+::endgroup::
+::group::web files
+www ready: 148 files, 1048 KiB
+::endgroup::
+::group::android project
+✔ Adding native android project in android in 38.20ms
+✔ add in 38.57ms
+✔ Copying web assets from www to android/app/src/main/assets/public in 21.40ms
+✔ Creating capacitor.config.json in android/app/src/main/assets in 346.39μs
+✔ copy android in 27.41ms
+✔ Updating Android plugins in 791.98μs
+[info] Found 2 Capacitor plugins for android:
+       @capacitor/app@7.1.2
+       @capacitor/local-notifications@7.0.7
+✔ update android in 19.18ms
+✔ Syncing Gradle in 180.29μs
+[success] android platform added!
+Follow the Developer Workflow guide to get building:
+https://capacitorjs.com/docs/basics/workflow
+android/ prepared
+✔ Copying web assets from www to android/app/src/main/assets/public in 32.07ms
+✔ Creating capacitor.config.json in android/app/src/main/assets in 650.56μs
+✔ copy android in 39.80ms
+✔ Updating Android plugins in 825.75μs
+[info] Found 2 Capacitor plugins for android:
+       @capacitor/app@7.1.2
+       @capacitor/local-notifications@7.0.7
+✔ update android in 26.92ms
+[info] Sync finished in 0.084s
+::endgroup::
+::group::gradle
+Downloading https://services.gradle.org/distributions/gradle-8.11.1-all.zip
+.....................10%......................20%......................30%......................40%......................50%......................60%......................70%......................80%......................90%......................100%
+
+Welcome to Gradle 8.11.1!
+
+Here are the highlights of this release:
+ - Parallel load and store for Configuration Cache
+ - Java compilation errors at the end of the build output
+ - Consolidated report for warnings and deprecations
+
+For more details see https://docs.gradle.org/8.11.1/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/home/runner/work/Monivra/Monivra/android-app/android/app/build.gradle' line: 14
+
+* What went wrong:
+A problem occurred evaluating project ':app'.
+> Value is null
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 31s
