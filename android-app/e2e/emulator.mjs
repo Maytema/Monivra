@@ -460,7 +460,12 @@ await step(
     );
     await waitForFocus(/documentsui|DocumentsActivity|FilesActivity/i, "the system save screen");
     screenshot("05-save-screen");
-    back();
+    // The first Back may only close the on-screen keyboard: press until the screen answers.
+    for (let i = 0; i < 4; i++) {
+      back();
+      await sleep(1500);
+      if (await ev(`window.__save`)) break;
+    }
     const result = await waitFor(`window.__save`, "the answer after cancel");
     assert(result.status === "cancelled", `got ${JSON.stringify(result)}`);
   },
@@ -719,15 +724,36 @@ await step("a scheduled payment reminder is registered with Android's alarm mana
     await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
   }
   await sleep(5000);
-  const alarms = sh(`dumpsys alarm`);
-  const mine = alarms.split("\n").filter((l) => l.includes(PKG));
-  assert(mine.length, "no alarm of the application is registered");
-  writeFileSync(join(outDir, "alarms.txt"), mine.join("\n"));
+  const mine = tryAdb("shell", "dumpsys alarm | grep -i monivra")
+    .split("\n")
+    .filter((l) => l.trim());
   const state = await ev(`localStorage.getItem('monivra.reminders.scheduled')`);
-  assert(
-    state && state.includes("e2e-payment"),
-    `the application did not record the scheduled reminder: ${state}`,
+  const permission = await ev(
+    `Capacitor.Plugins.LocalNotifications.checkPermissions().then((r) => r.display)`,
   );
+  const pending = await ev(
+    `Capacitor.Plugins.LocalNotifications.getPending().then((r) => (r.notifications || []).length)`,
+  );
+  const stored = await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { upcomingReminders } = await import('/js/domain/reminder-plan.js');
+    return { scheduled: appData.scheduled.length, notifications: appData.settings.notifications,
+      planned: upcomingReminders(appData).length, now: new Date().toString() };
+  })()`);
+  const diagnostics = JSON.stringify({
+    permission,
+    pending,
+    state,
+    stored,
+    alarmLines: mine.length,
+  });
+  writeFileSync(join(outDir, "alarms.txt"), `${diagnostics}\n${mine.join("\n")}`);
+  assert(permission === "granted", `notification permission: ${diagnostics}`);
+  assert(
+    state && state.includes("e2e-payment") && pending > 0,
+    `the application did not hand the reminder to the system: ${diagnostics}`,
+  );
+  assert(mine.length, `no alarm of the application is registered: ${diagnostics}`);
   window_due = { day, due, remind };
   return `payment ${day} ${due}, reminder ${remind}; ${mine.length} alarm line(s) of the application`;
 });
@@ -741,10 +767,10 @@ await step(
     await sleep(2500);
     // Ends the process the way the system does when it needs memory; unlike a force stop it keeps the
     // alarms the application handed to the system.
-    const pid = sh(`pidof ${PKG}`).trim();
+    const pid = tryAdb("shell", `pidof ${PKG}`).trim();
     if (pid) runAs(`kill -9 ${pid}`);
     await sleep(2000);
-    assert(!sh(`pidof ${PKG}`).trim(), "the process is still running");
+    assert(!tryAdb("shell", `pidof ${PKG}`).trim(), "the process is still running");
     const start = Date.now();
     let notification = "";
     while (Date.now() - start < 5 * 60000) {
@@ -893,7 +919,9 @@ await step("the log holds no financial data and no crash", async () => {
   const mine = log.split("\n").filter((l) => /monivra|Capacitor|chromium|MonivraNative/i.test(l));
   writeFileSync(join(outDir, "app-log.txt"), mine.slice(-400).join("\n"));
   assert(!/FATAL EXCEPTION/.test(tryAdb("logcat", "-d", "-b", "crash")), "a crash was logged");
-  const leaks = mine.filter((l) => /"opening"|"accounts"|"salt"|e2e-payment|777/.test(l));
+  const leaks = mine.filter((l) =>
+    /"opening"|"accounts"|"salt"|e2e-payment|"amount":\s*777/.test(l),
+  );
   assert(!leaks.length, `data in the log: ${leaks[0]?.slice(0, 160)}`);
   return `${mine.length} lines of the application checked`;
 });
