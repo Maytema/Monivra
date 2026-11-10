@@ -9,37 +9,37 @@
     "name": "the release APK installs",
     "status": "pass",
     "note": "",
-    "seconds": 6
+    "seconds": 4
   },
   {
     "name": "installed package facts: ID, version, SDKs, permissions, not debuggable, no network permission",
     "status": "pass",
-    "note": "version 0.1.0-build.10, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
+    "note": "version 0.1.0-build.11, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
     "seconds": 0
   },
   {
     "name": "the release APK starts offline (airplane mode) and stays running",
     "status": "pass",
-    "note": "running, pid 3433, no crash",
-    "seconds": 14
+    "note": "running, pid 2777, no crash",
+    "seconds": 12
   },
   {
     "name": "the debuggable build installs over the release build (same signature)",
     "status": "pass",
     "note": "",
-    "seconds": 2
+    "seconds": 1
   },
   {
     "name": "a new install shows the welcome screen and no data",
     "status": "pass",
     "note": "",
-    "seconds": 0
+    "seconds": 1
   },
   {
     "name": "data is created by the application's own code and stored",
     "status": "pass",
     "note": "5 accounts, 44 operations",
-    "seconds": 2
+    "seconds": 1
   },
   {
     "name": "every save is copied to the internal copy in the private folder, checked by a hash",
@@ -51,19 +51,19 @@
     "name": "data survives the process being killed and restarted",
     "status": "pass",
     "note": "",
-    "seconds": 6
+    "seconds": 3
   },
   {
     "name": "stored data lost, application installed: the internal copy restores it, with a notice",
     "status": "pass",
     "note": "restored; notice shown",
-    "seconds": 14
+    "seconds": 12
   },
   {
     "name": "a damaged stored dataset is not overwritten by the internal copy",
     "status": "pass",
     "note": "",
-    "seconds": 21
+    "seconds": 20
   },
   {
     "name": "durability: a change made a moment before the process is killed is still there",
@@ -75,13 +75,13 @@
     "name": "a PIN: its hash is in the keystore storage, not in the data, the copy or the log",
     "status": "pass",
     "note": "marker only in the data and copy; sealed file is not text",
-    "seconds": 6
+    "seconds": 3
   },
   {
     "name": "after a restart the lock screen asks for the PIN: wrong refused, right opens",
     "status": "pass",
     "note": "",
-    "seconds": 8
+    "seconds": 7
   },
   {
     "name": "the real system reports biometric status (no fingerprint is enrolled on the emulator)",
@@ -91,14 +91,14 @@
   },
   {
     "name": "Save: the system 'save as' screen opens and a cancel is reported as cancelled, nothing written",
-    "status": "FAIL",
-    "note": "timed out waiting for the answer after cancel (last: null)",
-    "seconds": 39
+    "status": "pass",
+    "note": "",
+    "seconds": 5
   },
   {
     "name": "Save: confirming in the system screen writes the file with the given content",
-    "status": "warn",
-    "note": "no Save button found in the system screen",
+    "status": "pass",
+    "note": "written to /sdcard/Download/monivra-e2e.json",
     "seconds": 5
   },
   {
@@ -109,21 +109,21 @@
   },
   {
     "name": "Print: the system print screen opens with the PDF and closing it answers the call",
-    "status": "FAIL",
-    "note": "timed out waiting for the answer after closing print (last: null)",
-    "seconds": 35
+    "status": "pass",
+    "note": "",
+    "seconds": 4
   },
   {
     "name": "Android Back: closes a page, then at the first screen sends the app to the background (alive)",
-    "status": "FAIL",
-    "note": "timed out waiting for back on the More tab (last: false)",
-    "seconds": 31
+    "status": "pass",
+    "note": "",
+    "seconds": 4
   },
   {
     "name": "rotation: the layout follows and the navigation bar stays",
-    "status": "FAIL",
-    "note": "timed out waiting for the first screen (last: false)",
-    "seconds": 30
+    "status": "pass",
+    "note": "",
+    "seconds": 6
   },
   {
     "name": "language and theme: Russian and dark apply, system bars follow",
@@ -134,8 +134,8 @@
   {
     "name": "update: a build with a higher version code installed over this one keeps data, PIN and lock",
     "status": "pass",
-    "note": "versionCode=10 minSdk=23 targetSdk=35 → versionCode=11 minSdk=23 targetSdk=35; 44 operations unchanged",
-    "seconds": 8
+    "note": "versionCode=11 minSdk=23 targetSdk=35 → versionCode=12 minSdk=23 targetSdk=35; 44 operations unchanged",
+    "seconds": 7
   },
   {
     "name": "a build signed with another key is refused over this one (data stays)",
@@ -146,31 +146,31 @@
   {
     "name": "a scheduled payment reminder is registered with Android's alarm manager",
     "status": "pass",
-    "note": "payment 2026-11-10 11:47, reminder 11:45; 3 alarm line(s) of the application",
-    "seconds": 12
+    "note": "payment 2026-11-10 11:59, reminder 11:57; 3 alarm line(s) of the application",
+    "seconds": 11
   },
   {
     "name": "the reminder is delivered while the application is closed, and the payment is not posted until it is opened",
     "status": "pass",
-    "note": "delivered after 120 s with the application closed",
-    "seconds": 125
+    "note": "delivered after 105 s with the application closed",
+    "seconds": 110
   },
   {
     "name": "opening the application after the due time posts the payment once, with its own date and time",
     "status": "pass",
-    "note": "posted once as 2026-11-10 11:47",
-    "seconds": 198
+    "note": "posted once as 2026-11-10 11:59",
+    "seconds": 207
   },
   {
     "name": "a data file exported by the web app: previewed, a corrupt one refused with data untouched, a valid one restored",
     "status": "pass",
     "note": "refused: The file is damaged or is not a JSON fil | The file is empty. | Section «Accounts»: the section is missi | The file was made by a newer version of ; restored 7 operations; the PIN of the file is sealed",
-    "seconds": 10
+    "seconds": 8
   },
   {
     "name": "the log holds no financial data and no crash",
     "status": "pass",
-    "note": "1354 lines of the application checked",
+    "note": "1380 lines of the application checked",
     "seconds": 0
   }
 ]
