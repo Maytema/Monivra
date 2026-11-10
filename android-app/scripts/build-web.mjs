@@ -58,3 +58,12 @@ const walk = (dir) => {
 };
 walk(out);
 console.log(`www ready: ${files} files, ${(bytes / 1024).toFixed(0)} KiB`);
+
+// The shipped app must hold no sample-data generator that could replace a person's data.
+for (const file of readdirSync(join(out, "js"), { recursive: true })) {
+  const full = join(out, "js", String(file));
+  if (statSync(full).isFile() && /createSampleData|sample-data|Replace with sample data/.test(readFileSync(full, "utf8"))) {
+    console.error(`${file} contains the sample-data feature`);
+    process.exit(1);
+  }
+}

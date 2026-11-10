@@ -1,14 +1,12 @@
 /* Info pages of the More tab */
 import { render } from "../../app/shell.js";
 import { APP_NAME, iconSvg } from "../../core/constants.js";
-import { appData, setAppData, uiState } from "../../core/state.js";
+import { uiState } from "../../core/state.js";
 import { aboutArt } from "../about-art.js";
-import { createSampleData } from "../../data/sample.js";
-import { save } from "../../data/storage.js";
-import { translate, translateCount, translateWith } from "../../i18n/index.js";
-import { goBack, goHome } from "../../ui/navigation.js";
-import { confirmAction, showInfo } from "../../ui/dialogs.js";
-import { buttonHtml, iconButtonHtml, pageHeader, toast } from "../../ui/primitives.js";
+import { translate, translateWith } from "../../i18n/index.js";
+import { goBack } from "../../ui/navigation.js";
+import { showInfo } from "../../ui/dialogs.js";
+import { buttonHtml, iconButtonHtml, pageHeader } from "../../ui/primitives.js";
 import {
   guidePage,
   instructionsPage,
@@ -17,8 +15,11 @@ import {
   supportTopicPage,
 } from "./support.js";
 
+// A label for pages of features that do not exist yet; none of them claims an account, a purchase or sync.
+const soon = () => `<span class="info-pill">${translate("Coming soon")}</span>`;
+
 function profilePage() {
-  const body = `<div class="profile"><div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle class="orbit-ring" cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g class="orbit-particles" fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/><circle cx="150" cy="30" r="1.8"/><circle cx="44" cy="164" r="2"/></g><g class="orbit-particles slow" fill="#8bbcc1"><circle cx="100" cy="188" r="2.2"/><circle cx="31" cy="52" r="1.6"/><circle cx="182" cy="140" r="1.8"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
+  const body = `<div class="profile">${soon()}<div class="profile-orbit" aria-label="Profile avatar"><svg viewBox="0 0 200 200" width="200" height="200" role="img"><circle cx="100" cy="100" r="80" fill="none" stroke="#72a6aa" stroke-width="1.4"/><circle cx="100" cy="100" r="71" fill="none" stroke="#72a6aa" stroke-width="1"/><circle class="orbit-ring" cx="100" cy="100" r="87" fill="none" stroke="#72a6aa" stroke-width="1" stroke-dasharray="75 18 40 22 14 30"/><g fill="none" stroke="#488c94" stroke-width="2.5" stroke-linecap="round"><circle cx="100" cy="92" r="10"/><path d="M86 118v-8c0-11 28-11 28 0v8"/></g><g class="orbit-particles" fill="#5c989f"><circle cx="23" cy="101" r="3"/><circle cx="176" cy="93" r="3"/><circle cx="100" cy="12" r="3"/><circle cx="150" cy="30" r="1.8"/><circle cx="44" cy="164" r="2"/></g><g class="orbit-particles slow" fill="#8bbcc1"><circle cx="100" cy="188" r="2.2"/><circle cx="31" cy="52" r="1.6"/><circle cx="182" cy="140" r="1.8"/></g></svg></div><div class="profile-details"><div class="profile-label">Sync status</div><div class="profile-value"><span class="profile-cloud">${iconSvg("cloud", 17)}</span><span>Local data · not synced</span></div><div class="profile-label">User ID</div><div class="profile-value">Not connected</div><div class="profile-label">Signed in via</div><div class="profile-value">Not signed in</div><div class="profile-label">Subscription status</div><div class="profile-value">Closed beta</div></div><div class="profile-actions">${buttonHtml("Sign out", () => showInfo("This offline beta is not connected to an account."), "profile-action")}${buttonHtml("Delete account", () => showInfo("No remote account exists. You can manage local data under More → Data."), "profile-action profile-danger")}</div></div>`;
   return { title: "Profile", body };
 }
 
@@ -46,7 +47,7 @@ function subscriptionPage() {
     "Backup and restore data",
     "No ads",
   ];
-  const body = `<div class="subscription"><div class="sub-head">${iconButtonHtml("back", "Back", goBack)}<h2 class="sub-title">${translate("Use the full potential of the application!")}</h2></div><div class="sub-plans">${plans
+  const body = `<div class="subscription">${soon()}<div class="sub-head">${iconButtonHtml("back", "Back", goBack)}<h2 class="sub-title">${translate("Use the full potential of the application!")}</h2></div><div class="sub-plans">${plans
     .map(([key, name, price, detail, tag]) =>
       buttonHtml(
         `<span class="plan-left"><strong>${key === "Lifetime" ? "Lifetime access" : name}</strong>${tag && key === "Annually" ? `<em>${tag}</em>` : ""}<small>${detail}</small>${key === "Lifetime" ? `<small>All future features are included at no additional cost</small>` : ""}</span><span class="plan-price">${price}</span>${plan === key ? `<span class="plan-check">${iconSvg("check", 13)}</span>` : ""}`,
@@ -65,7 +66,7 @@ function subscriptionPage() {
 }
 
 function sharedAccessPage() {
-  const body = `<div class="empty">${iconSvg("user", 52)}<p>Shared access will be available after sign-in is added.</p></div>`;
+  const body = `<div class="empty">${soon()}${iconSvg("user", 52)}<p>Shared access will be available after sign-in is added.</p></div>`;
   return { title: "Shared access", body };
 }
 
@@ -84,52 +85,6 @@ function termsPage() {
   return { title: "Terms of use", body };
 }
 
-function sampleDataPage() {
-  const hasData = !!(appData.accounts.length || appData.categories.length || appData.ops.length);
-  const body = `<div class="info-card"><h2>Sample accounts and categories</h2><p>Install 5 example accounts, 14 categories and sample transactions for testing. All items will behave like ordinary records: you can edit or delete them.</p><p><strong>Current database:</strong> ${[translateCount("{n} account", "{n} accounts", appData.accounts.length), translateCount("{n} category", "{n} categories", appData.categories.length), translateCount("{n} operation", "{n} operations", appData.ops.length)].join(" · ")}.</p>${
-    hasData
-      ? `<p class="caution">Your database already contains records. To protect them, sample data cannot be installed over existing data.</p>${buttonHtml(
-          "Replace with sample data",
-          () =>
-            confirmAction(
-              "Replace current local records with editable sample data? You can cancel without downloading anything.",
-              () => {
-                setAppData(createSampleData());
-                save();
-                goHome("accounts");
-                toast("Sample data installed");
-              },
-              false,
-              "Replace data",
-            ),
-          "danger-outline",
-        )}`
-      : `<p>This action runs once on an empty database. Deleted sample records will not reappear.</p>${buttonHtml(
-          "Install sample data",
-          () =>
-            confirmAction(
-              "Create sample accounts, categories and operations?",
-              () => {
-                if (appData.accounts.length || appData.categories.length || appData.ops.length)
-                  return toast("Database is not empty");
-                const initial = createSampleData();
-                appData.accounts = initial.accounts;
-                appData.categories = initial.categories;
-                appData.ops = initial.ops;
-                appData.tags = initial.tags;
-                save();
-                goHome("accounts");
-                toast("Sample data installed");
-              },
-              false,
-              "Install",
-            ),
-          "primary",
-        )}`
-  }</div>`;
-  return { title: "Test data", body };
-}
-
 function unavailablePage() {
   const body = "<p>Information is not available in this preview.</p>";
   return { title: "Information", body };
@@ -141,7 +96,6 @@ const PAGES = {
   shared: sharedAccessPage,
   instructions: instructionsPage,
   support: supportPage,
-  sampleData: sampleDataPage,
   about: aboutPage,
   privacyPolicy: privacyPolicyPage,
   terms: termsPage,

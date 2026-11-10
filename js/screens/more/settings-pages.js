@@ -61,6 +61,9 @@ function pinSetup(remove) {
           } else {
             if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
             if (first !== second) return toast("PINs do not match");
+            // A person who turns the lock on expects the app to lock when it is left, so a new PIN also
+            // switches that on; a PIN that already exists keeps the person's own choice.
+            if (!appData.settings.pin) appData.settings.relock = true;
             appData.settings.pin = makePin(first);
           }
           save();
@@ -168,6 +171,9 @@ function securitySettings() {
       setPinEntry("");
       render();
     }) +
+    (appData.settings.pin && !appData.settings.relock
+      ? `<p class="caution">${translate("The app asks for the PIN only when it starts. Turn on “Lock after leaving” to lock it when you switch to another app or to the home screen; the delay below then applies.")}</p>`
+      : "") +
     `<p class="footnote">${translate("The PIN only hides the screen; data on the device is not encrypted.")}</p>` +
     (biometricState() === "unsupported"
       ? ""

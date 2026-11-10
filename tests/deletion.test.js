@@ -1,5 +1,5 @@
 import { check } from "./harness.js";
-import { createSampleData } from "../js/data/sample.js";
+import { createSampleData } from "./fixtures/sample-data.js";
 import { createReportFixture } from "./report-fixture.js";
 import { appData, setAppData, uiState } from "../js/core/state.js";
 import { findDataProblem } from "../js/data/storage.js";

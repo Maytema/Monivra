@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createSampleData } from "../../tests/fixtures/sample-data.js";
 
 const [releaseApk, debugApk, nextApk, outDir] = process.argv.slice(2);
 mkdirSync(outDir, { recursive: true });
@@ -319,19 +320,29 @@ await step("a new install shows the welcome screen and no data", async () => {
   screenshot("02-welcome");
 });
 
-await step("data is created by the application's own code and stored", async () => {
+await step("synthetic test data (a fixture of the tests, not of the app) is stored", async () => {
   await ev(`(async () => {
     const { setAppData, setFirstLaunch } = await import('/js/core/state.js');
-    const { createSampleData } = await import('/js/data/sample.js');
     const { save } = await import('/js/data/storage.js');
     const { render } = await import('/js/app/shell.js');
-    setAppData(createSampleData()); setFirstLaunch(false); save(); render();
+    setAppData(${JSON.stringify(createSampleData())}); setFirstLaunch(false); save(); render();
   })()`);
   await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
   before = await stateOfData();
   assert(before.ops > 0 && before.accounts > 0, "no data");
   screenshot("03-with-data");
   return `${before.accounts} accounts, ${before.ops} operations`;
+});
+
+await step("the sample-data feature does not exist in the installed app", async () => {
+  const gone = await ev(`(async () => {
+    const r = await fetch('/js/data/sample.js').then((x) => x.text()).catch(() => '');
+    return JSON.stringify({ module: r.includes('createSampleData') });
+  })()`);
+  const parsed = JSON.parse(gone);
+  assert(!parsed.module, "sample.js is served by the app");
+  const text = await ev(`document.body.innerText`);
+  assert(!/Test data|sample data/i.test(String(text)), "sample-data text on the main screen");
 });
 
 await step(
@@ -455,6 +466,68 @@ await step(
     await waitFor(`document.body.innerText.includes('Incorrect PIN')`, "the wrong-PIN message");
     await typePin("1234");
     await waitFor(`!!document.querySelector('.navbar')`, "the main screen after the right PIN");
+  },
+);
+
+await step(
+  "leaving to Home / Recents / another app and coming back: Immediately asks for the PIN, a timed lock waits, the switch off never locks",
+  async () => {
+    const pid = () => sh(`pidof ${PKG}`).trim();
+    const setLock = (relock, delay) =>
+      ev(`(async () => {
+        const { appData } = await import('/js/core/state.js');
+        const { save } = await import('/js/data/storage.js');
+        appData.settings.relock = ${relock}; appData.settings.lockDelay = ${delay}; save();
+      })()`);
+    const awayAndBack = async (how) => {
+      if (how === "home") sh("input keyevent KEYCODE_HOME");
+      else if (how === "recents") sh("input keyevent KEYCODE_APP_SWITCH");
+      else sh("am start -W -a android.settings.SETTINGS"); // another app in front
+      await sleep(1500);
+      return how;
+    };
+    const comeBack = async () => {
+      await launch();
+    };
+    const started = pid();
+    assert(started, "the app is not running");
+    const seen = [];
+    // Immediately: every way of leaving asks for the PIN again, the process stays alive.
+    await setLock(true, 0);
+    for (const how of ["home", "recents", "app"]) {
+      await awayAndBack(how);
+      assert(pid() === started, `the process changed after ${how}: it did not stay alive`);
+      await comeBack();
+      assert(await ev(`!!document.querySelector('.pin')`), `no lock screen after ${how}`);
+      seen.push(`${how}: locked`);
+      await typePin("1234");
+      await waitFor(`!!document.querySelector('.navbar')`, `the main screen after ${how}`);
+    }
+    // Screen lock and unlock.
+    sh("input keyevent KEYCODE_SLEEP");
+    await sleep(1500);
+    sh("input keyevent KEYCODE_WAKEUP");
+    sh("wm dismiss-keyguard");
+    await sleep(1500);
+    await comeBack();
+    assert(await ev(`!!document.querySelector('.pin')`), "no lock screen after the screen lock");
+    seen.push("screen lock: locked");
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen after the screen lock");
+    // A timed lock: back at once stays open.
+    await setLock(true, 60);
+    await awayAndBack("home");
+    await comeBack();
+    assert(!(await ev(`!!document.querySelector('.pin')`)), "locked before the delay");
+    seen.push("60 s, back at once: open");
+    // The switch off: never locks on leaving.
+    await setLock(false, 0);
+    await awayAndBack("home");
+    await comeBack();
+    assert(!(await ev(`!!document.querySelector('.pin')`)), "locked with the switch off");
+    seen.push("switch off: open");
+    screenshot("04b-after-leaving");
+    return seen.join("; ");
   },
 );
 

@@ -16,7 +16,7 @@ const browser = await chromium.launch();
 const seedPage = await browser.newPage();
 await seedPage.goto(`${address}/index.html`);
 const seedJson = await seedPage.evaluate(async () => {
-  const { createSampleData } = await import("/js/data/sample.js");
+  const { createSampleData } = await import("/tests/fixtures/sample-data.js");
   return JSON.stringify(createSampleData());
 });
 await seedPage.close();
@@ -288,6 +288,107 @@ const scenarios = {
     });
     await settle(page, 200);
     expect(page.bridge.mirror, "copy after leaving").toBe(await stored(page));
+  },
+
+  // ---------- leaving the app and coming back (Home, Recents, another app, screen lock) ----------
+  // The Android shell reports every one of these the same way: appStateChange(false) and then (true).
+  async "MOCK: with 'Lock after leaving' on and 'Immediately', returning from the background asks for the PIN even though the app stayed alive"(
+    open,
+  ) {
+    const page = await open({ bridge: makeBridge() });
+    await setPinInApp(page, "1234");
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      appData.settings.relock = true;
+      appData.settings.lockDelay = 0;
+      save();
+    });
+    await settle(page, 400);
+    await page.reload();
+    await page.waitForSelector(".pin");
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+    await page.evaluate(() =>
+      window.__listeners.appStateChange.forEach((f) => f({ isActive: false })),
+    );
+    await page.evaluate(() =>
+      window.__listeners.appStateChange.forEach((f) => f({ isActive: true })),
+    );
+    await page.waitForSelector(".pin", { timeout: 3000 });
+    expect(await page.locator(".navbar").count(), "content behind the lock").toBe(0);
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+  },
+
+  async "MOCK: a timed lock is respected: back before the delay stays open, after it asks for the PIN; with the switch off it never locks"(
+    open,
+  ) {
+    const page = await open({ bridge: makeBridge() });
+    await setPinInApp(page, "1234");
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      appData.settings.relock = true;
+      appData.settings.lockDelay = 30;
+      save();
+    });
+    await settle(page, 400);
+    await page.reload();
+    await page.waitForSelector(".pin");
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+    await page.evaluate(() => {
+      const real = Date.now.bind(Date);
+      window.__skew = 0;
+      Date.now = () => real() + window.__skew;
+    });
+    const leaveAndReturn = (seconds) =>
+      page.evaluate((s) => {
+        window.__listeners.appStateChange.forEach((f) => f({ isActive: false }));
+        window.__skew += s * 1000;
+        window.__listeners.appStateChange.forEach((f) => f({ isActive: true }));
+      }, seconds);
+    await leaveAndReturn(10);
+    await settle(page, 200);
+    expect(await page.locator(".pin").count(), "locked before the delay").toBe(0);
+    await leaveAndReturn(31);
+    await page.waitForSelector(".pin", { timeout: 3000 });
+    await typePin(page, "1234");
+    await page.waitForSelector(".navbar");
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      appData.settings.relock = false;
+    });
+    await leaveAndReturn(3600);
+    await settle(page, 200);
+    expect(await page.locator(".pin").count(), "locked with the switch off").toBe(0);
+  },
+
+  async "MOCK: the privacy setting covers the screen in the system (recent-apps preview) and nothing else turns it on"(
+    open,
+  ) {
+    const bridge = makeBridge();
+    const page = await open({ bridge });
+    await settle(page, 300);
+    const calls = () => bridge.calls.filter((c) => c.name === "MonivraNative.setPrivacyScreen");
+    expect(
+      calls().every((c) => c.args?.on === false) || calls().length === 0,
+      "on by default",
+    ).toBe(true);
+    await page.evaluate(async () => {
+      const { appData } = await import("/js/core/state.js");
+      const { save } = await import("/js/data/storage.js");
+      const { render } = await import("/js/app/shell.js");
+      appData.settings.hidePreview = true;
+      save();
+      render();
+    });
+    await settle(page, 200);
+    expect(
+      calls().some((c) => c.args?.on === true),
+      "cover requested",
+    ).toBe(true);
   },
 
   // ---------- the PIN and the lock ----------

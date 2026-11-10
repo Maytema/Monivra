@@ -616,8 +616,6 @@ export const russianStrings = {
     "Пока нет ни одного счёта или накопления. Создать первый счёт или накопление?",
   "Categories will be here": "Здесь будут категории",
   "So far, it's empty. Create your first category?": "Пока пусто. Создать первую категорию?",
-  "Your database already contains records. To protect them, sample data cannot be installed over existing data.":
-    "В базе уже есть записи. Чтобы их защитить, примеры нельзя установить поверх существующих данных.",
   "30 seconds": "30 секунд",
   "1 minute": "1 минута",
   "5 minutes": "5 минут",
@@ -666,7 +664,6 @@ export const russianStrings = {
   Install: "Установить",
   "Install 5 example accounts, 14 categories and sample transactions for testing. All items will behave like ordinary records: you can edit or delete them.":
     "Установить 5 примеров счетов, 14 категорий и тестовые операции. Это обычные записи: их можно изменять и удалять.",
-  "Install sample data": "Установить примеры данных",
   Internet: "Интернет",
   "Invalid amount": "Некорректная сумма",
   "Invalid debt transfer amount": "Некорректная сумма перевода долга",
@@ -727,14 +724,9 @@ export const russianStrings = {
   Repair: "Ремонт",
   Repeat: "Повтор",
   "Repeat hints": "Повторить подсказки",
-  "Replace current local records with editable sample data? You can cancel without downloading anything.":
-    "Заменить текущие записи примерами данных? Можно отменить, ничего не скачивая.",
   "Replace data": "Заменить данные",
-  "Replace with sample data": "Заменить примерами данных",
   "Report a bug": "Сообщить об ошибке",
   "Request a feature": "Предложить функцию",
-  "Sample accounts and categories": "Примеры счетов и категорий",
-  "Sample data installed": "Примеры данных установлены",
   Saved: "Сохранено",
   Schedule: "Расписание",
   "Select a category": "Выберите категорию",
@@ -762,7 +754,6 @@ export const russianStrings = {
   "Synchronization of devices in real time via a shared account":
     "Синхронизация устройств в реальном времени через общий аккаунт",
   "Tag already exists": "Такой тег уже есть",
-  "Test data": "Тестовые данные",
   "Test notification": "Тестовое уведомление",
   "The file is larger than the 20 MB import limit.": "Файл больше лимита импорта в 20 МБ.",
   "The first row must contain:": "Первая строка должна содержать:",
@@ -835,6 +826,9 @@ export const russianStrings = {
   Income: "Доход",
   Report: "Отчёт",
   "Closed Beta": "Закрытая бета",
+  "Coming soon": "Скоро",
+  "The app asks for the PIN only when it starts. Turn on “Lock after leaving” to lock it when you switch to another app or to the home screen; the delay below then applies.":
+    "Приложение спрашивает PIN только при запуске. Включите «Блокировать при выходе», чтобы оно блокировалось, когда вы переключаетесь на другое приложение или на главный экран; тогда действует задержка ниже.",
   build: "сборка",
   "Selected: {n}": "Выбрано: {n}",
   "Archive ({n})": "Архив ({n})",
@@ -848,7 +842,6 @@ export const russianStrings = {
   "Save operation": "Сохранить операцию",
   "(Approx. $0.23 per week)": "(≈ $0.23 в неделю)",
   "(Approx. $0.35 per week)": "(≈ $0.35 в неделю)",
-  "Test data · accounts and categories": "Тестовые данные · счета и категории",
   "Photo attached": "Фото прикреплено",
   "No more than {n} photos": "Не больше {n} фото",
   "invalid type": "неверный тип операции",

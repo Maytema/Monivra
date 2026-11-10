@@ -1,7 +1,7 @@
 /* Sample dataset for testing: example accounts, categories and a month of operations */
-import { createEmptyData } from "./defaults.js";
+import { createEmptyData } from "../../js/data/defaults.js";
 
-// Installed only on request from More > Data > Test data.
+// Test fixture only. The application never ships or installs it.
 export function createSampleData() {
   const accounts = [
     ["Wallet", "Regular", 1846700, "card", "#5067d7"],

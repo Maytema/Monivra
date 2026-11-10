@@ -1,5 +1,5 @@
 import { appData, firstLaunch, setAppData, setFirstLaunch } from "../js/core/state.js";
-import { createSampleData } from "../js/data/sample.js";
+import { createSampleData } from "./fixtures/sample-data.js";
 
 const registered = [];
 

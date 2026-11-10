@@ -28,7 +28,7 @@ async function openApp({ width = 360, height = 700, adjust = () => {}, motion = 
   page.on("pageerror", (error) => page.errors.push(error.message));
   await page.goto(`${address}/index.html`);
   const stored = await page.evaluate(async (adjustSource) => {
-    const { createSampleData } = await import("/js/data/sample.js");
+    const { createSampleData } = await import("/tests/fixtures/sample-data.js");
     const { STORAGE_KEY } = await import("/js/core/constants.js");
     const data = createSampleData();
     new Function("data", adjustSource)(data);
