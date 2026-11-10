@@ -65,6 +65,7 @@ cp android/app/build/intermediates/merged_manifests/release/processReleaseManife
 
 # Facts about the finished APK, read from the APK itself.
 BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+cp "$BT/lib/apksigner.jar" "$OUT/apksigner.jar" 2>/dev/null || true
 {
   echo "version name: $MONIVRA_VERSION_NAME   version code: $MONIVRA_VERSION_CODE"
   echo "signing: $SIGNING"

@@ -34,7 +34,11 @@ else
     else
       # Not signed with the owner's key: the reports go out, the APKs do not.
       for f in "$DIST"/*; do case "$f" in *.apk) ;; *) cp "$f" . 2>/dev/null || true ;; esac; done
-      echo "APKs not published: this build was not signed with the owner key." > NO-APK.txt
+      # The release APK goes out only under a name that says it is to be re-signed: its one-run key
+      # cannot update anything. apksigner.jar (from the runner's SDK) lets the owner's key be applied
+      # elsewhere, since the key itself never enters this repository or its secrets.
+      for f in "$DIST"/monivra-*.apk; do case "$f" in *-debuggable.apk) ;; *) cp "$f" "RESIGN-ONLY-$(basename "$f")" ;; esac; done
+      echo "These APKs are signed with a one-run key and are NOT for installing: re-sign them with the owner key." > NO-APK.txt
     fi
   fi
   # The tail of the log is what matters when a build fails.
