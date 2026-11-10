@@ -57,7 +57,9 @@ function statsGroups(type = uiState.catType) {
     }
     group.total += o.reportAmount;
   }
-  return [...groups.values()].sort((a, b) => b.total - a.total);
+  // Only what happened in the period: a category without money in it is not listed (the empty
+  // state shows when none has any).
+  return [...groups.values()].filter((g) => g.total !== 0).sort((a, b) => b.total - a.total);
 }
 // Open the operations list filtered by a category.
 function statsDetail(id, members = []) {
