@@ -513,6 +513,35 @@ const scenarios = {
   },
 
   // ---------- reminders ----------
+  async "MOCK: with the permission already given, the reminders are handed to the system at launch by themselves"(
+    open,
+  ) {
+    const data = JSON.parse(seedJson);
+    const base = data.accounts[0];
+    const food = data.categories.find((c) => c.type === "expense" && !c.parent);
+    const soon = new Date(Date.now() + 3 * 86400000);
+    const iso = `${soon.getFullYear()}-${String(soon.getMonth() + 1).padStart(2, "0")}-${String(soon.getDate()).padStart(2, "0")}`;
+    data.scheduled = [
+      {
+        id: "s2",
+        type: "expense",
+        amount: 500,
+        date: iso,
+        time: "10:00",
+        comment: "",
+        tags: [],
+        from: base.id,
+        category: food.id,
+        reminder: { before: 1, unit: "Days", time: "09:00" },
+        recur: null,
+      },
+    ];
+    data.settings.notifications = true;
+    const bridge = makeBridge({ notifications: "granted" });
+    await open({ data: JSON.stringify(data), bridge });
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    expect(bridge.pending.length, "reminders handed to the system at launch").toBe(1);
+  },
   async "MOCK: notifications: asked on switching on; granted → reminders handed to the system; the old ones replaced"(
     open,
   ) {

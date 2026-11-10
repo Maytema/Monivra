@@ -239,7 +239,7 @@ function bindNative() {
       render();
     });
   });
-  refreshNotificationPermission(translate("Payment reminders")).then(scheduleReminders);
+  refreshNotificationPermission(translate("Payment reminders")).then(() => scheduleReminders());
   adoptNativePin();
 }
 
