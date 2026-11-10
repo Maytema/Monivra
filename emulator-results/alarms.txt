@@ -1,1 +1,4 @@
-{"probe":"ok","permission":"granted","pending":0,"state":"[]","stored":{"scheduled":1,"notifications":true,"planned":1,"now":"Tue Nov 10 2026 10:40:34 GMT+0000 (Coordinated Universal Time)"},"alarmLines":0}
+{"probe":"ok","permission":"granted","pending":1,"state":"[\"payment:e2e-payment:2026-11-10\"]","stored":{"scheduled":1,"notifications":true,"planned":1,"now":"Tue Nov 10 2026 10:56:59 GMT+0000 (Coordinated Universal Time)"},"alarmLines":3}
+    RTC_WAKEUP #4: Alarm{376abbb type 0 origWhen 1794308280000 whenElapsed 257824 app.monivra.finance}
+      tag=*walarm*:app.monivra.finance/com.capacitorjs.plugins.localnotifications.TimedNotificationPublisher
+      operation=PendingIntent{f7c48d8: PendingIntentRecord{52d0431 app.monivra.finance broadcastIntent}}
