@@ -1,36 +1,36 @@
 Activity Resolver Table:
   Non-Data Actions:
       android.intent.action.MAIN:
-        f6ca49b app.monivra.finance.dev/app.monivra.finance.MainActivity filter 64b8038
+        aa2cb03 app.monivra.finance.dev/app.monivra.finance.MainActivity filter 87d8a80
           Action: "android.intent.action.MAIN"
           Category: "android.intent.category.LAUNCHER"
 
 Receiver Resolver Table:
   Non-Data Actions:
       android.intent.action.QUICKBOOT_POWERON:
-        286d811 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 7655d76
+        ca728b9 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 9aae4fe
           Action: "android.intent.action.QUICKBOOT_POWERON"
           Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
           Action: "android.intent.action.BOOT_COMPLETED"
       androidx.profileinstaller.action.SAVE_PROFILE:
-        7e6ef77 app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter 241db02
+        9fd145f app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter 44c530a
           Action: "androidx.profileinstaller.action.SAVE_PROFILE"
       android.intent.action.LOCKED_BOOT_COMPLETED:
-        286d811 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 7655d76
+        ca728b9 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 9aae4fe
           Action: "android.intent.action.QUICKBOOT_POWERON"
           Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
           Action: "android.intent.action.BOOT_COMPLETED"
       androidx.profileinstaller.action.INSTALL_PROFILE:
-        7e6ef77 app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter 75467e4
+        9fd145f app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter d70ceac
           Action: "androidx.profileinstaller.action.INSTALL_PROFILE"
       androidx.profileinstaller.action.SKIP_FILE:
-        7e6ef77 app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter 4efe44d
+        9fd145f app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter d089775
           Action: "androidx.profileinstaller.action.SKIP_FILE"
       androidx.profileinstaller.action.BENCHMARK_OPERATION:
-        7e6ef77 app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter c510c13
+        9fd145f app.monivra.finance.dev/androidx.profileinstaller.ProfileInstallReceiver filter 988977b
           Action: "androidx.profileinstaller.action.BENCHMARK_OPERATION"
       android.intent.action.BOOT_COMPLETED:
-        286d811 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 7655d76
+        ca728b9 app.monivra.finance.dev/com.capacitorjs.plugins.localnotifications.LocalNotificationRestoreReceiver filter 9aae4fe
           Action: "android.intent.action.QUICKBOOT_POWERON"
           Action: "android.intent.action.LOCKED_BOOT_COMPLETED"
           Action: "android.intent.action.BOOT_COMPLETED"
@@ -38,44 +38,44 @@ Receiver Resolver Table:
 Domain verification status:
 
 Permissions:
-  Permission [app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (869642f):
+  Permission [app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION] (c92c84d):
     sourcePackage=app.monivra.finance.dev
     uid=10192 gids=[] type=0 prot=signature
-    perm=PermissionInfo{cc02a3c app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
+    perm=PermissionInfo{c14ef02 app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}
     flags=0x0
 
 Registered ContentProviders:
   app.monivra.finance.dev/androidx.core.content.FileProvider:
-    Provider{11873c5 app.monivra.finance.dev/androidx.core.content.FileProvider}
+    Provider{3489013 app.monivra.finance.dev/androidx.core.content.FileProvider}
   app.monivra.finance.dev/androidx.startup.InitializationProvider:
-    Provider{a0d811a app.monivra.finance.dev/androidx.startup.InitializationProvider}
+    Provider{37d5250 app.monivra.finance.dev/androidx.startup.InitializationProvider}
 
 ContentProvider Authorities:
   [app.monivra.finance.dev.androidx-startup]:
-    Provider{a0d811a app.monivra.finance.dev/androidx.startup.InitializationProvider}
-      applicationInfo=ApplicationInfo{932144b app.monivra.finance.dev}
+    Provider{37d5250 app.monivra.finance.dev/androidx.startup.InitializationProvider}
+      applicationInfo=ApplicationInfo{5509c49 app.monivra.finance.dev}
   [app.monivra.finance.dev.fileprovider]:
-    Provider{11873c5 app.monivra.finance.dev/androidx.core.content.FileProvider}
-      applicationInfo=ApplicationInfo{983ae28 app.monivra.finance.dev}
+    Provider{3489013 app.monivra.finance.dev/androidx.core.content.FileProvider}
+      applicationInfo=ApplicationInfo{c66f94e app.monivra.finance.dev}
 
 Key Set Manager:
   [app.monivra.finance.dev]
       Signing KeySets: 56
 
 Packages:
-  Package [app.monivra.finance.dev] (7118741):
+  Package [app.monivra.finance.dev] (8221a6f):
     appId=10192
-    pkg=Package{6f294e6 app.monivra.finance.dev}
-    codePath=/data/app/~~w_hA53EV-EhUsaPoFd4pDw==/app.monivra.finance.dev-ZaUD1-6qbvDldsSxfezFcA==
-    resourcePath=/data/app/~~w_hA53EV-EhUsaPoFd4pDw==/app.monivra.finance.dev-ZaUD1-6qbvDldsSxfezFcA==
-    legacyNativeLibraryDir=/data/app/~~w_hA53EV-EhUsaPoFd4pDw==/app.monivra.finance.dev-ZaUD1-6qbvDldsSxfezFcA==/lib
+    pkg=Package{b6d437c app.monivra.finance.dev}
+    codePath=/data/app/~~voqm0xJjcL07LV9VOBMpMw==/app.monivra.finance.dev-m0IOPKMmaCeDNZcTlLbftg==
+    resourcePath=/data/app/~~voqm0xJjcL07LV9VOBMpMw==/app.monivra.finance.dev-m0IOPKMmaCeDNZcTlLbftg==
+    legacyNativeLibraryDir=/data/app/~~voqm0xJjcL07LV9VOBMpMw==/app.monivra.finance.dev-m0IOPKMmaCeDNZcTlLbftg==/lib
     extractNativeLibs=false
     primaryCpuAbi=null
     secondaryCpuAbi=null
     cpuAbiOverride=null
-    versionCode=20 minSdk=23 targetSdk=35
+    versionCode=21 minSdk=23 targetSdk=35
     minExtensionVersions=[]
-    versionName=0.1.0-build.20
+    versionName=0.1.0-build.21
     usesNonSdkApi=false
     splits=[base]
     apkSigningVersion=2
@@ -84,15 +84,15 @@ Packages:
     forceQueryable=false
     dataDir=/data/user/0/app.monivra.finance.dev
     supportsScreens=[small, medium, large, xlarge, resizeable, anyDensity]
-    timeStamp=2026-11-10 22:37:42
-    lastUpdateTime=2026-11-10 22:37:42
+    timeStamp=2026-11-10 23:50:07
+    lastUpdateTime=2026-11-10 23:50:08
     installerPackageName=null
     installerPackageUid=-1
     initiatingPackageName=com.android.shell
     originatingPackageName=null
     packageSource=1
     appMetadataFilePath=null
-    signatures=PackageSignatures{e8baa27 version:2, signatures:[cd552216], past signatures:[]}
+    signatures=PackageSignatures{5fdb405 version:2, signatures:[89d2d463], past signatures:[]}
     installPermissionsFixed=true
     pkgFlags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ]
     privatePkgFlags=[ PRIVATE_FLAG_ACTIVITIES_RESIZE_MODE_RESIZEABLE_VIA_SDK_VERSION ALLOW_AUDIO_PLAYBACK_CAPTURE PARTIALLY_DIRECT_BOOT_AWARE PRIVATE_FLAG_ALLOW_NATIVE_HEAP_POINTER_TAGGING ]
@@ -112,9 +112,9 @@ Packages:
       android.permission.USE_FINGERPRINT: granted=true
       android.permission.USE_BIOMETRIC: granted=true
       android.permission.WAKE_LOCK: granted=true
-    User 0: ceDataInode=320207 installed=true hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=true enabled=0 instant=false virtual=false
+    User 0: ceDataInode=320206 installed=true hidden=false suspended=false distractionFlags=0 stopped=true notLaunched=true enabled=0 instant=false virtual=false
       installReason=0
-      firstInstallTime=2026-11-10 22:37:42
+      firstInstallTime=2026-11-10 23:50:08
       uninstallReason=0
       overlay paths:
         /product/overlay/EmulationPixel6/EmulationPixel6Overlay.apk
@@ -138,10 +138,10 @@ Queries:
 
 Dexopt state:
   [app.monivra.finance.dev]
-    path: /data/app/~~w_hA53EV-EhUsaPoFd4pDw==/app.monivra.finance.dev-ZaUD1-6qbvDldsSxfezFcA==/base.apk
+    path: /data/app/~~voqm0xJjcL07LV9VOBMpMw==/app.monivra.finance.dev-m0IOPKMmaCeDNZcTlLbftg==/base.apk
       x86_64: [status=verify] [reason=install] [primary-abi]
-        [location is /data/app/~~w_hA53EV-EhUsaPoFd4pDw==/app.monivra.finance.dev-ZaUD1-6qbvDldsSxfezFcA==/oat/x86_64/base.odex]
+        [location is /data/app/~~voqm0xJjcL07LV9VOBMpMw==/app.monivra.finance.dev-m0IOPKMmaCeDNZcTlLbftg==/oat/x86_64/base.odex]
 
 Compiler stats:
   [app.monivra.finance.dev]
-     base.apk - 741
+     base.apk - 1739
