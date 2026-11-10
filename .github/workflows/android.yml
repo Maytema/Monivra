@@ -104,8 +104,11 @@ jobs:
           arch: x86_64
           target: google_apis
           profile: pixel_6
+          ram-size: 4096M
+          heap-size: 512M
+          disk-size: 6144M
           disable-animations: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          emulator-options: -no-window -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           script: bash android-app/scripts/emulator-test.sh
       - name: Publish the emulator results
         if: always()

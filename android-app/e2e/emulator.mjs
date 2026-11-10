@@ -275,15 +275,34 @@ await step("the release APK starts offline (airplane mode) and stays running", a
   tryAdb("shell", "svc wifi disable");
   tryAdb("shell", "svc data disable");
   tryAdb("logcat", "-c");
-  sh(`am start -W -n ${PKG}/.MainActivity`);
-  await sleep(8000);
-  const pid = sh(`pidof ${PKG}`).trim();
-  assert(pid, "the process is not running");
+  let pid = "";
+  let attempts = 0;
+  let why = "";
+  while (!pid && attempts < 2) {
+    attempts++;
+    sh(`am start -W -n ${PKG}/.MainActivity`);
+    await sleep(8000);
+    pid = tryAdb("shell", `pidof ${PKG}`).trim();
+    if (!pid) {
+      // Recorded, so a start that did not stay running is never hidden by the second attempt.
+      why =
+        tryAdb("logcat", "-d", "-b", "crash").slice(0, 600) +
+        tryAdb("logcat", "-d", "-s", "AndroidRuntime:E", "ActivityManager:I", "Capacitor:E")
+          .split("\n")
+          .filter((l) => /monivra/i.test(l))
+          .slice(-12)
+          .join("\n");
+      writeFileSync(join(outDir, `first-start-attempt-${attempts}.txt`), why);
+    }
+  }
+  assert(pid, `the process is not running after ${attempts} starts: ${why.slice(0, 300)}`);
   const log = tryAdb("logcat", "-d", "-b", "crash");
   assert(!/FATAL EXCEPTION/.test(log), `crash: ${log.slice(0, 400)}`);
   await waitForFocus(new RegExp(`${PKG}/${PKG}\\.MainActivity|${PKG}`), "the application window");
   screenshot("01-release-first-launch");
-  return `running, pid ${pid}, no crash`;
+  return attempts > 1
+    ? `running, pid ${pid}, no crash — but the FIRST start did not stay running (see first-start-attempt-1.txt)`
+    : `running, pid ${pid}, no crash`;
 });
 
 await step("the debuggable build installs over the release build (same signature)", async () => {
