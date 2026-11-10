@@ -59,7 +59,7 @@ patch(
 patch(
   "versionCode",
   /versionCode\s+\d+/,
-  'versionCode (System.getenv("MONIVRA_VERSION_CODE") ?: "1").toInteger()',
+  'versionCode Integer.parseInt(System.getenv("MONIVRA_VERSION_CODE") ?: "1")',
 );
 patch(
   "versionName",

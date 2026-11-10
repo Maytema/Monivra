@@ -9,5 +9,6 @@ import "./deletion.test.js";
 import "./premerge.test.js";
 import "./stress.test.js";
 import "./dataux.test.js";
+import "./android.test.js";
 
 export { runChecks } from "./harness.js";
