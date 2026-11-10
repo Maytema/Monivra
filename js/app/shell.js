@@ -1,4 +1,5 @@
 /* App shell: navigation, root view, rendering */
+import { applyPrivacyScreen, applySystemBars } from "../platform/system-bars.js";
 import { bindSheetSwipe, mountSwipeChrome } from "./chrome.js";
 import { initClockDial } from "./clock-dial.js";
 import { initColorWheel } from "./color-wheel.js";
@@ -145,6 +146,9 @@ function applyAppearance() {
   root.style.setProperty("--on-accent", textOn(accent));
   root.style.setProperty("--accent-ink", readableOver(accent, background));
   root.lang = appData.settings.language;
+  // The system bars and the recents preview of the Android shell follow the theme and the privacy setting.
+  applySystemBars(dark);
+  applyPrivacyScreen(Boolean(appData.settings.hidePreview));
 }
 
 // Roll the digits of the total balance when it appeared or changed.

@@ -2,8 +2,10 @@
    exported file does not show the PIN, and a PIN used elsewhere does not leak with it.
    This is a screen lock, not encryption: the financial data in the browser storage is not encrypted,
    and a PIN of 4 or 6 digits can be guessed from its hash by anyone who holds the file. The
-   functions are synchronous so the lock screen needs no waiting; a native shell would keep the secret
-   in the system keystore instead. */
+   functions are synchronous so the lock screen needs no waiting. In the Android shell the hash is not
+   kept in the data but in storage encrypted by the system keystore (see secure-pin.js); the data then
+   holds a marker `{ v: 2, native: true, length }` and the check goes against that stored hash. */
+import { notePinDropped, sealedPinRecord } from "./secure-pin.js";
 
 const K = new Uint32Array([
   0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -106,10 +108,16 @@ export function makePin(pin, salt = crypto.getRandomValues(new Uint8Array(16))) 
 export const hasPin = (stored) => Boolean(stored);
 // How many digits the stored PIN has.
 export const pinLength = (stored) => (typeof stored === "string" ? stored.length : stored.length);
+// What the data holds for a PIN whose hash is kept by the system.
+export const pinMarker = (record) => ({ v: 2, native: true, length: record.length });
 // Does the typed PIN match the stored one?
 export function pinMatches(stored, typed) {
   if (!stored) return false;
   if (typeof stored === "string") return stored === typed;
+  if (stored.native) {
+    const record = sealedPinRecord();
+    return record ? pinMatches(record, typed) : false;
+  }
   const hash = pbkdf2(text(typed), unhex(stored.salt), ITERATIONS);
   // Compared in full whatever the first difference, as a habit of comparing secrets.
   let difference = 0;
@@ -118,5 +126,13 @@ export function pinMatches(stored, typed) {
   return difference === 0;
 }
 // A stored PIN in the current form: an earlier version kept the digits themselves.
-export const protectedPin = (stored) =>
-  typeof stored === "string" && /^\d{4,6}$/.test(stored) ? makePin(stored) : stored;
+// A marker for a hash kept by the system means nothing where there is no such hash (a data file opened
+// on another device, a browser), so it becomes "no PIN" there.
+export function protectedPin(stored) {
+  if (typeof stored === "string") return /^\d{4,6}$/.test(stored) ? makePin(stored) : stored;
+  if (stored?.native && !sealedPinRecord()) {
+    notePinDropped();
+    return false;
+  }
+  return stored;
+}

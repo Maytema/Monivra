@@ -1,0 +1,70 @@
+# Builds the Android APKs of the `android-first-apk` branch. Nothing here touches the website, `main`
+# or Pages. The result (APKs, checksums, a report of what is inside them, the build log) is committed
+# to the branch `android-builds`, which only holds build results.
+name: Android build
+
+on:
+  push:
+    branches: [android-first-apk]
+  workflow_dispatch:
+
+permissions:
+  contents: write # only to publish build results to the `android-builds` branch
+
+concurrency:
+  group: android-build
+  cancel-in-progress: false
+
+jobs:
+  web-tests:
+    name: Web tests (shared code)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Lint and tests
+        run: |
+          set -o pipefail
+          mkdir -p results
+          npx eslint js tests 2>&1 | tee results/lint.log
+          node tests/run.mjs 2>&1 | tee results/unit.log
+          node tests/scenarios.mjs 2>&1 | tee results/scenarios.log
+      - name: Publish test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-test-logs
+          path: results
+
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Build
+        id: build
+        env:
+          MONIVRA_KEYSTORE_B64: ${{ secrets.MONIVRA_KEYSTORE_B64 }}
+          MONIVRA_KEYSTORE_PASSWORD: ${{ secrets.MONIVRA_KEYSTORE_PASSWORD }}
+          MONIVRA_KEY_ALIAS: ${{ secrets.MONIVRA_KEY_ALIAS }}
+          MONIVRA_KEY_PASSWORD: ${{ secrets.MONIVRA_KEY_PASSWORD }}
+        run: |
+          set -o pipefail
+          bash android-app/scripts/ci-build.sh 2>&1 | tee build.log
+      - name: Publish the result to the android-builds branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+        run: bash android-app/scripts/publish-build.sh

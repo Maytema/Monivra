@@ -49,6 +49,7 @@ export function createEmptyData() {
       relock: false,
       lockDelay: 0,
       hidePreview: false,
+      biometric: false,
       hiddenValues: "Hide all",
       autoBackup: false,
       autoRates: false,

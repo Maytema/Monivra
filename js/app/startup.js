@@ -1,16 +1,25 @@
 /* Startup: global event handlers, routing and lifecycle */
 import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
-import { appData, setLocked, setPinEntry, uiState } from "../core/state.js";
+import { appData, locked, setLocked, setPinEntry, uiState } from "../core/state.js";
 import { createBackup } from "../domain/backups.js";
-import { save } from "../data/storage.js";
+import { onSaved, save } from "../data/storage.js";
 import { categoryById } from "../domain/finance.js";
 import { categoryActions } from "../screens/categories.js";
 import { askAboutMissed, postDuePayments } from "../screens/due-payments.js";
 import { closeLayers, goBack, goHome } from "../ui/navigation.js";
 import { hasAction, runAction, runInput } from "../ui/handlers.js";
 import { toast } from "../ui/primitives.js";
-import { showDueReminders } from "./reminders.js";
+import { showDueReminders, scheduleReminders, scheduleRemindersSoon } from "./reminders.js";
+import { isNative } from "../platform/native.js";
+import { leaveApp, onSystemBack, onVisibility } from "../platform/lifecycle.js";
+import { flushMirror, mirrorSoon } from "../platform/native-sync.js";
+import { boot } from "../platform/native-boot.js";
+import { refreshBiometric } from "../platform/biometric.js";
+import { refreshNotificationPermission } from "../platform/notify.js";
+import { takePinDropped } from "../platform/secure-pin.js";
+import { adoptNativePin } from "./native-pin.js";
+import { translate } from "../i18n/index.js";
 
 const HOME_TABS = ["accounts", "categories", "operations", "statistics", "more"];
 // Long press on a category tile opens its sheet; small finger movements do not cancel it.
@@ -115,8 +124,8 @@ function bindCategoryHold() {
 function bindPrivacy() {
   const app = document.getElementById("app");
   let hiddenAt = 0;
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
+  onVisibility((hidden) => {
+    if (hidden) {
       hiddenAt = Date.now();
       if (appData.settings.hidePreview) app.style.visibility = "hidden";
       return;
@@ -133,6 +142,22 @@ function bindPrivacy() {
 
 // The system back button steps back through pages and layers instead of leaving the app.
 function bindSystemBack() {
+  if (isNative) {
+    // The Android shell reports Back itself: step back through pages and layers, and at the first
+    // screen (or the lock screen) send the application to the background as Android apps do.
+    onSystemBack(() => {
+      const atRoot =
+        locked ||
+        (!uiState.pages.length &&
+          !uiState.layers.length &&
+          uiState.tab === "accounts" &&
+          !uiState.selection &&
+          !uiState.search);
+      if (atRoot) leaveApp();
+      else goBack();
+    });
+    return;
+  }
   try {
     history.pushState({ Monivra: true }, "");
     window.addEventListener("popstate", () => {
@@ -173,8 +198,8 @@ function bindDuePayments() {
     showDueReminders();
   };
   setInterval(tick, 60000);
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) return;
+  onVisibility((hidden) => {
+    if (hidden) return;
     tick();
     askAboutMissed();
   });
@@ -195,6 +220,42 @@ function bindSystemTheme() {
   });
 }
 
+// The Android shell: copy the data after each save, rebuild the system's reminders, and refresh what
+// the system says (a fingerprint or a notification permission may have changed in the settings).
+function bindNative() {
+  if (!isNative) return;
+  onSaved(() => {
+    mirrorSoon();
+    scheduleRemindersSoon();
+    adoptNativePin(); // a PIN just set or restored moves to the system storage; a PIN turned off is forgotten
+  });
+  onVisibility((hidden) => {
+    if (hidden) return flushMirror();
+    Promise.allSettled([
+      refreshBiometric(),
+      refreshNotificationPermission(translate("Payment reminders")),
+    ]).then(() => {
+      scheduleReminders();
+      render();
+    });
+  });
+  refreshNotificationPermission(translate("Payment reminders")).then(scheduleReminders);
+  adoptNativePin();
+}
+
+// Things the person is told once at the start of the Android shell.
+function nativeNotices() {
+  if (!isNative) return;
+  if (boot.data === "restored")
+    toast(translate("Your data was restored from the internal copy on this device."));
+  else if (boot.data === "unreadable")
+    toast(
+      translate("The internal copy of the data could not be read. Save a data file when you can."),
+    );
+  if (takePinDropped())
+    toast(translate("The PIN could not be read on this device and was turned off. Set it again."));
+}
+
 export function startup() {
   initSwipeGestures();
   bindClicks();
@@ -211,7 +272,9 @@ export function startup() {
     save();
     setLocked(true);
   }
+  bindNative();
   bindHashRoute();
   render();
+  nativeNotices();
   askAboutMissed();
 }

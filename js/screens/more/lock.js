@@ -4,6 +4,7 @@ import { iconSvg } from "../../core/constants.js";
 import { appData, pinEntry, setLocked, setPinEntry } from "../../core/state.js";
 import { pinLength, pinMatches } from "../../platform/pin.js";
 import { translate, translateWith } from "../../i18n/index.js";
+import { biometricAvailable, verifyBiometric } from "../../platform/biometric.js";
 import { buttonHtml, toast } from "../../ui/primitives.js";
 
 // True right after a wrong PIN, until the next key: the dots shake.
@@ -25,8 +26,41 @@ const afterLastDot = (fn) => {
   if (!running.length) return fn();
   Promise.allSettled(running.map((a) => a.finished)).then(fn);
 };
+// The words of the system prompt, in the language of the application.
+export const biometricTexts = () => ({
+  title: translate("Unlock Monivra"),
+  subtitle: translate("Confirm that it is you"),
+  negative: translate("Use PIN"),
+});
+// Biometric unlock is wanted when it is on and the device can do it right now.
+const wantsBiometric = () => Boolean(appData.settings.biometric) && biometricAvailable();
+// The prompt is shown once for each time the screen locks, by itself; after that only the key
+// below shows it, so cancelling it leaves the person on the PIN keys and not in a loop.
+let promptedThisLock = false;
+let prompting = false;
+export async function promptBiometric() {
+  if (prompting || !wantsBiometric()) return;
+  prompting = true;
+  try {
+    const result = await verifyBiometric(biometricTexts());
+    if (result === "ok") {
+      wrongPins = 0;
+      promptedThisLock = false;
+      setLocked(false);
+      setPinEntry("");
+      render();
+    } else if (result === "lockout") toast("Too many fingerprint attempts. Use your PIN.");
+    else if (result === "failed") toast("Fingerprint or face could not be used. Use your PIN.");
+  } finally {
+    prompting = false;
+  }
+}
 // PIN lock screen: the last dot fills in first, then the PIN is checked and the app opens.
 export function lockView() {
+  if (wantsBiometric() && !promptedThisLock) {
+    promptedThisLock = true;
+    setTimeout(promptBiometric, 0);
+  }
   const size = pinLength(appData.settings.pin);
   const check = () => {
     pinBusy = false;
@@ -39,6 +73,7 @@ export function lockView() {
       );
     } else if (pinMatches(appData.settings.pin, pinEntry)) {
       wrongPins = 0;
+      promptedThisLock = false;
       setLocked(false);
     } else {
       pinFailed = true;
@@ -74,6 +109,14 @@ export function lockView() {
     "key plain",
     `aria-label="${translate("Backspace")}"`,
   );
-  const keys = [..."123456789"].map(digit).join("") + "<span></span>" + digit("0") + backspace;
+  const fingerprint = wantsBiometric()
+    ? buttonHtml(
+        iconSvg("fingerprint", 30),
+        () => promptBiometric(),
+        "key plain",
+        `aria-label="${translate("Unlock with fingerprint or face")}"`,
+      )
+    : "<span></span>";
+  const keys = [..."123456789"].map(digit).join("") + fingerprint + digit("0") + backspace;
   return `<div class="pin"><div>${iconSvg("lock", 42)}<h2>${translate("Enter your PIN")}</h2>${pinDotsHtml(size, pinEntry.length, pinFailed)}<div class="keypad">${keys}</div></div></div>`;
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/monivra_bg</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/monivra_bg</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- Shown while the application starts: the symbol on a plain background (Android 12 and later
+         draw it themselves; earlier versions show the window background). -->
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/monivra_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_symbol</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+        <item name="android:windowBackground">@color/monivra_bg</item>
+    </style>
+</resources>

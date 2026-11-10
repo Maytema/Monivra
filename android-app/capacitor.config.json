@@ -1,0 +1,18 @@
+{
+  "appId": "app.monivra.finance",
+  "appName": "Monivra",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https",
+    "hostname": "localhost"
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_monivra",
+      "iconColor": "#5067D7"
+    }
+  }
+}

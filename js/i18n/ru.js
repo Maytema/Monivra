@@ -1193,6 +1193,37 @@ export const russianStrings = {
     "Этот браузер не умеет показывать уведомления: напоминания показываются внутри приложения.",
   "Reminders appear only while the app is open or in the background of the browser. A closed app cannot remind you: that needs the mobile app.":
     "Напоминания приходят только пока приложение открыто или работает в фоне браузера. Закрытое приложение напомнить не может: для этого нужно мобильное приложение.",
+  "Your data was restored from the internal copy on this device.":
+    "Данные восстановлены из внутренней копии на этом устройстве.",
+  "The internal copy of the data could not be read. Save a data file when you can.":
+    "Внутреннюю копию данных не удалось прочитать. Сохраните файл данных, как только сможете.",
+  "The PIN could not be read on this device and was turned off. Set it again.":
+    "PIN не удалось прочитать на этом устройстве, он выключен. Задайте его заново.",
+  "The file could not be saved. Nothing was written.":
+    "Не удалось сохранить файл. Ничего не записано.",
+  "The print screen could not be opened. Nothing was printed.":
+    "Не удалось открыть печать. Ничего не напечатано.",
+  "Allowed: reminders of scheduled payments come as notifications of the device, also when the app is closed.":
+    "Разрешено: напоминания о плановых платежах приходят уведомлениями устройства, в том числе когда приложение закрыто.",
+  "Blocked in the Android settings: reminders are shown inside the app. Allow notifications for Monivra in the Android settings to get them as notifications.":
+    "Запрещено в настройках Android: напоминания показываются внутри приложения. Разрешите уведомления для Monivra в настройках Android, чтобы получать их как уведомления.",
+  "This device cannot show notifications: reminders are shown inside the app.":
+    "Это устройство не показывает уведомления: напоминания показываются внутри приложения.",
+  "Android may deliver a reminder a few minutes late to save battery. A payment itself is added to your operations when you open Monivra, with the date and time it was set for.":
+    "Android может доставить напоминание с опозданием на несколько минут, экономя заряд. Сам платёж добавляется в операции, когда вы открываете Monivra, с датой и временем, на которые он назначен.",
+  "The fingerprint or face check is made by Android; Monivra never sees or keeps it. It opens the lock screen like the PIN does and does not encrypt your data.":
+    "Отпечаток или лицо проверяет Android; Monivra их не видит и не хранит. Они открывают экран блокировки так же, как PIN, и не шифруют ваши данные.",
+  "Unlock with fingerprint or face": "Разблокировка отпечатком или лицом",
+  "Not set up on this phone": "Не настроено на этом телефоне",
+  "Set up a fingerprint or face in your phone settings first":
+    "Сначала настройте отпечаток или лицо в настройках телефона",
+  "Unlock Monivra": "Разблокировать Monivra",
+  "Confirm that it is you": "Подтвердите, что это вы",
+  "Use PIN": "Ввести PIN",
+  "Too many fingerprint attempts. Use your PIN.": "Слишком много попыток. Введите PIN.",
+  "Fingerprint or face could not be used. Use your PIN.":
+    "Отпечаток или лицо недоступны. Введите PIN.",
+  "Payment reminders": "Напоминания о платежах",
   "Notification sent": "Уведомление отправлено",
   "Scheduled payment": "Плановый платёж",
   "{title} is due on {date}": "{title}: срок {date}",

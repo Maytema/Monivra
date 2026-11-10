@@ -14,7 +14,10 @@ import {
   showSystemNotification,
 } from "../../platform/notify.js";
 import { makePin, pinLength, pinMatches } from "../../platform/pin.js";
+import { isNative } from "../../platform/native.js";
+import { biometricState, verifyBiometric } from "../../platform/biometric.js";
 import { translate } from "../../i18n/index.js";
+import { biometricTexts } from "./lock.js";
 import { confirmAction } from "../../ui/dialogs.js";
 import { numberFieldHtml } from "../../ui/number-picker.js";
 import { buttonHtml, menuRowHtml, pageHeader, toast, toggleRowHtml } from "../../ui/primitives.js";
@@ -54,6 +57,7 @@ function pinSetup(remove) {
           if (remove) {
             if (!pinMatches(appData.settings.pin, first)) return toast("Incorrect PIN");
             appData.settings.pin = false;
+            appData.settings.biometric = false;
           } else {
             if (!PIN_LENGTHS.includes(first.length)) return toast("Enter 4 or 6 digits");
             if (first !== second) return toast("PINs do not match");
@@ -70,13 +74,22 @@ function pinSetup(remove) {
   );
 }
 // What the browser says about notifications, in words for the person.
-const NOTIFICATION_STATES = {
-  granted: "Allowed: reminders come as notifications of the device while the app is open.",
-  default: "Not asked yet: allow notifications when you switch them on.",
-  denied:
-    "Blocked in the browser settings: reminders are shown inside the app. Allow them in the browser settings for this site to get notifications.",
-  unsupported: "This browser cannot show notifications: reminders are shown inside the app.",
-};
+const NOTIFICATION_STATES = isNative
+  ? {
+      granted:
+        "Allowed: reminders of scheduled payments come as notifications of the device, also when the app is closed.",
+      default: "Not asked yet: allow notifications when you switch them on.",
+      denied:
+        "Blocked in the Android settings: reminders are shown inside the app. Allow notifications for Monivra in the Android settings to get them as notifications.",
+      unsupported: "This device cannot show notifications: reminders are shown inside the app.",
+    }
+  : {
+      granted: "Allowed: reminders come as notifications of the device while the app is open.",
+      default: "Not asked yet: allow notifications when you switch them on.",
+      denied:
+        "Blocked in the browser settings: reminders are shown inside the app. Allow them in the browser settings for this site to get notifications.",
+      unsupported: "This browser cannot show notifications: reminders are shown inside the app.",
+    };
 function notificationsSettings() {
   const status = notificationStatus();
   const body =
@@ -99,8 +112,41 @@ function notificationsSettings() {
       const system = await showSystemNotification(title, text, "test");
       toast(system ? "Notification sent" : `${title}: ${text}`);
     }) +
-    `<p class="footnote">${translate("Reminders appear only while the app is open or in the background of the browser. A closed app cannot remind you: that needs the mobile app.")}</p>`;
+    `<p class="footnote">${translate(
+      isNative
+        ? "Android may deliver a reminder a few minutes late to save battery. A payment itself is added to your operations when you open Monivra, with the date and time it was set for."
+        : "Reminders appear only while the app is open or in the background of the browser. A closed app cannot remind you: that needs the mobile app.",
+    )}</p>`;
   return { title: "Notifications", body };
+}
+
+// The switch for biometric unlock; there is none on a device that cannot do it. The PIN stays the
+// way in whenever the fingerprint or face is not used or does not work.
+function biometricRow() {
+  const state = biometricState();
+  if (state === "unsupported") return "";
+  return toggleRowHtml(
+    "Unlock with fingerprint or face",
+    Boolean(appData.settings.biometric),
+    async () => {
+      if (appData.settings.biometric) {
+        appData.settings.biometric = false;
+        save();
+        return render();
+      }
+      if (!appData.settings.pin) return toast("Set a PIN first");
+      if (biometricState() !== "available")
+        return toast("Set up a fingerprint or face in your phone settings first");
+      // Switching it on needs one successful check, so a person who cannot use it is not left with
+      // a lock screen that waits for it.
+      const result = await verifyBiometric(biometricTexts());
+      if (result !== "ok") return;
+      appData.settings.biometric = true;
+      save();
+      render();
+    },
+    state === "available" ? "" : "Not set up on this phone",
+  );
 }
 
 function securitySettings() {
@@ -108,6 +154,7 @@ function securitySettings() {
     toggleRowHtml("PIN code", Boolean(appData.settings.pin), () =>
       pinSetup(Boolean(appData.settings.pin)),
     ) +
+    biometricRow() +
     switchSetting("Lock after leaving", "relock") +
     settingOptions("Lock delay", "lockDelay", [
       [0, "Immediately"],
@@ -121,7 +168,10 @@ function securitySettings() {
       setPinEntry("");
       render();
     }) +
-    '<p class="footnote">The PIN only hides the screen; data on the device is not encrypted.</p>';
+    `<p class="footnote">${translate("The PIN only hides the screen; data on the device is not encrypted.")}</p>` +
+    (biometricState() === "unsupported"
+      ? ""
+      : `<p class="footnote">${translate("The fingerprint or face check is made by Android; Monivra never sees or keeps it. It opens the lock screen like the PIN does and does not encrypt your data.")}</p>`);
   return { title: "Security", body };
 }
 

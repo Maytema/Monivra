@@ -12,10 +12,12 @@ import { toast } from "./primitives.js";
 // The data file as a file ready to be saved or shared.
 export const dataFile = () => makeFile(backupFileName(), backupFileText(), BACKUP_TYPE);
 
-// Writes the file into the downloads of the device.
-export function saveDelivery(file) {
-  saveFile(file);
-  toast("File saved");
+// Writes the file where the device puts it (the save screen of the Android shell, the downloads of a
+// browser). The toast comes only when the file was written: a closed save screen says nothing.
+export async function saveDelivery(file) {
+  const result = await saveFile(file);
+  if (result === "saved") toast("File saved");
+  else if (result === "failed") showInfo("The file could not be saved. Nothing was written.");
 }
 
 // Opens the share sheet with the file attached. Where the browser cannot share files, the person
@@ -48,8 +50,15 @@ export async function shareDelivery(file) {
     showInfo("The share sheet could not be opened. The file has not been saved or sent.");
 }
 
-// Opens the print dialog with the pictures of the pages.
-export const printDelivery = (urls) => printPages(urls);
+// Opens the print dialog: the system print service with the PDF in the Android shell, the pictures of
+// the pages in a browser.
+export async function printDelivery(urls, file = null) {
+  try {
+    await printPages(urls, file);
+  } catch {
+    showInfo("The print screen could not be opened. Nothing was printed.");
+  }
+}
 
 // Runs a task that takes a while behind a small dialog that says what is going on; `task` is given a
 // function to report the page it has reached. The dialog goes away when the task ends.

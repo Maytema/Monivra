@@ -1,0 +1,17 @@
+{
+  "name": "monivra-android",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Android shell (Capacitor) of Monivra. The web application in the parent folder is copied into the shell unchanged; this folder holds only what Android adds.",
+  "scripts": {
+    "web": "node scripts/build-web.mjs",
+    "prepare-android": "node scripts/prepare-android.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/cli": "^7.4.0",
+    "@capacitor/core": "^7.4.0",
+    "@capacitor/local-notifications": "^7.0.0"
+  }
+}

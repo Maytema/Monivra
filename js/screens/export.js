@@ -129,7 +129,7 @@ export function fileActionsHtml(host, owner, { print }) {
       `file-action ${host.busy === label ? "busy" : ""}`,
       `aria-busy="${host.busy === label}"`,
     );
-  return `<div class="file-actions ${print ? "three" : ""}">${action("Share", "share", (job) => shareDelivery(job.file))}${action("Save", "save", (job) => saveDelivery(job.file))}${print ? action("Print", "print", (job) => printDelivery(job.pages)) : ""}</div>`;
+  return `<div class="file-actions ${print ? "three" : ""}">${action("Share", "share", (job) => shareDelivery(job.file))}${action("Save", "save", (job) => saveDelivery(job.file))}${print ? action("Print", "print", (job) => printDelivery(job.pages, job.file)) : ""}</div>`;
 }
 
 // A card that chooses the way to export.

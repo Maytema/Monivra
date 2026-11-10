@@ -172,6 +172,13 @@ export const isValidData = (x) => !findDataProblem(x);
 let revision = 0;
 export const dataRevision = () => revision;
 
+// Something to do after each successful save (the Android shell copies the data and rebuilds the
+// system's reminders); nothing in a browser.
+let afterSave = () => {};
+export const onSaved = (fn) => {
+  afterSave = fn;
+};
+
 // Persist appData to localStorage.
 export function save() {
   revision++;
@@ -179,6 +186,7 @@ export function save() {
   if (loadProblem) return false;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    afterSave();
     return true;
   } catch {
     toast("Storage is unavailable or full. Export a data file to keep changes.");
