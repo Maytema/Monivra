@@ -14,17 +14,35 @@ fi
 cd "$PUB"
 git config user.name "github-actions[bot]"
 git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-find . -maxdepth 1 -type f ! -name '.git*' -delete
-DIST="$GITHUB_WORKSPACE/android-app/dist"
-[ -d "$DIST" ] && cp "$DIST"/* . 2>/dev/null || true
-# The tail of the log is what matters when a build fails.
-tail -n 600 "$GITHUB_WORKSPACE/build.log" > build-log-tail.txt 2>/dev/null || echo "no log" > build-log-tail.txt
-{
-  echo "build outcome: ${BUILD_OUTCOME:-unknown}"
-  echo "run: ${GITHUB_RUN_NUMBER} (${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
-  echo "commit: ${GITHUB_SHA}"
-  echo "date: $(date -u +%FT%TZ)"
-} > STATUS.txt
+if [ -n "${PUBLISH_DIR:-}" ]; then
+  # Results of the emulator test go to a folder of their own; the build's files stay.
+  rm -rf "$PUBLISH_DIR"; mkdir -p "$PUBLISH_DIR"
+  [ -d "$GITHUB_WORKSPACE/$PUBLISH_FROM" ] && cp -r "$GITHUB_WORKSPACE/$PUBLISH_FROM"/. "$PUBLISH_DIR"/ || true
+  {
+    echo "emulator test outcome: ${BUILD_OUTCOME:-unknown}"
+    echo "run: ${GITHUB_RUN_NUMBER} (${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+    echo "commit: ${GITHUB_SHA}"
+    echo "date: $(date -u +%FT%TZ)"
+  } > "$PUBLISH_DIR/STATUS.txt"
+  MESSAGE="Emulator results of run ${GITHUB_RUN_NUMBER}: ${BUILD_OUTCOME:-unknown}"
+else
+  find . -maxdepth 1 -type f ! -name '.git*' -delete
+  DIST="$GITHUB_WORKSPACE/android-app/dist"
+  [ -d "$DIST" ] && cp "$DIST"/* . 2>/dev/null || true
+  # The tail of the log is what matters when a build fails.
+  tail -n 600 "$GITHUB_WORKSPACE/build.log" > build-log-tail.txt 2>/dev/null || echo "no log" > build-log-tail.txt
+  {
+    echo "build outcome: ${BUILD_OUTCOME:-unknown}"
+    echo "run: ${GITHUB_RUN_NUMBER} (${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
+    echo "commit: ${GITHUB_SHA}"
+    echo "date: $(date -u +%FT%TZ)"
+  } > STATUS.txt
+  MESSAGE="Build ${GITHUB_RUN_NUMBER} of ${GITHUB_SHA:0:7}: ${BUILD_OUTCOME:-unknown}"
+fi
 git add -A
-git commit --quiet -m "Build ${GITHUB_RUN_NUMBER} of ${GITHUB_SHA:0:7}: ${BUILD_OUTCOME:-unknown}" || exit 0
-git push --quiet origin android-builds
+git commit --quiet -m "$MESSAGE" || exit 0
+for attempt in 1 2 3; do
+  git push --quiet origin android-builds && exit 0
+  git pull --quiet --rebase origin android-builds || true
+done
+exit 1

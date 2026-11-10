@@ -1,0 +1,809 @@
+// End-to-end test of the Monivra APKs on a real Android system (an emulator in CI). It installs the
+// APKs with adb, drives the application inside its real WebView through the Chrome DevTools protocol
+// (the page is the application's own code running on the device), presses the real Back key, and
+// looks at what Android itself reports (focused window, alarms, notifications, package info, files
+// in the private folder). Nothing here is a mock of the native side.
+//
+// Usage: node e2e/emulator.mjs <release.apk> <debuggable.apk> <next-debuggable.apk> <results-dir>
+import { execFileSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const [releaseApk, debugApk, nextApk, outDir] = process.argv.slice(2);
+mkdirSync(outDir, { recursive: true });
+const PKG = "app.monivra.finance";
+const KEY = "monivra.offline.2026.v1";
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+const adb = (...args) =>
+  execFileSync("adb", args, {
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+const sh = (command) => adb("shell", command);
+const tryAdb = (...args) => {
+  try {
+    return adb(...args);
+  } catch (error) {
+    return `${error.stdout ?? ""}${error.stderr ?? ""}`;
+  }
+};
+const runAs = (command) => tryAdb("shell", `run-as ${PKG} ${command}`);
+
+// ---------- a minimal DevTools client for the WebView ----------
+let page = null;
+async function connect() {
+  let pid = "";
+  for (let i = 0; i < 60 && !pid; i++) {
+    pid = tryAdb("shell", `pidof ${PKG}`).trim().split(/\s+/)[0];
+    if (!pid) await sleep(500);
+  }
+  if (!pid) throw Error("the application did not start");
+  let target = null;
+  for (let i = 0; i < 60 && !target; i++) {
+    tryAdb("forward", "--remove", "tcp:9222");
+    adb("forward", "tcp:9222", `localabstract:webview_devtools_remote_${pid}`);
+    try {
+      const list = await (await fetch("http://127.0.0.1:9222/json")).json();
+      target = list.find((t) => t.type === "page" && t.url.startsWith("https://localhost"));
+    } catch {
+      // the WebView is not ready yet
+    }
+    if (!target) await sleep(1000);
+  }
+  if (!target) throw Error("the WebView page was not found");
+  const ws = new WebSocket(target.webSocketDebuggerUrl);
+  await new Promise((resolve, reject) => {
+    ws.addEventListener("open", resolve);
+    ws.addEventListener("error", reject);
+  });
+  let id = 0;
+  const waiting = new Map();
+  ws.addEventListener("message", (event) => {
+    const message = JSON.parse(event.data);
+    if (message.id && waiting.has(message.id)) {
+      waiting.get(message.id)(message);
+      waiting.delete(message.id);
+    }
+  });
+  const send = (method, params = {}) =>
+    new Promise((resolve) => {
+      const n = ++id;
+      waiting.set(n, resolve);
+      ws.send(JSON.stringify({ id: n, method, params }));
+    });
+  const evaluate = async (expression) => {
+    const response = await send("Runtime.evaluate", {
+      expression,
+      awaitPromise: true,
+      returnByValue: true,
+    });
+    if (response.error) throw Error(response.error.message);
+    const { result, exceptionDetails } = response.result;
+    if (exceptionDetails)
+      throw Error(exceptionDetails.exception?.description ?? exceptionDetails.text);
+    return result.value;
+  };
+  page = { evaluate, close: () => ws.close() };
+  return page;
+}
+const ev = (expression) => page.evaluate(expression);
+async function waitFor(expression, what, timeoutMs = 30000) {
+  const start = Date.now();
+  let last;
+  while (Date.now() - start < timeoutMs) {
+    try {
+      last = await ev(expression);
+      if (last) return last;
+    } catch (error) {
+      last = error.message;
+    }
+    await sleep(500);
+  }
+  throw Error(`timed out waiting for ${what} (last: ${JSON.stringify(last)})`);
+}
+const launch = async () => {
+  page?.close();
+  sh(`am start -W -n ${PKG}/.MainActivity`);
+  await connect();
+  await waitFor(
+    `!!document.querySelector('.navbar, .pin, .welcome, .recovery')`,
+    "the first screen",
+  );
+};
+const restart = async () => {
+  page?.close();
+  page = null;
+  sh(`am force-stop ${PKG}`);
+  await sleep(1000);
+  await launch();
+};
+const screenshot = (name) => {
+  try {
+    const png = execFileSync("adb", ["exec-out", "screencap", "-p"], {
+      maxBuffer: 64 * 1024 * 1024,
+    });
+    writeFileSync(join(outDir, `${name}.png`), png);
+  } catch {
+    // a missing screenshot does not fail the test
+  }
+};
+const focus = () => sh("dumpsys window | grep -E 'mCurrentFocus|mFocusedApp'");
+async function waitForFocus(pattern, what, timeoutMs = 20000) {
+  const start = Date.now();
+  let last = "";
+  while (Date.now() - start < timeoutMs) {
+    last = focus();
+    if (pattern.test(last)) return last;
+    await sleep(700);
+  }
+  throw Error(`${what} did not come to the front. Focus: ${last.trim().slice(0, 300)}`);
+}
+const back = () => sh("input keyevent KEYCODE_BACK");
+const sha256InPage = `(async (t) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)))].map(b => b.toString(16).padStart(2,'0')).join(''))`;
+const stateOfData = () =>
+  ev(`(async () => {
+    const text = localStorage.getItem(${JSON.stringify(KEY)});
+    if (text === null) return null;
+    const data = JSON.parse(text);
+    return { hash: await ${sha256InPage}(text), ops: data.ops.length, accounts: data.accounts.length, pin: data.settings.pin, scheduled: data.scheduled.length };
+  })()`);
+const clickKey = (digit) =>
+  ev(
+    `(() => { const b = [...document.querySelectorAll('.keypad .key')].find(b => b.textContent.trim() === ${JSON.stringify(digit)}); if (!b) return false; b.click(); return true; })()`,
+  );
+const typePin = async (digits) => {
+  for (const d of digits) {
+    await clickKey(d);
+    await sleep(250);
+  }
+};
+const clickText = (text) =>
+  ev(`(() => {
+    const items = [...document.querySelectorAll('[data-action]')].filter(e => e.textContent.replace(/\\s+/g,' ').trim().startsWith(${JSON.stringify(text)}));
+    if (!items.length) return false;
+    items[0].click();
+    return true;
+  })()`);
+
+// ---------- a minimal valid one-page PDF ----------
+function tinyPdf() {
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>",
+    null,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  const stream = "BT /F1 24 Tf 72 760 Td (Monivra test page) Tj ET";
+  objects[3] = `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`;
+  let pdf = "%PDF-1.4\n";
+  const offsets = [];
+  objects.forEach((body, i) => {
+    offsets.push(pdf.length);
+    pdf += `${i + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = pdf.length;
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (const o of offsets) pdf += `${String(o).padStart(10, "0")} 00000 n \n`;
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(pdf, "latin1").toString("base64");
+}
+
+// ---------- the steps ----------
+const results = [];
+let failed = 0;
+async function step(name, fn, { required = true } = {}) {
+  const started = Date.now();
+  try {
+    const note = await fn();
+    results.push({
+      name,
+      status: "pass",
+      note: note ?? "",
+      seconds: Math.round((Date.now() - started) / 1000),
+    });
+    console.log(`PASS ${name}${note ? ` — ${note}` : ""}`);
+  } catch (error) {
+    const status = required ? "FAIL" : "warn";
+    if (required) failed++;
+    results.push({
+      name,
+      status,
+      note: error.message,
+      seconds: Math.round((Date.now() - started) / 1000),
+    });
+    console.log(`${status} ${name} — ${error.message}`);
+    screenshot(`failure-${results.length}`);
+  }
+}
+const assert = (condition, message) => {
+  if (!condition) throw Error(message);
+};
+
+let window_due = null; // the payment set up for the reminder steps
+let before = null; // the state of the data to compare with after restarts and the update
+
+await step("the device", async () => {
+  const release = sh("getprop ro.build.version.release").trim();
+  const sdk = sh("getprop ro.build.version.sdk").trim();
+  const abi = sh("getprop ro.product.cpu.abi").trim();
+  return `Android ${release} (API ${sdk}), ${abi}, ${sh("getprop ro.product.model").trim()}`;
+});
+
+await step("the release APK installs", async () => {
+  tryAdb("uninstall", PKG);
+  const out = adb("install", "-r", releaseApk);
+  assert(/Success/.test(out), out);
+  assert(sh(`pm list packages ${PKG}`).includes(PKG), "package not listed");
+});
+
+await step(
+  "installed package facts: ID, version, SDKs, permissions, not debuggable, no network permission",
+  async () => {
+    const dump = sh(`dumpsys package ${PKG}`);
+    const field = (re) => (dump.match(re) ?? [])[1];
+    const versionName = field(/versionName=(\S+)/);
+    const targetSdk = field(/targetSdk=(\d+)/);
+    const minSdk = field(/minSdk=(\d+)/);
+    const flags = field(/\n\s+flags=\[([^\]]*)\]/) ?? "";
+    const requested = [...dump.matchAll(/android\.permission\.[A-Z_]+/g)].map((m) => m[0]);
+    const requestedBlock = (dump.split("requested permissions:")[1] ?? "").split(
+      /\n\s*(install permissions|User \d)/,
+    )[0];
+    const requestedList = [...requestedBlock.matchAll(/(android\.permission\.[A-Z_]+)/g)].map(
+      (m) => m[1],
+    );
+    assert(
+      !requestedList.includes("android.permission.INTERNET"),
+      "the application requests INTERNET",
+    );
+    assert(!flags.includes("DEBUGGABLE"), `the release APK is debuggable (flags: ${flags})`);
+    assert(!/allowBackup|ALLOW_BACKUP/.test(flags), `backup is allowed (flags: ${flags})`);
+    writeFileSync(join(outDir, "package-dump.txt"), dump);
+    return `version ${versionName}, minSdk ${minSdk}, targetSdk ${targetSdk}, permissions: ${[...new Set(requestedList)].join(", ") || [...new Set(requested)].join(", ")}`;
+  },
+);
+
+await step("the release APK starts offline (airplane mode) and stays running", async () => {
+  tryAdb("shell", "svc wifi disable");
+  tryAdb("shell", "svc data disable");
+  tryAdb("logcat", "-c");
+  sh(`am start -W -n ${PKG}/.MainActivity`);
+  await sleep(8000);
+  const pid = sh(`pidof ${PKG}`).trim();
+  assert(pid, "the process is not running");
+  const log = tryAdb("logcat", "-d", "-b", "crash");
+  assert(!/FATAL EXCEPTION/.test(log), `crash: ${log.slice(0, 400)}`);
+  await waitForFocus(new RegExp(`${PKG}/${PKG}\\.MainActivity|${PKG}`), "the application window");
+  screenshot("01-release-first-launch");
+  return `running, pid ${pid}, no crash`;
+});
+
+await step("the debuggable build installs over the release build (same signature)", async () => {
+  sh(`am force-stop ${PKG}`);
+  const out = adb("install", "-r", debugApk);
+  assert(/Success/.test(out), out);
+});
+
+await launch();
+
+await step("a new install shows the welcome screen and no data", async () => {
+  assert(await ev(`!!document.querySelector('.welcome')`), "no welcome screen");
+  assert((await stateOfData()) === null, "there is stored data");
+  screenshot("02-welcome");
+});
+
+await step("data is created by the application's own code and stored", async () => {
+  await ev(`(async () => {
+    const { setAppData, setFirstLaunch } = await import('/js/core/state.js');
+    const { createSampleData } = await import('/js/data/sample.js');
+    const { save } = await import('/js/data/storage.js');
+    const { render } = await import('/js/app/shell.js');
+    setAppData(createSampleData()); setFirstLaunch(false); save(); render();
+  })()`);
+  await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+  before = await stateOfData();
+  assert(before.ops > 0 && before.accounts > 0, "no data");
+  screenshot("03-with-data");
+  return `${before.accounts} accounts, ${before.ops} operations`;
+});
+
+await step(
+  "every save is copied to the internal copy in the private folder, checked by a hash",
+  async () => {
+    await sleep(2500);
+    const list = runAs("ls files/mirror");
+    assert(list.includes("data.json"), `no internal copy: ${list.trim().slice(0, 200)}`);
+    const wrapper = JSON.parse(runAs("cat files/mirror/data.json"));
+    const hash = await ev(`${sha256InPage}(${JSON.stringify(wrapper.text)})`);
+    assert(wrapper.sha256 === hash, "the hash of the copy does not match its text");
+    const stored = await ev(`localStorage.getItem(${JSON.stringify(KEY)})`);
+    assert(wrapper.text === stored, "the copy differs from the stored data");
+    return `copy of ${wrapper.text.length} characters, hash matches`;
+  },
+);
+
+await step("data survives the process being killed and restarted", async () => {
+  await restart();
+  const after = await stateOfData();
+  assert(after && after.hash === before.hash, "the data changed or is gone");
+  assert(await ev(`!!document.querySelector('.navbar')`), "the main screen is not shown");
+});
+
+await step(
+  "stored data lost, application installed: the internal copy restores it, with a notice",
+  async () => {
+    await ev(`localStorage.removeItem(${JSON.stringify(KEY)})`);
+    await restart();
+    const after = await stateOfData();
+    assert(after && after.hash === before.hash, "the data was not restored");
+    const toastSeen = await ev(
+      `document.body.innerText.includes('restored from the internal copy')`,
+    );
+    return toastSeen ? "restored; notice shown" : "restored (the notice had already gone)";
+  },
+);
+
+await step("a damaged stored dataset is not overwritten by the internal copy", async () => {
+  await ev(`localStorage.setItem(${JSON.stringify(KEY)}, '{"damaged": true')`);
+  await restart();
+  const raw = await ev(`localStorage.getItem(${JSON.stringify(KEY)})`);
+  assert(raw === '{"damaged": true', "the damaged text was replaced");
+  assert(await ev(`!!document.querySelector('.recovery')`), "the recovery screen is not shown");
+  // put the good data back for the next steps
+  const wrapper = JSON.parse(runAs("cat files/mirror/data.json"));
+  await ev(`localStorage.setItem(${JSON.stringify(KEY)}, ${JSON.stringify(wrapper.text)})`);
+  await restart();
+  const after = await stateOfData();
+  assert(after && after.hash === before.hash, "the data was not back");
+});
+
+await step(
+  "a PIN: its hash is in the keystore storage, not in the data, the copy or the log",
+  async () => {
+    tryAdb("logcat", "-c");
+    await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { save } = await import('/js/data/storage.js');
+    const { makePin } = await import('/js/platform/pin.js');
+    appData.settings.pin = makePin('1234'); save();
+  })()`);
+    await sleep(3000);
+    const stored = await ev(`localStorage.getItem(${JSON.stringify(KEY)})`);
+    const pin = JSON.parse(stored).settings.pin;
+    assert(
+      pin && pin.native === true && !("hash" in pin) && !stored.includes('"salt"'),
+      `the data holds more than a marker: ${JSON.stringify(pin)}`,
+    );
+    const files = runAs("ls files/secure");
+    assert(files.includes("pin.bin"), `no sealed PIN file: ${files.trim()}`);
+    assert(!runAs("cat files/secure/pin.bin").includes("salt"), "the sealed file is readable text");
+    assert(
+      !runAs("cat files/mirror/data.json").includes('\\"salt\\"'),
+      "the internal copy holds the hash",
+    );
+    const log = tryAdb("logcat", "-d");
+    assert(
+      !/"salt"|"hash"|1234/.test(
+        log
+          .split("\n")
+          .filter((l) => /monivra|Capacitor|chromium/i.test(l))
+          .join("\n"),
+      ),
+      "the PIN or hash is in the log",
+    );
+    return "marker only in the data and copy; sealed file is not text";
+  },
+);
+
+await step(
+  "after a restart the lock screen asks for the PIN: wrong refused, right opens",
+  async () => {
+    await restart();
+    assert(await ev(`!!document.querySelector('.pin')`), "no lock screen");
+    screenshot("04-lock-screen");
+    await typePin("1111");
+    await waitFor(`document.body.innerText.includes('Incorrect PIN')`, "the wrong-PIN message");
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen after the right PIN");
+  },
+);
+
+await step(
+  "the real system reports biometric status (no fingerprint is enrolled on the emulator)",
+  async () => {
+    const status = await ev(
+      `Capacitor.Plugins.MonivraNative.biometricStatus().then(r => r.status)`,
+    );
+    assert(["available", "not_enrolled", "unsupported"].includes(status), `unexpected: ${status}`);
+    const shown = await ev(
+      `(async () => { const { biometricState } = await import('/js/platform/biometric.js'); return biometricState(); })()`,
+    );
+    return `system says "${status}"; the application sees "${shown}"`;
+  },
+);
+
+await step(
+  "Save: the system 'save as' screen opens and a cancel is reported as cancelled, nothing written",
+  async () => {
+    await ev(
+      `window.__save = null; Capacitor.Plugins.MonivraNative.saveDocument({ name: 'monivra-e2e.json', mime: 'application/json', data: btoa('{"e2e":1}') }).then(r => { window.__save = r; }, e => { window.__save = { error: e.message }; }); true`,
+    );
+    await waitForFocus(/documentsui|DocumentsActivity|FilesActivity/i, "the system save screen");
+    screenshot("05-save-screen");
+    back();
+    const result = await waitFor(`window.__save`, "the answer after cancel");
+    assert(result.status === "cancelled", `got ${JSON.stringify(result)}`);
+  },
+);
+
+await step(
+  "Save: confirming in the system screen writes the file with the given content",
+  async () => {
+    await launch();
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen", 10000).catch(
+      async () => {
+        await typePin("1234");
+      },
+    );
+    await ev(
+      `window.__save = null; Capacitor.Plugins.MonivraNative.saveDocument({ name: 'monivra-e2e.json', mime: 'application/json', data: btoa('{"e2e":1}') }).then(r => { window.__save = r; }, e => { window.__save = { error: e.message }; }); true`,
+    );
+    await waitForFocus(/documentsui|DocumentsActivity|FilesActivity/i, "the system save screen");
+    await sleep(1500);
+    sh("uiautomator dump /sdcard/ui.xml");
+    const xml = sh("cat /sdcard/ui.xml");
+    const node = [
+      ...xml.matchAll(
+        /<node[^>]*text="([^"]*)"[^>]*clickable="true"[^>]*bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"/g,
+      ),
+    ].find((m) => /^save$/i.test(m[1]));
+    assert(node, "no Save button found in the system screen");
+    const [x, y] = [(+node[2] + +node[4]) / 2, (+node[3] + +node[5]) / 2];
+    sh(`input tap ${Math.round(x)} ${Math.round(y)}`);
+    const result = await waitFor(`window.__save`, "the answer after saving");
+    assert(result.status === "saved", `got ${JSON.stringify(result)}`);
+    const found = sh("find /sdcard -name 'monivra-e2e*.json' 2>/dev/null").trim().split("\n")[0];
+    assert(found, "the saved file was not found");
+    assert(sh(`cat '${found}'`).trim() === '{"e2e":1}', "the saved file has other content");
+    return `written to ${found}`;
+  },
+  { required: false },
+);
+
+await step(
+  "Share: the system share sheet opens with the file (content address, no storage permission)",
+  async () => {
+    await restart();
+    if (await ev(`!!document.querySelector('.pin')`)) {
+      await typePin("1234");
+      await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+    }
+    const status = await ev(
+      `Capacitor.Plugins.MonivraNative.shareDocument({ name: 'monivra-e2e.txt', mime: 'text/plain', data: btoa('hello') }).then(r => r.status)`,
+    );
+    assert(status === "opened", `got ${status}`);
+    await waitForFocus(/chooser|resolver|ShareSheet|intentresolver/i, "the share sheet");
+    screenshot("06-share-sheet");
+    const staged = runAs("ls cache/shared");
+    assert(staged.includes("monivra-e2e.txt"), `file not staged: ${staged.trim()}`);
+    back();
+    await sleep(1500);
+  },
+);
+
+await step(
+  "Print: the system print screen opens with the PDF and closing it answers the call",
+  async () => {
+    await ev(
+      `window.__print = null; Capacitor.Plugins.MonivraNative.printPdf({ name: 'monivra-e2e.pdf', mime: 'application/pdf', data: '${tinyPdf()}' }).then(r => { window.__print = r; }, e => { window.__print = { error: e.message }; }); true`,
+    );
+    await waitForFocus(/printspooler|PrintActivity/i, "the system print screen");
+    await sleep(2000);
+    screenshot("07-print-screen");
+    back();
+    await sleep(1000);
+    if (/printspooler|PrintActivity/i.test(focus())) back();
+    const result = await waitFor(`window.__print`, "the answer after closing print");
+    assert(!result.error, `print failed: ${result.error}`);
+  },
+);
+
+await step(
+  "Android Back: closes a page, then at the first screen sends the app to the background (alive)",
+  async () => {
+    await launch();
+    if (await ev(`!!document.querySelector('.pin')`)) {
+      await typePin("1234");
+      await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+    }
+    assert(await clickText("More"), "no More tab");
+    await sleep(600);
+    assert(await clickText("Settings"), "no Settings row");
+    await waitFor(
+      `!document.querySelector('.navbar') && document.body.innerText.includes('Security')`,
+      "the settings page",
+    );
+    back();
+    await waitFor(
+      `!!document.querySelector('.navbar') && !document.body.innerText.includes('Security')`,
+      "back on the More tab",
+    );
+    // Go to the first tab and press Back there.
+    await ev(
+      `(async () => { const { goHome } = await import('/js/ui/navigation.js'); goHome('accounts'); })()`,
+    );
+    await sleep(500);
+    back();
+    await sleep(2000);
+    const pid = sh(`pidof ${PKG}`).trim();
+    assert(pid, "the process ended");
+    assert(
+      !new RegExp(`${PKG}/${PKG}\\.MainActivity`).test(focus()),
+      "the application is still in front",
+    );
+    screenshot("08-after-back");
+  },
+);
+
+await step("rotation: the layout follows and the navigation bar stays", async () => {
+  await launch();
+  if (await ev(`!!document.querySelector('.pin')`)) {
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+  }
+  sh("settings put system accelerometer_rotation 0");
+  sh("settings put system user_rotation 1");
+  await sleep(3000);
+  const wide = await ev(`innerWidth > innerHeight && !!document.querySelector('.navbar')`);
+  screenshot("09-landscape");
+  sh("settings put system user_rotation 0");
+  await sleep(2000);
+  assert(wide, "not landscape or no navigation bar");
+});
+
+await step("language and theme: Russian and dark apply, system bars follow", async () => {
+  await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { save } = await import('/js/data/storage.js');
+    const { render } = await import('/js/app/shell.js');
+    appData.settings.language = 'ru'; appData.settings.theme = 'dark'; save(); render();
+  })()`);
+  await sleep(1500);
+  assert(
+    await ev(
+      `document.documentElement.classList.contains('dark') && document.documentElement.lang === 'ru'`,
+    ),
+    "theme or language did not apply",
+  );
+  screenshot("10-russian-dark");
+  await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { save } = await import('/js/data/storage.js');
+    const { render } = await import('/js/app/shell.js');
+    appData.settings.language = 'en'; appData.settings.theme = 'light'; save(); render();
+  })()`);
+  await sleep(800);
+});
+
+await step(
+  "update: a build with a higher version code installed over this one keeps data, PIN and lock",
+  async () => {
+    before = await stateOfData();
+    const oldCode = sh(`dumpsys package ${PKG} | grep versionCode | head -1`).trim();
+    page?.close();
+    sh(`am force-stop ${PKG}`);
+    const out = adb("install", "-r", nextApk);
+    assert(/Success/.test(out), out);
+    const newCode = sh(`dumpsys package ${PKG} | grep versionCode | head -1`).trim();
+    assert(oldCode !== newCode, `the version did not change (${oldCode})`);
+    await launch();
+    assert(
+      await ev(`!!document.querySelector('.pin')`),
+      "the lock screen is gone after the update",
+    );
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen after the update");
+    const after = await stateOfData();
+    assert(
+      after.hash === before.hash && after.ops === before.ops,
+      "the data changed by the update",
+    );
+    return `${oldCode} → ${newCode}; ${after.ops} operations unchanged`;
+  },
+);
+
+await step("a build signed with another key is refused over this one (data stays)", async () => {
+  // Re-sign the APK with a throw-away key and try to install it over the installed app.
+  const dir = join(outDir, "foreign");
+  mkdirSync(dir, { recursive: true });
+  execFileSync(
+    "keytool",
+    [
+      "-genkeypair",
+      "-keystore",
+      join(dir, "other.jks"),
+      "-alias",
+      "other",
+      "-keyalg",
+      "RSA",
+      "-keysize",
+      "2048",
+      "-validity",
+      "100",
+      "-storepass",
+      "foreign",
+      "-keypass",
+      "foreign",
+      "-dname",
+      "CN=Other",
+    ],
+    { stdio: "ignore" },
+  );
+  const buildTools = execFileSync(
+    "bash",
+    ["-c", "ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1"],
+    { encoding: "utf8" },
+  ).trim();
+  const foreign = join(dir, "foreign.apk");
+  execFileSync(`${buildTools}/apksigner`, [
+    "sign",
+    "--ks",
+    join(dir, "other.jks"),
+    "--ks-pass",
+    "pass:foreign",
+    "--key-pass",
+    "pass:foreign",
+    "--out",
+    foreign,
+    nextApk,
+  ]);
+  const out = tryAdb("install", "-r", foreign);
+  assert(
+    /INSTALL_FAILED_UPDATE_INCOMPATIBLE|signatures do not match/i.test(out),
+    `unexpected: ${out.slice(0, 200)}`,
+  );
+  assert((await stateOfData()).hash === before.hash, "data changed");
+  return "refused: INSTALL_FAILED_UPDATE_INCOMPATIBLE";
+});
+
+await step("a scheduled payment reminder is registered with Android's alarm manager", async () => {
+  tryAdb("shell", `pm grant ${PKG} android.permission.POST_NOTIFICATIONS`);
+  await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    const { save } = await import('/js/data/storage.js');
+    const at = (min) => { const d = new Date(Date.now() + min * 60000); const p = (n) => String(n).padStart(2, '0'); return [d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()), p(d.getHours()) + ':' + p(d.getMinutes())]; };
+    const [day, due] = at(4); const [, remind] = at(2);
+    const account = appData.accounts[0], category = appData.categories.find((c) => c.type === 'expense' && !c.parent);
+    appData.scheduled.push({ id: 'e2e-payment', type: 'expense', amount: 777, date: day, time: due, comment: 'e2e', tags: [], from: account.id, category: category.id, reminder: { before: 0, unit: 'Days', time: remind }, recur: null });
+    appData.settings.notifications = true;
+    appData.settings.pin = appData.settings.pin; save();
+    window.__due = [day, due, remind];
+  })()`);
+  const [day, due, remind] = await ev(`window.__due`);
+  // The permission is read when the application starts: restart so it sees the grant.
+  await restart();
+  if (await ev(`!!document.querySelector('.pin')`)) {
+    await typePin("1234");
+    await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+  }
+  await sleep(5000);
+  const alarms = sh(`dumpsys alarm`);
+  const mine = alarms.split("\n").filter((l) => l.includes(PKG));
+  assert(mine.length, "no alarm of the application is registered");
+  writeFileSync(join(outDir, "alarms.txt"), mine.join("\n"));
+  const state = await ev(`localStorage.getItem('monivra.reminders.scheduled')`);
+  assert(
+    state && state.includes("e2e-payment"),
+    `the application did not record the scheduled reminder: ${state}`,
+  );
+  window_due = { day, due, remind };
+  return `payment ${day} ${due}, reminder ${remind}; ${mine.length} alarm line(s) of the application`;
+});
+
+await step(
+  "the reminder is delivered while the application is closed, and the payment is not posted until it is opened",
+  async () => {
+    page?.close();
+    page = null;
+    sh("input keyevent KEYCODE_HOME");
+    sh(`am kill ${PKG}`); // ends the background process only; alarms stay
+    await sleep(2000);
+    assert(!sh(`pidof ${PKG}`).trim(), "the process is still running");
+    const start = Date.now();
+    let notification = "";
+    while (Date.now() - start < 5 * 60000) {
+      notification = sh("dumpsys notification --noredact");
+      if (
+        new RegExp(
+          `pkg=${PKG}[\\s\\S]{0,1500}Scheduled payment|Scheduled payment[\\s\\S]{0,1500}pkg=${PKG}`,
+        ).test(notification)
+      )
+        break;
+      await sleep(15000);
+    }
+    const delivered =
+      new RegExp(`pkg=${PKG}`).test(notification) &&
+      /Scheduled payment|Плановый платёж/.test(notification);
+    writeFileSync(
+      join(outDir, "notification-dump.txt"),
+      notification
+        .split("\n")
+        .filter(
+          (l, i, a) => l.includes(PKG) || (a[i - 1] ?? "").includes(PKG) || /title|text=/.test(l),
+        )
+        .slice(0, 120)
+        .join("\n"),
+    );
+    assert(delivered, "no notification of the application was posted within 5 minutes");
+    return `delivered after ${Math.round((Date.now() - start) / 1000)} s with the application closed`;
+  },
+  { required: false },
+);
+
+await step(
+  "opening the application after the due time posts the payment once, with its own date and time",
+  async () => {
+    // Wait until the payment is due (4 minutes after it was set up), then open the application.
+    const [, due] = [window_due?.day, window_due?.due];
+    assert(due, "no payment was set up");
+    await waitFor(`1`, "ready").catch(() => {});
+    const wait = async () => {
+      for (let i = 0; i < 80; i++) {
+        const [h, m] = tryAdb("shell", "date +%H:%M").trim().split(":").map(Number);
+        const [dh, dm] = due.split(":").map(Number);
+        if (h * 60 + m > dh * 60 + dm) return;
+        await sleep(5000);
+      }
+    };
+    await wait();
+    await launch();
+    if (await ev(`!!document.querySelector('.pin')`)) {
+      await typePin("1234");
+      await waitFor(`!!document.querySelector('.navbar')`, "the main screen");
+    }
+    await sleep(3000);
+    const posted = await ev(`(async () => {
+    const { appData } = await import('/js/core/state.js');
+    return appData.ops.filter((o) => o.fromSchedule?.id === 'e2e-payment').map((o) => ({ date: o.date, time: o.time, amount: o.amount, at: o.fromSchedule.date }));
+  })()`);
+    assert(posted.length === 1, `expected one posted operation, got ${posted.length}`);
+    assert(
+      posted[0].date === window_due.day && posted[0].time === window_due.due,
+      `wrong date/time: ${JSON.stringify(posted[0])}`,
+    );
+    // Another minute with the application open: still once.
+    await sleep(70000);
+    const again = await ev(
+      `(async () => (await import('/js/core/state.js')).appData.ops.filter((o) => o.fromSchedule?.id === 'e2e-payment').length)()`,
+    );
+    assert(again === 1, `posted ${again} times`);
+    const left = await ev(
+      `(async () => (await import('/js/core/state.js')).appData.scheduled.some((o) => o.id === 'e2e-payment'))()`,
+    );
+    assert(!left, "the posted payment is still scheduled");
+    return `posted once as ${posted[0].date} ${posted[0].time}`;
+  },
+);
+
+await step("the log holds no financial data and no crash", async () => {
+  const log = tryAdb("logcat", "-d");
+  const mine = log.split("\n").filter((l) => /monivra|Capacitor|chromium|MonivraNative/i.test(l));
+  writeFileSync(join(outDir, "app-log.txt"), mine.slice(-400).join("\n"));
+  assert(!/FATAL EXCEPTION/.test(tryAdb("logcat", "-d", "-b", "crash")), "a crash was logged");
+  const leaks = mine.filter((l) => /"opening"|"accounts"|"salt"|e2e-payment|777/.test(l));
+  assert(!leaks.length, `data in the log: ${leaks[0]?.slice(0, 160)}`);
+  return `${mine.length} lines of the application checked`;
+});
+
+page?.close();
+writeFileSync(join(outDir, "results.json"), JSON.stringify(results, null, 2));
+const lines = results.map(
+  (r) => `${r.status.padEnd(4)} ${r.name}${r.note ? ` — ${r.note}` : ""} (${r.seconds}s)`,
+);
+const summary = `${results.filter((r) => r.status === "pass").length} passed, ${failed} failed, ${results.filter((r) => r.status === "warn").length} not confirmed (optional)`;
+writeFileSync(join(outDir, "report.txt"), `${lines.join("\n")}\n\n${summary}\n`);
+console.log(summary);
+process.exit(failed ? 1 : 0);

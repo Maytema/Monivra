@@ -69,3 +69,49 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           BUILD_OUTCOME: ${{ steps.build.outcome }}
         run: bash android-app/scripts/publish-build.sh
+      - name: Keep the APKs for the emulator job
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apks
+          path: android-app/dist/*.apk
+          retention-days: 3
+
+  emulator:
+    name: Emulator test (Android 14)
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: apks
+          path: android-app/dist
+      - name: Allow the emulator to use hardware acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Test on the emulator
+        id: emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: bash android-app/scripts/emulator-test.sh
+      - name: Publish the emulator results
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_OUTCOME: ${{ steps.emulator.outcome }}
+          PUBLISH_DIR: emulator-results
+          PUBLISH_FROM: android-app/emulator-results
+        run: bash android-app/scripts/publish-build.sh

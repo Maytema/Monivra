@@ -44,6 +44,14 @@ echo "::endgroup::"
 
 cp android/app/build/outputs/apk/release/app-release.apk "$OUT/monivra-${MONIVRA_VERSION_NAME}.apk"
 cp android/app/build/outputs/apk/debug/app-debug.apk "$OUT/monivra-${MONIVRA_VERSION_NAME}-debuggable.apk"
+
+# A second debuggable build with a higher version code, signed with the same key: the emulator test
+# installs it over the first one to check that an update keeps the data.
+echo "::group::gradle (upgrade-test build)"
+(cd android && MONIVRA_VERSION_CODE=$((MONIVRA_VERSION_CODE + 1)) MONIVRA_VERSION_NAME="${MONIVRA_VERSION_NAME}-next" \
+  ./gradlew --no-daemon --console=plain assembleDebug)
+echo "::endgroup::"
+cp android/app/build/outputs/apk/debug/app-debug.apk "$OUT/upgrade-test-debuggable.apk"
 cp package-lock.json "$OUT/package-lock.json"
 cp android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml "$OUT/merged-manifest-release.xml" 2>/dev/null || true
 
@@ -57,9 +65,9 @@ BT="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
     echo; echo "=== $(basename "$apk")"
     echo "size: $(stat -c %s "$apk") bytes"
     echo "sha256: $(sha256sum "$apk" | cut -d' ' -f1)"
-    "$BT/aapt2" dump badging "$apk" | grep -E "^(package|sdkVersion|targetSdkVersion|application-label:|uses-permission|launchable-activity)" | sed 's/^/  /'
+    "$BT/aapt2" dump badging "$apk" | grep -E "^(package|sdkVersion|minSdkVersion|targetSdkVersion|application-label:|uses-permission|launchable-activity|application-debuggable)" | sed 's/^/  /'
     echo "  signature:"; "$BT/apksigner" verify --verbose --print-certs "$apk" 2>&1 | grep -E "Verifies|Verified using|certificate (DN|SHA-256)" | sed 's/^/    /'
-    echo "  debuggable: $("$BT/aapt2" dump xmltree --file AndroidManifest.xml "$apk" | grep -c 'debuggable.*0xffffffff' || true) (1 = yes)"
+    if "$BT/aapt2" dump badging "$apk" | grep -q "^application-debuggable"; then echo "  debuggable: yes (test build only)"; else echo "  debuggable: no"; fi
   done
 } | tee "$OUT/build-report.txt"
 (cd "$OUT" && sha256sum *.apk > SHA256SUMS.txt)
