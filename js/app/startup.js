@@ -1,4 +1,5 @@
 /* Startup: global event handlers, routing and lifecycle */
+import { keepFieldsInView } from "../ui/keyboard.js";
 import { render } from "./shell.js";
 import { initSwipeGestures, isSwipeClickSuppressed } from "./swipe.js";
 import { appData, locked, setLocked, setPinEntry, uiState } from "../core/state.js";
@@ -264,6 +265,7 @@ export function startup() {
   initSwipeGestures();
   bindClicks();
   bindFields();
+  keepFieldsInView();
   bindKeyboard();
   bindCategoryHold();
   bindPrivacy();

@@ -178,8 +178,44 @@ await test("bulk edit: tags show as separate chips without a plus sign, the date
   await page.getByRole("button", { name: "OK", exact: true }).click();
   const date = await bulkValue(page, "Date");
   assert(/15/.test(date) && !/→|↑|↓/.test(date), `date summary "${date}"`);
-  assert(/earlier|later|same|раньше|позже/i.test(date) === false, `mixed original dates must not claim a direction: "${date}"`);
+  assert(
+    /earlier|later|same|раньше|позже/i.test(date) === false,
+    `mixed original dates must not claim a direction: "${date}"`,
+  );
   assert(!/^\s*[+−]/.test(await bulkValue(page, "Tags")), "tags summary has a sign");
+});
+
+await test("the typed-deletion dialog stays usable with the keyboard up (short screen)", async (page) => {
+  await page.locator(".navbar").getByText("More", { exact: true }).click();
+  await page.getByText("Data", { exact: true }).first().click();
+  await page.getByText("Delete my data", { exact: true }).click();
+  await page.getByText("Delete local data", { exact: true }).click();
+  const input = page.getByLabel("Confirmation word");
+  // The keyboard takes the lower part of the screen: the window gets shorter.
+  await page.setViewportSize({ width: 360, height: 330 });
+  await input.focus();
+  await page.waitForTimeout(700);
+  const inView = async (locator) => {
+    const b = await locator.boundingBox();
+    const h = page.viewportSize().height;
+    return b && b.y >= 0 && b.y + b.height <= h;
+  };
+  assert(await inView(input), "the confirmation field is not in view");
+  await input.fill("DELETE");
+  await page.waitForTimeout(500);
+  assert(await inView(input), "the field left the view while typing");
+  // Everything of the dialog can be reached by scrolling the dialog itself (nothing is cut off).
+  const scrollable = await page.evaluate(() => {
+    const panel = document.querySelector(".overlay .panel");
+    return (
+      panel.scrollHeight >= panel.clientHeight && getComputedStyle(panel).overflowY !== "hidden"
+    );
+  });
+  assert(scrollable, "the dialog cannot scroll");
+  const button = page.getByRole("button", { name: "Delete", exact: true });
+  await button.scrollIntoViewIfNeeded();
+  assert(await inView(button), "the Delete button cannot be brought into view");
+  assert(await button.isEnabled(), "the typed word does not enable the button");
 });
 
 await browser.close();
