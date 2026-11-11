@@ -44,6 +44,13 @@ the first application are untouched; the first application stays the reference.
 - **INTERNET permission** in the new app, used only for exchange rates (the owner asked for online
   rates). Nothing about the person is sent.
 
+## Found on the emulator (CI smoke test)
+
+- Build 5: the release APK stopped at start — WorkManager's Room database constructor was removed by
+  code shrinking (`WorkDatabase_Impl.<init>`). Fixed with keep rules (expo-build-properties); build 6 starts.
+- Build 6: first start, the basic set, the accounts screen and the calculator work; saving an expense
+  without a category is refused with "Select a category" (correct). The smoke test now picks a category.
+
 ## Fixed defects of the first application (approved difference from parity)
 
 | ID | Defect | Fix | Test |
