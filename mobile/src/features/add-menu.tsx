@@ -31,7 +31,7 @@ function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
   const t = useT();
   const money = useMoney();
   const close = useCloseLayer();
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<{ scrollTo: (to: { x: number; animated: boolean }) => void } | null>(null);
   const [width, setWidth] = useState(0);
   const [direction, setDirection] = useState<Direction>("expense");
   const choose = (dir: Direction, id: string) => {
@@ -59,7 +59,9 @@ function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
       </View>
       {width ? (
         <ScrollView
-          ref={scroller}
+          ref={(node) => {
+            scroller.current = node;
+          }}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}

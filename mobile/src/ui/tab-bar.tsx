@@ -1,7 +1,6 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
-import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
@@ -16,13 +15,24 @@ export const TABS = [
   { name: "more", title: "More", icon: "more" },
 ] as const;
 
-export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+// The part of the navigator's props the bar uses (the navigator's own type lives in a package the
+// application does not depend on directly).
+interface TabBarProps {
+  state: { index: number; routes: readonly { key: string; name: string }[] };
+  descriptors: Record<string, { options: { tabBarStyle?: unknown } } | undefined>;
+  navigation: {
+    emit(event: { type: "tabPress"; target: string; canPreventDefault: boolean }): { defaultPrevented?: boolean };
+    navigate(name: string): void;
+  };
+}
+
+export function TabBar({ state, descriptors, navigation }: TabBarProps) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
   // A screen hides the bar while it has its own actions there (the selection of operations).
   const current = state.routes[state.index];
-  const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle) : undefined;
+  const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle as Parameters<typeof StyleSheet.flatten>[0]) : undefined;
   if (style?.display === "none") return null;
   return (
     <View
