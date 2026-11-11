@@ -27,6 +27,20 @@ the first application are untouched; the first application stays the reference.
 | 7 | done  | Reminders as local notifications (plan identical to the old one — parity test), background task for posting (WorkManager/BGTaskScheduler via expo-background-task), PIN lock with keystore and fingerprint |
 | 8 | done  | CI: types, tests, release APK; emulator smoke test; results published to branch `mobile-builds` (new commits only) |
 
+### Interface fidelity phase (second pass)
+
+Written from the first application's code and `catalog/`; **checked locally only** (types with stubbed
+platform modules, 45 domain/database tests, boundary check). Nothing below is claimed to look right on a
+device until the emulator screenshots of the CI run have been compared with `catalog/`.
+
+| # | State | What |
+| - | ----- | ---- |
+| 9  | coded | Bottom bar and screens follow the system insets (no fixed heights); sheet/dialog layer inside the app (`ui/sheets.tsx`), notice line, dialogs (`ui/dialogs.tsx`) |
+| 10 | coded | Operation editor as a bottom sheet: date row, tiles, dual amounts, calculator keypad (double tap = calculator), Additionally, tax/commission, repeat, reminder, tags, party picker |
+| 11 | coded | Categories (tiles, sum tabs, manage page, sheet, form with subcategory plans), statistics (blocks), More menu, info pages |
+| 12 | coded | Scheduled payments page (sort, day groups, details, "Select date" dialog, missed-payments question) |
+| 13 | coded | Account form (type step, customize icon/colour, calculator sheet, currency-change preview sheet), budgets (list, page, form, category selection), settings tree, rates page, currency sheet with search, bulk edit sheet, time dialog with a dial |
+
 ## Decisions taken while implementing (routine, reversible)
 
 - **Store = SQLite + in-memory ledger.** The database is the source of truth; commands run on a working
@@ -67,10 +81,10 @@ the first application are untouched; the first application stays the reference.
 
 ## Not yet in the new application (next priorities)
 
-1. Bulk selection and bulk edit screen (domain `applyBulkChanges` is ready and tested).
+1. **Emulator comparison with `catalog/`** of every screen above (the CI emulator test only drives the add flow).
 2. PDF reports (model exists in the old app; render as HTML → `expo-print`), CSV import wizard.
-3. Merge-restore of a data file (today: replace with verification), inner backups as files, deletion modes.
-4. Currency change preview, subcategory management page, ordering by drag, account/category icons and colour wheel as in the old app.
+3. Saved backups (list, restore with scheduled-payment modes), merge-restore, deletion modes (the Data page has data file and CSV only).
+4. Ordering by drag (categories, statistics blocks), colour wheel in the colour page, random-selection settings.
 5. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
-6. Swipe between tabs, the dial time picker, date picker, exact visual match with `catalog/`.
+6. Swipe between tabs and periods, photo attachments, welcome/onboarding screens against `catalog/`.
 7. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
