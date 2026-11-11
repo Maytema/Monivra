@@ -12,7 +12,7 @@ import { font, space } from "../ui/theme.ts";
 // ---- Lock state (lives while the application runs) ------------------------------------------------
 let lock = { locked: true, failures: 0, waitUntil: 0 };
 const listeners = new Set<() => void>();
-const setLock = (patch: Partial<typeof lock>) => {
+export const setLock = (patch: Partial<typeof lock>) => {
   lock = { ...lock, ...patch };
   for (const fn of listeners) fn();
 };

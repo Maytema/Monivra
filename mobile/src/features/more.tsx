@@ -4,22 +4,16 @@ import { Alert, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
-import { changeMainCurrency } from "../domain/accounts.ts";
 import { FileProblem } from "../domain/datafile.ts";
 import { csvText } from "../domain/csv.ts";
 import { newestFirst } from "../domain/ledger.ts";
-import type { Settings } from "../domain/types.ts";
-import { LANGUAGES } from "../i18n/index.ts";
 import { fetcher } from "../platform/network.ts";
 import { pickTextFile, shareTextFile } from "../platform/files.ts";
-import { notificationsAllowed } from "../platform/notifications.ts";
-import { biometricAvailable } from "../platform/lock.ts";
-import { PinSettings } from "./lock.tsx";
 import { RATE_PROVIDERS } from "../services/rates/providers.ts";
 import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, showError, useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
-import { Button, Card, ChoiceField, Field, Icon, Label, Row, Screen, Toggle } from "../ui/kit.tsx";
-import { OptionPicker, Panel } from "../ui/pickers.tsx";
+import { Button, Card, Field, Icon, Label, Row, Screen, Toggle } from "../ui/kit.tsx";
+import { Panel } from "../ui/pickers.tsx";
 import { BrandMark } from "../ui/brand-mark.tsx";
 import { font, space } from "../ui/theme.ts";
 
@@ -199,88 +193,5 @@ export function RatesScreen() {
         </View>
       </Panel>
     </Screen>
-  );
-}
-
-// ---- Settings -------------------------------------------------------------------------------------
-const THEMES = [
-  { value: "light", label: "Light" },
-  { value: "dark", label: "Dark" },
-  { value: "system", label: "As in the system" },
-] as const;
-
-export function SettingsScreen() {
-  const data = useLedger();
-  const t = useT();
-  const p = usePalette();
-  const run = useCommand();
-  const [picking, setPicking] = useState<"language" | "theme" | "currency" | null>(null);
-  const setSetting = (patch: Partial<Settings>) => run((tx) => (tx.setSettings(patch), true));
-  return (
-    <Screen>
-      <Row left={<Icon name="transfer" color={p.accentInk} />} title={t.t("Exchange rates")} subtitle={t.t("Update and edit")} right={<Icon name="right" size={18} color={p.muted} />} onPress={() => router.push("/rates")} />
-      <ChoiceField label="Language" value={LANGUAGES.find((l) => l.code === data.settings.language)?.name ?? data.settings.language} onPress={() => setPicking("language")} />
-      <ChoiceField label="Theme" value={t.t(THEMES.find((x) => x.value === data.settings.theme)?.label ?? "")} onPress={() => setPicking("theme")} />
-      <ChoiceField label="Main currency" value={data.settings.currency} onPress={() => setPicking("currency")} />
-      <Toggle label="Hide amounts" value={!!data.settings.hidden} onChange={(hidden) => setSetting({ hidden })} />
-      <Label>{t.t("Screen lock")}</Label>
-      <PinSettings />
-      {data.settings.pin ? (
-        <>
-          <Toggle
-            label="Unlock with fingerprint"
-            value={!!data.settings.biometric}
-            onChange={async (biometric) => {
-              if (biometric && !(await biometricAvailable())) return void Alert.alert(t.t("No fingerprint or face is set up on this phone."));
-              setSetting({ biometric });
-            }}
-          />
-          <Toggle label="Lock again after leaving the app" value={!!data.settings.relock} onChange={(relock) => setSetting({ relock })} />
-        </>
-      ) : null}
-      <Toggle
-        label="Reminders"
-        value={!!data.settings.notifications}
-        hint="Notifications about scheduled payments, also when the app is closed. They remind; the payment is recorded when the app runs."
-        onChange={async (on) => {
-          if (!on) return void setSetting({ notifications: false });
-          if (await notificationsAllowed(true)) setSetting({ notifications: true });
-          else Alert.alert(t.t("Notifications are not allowed"), t.t("Allow notifications for Monivra in the system settings."));
-        }}
-      />
-      {data.settings.notifications ? (
-        <>
-          <Toggle label="Daily reminder to enter operations" value={!!data.settings.periodic} onChange={(periodic) => setSetting({ periodic })} />
-          {data.settings.periodic ? <TimeField label="Time of the reminder" value={data.settings.notificationTime} onValid={(notificationTime) => setSetting({ notificationTime })} /> : null}
-        </>
-      ) : null}
-      <OptionPicker visible={picking === "language"} title="Language" options={LANGUAGES.map((l) => ({ value: l.code as string, label: l.name }))} value={data.settings.language} onPick={(language) => setSetting({ language })} onClose={() => setPicking(null)} />
-      <OptionPicker visible={picking === "theme"} title="Theme" options={THEMES} value={data.settings.theme} onPick={(theme) => setSetting({ theme })} onClose={() => setPicking(null)} />
-      <OptionPicker
-        visible={picking === "currency"}
-        title="Main currency"
-        options={Object.keys(data.rates).sort().map((c) => ({ value: c, label: c }))}
-        value={data.settings.currency}
-        onPick={(currency) => run((tx) => (changeMainCurrency(tx, currency), true))}
-        onClose={() => setPicking(null)}
-      />
-    </Screen>
-  );
-}
-
-// A time "HH:MM" typed freely; it is taken once it is a real time.
-function TimeField({ label, value, onValid }: { label: string; value: string; onValid: (v: string) => void }) {
-  const [text, setText] = useState(value);
-  return (
-    <Field
-      label={label}
-      value={text}
-      keyboard="numeric"
-      placeholder="20:00"
-      onChange={(v) => {
-        setText(v);
-        if (/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) onValid(v);
-      }}
-    />
   );
 }

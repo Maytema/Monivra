@@ -1,1 +1,1 @@
-export { SettingsScreen as default } from "../features/more.tsx";
+export { SettingsScreen as default } from "../features/settings.tsx";
