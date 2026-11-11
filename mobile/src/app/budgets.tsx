@@ -1,1 +1,1 @@
-export { BudgetsScreen as default } from "../features/more.tsx";
+export { BudgetsScreen as default } from "../features/budgets.tsx";

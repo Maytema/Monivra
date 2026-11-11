@@ -1,16 +1,13 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
-import { useMemo, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import { blankCategory, deleteCategory, storeCategory } from "../domain/categories.ts";
-import { categoryById, categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
+import { useMemo } from "react";
+import { View } from "react-native";
+import { router } from "expo-router";
+import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";
 import type { Category } from "../domain/types.ts";
-import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Button, ChoiceField, Empty, Field, Label, Screen, Segmented } from "../ui/kit.tsx";
+import { useLedger, useMoney } from "../ui/app-context.tsx";
+import { Button, Empty, Screen } from "../ui/kit.tsx";
 import { CategoryTile, SumTabs } from "../ui/parts.tsx";
-import { OptionPicker } from "../ui/pickers.tsx";
-import { font, radius, space } from "../ui/theme.ts";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";

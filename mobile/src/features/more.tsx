@@ -5,11 +5,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { changeMainCurrency } from "../domain/accounts.ts";
-import { budgetState, deleteBudget, saveBudget } from "../domain/categories.ts";
 import { FileProblem } from "../domain/datafile.ts";
 import { csvText } from "../domain/csv.ts";
 import { newestFirst } from "../domain/ledger.ts";
-import type { Budget, BudgetPeriod, Settings } from "../domain/types.ts";
+import type { Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { fetcher } from "../platform/network.ts";
 import { pickTextFile, shareTextFile } from "../platform/files.ts";
@@ -18,14 +17,11 @@ import { biometricAvailable } from "../platform/lock.ts";
 import { PinSettings } from "./lock.tsx";
 import { RATE_PROVIDERS } from "../services/rates/providers.ts";
 import type { RateUpdateState } from "../services/rates/refresh.ts";
-import { appStore, showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, showError, useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Button, Card, ChoiceField, Field, Icon, Label, Row, Screen, Toggle } from "../ui/kit.tsx";
-import { CategoryPicker, OptionPicker, Panel } from "../ui/pickers.tsx";
+import { OptionPicker, Panel } from "../ui/pickers.tsx";
 import { BrandMark } from "../ui/brand-mark.tsx";
 import { font, space } from "../ui/theme.ts";
-import { openAmountSheet } from "../ui/amount-sheet.tsx";
-import { FieldButton } from "../ui/form.tsx";
-import { useView } from "./ui-state.ts";
 
 // The groups of the menu (js/screens/more/menu.js). Pages that are not built yet are not listed.
 const GROUPS = [
@@ -268,58 +264,6 @@ export function SettingsScreen() {
         onPick={(currency) => run((tx) => (changeMainCurrency(tx, currency), true))}
         onClose={() => setPicking(null)}
       />
-    </Screen>
-  );
-}
-
-// ---- Budgets ----------------------------------------------------------------------------------------
-const PERIODS: { value: BudgetPeriod; label: string }[] = [
-  { value: "day", label: "Day" },
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
-  { value: "year", label: "Year" },
-];
-
-export function BudgetsScreen() {
-  const data = useLedger();
-  const p = usePalette();
-  const t = useT();
-  const money = useMoney();
-  const run = useCommand();
-  const { period } = useView();
-  const [draft, setDraft] = useState<(Omit<Budget, "id"> & { id: string | null }) | null>(null);
-  const [picking, setPicking] = useState<"period" | "category" | null>(null);
-  const blank = () => setDraft({ id: null, name: "", amount: 0, currency: data.settings.currency, period: "month", categories: null });
-  return (
-    <Screen>
-      {data.budgets.map((b) => {
-        const s = budgetState(data, b, period.anchor);
-        return (
-          <Card key={b.id} onPress={() => setDraft({ ...b })}>
-            <Row title={b.name || t.t("Budget")} subtitle={b.categories ? b.categories.map((id) => data.categories.find((c) => c.id === id)?.name).join(", ") : t.t("All expenses")} right={<Text style={{ color: p.ink }}>{money(b.amount, b.currency)}</Text>} />
-            <View style={{ height: 8, borderRadius: 4, backgroundColor: p.line }}>
-              <View style={{ height: 8, borderRadius: 4, width: `${Math.min(100, s.share)}%`, backgroundColor: s.left < 0 ? p.negative : p.accent }} />
-            </View>
-            <Label>{s.left >= 0 ? `${t.t("Left")}: ${money(s.left, b.currency)}` : `${t.t("Over by")}: ${money(-s.left, b.currency)}`}</Label>
-          </Card>
-        );
-      })}
-      <Button label="New budget" onPress={blank} />
-      <Panel visible={draft !== null} title={draft?.id ? "Change budget" : "New budget"} onClose={() => setDraft(null)}>
-        {draft ? (
-          <View style={{ padding: space.l, gap: space.m }}>
-            <Field label="Title" value={draft.name} onChange={(name) => setDraft({ ...draft, name })} />
-            <FieldButton label="Budget" value={money(draft.amount, draft.currency)} onPress={() => openAmountSheet("Budget", draft.amount, (amount) => setDraft({ ...draft, amount }), false, draft.currency)} />
-            <ChoiceField label="Period" value={t.t(PERIODS.find((x) => x.value === draft.period)?.label ?? "")} onPress={() => setPicking("period")} />
-            <ChoiceField label="Categories" value={draft.categories ? draft.categories.map((id) => data.categories.find((c) => c.id === id)?.name).join(", ") : t.t("All expenses")} onPress={() => setPicking("category")} />
-            {draft.categories ? <Button label="All expenses" kind="text" onPress={() => setDraft({ ...draft, categories: null })} /> : null}
-            <Button label="Save" onPress={() => run((tx, env) => saveBudget(tx, draft, env)) && setDraft(null)} />
-            {draft.id ? <Button label="Delete" kind="danger" onPress={() => run((tx) => (deleteBudget(tx, draft.id!), true)) && setDraft(null)} /> : null}
-          </View>
-        ) : null}
-      </Panel>
-      <OptionPicker visible={picking === "period"} title="Period" options={PERIODS} value={draft?.period ?? "month"} onPick={(v) => draft && setDraft({ ...draft, period: v })} onClose={() => setPicking(null)} />
-      <CategoryPicker visible={picking === "category"} type="expense" onPick={(c) => draft && setDraft({ ...draft, categories: [...new Set([...(draft.categories ?? []), c.id])] })} onClose={() => setPicking(null)} />
     </Screen>
   );
 }

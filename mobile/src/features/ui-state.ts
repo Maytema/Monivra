@@ -23,4 +23,6 @@ export function setView(change: Partial<ViewState>): void {
   for (const fn of listeners) fn();
 }
 
+export const getView = (): ViewState => state;
+
 export const useView = (): ViewState => useSyncExternalStore(subscribe, () => state);
