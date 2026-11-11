@@ -8,12 +8,22 @@ import type { ReactNode } from "react";
 const box = (p: ReturnType<typeof usePalette>, narrow = false) => ({ borderWidth: 1, borderColor: p.line, borderRadius: 13, padding: narrow ? 17 : 22, backgroundColor: p.bg });
 const label = { fontSize: 15, fontWeight: "500" as const };
 
-export function FieldButton({ label: title, value, onPress, right, tone, inline = false }: { label: string; value?: string; onPress: () => void; right?: ReactNode; tone?: "positive" | "negative"; inline?: boolean }) {
+export function FieldButton({ label: title, value, onPress, right, tone, inline = false, cell }: { label: string; value?: string; onPress: () => void; right?: ReactNode; tone?: "positive" | "negative"; inline?: boolean; cell?: { node: ReactNode; background: string } }) {
   const p = usePalette();
   const t = useT();
   const narrow = useWindowDimensions().width < 360;
   const color = tone === "positive" ? p.positiveInk : tone === "negative" ? p.negativeInk : p.accentInk;
   // An inline field keeps the title on the left and the value (or a mark) on the right.
+  // A cell is a tinted block at the right edge of the field (the icon of an account or a category).
+  if (cell)
+    return (
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t(title)} onPress={onPress} style={{ flexDirection: "row", alignItems: "stretch", minHeight: 70, borderWidth: 1, borderColor: p.line, borderRadius: 13, overflow: "hidden", backgroundColor: p.bg }}>
+        <View style={{ flex: 1, justifyContent: "center", paddingLeft: narrow ? 17 : 22 }}>
+          <Text style={label}>{t.t(title)}</Text>
+        </View>
+        <View style={{ width: 72, alignItems: "center", justifyContent: "center", backgroundColor: cell.background }}>{cell.node}</View>
+      </Pressable>
+    );
   if (inline)
     return (
       <Pressable accessibilityRole="button" accessibilityLabel={t.t(title)} onPress={onPress} style={({ pressed }) => [box(p, narrow), { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 12, minHeight: 75 }, pressed && { backgroundColor: p.soft }]}>

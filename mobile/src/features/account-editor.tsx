@@ -26,7 +26,6 @@ import { openCustomize } from "../ui/customize-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText, FieldToggle } from "../ui/form.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
-import { ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { mix, space } from "../ui/theme.ts";
 import { TextButton } from "../ui/calendar-sheet.tsx";
@@ -227,7 +226,7 @@ export function AccountEditor() {
       <Stack.Screen options={{ title: t.t(editing ? "Change account" : "New account") }} />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
         <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
-        <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} right={<ToneBadge icon={draft.icon} color={draft.color} size={40} iconSize={22} />} />
+        <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} cell={{ node: <Icon name={draft.icon} size={26} color={draft.color} />, background: mix(draft.color, p.bg, 0.14) }} />
         <FieldText label="Description" value={draft.description ?? ""} onChange={(description) => set({ description })} />
         <FieldButton
           label="Account type"

@@ -15,6 +15,7 @@ import { confirmDialog, DialogActions, DialogTitle, promptDialog, toast } from "
 import { FieldButton, FieldText } from "../ui/form.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { ToneBadge } from "../ui/parts.tsx";
+import { currencyName } from "../ui/currency-names.ts";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { TextButton } from "../ui/calendar-sheet.tsx";
 import { mix, space } from "../ui/theme.ts";
@@ -226,11 +227,11 @@ export function CategoryEditor() {
     const label = a ? t.t(PLANNED[a.mode], { name: categoryById(data, a.target)?.name ?? "" }) : "";
     return (
       <View key={c.id}>
-        <Pressable accessibilityRole="button" onPress={() => (isNew ? newSubMenu(c) : subMenu(c))} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14, paddingHorizontal: 16, borderWidth: 1, borderColor: p.line, borderRadius: 13 }}>
-          <Text style={{ flex: 1, color: p.ink, fontSize: 16 }}>{c.name}</Text>
+        <Pressable accessibilityRole="button" onPress={() => (isNew ? newSubMenu(c) : subMenu(c))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 16, backgroundColor: pressed ? p.soft : "transparent" })}>
+          <Text style={{ flex: 1, color: p.accentInk, fontSize: 16 }}>{c.name}</Text>
           <Icon name="right" size={19} color={p.muted} />
         </Pressable>
-        {label ? <Text style={{ color: p.muted, fontSize: 12, paddingTop: 3, paddingLeft: 6 }}>→ {label}</Text> : null}
+        {label ? <Text style={{ color: p.muted, fontSize: 12, paddingBottom: 6, paddingLeft: 16 }}>→ {label}</Text> : null}
       </View>
     );
   };
@@ -238,16 +239,18 @@ export function CategoryEditor() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t(editing ? "Change category" : "New category") }} />
-      <ScrollView contentContainerStyle={{ padding: space.l, gap: 14 }} keyboardShouldPersistTaps="handled">
-        <FieldText label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
-        <FieldButton label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} right={<ToneBadge icon={draft.icon} color={draft.color} size={40} iconSize={22} />} />
+      <ScrollView contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
+        <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
+        <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} cell={{ node: <Icon name={draft.icon} size={26} color={draft.color} />, background: mix(draft.color, p.bg, 0.14) }} />
         <FieldButton label="Type" right={<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={draft.type === "expense" ? "arrowExpense" : "arrowIncome"} size={24} color={p.accentInk} /><Text style={{ color: p.accentInk, fontSize: 14 }}>{t.t(draft.type === "expense" ? "Expenses" : "Incomes")}</Text></View>} onPress={() => sheets.open(<TypeSheet value={draft.type} parent={categoryById(data, draft.parent)} onPick={(type) => set({ type })} />, "sheet")} />
-        <FieldButton label="Category currency" value={draft.currency} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
+        <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {!draft.parent ? (
-          <View style={{ gap: 10 }}>
-            <Text style={{ color: p.ink, fontSize: 15, fontWeight: "600", paddingTop: 6 }}>{t.t("Subcategories")}</Text>
+          <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 13, overflow: "hidden" }}>
+            <Text style={{ color: p.ink, fontSize: 15, fontWeight: "500", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: p.line }}>{t.t("Subcategories")}</Text>
             {[...active.map((c) => chip(c, false)), ...fresh.map((c) => chip(c, true))]}
-            <Button label="Add subcategory" kind="outline" onPress={addSub} />
+            <Pressable accessibilityRole="button" onPress={addSub} style={({ pressed }) => ({ minHeight: 56, alignItems: "center", justifyContent: "center", borderTopWidth: 1, borderTopColor: p.line, backgroundColor: pressed ? p.soft : "transparent" })}>
+              <Text style={{ color: p.accentInk, fontSize: 15 }}>{t.t("Add subcategory")}</Text>
+            </Pressable>
             {archived.length ? (
               <>
                 <Text style={{ color: p.muted, fontSize: 14, paddingTop: 6 }}>{t.t("Archive")}</Text>
