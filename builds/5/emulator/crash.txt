@@ -1,0 +1,91 @@
+--------- beginning of crash
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: FATAL EXCEPTION: main
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: Process: app.monivra.finance.next, PID: 3152
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: java.lang.RuntimeException: Unable to get provider androidx.startup.InitializationProvider: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7770)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.installContentProviders(ActivityThread.java:7276)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.handleBindApplication(ActivityThread.java:6983)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleBindApplication(Unknown Source:0)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2236)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: Caused by: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:104)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at l60.u(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:86)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at androidx.startup.InitializationProvider.onCreate(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:57)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2619)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2589)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7765)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	... 11 more
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at java.lang.Class.getDeclaredConstructor(Class.java:3063)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at ec4.i(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:555)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at androidx.work.WorkManagerInitializer.create(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:59)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:90)
+11-11 16:44:54.818  3152  3152 E AndroidRuntime: 	... 16 more
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: FATAL EXCEPTION: main
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: Process: app.monivra.finance.next, PID: 3915
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: java.lang.RuntimeException: Unable to get provider androidx.startup.InitializationProvider: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7770)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.installContentProviders(ActivityThread.java:7276)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.handleBindApplication(ActivityThread.java:6983)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleBindApplication(Unknown Source:0)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2236)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: Caused by: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:104)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at l60.u(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:86)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at androidx.startup.InitializationProvider.onCreate(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:57)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2619)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2589)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7765)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	... 11 more
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at java.lang.Class.getDeclaredConstructor(Class.java:3063)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at ec4.i(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:555)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at androidx.work.WorkManagerInitializer.create(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:59)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:90)
+11-11 16:45:00.678  3915  3915 E AndroidRuntime: 	... 16 more
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: FATAL EXCEPTION: main
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: Process: app.monivra.finance.next, PID: 6037
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: java.lang.RuntimeException: Unable to get provider androidx.startup.InitializationProvider: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7770)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.installContentProviders(ActivityThread.java:7276)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.handleBindApplication(ActivityThread.java:6983)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.-$$Nest$mhandleBindApplication(Unknown Source:0)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2236)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: Caused by: ti: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:104)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at l60.u(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:86)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at androidx.startup.InitializationProvider.onCreate(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:57)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2619)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.content.ContentProvider.attachInfo(ContentProvider.java:2589)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at android.app.ActivityThread.installProvider(ActivityThread.java:7765)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	... 11 more
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> []
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at java.lang.Class.getConstructor0(Class.java:3325)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at java.lang.Class.getDeclaredConstructor(Class.java:3063)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at ec4.i(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:555)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at androidx.work.WorkManagerInitializer.create(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:59)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	at l60.w(r8-map-id-d8a7095bdd1a204b61561d8e2e6bd8afe399f95cd89a96ed45e41ae973236887:90)
+11-11 16:46:09.660  6037  6037 E AndroidRuntime: 	... 16 more
