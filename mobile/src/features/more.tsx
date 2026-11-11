@@ -6,6 +6,8 @@ import { APP_VERSION } from "../application/store.ts";
 import { changeMainCurrency } from "../domain/accounts.ts";
 import { budgetState, deleteBudget, saveBudget } from "../domain/categories.ts";
 import { FileProblem } from "../domain/datafile.ts";
+import { csvText } from "../domain/csv.ts";
+import { newestFirst } from "../domain/ledger.ts";
 import type { Budget, BudgetPeriod, Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { fetcher } from "../platform/network.ts";
@@ -88,6 +90,15 @@ export function DataScreen() {
       </Card>
       <Button label="Save data file" onPress={() => void exportFile()} disabled={busy} />
       <Label>{t.t("A data file holds everything you recorded. The old app can read it too.")}</Label>
+      <Button
+        label="Save operations as CSV"
+        kind="outline"
+        disabled={busy}
+        onPress={() =>
+          void shareTextFile(`monivra-operations-${appStore().env.clock.today()}.csv`, csvText(data, [...data.ops].sort(newestFirst)), "text/csv").catch((e: unknown) => showError(t, e))
+        }
+      />
+      <Label>{t.t("All operations in the columns the old app uses; a spreadsheet opens them.")}</Label>
       <Button label="Bring data from a file" kind="outline" onPress={importFile} disabled={busy} />
       <Label>{t.t("Use a data file saved in the old app (More → Data) or in this one.")}</Label>
     </Screen>

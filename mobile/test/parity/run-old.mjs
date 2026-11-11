@@ -22,6 +22,7 @@ const result = await page.evaluate(async () => {
   const budgets = await import("/js/domain/budgets.js");
   const scheduled = await import("/js/domain/scheduled.js");
   const plan = await import("/js/domain/reminder-plan.js");
+  const csv = await import("/js/data/csv.js");
   const { createSampleData } = await import("/tests/fixtures/sample-data.js");
   const { createReportFixture } = await import("/tests/report-fixture.js");
   const user = st.appData;
@@ -103,7 +104,10 @@ const result = await page.evaluate(async () => {
       day: `${r.at.getFullYear()}-${pad(r.at.getMonth() + 1)}-${pad(r.at.getDate())}`,
       time: `${pad(r.at.getHours())}:${pad(r.at.getMinutes())}`,
     }));
+    st.setAppData(clone(report));
+    const csvReport = csv.csvText(st.appData.ops);
     return {
+      csvReport,
       reminders,
       fixtures: { sample, report, withSchedules, withReminders },
       observations: { sample: observe(sample), report: observe(report) },
@@ -117,5 +121,5 @@ await browser.close();
 server.close();
 
 for (const [name, data] of Object.entries(result.fixtures)) await writeFile(new URL(`${name}.json`, out), JSON.stringify(data, null, 1));
-await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue, reminders: result.reminders }, null, 1));
+await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue, reminders: result.reminders, csvReport: result.csvReport }, null, 1));
 console.log("written", Object.keys(result.fixtures).join(", "), "and old-observations.json");

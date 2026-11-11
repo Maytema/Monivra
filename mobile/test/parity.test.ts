@@ -80,3 +80,9 @@ test("parity: reminders planned for the system (periodic on weekdays, payment re
   const mine = upcomingReminders(data, "2026-11-11", "12:00", { days: 40, limit: 60 }).map((r) => ({ key: r.key, day: r.day, time: r.time }));
   assert.deepEqual(mine, old.reminders);
 });
+
+test("parity: the CSV of all operations is the same text as the first application's", async () => {
+  const { csvText } = await import("../src/domain/csv.ts");
+  const data = fixture("report");
+  assert.equal(csvText(data, data.ops), old.csvReport);
+});
