@@ -1,13 +1,15 @@
 // The history: operations of the chosen period, newest first, grouped by day, with the period's totals.
 import { useMemo, useState, type ReactNode } from "react";
-import { FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { Alert, FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { accountById, categoryById, newestFirst, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Filters } from "../domain/periods.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
-import { appStore, useAppState, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { applyBulkChanges, deleteOperations, emptyBulkChanges, rememberTags, type BulkChanges } from "../domain/operations.ts";
+import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Badge, Button, Card, Icon, Label, Money, Row } from "../ui/kit.tsx";
-import { Panel } from "../ui/pickers.tsx";
+import { AccountPicker, CategoryPicker, Panel } from "../ui/pickers.tsx";
+import { ChoiceField, Field } from "../ui/kit.tsx";
 import { font, radius, space } from "../ui/theme.ts";
 import { AddButton } from "./add-button.tsx";
 import { PeriodBar } from "./period-bar.tsx";
@@ -42,12 +44,21 @@ export function OperationsScreen() {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [filtering, setFiltering] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [bulk, setBulk] = useState(false);
+  const toggleSelected = (id: string) => setSelected((list) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]));
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin);
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
   const rows = useMemo(() => reportRows(data, ops), [data, ops]);
   const income = totalByType(rows, "income"),
     expense = totalByType(rows, "expense");
   const posted = state.status === "ready" ? state.posted : [];
+  const run = useCommand();
+  const removeSelected = () =>
+    Alert.alert(t.t("Delete the selected operations?"), t.t("Balances of the accounts change by them."), [
+      { text: t.t("Cancel"), style: "cancel" },
+      { text: t.t("Delete"), style: "destructive", onPress: () => run((tx) => (deleteOperations(tx, selected), true)) && setSelected([]) },
+    ]);
   const items = useMemo(() => {
     const out: ({ kind: "day"; date: string } | { kind: "op"; op: Operation })[] = [];
     let day = "";
@@ -66,6 +77,16 @@ export function OperationsScreen() {
         ListHeaderComponent={
           <View style={{ gap: space.m, marginBottom: space.m }}>
             <PeriodBar />
+            {selected.length ? (
+              <Card>
+                <Text style={{ color: p.ink, fontWeight: "600" }}>{t.t("Selected: {n}", { n: selected.length })}</Text>
+                <View style={{ flexDirection: "row", gap: space.s, flexWrap: "wrap" }}>
+                  <Button label="Edit" kind="outline" onPress={() => setBulk(true)} />
+                  <Button label="Delete" kind="danger" onPress={() => removeSelected()} />
+                  <Button label="Cancel" kind="text" onPress={() => setSelected([])} />
+                </View>
+              </Card>
+            ) : null}
             {posted.length ? (
               <Pressable onPress={() => appStore().forgetPosted()}>
                 <Card>
@@ -108,12 +129,15 @@ export function OperationsScreen() {
               title={look.title}
               subtitle={[look.account, o.comment, o.tags.join(", "), o.fromSchedule ? "⟳" : ""].filter(Boolean).join(" · ")}
               right={<Money value={o.type === "transfer" ? 0 : shown} text={money(shown, look.currency)} />}
-              onPress={() => router.push({ pathname: "/operation", params: { id: o.id } })}
+              onPress={() => (selected.length ? toggleSelected(o.id) : router.push({ pathname: "/operation", params: { id: o.id } }))}
+              onLongPress={() => toggleSelected(o.id)}
+              selected={selected.includes(o.id)}
             />
           );
         }}
       />
       <AddButton />
+      <BulkPanel visible={bulk} ids={selected} onDone={() => (setBulk(false), setSelected([]))} onClose={() => setBulk(false)} />
       <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
     </View>
   );
@@ -153,6 +177,43 @@ function FiltersPanel({ visible, filters, onChange, onClose }: { visible: boolea
         {group("Tags", data.tags.map((tag) => chip("tags", tag, tag)))}
         <Button label="Reset" kind="outline" onPress={() => onChange(emptyFilters())} />
       </View>
+    </Panel>
+  );
+}
+
+// The same change for many operations: category, account, comment, tags, date. Amounts never change
+// with a comment, tags or date (domain/operations.ts); nothing changes if one of them is refused.
+function BulkPanel({ visible, ids, onDone, onClose }: { visible: boolean; ids: string[]; onDone: () => void; onClose: () => void }) {
+  const data = useLedger();
+  const t = useT();
+  const run = useCommand();
+  const [changes, setChanges] = useState<BulkChanges>(emptyBulkChanges);
+  const [tag, setTag] = useState("");
+  const [picking, setPicking] = useState<"account" | "category" | null>(null);
+  const [kind, setKind] = useState<"expense" | "income">("expense");
+  const apply = () => {
+    const all = { ...changes, addTags: tag.trim() ? [tag.trim()] : [] };
+    const planned = run((tx, env) => {
+      rememberTags(tx, all.addTags);
+      return applyBulkChanges(tx, ids, all, env);
+    });
+    if (planned === undefined) return;
+    if (planned) Alert.alert(t.t("Saved as a scheduled payment"), t.t("An operation dated in the future waits among the scheduled payments until its day."));
+    setChanges(emptyBulkChanges());
+    setTag("");
+    onDone();
+  };
+  return (
+    <Panel visible={visible} title="Edit selected" onClose={onClose}>
+      <View style={{ padding: space.l, gap: space.m }}>
+        <ChoiceField label="Category" value={data.categories.find((c) => c.id === changes.category)?.name ?? t.t("Keep")} onPress={() => (setKind("expense"), setPicking("category"))} />
+        <ChoiceField label="Account" value={data.accounts.find((a) => a.id === changes.account)?.name ?? t.t("Keep")} onPress={() => setPicking("account")} />
+        <Field label="Comment" value={changes.comment ?? ""} onChange={(comment) => setChanges({ ...changes, comment })} placeholder="Keep" />
+        <Field label="Add tag" value={tag} onChange={setTag} />
+        <Button label="Apply" onPress={apply} />
+      </View>
+      <AccountPicker visible={picking === "account"} onPick={(a) => setChanges({ ...changes, account: a.id })} onClose={() => setPicking(null)} />
+      <CategoryPicker visible={picking === "category"} type={kind} onPick={(c) => setChanges({ ...changes, category: c.id })} onClose={() => setPicking(null)} />
     </Panel>
   );
 }
