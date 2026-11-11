@@ -140,7 +140,9 @@ file is moved into the Keystore-encrypted storage on restore.
   rule). A notification only reminds; it does not move money. If the phone is off or the app is not opened,
   the payment is posted at the next launch (the emulator test checks exactly-once and the original time).
   Guaranteeing posting while closed would need a persistent native scheduler that runs the financial
-  logic outside the WebView; that is a design decision left for later.
+  logic outside the WebView; that is a design decision left for later. Details, the review of the reminder
+  APIs, permissions and timing, and the future requirement are in
+  [SCHEDULED_AND_NOTIFICATIONS.md](SCHEDULED_AND_NOTIFICATIONS.md).
 - **Back button**: steps back through layers and pages (`goBack`), minimises at the first screen and on the
   lock screen.
 - **System bars / keyboard / orientation**: the activity gives the page the room the bars and keyboard
@@ -194,7 +196,9 @@ system at launch.
 ## Limitations (honest list)
 
 - The data model still lives in `localStorage` (~5M characters limit, shared with photos).
-- Reminders are inexact; a payment is posted only when the app is opened (see above).
+- Reminders are inexact; a payment is posted only when the app is opened (see above and
+  [SCHEDULED_AND_NOTIFICATIONS.md](SCHEDULED_AND_NOTIFICATIONS.md): no scheduled operation is committed while
+  the app is closed, and no background write to the WebView's `localStorage` is to be added).
 - "Shared" only means the share sheet opened. Sharing/printing/biometrics on real hardware is untested by me.
 - The emulator has no enrolled fingerprint, so the real biometric prompt and its cancel/lockout results are
   covered by the mock and the phone checklist only.

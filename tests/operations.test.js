@@ -290,6 +290,92 @@ check("Skip and Add now deal with one occurrence of one payment and leave the ot
   );
 });
 
+check(
+  "Missed payments are created exactly once, with the right dates, amounts, categories, accounts and balances",
+  () => {
+    const cash = addAccount({ opening: 100000 });
+    const bank = addAccount({ opening: 50000 });
+    const expenseCategory = appData.categories.find((c) => c.type === "expense");
+    const incomeCategory = appData.categories.find((c) => c.type === "income");
+    const daily = () => ({ every: 1, unit: "Days", remaining: null, days: [] });
+    const start = addDays(TODAY, -3); // three days missed, and today
+    const base = { date: start, tags: [], comment: "", recur: daily(), reminder: null };
+    appData.ops = [];
+    appData.scheduled = [
+      {
+        ...base,
+        id: "__sx",
+        type: "expense",
+        from: cash.id,
+        amount: 700,
+        category: expenseCategory.id,
+      },
+      {
+        ...base,
+        id: "__si",
+        type: "income",
+        to: bank.id,
+        amount: 1200,
+        category: incomeCategory.id,
+      },
+      {
+        ...base,
+        id: "__st",
+        type: "transfer",
+        from: cash.id,
+        to: bank.id,
+        amount: 300,
+        receive: 300,
+      },
+    ];
+    const cashBefore = accountBalance(cash.id);
+    const bankBefore = accountBalance(bank.id);
+    const first = postDue();
+    // Opening the application again, a minute later, on another tick: nothing is made twice.
+    const second = postDue();
+    const third = postDue();
+    const days = [-3, -2, -1, 0].map((n) => addDays(TODAY, n));
+    const made = (id) =>
+      appData.ops
+        .filter((o) => o.fromSchedule?.id === id)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    const expense = made("__sx");
+    const income = made("__si");
+    const moved = made("__st");
+    const fieldsOk =
+      expense.every(
+        (o) => o.from === cash.id && o.amount === 700 && o.category === expenseCategory.id,
+      ) &&
+      income.every(
+        (o) => o.to === bank.id && o.amount === 1200 && o.category === incomeCategory.id,
+      ) &&
+      moved.every(
+        (o) => o.from === cash.id && o.to === bank.id && o.amount === 300 && o.receive === 300,
+      );
+    const datesOk = [expense, income, moved].every(
+      (list) =>
+        list.map((o) => o.date).join() === days.join() &&
+        list.map((o) => o.fromSchedule.date).join() === days.join() &&
+        list.every((o) => !o.recur && !o.reminder),
+    );
+    // Four of each: the cash account lost 4 × 700 and 4 × 300, the bank gained 4 × 1200 and 4 × 300.
+    const balancesOk =
+      accountBalance(cash.id) === cashBefore - 4 * 700 - 4 * 300 &&
+      accountBalance(bank.id) === bankBefore + 4 * 1200 + 4 * 300;
+    const nextOk = appData.scheduled.every((x) => x.date === addDays(TODAY, 1));
+    return (
+      first.length === 12 &&
+      second.length === 0 &&
+      third.length === 0 &&
+      appData.ops.length === 12 &&
+      fieldsOk &&
+      datesOk &&
+      balancesOk &&
+      nextOk
+    );
+  },
+);
+
 check("The last repetition leaves the list", () => {
   scheduledExpense("2026-11-19", { every: 1, unit: "Days", remaining: 1, days: [] });
   processScheduled("__due", true);
