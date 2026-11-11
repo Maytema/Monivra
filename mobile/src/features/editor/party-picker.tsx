@@ -12,7 +12,7 @@ import type { EditorSession } from "./session.ts";
 
 type Tab = "category" | "account";
 
-function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
+export function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
   const p = usePalette();
   return (
     <Pressable
@@ -33,7 +33,7 @@ function Tile({ icon, color, name, figure, onPress }: { icon: string; color: str
   );
 }
 
-const sum = (data: LedgerData, category: Category): number => data.ops.filter((o) => o.category === category.id || categoryById(data, o.category)?.parent === category.id).reduce((n, o) => n + o.amount, 0);
+export const sum = (data: LedgerData, category: Category): number => data.ops.filter((o) => o.category === category.id || categoryById(data, o.category)?.parent === category.id).reduce((n, o) => n + o.amount, 0);
 
 function Picker({ session, incoming, accountsOnly, title }: { session: EditorSession; incoming: boolean; accountsOnly: boolean; title: string }) {
   const data = useLedger();
@@ -81,3 +81,40 @@ function Picker({ session, incoming, accountsOnly, title }: { session: EditorSes
 // "Take from" for the left tile, "Add to" for the right one; an adjustment picks only its own account.
 export const openPartyPicker = (session: EditorSession, incoming: boolean, accountsOnly = false): number =>
   sheets.open(<Picker session={session} incoming={incoming} accountsOnly={accountsOnly} title={accountsOnly ? "Select account" : incoming ? "Take from" : "Add to"} />, "sheet", { bare: false });
+
+// The same tiles for a choice that belongs to no operation (bulk edit): one account, or one category of
+// either kind on two tabs.
+function ChoiceSheet({ mode, onPick }: { mode: "account" | "category"; onPick: (id: string) => void }) {
+  const data = useLedger();
+  const t = useT();
+  const p = usePalette();
+  const money = useMoney();
+  const close = useCloseLayer();
+  const [kind, setKind] = useState<"expense" | "income">("expense");
+  const done = (id: string) => {
+    close();
+    onPick(id);
+  };
+  return (
+    <View>
+      <Text style={{ color: p.ink, fontSize: 25, fontWeight: "500", textAlign: "center", marginTop: 6, marginBottom: 12 }}>{t.t(mode === "account" ? "Select account" : "Select category")}</Text>
+      {mode === "category" ? (
+        <TopTabs
+          tabs={[
+            { id: "expense" as const, label: "Expenses" },
+            { id: "income" as const, label: "Incomes" },
+          ]}
+          active={kind}
+          onChange={setKind}
+        />
+      ) : null}
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
+        {mode === "account"
+          ? data.accounts.filter((a) => !a.archived).map((a) => <Tile key={a.id} icon={a.icon} color={a.color} name={a.name} figure={money(accountBalance(data, a.id), a.currency)} onPress={() => done(a.id)} />)
+          : data.categories.filter((c) => !c.archived && !c.parent && c.type === kind).map((c) => <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => done(c.id)} />)}
+      </View>
+    </View>
+  );
+}
+
+export const openChoice = (mode: "account" | "category", onPick: (id: string) => void): number => sheets.open(<ChoiceSheet mode={mode} onPick={onPick} />, "sheet", { bare: false });

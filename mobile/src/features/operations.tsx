@@ -2,7 +2,7 @@
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
 import { useEffect, useMemo, useState } from "react";
-import { Alert, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
@@ -10,14 +10,12 @@ import { newestFirst } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import { emptyFilters, operationsIn, periodBounds, type Filters } from "../domain/periods.ts";
 import type { Operation } from "../domain/types.ts";
-import { applyBulkChanges, deleteOperations, emptyBulkChanges, rememberTags, type BulkChanges } from "../domain/operations.ts";
+import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
-import { Button, Card, Icon, Label } from "../ui/kit.tsx";
+import { Card, Icon, Label } from "../ui/kit.tsx";
 import { Fab, MoneyText } from "../ui/parts.tsx";
-import { AccountPicker, CategoryPicker, Panel } from "../ui/pickers.tsx";
-import { ChoiceField, Field } from "../ui/kit.tsx";
-import { chrome, space } from "../ui/theme.ts";
+import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
@@ -25,6 +23,8 @@ import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { FiltersPanel } from "./filters-panel.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
+import { openBulkEdit } from "./bulk-edit.tsx";
+import { confirmDialog, toast } from "../ui/dialogs.tsx";
 
 type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
 
@@ -54,8 +54,7 @@ export function OperationsScreen() {
   const [filtering, setFiltering] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState(false);
-  const [bulk, setBulk] = useState(false);
-  const [atTop, setAtTop] = useState(true);
+    const [atTop, setAtTop] = useState(true);
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
   const posted = state.status === "ready" ? state.posted : [];
@@ -76,15 +75,12 @@ export function OperationsScreen() {
 
   const removeSelected = () => {
     if (!selected.length) return;
-    Alert.alert(t.t("Delete selected operations?"), t.t("Balances of the accounts change by them."), [
-      { text: t.t("Cancel"), style: "cancel" },
-      { text: t.t("Delete"), style: "destructive", onPress: () => run((tx) => (deleteOperations(tx, selected), true)) && (setSelected([]), setSelection(false)) },
-    ]);
+    confirmDialog("Delete selected operations?", () => run((tx) => (deleteOperations(tx, selected), true)) && (setSelected([]), setSelection(false)), true, "Delete", t.t("Balances of the accounts change by them."));
   };
   const changeDate = () =>
     openCalendar(systemClock.today(), (date) => {
       const planned = run((tx, env) => applyBulkChanges(tx, selected, { ...emptyBulkChanges(), date }, env));
-      if (planned) Alert.alert(t.t("Saved as a scheduled payment"), t.t("An operation dated in the future waits among the scheduled payments until its day."));
+      if (planned) toast("Saved as a scheduled payment");
     });
 
   const items = useMemo(() => {
@@ -185,7 +181,7 @@ export function OperationsScreen() {
       />
       {selection ? (
         <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
-          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["more", "More", () => selected.length && setBulk(true)]] as const).map(([icon, label, action]) => (
+          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["more", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
             <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed }) => ({ flex: 1, minHeight: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: pressed ? p.soft : p.key })}>
               <Icon name={icon} size={21} color={p.ink} />
               <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
@@ -195,45 +191,7 @@ export function OperationsScreen() {
       ) : (
         <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
       )}
-      <BulkPanel visible={bulk} ids={selected} onDone={() => (setBulk(false), setSelected([]), setSelection(false))} onClose={() => setBulk(false)} />
       <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
     </View>
-  );
-}
-
-// The same change for many operations: category, account, comment, tags, date. Amounts never change
-// with a comment, tags or date (domain/operations.ts); nothing changes if one of them is refused.
-function BulkPanel({ visible, ids, onDone, onClose }: { visible: boolean; ids: string[]; onDone: () => void; onClose: () => void }) {
-  const data = useLedger();
-  const t = useT();
-  const run = useCommand();
-  const [changes, setChanges] = useState<BulkChanges>(emptyBulkChanges);
-  const [tag, setTag] = useState("");
-  const [picking, setPicking] = useState<"account" | "category" | null>(null);
-  const [kind, setKind] = useState<"expense" | "income">("expense");
-  const apply = () => {
-    const all = { ...changes, addTags: tag.trim() ? [tag.trim()] : [] };
-    const planned = run((tx, env) => {
-      rememberTags(tx, all.addTags);
-      return applyBulkChanges(tx, ids, all, env);
-    });
-    if (planned === undefined) return;
-    if (planned) Alert.alert(t.t("Saved as a scheduled payment"), t.t("An operation dated in the future waits among the scheduled payments until its day."));
-    setChanges(emptyBulkChanges());
-    setTag("");
-    onDone();
-  };
-  return (
-    <Panel visible={visible} title="Edit selected" onClose={onClose}>
-      <View style={{ padding: space.l, gap: space.m }}>
-        <ChoiceField label="Category" value={data.categories.find((c) => c.id === changes.category)?.name ?? t.t("Keep")} onPress={() => (setKind("expense"), setPicking("category"))} />
-        <ChoiceField label="Account" value={data.accounts.find((a) => a.id === changes.account)?.name ?? t.t("Keep")} onPress={() => setPicking("account")} />
-        <Field label="Comment" value={changes.comment ?? ""} onChange={(comment) => setChanges({ ...changes, comment })} placeholder="Keep" />
-        <Field label="Add tag" value={tag} onChange={setTag} />
-        <Button label="Apply" onPress={apply} />
-      </View>
-      <AccountPicker visible={picking === "account"} onPick={(a) => setChanges({ ...changes, account: a.id })} onClose={() => setPicking(null)} />
-      <CategoryPicker visible={picking === "category"} type={kind} onPick={(c) => setChanges({ ...changes, category: c.id })} onClose={() => setPicking(null)} />
-    </Panel>
   );
 }
