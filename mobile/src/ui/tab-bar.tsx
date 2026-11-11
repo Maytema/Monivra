@@ -20,7 +20,7 @@ export const TABS = [
 interface TabBarProps {
   state: { index: number; routes: readonly { key: string; name: string }[] };
   descriptors: Record<string, { options: { tabBarStyle?: unknown } } | undefined>;
-  emitter: { emit(event: { type: "tabPress"; target: string; canPreventDefault: boolean }): { defaultPrevented?: boolean } };
+  emitter: { emit(event: { type: "tabPress"; target: string; canPreventDefault: true }): { defaultPrevented?: boolean } };
   navigateToTab: (routeKey: string) => void;
 }
 
