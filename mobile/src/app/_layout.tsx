@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { ActivityIndicator, AppState as SystemAppState, Text, View } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { appStore, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
@@ -53,6 +53,7 @@ function KeepCurrent() {
 function Ready() {
   const p = usePalette();
   const t = useT();
+  const insets = useSafeAreaInsets();
   return (
     <>
       <StatusBar style={p.dark ? "light" : "dark"} />
@@ -63,10 +64,11 @@ function Ready() {
           headerStyle: { backgroundColor: p.bg },
           headerTintColor: p.ink,
           headerShadowVisible: false,
-          contentStyle: { backgroundColor: p.bg },
+          // Every page of the stack ends above the system bar; the tabs carry the inset in their bar.
+          contentStyle: { backgroundColor: p.bg, paddingBottom: insets.bottom },
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, contentStyle: { backgroundColor: p.bg, paddingBottom: 0 } }} />
         <Stack.Screen name="account" options={{ title: t.t("Account") }} />
         <Stack.Screen name="category" options={{ title: t.t("Category") }} />
         <Stack.Screen name="categories-manage" options={{ title: t.t("Change categories") }} />

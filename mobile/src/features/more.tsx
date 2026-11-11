@@ -36,7 +36,7 @@ export function MoreScreen() {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: p.bg }}>
-      <Screen tab padded={false}>
+      <Screen padded={false}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12, height: 59, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
           <View style={p.dark ? { backgroundColor: "#ffffff", borderRadius: 10, paddingVertical: 3, paddingHorizontal: 4 } : undefined}>
             <BrandMark height={38} />

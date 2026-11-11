@@ -1,7 +1,7 @@
 // The calendar dialog for one date and the dialog for a range of dates (js/ui/calendar.js): a month
 // grid with arrows, the title opens a grid of years; Today, Cancel and OK under it.
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useRef, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { systemClock } from "../domain/dates.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
@@ -31,6 +31,87 @@ export function PrimaryPill({ label, onPress, disabled = false }: { label: strin
   );
 }
 
+const ROW = 44;
+const SEEN = 5;
+const FIRST_YEAR = 1900;
+const LAST_YEAR = 2100;
+
+// One column of the month/year chooser: a snapping list whose middle row is the chosen one; rows
+// fade with the distance from it.
+function Wheel({ items, index, onIndex, align }: { items: string[]; index: number; onIndex: (i: number) => void; align: "flex-end" | "flex-start" }) {
+  const p = usePalette();
+  const ref = useRef<ScrollView | null>(null);
+  const [shown, setShown] = useState(index);
+  const settle = (y: number) => {
+    const i = Math.max(0, Math.min(items.length - 1, Math.round(y / ROW)));
+    setShown(i);
+    return i;
+  };
+  return (
+    <View style={{ flex: 1, height: ROW * SEEN }}>
+      <ScrollView
+        ref={(node) => {
+          ref.current = node;
+        }}
+        showsVerticalScrollIndicator={false}
+        snapToInterval={ROW}
+        decelerationRate="fast"
+        scrollEventThrottle={16}
+        contentOffset={{ x: 0, y: index * ROW }}
+        contentContainerStyle={{ paddingVertical: ROW * Math.floor(SEEN / 2) }}
+        onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
+          const i = Math.max(0, Math.min(items.length - 1, Math.round(e.nativeEvent.contentOffset.y / ROW)));
+          if (i !== shown) setShown(i);
+        }}
+        onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { y: number } } }) => onIndex(settle(e.nativeEvent.contentOffset.y))}
+        onScrollEndDrag={(e: { nativeEvent: { contentOffset: { y: number } } }) => onIndex(settle(e.nativeEvent.contentOffset.y))}
+      >
+        {items.map((label, i) => {
+          const far = Math.abs(i - shown);
+          return (
+            <Pressable
+              key={label}
+              accessibilityRole="button"
+              onPress={() => {
+                ref.current?.scrollTo({ y: i * ROW, animated: true });
+                setShown(i);
+                onIndex(i);
+              }}
+              style={{ height: ROW, justifyContent: "center", alignItems: align, paddingHorizontal: 18 }}
+            >
+              <Text style={{ color: p.ink, fontSize: far === 0 ? 18 : 16, fontWeight: far === 0 ? "600" : "400", opacity: far === 0 ? 1 : far === 1 ? 0.7 : 0.35 }}>{label}</Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+// Month on the left, years on the right (as in the reference); a tap on the title or on the chosen
+// row goes back to the days.
+function MonthYearWheels({ month, setMonth, done }: { month: string; setMonth: (m: string) => void; done: () => void }) {
+  const p = usePalette();
+  const t = useT();
+  const year = Number(month.slice(0, 4));
+  const m = Number(month.slice(5, 7)) - 1;
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const name = new Date(Date.UTC(2026, i, 1)).toLocaleDateString(t.locale, { month: "long", timeZone: "UTC" });
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  });
+  const years = Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => String(FIRST_YEAR + i));
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    <View style={{ height: ROW * SEEN, marginBottom: 4 }}>
+      <Pressable accessibilityRole="button" onPress={done} style={{ position: "absolute", left: 0, right: 0, top: ROW * Math.floor(SEEN / 2), height: ROW, borderRadius: 12, backgroundColor: p.soft }} />
+      <View style={{ flexDirection: "row" }}>
+        <Wheel items={months} index={m} align="flex-end" onIndex={(i) => setMonth(`${year}-${pad(i + 1)}`)} />
+        <Wheel items={years} index={year - FIRST_YEAR} align="flex-start" onIndex={(i) => setMonth(`${FIRST_YEAR + i}-${pad(m + 1)}`)} />
+      </View>
+    </View>
+  );
+}
+
 function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setMonth: (m: string) => void; chosen: string | null; pick: (date: string) => void; min?: string | null }) {
   const data = useLedger();
   const p = usePalette();
@@ -46,48 +127,36 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
     setMonth(iso(d).slice(0, 7));
   };
   const title = first.toLocaleDateString(t.locale, { month: "long", year: "numeric", timeZone: "UTC" });
-  const year = first.getUTCFullYear();
   const today = systemClock.today();
   // 2026-11-01 is a Sunday.
   const letters = Array.from({ length: 7 }, (_, i) => day(`2026-11-${String(1 + ((weekStart + i) % 7)).padStart(2, "0")}`).toLocaleDateString(t.locale, { weekday: "short", timeZone: "UTC" }));
   const cells: (string | null)[] = [...Array<null>(lead).fill(null), ...Array.from({ length: count }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`)];
   const heading = (
     <Pressable accessibilityRole="button" onPress={() => setYears(!years)} style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14 }}>
-      <Text style={{ color: p.ink, fontSize: 17, fontWeight: "600" }}>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
-      <Icon name={years ? "up" : "down"} size={16} color={p.ink} />
+      <Text style={{ color: p.accentInk, fontSize: 17, fontWeight: "600" }}>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
+      <Icon name={years ? "down" : "right"} size={16} color={p.accentInk} />
     </Pressable>
   );
   if (years)
     return (
       <View>
-        <View style={{ alignItems: "center", marginTop: 12, marginBottom: 8 }}>{heading}</View>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6, paddingVertical: 4 }}>
-          {Array.from({ length: 21 }, (_, i) => year - 10 + i).map((y) => (
-            <Pressable
-              key={y}
-              onPress={() => {
-                setMonth(`${y}${month.slice(4)}`);
-                setYears(false);
-              }}
-              style={{ width: "31%", paddingVertical: 11, borderRadius: 20, alignItems: "center", backgroundColor: y === year ? p.accent : "transparent" }}
-            >
-              <Text style={{ color: y === year ? p.onAccent : p.ink, fontSize: 15 }}>{y}</Text>
-            </Pressable>
-          ))}
-        </View>
+        <View style={{ alignItems: "flex-start", marginTop: 8, marginBottom: 4 }}>{heading}</View>
+        <MonthYearWheels month={month} setMonth={setMonth} done={() => setYears(false)} />
       </View>
     );
   const blocked = !!min && month <= monthOf(min);
   return (
     <View>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12, marginBottom: 8 }}>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t("Previous month")} disabled={blocked} onPress={() => move(-1)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center", opacity: blocked ? 0.4 : 1 }}>
-          <Icon name="left" size={22} color={p.ink} />
-        </Pressable>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 8, marginBottom: 4 }}>
         {heading}
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t("Next month")} onPress={() => move(1)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
-          <Icon name="right" size={22} color={p.ink} />
-        </Pressable>
+        <View style={{ flexDirection: "row" }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.t("Previous month")} disabled={blocked} onPress={() => move(-1)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center", opacity: blocked ? 0.4 : 1 }}>
+            <Icon name="left" size={22} color={p.accentInk} />
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.t("Next month")} onPress={() => move(1)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
+            <Icon name="right" size={22} color={p.accentInk} />
+          </Pressable>
+        </View>
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         {letters.map((l, i) => (

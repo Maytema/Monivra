@@ -30,7 +30,7 @@ export function CategoriesScreen() {
   return (
     <View style={{ flex: 1 }}>
       <RootHero icon="edit" label="Change categories" onAction={edit} />
-      <Screen tab padded={false}>
+      <Screen padded={false}>
         <PeriodBar />
         <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
         {empty ? (

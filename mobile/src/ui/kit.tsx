@@ -26,13 +26,12 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
   );
 }
 
-// A page. A page of the stack ends above the system's bottom bar (its inset is added); a page inside
-// the tabs (`tab`) already ends above the tab bar, which carries the inset itself.
-export function Screen({ children, scroll = true, padded = true, tab = false }: { children: ReactNode; scroll?: boolean; padded?: boolean; tab?: boolean }) {
+// A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab
+// bar carries the inset itself, so a page adds none.
+export function Screen({ children, scroll = true, padded = true }: { children: ReactNode; scroll?: boolean; padded?: boolean }) {
   const p = usePalette();
-  const insets = useSafeAreaInsets();
   const style = { flex: 1, backgroundColor: p.bg };
-  const content = { padding: padded ? space.l : 0, paddingBottom: (padded ? space.l : 0) + (tab ? 0 : insets.bottom), gap: space.m };
+  const content = { padding: padded ? space.l : 0, gap: space.m };
   return scroll ? (
     <ScrollView style={style} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
       {children}

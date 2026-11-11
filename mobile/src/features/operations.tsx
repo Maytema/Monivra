@@ -85,10 +85,14 @@ export function OperationsScreen() {
 
   const items = useMemo(() => {
     const out: Item[] = [];
-    for (const date of [...new Set(ops.map((o) => o.date))]) {
-      const dayOps = ops.filter((o) => o.date === date);
-      out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
+    // One pass: the list is already newest first, so the days follow each other.
+    const days = new Map<string, Operation[]>();
+    for (const o of ops) {
+      const day = days.get(o.date);
+      if (day) day.push(o);
+      else days.set(o.date, [o]);
     }
+    for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
     return out;
   }, [ops]);
 
@@ -132,6 +136,10 @@ export function OperationsScreen() {
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
         onScroll={(e) => setAtTop(e.nativeEvent.contentOffset.y < 12)}
         scrollEventThrottle={64}
+        initialNumToRender={12}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        removeClippedSubviews
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }}
         ListHeaderComponent={
           <View style={{ marginHorizontal: -16 }}>
