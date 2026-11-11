@@ -56,6 +56,7 @@ jobs:
         run: npx tsc --noEmit -p tsconfig.json
         continue-on-error: true
       - name: Keep package files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: package-files
@@ -77,3 +78,44 @@ jobs:
       - name: Fail when types are wrong
         if: steps.types.outcome == 'failure'
         run: exit 1
+
+  # A separate job publishes the results to the `mobile-builds` branch (new commits only, never a
+  # forced push). It runs no npm code, so only it holds a token that can write.
+  publish:
+    name: Publish the APK to the mobile-builds branch
+    needs: build
+    if: always() && needs.build.result != 'cancelled'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: results
+        continue-on-error: true
+      - name: Commit the results
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -e
+          REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads "$REPO_URL" mobile-builds >/dev/null 2>&1; then
+            git clone --quiet --depth 1 --branch mobile-builds "$REPO_URL" out
+          else
+            git init --quiet -b mobile-builds out && git -C out remote add origin "$REPO_URL"
+          fi
+          dir="out/builds/${GITHUB_RUN_NUMBER}"
+          mkdir -p "$dir"
+          cp results/package-files/* "$dir"/ 2>/dev/null || true
+          for apk in results/monivra-rn-apk/*.apk; do
+            [ -f "$apk" ] && cp "$apk" "$dir/RESIGN-ONLY-monivra-rn-${GITHUB_RUN_NUMBER}.apk"
+          done
+          (cd "$dir" && { sha256sum *.apk 2>/dev/null || true; } > SHA256SUMS && printf 'commit %s\nresult %s\n' "$GITHUB_SHA" "$BUILD_RESULT" > BUILD.txt)
+          cd out
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit --quiet -m "mobile build ${GITHUB_RUN_NUMBER} (${BUILD_RESULT}) from ${GITHUB_SHA}" || exit 0
+          for i in 1 2 3; do git push --quiet origin HEAD:mobile-builds && exit 0; git pull --quiet --rebase origin mobile-builds || true; done
+          exit 1

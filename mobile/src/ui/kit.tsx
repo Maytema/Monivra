@@ -1,13 +1,13 @@
 // Reusable pieces of every screen, built only from the theme tokens.
 import type { ReactNode } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type StyleProp, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { ICONS } from "./icon-paths.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { font, radius, space } from "./theme.ts";
 
-export function Icon({ name, size = 22, color }: { name: string; size?: number; color?: string }) {
+export function Icon({ name, size = 22, color }: { name: string; size?: number; color?: ColorValue }) {
   const p = usePalette();
   const heavy = name === "more" || name === "apps";
   return (
