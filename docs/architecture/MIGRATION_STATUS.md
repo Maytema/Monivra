@@ -50,6 +50,13 @@ the first application are untouched; the first application stays the reference.
   code shrinking (`WorkDatabase_Impl.<init>`). Fixed with keep rules (expo-build-properties); build 6 starts.
 - Build 6: first start, the basic set, the accounts screen and the calculator work; saving an expense
   without a category is refused with "Select a category" (correct). The smoke test now picks a category.
+- **Build 7 (commit `990d22b`): all green** — types, 37 tests, release APK, emulator smoke test passed
+  (first start → basic set → expense 125 by the calculator with a category → shown on the account and in
+  the history → still there after the app is stopped and started again → no crash). Re-signed with the
+  owner's test key (certificate SHA-256 `7e041ae5…bc9784`): `Monivra-RN-0.2.0-build.7.apk`, SHA-256
+  `2925960c34ac3d8f1669b8fb8d85344bc84807b6459cf772ead4500347cf2463`.
+- Not checked by any automated test yet: import of a real data file on the phone, notifications delivered
+  by the system, the background task actually running, PIN/fingerprint, rates from the network on the phone.
 
 ## Fixed defects of the first application (approved difference from parity)
 
