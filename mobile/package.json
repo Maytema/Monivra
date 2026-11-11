@@ -1,0 +1,20 @@
+{
+  "name": "monivra-mobile",
+  "version": "0.2.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "description": "Monivra on React Native + Expo. The first application (repository root) stays the reference until this one passes acceptance.",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc -p tsconfig.core.json",
+    "boundaries": "node scripts/check-boundaries.mjs",
+    "parity:record": "node test/parity/run-old.mjs",
+    "i18n": "node scripts/convert-strings.mjs"
+  },
+  "dependencies": {
+    "expo": "~58.0.0"
+  },
+  "devDependencies": {}
+}

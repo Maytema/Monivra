@@ -1,0 +1,79 @@
+# The React Native application in mobile/: types, tests (including parity with the first
+# application's code), and a release APK. The APK is signed with the build's debug key; it is
+# re-signed with the owner's test key outside CI, as the first application's builds are.
+name: Mobile (React Native)
+
+on:
+  push:
+    branches: [rn-migration]
+    paths: ["mobile/**", ".github/workflows/mobile.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Check and build APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci --no-audit --no-fund
+          else
+            # First build: Expo picks the versions that belong to its SDK; the lockfile is kept as an artifact.
+            npm install --no-audit --no-fund
+            npx expo install expo-router expo-sqlite expo-document-picker expo-file-system expo-sharing expo-crypto \
+              expo-localization expo-status-bar expo-splash-screen expo-constants expo-linking react-native-svg \
+              react-native-safe-area-context react-native-screens react react-native
+            npx expo install typescript @types/react -- --save-dev
+            npm install --no-audit --no-fund --save-dev @types/node@22
+          fi
+      - name: Dependency versions match the Expo SDK
+        run: npx expo install --check
+        continue-on-error: true
+      - name: Tests (domain, database, rates, store, parity with the first application)
+        run: npm test
+      - name: Types
+        id: types
+        run: npx tsc --noEmit -p tsconfig.json
+        continue-on-error: true
+      - name: Keep package files
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-files
+          path: |
+            mobile/package.json
+            mobile/package-lock.json
+      - name: Android project
+        run: npx expo prebuild --platform android --no-install --clean
+        env:
+          MONIVRA_VERSION_CODE: ${{ github.run_number }}
+      - name: Build release APK
+        working-directory: mobile/android
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+      - name: Keep the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: monivra-rn-apk
+          path: mobile/android/app/build/outputs/apk/release/*.apk
+      - name: Fail when types are wrong
+        if: steps.types.outcome == 'failure'
+        run: exit 1
