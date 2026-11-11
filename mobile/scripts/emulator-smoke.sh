@@ -77,6 +77,10 @@ shot 12b-account-form-end 2
 back
 tap "Categories"
 shot 13-categories 3
+tap "Statistics"
+shot 13b-statistics 3
+adb shell input swipe 540 1800 540 600 300
+shot 13c-statistics-scrolled 2
 tap "Operations"
 tap "More"
 shot 14-more 3
