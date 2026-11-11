@@ -96,6 +96,7 @@ export function OperationsScreen() {
     return out;
   }, [ops]);
 
+  const stickyDays = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const [from, to] = periodBounds(period, data.settings);
   const summary = data.settings.opening && ops.length > 0 && !active;
   const header = selection ? (
@@ -136,10 +137,10 @@ export function OperationsScreen() {
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
         onScroll={(e) => setAtTop(e.nativeEvent.contentOffset.y < 12)}
         scrollEventThrottle={64}
+        stickyHeaderIndices={stickyDays}
         initialNumToRender={12}
         maxToRenderPerBatch={10}
         windowSize={7}
-        removeClippedSubviews
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }}
         ListHeaderComponent={
           <View style={{ marginHorizontal: -16 }}>

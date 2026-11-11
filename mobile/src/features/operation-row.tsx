@@ -136,13 +136,13 @@ export function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
   const t = useT();
   const money = useMoney();
   const day = new Date(date + "T12:00:00Z");
-  const weekday = day.toLocaleDateString(t.locale, { weekday: "short", timeZone: "UTC" });
-  const monthYear = day.toLocaleDateString(t.locale, { month: "short", year: "numeric", timeZone: "UTC" });
+  const weekday = day.toLocaleDateString(t.locale, { weekday: "long", timeZone: "UTC" });
+  const monthYear = day.toLocaleDateString(t.locale, { month: "long", year: "numeric", timeZone: "UTC" });
   const total = dayTotal(data, ops);
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 7, paddingTop: 23, paddingBottom: 15, borderBottomWidth: 1, borderBottomColor: p.line }}>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 7, paddingTop: 23, paddingBottom: 15, borderBottomWidth: 1, borderBottomColor: p.line, backgroundColor: p.bg }}>
       <Text style={{ color: p.ink, fontSize: 28 }}>{Number(date.slice(-2))}</Text>
-      <Text style={{ color: p.ink, fontSize: 15, lineHeight: 21 }}>{`${weekday}\n${monthYear}`}</Text>
+      <Text style={{ flexShrink: 1, color: p.ink, fontSize: 15, lineHeight: 21 }}>{`${weekday.charAt(0).toLocaleUpperCase(t.locale)}${weekday.slice(1)}\n${monthYear}`}</Text>
       <View style={{ marginLeft: "auto" }}>
         <MoneyText text={money(total)} value={total} size={17} />
       </View>

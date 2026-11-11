@@ -1,7 +1,7 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { useMemo, useState, type ReactNode } from "react";
+import { Fragment, useMemo, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
@@ -108,21 +108,44 @@ export function StatisticsScreen() {
     bar: () => {
       const { income: inc, expense: exp } = chartBins(rows, start, end);
       const series = catType === "income" ? inc : exp;
-      const max = Math.max(1, ...series);
+      const top = Math.max(1, ...series);
+      // A round upper bound split in four steps, labelled on the left (the original's axis).
+      const raw = top / 4;
+      const unit = 10 ** Math.floor(Math.log10(raw));
+      const step = [1, 2, 2.5, 5, 10].map((k) => k * unit).find((v) => v >= raw) ?? unit * 10;
+      const max = step * 4;
       const bins = series.length;
-      const w = 320 / bins;
+      const left = 46;
+      const right = 332;
+      const base = 190;
+      const height = 170;
+      const w = (right - left) / bins;
       return (
         <Card key="bar">
-          <Svg accessibilityLabel="Income and expense chart" viewBox="0 0 340 144" style={{ width: "100%", aspectRatio: 340 / 144 }}>
-            <Path d="M10 124H334" stroke={p.line} strokeWidth={1} />
-            {series.map((n, i) => {
-              const h = (n / max) * 105;
-              return <Rect key={i} x={10 + i * w + (catType === "income" ? 0 : w * 0.4)} y={124 - h} width={Math.max(2, w * 0.36)} height={h} rx={1} fill={catType === "income" ? p.positive : p.negative} />;
+          <Svg accessibilityLabel="Income and expense chart" viewBox="0 0 340 214" style={{ width: "100%", aspectRatio: 340 / 214 }}>
+            {[0, 1, 2, 3, 4].map((k) => {
+              const y = base - (k * height) / 4;
+              return (
+                <Fragment key={k}>
+                  <Path d={`M${left} ${y}H${right}`} stroke={p.line} strokeWidth={1} strokeDasharray={k ? "4 4" : undefined} />
+                  <SvgText x={left - 6} y={y + 3.5} fill={p.ink} fontSize={10} textAnchor="end">
+                    {(step * k).toLocaleString(t.locale)}
+                  </SvgText>
+                </Fragment>
+              );
             })}
-            <SvgText x={10} y={141} fill={p.muted} fontSize={10}>
+            {[1, 2, 3].map((k) => (
+              <Path key={k} d={`M${left + ((right - left) * k) / 4} ${base - height}V${base}`} stroke={p.line} strokeWidth={1} strokeDasharray="4 4" />
+            ))}
+            {series.map((n, i) => {
+              const h = (n / max) * height;
+              const bar = Math.min(6, Math.max(2, w * 0.5));
+              return <Rect key={i} x={left + i * w + (w - bar) / 2} y={base - h} width={bar} height={h} rx={1} fill={catType === "income" ? p.positive : p.negative} />;
+            })}
+            <SvgText x={left} y={207} fill={p.muted} fontSize={10}>
               {axis(start)}
             </SvgText>
-            <SvgText x={334} y={141} fill={p.muted} fontSize={10} textAnchor="end">
+            <SvgText x={right} y={207} fill={p.muted} fontSize={10} textAnchor="end">
               {axis(end)}
             </SvgText>
           </Svg>

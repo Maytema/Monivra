@@ -199,13 +199,14 @@ export function SumTabs({ active, expense, income, onChange }: { active: "expens
   const t = useT();
   const tab = (type: "expense" | "income", label: string, text: string) => {
     const on = active === type;
+    const tint = type === "expense" ? p.negative : p.positive;
     return (
       <Pressable
         key={type}
         accessibilityRole="tab"
         accessibilityState={{ selected: on }}
         onPress={() => onChange(type)}
-        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, backgroundColor: on ? p.bg : "transparent" }}
+        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: on ? tint : "transparent", backgroundColor: on ? mix(tint, p.bg, 0.16) : "transparent" }}
       >
         <Text style={{ color: on ? p.ink : p.muted, fontSize: 14 }}>{t.t(label)}</Text>
         <Text style={{ color: type === "expense" ? p.negativeInk : p.positiveInk, opacity: on ? 1 : 0.6, fontSize: 21, marginTop: 7 }} numberOfLines={1}>
