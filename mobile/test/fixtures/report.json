@@ -1,0 +1,5452 @@
+{
+ "schema": 1,
+ "accounts": [
+  {
+   "id": "cash",
+   "name": "Наличные",
+   "type": "Regular",
+   "opening": 5000000,
+   "icon": "wallet",
+   "color": "#24b5d1",
+   "currency": "KGS",
+   "goal": 0,
+   "limit": 0,
+   "include": true,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  },
+  {
+   "id": "card",
+   "name": "Карта Visa",
+   "type": "Regular",
+   "opening": 0,
+   "icon": "wallet",
+   "color": "#5067d7",
+   "currency": "KGS",
+   "goal": 0,
+   "limit": 10000000,
+   "include": true,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  },
+  {
+   "id": "usd",
+   "name": "Dollars",
+   "type": "Regular",
+   "opening": 100000,
+   "icon": "wallet",
+   "color": "#2fb585",
+   "currency": "USD",
+   "goal": 0,
+   "limit": 0,
+   "include": true,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  },
+  {
+   "id": "eur",
+   "name": "Euro",
+   "type": "Regular",
+   "opening": 50000,
+   "icon": "wallet",
+   "color": "#7064cc",
+   "currency": "EUR",
+   "goal": 0,
+   "limit": 0,
+   "include": false,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  },
+  {
+   "id": "dream",
+   "name": "Отпуск мечты",
+   "type": "Savings",
+   "opening": 0,
+   "icon": "wallet",
+   "color": "#8d4ed9",
+   "currency": "KGS",
+   "goal": 50000000,
+   "limit": 0,
+   "include": true,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  },
+  {
+   "id": "ann",
+   "name": "Долг Ане",
+   "type": "Debt",
+   "opening": 0,
+   "icon": "wallet",
+   "color": "#c9528a",
+   "currency": "KGS",
+   "goal": 0,
+   "limit": 0,
+   "include": true,
+   "archived": false,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": true,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false,
+   "totalDebt": 5000000
+  },
+  {
+   "id": "old",
+   "name": "Старый счёт",
+   "type": "Regular",
+   "opening": 70000,
+   "icon": "wallet",
+   "color": "#5067d7",
+   "currency": "KGS",
+   "goal": 0,
+   "limit": 0,
+   "include": false,
+   "archived": true,
+   "favorite": false,
+   "description": "",
+   "debt": "Owe me",
+   "considerExpense": false,
+   "considerIncome": false,
+   "showExpense": false,
+   "showIncome": false
+  }
+ ],
+ "categories": [
+  {
+   "id": "food",
+   "name": "Еда",
+   "type": "expense",
+   "icon": "tag",
+   "color": "#f57400",
+   "currency": "KGS",
+   "parent": null,
+   "archived": false
+  },
+  {
+   "id": "market",
+   "name": "Market",
+   "type": "expense",
+   "icon": "tag",
+   "color": "#f58a00",
+   "currency": "KGS",
+   "parent": "food",
+   "archived": false
+  },
+  {
+   "id": "cafe",
+   "name": "Cafe",
+   "type": "expense",
+   "icon": "tag",
+   "color": "#f5a000",
+   "currency": "KGS",
+   "parent": "food",
+   "archived": false
+  },
+  {
+   "id": "transport",
+   "name": "Transport",
+   "type": "expense",
+   "icon": "tag",
+   "color": "#479ee2",
+   "currency": "KGS",
+   "parent": null,
+   "archived": false
+  },
+  {
+   "id": "home",
+   "name": "Home",
+   "type": "expense",
+   "icon": "tag",
+   "color": "#45585e",
+   "currency": "KGS",
+   "parent": null,
+   "archived": false
+  },
+  {
+   "id": "salary",
+   "name": "Salary",
+   "type": "income",
+   "icon": "tag",
+   "color": "#858585",
+   "currency": "KGS",
+   "parent": null,
+   "archived": false
+  },
+  {
+   "id": "bonus",
+   "name": "Бонус",
+   "type": "income",
+   "icon": "tag",
+   "color": "#ead447",
+   "currency": "KGS",
+   "parent": null,
+   "archived": false
+  }
+ ],
+ "ops": [
+  {
+   "id": "o0",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 80300,
+   "date": "2025-09-02",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o1",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2025-09-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o2",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2025-09-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o3",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 73000,
+   "date": "2025-09-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o4",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 401000,
+   "date": "2025-09-05",
+   "comment": "Покупка №5",
+   "tags": []
+  },
+  {
+   "id": "o5",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 128000,
+   "date": "2025-09-06",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o6",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 294600,
+   "date": "2025-09-06",
+   "comment": "Покупка №7",
+   "tags": []
+  },
+  {
+   "id": "o7",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 98700,
+   "date": "2025-09-07",
+   "comment": "Покупка №8",
+   "tags": []
+  },
+  {
+   "id": "o8",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 1800,
+   "date": "2025-09-07",
+   "comment": "Покупка №9",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o9",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 474700,
+   "date": "2025-09-09",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o10",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 427600,
+   "date": "2025-09-09",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o11",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 351400,
+   "date": "2025-09-10",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o12",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 461800,
+   "date": "2025-09-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o13",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 4400,
+   "date": "2025-09-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o14",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 224800,
+   "date": "2025-09-13",
+   "comment": "Покупка №15",
+   "tags": []
+  },
+  {
+   "id": "o15",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2025-09-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o16",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 147600,
+   "date": "2025-09-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o17",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 1900,
+   "date": "2025-09-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o18",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3500,
+   "date": "2025-09-18",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o19",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 2000,
+   "date": "2025-09-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o20",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 319100,
+   "date": "2025-09-20",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o21",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 1500,
+   "date": "2025-09-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o22",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 234600,
+   "date": "2025-09-21",
+   "comment": "Покупка №23",
+   "tags": []
+  },
+  {
+   "id": "o23",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 446200,
+   "date": "2025-09-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o24",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 510000,
+   "date": "2025-09-25",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o25",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 501800,
+   "date": "2025-09-26",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o26",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 3500,
+   "date": "2025-09-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o27",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 298600,
+   "date": "2025-09-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o28",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3300,
+   "date": "2025-09-30",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o29",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 176900,
+   "date": "2025-09-30",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o30",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 175500,
+   "date": "2025-10-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o31",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2025-10-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o32",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2025-10-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o33",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 237200,
+   "date": "2025-10-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o34",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 104600,
+   "date": "2025-10-06",
+   "comment": "Покупка №35",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o35",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 435400,
+   "date": "2025-10-06",
+   "comment": "Покупка №36",
+   "tags": []
+  },
+  {
+   "id": "o36",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 46800,
+   "date": "2025-10-08",
+   "comment": "Покупка №37",
+   "tags": []
+  },
+  {
+   "id": "o37",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 114300,
+   "date": "2025-10-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o38",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 481300,
+   "date": "2025-10-12",
+   "comment": "Покупка №39",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o39",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1000,
+   "date": "2025-10-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o40",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 498800,
+   "date": "2025-10-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o41",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 226800,
+   "date": "2025-10-13",
+   "comment": "Покупка №42",
+   "tags": []
+  },
+  {
+   "id": "o42",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 495100,
+   "date": "2025-10-14",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o43",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2025-10-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o44",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 162700,
+   "date": "2025-10-16",
+   "comment": "Покупка №45",
+   "tags": []
+  },
+  {
+   "id": "o45",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 111800,
+   "date": "2025-10-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o46",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 204400,
+   "date": "2025-10-19",
+   "comment": "Покупка №47",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o47",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 180900,
+   "date": "2025-10-20",
+   "comment": "Покупка №48",
+   "tags": []
+  },
+  {
+   "id": "o48",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 2000,
+   "date": "2025-10-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o49",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 700,
+   "date": "2025-10-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o50",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 476600,
+   "date": "2025-10-22",
+   "comment": "Покупка №51",
+   "tags": []
+  },
+  {
+   "id": "o51",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 125600,
+   "date": "2025-10-24",
+   "comment": "Покупка №52",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o52",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 90900,
+   "date": "2025-10-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o53",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 335500,
+   "date": "2025-10-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o54",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 519400,
+   "date": "2025-10-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o55",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 334700,
+   "date": "2025-10-27",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o56",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1700,
+   "date": "2025-10-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o57",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 161900,
+   "date": "2025-10-30",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o58",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 259300,
+   "date": "2025-11-01",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o59",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 113600,
+   "date": "2025-11-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o60",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2025-11-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o61",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2025-11-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o62",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 509600,
+   "date": "2025-11-05",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o63",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 281100,
+   "date": "2025-11-08",
+   "comment": "Покупка №64",
+   "tags": []
+  },
+  {
+   "id": "o64",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 2700,
+   "date": "2025-11-09",
+   "comment": "Покупка №65",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o65",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 477700,
+   "date": "2025-11-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o66",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 1100,
+   "date": "2025-11-10",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o67",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 4000,
+   "date": "2025-11-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o68",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 247900,
+   "date": "2025-11-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o69",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 81100,
+   "date": "2025-11-12",
+   "comment": "Покупка №70",
+   "tags": []
+  },
+  {
+   "id": "o70",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 50300,
+   "date": "2025-11-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o71",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 191400,
+   "date": "2025-11-13",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o72",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 513000,
+   "date": "2025-11-14",
+   "comment": "Покупка №73",
+   "tags": []
+  },
+  {
+   "id": "o73",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 130000,
+   "date": "2025-11-14",
+   "comment": "Покупка №74",
+   "tags": []
+  },
+  {
+   "id": "o74",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2025-11-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o75",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 316000,
+   "date": "2025-11-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o76",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 2500,
+   "date": "2025-11-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o77",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 85500,
+   "date": "2025-11-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o78",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 249800,
+   "date": "2025-11-19",
+   "comment": "Покупка №79",
+   "tags": []
+  },
+  {
+   "id": "o79",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 318700,
+   "date": "2025-11-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o80",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 480700,
+   "date": "2025-11-20",
+   "comment": "Покупка №81",
+   "tags": []
+  },
+  {
+   "id": "o81",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 450100,
+   "date": "2025-11-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o82",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 4300,
+   "date": "2025-11-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o83",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 1100,
+   "date": "2025-11-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o84",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 390400,
+   "date": "2025-11-23",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o85",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 333900,
+   "date": "2025-11-24",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o86",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 424700,
+   "date": "2025-11-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o87",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 109800,
+   "date": "2025-11-25",
+   "comment": "Покупка №88",
+   "tags": []
+  },
+  {
+   "id": "o88",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 79900,
+   "date": "2025-11-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o89",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 516600,
+   "date": "2025-11-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o90",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3900,
+   "date": "2025-11-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o91",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 163900,
+   "date": "2025-11-29",
+   "comment": "Покупка №92",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o92",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 423000,
+   "date": "2025-11-29",
+   "comment": "Покупка №93",
+   "tags": []
+  },
+  {
+   "id": "o93",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 452000,
+   "date": "2025-12-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o94",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 257700,
+   "date": "2025-12-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o95",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2025-12-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o96",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2025-12-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o97",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 198900,
+   "date": "2025-12-06",
+   "comment": "Покупка №98",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o98",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 4500,
+   "date": "2025-12-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o99",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 440100,
+   "date": "2025-12-09",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o100",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 202700,
+   "date": "2025-12-11",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o101",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 324300,
+   "date": "2025-12-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o102",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 30200,
+   "date": "2025-12-12",
+   "comment": "Покупка №103",
+   "tags": []
+  },
+  {
+   "id": "o103",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 291900,
+   "date": "2025-12-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o104",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2025-12-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o105",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 267200,
+   "date": "2025-12-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o106",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 443600,
+   "date": "2025-12-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o107",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 4500,
+   "date": "2025-12-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o108",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 32800,
+   "date": "2025-12-18",
+   "comment": "Покупка №109",
+   "tags": []
+  },
+  {
+   "id": "o109",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 355900,
+   "date": "2025-12-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o110",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 139600,
+   "date": "2025-12-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o111",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 2500,
+   "date": "2025-12-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o112",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 516600,
+   "date": "2025-12-21",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o113",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 374500,
+   "date": "2025-12-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o114",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 347600,
+   "date": "2025-12-23",
+   "comment": "Покупка №115",
+   "tags": []
+  },
+  {
+   "id": "o115",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 302400,
+   "date": "2025-12-23",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o116",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 353900,
+   "date": "2025-12-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o117",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 54900,
+   "date": "2025-12-25",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o118",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 151900,
+   "date": "2025-12-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o119",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 347200,
+   "date": "2025-12-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o120",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 35300,
+   "date": "2025-12-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o121",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 117000,
+   "date": "2025-12-29",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o122",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 59200,
+   "date": "2025-12-29",
+   "comment": "Покупка №123",
+   "tags": []
+  },
+  {
+   "id": "o123",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 254400,
+   "date": "2026-01-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o124",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 247400,
+   "date": "2026-01-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o125",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 55800,
+   "date": "2026-01-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o126",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 366300,
+   "date": "2026-01-03",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o127",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 141700,
+   "date": "2026-01-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o128",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 25100,
+   "date": "2026-01-04",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o129",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-01-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o130",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-01-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o131",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 35100,
+   "date": "2026-01-06",
+   "comment": "Покупка №132",
+   "tags": []
+  },
+  {
+   "id": "o132",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 416500,
+   "date": "2026-01-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o133",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 224700,
+   "date": "2026-01-07",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o134",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 516000,
+   "date": "2026-01-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o135",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 111400,
+   "date": "2026-01-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o136",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 56300,
+   "date": "2026-01-09",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o137",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 479800,
+   "date": "2026-01-11",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o138",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 351600,
+   "date": "2026-01-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o139",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 155600,
+   "date": "2026-01-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o140",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 450000,
+   "date": "2026-01-14",
+   "comment": "Покупка №141",
+   "tags": []
+  },
+  {
+   "id": "o141",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-01-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o142",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 149400,
+   "date": "2026-01-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o143",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 4400,
+   "date": "2026-01-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o144",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 443100,
+   "date": "2026-01-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o145",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 519700,
+   "date": "2026-01-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o146",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 178900,
+   "date": "2026-01-21",
+   "comment": "Покупка №147",
+   "tags": []
+  },
+  {
+   "id": "o147",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 156400,
+   "date": "2026-01-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o148",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 23100,
+   "date": "2026-01-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o149",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 417100,
+   "date": "2026-01-24",
+   "comment": "Покупка №150",
+   "tags": []
+  },
+  {
+   "id": "o150",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 432300,
+   "date": "2026-01-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o151",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 341800,
+   "date": "2026-01-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o152",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 4300,
+   "date": "2026-01-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o153",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 44600,
+   "date": "2026-01-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o154",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1500,
+   "date": "2026-01-26",
+   "comment": "Покупка №155",
+   "tags": []
+  },
+  {
+   "id": "o155",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 381600,
+   "date": "2026-01-29",
+   "comment": "Покупка №156",
+   "tags": []
+  },
+  {
+   "id": "o156",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 228300,
+   "date": "2026-01-31",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o157",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 300400,
+   "date": "2026-01-31",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o158",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 449600,
+   "date": "2026-02-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o159",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 39400,
+   "date": "2026-02-03",
+   "comment": "Покупка №160",
+   "tags": []
+  },
+  {
+   "id": "o160",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1400,
+   "date": "2026-02-03",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o161",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 58300,
+   "date": "2026-02-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o162",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-02-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o163",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-02-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o164",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 404100,
+   "date": "2026-02-06",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o165",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 180700,
+   "date": "2026-02-06",
+   "comment": "Покупка №166",
+   "tags": []
+  },
+  {
+   "id": "o166",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 192900,
+   "date": "2026-02-07",
+   "comment": "Покупка №167",
+   "tags": []
+  },
+  {
+   "id": "o167",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 2300,
+   "date": "2026-02-08",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o168",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3900,
+   "date": "2026-02-08",
+   "comment": "Покупка №169",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o169",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 300000,
+   "date": "2026-02-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o170",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 234100,
+   "date": "2026-02-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o171",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 1900,
+   "date": "2026-02-12",
+   "comment": "Покупка №172",
+   "tags": []
+  },
+  {
+   "id": "o172",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 301400,
+   "date": "2026-02-12",
+   "comment": "Покупка №173",
+   "tags": []
+  },
+  {
+   "id": "o173",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 435100,
+   "date": "2026-02-14",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o174",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 206900,
+   "date": "2026-02-14",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o175",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-02-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o176",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3700,
+   "date": "2026-02-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o177",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 401600,
+   "date": "2026-02-16",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o178",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 465300,
+   "date": "2026-02-17",
+   "comment": "Покупка №179",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o179",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 283900,
+   "date": "2026-02-17",
+   "comment": "Покупка №180",
+   "tags": []
+  },
+  {
+   "id": "o180",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 114400,
+   "date": "2026-02-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o181",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 517700,
+   "date": "2026-02-21",
+   "comment": "Покупка №182",
+   "tags": []
+  },
+  {
+   "id": "o182",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 1500,
+   "date": "2026-02-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o183",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 64000,
+   "date": "2026-02-24",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o184",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 282900,
+   "date": "2026-02-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o185",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 429600,
+   "date": "2026-02-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o186",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 297500,
+   "date": "2026-02-27",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o187",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 230700,
+   "date": "2026-02-28",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o188",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 454400,
+   "date": "2026-03-01",
+   "comment": "Покупка №189",
+   "tags": []
+  },
+  {
+   "id": "o189",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 241400,
+   "date": "2026-03-02",
+   "comment": "Покупка №190",
+   "tags": []
+  },
+  {
+   "id": "o190",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 187500,
+   "date": "2026-03-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o191",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 496600,
+   "date": "2026-03-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o192",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 174300,
+   "date": "2026-03-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o193",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-03-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o194",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-03-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o195",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 239600,
+   "date": "2026-03-07",
+   "comment": "Покупка №196",
+   "tags": []
+  },
+  {
+   "id": "o196",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 1400,
+   "date": "2026-03-08",
+   "comment": "Покупка №197",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o197",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 468800,
+   "date": "2026-03-09",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o198",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 94200,
+   "date": "2026-03-09",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o199",
+   "type": "income",
+   "to": "usd",
+   "category": "bonus",
+   "amount": 20000,
+   "date": "2026-03-10",
+   "comment": "Bonus in dollars",
+   "tags": []
+  },
+  {
+   "id": "o200",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 4300,
+   "date": "2026-03-11",
+   "comment": "Покупка №201",
+   "tags": []
+  },
+  {
+   "id": "o201",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 511500,
+   "date": "2026-03-11",
+   "comment": "Покупка №202",
+   "tags": []
+  },
+  {
+   "id": "o202",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 343300,
+   "date": "2026-03-12",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o203",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 448700,
+   "date": "2026-03-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o204",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-03-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o205",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3600,
+   "date": "2026-03-15",
+   "comment": "Покупка №206",
+   "tags": []
+  },
+  {
+   "id": "o206",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3100,
+   "date": "2026-03-15",
+   "comment": "Покупка №207",
+   "tags": []
+  },
+  {
+   "id": "o207",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 389300,
+   "date": "2026-03-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o208",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 427700,
+   "date": "2026-03-17",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o209",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 1000,
+   "date": "2026-03-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o210",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 75000,
+   "date": "2026-03-19",
+   "comment": "Покупка №211",
+   "tags": []
+  },
+  {
+   "id": "o211",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 288900,
+   "date": "2026-03-19",
+   "comment": "Покупка №212",
+   "tags": []
+  },
+  {
+   "id": "o212",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 57800,
+   "date": "2026-03-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o213",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 450700,
+   "date": "2026-03-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o214",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1900,
+   "date": "2026-03-23",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o215",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 153300,
+   "date": "2026-03-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o216",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 266600,
+   "date": "2026-03-24",
+   "comment": "Покупка №217",
+   "tags": []
+  },
+  {
+   "id": "o217",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 65200,
+   "date": "2026-03-25",
+   "comment": "Покупка №218",
+   "tags": []
+  },
+  {
+   "id": "o218",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 91100,
+   "date": "2026-03-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o219",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 220300,
+   "date": "2026-03-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o220",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 233800,
+   "date": "2026-03-27",
+   "comment": "Покупка №221",
+   "tags": []
+  },
+  {
+   "id": "o221",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 431600,
+   "date": "2026-03-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o222",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 451300,
+   "date": "2026-03-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o223",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3200,
+   "date": "2026-03-30",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o224",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 291800,
+   "date": "2026-03-31",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o225",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 379100,
+   "date": "2026-03-31",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o226",
+   "type": "transfer",
+   "from": "cash",
+   "to": "ann",
+   "amount": 2000000,
+   "receive": 2000000,
+   "date": "2026-04-02",
+   "comment": "Одолжил Ане",
+   "tags": [
+    "долг"
+   ]
+  },
+  {
+   "id": "o227",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 443200,
+   "date": "2026-04-03",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o228",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 146600,
+   "date": "2026-04-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o229",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 122000,
+   "date": "2026-04-04",
+   "comment": "Покупка №230",
+   "tags": []
+  },
+  {
+   "id": "o230",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-04-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o231",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-04-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o232",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3700,
+   "date": "2026-04-05",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o233",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 238300,
+   "date": "2026-04-06",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o234",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 175700,
+   "date": "2026-04-07",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o235",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 376000,
+   "date": "2026-04-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o236",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 503800,
+   "date": "2026-04-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o237",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 206800,
+   "date": "2026-04-08",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o238",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 196000,
+   "date": "2026-04-09",
+   "comment": "Покупка №239",
+   "tags": []
+  },
+  {
+   "id": "o239",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 413400,
+   "date": "2026-04-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o240",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 468100,
+   "date": "2026-04-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o241",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 40600,
+   "date": "2026-04-12",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o242",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 349700,
+   "date": "2026-04-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o243",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-04-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o244",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 157200,
+   "date": "2026-04-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o245",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 199800,
+   "date": "2026-04-16",
+   "comment": "Покупка №246",
+   "tags": []
+  },
+  {
+   "id": "o246",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 202700,
+   "date": "2026-04-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o247",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 800,
+   "date": "2026-04-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o248",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 395100,
+   "date": "2026-04-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o249",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 20600,
+   "date": "2026-04-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o250",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 162700,
+   "date": "2026-04-21",
+   "comment": "Покупка №251",
+   "tags": []
+  },
+  {
+   "id": "o251",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 508300,
+   "date": "2026-04-21",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o252",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 208500,
+   "date": "2026-04-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o253",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 119000,
+   "date": "2026-04-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o254",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 310000,
+   "date": "2026-04-24",
+   "comment": "Покупка №255",
+   "tags": []
+  },
+  {
+   "id": "o255",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 85200,
+   "date": "2026-04-25",
+   "comment": "Покупка №256",
+   "tags": []
+  },
+  {
+   "id": "o256",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 94500,
+   "date": "2026-04-25",
+   "comment": "Покупка №257",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o257",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 364400,
+   "date": "2026-04-29",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o258",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 235700,
+   "date": "2026-04-30",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o259",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 350200,
+   "date": "2026-05-01",
+   "comment": "Покупка №260",
+   "tags": []
+  },
+  {
+   "id": "o260",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 3300,
+   "date": "2026-05-01",
+   "comment": "Покупка №261",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o261",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 2700,
+   "date": "2026-05-02",
+   "comment": "Покупка №262",
+   "tags": []
+  },
+  {
+   "id": "o262",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 502800,
+   "date": "2026-05-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o263",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-05-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o264",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-05-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o265",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 1800,
+   "date": "2026-05-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o266",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 283400,
+   "date": "2026-05-06",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o267",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 343200,
+   "date": "2026-05-07",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o268",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 268900,
+   "date": "2026-05-08",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o269",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 254600,
+   "date": "2026-05-08",
+   "comment": "Покупка №270",
+   "tags": []
+  },
+  {
+   "id": "o270",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 2400,
+   "date": "2026-05-10",
+   "comment": "Покупка №271",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o271",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 427400,
+   "date": "2026-05-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o272",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 482800,
+   "date": "2026-05-11",
+   "comment": "Покупка №273",
+   "tags": []
+  },
+  {
+   "id": "o273",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-05-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o274",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 436800,
+   "date": "2026-05-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o275",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3900,
+   "date": "2026-05-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o276",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 259400,
+   "date": "2026-05-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o277",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 335200,
+   "date": "2026-05-16",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o278",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 409000,
+   "date": "2026-05-17",
+   "comment": "Покупка №279",
+   "tags": []
+  },
+  {
+   "id": "o279",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 292900,
+   "date": "2026-05-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o280",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 26800,
+   "date": "2026-05-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o281",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 390400,
+   "date": "2026-05-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o282",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 77200,
+   "date": "2026-05-22",
+   "comment": "Покупка №283",
+   "tags": []
+  },
+  {
+   "id": "o283",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 327900,
+   "date": "2026-05-23",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o284",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 485300,
+   "date": "2026-05-25",
+   "comment": "Покупка №285",
+   "tags": []
+  },
+  {
+   "id": "o285",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 154000,
+   "date": "2026-05-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o286",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 131600,
+   "date": "2026-05-26",
+   "comment": "Покупка №287",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o287",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 327300,
+   "date": "2026-05-26",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o288",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 314100,
+   "date": "2026-05-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o289",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 4100,
+   "date": "2026-05-31",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o290",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 900,
+   "date": "2026-05-31",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o291",
+   "type": "adjustment",
+   "to": "cash",
+   "amount": 15000,
+   "date": "2026-06-02",
+   "comment": "Нашёл в кармане",
+   "tags": []
+  },
+  {
+   "id": "o292",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 1900,
+   "date": "2026-06-02",
+   "comment": "Покупка №293",
+   "tags": []
+  },
+  {
+   "id": "o293",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 228500,
+   "date": "2026-06-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o294",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 319400,
+   "date": "2026-06-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o295",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-06-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o296",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-06-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o297",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 356800,
+   "date": "2026-06-06",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o298",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 37300,
+   "date": "2026-06-06",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o299",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 181100,
+   "date": "2026-06-09",
+   "comment": "Покупка №300",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o300",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 389100,
+   "date": "2026-06-09",
+   "comment": "Покупка №301",
+   "tags": []
+  },
+  {
+   "id": "o301",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 225300,
+   "date": "2026-06-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o302",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 411600,
+   "date": "2026-06-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o303",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 161600,
+   "date": "2026-06-14",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o304",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 403000,
+   "date": "2026-06-14",
+   "comment": "Покупка №305",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o305",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-06-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o306",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 1500,
+   "date": "2026-06-15",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o307",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 460800,
+   "date": "2026-06-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o308",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 360500,
+   "date": "2026-06-16",
+   "comment": "Покупка №309",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o309",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3100,
+   "date": "2026-06-16",
+   "comment": "Покупка №310",
+   "tags": []
+  },
+  {
+   "id": "o310",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 168500,
+   "date": "2026-06-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o311",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 324000,
+   "date": "2026-06-17",
+   "comment": "Покупка №312",
+   "tags": []
+  },
+  {
+   "id": "o312",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 431900,
+   "date": "2026-06-19",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o313",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 291800,
+   "date": "2026-06-19",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o314",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 3400,
+   "date": "2026-06-20",
+   "comment": "Покупка №315",
+   "tags": []
+  },
+  {
+   "id": "o315",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 277300,
+   "date": "2026-06-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o316",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 210400,
+   "date": "2026-06-22",
+   "comment": "Покупка №317",
+   "tags": []
+  },
+  {
+   "id": "o317",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 89800,
+   "date": "2026-06-26",
+   "comment": "Покупка №318",
+   "tags": []
+  },
+  {
+   "id": "o318",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 2100,
+   "date": "2026-06-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o319",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 3900,
+   "date": "2026-06-28",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o320",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 199400,
+   "date": "2026-06-30",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o321",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 230200,
+   "date": "2026-07-01",
+   "comment": "Покупка №322",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o322",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 510800,
+   "date": "2026-07-04",
+   "comment": "Покупка №323",
+   "tags": []
+  },
+  {
+   "id": "o323",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-07-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o324",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-07-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o325",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 4300,
+   "date": "2026-07-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o326",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 4200,
+   "date": "2026-07-07",
+   "comment": "Покупка №327",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o327",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 279100,
+   "date": "2026-07-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o328",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 3900,
+   "date": "2026-07-08",
+   "comment": "Покупка №329",
+   "tags": []
+  },
+  {
+   "id": "o329",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 218200,
+   "date": "2026-07-08",
+   "comment": "Покупка №330",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o330",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 34700,
+   "date": "2026-07-09",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o331",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 193900,
+   "date": "2026-07-10",
+   "comment": "Покупка №332",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o332",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 88500,
+   "date": "2026-07-13",
+   "comment": "Покупка №333",
+   "tags": []
+  },
+  {
+   "id": "o333",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 284000,
+   "date": "2026-07-14",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o334",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-07-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o335",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 261300,
+   "date": "2026-07-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o336",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 489100,
+   "date": "2026-07-16",
+   "comment": "Покупка №337",
+   "tags": []
+  },
+  {
+   "id": "o337",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 2100,
+   "date": "2026-07-16",
+   "comment": "Покупка №338",
+   "tags": []
+  },
+  {
+   "id": "o338",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 390300,
+   "date": "2026-07-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o339",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 260500,
+   "date": "2026-07-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o340",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3800,
+   "date": "2026-07-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o341",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 388300,
+   "date": "2026-07-18",
+   "comment": "Покупка №342",
+   "tags": []
+  },
+  {
+   "id": "o342",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 238800,
+   "date": "2026-07-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o343",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 349000,
+   "date": "2026-07-20",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o344",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 128700,
+   "date": "2026-07-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o345",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 95100,
+   "date": "2026-07-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o346",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 146400,
+   "date": "2026-07-25",
+   "comment": "Покупка №347",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o347",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1400,
+   "date": "2026-07-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o348",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 439800,
+   "date": "2026-07-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o349",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 319600,
+   "date": "2026-07-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o350",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3200,
+   "date": "2026-07-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o351",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 307000,
+   "date": "2026-07-28",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o352",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 389600,
+   "date": "2026-07-29",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o353",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3300,
+   "date": "2026-07-31",
+   "comment": "Покупка №354",
+   "tags": []
+  },
+  {
+   "id": "o354",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 461700,
+   "date": "2026-08-01",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o355",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 103200,
+   "date": "2026-08-01",
+   "comment": "Покупка №356",
+   "tags": []
+  },
+  {
+   "id": "o356",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 212800,
+   "date": "2026-08-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o357",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-08-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o358",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-08-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o359",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 155700,
+   "date": "2026-08-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o360",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 243500,
+   "date": "2026-08-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o361",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 290800,
+   "date": "2026-08-06",
+   "comment": "Покупка №362",
+   "tags": []
+  },
+  {
+   "id": "o362",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 205600,
+   "date": "2026-08-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o363",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3300,
+   "date": "2026-08-07",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o364",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 39300,
+   "date": "2026-08-09",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o365",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 318100,
+   "date": "2026-08-09",
+   "comment": "Покупка №366",
+   "tags": []
+  },
+  {
+   "id": "o366",
+   "type": "expense",
+   "from": "usd",
+   "category": "food",
+   "amount": 1200,
+   "date": "2026-08-10",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o367",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 23100,
+   "date": "2026-08-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o368",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 353100,
+   "date": "2026-08-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o369",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 389700,
+   "date": "2026-08-13",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o370",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 373100,
+   "date": "2026-08-13",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o371",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-08-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o372",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 137000,
+   "date": "2026-08-15",
+   "comment": "Покупка №373",
+   "tags": []
+  },
+  {
+   "id": "o373",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 223000,
+   "date": "2026-08-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o374",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 1800,
+   "date": "2026-08-16",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o375",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 183400,
+   "date": "2026-08-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o376",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 374000,
+   "date": "2026-08-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o377",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 480800,
+   "date": "2026-08-21",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o378",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 76700,
+   "date": "2026-08-23",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o379",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 236100,
+   "date": "2026-08-23",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o380",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 301100,
+   "date": "2026-08-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o381",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 175800,
+   "date": "2026-08-24",
+   "comment": "Покупка №382",
+   "tags": []
+  },
+  {
+   "id": "o382",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 473200,
+   "date": "2026-08-25",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o383",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 364000,
+   "date": "2026-08-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o384",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 436800,
+   "date": "2026-08-26",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o385",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 257300,
+   "date": "2026-08-27",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o386",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 472100,
+   "date": "2026-08-30",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o387",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 3500,
+   "date": "2026-08-30",
+   "comment": "Покупка №388",
+   "tags": []
+  },
+  {
+   "id": "o388",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 309200,
+   "date": "2026-09-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o389",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 519900,
+   "date": "2026-09-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o390",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 337800,
+   "date": "2026-09-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o391",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 1800,
+   "date": "2026-09-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o392",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-09-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o393",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-09-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o394",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 299300,
+   "date": "2026-09-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o395",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 57300,
+   "date": "2026-09-05",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o396",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 202300,
+   "date": "2026-09-06",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o397",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 297900,
+   "date": "2026-09-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o398",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 3500,
+   "date": "2026-09-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o399",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 292500,
+   "date": "2026-09-08",
+   "comment": "Покупка №400",
+   "tags": []
+  },
+  {
+   "id": "o400",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 33100,
+   "date": "2026-09-11",
+   "comment": "Покупка №401",
+   "tags": []
+  },
+  {
+   "id": "o401",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 377300,
+   "date": "2026-09-11",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o402",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 394900,
+   "date": "2026-09-13",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o403",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3000,
+   "date": "2026-09-13",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o404",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-09-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o405",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 226100,
+   "date": "2026-09-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o406",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 2500,
+   "date": "2026-09-17",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o407",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3300,
+   "date": "2026-09-17",
+   "comment": "Покупка №408",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o408",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 497500,
+   "date": "2026-09-19",
+   "comment": "Покупка №409",
+   "tags": []
+  },
+  {
+   "id": "o409",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 499100,
+   "date": "2026-09-21",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o410",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 394200,
+   "date": "2026-09-22",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o411",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 423600,
+   "date": "2026-09-23",
+   "comment": "Покупка №412",
+   "tags": []
+  },
+  {
+   "id": "o412",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 92500,
+   "date": "2026-09-23",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o413",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 315100,
+   "date": "2026-09-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o414",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 203500,
+   "date": "2026-09-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o415",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 365200,
+   "date": "2026-09-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o416",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 364200,
+   "date": "2026-09-27",
+   "comment": "Покупка №417",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o417",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 115600,
+   "date": "2026-09-27",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o418",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 314900,
+   "date": "2026-09-28",
+   "comment": "Покупка №419",
+   "tags": []
+  },
+  {
+   "id": "o419",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 515800,
+   "date": "2026-09-30",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o420",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 413200,
+   "date": "2026-09-30",
+   "comment": "Покупка №421",
+   "tags": []
+  },
+  {
+   "id": "o421",
+   "type": "expense",
+   "from": "usd",
+   "category": "cafe",
+   "amount": 3800,
+   "date": "2026-10-02",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o422",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1300,
+   "date": "2026-10-03",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o423",
+   "type": "expense",
+   "from": "card",
+   "category": "cafe",
+   "amount": 287600,
+   "date": "2026-10-03",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o424",
+   "type": "income",
+   "to": "card",
+   "category": "salary",
+   "amount": 8000000,
+   "date": "2026-10-05",
+   "comment": "",
+   "tags": [
+    "work"
+   ]
+  },
+  {
+   "id": "o425",
+   "type": "transfer",
+   "from": "card",
+   "to": "dream",
+   "amount": 1000000,
+   "receive": 1000000,
+   "date": "2026-10-05",
+   "comment": "Откладываю",
+   "tags": []
+  },
+  {
+   "id": "o426",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 2500,
+   "date": "2026-10-05",
+   "comment": "Покупка №427",
+   "tags": []
+  },
+  {
+   "id": "o427",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 362200,
+   "date": "2026-10-05",
+   "comment": "Покупка №428",
+   "tags": []
+  },
+  {
+   "id": "o428",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 94800,
+   "date": "2026-10-06",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o429",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 4200,
+   "date": "2026-10-06",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o430",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 387300,
+   "date": "2026-10-07",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o431",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 502400,
+   "date": "2026-10-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o432",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 460100,
+   "date": "2026-10-08",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o433",
+   "type": "expense",
+   "from": "usd",
+   "category": "market",
+   "amount": 3700,
+   "date": "2026-10-09",
+   "comment": "Покупка №434",
+   "tags": []
+  },
+  {
+   "id": "o434",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 412200,
+   "date": "2026-10-09",
+   "comment": "Покупка №435",
+   "tags": []
+  },
+  {
+   "id": "o435",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 2100,
+   "date": "2026-10-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o436",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 211000,
+   "date": "2026-10-10",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o437",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 335200,
+   "date": "2026-10-12",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o438",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 148600,
+   "date": "2026-10-14",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o439",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 98500,
+   "date": "2026-10-14",
+   "comment": "Покупка №440",
+   "tags": []
+  },
+  {
+   "id": "o440",
+   "type": "transfer",
+   "from": "cash",
+   "to": "usd",
+   "amount": 875000,
+   "receive": 10000,
+   "date": "2026-10-15",
+   "comment": "Обмен",
+   "tags": []
+  },
+  {
+   "id": "o441",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 262700,
+   "date": "2026-10-15",
+   "comment": "Покупка №442",
+   "tags": []
+  },
+  {
+   "id": "o442",
+   "type": "expense",
+   "from": "cash",
+   "category": "cafe",
+   "amount": 128900,
+   "date": "2026-10-15",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o443",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 4400,
+   "date": "2026-10-16",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": []
+  },
+  {
+   "id": "o444",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 511200,
+   "date": "2026-10-16",
+   "comment": "Покупка №445",
+   "tags": []
+  },
+  {
+   "id": "o445",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 44500,
+   "date": "2026-10-17",
+   "comment": "Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. Очень длинный комментарий о покупке: куплено много разных вещей для дома, дачи и поездки, чек сохранён в папке, оплата частями, проверить гарантию через два месяца. ",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o446",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 144100,
+   "date": "2026-10-18",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o447",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 2400,
+   "date": "2026-10-18",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o448",
+   "type": "expense",
+   "from": "cash",
+   "category": "transport",
+   "amount": 253000,
+   "date": "2026-10-19",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o449",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 84800,
+   "date": "2026-10-20",
+   "comment": "Покупка №450",
+   "tags": []
+  },
+  {
+   "id": "o450",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 448900,
+   "date": "2026-10-20",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o451",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 193700,
+   "date": "2026-10-21",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o452",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 471100,
+   "date": "2026-10-23",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o453",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 370100,
+   "date": "2026-10-23",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o454",
+   "type": "expense",
+   "from": "card",
+   "category": "food",
+   "amount": 378900,
+   "date": "2026-10-24",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o455",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 137600,
+   "date": "2026-10-25",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o456",
+   "type": "expense",
+   "from": "cash",
+   "category": "food",
+   "amount": 315200,
+   "date": "2026-10-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o457",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 224200,
+   "date": "2026-10-26",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o458",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 426900,
+   "date": "2026-10-28",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o459",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 519800,
+   "date": "2026-10-29",
+   "comment": "Покупка №460",
+   "tags": []
+  },
+  {
+   "id": "o460",
+   "type": "expense",
+   "from": "usd",
+   "category": "home",
+   "amount": 1500,
+   "date": "2026-10-29",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o461",
+   "type": "expense",
+   "from": "card",
+   "category": "home",
+   "amount": 328700,
+   "date": "2026-10-31",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o462",
+   "type": "expense",
+   "from": "cash",
+   "category": "market",
+   "amount": 277700,
+   "date": "2026-10-31",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o463",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3800,
+   "date": "2026-11-01",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o464",
+   "type": "expense",
+   "from": "usd",
+   "category": "transport",
+   "amount": 3100,
+   "date": "2026-11-01",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o465",
+   "type": "expense",
+   "from": "card",
+   "category": "market",
+   "amount": 311600,
+   "date": "2026-11-04",
+   "comment": "",
+   "tags": [
+    "trip",
+    "семья"
+   ]
+  },
+  {
+   "id": "o466",
+   "type": "expense",
+   "from": "card",
+   "category": "transport",
+   "amount": 106400,
+   "date": "2026-11-04",
+   "comment": "",
+   "tags": []
+  },
+  {
+   "id": "o467",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 12300,
+   "date": "2026-07-07",
+   "comment": "Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово Слово ",
+   "tags": []
+  },
+  {
+   "id": "o468",
+   "type": "expense",
+   "from": "cash",
+   "category": "home",
+   "amount": 45600,
+   "date": "2026-07-08",
+   "comment": "https://example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "tags": [
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   ]
+  }
+ ],
+ "tags": [
+  "work",
+  "trip",
+  "семья",
+  "долг"
+ ],
+ "scheduled": [],
+ "budgets": [
+  {
+   "id": "b1",
+   "name": "Еда в месяц",
+   "amount": 4000000,
+   "currency": "KGS",
+   "period": "month",
+   "categories": [
+    "food"
+   ]
+  },
+  {
+   "id": "b2",
+   "name": "Всё",
+   "amount": 3000000,
+   "currency": "KGS",
+   "period": "month",
+   "categories": null
+  }
+ ],
+ "backups": [],
+ "settings": {
+  "accent": "#a000b8",
+  "theme": "light",
+  "language": "en",
+  "currency": "KGS",
+  "numberFormat": "comma-dot",
+  "groupDigits": true,
+  "decimal": false,
+  "hideCents": false,
+  "currencyFirst": false,
+  "dateFormat": "month",
+  "monthStart": 1,
+  "weekStart": 0,
+  "navLabels": "always",
+  "bigAccounts": false,
+  "oneColumn": false,
+  "onePicker": false,
+  "subcategories": true,
+  "reverseKeys": false,
+  "opening": true,
+  "notifications": false,
+  "periodic": false,
+  "notificationTime": "20:00",
+  "notificationFrequency": "Every day",
+  "pin": false,
+  "relock": false,
+  "lockDelay": 0,
+  "hidePreview": false,
+  "biometric": false,
+  "hiddenValues": "Hide all",
+  "autoBackup": false,
+  "autoRates": false,
+  "fixedRates": [],
+  "currencySort": "groups",
+  "stats": [
+   "flow",
+   "scheduled",
+   "bar",
+   "average",
+   "donut",
+   "categories",
+   "tags"
+  ]
+ },
+ "rates": {
+  "AED": 23.83,
+  "AFN": 1.269,
+  "ALL": 0.9887,
+  "AMD": 0.2275,
+  "ANG": 48.91,
+  "AOA": 0.09625,
+  "ARS": 0.07,
+  "AUD": 57,
+  "AWG": 48.89,
+  "AZN": 51.45,
+  "BAM": 49,
+  "BBD": 43.75,
+  "BDT": 0.7175,
+  "BGN": 49,
+  "BHD": 231.9,
+  "BIF": 0.02975,
+  "BND": 67.38,
+  "BOB": 12.68,
+  "BRL": 15.75,
+  "BSD": 87.5,
+  "BTN": 1.041,
+  "BWP": 6.387,
+  "BYN": 27.13,
+  "BZD": 43.75,
+  "CAD": 63,
+  "CDF": 0.03062,
+  "CHF": 105,
+  "CLP": 0.09187,
+  "CNY": 12.2,
+  "COP": 0.02188,
+  "CRC": 0.175,
+  "CZK": 3.762,
+  "DJF": 0.49,
+  "DKK": 12.69,
+  "DOP": 1.444,
+  "DZD": 0.6563,
+  "EGP": 1.75,
+  "ETB": 0.6475,
+  "EUR": 100,
+  "FJD": 38.5,
+  "GBP": 117,
+  "GEL": 32.38,
+  "GHS": 7,
+  "GMD": 1.225,
+  "GNF": 0.01006,
+  "GTQ": 11.38,
+  "GYD": 0.42,
+  "HKD": 11.2,
+  "HNL": 3.413,
+  "HTG": 0.665,
+  "HUF": 0.2363,
+  "IDR": 0.005338,
+  "ILS": 23.63,
+  "INR": 1.015,
+  "IQD": 0.0665,
+  "IRR": 0.00021,
+  "ISK": 0.6388,
+  "JMD": 0.5513,
+  "JOD": 123.4,
+  "JPY": 0.59,
+  "KES": 0.6738,
+  "KGS": 1,
+  "KHR": 0.02188,
+  "KMF": 0.2012,
+  "KRW": 0.063,
+  "KWD": 285.3,
+  "KZT": 0.18,
+  "LAK": 0.004025,
+  "LBP": 0.00098,
+  "LKR": 0.2888,
+  "LRD": 0.4375,
+  "LSL": 4.813,
+  "LYD": 17.5,
+  "MAD": 9.012,
+  "MDL": 4.987,
+  "MGA": 0.01925,
+  "MKD": 1.557,
+  "MMK": 0.042,
+  "MNT": 0.0245,
+  "MOP": 10.85,
+  "MRU": 2.188,
+  "MUR": 1.925,
+  "MVR": 5.688,
+  "MWK": 0.05075,
+  "MXN": 4.55,
+  "MYR": 20.13,
+  "MZN": 1.374,
+  "NAD": 4.813,
+  "NGN": 0.05687,
+  "NIO": 2.362,
+  "NOK": 8.313,
+  "NPR": 0.6475,
+  "NZD": 51.63,
+  "OMR": 227.5,
+  "PAB": 87.5,
+  "PEN": 23.63,
+  "PGK": 21,
+  "PHP": 1.531,
+  "PKR": 0.315,
+  "PLN": 22.75,
+  "PYG": 0.01137,
+  "QAR": 24.04,
+  "RON": 19.25,
+  "RSD": 0.8312,
+  "RUB": 1.05,
+  "RWF": 0.06125,
+  "SAR": 23.34,
+  "SBD": 10.5,
+  "SCR": 6.125,
+  "SEK": 8.75,
+  "SGD": 67.38,
+  "SOS": 0.1531,
+  "SRD": 2.275,
+  "SZL": 4.813,
+  "THB": 2.625,
+  "TJS": 8.2,
+  "TMT": 25,
+  "TND": 28.88,
+  "TOP": 36.75,
+  "TRY": 2.1,
+  "TTD": 12.86,
+  "TWD": 2.712,
+  "TZS": 0.03238,
+  "UAH": 2.1,
+  "UGX": 0.02363,
+  "USD": 87.5,
+  "UYU": 2.188,
+  "UZS": 0.006912,
+  "VND": 0.0035,
+  "VUV": 0.735,
+  "WST": 31.5,
+  "XAF": 0.1487,
+  "XCD": 32.38,
+  "XOF": 0.1487,
+  "XPF": 0.805,
+  "YER": 0.35,
+  "ZAR": 4.813,
+  "ZMW": 3.5
+ }
+}
