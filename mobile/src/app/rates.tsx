@@ -1,1 +1,1 @@
-export { RatesScreen as default } from "../features/more.tsx";
+export { RatesScreen as default } from "../features/rates.tsx";

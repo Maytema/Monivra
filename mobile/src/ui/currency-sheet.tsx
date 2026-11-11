@@ -1,34 +1,92 @@
-// The sheet to choose a currency (js/ui/currency-picker.js): the codes of all currencies, the chosen one marked.
-import { Pressable, Text, View } from "react-native";
+// The sheet to choose a currency (js/ui/currency-picker.js): a search field (code, sign, name or country), the
+// order of the list, and sections: used first, major, other. The chosen currency is marked.
+import { useMemo, useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { CURRENCIES } from "../domain/currencies.ts";
-import { usePalette, useT } from "./app-context.tsx";
-import { Icon } from "./kit.tsx";
+import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
+import { currencyName, currencySign, searchCurrencies } from "./currency-names.ts";
 import { sheets, useCloseLayer } from "./sheets.tsx";
+
+const POPULAR = ["USD", "EUR", "GBP", "CNY", "JPY", "CHF", "CAD", "AUD"];
+const SORTS = [
+  ["groups", "Used first"],
+  ["name", "By name"],
+  ["code", "By code"],
+] as const;
 
 export const openCurrencySheet = (value: string, onPick: (code: string) => void): number => sheets.open(<CurrencySheet value={value} onPick={onPick} />);
 
 function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string) => void }) {
+  const data = useLedger();
   const p = usePalette();
   const t = useT();
+  const run = useCommand();
   const close = useCloseLayer();
+  const [text, setText] = useState("");
+  const by = (data.settings.currencySort as string) || "groups";
+  const sections = useMemo((): [string, string[]][] => {
+    if (text.trim()) return [["", searchCurrencies(text, t.locale)]];
+    const collator = new Intl.Collator(t.locale);
+    const key = (code: string) => (by === "code" ? code : currencyName(code, t.locale));
+    const all = CURRENCIES.map((c) => c.code).sort((a, b) => collator.compare(key(a), key(b)));
+    if (by !== "groups") {
+      const letters = new Map<string, string[]>();
+      for (const code of all) {
+        const first = key(code).charAt(0).toLocaleUpperCase();
+        letters.set(first, [...(letters.get(first) ?? []), code]);
+      }
+      return [...letters];
+    }
+    const used = new Set([data.settings.currency, ...data.accounts.map((a) => a.currency), ...data.categories.map((c) => c.currency)]);
+    return [
+      ["Currencies used", all.filter((c) => used.has(c))],
+      ["Major currencies", POPULAR.filter((c) => !used.has(c))],
+      ["Other currencies", all.filter((c) => !used.has(c) && !POPULAR.includes(c))],
+    ];
+  }, [text, by, t.locale, data.settings.currency, data.accounts, data.categories]);
+  const shown = sections.filter(([, codes]) => codes.length);
   return (
-    <View>
-      <Text style={{ color: p.ink, fontSize: 20, textAlign: "center", marginTop: 6, marginBottom: 12 }}>{t.t("Currency")}</Text>
-      {CURRENCIES.map((c) => (
-        <Pressable
-          key={c.code}
-          accessibilityRole="radio"
-          accessibilityState={{ selected: c.code === value }}
-          onPress={() => {
-            onPick(c.code);
-            close();
-          }}
-          style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 12, minHeight: 52, paddingHorizontal: 8, borderRadius: 12, backgroundColor: pressed ? p.soft : "transparent" })}
-        >
-          <Text style={{ flex: 1, color: p.ink, fontSize: 16 }}>{c.code}</Text>
-          {c.code === value ? <Icon name="check" size={20} color={p.accentInk} /> : null}
-        </Pressable>
-      ))}
+    <View style={{ maxHeight: 640 }}>
+      <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Select currency")}</Text>
+      <TextInput value={text} onChangeText={setText} placeholder={t.t("Code, name or country")} placeholderTextColor={p.muted} autoCorrect={false} style={{ borderWidth: 1, borderColor: p.line, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 11, color: p.ink, fontSize: 16 }} />
+      <View style={{ flexDirection: "row", gap: 8, paddingVertical: 10 }}>
+        {SORTS.map(([id, label]) => (
+          <Pressable key={id} accessibilityRole="button" accessibilityState={{ selected: by === id }} onPress={() => run((tx) => (tx.setSettings({ currencySort: id }), true))} style={{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: by === id ? p.accent : p.line, backgroundColor: by === id ? p.accent : "transparent" }}>
+            <Text style={{ color: by === id ? p.onAccent : p.ink, fontSize: 13 }}>{t.t(label)}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <ScrollView keyboardShouldPersistTaps="handled">
+        {shown.map(([title, codes]) => (
+          <View key={title || "found"}>
+            {title ? <Text style={{ color: p.muted, fontSize: 14, paddingTop: 12, paddingBottom: 4 }}>{t.t(title)}</Text> : null}
+            {codes.map((code) => {
+              const sign = currencySign(code);
+              return (
+                <Pressable
+                  key={code}
+                  accessibilityRole="radio"
+                  accessibilityLabel={`${currencyName(code, t.locale)} ${code}`}
+                  accessibilityState={{ selected: code === value }}
+                  onPress={() => {
+                    close();
+                    onPick(code);
+                  }}
+                  style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 56, paddingHorizontal: 6, backgroundColor: pressed ? p.soft : "transparent" })}
+                >
+                  <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: code === value ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{code === value ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+                  <View style={{ flex: 1 }}>
+                    <Text numberOfLines={1} style={{ color: p.ink, fontSize: 16 }}>{currencyName(code, t.locale)}</Text>
+                    <Text style={{ color: p.muted, fontSize: 12 }}>{code}</Text>
+                  </View>
+                  {sign === code ? null : <Text style={{ color: p.inkSoft, fontSize: 16 }}>{sign}</Text>}
+                </Pressable>
+              );
+            })}
+          </View>
+        ))}
+        {shown.length ? null : <Text style={{ color: p.muted, textAlign: "center", padding: 24 }}>{t.t("No currencies found")}</Text>}
+      </ScrollView>
     </View>
   );
 }
