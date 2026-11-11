@@ -194,7 +194,8 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
 
 // The two sums of the categories and statistics tabs (components.css .sum-tabs): the chosen one is
 // lifted, the other one is muted; expenses in red, incomes in green.
-export function SumTabs({ active, expense, income, onChange }: { active: "expense" | "income"; expense: string; income: string; onChange: (type: "expense" | "income") => void }) {
+// `tinted` is the statistics look: the open tab takes the colour of its type.
+export function SumTabs({ active, expense, income, onChange, tinted = false }: { active: "expense" | "income"; expense: string; income: string; onChange: (type: "expense" | "income") => void; tinted?: boolean }) {
   const p = usePalette();
   const t = useT();
   const tab = (type: "expense" | "income", label: string, text: string) => {
@@ -206,7 +207,7 @@ export function SumTabs({ active, expense, income, onChange }: { active: "expens
         accessibilityRole="tab"
         accessibilityState={{ selected: on }}
         onPress={() => onChange(type)}
-        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: on ? tint : "transparent", backgroundColor: on ? mix(tint, p.bg, 0.16) : "transparent" }}
+        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: on && tinted ? tint : "transparent", backgroundColor: on ? (tinted ? mix(tint, p.bg, 0.16) : p.bg) : "transparent" }}
       >
         <Text style={{ color: on ? p.ink : p.muted, fontSize: 14 }}>{t.t(label)}</Text>
         <Text style={{ color: type === "expense" ? p.negativeInk : p.positiveInk, opacity: on ? 1 : 0.6, fontSize: 21, marginTop: 7 }} numberOfLines={1}>
