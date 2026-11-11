@@ -23,7 +23,9 @@ the first application are untouched; the first application stays the reference.
 | 3 | done  | Exchange-rate sources behind one interface, fallback chain, time limits, merge per currency, never blocking |
 | 4 | done  | Parity harness: the old code's results on 3 fixtures recorded; the new domain matches them |
 | 5 | done  | Store (application layer) over SQLite; tests with a real database |
-| 6 | in progress | Expo application: screens for accounts, operations, editor, categories, statistics, scheduled, budgets, rates, data, settings; CI typecheck and APK |
+| 6 | done  | Expo application: screens for accounts, operations (period, search, filters), editor (calculator, two currencies, fees, repeat, reminder, tags), categories, statistics, scheduled (Add now / Skip / far behind), budgets, rates, data (data file in/out, CSV), settings |
+| 7 | done  | Reminders as local notifications (plan identical to the old one — parity test), background task for posting (WorkManager/BGTaskScheduler via expo-background-task), PIN lock with keystore and fingerprint |
+| 8 | done  | CI: types, tests, release APK; emulator smoke test; results published to branch `mobile-builds` (new commits only) |
 
 ## Decisions taken while implementing (routine, reversible)
 
@@ -51,10 +53,10 @@ the first application are untouched; the first application stays the reference.
 
 ## Not yet in the new application (next priorities)
 
-1. Reminders (local notifications) and background posting of scheduled payments (BACKGROUND_EXECUTION).
-2. PIN / biometric lock, privacy screen.
-3. Fees (tax, commission) editing in the editor (stored fees are kept and computed already).
-4. Filters page, bulk selection/edit screen (domain is ready), CSV import/export, PDF reports.
-5. Currency change preview screen, category subcategory management page, ordering by drag.
-6. Swipe between tabs, the dial time picker, the exact visual match with `catalog/`.
-7. Device checks on a phone (Maestro flows in CI later).
+1. Bulk selection and bulk edit screen (domain `applyBulkChanges` is ready and tested).
+2. PDF reports (model exists in the old app; render as HTML → `expo-print`), CSV import wizard.
+3. Merge-restore of a data file (today: replace with verification), inner backups as files, deletion modes.
+4. Currency change preview, subcategory management page, ordering by drag, account/category icons and colour wheel as in the old app.
+5. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
+6. Swipe between tabs, the dial time picker, date picker, exact visual match with `catalog/`.
+7. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).

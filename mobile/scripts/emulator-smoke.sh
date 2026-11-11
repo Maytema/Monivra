@@ -25,7 +25,7 @@ PY
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
   adb shell input tap $xy; log "tapped: $1"; sleep 1.5
 }
-has() { grep -q "$1" "$OUT/$2.xml" && log "OK: '$1' on $2" || { log "FAIL: '$1' not on $2"; FAILED=1; }; }
+has() { grep -q "text=\"[^\"]*$1" "$OUT/$2.xml" && log "OK: '$1' on $2" || { log "FAIL: '$1' not on $2"; FAILED=1; }; }
 FAILED=0
 
 adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAIL: install"; cat "$OUT/install.txt"; exit 1; }

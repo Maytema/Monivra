@@ -39,6 +39,20 @@ const config: ExpoConfig = {
     "expo-status-bar",
     "expo-background-task",
     "expo-secure-store",
+    // WorkManager (background posting) creates its Room database by reflection; keep what it needs
+    // when the release build is shrunk (without this the app stopped at start: WorkDatabase_Impl.<init>).
+    [
+      "expo-build-properties",
+      {
+        android: {
+          extraProguardRules: [
+            "-keep class * extends androidx.room.RoomDatabase { <init>(); }",
+            "-keep class androidx.work.impl.WorkDatabase_Impl { *; }",
+            "-keep class androidx.work.** { *; }",
+          ].join("\n"),
+        },
+      },
+    ],
     ["expo-local-authentication", { faceIDPermission: "Monivra uses Face ID to unlock the app." }],
     ["expo-notifications", { icon: "./assets/notification-icon.png", color: "#03CAA1" }],
     [

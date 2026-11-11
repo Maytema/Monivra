@@ -38,13 +38,11 @@ jobs:
           if [ -f package-lock.json ]; then
             npm ci --no-audit --no-fund
           else
-            # First build: Expo picks the versions that belong to its SDK; the lockfile is kept as an artifact.
+            # Versions come from package.json (taken from build 5); Expo adds any new package at the version of its SDK.
             npm install --no-audit --no-fund
             npx expo install expo-router expo-sqlite expo-document-picker expo-file-system expo-sharing expo-crypto \
               expo-localization expo-status-bar expo-splash-screen expo-constants expo-linking react-native-svg \
-              react-native-safe-area-context react-native-screens expo-notifications expo-task-manager expo-background-task expo-secure-store expo-local-authentication react react-dom react-native
-            npx expo install typescript @types/react -- --save-dev
-            npm install --no-audit --no-fund --save-dev @types/node@22
+              react-native-safe-area-context react-native-screens expo-notifications expo-task-manager expo-background-task expo-secure-store expo-local-authentication expo-build-properties react react-dom react-native
           fi
       - name: Dependency versions match the Expo SDK
         run: npx expo install --check
