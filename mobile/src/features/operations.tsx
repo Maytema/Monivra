@@ -1,12 +1,13 @@
 // The history: operations of the chosen period, newest first, grouped by day, with the period's totals.
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { accountById, categoryById, newestFirst, reportRows, totalByType } from "../domain/ledger.ts";
-import { emptyFilters, operationsIn } from "../domain/periods.ts";
+import { emptyFilters, operationsIn, type Filters } from "../domain/periods.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
 import { appStore, useAppState, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Card, Icon, Label, Money, Row } from "../ui/kit.tsx";
+import { Badge, Button, Card, Icon, Label, Money, Row } from "../ui/kit.tsx";
+import { Panel } from "../ui/pickers.tsx";
 import { font, radius, space } from "../ui/theme.ts";
 import { AddButton } from "./add-button.tsx";
 import { PeriodBar } from "./period-bar.tsx";
@@ -39,7 +40,10 @@ export function OperationsScreen() {
   const money = useMoney();
   const { period } = useView();
   const [query, setQuery] = useState("");
-  const ops = useMemo(() => operationsIn(data, period, { ...emptyFilters(), comment: query }).sort(newestFirst), [data, period, query]);
+  const [filters, setFilters] = useState<Filters>(emptyFilters);
+  const [filtering, setFiltering] = useState(false);
+  const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin);
+  const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
   const rows = useMemo(() => reportRows(data, ops), [data, ops]);
   const income = totalByType(rows, "income"),
     expense = totalByType(rows, "expense");
@@ -83,6 +87,9 @@ export function OperationsScreen() {
             <View style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: p.line, borderRadius: radius.pill, paddingHorizontal: space.m }}>
               <Icon name="search" size={18} color={p.muted} />
               <TextInput value={query} onChangeText={setQuery} placeholder={t.t("Search in comments")} placeholderTextColor={p.muted} style={{ flex: 1, color: p.ink, paddingVertical: 8, paddingHorizontal: space.s }} />
+              <Pressable onPress={() => setFiltering(true)} hitSlop={10} accessibilityLabel={t.t("Filters")}>
+                <Icon name={active ? "filterOff" : "filter"} size={20} color={active ? p.accentInk : p.muted} />
+              </Pressable>
             </View>
             <Pressable onPress={() => router.push("/scheduled")}>
               <Label>{`${t.t("Scheduled payments")} (${data.scheduled.length}) ›`}</Label>
@@ -107,6 +114,45 @@ export function OperationsScreen() {
         }}
       />
       <AddButton />
+      <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
     </View>
+  );
+}
+
+// Filters of the history: a field is an OR over its choices, the fields are ANDed (domain/periods.ts).
+function FiltersPanel({ visible, filters, onChange, onClose }: { visible: boolean; filters: Filters; onChange: (f: Filters) => void; onClose: () => void }) {
+  const data = useLedger();
+  const p = usePalette();
+  const t = useT();
+  const toggle = (key: "accounts" | "categories" | "types" | "tags", value: string) => {
+    const list = filters[key] ?? [];
+    const next = list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
+    onChange({ ...filters, [key]: next.length ? next : null });
+  };
+  const chip = (key: "accounts" | "categories" | "types" | "tags", value: string, label: string) => {
+    const on = filters[key]?.includes(value) ?? false;
+    return (
+      <Pressable key={key + value} onPress={() => toggle(key, value)} style={{ paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, backgroundColor: on ? p.accent : p.nav }}>
+        <Text style={{ color: on ? p.onAccent : p.ink }}>{label}</Text>
+      </Pressable>
+    );
+  };
+  const group = (title: string, chips: ReactNode[]) =>
+    chips.length ? (
+      <View style={{ gap: 6 }}>
+        <Label>{t.t(title)}</Label>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>{chips}</View>
+      </View>
+    ) : null;
+  return (
+    <Panel visible={visible} title="Filters" onClose={onClose}>
+      <View style={{ padding: space.l, gap: space.m }}>
+        {group("Type", [chip("types", "expense", t.t("Expense")), chip("types", "income", t.t("Income")), chip("types", "transfer", t.t("Transfer"))])}
+        {group("Accounts", data.accounts.filter((a) => !a.archived).map((a) => chip("accounts", a.id, a.name)))}
+        {group("Categories", data.categories.filter((c) => !c.archived).map((c) => chip("categories", c.id, (c.parent ? "· " : "") + c.name)))}
+        {group("Tags", data.tags.map((tag) => chip("tags", tag, tag)))}
+        <Button label="Reset" kind="outline" onPress={() => onChange(emptyFilters())} />
+      </View>
+    </Panel>
   );
 }
