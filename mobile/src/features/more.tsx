@@ -23,7 +23,8 @@ import { Button, Card, ChoiceField, Field, Icon, Label, Row, Screen, Toggle } fr
 import { CategoryPicker, OptionPicker, Panel } from "../ui/pickers.tsx";
 import { BrandMark } from "../ui/brand-mark.tsx";
 import { font, space } from "../ui/theme.ts";
-import { AmountField } from "./account-editor.tsx";
+import { openAmountSheet } from "../ui/amount-sheet.tsx";
+import { FieldButton } from "../ui/form.tsx";
 import { useView } from "./ui-state.ts";
 
 // The groups of the menu (js/screens/more/menu.js). Pages that are not built yet are not listed.
@@ -308,7 +309,7 @@ export function BudgetsScreen() {
         {draft ? (
           <View style={{ padding: space.l, gap: space.m }}>
             <Field label="Title" value={draft.name} onChange={(name) => setDraft({ ...draft, name })} />
-            <AmountField label="Budget" value={draft.amount} onChange={(amount) => setDraft({ ...draft, amount })} />
+            <FieldButton label="Budget" value={money(draft.amount, draft.currency)} onPress={() => openAmountSheet("Budget", draft.amount, (amount) => setDraft({ ...draft, amount }), false, draft.currency)} />
             <ChoiceField label="Period" value={t.t(PERIODS.find((x) => x.value === draft.period)?.label ?? "")} onPress={() => setPicking("period")} />
             <ChoiceField label="Categories" value={draft.categories ? draft.categories.map((id) => data.categories.find((c) => c.id === id)?.name).join(", ") : t.t("All expenses")} onPress={() => setPicking("category")} />
             {draft.categories ? <Button label="All expenses" kind="text" onPress={() => setDraft({ ...draft, categories: null })} /> : null}

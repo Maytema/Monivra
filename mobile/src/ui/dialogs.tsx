@@ -17,13 +17,14 @@ export function DialogActions({ children }: { children: ReactNode }) {
   return <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 4, marginTop: 18 }}>{children}</View>;
 }
 
-function Confirm({ title, yes, danger, onYes }: { title: string; yes: string; danger: boolean; onYes: () => void }) {
+function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
   return (
     <View>
       <DialogTitle>{t.t(title)}</DialogTitle>
+      {message ? <Text style={{ color: p.inkSoft, fontSize: 15, lineHeight: 22 }}>{message}</Text> : null}
       <DialogActions>
         <TextButton label="Cancel" onPress={close} />
         <Pressable
@@ -42,8 +43,8 @@ function Confirm({ title, yes, danger, onYes }: { title: string; yes: string; da
 }
 
 // A question: the dangerous action is red and says what it does ("Delete").
-export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK"): number =>
-  sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} />, "dialog");
+export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK", message?: string): number =>
+  sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} message={message} />, "dialog");
 
 function Prompt({ title, initial, label, onDone }: { title: string; initial: string; label: string; onDone: (value: string) => void }) {
   const p = usePalette();
