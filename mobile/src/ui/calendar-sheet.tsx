@@ -40,7 +40,7 @@ const LAST_YEAR = 2100;
 // fade with the distance from it.
 function Wheel({ items, index, onIndex, align }: { items: string[]; index: number; onIndex: (i: number) => void; align: "flex-end" | "flex-start" }) {
   const p = usePalette();
-  const ref = useRef<ScrollView | null>(null);
+  const ref = useRef<{ scrollTo(to: { y: number; animated: boolean }): void } | null>(null);
   const [shown, setShown] = useState(index);
   const settle = (y: number) => {
     const i = Math.max(0, Math.min(items.length - 1, Math.round(y / ROW)));
