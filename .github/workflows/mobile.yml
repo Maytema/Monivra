@@ -69,7 +69,7 @@ jobs:
           MONIVRA_VERSION_CODE: ${{ github.run_number }}
       - name: Build release APK
         working-directory: mobile/android
-        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a,x86_64
       - name: Keep the APK
         uses: actions/upload-artifact@v4
         with:
@@ -79,11 +79,48 @@ jobs:
         if: steps.types.outcome == 'failure'
         run: exit 1
 
+  emulator:
+    name: Smoke test on the Android emulator
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: monivra-rn-apk
+          path: results-apk
+      - name: Allow the emulator to use hardware acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Smoke test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          ram-size: 4096M
+          disk-size: 6144M
+          disable-animations: true
+          emulator-options: -no-window -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          script: bash mobile/scripts/emulator-smoke.sh
+      - name: Keep the results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-results
+          path: emulator-results
+
   # A separate job publishes the results to the `mobile-builds` branch (new commits only, never a
   # forced push). It runs no npm code, so only it holds a token that can write.
   publish:
     name: Publish the APK to the mobile-builds branch
-    needs: build
+    needs: [build, emulator]
     if: always() && needs.build.result != 'cancelled'
     runs-on: ubuntu-latest
     permissions:
@@ -97,6 +134,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           BUILD_RESULT: ${{ needs.build.result }}
+          EMULATOR_RESULT: ${{ needs.emulator.result }}
         run: |
           set -e
           REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
@@ -108,10 +146,11 @@ jobs:
           dir="out/builds/${GITHUB_RUN_NUMBER}"
           mkdir -p "$dir"
           cp results/package-files/* "$dir"/ 2>/dev/null || true
+          if [ -d results/emulator-results ]; then mkdir -p "$dir/emulator" && cp results/emulator-results/* "$dir/emulator"/ 2>/dev/null || true; fi
           for apk in results/monivra-rn-apk/*.apk; do
             [ -f "$apk" ] && cp "$apk" "$dir/RESIGN-ONLY-monivra-rn-${GITHUB_RUN_NUMBER}.apk"
           done
-          (cd "$dir" && { sha256sum *.apk 2>/dev/null || true; } > SHA256SUMS && printf 'commit %s\nresult %s\n' "$GITHUB_SHA" "$BUILD_RESULT" > BUILD.txt)
+          (cd "$dir" && { sha256sum *.apk 2>/dev/null || true; } > SHA256SUMS && printf 'commit %s\nbuild %s\nemulator %s\n' "$GITHUB_SHA" "$BUILD_RESULT" "$EMULATOR_RESULT" > BUILD.txt)
           cd out
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
