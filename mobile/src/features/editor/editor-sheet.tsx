@@ -38,6 +38,8 @@ export interface EditorStart {
   to?: string | null;
   // A copy of an operation that was already filled in.
   copy?: Partial<EditorDraft>;
+  // What a scheduled payment has been given before the editor opens (date, time, repeat, reminder).
+  preset?: Partial<EditorDraft>;
 }
 
 const ledger = (): LedgerData => {
@@ -61,7 +63,7 @@ export function openEditor(start: EditorStart): number | null {
       from: type === "income" ? null : (start.from ?? fallback ?? null),
       to: type === "income" ? (start.to ?? fallback ?? null) : (start.to ?? null),
     };
-  const draft = newDraft(data, env.clock.today(), base as Partial<EditorDraft>);
+  const draft = newDraft(data, env.clock.today(), { ...(base as Partial<EditorDraft>), ...(found ? {} : start.preset) });
   const session = new EditorSession(draft, scheduled, { data: ledger, say: toast });
   return sheets.open(<EditorSheet session={session} />, "sheet", { bare: true });
 }

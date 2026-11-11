@@ -9,12 +9,15 @@ import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
+import type { EditorDraft } from "./editor/session.ts";
 
 const DIRECTIONS = ["income", "expense", "accounts"] as const;
 type Direction = (typeof DIRECTIONS)[number];
 const LABELS: Record<Direction, string> = { income: "Incomes", expense: "Expenses", accounts: "Accounts" };
 
-export const openAddMenu = (): number => sheets.open(<AddMenu />, "sheet", { bare: true });
+// `scheduled` starts a scheduled payment with the date, time, repeat and reminder already chosen.
+export type SchedulePreset = Pick<EditorDraft, "date" | "time" | "recur" | "reminder">;
+export const openAddMenu = (scheduled?: SchedulePreset): number => sheets.open(<AddMenu scheduled={scheduled} />, "sheet", { bare: true });
 
 // What an item of a tab shows under its name: the balance of an account, the sum of a category.
 function figure(data: LedgerData, direction: Direction, id: string): number {
@@ -22,7 +25,7 @@ function figure(data: LedgerData, direction: Direction, id: string): number {
   return data.ops.filter((o) => o.category === id || categoryById(data, o.category)?.parent === id).reduce((n, o) => n + o.amount, 0);
 }
 
-function AddMenu() {
+function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -34,9 +37,10 @@ function AddMenu() {
   const choose = (dir: Direction, id: string) => {
     close();
     const account = defaultAccountId(data, dir === "accounts" ? id : null) ?? undefined;
-    if (dir === "expense") openEditor({ type: "expense", category: id, from: account ?? null });
-    else if (dir === "income") openEditor({ type: "income", category: id, to: account ?? null });
-    else openEditor({ type: "transfer", from: id, to: account ?? null });
+    const extra = scheduled ? { scheduled: true, preset: scheduled } : {};
+    if (dir === "expense") openEditor({ type: "expense", category: id, from: account ?? null, ...extra });
+    else if (dir === "income") openEditor({ type: "income", category: id, to: account ?? null, ...extra });
+    else openEditor({ type: "transfer", from: id, to: account ?? null, ...extra });
   };
   const go = (dir: Direction) => {
     setDirection(dir);

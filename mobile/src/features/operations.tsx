@@ -193,7 +193,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        <Fab label="Add" collapsed={!atTop} onPress={openAddMenu} />
+        <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
       )}
       <BulkPanel visible={bulk} ids={selected} onDone={() => (setBulk(false), setSelected([]), setSelection(false))} onClose={() => setBulk(false)} />
       <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
