@@ -1,87 +1,266 @@
-// Statistics of the period: income, expenses, the difference, the average per day and the share of
-// every category (with its subcategories) — all from the same report rows as reports and budgets.
-import { useMemo } from "react";
-import { Text, View } from "react-native";
-import { categoryTotal, reportRows, totalByType } from "../domain/ledger.ts";
+// The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
+// cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
+// from the same report rows as the reports and budgets.
+import { useMemo, useState, type ReactNode } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
+import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
+import { chartBins, donutSlices, OTHER_SLICE, type Group } from "../domain/chart.ts";
+import { parseDate, systemClock } from "../domain/dates.ts";
+import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
-import { emptyFilters, operationsIn, periodBounds } from "../domain/periods.ts";
-import { parseDate } from "../domain/dates.ts";
+import { operationsIn, periodBounds } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Card, Label, Money, Screen, Segmented } from "../ui/kit.tsx";
-import { font, space } from "../ui/theme.ts";
+import { Icon } from "../ui/kit.tsx";
+import { SumTabs, ToneBadge } from "../ui/parts.tsx";
+import { openCategorySheet } from "./category-sheet.tsx";
+import { FiltersPanel, filtersActive } from "./filters-panel.tsx";
+import { FilteredBanner } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
+
+const percentText = (percent: number, locale: string): string => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(shownPercent(percent)) + "%";
+const DAY = 86400000;
+
+function Card({ children, padded = true, borderColor }: { children: ReactNode; padded?: boolean; borderColor?: string }) {
+  const p = usePalette();
+  return <View style={{ alignItems: "stretch", borderWidth: 1, borderColor: borderColor ?? p.line, borderRadius: 13, marginBottom: 14, paddingVertical: padded ? 12 : 0, paddingHorizontal: padded ? 14 : 0 }}>{children}</View>;
+}
+
+function Heading({ children }: { children: string }) {
+  const p = usePalette();
+  const t = useT();
+  return <Text style={{ color: p.ink, fontSize: 16, textAlign: "center", marginBottom: 9 }}>{t.t(children)}</Text>;
+}
 
 export function StatisticsScreen() {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { period, catType } = useView();
-  const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
-  const income = totalByType(rows, "income"),
-    expense = totalByType(rows, "expense");
+  const { period, catType, filters } = useView();
+  const [filtering, setFiltering] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
+  const today = systemClock.today();
+  const rows = useMemo(() => reportRows(data, operationsIn(data, period, filters)), [data, period, filters]);
+  const income = totalByType(rows, "income");
+  const expense = totalByType(rows, "expense");
+  const main = data.settings.currency;
+  const firstOperation = useMemo(() => data.ops.reduce((s, o) => (o.date < s ? o.date : s), today), [data.ops, today]);
+
   const [from, to] = periodBounds(period, data.settings);
-  const first = period.mode === "all" ? (data.ops.reduce((a, o) => (o.date < a ? o.date : a), to) ?? to) : from;
-  const days = Math.max(1, Math.round((parseDate(to).getTime() - parseDate(first).getTime()) / 86400000) + 1);
-  const total = catType === "income" ? income : expense;
-  const shares = data.categories
-    .filter((c) => c.type === catType && !c.parent)
-    .map((c) => ({ c, amount: categoryTotal(data, rows, c.id, catType) }))
-    .filter((x) => x.amount > 0)
-    .sort((a, b) => b.amount - a.amount);
-  const scheduledTotal = data.scheduled
-    .filter((s) => s.type === catType)
-    .reduce((n, s) => n + convert(s.amount, data.accounts.find((a) => a.id === (s.from || s.to))?.currency, data.settings.currency, data.rates), 0);
-  return (
-    <View style={{ flex: 1 }}>
-    <RootHero />
-    <Screen tab>
-      <PeriodBar />
-      <View style={{ flexDirection: "row", gap: space.m }}>
-        <Card style={{ flex: 1 }}>
-          <Label>{t.t("Income")}</Label>
-          <Money value={income} text={money(income)} />
-        </Card>
-        <Card style={{ flex: 1 }}>
-          <Label>{t.t("Expenses")}</Label>
-          <Money value={-expense} text={money(expense)} />
-        </Card>
-      </View>
-      <Card>
-        <Label>{t.t("Difference")}</Label>
-        <Money value={income - expense} text={money(income - expense)} size={font.title} />
-        <Label>{`${t.t("Average expense per day")}: ${money(Math.round(expense / days))}`}</Label>
+  const start = from.startsWith("0000") ? firstOperation : from;
+  const end = to > today ? today : to;
+  const days = Math.max(1, Math.round((parseDate(end).getTime() - parseDate(start).getTime()) / DAY) + 1);
+
+  // Category totals; only what happened in the period is listed.
+  const groups: Group[] = useMemo(() => {
+    const map = new Map<string, Group>(data.categories.filter((c) => c.type === catType && !c.parent && !c.archived).map((c) => [c.id, { id: c.id, name: c.name, icon: c.icon, color: c.color, total: 0 }]));
+    for (const o of rows.filter((r) => r.reportType === catType)) {
+      const c = categoryById(data, o.category);
+      const id = c?.parent || (o.category as string);
+      let group = map.get(id);
+      if (!group) {
+        const base = categoryById(data, id);
+        group = base ? { id, name: base.name, icon: base.icon, color: base.color, total: 0 } : { id, name: accountById(data, id?.replace("debt:", ""))?.name ?? "Debt", icon: "debt", color: "#858595", total: 0 };
+        map.set(id, group);
+      }
+      group.total += o.reportAmount;
+    }
+    return [...map.values()].filter((g) => g.total !== 0).sort((a, b) => b.total - a.total);
+  }, [data, rows, catType]);
+  const total = groups.reduce((s, g) => s + g.total, 0);
+  const slices = donutSlices(groups);
+  const sliceTotal = slices.reduce((s, x) => s + x.total, 0);
+  const chosen = slices.find((g) => g.id === selected);
+
+  const openOperations = (id: string, members: Group[] = []) => {
+    if (id === OTHER_SLICE) return router.push({ pathname: "/filtered", params: { categories: members.flatMap((g) => (categoryById(data, g.id) ? categoryFamily(data, g.id) : [g.id])).join(",") } });
+    if (categoryById(data, id)) return openCategorySheet(id);
+    router.push({ pathname: "/filtered", params: { categories: id } });
+  };
+
+  const tone = catType === "expense" ? p.negativeInk : p.positiveInk;
+  const scheduledSum = (type: string) => data.scheduled.filter((o) => o.type === type).reduce((n, o) => n + convert(o.amount, accountById(data, o.from || o.to)?.currency, main, data.rates), 0);
+  const axis = (date: string) => parseDate(date).toLocaleDateString(t.locale, { day: "numeric", month: "short", timeZone: "UTC" });
+
+  const blocks: Record<string, () => ReactNode> = {
+    flow: () => (
+      <Card key="flow" borderColor={income >= expense ? p.positive : p.negative}>
+        <Heading>Cash flow</Heading>
+        <Text style={{ color: income - expense >= 0 ? p.positiveInk : p.negativeInk, fontSize: 23, textAlign: "center" }}>{money(income - expense, main)}</Text>
       </Card>
-      <Segmented value={catType} options={[{ value: "expense", label: "Expenses" }, { value: "income", label: "Income" }] as const} onChange={(v) => setView({ catType: v })} />
-      <Card>
-        {shares.length ? (
-          shares.map(({ c, amount }) => {
-            const share = total ? (amount / total) * 100 : 0;
-            return (
-              <View key={c.id} style={{ gap: 4, paddingVertical: 4 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: space.s }}>
-                  <Badge icon={c.icon} color={c.color} size={26} />
-                  <Text style={{ flex: 1, color: p.ink }}>{c.name}</Text>
-                  <Text style={{ color: p.ink, fontWeight: "600" }}>{money(amount)}</Text>
-                  <Text style={{ color: p.muted, width: 56, textAlign: "right" }}>{shownPercent(share)} %</Text>
-                </View>
-                <View style={{ height: 6, borderRadius: 3, backgroundColor: p.line }}>
-                  <View style={{ height: 6, borderRadius: 3, width: `${Math.min(100, share)}%`, backgroundColor: c.color }} />
-                </View>
+    ),
+    scheduled: () => (
+      <Card key="scheduled" padded={false}>
+        {([catType, "transfer"] as const).map((type, i) => {
+          const sum = scheduledSum(type);
+          return (
+            <Pressable key={type} accessibilityRole="button" onPress={() => router.push("/scheduled")} style={{ paddingVertical: 24, paddingHorizontal: 12, borderTopWidth: i ? 1 : 0, borderTopColor: p.line }}>
+              <Text style={{ color: p.ink, fontSize: 16, textAlign: "center", marginBottom: 12 }}>{t.t(type === "expense" ? "Scheduled expenses" : type === "income" ? "Scheduled incomes" : "Scheduled transfers")}</Text>
+              <Text style={{ color: type === "expense" ? p.negativeInk : type === "income" ? p.positiveInk : p.muted, fontSize: 22, textAlign: "center" }}>{money(sum, main)}</Text>
+            </Pressable>
+          );
+        })}
+      </Card>
+    ),
+    bar: () => {
+      const { income: inc, expense: exp } = chartBins(rows, start, end);
+      const series = catType === "income" ? inc : exp;
+      const max = Math.max(1, ...series);
+      const bins = series.length;
+      const w = 320 / bins;
+      return (
+        <Card key="bar">
+          <Svg accessibilityLabel="Income and expense chart" viewBox="0 0 340 144" style={{ width: "100%", aspectRatio: 340 / 144 }}>
+            <Path d="M10 124H334" stroke={p.line} strokeWidth={1} />
+            {series.map((n, i) => {
+              const h = (n / max) * 105;
+              return <Rect key={i} x={10 + i * w + (catType === "income" ? 0 : w * 0.4)} y={124 - h} width={Math.max(2, w * 0.36)} height={h} rx={1} fill={catType === "income" ? p.positive : p.negative} />;
+            })}
+            <SvgText x={10} y={141} fill={p.muted} fontSize={10}>
+              {axis(start)}
+            </SvgText>
+            <SvgText x={334} y={141} fill={p.muted} fontSize={10} textAnchor="end">
+              {axis(end)}
+            </SvgText>
+          </Svg>
+        </Card>
+      );
+    },
+    average: () => (
+      <Card key="average">
+        <Heading>Average values</Heading>
+        <Text style={{ color: p.muted, fontSize: 12, textAlign: "center", marginTop: -6 }}>{t.t("Based on {n} days", { n: days })}</Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", rowGap: 15, marginTop: 16 }}>
+          {([["Day", 1], ["Week", 7]] as const).map(([label, n]) => (
+            <View key={label} style={{ flexDirection: "row", width: "100%" }}>
+              <Text style={{ flex: 1, color: p.ink, fontSize: 14 }}>{t.t(label)}</Text>
+              <Text style={{ flex: 2, color: p.ink, fontSize: 14, textAlign: "right" }}>{money(Math.round(((catType === "expense" ? expense : income) / days) * n), main)}</Text>
+            </View>
+          ))}
+        </View>
+      </Card>
+    ),
+    donut: () => {
+      const radius = 68;
+      const circ = 2 * Math.PI * radius;
+      let offset = 0;
+      const label = (g: Group) => (g.id === OTHER_SLICE ? t.t(g.name) : g.name);
+      return (
+        <Card key="donut">
+          <View style={{ aspectRatio: 1 }}>
+            <Svg accessibilityLabel="Category distribution" viewBox="0 0 190 190" style={{ width: "100%", height: "100%" }}>
+              <Circle cx={95} cy={95} r={radius} fill="none" stroke={p.line} strokeWidth={28} />
+              {slices.map((g) => {
+                const length = sliceTotal ? (g.total / sliceTotal) * circ : 0;
+                const node = (
+                  <Circle
+                    key={g.id}
+                    accessibilityLabel={label(g)}
+                    onPress={() => setSelected(selected === g.id ? null : g.id)}
+                    cx={95}
+                    cy={95}
+                    r={radius}
+                    fill="none"
+                    stroke={g.color}
+                    strokeWidth={selected === g.id ? 35 : 28}
+                    strokeDasharray={`${Math.max(0, length - 1)} ${circ}`}
+                    strokeDashoffset={-offset}
+                    transform="rotate(-90 95 95)"
+                  />
+                );
+                offset += length;
+                return node;
+              })}
+            </Svg>
+            <View pointerEvents="box-none" style={{ position: "absolute", top: "28%", bottom: "28%", left: "28%", right: "28%", alignItems: "center", justifyContent: "center", gap: 10 }}>
+              <Text style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{chosen ? label(chosen) : t.t("Not selected")}</Text>
+              <Text style={{ color: p.ink, fontSize: 18, fontWeight: "600" }}>{chosen ? percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale) : money(sliceTotal, main)}</Text>
+              {chosen ? (
+                <Pressable accessibilityRole="button" onPress={() => openOperations(chosen.id, chosen.members)}>
+                  <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t("Operations")}</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          </View>
+        </Card>
+      );
+    },
+    categories: () => (
+      <Card key="categories">
+        {groups.map((g) => (
+          <Pressable key={g.id} accessibilityRole="button" onPress={() => openOperations(g.id)} style={{ flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 12 }}>
+            <ToneBadge icon={g.icon ?? "tag"} color={g.color} size={36} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: p.ink, fontSize: 16 }}>{g.name}</Text>
+              <View style={{ height: 14, borderRadius: 7, backgroundColor: p.tint, overflow: "hidden", marginTop: 6 }}>
+                <View style={{ width: `${total ? (g.total / total) * 100 : 0}%`, height: 14, borderRadius: 7, backgroundColor: p.accent }} />
               </View>
-            );
-          })
+            </View>
+            <View style={{ alignItems: "flex-end" }}>
+              <Text style={{ color: tone, fontSize: 15 }}>{money(g.total, main)}</Text>
+              <Text style={{ color: p.muted, fontSize: 12 }}>{percentText(total ? (g.total / total) * 100 : 0, t.locale)}</Text>
+            </View>
+          </Pressable>
+        ))}
+        {!groups.length ? <Text style={{ color: p.muted, textAlign: "center", paddingVertical: 12 }}>{t.t("Empty")}</Text> : null}
+      </Card>
+    ),
+    tags: () => {
+      const own = rows.filter((o) => o.reportType === catType);
+      const used = data.tags
+        .map((tag) => ({ tag, total: own.filter((o) => o.tags?.includes(tag)).reduce((s, o) => s + o.reportAmount, 0), used: own.some((o) => o.tags?.includes(tag)) }))
+        .filter((x) => x.used)
+        .sort((x, y) => y.total - x.total);
+      if (!used.length) return null;
+      return (
+        <Card key="tags">
+          <Text style={{ color: p.ink, fontSize: 17, fontWeight: "500", textAlign: "center", marginBottom: 6 }}>{t.t("Tags")}</Text>
+          {used.map(({ tag, total: sum }, i) => (
+            <Pressable key={tag} accessibilityRole="button" onPress={() => (setView({ filters: { ...filters, tags: [tag] } }), router.navigate("/operations"))} style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, paddingHorizontal: 2, borderTopWidth: i ? 1 : 0, borderTopColor: p.line }}>
+              <Icon name="tag" size={20} color={p.muted} />
+              <Text numberOfLines={1} style={{ flex: 1, color: p.ink, fontSize: 16 }}>
+                {tag}
+              </Text>
+              <Text style={{ color: tone, fontSize: 16 }}>{money(sum, main)}</Text>
+            </Pressable>
+          ))}
+        </Card>
+      );
+    },
+  };
+
+  const hasOperations = data.ops.length > 0 || filtersActive(filters);
+  return (
+    <View style={{ flex: 1, backgroundColor: p.bg }}>
+      <RootHero icon="filter" label="Filters" onAction={() => setFiltering(true)} />
+      <View style={{ flex: 1 }}>
+        <PeriodBar />
+        {hasOperations ? (
+          <>
+            <SumTabs active={catType} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
+            {filtersActive(filters) ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
+            <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
+          </>
         ) : (
-          <Label>{t.t("Nothing in this period")}</Label>
+          <View style={{ padding: 32, alignItems: "center", gap: 10 }}>
+            <Icon name="stats" size={80} color={p.accentInk} />
+            <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Statistics would be here")}</Text>
+            <Text style={{ color: p.muted, textAlign: "center" }}>{t.t("Start adding expenses or income and the data will appear")}</Text>
+          </View>
         )}
-      </Card>
-      <Card>
-        <Label>{t.t(catType === "income" ? "Scheduled incomes" : "Scheduled expenses")}</Label>
-        <Text style={{ color: p.ink, fontWeight: "600" }}>{money(scheduledTotal)}</Text>
-      </Card>
-    </Screen>
+      </View>
+      <FiltersPanel visible={filtering} filters={filters} onChange={(f) => setView({ filters: f })} onClose={() => setFiltering(false)} />
     </View>
+  );
+}
+
+function ScrollBlocks({ children }: { children: ReactNode }) {
+  return (
+    <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
+      {children}
+    </ScrollView>
   );
 }

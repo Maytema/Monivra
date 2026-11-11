@@ -22,7 +22,8 @@ import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { useView } from "./ui-state.ts";
+import { setView, useView } from "./ui-state.ts";
+import { FiltersPanel } from "./filters-panel.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 
 type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
@@ -46,10 +47,10 @@ export function OperationsScreen() {
   const run = useCommand();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { period } = useView();
+  const { period, filters } = useView();
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState<Filters>(emptyFilters);
+  const setFilters = (next: Filters) => setView({ filters: next });
   const [filtering, setFiltering] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState(false);
@@ -197,43 +198,6 @@ export function OperationsScreen() {
       <BulkPanel visible={bulk} ids={selected} onDone={() => (setBulk(false), setSelected([]), setSelection(false))} onClose={() => setBulk(false)} />
       <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
     </View>
-  );
-}
-
-function FiltersPanel({ visible, filters, onChange, onClose }: { visible: boolean; filters: Filters; onChange: (f: Filters) => void; onClose: () => void }) {
-  const data = useLedger();
-  const p = usePalette();
-  const t = useT();
-  const toggle = (key: "accounts" | "categories" | "types" | "tags", value: string) => {
-    const list = filters[key] ?? [];
-    const next = list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
-    onChange({ ...filters, [key]: next.length ? next : null });
-  };
-  const chip = (key: "accounts" | "categories" | "types" | "tags", value: string, label: string) => {
-    const on = filters[key]?.includes(value) ?? false;
-    return (
-      <Pressable key={key + value} onPress={() => toggle(key, value)} style={{ paddingHorizontal: 12, paddingVertical: 7, borderRadius: 999, backgroundColor: on ? p.accent : p.nav }}>
-        <Text style={{ color: on ? p.onAccent : p.ink }}>{label}</Text>
-      </Pressable>
-    );
-  };
-  const group = (title: string, chips: ReactNode[]) =>
-    chips.length ? (
-      <View style={{ gap: 6 }}>
-        <Label>{t.t(title)}</Label>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>{chips}</View>
-      </View>
-    ) : null;
-  return (
-    <Panel visible={visible} title="Filters" onClose={onClose}>
-      <View style={{ padding: space.l, gap: space.m }}>
-        {group("Type", [chip("types", "expense", t.t("Expense")), chip("types", "income", t.t("Income")), chip("types", "transfer", t.t("Transfer"))])}
-        {group("Accounts", data.accounts.filter((a) => !a.archived).map((a) => chip("accounts", a.id, a.name)))}
-        {group("Categories", data.categories.filter((c) => !c.archived).map((c) => chip("categories", c.id, (c.parent ? "· " : "") + c.name)))}
-        {group("Tags", data.tags.map((tag) => chip("tags", tag, tag)))}
-        <Button label="Reset" kind="outline" onPress={() => onChange(emptyFilters())} />
-      </View>
-    </Panel>
   );
 }
 

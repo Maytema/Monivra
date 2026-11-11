@@ -1,6 +1,6 @@
 // More: budgets, scheduled payments, exchange rates, data, settings; and those pages.
 import { useMemo, useState } from "react";
-import { Alert, Linking, Text, View } from "react-native";
+import { Alert, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
@@ -21,16 +21,21 @@ import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Button, Card, ChoiceField, Field, Icon, Label, Row, Screen, Toggle } from "../ui/kit.tsx";
 import { CategoryPicker, OptionPicker, Panel } from "../ui/pickers.tsx";
+import { BrandMark } from "../ui/brand-mark.tsx";
 import { font, space } from "../ui/theme.ts";
 import { AmountField } from "./account-editor.tsx";
 import { useView } from "./ui-state.ts";
 
-const MENU = [
-  ["Budgets", "goal", "/budgets"],
-  ["Scheduled payments", "repeat", "/scheduled"],
-  ["Exchange rates", "trend", "/rates"],
-  ["Data", "save", "/data"],
-  ["Settings", "gear", "/settings"],
+// The groups of the menu (js/screens/more/menu.js). Pages that are not built yet are not listed.
+const GROUPS = [
+  [
+    ["Scheduled payments", "calendar", "/scheduled"],
+    ["Budgets", "budget", "/budgets"],
+  ],
+  [
+    ["Settings", "gear", "/settings"],
+    ["Data", "receipt", "/data"],
+  ],
 ] as const;
 
 export function MoreScreen() {
@@ -39,14 +44,34 @@ export function MoreScreen() {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: p.bg }}>
-    <Screen tab>
-      <Card style={{ paddingHorizontal: space.s }}>
-        {MENU.map(([label, icon, href]) => (
-          <Row key={href} left={<Icon name={icon} color={p.accentInk} />} title={t.t(label)} right={<Icon name="right" size={18} color={p.muted} />} onPress={() => router.push(href)} />
+      <Screen tab padded={false}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12, height: 59, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
+          <View style={p.dark ? { backgroundColor: "#ffffff", borderRadius: 10, paddingVertical: 3, paddingHorizontal: 4 } : undefined}>
+            <BrandMark height={38} />
+          </View>
+          <Text numberOfLines={1} style={{ flexShrink: 1, color: p.ink, fontSize: 29, fontWeight: "600" }}>
+            Monivra
+          </Text>
+          <View style={{ backgroundColor: "#000000", borderRadius: 9, paddingTop: 3, paddingBottom: 4, paddingHorizontal: 10 }}>
+            <Text style={{ color: "#ffffff", fontSize: 18, fontWeight: "500" }}>{t.t("Premium")}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 15, height: 41, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
+          <Icon name="cloud" size={23} color={p.positive} />
+          <Text style={{ color: p.muted, fontSize: 14 }}>{t.t("Local data · Closed Beta")}</Text>
+        </View>
+        {GROUPS.map((group, i) => (
+          <View key={i} style={{ paddingVertical: 9, borderBottomWidth: i === GROUPS.length - 1 ? 0 : 1, borderBottomColor: p.line }}>
+            {group.map(([label, icon, href]) => (
+              <Pressable key={href} accessibilityRole="button" onPress={() => router.push(href)} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, height: 56, paddingHorizontal: 18, backgroundColor: pressed ? p.sheet : "transparent" })}>
+                <Icon name={icon} size={24} color={p.inkSoft} />
+                <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
+              </Pressable>
+            ))}
+          </View>
         ))}
-      </Card>
-      <Label>{`Monivra ${APP_VERSION} · React Native`}</Label>
-    </Screen>
+        <Text style={{ color: p.muted, fontSize: 14, textAlign: "center", paddingTop: 22, paddingBottom: 24 }}>{`Monivra · ${APP_VERSION} (${t.t("Closed Beta")}) · React Native`}</Text>
+      </Screen>
     </View>
   );
 }
@@ -190,11 +215,13 @@ const THEMES = [
 export function SettingsScreen() {
   const data = useLedger();
   const t = useT();
+  const p = usePalette();
   const run = useCommand();
   const [picking, setPicking] = useState<"language" | "theme" | "currency" | null>(null);
   const setSetting = (patch: Partial<Settings>) => run((tx) => (tx.setSettings(patch), true));
   return (
     <Screen>
+      <Row left={<Icon name="transfer" color={p.accentInk} />} title={t.t("Exchange rates")} subtitle={t.t("Update and edit")} right={<Icon name="right" size={18} color={p.muted} />} onPress={() => router.push("/rates")} />
       <ChoiceField label="Language" value={LANGUAGES.find((l) => l.code === data.settings.language)?.name ?? data.settings.language} onPress={() => setPicking("language")} />
       <ChoiceField label="Theme" value={t.t(THEMES.find((x) => x.value === data.settings.theme)?.label ?? "")} onPress={() => setPicking("theme")} />
       <ChoiceField label="Main currency" value={data.settings.currency} onPress={() => setPicking("currency")} />

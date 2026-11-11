@@ -191,3 +191,52 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
     </Pressable>
   );
 }
+
+// The two sums of the categories and statistics tabs (components.css .sum-tabs): the chosen one is
+// lifted, the other one is muted; expenses in red, incomes in green.
+export function SumTabs({ active, expense, income, onChange }: { active: "expense" | "income"; expense: string; income: string; onChange: (type: "expense" | "income") => void }) {
+  const p = usePalette();
+  const t = useT();
+  const tab = (type: "expense" | "income", label: string, text: string) => {
+    const on = active === type;
+    return (
+      <Pressable
+        key={type}
+        accessibilityRole="tab"
+        accessibilityState={{ selected: on }}
+        onPress={() => onChange(type)}
+        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, backgroundColor: on ? p.bg : "transparent" }}
+      >
+        <Text style={{ color: on ? p.ink : p.muted, fontSize: 14 }}>{t.t(label)}</Text>
+        <Text style={{ color: type === "expense" ? p.negativeInk : p.positiveInk, opacity: on ? 1 : 0.6, fontSize: 21, marginTop: 7 }} numberOfLines={1}>
+          {text}
+        </Text>
+      </Pressable>
+    );
+  };
+  return <View style={{ flexDirection: "row", gap: 5, backgroundColor: p.nav, borderRadius: 13, marginHorizontal: 16, marginTop: 9, marginBottom: 18, padding: 8, minHeight: 90 }}>{[tab("expense", "Expenses", expense), tab("income", "Incomes", income)]}</View>;
+}
+
+// A tile of a category (categories.css .cat-tile): badge, name, the sum of the period.
+export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
+  const p = usePalette();
+  const ink = tone === "pos" ? p.positiveInk : tone === "neg" ? p.negativeInk : p.muted;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      onLongPress={onLongPress}
+      style={({ pressed }) => ({ width, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 9, paddingVertical: 6, paddingHorizontal: 7, borderWidth: 1, borderColor: p.line, borderRadius: 12, backgroundColor: pressed ? p.soft : p.key })}
+    >
+      <ToneBadge icon={icon} color={color} size={42} iconSize={23} radius={10} />
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text numberOfLines={1} style={{ color: p.ink, fontSize: 14, marginBottom: 3 }}>
+          {name}
+        </Text>
+        <Text numberOfLines={1} style={{ color: ink, fontSize: 13 }}>
+          {figure}
+        </Text>
+      </View>
+    </Pressable>
+  );
+}

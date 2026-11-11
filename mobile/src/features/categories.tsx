@@ -3,61 +3,58 @@ import { useMemo, useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { blankCategory, deleteCategory, storeCategory } from "../domain/categories.ts";
-import { categoryById, categoryTotalIn, reportRows } from "../domain/ledger.ts";
+import { categoryById, categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";
 import type { Category } from "../domain/types.ts";
 import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Button, ChoiceField, Field, Label, Screen, Segmented } from "../ui/kit.tsx";
+import { Badge, Button, ChoiceField, Empty, Field, Label, Screen, Segmented } from "../ui/kit.tsx";
+import { CategoryTile, SumTabs } from "../ui/parts.tsx";
 import { OptionPicker } from "../ui/pickers.tsx";
 import { font, radius, space } from "../ui/theme.ts";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
-
-const KINDS = [
-  { value: "expense", label: "Expenses" },
-  { value: "income", label: "Income" },
-] as const;
+import { openAccountSheet } from "./account-sheet.tsx";
+import { openCategorySheet } from "./category-sheet.tsx";
 
 export function CategoriesScreen() {
   const data = useLedger();
-  const p = usePalette();
-  const t = useT();
   const money = useMoney();
   const { period, catType } = useView();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
   const tiles = data.categories.filter((c) => c.type === catType && !c.parent && !c.archived);
+  // A debt account can stand among the categories, as an expense or as an income.
+  const debts = data.accounts.filter((a) => a.type === "Debt" && !a.archived && (catType === "expense" ? a.showExpense : a.showIncome));
+  const tone = (total: number) => (total === 0 ? "muted" : catType === "income" ? "pos" : "neg");
+  const edit = () => router.push({ pathname: "/categories-manage" });
+  const create = () => router.push({ pathname: "/category", params: { type: catType } });
+  const empty = !tiles.length && !debts.length;
   return (
     <View style={{ flex: 1 }}>
-    <RootHero icon="plus" label="New category" onAction={() => router.push({ pathname: "/category", params: { type: catType } })} />
-    <Screen tab>
-      <PeriodBar />
-      <Segmented value={catType} options={KINDS} onChange={(v) => setView({ catType: v })} />
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.m }}>
-        {tiles.map((c) => {
-          const total = categoryTotalIn(data, rows, c);
-          return (
-            <Pressable
-              key={c.id}
-              onPress={() => openEditor({ type: c.type === "income" ? "income" : "expense", category: c.id })}
-              onLongPress={() => router.push({ pathname: "/category", params: { id: c.id } })}
-              style={({ pressed }) => ({ width: "30%", alignItems: "center", gap: 6, padding: space.s, borderRadius: radius.m, backgroundColor: pressed ? p.soft : "transparent" })}
-            >
-              <Badge icon={c.icon} color={c.color} size={52} />
-              <Text style={{ color: p.ink, fontSize: font.small }} numberOfLines={1}>
-                {c.name}
-              </Text>
-              <Text style={{ color: total ? p.ink : p.muted, fontSize: font.small, fontWeight: "600" }} numberOfLines={1}>
-                {money(total, c.currency)}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-      {!tiles.length ? <Button label="Create category" onPress={() => router.push({ pathname: "/category", params: { type: catType } })} /> : null}
-      <Label>{t.t("Tap a category to add an operation, hold it to change the category.")}</Label>
-    </Screen>
+      <RootHero icon="edit" label="Change categories" onAction={edit} />
+      <Screen tab padded={false}>
+        <PeriodBar />
+        <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
+        {empty ? (
+          <View style={{ padding: 24, gap: 14 }}>
+            <Empty text="Categories will be here" />
+            <Button label="Create" onPress={create} />
+          </View>
+        ) : (
+          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 11, paddingBottom: 16 }}>
+            {tiles.map((c) => {
+              const total = categoryTotalIn(data, rows, c);
+              return <CategoryTile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} onPress={() => openEditor({ type: c.type === "income" ? "income" : "expense", category: c.id })} onLongPress={() => openCategorySheet(c.id)} />;
+            })}
+            {debts.map((a) => {
+              const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: catType, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
+              const total = categoryTotalIn(data, rows, asCategory);
+              return <CategoryTile key={asCategory.id} icon={a.icon} color={a.color} name={a.name} figure={money(total, a.currency)} tone={tone(total)} onPress={() => openAccountSheet(a.id)} />;
+            })}
+          </View>
+        )}
+      </Screen>
     </View>
   );
 }
