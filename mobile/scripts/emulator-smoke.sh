@@ -66,6 +66,33 @@ shot 07-restarted 20
 tap "Operations"
 shot 08-operations-after-restart 3
 has "125" 08-operations-after-restart
+# A tour of the other screens (screenshots for a person; a missing label only logs NOT FOUND).
+back() { adb shell input keyevent 4; sleep 1.5; }
+tap "Accounts"
+tap "Cash"
+tap "Edit"
+shot 12-account-form 3
+adb shell input swipe 540 1800 540 600 300
+shot 12b-account-form-end 2
+back
+tap "Categories"
+shot 13-categories 3
+tap "Operations"
+tap "More"
+shot 14-more 3
+for page in "Settings" "Scheduled payments" "Budgets" "Exchange rates"; do
+  tap "$page"
+  shot "15-$(echo "$page" | tr ' ' '-')" 3
+  back
+done
+tap "Operations"
+tap "New operation"
+tap "Food"
+shot 16-editor 3
+tap "Select date"
+shot 16b-calendar 2
+tap "Cancel"
+back
 # Layout under other system settings: three-button navigation, a large font, a denser display.
 # (Looked at by a person: screenshots only.)
 tap "Accounts"
