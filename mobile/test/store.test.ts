@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createStore } from "../src/application/store.ts";
-import { putOperation } from "../src/domain/operations.ts";
+import { deleteTag, putOperation, rememberTags, renameTag } from "../src/domain/operations.ts";
 import { loadLedger, compareLedgers } from "../src/data/repository.ts";
 import { DomainError } from "../src/domain/errors.ts";
 import { fixtureText, memoryDb, testEnv } from "./support/helpers.ts";
@@ -83,4 +83,28 @@ test("rates: updated when switched on and due; a failing network changes nothing
   const s2 = store.getState();
   assert.equal(s2.status === "ready" && s2.data.rates.USD, 87.45);
   assert.equal(loadLedger(db)?.rates.USD, 87.45, "stored");
+});
+
+test("renaming and deleting a tag reaches every operation and scheduled payment, in one stored change", () => {
+  const db = memoryDb();
+  const env = testEnv();
+  const store = createStore(db, env, () => "en");
+  store.open();
+  store.begin("starter", (s) => s);
+  const s0 = store.getState();
+  assert.equal(s0.status, "ready");
+  if (s0.status !== "ready") return;
+  const account = s0.data.accounts[0]!.id;
+  const category = s0.data.categories[0]!.id;
+  const op = { id: "", type: "expense" as const, from: account, category, amount: 500, date: "2026-11-10", comment: "", tags: ["trip", "food"] };
+  store.run((tx) => (rememberTags(tx, ["trip", "food"]), putOperation(tx, op, env)));
+  store.run((tx) => renameTag(tx, "trip", "journey"));
+  let s = store.getState();
+  assert.equal(s.status === "ready" && s.data.ops[0]!.tags.join(), "journey,food");
+  assert.deepEqual(s.status === "ready" && s.data.tags, ["journey", "food"]);
+  assert.throws(() => store.run((tx) => renameTag(tx, "journey", "food")), DomainError);
+  store.run((tx) => deleteTag(tx, "food"));
+  s = store.getState();
+  assert.equal(s.status === "ready" && s.data.ops[0]!.tags.join(), "journey");
+  assert.deepEqual(compareLedgers(s.status === "ready" ? s.data : (null as never), loadLedger(db)!), []);
 });

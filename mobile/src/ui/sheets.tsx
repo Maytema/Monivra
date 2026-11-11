@@ -14,6 +14,12 @@ interface Layer {
   kind: Kind;
   content: ReactNode;
   closing: boolean;
+  // A sheet whose content brings its own side padding (the add menu), with a taller panel.
+  bare: boolean;
+}
+
+export interface SheetOptions {
+  bare?: boolean;
 }
 
 let layers: readonly Layer[] = [];
@@ -26,9 +32,9 @@ const publish = (next: readonly Layer[]) => {
 
 export const sheets = {
   // Opens a layer over the current ones; returns its id.
-  open(content: ReactNode, kind: Kind = "sheet"): number {
+  open(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
     const id = ++counter;
-    publish([...layers, { id, kind, content, closing: false }]);
+    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare }]);
     return id;
   },
   // Starts closing a layer (the animation removes it).
@@ -44,9 +50,9 @@ export const sheets = {
     publish(layers.map((l) => ({ ...l, closing: true })));
   },
   // Replaces the top layer's content (an account action replaces the account sheet).
-  replaceTop(content: ReactNode, kind: Kind = "sheet"): number {
+  replaceTop(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
     this.closeTop();
-    return this.open(content, kind);
+    return this.open(content, kind, options);
   },
   get count(): number {
     return layers.filter((l) => !l.closing).length;
@@ -113,12 +119,13 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
                 backgroundColor: p.sheet,
                 borderTopLeftRadius: chrome.sheetRadius,
                 borderTopRightRadius: chrome.sheetRadius,
-                paddingTop: 10,
-                paddingHorizontal: 16 + Math.max(insets.left, insets.right),
-                paddingBottom: 23 + insets.bottom,
+                paddingTop: layer.bare ? 11 : 10,
+                paddingHorizontal: layer.bare ? 0 : 16 + Math.max(insets.left, insets.right),
+                paddingBottom: (layer.bare ? 0 : 23) + insets.bottom,
+                minHeight: layer.bare ? "45%" : undefined,
               }}
             >
-              <View style={{ width: 32, height: 4, borderRadius: 8, backgroundColor: p.line, alignSelf: "center", marginBottom: 12 }} />
+              <View style={{ width: 32, height: 4, borderRadius: 8, backgroundColor: p.line, alignSelf: "center", marginBottom: layer.bare ? 8 : 12 }} />
               <ScrollView style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
                 {layer.content}
               </ScrollView>

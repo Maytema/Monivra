@@ -292,4 +292,23 @@ export function rememberTags(tx: LedgerTx, names: readonly string[]): void {
   if (fresh.length) tx.setTags([...tx.data.tags, ...fresh]);
 }
 
+// A tag renamed everywhere: in the list and in every operation and scheduled payment that carries it.
+export function renameTag(tx: LedgerTx, from: string, to: string): void {
+  if (!to || (to !== from && tx.data.tags.includes(to))) throw new DomainError("Tag already exists");
+  tx.setTags(tx.data.tags.map((t) => (t === from ? to : t)));
+  for (const key of ["ops", "scheduled"] as const) {
+    const changed = tx.data[key].filter((op) => op.tags.includes(from)).map((op) => ({ ...op, tags: op.tags.map((t) => (t === from ? to : t)) }));
+    tx.put(key, ...(changed as never[]));
+  }
+}
+
+// A tag removed from the list and from every operation and scheduled payment.
+export function deleteTag(tx: LedgerTx, name: string): void {
+  tx.setTags(tx.data.tags.filter((t) => t !== name));
+  for (const key of ["ops", "scheduled"] as const) {
+    const changed = tx.data[key].filter((op) => op.tags.includes(name)).map((op) => ({ ...op, tags: op.tags.filter((t) => t !== name) }));
+    tx.put(key, ...(changed as never[]));
+  }
+}
+
 export { sameFees };

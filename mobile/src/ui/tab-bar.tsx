@@ -2,7 +2,7 @@
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
@@ -16,10 +16,14 @@ export const TABS = [
   { name: "more", title: "More", icon: "more" },
 ] as const;
 
-export function TabBar({ state, navigation }: BottomTabBarProps) {
+export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
+  // A screen hides the bar while it has its own actions there (the selection of operations).
+  const current = state.routes[state.index];
+  const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle) : undefined;
+  if (style?.display === "none") return null;
   return (
     <View
       style={{

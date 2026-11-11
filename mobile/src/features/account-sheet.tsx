@@ -10,6 +10,7 @@ import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-con
 import { Icon } from "../ui/kit.tsx";
 import { ActionGrid, ActionTile, Meter, MoneyText, ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { openEditor } from "./editor/editor-sheet.tsx";
 
 export const percentText = (percent: number): string => `${shownPercent(percent).toLocaleString(undefined, { maximumFractionDigits: 2 })}%`;
 
@@ -75,7 +76,7 @@ function AccountSheet({ id }: { id: string }) {
   // An account action replaces the sheet, so one "back" returns to the list.
   const start = (type: string, key: "to" | "from") => {
     close();
-    router.push({ pathname: "/operation", params: { type, [key]: id } });
+    openEditor({ type: type as "income" | "expense" | "transfer", [key]: id });
   };
   return (
     <View>

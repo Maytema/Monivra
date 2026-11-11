@@ -13,6 +13,7 @@ import { font, radius, space } from "../ui/theme.ts";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";
+import { openEditor } from "./editor/editor-sheet.tsx";
 
 const KINDS = [
   { value: "expense", label: "Expenses" },
@@ -39,7 +40,7 @@ export function CategoriesScreen() {
           return (
             <Pressable
               key={c.id}
-              onPress={() => router.push({ pathname: "/operation", params: { category: c.id } })}
+              onPress={() => openEditor({ type: c.type === "income" ? "income" : "expense", category: c.id })}
               onLongPress={() => router.push({ pathname: "/category", params: { id: c.id } })}
               style={({ pressed }) => ({ width: "30%", alignItems: "center", gap: 6, padding: space.s, borderRadius: radius.m, backgroundColor: pressed ? p.soft : "transparent" })}
             >

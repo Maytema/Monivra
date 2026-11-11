@@ -12,6 +12,7 @@ import { rebuildReminders } from "../platform/notifications.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
+import { ToastHost } from "../ui/dialogs.tsx";
 
 function KeepCurrent() {
   useEffect(() => {
@@ -66,7 +67,6 @@ function Ready() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="operation" options={{ title: t.t("Operation"), presentation: "modal" }} />
         <Stack.Screen name="account" options={{ title: t.t("Account") }} />
         <Stack.Screen name="category" options={{ title: t.t("Category") }} />
         <Stack.Screen name="scheduled" options={{ title: t.t("Scheduled payments") }} />
@@ -77,6 +77,7 @@ function Ready() {
         <Stack.Screen name="filtered" options={{ title: t.t("Operations") }} />
       </Stack>
       <SheetHost />
+      <ToastHost />
       </LockGate>
     </>
   );

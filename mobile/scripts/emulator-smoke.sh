@@ -48,14 +48,13 @@ has "Overall balance" 02c-sheet-closed
 tap "Operations"
 shot 02d-operations-empty 2
 tap "New operation"
+shot 03a-add-menu 3
+has "Add an operation" 03a-add-menu
+tap "Food"
 shot 03-editor 4
 for k in 1 2 5; do tap "$k"; done
 shot 04-amount 1
-tap "Category"
-shot 04b-categories 2
-tap "Food"
-adb shell input swipe 540 1900 540 500 300; adb shell input swipe 540 1900 540 500 300; sleep 1
-tap "Save"
+tap "Save operation"
 shot 05-after-save 3
 has "125" 05-after-save
 tap "Operations"

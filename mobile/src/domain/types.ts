@@ -157,6 +157,7 @@ export interface Settings {
   currencySort: string;
   stats: string[];
   totalCurrency?: Record<string, string>;
+  dismissedHints?: string[];
   [key: string]: unknown;
 }
 

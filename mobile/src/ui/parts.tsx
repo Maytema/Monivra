@@ -6,7 +6,7 @@ import { Pressable, Text, View, type StyleProp, type TextStyle } from "react-nat
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
-import { alpha, mix } from "./theme.ts";
+import { alpha, chrome, mix } from "./theme.ts";
 
 // Header of a root screen: a caption with the eye, the figure, and one round action at the right.
 // It starts below the status bar (the application is drawn edge to edge).
@@ -158,4 +158,36 @@ export function MoneyText({ text, value, size = 18, style }: { text: string; val
   const p = usePalette();
   const color = value > 0 ? p.positiveInk : value < 0 ? p.negativeInk : p.muted;
   return <Text style={[{ color, fontSize: size, fontVariant: ["tabular-nums"] }, style]}>{text}</Text>;
+}
+
+// The floating "Add" button of the operations tab (css/fab.css): a tinted square with a plus; at the
+// top of the list its name shows next to the plus, scrolled it is only the plus. It sits above the
+// tab bar (the scene ends there) at the design's gap from the edge.
+export function Fab({ label, collapsed, onPress }: { label: string; collapsed: boolean; onPress: () => void }) {
+  const p = usePalette();
+  const t = useT();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={t.t("New operation")}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        position: "absolute",
+        right: chrome.edgeGap,
+        bottom: chrome.edgeGap,
+        height: chrome.fab,
+        paddingHorizontal: 18,
+        borderRadius: 22,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: collapsed ? 0 : 10,
+        backgroundColor: p.tint,
+        elevation: 3,
+        opacity: pressed ? 0.85 : 1,
+      })}
+    >
+      {collapsed ? null : <Text style={{ color: p.ink, fontSize: 19, fontWeight: "600" }}>{t.t(label)}</Text>}
+      <Icon name="plus" size={26} color={p.ink} />
+    </Pressable>
+  );
 }

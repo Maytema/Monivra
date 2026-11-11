@@ -1,12 +1,12 @@
 // Scheduled payments: what comes next, "Add now" and "Skip" for one occurrence, and the question about
 // payments far behind (add what was missed, or carry on from the next occurrence).
 import { Alert, View } from "react-native";
-import { router } from "expo-router";
 import { accountById, categoryById } from "../domain/ledger.ts";
 import { missedPayments, processScheduled, settleMissed } from "../domain/scheduled.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Badge, Button, Card, Empty, Label, Row, Screen } from "../ui/kit.tsx";
 import { space } from "../ui/theme.ts";
+import { openEditor } from "./editor/editor-sheet.tsx";
 
 const RULES: Record<string, string> = { Days: "Every day", Weeks: "Every week", Months: "Every month", Years: "Every year" };
 
@@ -53,7 +53,7 @@ export function ScheduledScreen() {
                 title={title}
                 subtitle={`${t.day(s.date)}${s.time ? " " + s.time : ""} · ${rule}`}
                 right={<Label muted={false}>{money(s.amount, account?.currency)}</Label>}
-                onPress={() => router.push({ pathname: "/operation", params: { id: s.id, scheduled: "1" } })}
+                onPress={() => openEditor({ id: s.id, scheduled: true })}
               />
               <View style={{ flexDirection: "row", gap: space.s }}>
                 <View style={{ flex: 1 }}>

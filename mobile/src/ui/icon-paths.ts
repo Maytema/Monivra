@@ -26,6 +26,7 @@ export const ICONS: Record<string, string> = {
   more: "M12 5h.1M12 12h.1M12 19h.1",
   apps: "M6 6h.1M12 6h.1M18 6h.1M6 12h.1M12 12h.1M18 12h.1M6 18h.1M12 18h.1M18 18h.1",
   plus: "M12 4v16M4 12h16",
+  minus: "M5 12h14",
   back: "m14 5-7 7 7 7M7 12h14",
   left: "m15 5-7 7 7 7",
   right: "m9 5 7 7-7 7",
