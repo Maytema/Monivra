@@ -42,7 +42,7 @@ jobs:
             npm install --no-audit --no-fund
             npx expo install expo-router expo-sqlite expo-document-picker expo-file-system expo-sharing expo-crypto \
               expo-localization expo-status-bar expo-splash-screen expo-constants expo-linking react-native-svg \
-              react-native-safe-area-context react-native-screens react react-native
+              react-native-safe-area-context react-native-screens expo-notifications expo-task-manager expo-background-task react react-native
             npx expo install typescript @types/react -- --save-dev
             npm install --no-audit --no-fund --save-dev @types/node@22
           fi

@@ -73,3 +73,10 @@ test("parity: posting due scheduled payments (daily, monthly on the 31st, weekly
   const again = postDue(tx, env);
   assert.deepEqual(again.posted, []);
 });
+
+test("parity: reminders planned for the system (periodic on weekdays, payment reminders days and weeks ahead)", async () => {
+  const { upcomingReminders } = await import("../src/domain/reminders.ts");
+  const data = fixture("withReminders");
+  const mine = upcomingReminders(data, "2026-11-11", "12:00", { days: 40, limit: 60 }).map((r) => ({ key: r.key, day: r.day, time: r.time }));
+  assert.deepEqual(mine, old.reminders);
+});

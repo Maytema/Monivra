@@ -10,7 +10,7 @@ import { convert, evaluateExpression, netAmount, typeKey } from "../domain/money
 import { deleteOperations, isFarDate, putOperation, rememberTags } from "../domain/operations.ts";
 import type { IntervalUnit, Operation, ScheduledPayment } from "../domain/types.ts";
 import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Button, ChoiceField, Field, Label, Screen, Segmented } from "../ui/kit.tsx";
+import { Badge, Button, ChoiceField, Field, Label, Screen, Segmented, Toggle } from "../ui/kit.tsx";
 import { AccountPicker, CategoryPicker, OptionPicker } from "../ui/pickers.tsx";
 import { font, radius, space } from "../ui/theme.ts";
 import { appStore } from "../ui/app-context.tsx";
@@ -191,6 +191,14 @@ export function OperationEditor() {
       </View>
       {draft.date > env.clock.today() && !schedule ? <Label>{t.t("A date in the future makes it a scheduled payment.")}</Label> : null}
       {draft.type !== "adjustment" ? <ChoiceField label="Repeat" value={t.t(REPEATS.find((r) => r.value === repeatValue)?.label ?? "")} onPress={() => setPicking("repeat")} /> : null}
+      {schedule || draft.recur || draft.date > env.clock.today() ? (
+        <Toggle
+          label="Remind on the day of the payment"
+          value={!!draft.reminder}
+          onChange={(on) => set({ reminder: on ? { before: 0, unit: "Days", time: draft.time && draft.time > "09:00" ? "09:00" : "08:00" } : null })}
+          hint={draft.reminder ? `${t.t("At")} ${draft.reminder.time}` : undefined}
+        />
+      ) : null}
       <Field label="Comment" value={draft.comment} onChange={(comment) => set({ comment })} />
       <Field label="Tags" value={tagText} onChange={setTagText} placeholder="Separated by commas" />
       {data.tags.length ? (

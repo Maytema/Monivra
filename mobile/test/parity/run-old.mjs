@@ -21,6 +21,7 @@ const result = await page.evaluate(async () => {
   const fin = await import("/js/domain/finance.js");
   const budgets = await import("/js/domain/budgets.js");
   const scheduled = await import("/js/domain/scheduled.js");
+  const plan = await import("/js/domain/reminder-plan.js");
   const { createSampleData } = await import("/tests/fixtures/sample-data.js");
   const { createReportFixture } = await import("/tests/report-fixture.js");
   const user = st.appData;
@@ -90,8 +91,21 @@ const result = await page.evaluate(async () => {
       { ...base, id: "today-late", type: "expense", amount: 1000, date: "2026-11-11", time: "18:00", from: cash.id, category: food, recur: null },
       { ...base, id: "far", type: "expense", amount: 500, date: "2025-01-01", from: cash.id, category: food, recur: { every: 1, unit: "Days", days: [], remaining: null } },
     ];
+    // Reminders: the periodic one on weekdays and two payment reminders.
+    const withReminders = clone(withSchedules);
+    withReminders.settings = { ...withReminders.settings, notifications: true, periodic: true, notificationTime: "20:00", notificationFrequency: "Weekdays" };
+    withReminders.scheduled = withReminders.scheduled
+      .filter((s) => s.id !== "far")
+      .map((s) => ({ ...s, date: s.date < "2026-11-12" ? "2026-11-14" : s.date, reminder: s.id === "daily" ? { before: 0, unit: "Days", time: "09:00" } : s.id === "monthly31" ? { before: 1, unit: "Weeks", time: "10:30" } : null }));
+    const pad = (n) => String(n).padStart(2, "0");
+    const reminders = plan.upcomingReminders(withReminders, new Date(), { days: 40, limit: 60 }).map((r) => ({
+      key: r.key,
+      day: `${r.at.getFullYear()}-${pad(r.at.getMonth() + 1)}-${pad(r.at.getDate())}`,
+      time: `${pad(r.at.getHours())}:${pad(r.at.getMinutes())}`,
+    }));
     return {
-      fixtures: { sample, report, withSchedules },
+      reminders,
+      fixtures: { sample, report, withSchedules, withReminders },
       observations: { sample: observe(sample), report: observe(report) },
       postDue: postDue(withSchedules),
     };
@@ -103,5 +117,5 @@ await browser.close();
 server.close();
 
 for (const [name, data] of Object.entries(result.fixtures)) await writeFile(new URL(`${name}.json`, out), JSON.stringify(data, null, 1));
-await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue }, null, 1));
+await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue, reminders: result.reminders }, null, 1));
 console.log("written", Object.keys(result.fixtures).join(", "), "and old-observations.json");

@@ -34,6 +34,11 @@ const config: ExpoConfig = {
   plugins: [
     "expo-router",
     "expo-sqlite",
+    "expo-sharing",
+    "expo-localization",
+    "expo-status-bar",
+    "expo-background-task",
+    ["expo-notifications", { icon: "./assets/notification-icon.png", color: "#03CAA1" }],
     [
       "expo-splash-screen",
       { image: "./assets/splash-symbol.png", imageWidth: 160, backgroundColor: "#FFFAFE", dark: { backgroundColor: "#121014" } },

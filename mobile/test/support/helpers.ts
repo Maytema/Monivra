@@ -20,7 +20,7 @@ export function memoryDb(): SqlDriver {
 
 const fixturesDir = new URL("../fixtures/", import.meta.url);
 export const fixtureText = (name: string): string => readFileSync(new URL(`${name}.json`, fixturesDir), "utf8");
-export const fixture = (name: "sample" | "report" | "withSchedules"): LedgerData => readDataFile(fixtureText(name), "en").data;
+export const fixture = (name: "sample" | "report" | "withSchedules" | "withReminders"): LedgerData => readDataFile(fixtureText(name), "en").data;
 export const oldObservations = () => JSON.parse(fixtureText("old-observations")) as Record<string, any>;
 
 export function testEnv(day = "2026-11-11", time = "12:00"): Env {

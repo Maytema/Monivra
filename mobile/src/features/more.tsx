@@ -10,6 +10,7 @@ import type { Budget, BudgetPeriod, Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { fetcher } from "../platform/network.ts";
 import { pickTextFile, shareTextFile } from "../platform/files.ts";
+import { notificationsAllowed } from "../platform/notifications.ts";
 import { RATE_PROVIDERS } from "../services/rates/providers.ts";
 import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
@@ -181,6 +182,22 @@ export function SettingsScreen() {
       <ChoiceField label="Theme" value={t.t(THEMES.find((x) => x.value === data.settings.theme)?.label ?? "")} onPress={() => setPicking("theme")} />
       <ChoiceField label="Main currency" value={data.settings.currency} onPress={() => setPicking("currency")} />
       <Toggle label="Hide amounts" value={!!data.settings.hidden} onChange={(hidden) => setSetting({ hidden })} />
+      <Toggle
+        label="Reminders"
+        value={!!data.settings.notifications}
+        hint="Notifications about scheduled payments, also when the app is closed. They remind; the payment is recorded when the app runs."
+        onChange={async (on) => {
+          if (!on) return void setSetting({ notifications: false });
+          if (await notificationsAllowed(true)) setSetting({ notifications: true });
+          else Alert.alert(t.t("Notifications are not allowed"), t.t("Allow notifications for Monivra in the system settings."));
+        }}
+      />
+      {data.settings.notifications ? (
+        <>
+          <Toggle label="Daily reminder to enter operations" value={!!data.settings.periodic} onChange={(periodic) => setSetting({ periodic })} />
+          {data.settings.periodic ? <TimeField label="Time of the reminder" value={data.settings.notificationTime} onValid={(notificationTime) => setSetting({ notificationTime })} /> : null}
+        </>
+      ) : null}
       <OptionPicker visible={picking === "language"} title="Language" options={LANGUAGES.map((l) => ({ value: l.code as string, label: l.name }))} value={data.settings.language} onPick={(language) => setSetting({ language })} onClose={() => setPicking(null)} />
       <OptionPicker visible={picking === "theme"} title="Theme" options={THEMES} value={data.settings.theme} onPick={(theme) => setSetting({ theme })} onClose={() => setPicking(null)} />
       <OptionPicker
@@ -244,5 +261,22 @@ export function BudgetsScreen() {
       <OptionPicker visible={picking === "period"} title="Period" options={PERIODS} value={draft?.period ?? "month"} onPick={(v) => draft && setDraft({ ...draft, period: v })} onClose={() => setPicking(null)} />
       <CategoryPicker visible={picking === "category"} type="expense" onPick={(c) => draft && setDraft({ ...draft, categories: [...new Set([...(draft.categories ?? []), c.id])] })} onClose={() => setPicking(null)} />
     </Screen>
+  );
+}
+
+// A time "HH:MM" typed freely; it is taken once it is a real time.
+function TimeField({ label, value, onValid }: { label: string; value: string; onValid: (v: string) => void }) {
+  const [text, setText] = useState(value);
+  return (
+    <Field
+      label={label}
+      value={text}
+      keyboard="numeric"
+      placeholder="20:00"
+      onChange={(v) => {
+        setText(v);
+        if (/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) onValid(v);
+      }}
+    />
   );
 }

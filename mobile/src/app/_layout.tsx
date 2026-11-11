@@ -7,6 +7,8 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { appStore, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
+import { registerBackgroundPosting } from "../platform/background.ts";
+import { rebuildReminders } from "../platform/notifications.ts";
 import { Welcome } from "../features/welcome.tsx";
 
 function KeepCurrent() {
@@ -17,11 +19,29 @@ function KeepCurrent() {
       void store.updateRates(fetcher).catch(() => undefined);
     };
     refresh();
+    void registerBackgroundPosting();
     const timer = setInterval(() => store.postDueNow(), 60_000);
     const subscription = SystemAppState.addEventListener("change", (s) => s === "active" && refresh());
+    // The system's reminders follow every change, once a burst of changes is over.
+    let pending: ReturnType<typeof setTimeout> | null = null;
+    let lastData: unknown = null;
+    const plan = () => {
+      const state = store.getState();
+      if (state.status !== "ready" || state.data === lastData) return;
+      lastData = state.data;
+      if (pending) clearTimeout(pending);
+      pending = setTimeout(() => {
+        const now = store.getState();
+        if (now.status === "ready") void rebuildReminders(now.data, store.env.clock.today(), store.env.clock.time());
+      }, 1500);
+    };
+    plan();
+    const unsubscribe = store.subscribe(plan);
     return () => {
       clearInterval(timer);
       subscription.remove();
+      unsubscribe();
+      if (pending) clearTimeout(pending);
     };
   }, []);
   return null;
