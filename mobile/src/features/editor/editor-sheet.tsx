@@ -99,14 +99,14 @@ function DateRow({ session }: { session: EditorSession }) {
   );
 }
 
-function PartyTile({ caption, party, second, onPress }: { caption: string; party: Party | undefined; second: boolean; onPress: () => void }) {
+function PartyTile({ caption, party, onPress }: { caption: string; party: Party | undefined; onPress: () => void }) {
   const p = usePalette();
   const t = useT();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={{ flex: 1, minWidth: 0, minHeight: 80, padding: 12, paddingHorizontal: 11, gap: 11, borderRadius: 17, borderWidth: 1, borderColor: second ? mix(p.accent, p.line, 0.6) : p.muted, backgroundColor: mix(p.accent, p.bg, 0.12) }}
+      style={{ flex: 1, minWidth: 0, minHeight: 80, padding: 12, paddingHorizontal: 11, gap: 11, borderRadius: 17, borderWidth: 1, borderColor: mix(party?.color ?? p.accent, p.line, 0.55), backgroundColor: mix(party?.color ?? p.accent, p.bg, 0.12) }}
     >
       <Text style={{ color: p.ink, fontSize: 14, fontWeight: "600" }}>{t.t(caption)}</Text>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 9 }}>
@@ -129,8 +129,8 @@ function Parties({ session }: { session: EditorSession }) {
   return (
     <View>
       <View style={{ flexDirection: "row", gap: 9, marginTop: 5, marginBottom: session.compact ? 12 : 10 }}>
-        <PartyTile caption={sourceCaption} party={source} second={false} onPress={() => openPartyPicker(session, true, isAdjustment && !raise)} />
-        <PartyTile caption={targetCaption} party={target} second onPress={() => openPartyPicker(session, false, isAdjustment && raise)} />
+        <PartyTile caption={sourceCaption} party={source} onPress={() => openPartyPicker(session, true, isAdjustment && !raise)} />
+        <PartyTile caption={targetCaption} party={target} onPress={() => openPartyPicker(session, false, isAdjustment && raise)} />
       </View>
       {subcategories.length && root ? (
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
