@@ -88,7 +88,7 @@ function DateRow({ session }: { session: EditorSession }) {
   return (
     <View style={{ flexDirection: "row", alignItems: "center", height: session.compact ? 48 : 52, marginBottom: session.compact ? 8 : 9 }}>
       <IconButton name="left" label="Previous day" disabled={!!earliest && date <= earliest} onPress={() => session.update({ date: addDays(date, -1) })} />
-      <Pressable accessibilityRole="button" onPress={() => openCalendar(date, (value) => session.update({ date: value }), earliest)} style={{ flex: 1, alignSelf: "stretch", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Select date")} onPress={() => openCalendar(date, (value) => session.update({ date: value }), earliest)} style={{ flex: 1, alignSelf: "stretch", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}>
         <Icon name="calendar" size={16} color={p.ink} />
         <Text style={{ color: p.ink, fontSize: 16, fontWeight: "500" }} numberOfLines={1}>
           {label}

@@ -1,9 +1,13 @@
 // Names, signs and the search of currencies (js/domain/currency-search.js, i18n currencyName): a currency is
 // found by its code, sign, name or country, in any language of the application, and without accents.
 import { CURRENCIES, type CurrencyInfo } from "../domain/currencies.ts";
-import { LANGUAGES } from "../i18n/index.ts";
+import { NAMES } from "../i18n/names.ts";
+
+const tableFor = (locale: string) => NAMES[locale.slice(0, 2)] ?? NAMES.en!;
 
 export function currencyName(code: string, locale: string): string {
+  const known = tableFor(locale).currency[code];
+  if (known) return known.charAt(0).toLocaleUpperCase(locale) + known.slice(1);
   try {
     const name = new Intl.DisplayNames([locale], { type: "currency" }).of(code);
     return name ? name.charAt(0).toLocaleUpperCase(locale) + name.slice(1) : code;
@@ -33,14 +37,10 @@ function fieldsOf(c: CurrencyInfo): string[] {
   const known = fieldCache.get(c.code);
   if (known) return known;
   const names = (locale: string): (string | undefined)[] => {
-    try {
-      const regions = new Intl.DisplayNames([locale], { type: "region" });
-      return [new Intl.DisplayNames([locale], { type: "currency" }).of(c.code), ...c.regions.map((r) => regions.of(r))];
-    } catch {
-      return [];
-    }
+    const table = tableFor(locale);
+    return [table.currency[c.code], ...c.regions.map((r) => table.region[r])];
   };
-  const fields = [c.code, currencySign(c.code), ...LANGUAGES.flatMap((l) => names(l.locale))].filter((x): x is string => !!x).map(plain);
+  const fields = [c.code, currencySign(c.code), ...Object.keys(NAMES).flatMap((language) => names(language))].filter((x): x is string => !!x).map(plain);
   fieldCache.set(c.code, fields);
   return fields;
 }
