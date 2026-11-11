@@ -11,6 +11,8 @@ import { PrimaryPill, TextButton } from "../../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog, promptDialog, confirmDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { useCommand } from "../../ui/app-context.tsx";
+import { openTime } from "../../ui/time-dialog.tsx";
+export { openTime };
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { deleteTag, rememberTags, renameTag } from "../../domain/operations.ts";
 import type { EditorSession, EditorDraft } from "./session.ts";
@@ -104,46 +106,7 @@ function Footer({ off, ok, offLabel = "Turn off" }: { off?: () => void; ok: () =
 }
 
 // ---- Time ----------------------------------------------------------------------------------------
-const two = (n: number): string => String(n).padStart(2, "0");
 
-function TimeDialog({ value, onDone }: { value: string; onDone: (time: string) => void }) {
-  const p = usePalette();
-  const close = useCloseLayer();
-  const [hour, setHour] = useState(Number(value.slice(0, 2)) || 0);
-  const [minute, setMinute] = useState(Number(value.slice(3)) || 0);
-  const column = (n: number, set: (v: number) => void, max: number, step: number) => (
-    <View style={{ alignItems: "center", gap: 6 }}>
-      <Pressable onPress={() => set((n + step) % max)} style={{ padding: 8 }}>
-        <Icon name="up" size={22} color={p.accentInk} />
-      </Pressable>
-      <Text style={{ color: p.ink, fontSize: 44, fontVariant: ["tabular-nums"] }}>{two(n)}</Text>
-      <Pressable onPress={() => set((n - step + max) % max)} style={{ padding: 8 }}>
-        <Icon name="down" size={22} color={p.accentInk} />
-      </Pressable>
-    </View>
-  );
-  return (
-    <View>
-      <DialogTitle>Time</DialogTitle>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 14 }}>
-        {column(hour, setHour, 24, 1)}
-        <Text style={{ color: p.ink, fontSize: 44 }}>:</Text>
-        {column(minute, setMinute, 60, 5)}
-      </View>
-      <DialogActions>
-        <TextButton label="Cancel" onPress={close} />
-        <PrimaryPill
-          label="OK"
-          onPress={() => {
-            close();
-            onDone(`${two(hour)}:${two(minute)}`);
-          }}
-        />
-      </DialogActions>
-    </View>
-  );
-}
-export const openTime = (value: string, onDone: (time: string) => void): number => sheets.open(<TimeDialog value={value} onDone={onDone} />, "dialog");
 
 // A payment's time; a reminder of the same day that would come after it moves along or is dropped.
 export function setPaymentTime(session: EditorSession, time: string): void {
