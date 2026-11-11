@@ -1,18 +1,26 @@
 > Task :capacitor-local-notifications:compileReleaseLibraryResources
+> Task :app:processReleaseManifestForPackage
 > Task :capacitor-app:bundleLibCompileToJarRelease
-> Task :capacitor-cordova-android-plugins:bundleLibCompileToJarRelease
 > Task :capacitor-local-notifications:bundleLibCompileToJarRelease
+> Task :capacitor-cordova-android-plugins:bundleLibCompileToJarRelease
 > Task :app:desugarReleaseFileDependencies
 > Task :app:mergeReleaseStartupProfile
+> Task :app:processReleaseResources
+
+> Task :app:compileReleaseJavaWithJavac
+Note: /home/runner/work/Monivra/Monivra/android-app/android/app/src/main/java/app/monivra/finance/MonivraNativePlugin.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:dexBuilderRelease
 > Task :capacitor-android:prepareReleaseArtProfile
 > Task :capacitor-app:prepareReleaseArtProfile
 > Task :capacitor-cordova-android-plugins:prepareReleaseArtProfile
 > Task :capacitor-local-notifications:prepareReleaseArtProfile
-> Task :app:processReleaseManifestForPackage
 > Task :app:mergeReleaseArtProfile
 > Task :app:mergeReleaseShaders
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseGlobalSynthetics
 > Task :capacitor-android:mergeReleaseShaders
 > Task :capacitor-android:compileReleaseShaders NO-SOURCE
 > Task :capacitor-android:generateReleaseAssets UP-TO-DATE
@@ -33,29 +41,21 @@
 > Task :app:extractReleaseVersionControlInfo
 > Task :app:processReleaseJavaRes NO-SOURCE
 > Task :capacitor-android:processReleaseJavaRes NO-SOURCE
-> Task :app:compressReleaseAssets
 > Task :capacitor-app:processReleaseJavaRes NO-SOURCE
+> Task :app:compressReleaseAssets
 > Task :capacitor-cordova-android-plugins:processReleaseJavaRes NO-SOURCE
 > Task :capacitor-local-notifications:processReleaseJavaRes NO-SOURCE
-> Task :app:processReleaseResources
 > Task :app:mergeExtDexRelease
-> Task :app:mergeReleaseJavaResource
-
-> Task :app:compileReleaseJavaWithJavac
-Note: /home/runner/work/Monivra/Monivra/android-app/android/app/src/main/java/app/monivra/finance/MonivraNativePlugin.java uses or overrides a deprecated API.
-Note: Recompile with -Xlint:deprecation for details.
-
-> Task :app:dexBuilderRelease
-> Task :app:mergeReleaseGlobalSynthetics
 > Task :app:collectReleaseDependencies
 > Task :app:sdkReleaseDependencyData
+> Task :app:optimizeReleaseResources
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
 > Task :app:writeReleaseSigningConfigVersions
 > Task :capacitor-android:stripReleaseDebugSymbols NO-SOURCE
-> Task :app:optimizeReleaseResources
 > Task :capacitor-android:copyReleaseJniLibsProjectAndLocalJars
 > Task :capacitor-android:extractDeepLinksForAarRelease
+> Task :app:mergeReleaseJavaResource
 > Task :app:mergeDexRelease
 > Task :capacitor-android:extractReleaseAnnotations
 > Task :capacitor-android:mergeReleaseGeneratedProguardFiles
@@ -74,13 +74,16 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-app:mergeReleaseGeneratedProguardFiles
 > Task :capacitor-app:mergeReleaseConsumerProguardFiles
 > Task :capacitor-app:prepareLintJarForPublish
-> Task :capacitor-app:mapReleaseSourceSetPaths
 > Task :capacitor-app:mergeReleaseJavaResource
-> Task :capacitor-android:verifyReleaseResources
-> Task :capacitor-app:mergeReleaseResources
-> Task :capacitor-android:assembleRelease
+> Task :capacitor-app:mapReleaseSourceSetPaths
 > Task :capacitor-app:syncReleaseLibJars
 > Task :capacitor-app:bundleReleaseAar
+> Task :capacitor-app:mergeReleaseResources
+> Task :capacitor-android:verifyReleaseResources
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+> Task :capacitor-android:assembleRelease
 > Task :capacitor-cordova-android-plugins:stripReleaseDebugSymbols NO-SOURCE
 > Task :capacitor-cordova-android-plugins:extractDeepLinksForAarRelease
 > Task :capacitor-cordova-android-plugins:copyReleaseJniLibsProjectAndLocalJars
@@ -90,9 +93,6 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-cordova-android-plugins:mergeReleaseGeneratedProguardFiles
 > Task :capacitor-cordova-android-plugins:mergeReleaseConsumerProguardFiles
 > Task :capacitor-cordova-android-plugins:prepareLintJarForPublish
-> Task :app:packageRelease
-> Task :app:createReleaseApkListingFileRedirect
-> Task :app:assembleRelease
 > Task :capacitor-cordova-android-plugins:mergeReleaseJavaResource
 > Task :capacitor-cordova-android-plugins:mapReleaseSourceSetPaths
 > Task :capacitor-cordova-android-plugins:syncReleaseLibJars
@@ -105,8 +105,8 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-local-notifications:mergeReleaseGeneratedProguardFiles
 > Task :capacitor-local-notifications:mergeReleaseConsumerProguardFiles
 > Task :capacitor-local-notifications:mapReleaseSourceSetPaths
-> Task :capacitor-local-notifications:mergeReleaseJavaResource
 > Task :capacitor-local-notifications:prepareLintJarForPublish
+> Task :capacitor-local-notifications:mergeReleaseJavaResource
 > Task :capacitor-local-notifications:mergeReleaseResources
 > Task :capacitor-local-notifications:syncReleaseLibJars
 > Task :capacitor-local-notifications:bundleReleaseAar
@@ -116,20 +116,20 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:javaPreCompileDebug
 > Task :capacitor-app:preDebugBuild UP-TO-DATE
 > Task :capacitor-android:writeDebugAarMetadata
+> Task :capacitor-cordova-android-plugins:verifyReleaseResources
+> Task :capacitor-cordova-android-plugins:assembleRelease
 > Task :capacitor-cordova-android-plugins:preDebugBuild UP-TO-DATE
-> Task :capacitor-cordova-android-plugins:writeDebugAarMetadata
 > Task :capacitor-local-notifications:preDebugBuild UP-TO-DATE
-> Task :capacitor-local-notifications:writeDebugAarMetadata
+> Task :capacitor-cordova-android-plugins:writeDebugAarMetadata
 > Task :app:generateDebugResValues
 > Task :capacitor-android:generateDebugResValues
 > Task :capacitor-android:generateDebugResources
-> Task :capacitor-cordova-android-plugins:verifyReleaseResources
+> Task :capacitor-local-notifications:writeDebugAarMetadata
 > Task :capacitor-app:writeDebugAarMetadata
 > Task :capacitor-android:packageDebugResources
-> Task :capacitor-cordova-android-plugins:assembleRelease
-> Task :app:checkDebugAarMetadata
 > Task :capacitor-app:generateDebugResValues
 > Task :capacitor-app:generateDebugResources
+> Task :app:checkDebugAarMetadata
 > Task :capacitor-app:packageDebugResources
 > Task :capacitor-cordova-android-plugins:generateDebugResValues
 > Task :capacitor-cordova-android-plugins:generateDebugResources
@@ -139,23 +139,24 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-local-notifications:packageDebugResources
 > Task :app:mapDebugSourceSetPaths
 > Task :app:generateDebugResources
-> Task :capacitor-local-notifications:verifyReleaseResources
-> Task :capacitor-local-notifications:assembleRelease
 > Task :app:packageDebugResources
 > Task :app:createDebugCompatibleScreenManifests
-> Task :app:parseDebugLocalResources
 > Task :app:extractDeepLinksDebug
+> Task :capacitor-local-notifications:verifyReleaseResources
 > Task :capacitor-android:extractDeepLinksDebug
+> Task :capacitor-local-notifications:assembleRelease
 > Task :capacitor-app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+> Task :capacitor-app:processDebugManifest
 > Task :capacitor-android:processDebugManifest
 > Task :capacitor-cordova-android-plugins:extractDeepLinksDebug
-> Task :capacitor-app:processDebugManifest
-> Task :capacitor-cordova-android-plugins:processDebugManifest
 > Task :capacitor-local-notifications:extractDeepLinksDebug
-> Task :app:mergeDebugResources
+> Task :capacitor-cordova-android-plugins:processDebugManifest
 > Task :capacitor-android:compileDebugLibraryResources
 > Task :capacitor-local-notifications:processDebugManifest
 > Task :capacitor-android:parseDebugLocalResources
+> Task :capacitor-app:compileDebugLibraryResources
+> Task :app:mergeDebugResources
 
 > Task :app:processDebugMainManifest
 /home/runner/work/Monivra/Monivra/android-app/android/app/src/main/AndroidManifest.xml:49:5-87 Warning:
@@ -167,31 +168,29 @@ Note: Recompile with -Xlint:deprecation for details.
 
 > Task :app:processDebugManifest
 > Task :app:processDebugManifestForPackage
-> Task :capacitor-app:compileDebugLibraryResources
-> Task :capacitor-android:generateDebugRFile
 > Task :capacitor-app:parseDebugLocalResources
 > Task :capacitor-cordova-android-plugins:compileDebugLibraryResources
-> Task :capacitor-local-notifications:compileDebugLibraryResources
+> Task :capacitor-android:generateDebugRFile
 > Task :capacitor-cordova-android-plugins:parseDebugLocalResources
 > Task :capacitor-app:generateDebugRFile
+> Task :capacitor-cordova-android-plugins:generateDebugRFile
+> Task :capacitor-local-notifications:compileDebugLibraryResources
 > Task :capacitor-android:javaPreCompileDebug
 > Task :capacitor-local-notifications:parseDebugLocalResources
-> Task :capacitor-cordova-android-plugins:generateDebugRFile
-> Task :capacitor-local-notifications:generateDebugRFile
+> Task :capacitor-app:javaPreCompileDebug
 
 > Task :capacitor-android:compileDebugJavaWithJavac
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 
-> Task :capacitor-app:javaPreCompileDebug
-> Task :capacitor-android:bundleLibCompileToJarDebug
+> Task :capacitor-local-notifications:generateDebugRFile
 > Task :capacitor-cordova-android-plugins:javaPreCompileDebug
-> Task :capacitor-app:compileDebugJavaWithJavac
-> Task :capacitor-cordova-android-plugins:compileDebugJavaWithJavac NO-SOURCE
-> Task :capacitor-app:bundleLibCompileToJarDebug
-> Task :capacitor-cordova-android-plugins:bundleLibCompileToJarDebug
+> Task :capacitor-android:bundleLibCompileToJarDebug
 > Task :capacitor-local-notifications:javaPreCompileDebug
-> Task :app:mergeDebugShaders
+> Task :capacitor-app:compileDebugJavaWithJavac
+> Task :capacitor-app:bundleLibCompileToJarDebug
+> Task :capacitor-cordova-android-plugins:compileDebugJavaWithJavac NO-SOURCE
+> Task :capacitor-cordova-android-plugins:bundleLibCompileToJarDebug
 > Task :app:processDebugResources
 
 > Task :capacitor-local-notifications:compileDebugJavaWithJavac
@@ -199,12 +198,13 @@ Note: /home/runner/work/Monivra/Monivra/android-app/node_modules/@capacitor/loca
 Note: Recompile with -Xlint:deprecation for details.
 
 > Task :capacitor-local-notifications:bundleLibCompileToJarDebug
-> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:mergeDebugShaders
 
 > Task :app:compileDebugJavaWithJavac
 Note: /home/runner/work/Monivra/Monivra/android-app/android/app/src/main/java/app/monivra/finance/MonivraNativePlugin.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 
+> Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
 > Task :capacitor-android:mergeDebugShaders
 > Task :capacitor-android:compileDebugShaders NO-SOURCE
@@ -223,8 +223,8 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-local-notifications:generateDebugAssets UP-TO-DATE
 > Task :capacitor-local-notifications:packageDebugAssets
 > Task :app:mergeDebugAssets
-> Task :capacitor-local-notifications:bundleLibRuntimeToJarDebug
 > Task :capacitor-app:bundleLibRuntimeToJarDebug
+> Task :capacitor-local-notifications:bundleLibRuntimeToJarDebug
 > Task :capacitor-cordova-android-plugins:bundleLibRuntimeToJarDebug
 > Task :capacitor-android:bundleLibRuntimeToJarDebug
 > Task :app:desugarDebugFileDependencies
@@ -235,27 +235,27 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-app:processDebugJavaRes NO-SOURCE
 > Task :capacitor-cordova-android-plugins:processDebugJavaRes NO-SOURCE
 > Task :capacitor-local-notifications:processDebugJavaRes NO-SOURCE
-> Task :app:checkDebugDuplicateClasses
-> Task :app:mergeDebugJavaResource
-> Task :app:mergeDebugGlobalSynthetics
 > Task :app:mergeDebugJniLibFolders
 > Task :capacitor-android:mergeDebugJniLibFolders
 > Task :capacitor-android:mergeDebugNativeLibs NO-SOURCE
 > Task :capacitor-android:copyDebugJniLibsProjectOnly
+> Task :app:checkDebugDuplicateClasses
 > Task :capacitor-app:mergeDebugJniLibFolders
-> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugJavaResource
+> Task :app:mergeDebugGlobalSynthetics
 > Task :capacitor-app:mergeDebugNativeLibs NO-SOURCE
 > Task :capacitor-app:copyDebugJniLibsProjectOnly
-> Task :app:mergeProjectDexDebug
 > Task :capacitor-cordova-android-plugins:mergeDebugJniLibFolders
 > Task :capacitor-cordova-android-plugins:mergeDebugNativeLibs NO-SOURCE
+> Task :app:mergeLibDexDebug
 > Task :capacitor-cordova-android-plugins:copyDebugJniLibsProjectOnly
 > Task :capacitor-local-notifications:mergeDebugJniLibFolders
+> Task :app:mergeProjectDexDebug
 > Task :capacitor-local-notifications:mergeDebugNativeLibs NO-SOURCE
 > Task :capacitor-local-notifications:copyDebugJniLibsProjectOnly
+> Task :app:validateSigningDebug
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
-> Task :app:validateSigningDebug
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :capacitor-android:stripDebugDebugSymbols NO-SOURCE
@@ -265,12 +265,12 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-android:mergeDebugGeneratedProguardFiles
 > Task :capacitor-android:mergeDebugConsumerProguardFiles
 > Task :capacitor-android:prepareDebugArtProfile
+> Task :capacitor-app:stripDebugDebugSymbols NO-SOURCE
 > Task :capacitor-android:mergeDebugJavaResource
+> Task :capacitor-app:copyDebugJniLibsProjectAndLocalJars
 > Task :capacitor-android:syncDebugLibJars
 > Task :capacitor-android:bundleDebugAar
 > Task :capacitor-android:assembleDebug
-> Task :capacitor-app:stripDebugDebugSymbols NO-SOURCE
-> Task :capacitor-app:copyDebugJniLibsProjectAndLocalJars
 > Task :capacitor-app:extractDebugAnnotations
 > Task :capacitor-app:extractDeepLinksForAarDebug
 > Task :capacitor-app:mergeDebugGeneratedProguardFiles
@@ -288,12 +288,12 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :capacitor-cordova-android-plugins:mergeDebugConsumerProguardFiles
 > Task :capacitor-cordova-android-plugins:prepareDebugArtProfile
 > Task :capacitor-local-notifications:stripDebugDebugSymbols NO-SOURCE
-> Task :capacitor-local-notifications:copyDebugJniLibsProjectAndLocalJars
 > Task :capacitor-cordova-android-plugins:mergeDebugJavaResource
-> Task :capacitor-local-notifications:extractDebugAnnotations
+> Task :capacitor-local-notifications:copyDebugJniLibsProjectAndLocalJars
 > Task :capacitor-cordova-android-plugins:syncDebugLibJars
 > Task :capacitor-cordova-android-plugins:bundleDebugAar
 > Task :capacitor-cordova-android-plugins:assembleDebug
+> Task :capacitor-local-notifications:extractDebugAnnotations
 > Task :capacitor-local-notifications:extractDeepLinksForAarDebug
 > Task :capacitor-local-notifications:mergeDebugGeneratedProguardFiles
 > Task :capacitor-local-notifications:mergeDebugConsumerProguardFiles
@@ -308,7 +308,7 @@ Note: Recompile with -Xlint:deprecation for details.
 > Task :app:assembleDebug
 [Incubating] Problems report is available at: file:///home/runner/work/Monivra/Monivra/android-app/android/build/reports/problems/problems-report.html
 
-BUILD SUCCESSFUL in 2m 2s
+BUILD SUCCESSFUL in 1m 59s
 292 actionable tasks: 292 executed
 ::endgroup::
 ::group::gradle (upgrade-test build)
@@ -378,8 +378,8 @@ WARNING: Using flatDir should be avoided because it doesn't support any meta-dat
 > Task :app:processDebugManifest
 > Task :capacitor-android:compileDebugLibraryResources UP-TO-DATE
 > Task :capacitor-android:parseDebugLocalResources UP-TO-DATE
-> Task :app:processDebugManifestForPackage
 > Task :capacitor-android:generateDebugRFile UP-TO-DATE
+> Task :app:processDebugManifestForPackage
 > Task :capacitor-app:compileDebugLibraryResources UP-TO-DATE
 > Task :capacitor-app:parseDebugLocalResources UP-TO-DATE
 > Task :capacitor-app:generateDebugRFile UP-TO-DATE
@@ -511,18 +511,18 @@ WARNING: Using flatDir should be avoided because it doesn't support any meta-dat
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
 
-BUILD SUCCESSFUL in 13s
+BUILD SUCCESSFUL in 14s
 139 actionable tasks: 7 executed, 132 up-to-date
 ::endgroup::
-version name: 0.1.0-build.21   version code: 21
+version name: 0.1.0-build.22   version code: 22
 signing: EPHEMERAL one-run key (no owner key in the secrets): for the emulator test only, not for phones
 application id: app.monivra.finance.dev
-git commit: 52bb7c5462e74ce8ff31c2c377f4e820432226d0
+git commit: 298406b188ed7b0d710d1c9f78860caa26ecd3a8
 
-=== monivra-0.1.0-build.21-debuggable.apk
-size: 4718678 bytes
-sha256: 331a27edd47be195c162b2f03e1a0a5926855299093c398278c5406eb51e507c
-  package: name='app.monivra.finance.dev' versionCode='21' versionName='0.1.0-build.21' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.22-debuggable.apk
+size: 4718671 bytes
+sha256: eed2bedb38123436be7cc759f3147f67a41d9aa8c4db6d129fd9becb3ecea0b1
+  package: name='app.monivra.finance.dev' versionCode='22' versionName='0.1.0-build.22' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -543,13 +543,13 @@ sha256: 331a27edd47be195c162b2f03e1a0a5926855299093c398278c5406eb51e507c
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: a85a29890f22c7e7e5d5320d5a43eca6935bc71ff542609d1aa94246fc5b6910
+    V2 Signer: certificate SHA-256 digest: 3278128ac44dba234f40d4972df1a3b8b23f2b953bce3bcade70abc64d7f7be5
   debuggable: yes (test build only)
 
-=== monivra-0.1.0-build.21.apk
-size: 3767519 bytes
-sha256: b170a23bfb8b36a4db17b6a283746782f07382f5cc8ddd387918bd3a9e160020
-  package: name='app.monivra.finance.dev' versionCode='21' versionName='0.1.0-build.21' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+=== monivra-0.1.0-build.22.apk
+size: 3767515 bytes
+sha256: c3ec18d2d684cafb04a184f50fa48f22466d48dc3da17883fe84c4e1f41230e5
+  package: name='app.monivra.finance.dev' versionCode='22' versionName='0.1.0-build.22' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -569,13 +569,13 @@ sha256: b170a23bfb8b36a4db17b6a283746782f07382f5cc8ddd387918bd3a9e160020
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: a85a29890f22c7e7e5d5320d5a43eca6935bc71ff542609d1aa94246fc5b6910
+    V2 Signer: certificate SHA-256 digest: 3278128ac44dba234f40d4972df1a3b8b23f2b953bce3bcade70abc64d7f7be5
   debuggable: no
 
 === upgrade-test-debuggable.apk
-size: 4718695 bytes
-sha256: 7c2423c70de0d0e45489f3657fdc6e8220a1795520e468fed188cf44c37459b5
-  package: name='app.monivra.finance.dev' versionCode='22' versionName='0.1.0-build.21-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+size: 4718682 bytes
+sha256: 0d3434776c15f89584bed6be12e9950c56dafc906420e7f2a0b3fc2f2e3db7bb
+  package: name='app.monivra.finance.dev' versionCode='23' versionName='0.1.0-build.22-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
   minSdkVersion:'23'
   targetSdkVersion:'35'
   uses-permission: name='android.permission.USE_BIOMETRIC'
@@ -596,5 +596,5 @@ sha256: 7c2423c70de0d0e45489f3657fdc6e8220a1795520e468fed188cf44c37459b5
     Verified using v3.2 scheme (APK Signature Scheme v3.2): false
     Verified using v4 scheme (APK Signature Scheme v4): false
     V2 Signer: certificate DN: CN=Monivra CI one-run key
-    V2 Signer: certificate SHA-256 digest: a85a29890f22c7e7e5d5320d5a43eca6935bc71ff542609d1aa94246fc5b6910
+    V2 Signer: certificate SHA-256 digest: 3278128ac44dba234f40d4972df1a3b8b23f2b953bce3bcade70abc64d7f7be5
   debuggable: yes (test build only)
