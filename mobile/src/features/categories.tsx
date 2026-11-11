@@ -59,6 +59,11 @@ export function CategoriesScreen() {
   );
 }
 
+const KINDS = [
+  { value: "expense", label: "Expenses" },
+  { value: "income", label: "Income" },
+] as const;
+
 const COLORS = ["#f57400", "#479ee2", "#45585e", "#2fb585", "#4945a2", "#7064cc", "#b520c5", "#a5a3c8", "#e5322d", "#f2c200", "#22b35e", "#9b3fd1"];
 const ICON_CHOICES = ["pizza", "bike", "home", "shield", "tag", "play", "paw", "trend", "briefcase", "gift", "wifi", "repair", "business", "receipt", "percent", "card", "cash"];
 

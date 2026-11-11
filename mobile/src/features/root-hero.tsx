@@ -9,7 +9,7 @@ export function RootHero({ icon, label, onAction, below }: { icon?: string; labe
   const data = useLedger();
   const money = useMoney();
   const run = useCommand();
-  const hidden = data.settings.hidden;
+  const hidden = !!data.settings.hidden;
   return (
     <Hero
       caption="Overall balance"

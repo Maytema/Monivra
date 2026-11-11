@@ -135,7 +135,7 @@ function Parties({ session }: { session: EditorSession }) {
           {subcategories.map((x) => {
             const on = d.category === x.id;
             return (
-              <Pressable key={x.id} accessibilityState={{ selected: on }} onPress={() => session.pickSubcategory(x.id, root.id as string)} style={{ paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: mix(p.accent, p.line, 0.6), backgroundColor: on ? mix(p.accent, p.bg, 0.18) : "transparent" }}>
+              <Pressable key={x.id} accessibilityState={{ selected: on }} onPress={() => session.pickSubcategory(x.id ?? "", root.id ?? "")} style={{ paddingVertical: 7, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: mix(p.accent, p.line, 0.6), backgroundColor: on ? mix(p.accent, p.bg, 0.18) : "transparent" }}>
                 <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: on ? "600" : "400" }}>{x.name}</Text>
               </Pressable>
             );
