@@ -129,7 +129,7 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
   const title = first.toLocaleDateString(t.locale, { month: "long", year: "numeric", timeZone: "UTC" });
   const today = systemClock.today();
   // 2026-11-01 is a Sunday.
-  const letters = Array.from({ length: 7 }, (_, i) => day(`2026-11-${String(1 + ((weekStart + i) % 7)).padStart(2, "0")}`).toLocaleDateString(t.locale, { weekday: "short", timeZone: "UTC" }));
+  const letters = Array.from({ length: 7 }, (_, i) => day(`2026-11-${String(1 + ((weekStart + i) % 7)).padStart(2, "0")}`).toLocaleDateString(t.locale, { weekday: "narrow", timeZone: "UTC" }));
   const cells: (string | null)[] = [...Array<null>(lead).fill(null), ...Array.from({ length: count }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`)];
   const heading = (
     <Pressable accessibilityRole="button" onPress={() => setYears(!years)} style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14 }}>
@@ -160,7 +160,7 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
       </View>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
         {letters.map((l, i) => (
-          <Text key={i} style={{ width: "14.285%", textAlign: "center", paddingVertical: 8, color: p.muted, fontSize: 12, textTransform: "capitalize" }}>
+          <Text key={i} style={{ width: "14.285%", textAlign: "center", paddingVertical: 10, color: p.ink, fontSize: 14, textTransform: "uppercase" }}>
             {l}
           </Text>
         ))}
@@ -193,7 +193,9 @@ function CalendarDialog({ value, done, min }: { value: string; done: (date: stri
   const today = systemClock.today();
   return (
     <View>
-      <Text style={{ color: p.muted, fontSize: 14 }}>{t.t("Select date")}</Text>
+      <Text style={{ color: p.ink, fontSize: 14 }}>{t.t("Select date")}</Text>
+      <Text style={{ color: p.ink, fontSize: 28, marginTop: 22, marginBottom: 16 }}>{new Date(chosen + "T12:00:00Z").toLocaleDateString(t.locale, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })}</Text>
+      <View style={{ height: 1, backgroundColor: p.line, marginHorizontal: -24 }} />
       <MonthGrid month={month} setMonth={setMonth} chosen={chosen} pick={setChosen} min={min} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 12, gap: 4 }}>
         {min && min > today ? null : (
@@ -208,7 +210,7 @@ function CalendarDialog({ value, done, min }: { value: string; done: (date: stri
           </View>
         )}
         <TextButton label="Cancel" onPress={close} />
-        <PrimaryPill
+        <TextButton
           label="OK"
           onPress={() => {
             close();

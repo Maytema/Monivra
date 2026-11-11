@@ -1,13 +1,13 @@
 // The dialog "Time interval" (js/ui/period-picker.js): tiles for a range, all time, a day, week, today,
 // year and month, each with the range it would choose now; and the dialog for the day a month starts on.
 import { Pressable, Text, View } from "react-native";
+import Svg, { Path, Rect, Text as SvgText } from "react-native-svg";
 import { systemClock } from "../domain/dates.ts";
 import { periodBounds, type Period } from "../domain/periods.ts";
 import { periodTitle } from "./period-title.ts";
 import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
 import { openCalendar, openRangeDialog, TextButton } from "./calendar-sheet.tsx";
 import { HintBanner } from "./hint-banner.tsx";
-import { Icon } from "./kit.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 
 type Mode = "range" | "all" | "day" | "week" | "today" | "year" | "month";
@@ -20,6 +20,25 @@ const TILES: [Mode, string][] = [
   ["year", "Year"],
   ["month", "Month"],
 ];
+
+// A calendar page with what the tile stands for inside it: dots, infinity, a square, or a number.
+function Glyph({ mode, color }: { mode: Mode; color: string }) {
+  const number = mode === "week" ? "7" : mode === "today" ? "1" : mode === "year" ? "365" : mode === "month" ? "30" : "";
+  return (
+    <Svg width={40} height={40} viewBox="0 0 40 40" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <Rect x={5} y={8} width={30} height={27} rx={4} />
+      <Path d="M5 16H35M13 4V11M27 4V11" />
+      {mode === "range" ? <Path d="M12 25h.01M20 25h.01M28 25h.01" strokeWidth={4.5} /> : null}
+      {mode === "all" ? <Path d="M12 25c-3-4-7-2-7 0s4 4 7 0 5-4 8 0 7 2 7 0-4-4-7 0" transform="translate(4 0) scale(.9 1)" /> : null}
+      {mode === "day" ? <Rect x={16} y={21} width={8} height={8} rx={1.5} fill={color} /> : null}
+      {number ? (
+        <SvgText x={20} y={number.length > 2 ? 30 : 31} fontSize={number.length > 2 ? 11 : 13} fontWeight="bold" fill={color} stroke="none" textAnchor="middle">
+          {number}
+        </SvgText>
+      ) : null}
+    </Svg>
+  );
+}
 
 function MonthStartDialog() {
   const data = useLedger();
@@ -56,6 +75,7 @@ function PeriodDialog({ period, onPick }: { period: Period; onPick: (p: Period) 
   const close = useCloseLayer();
   const today = systemClock.today();
   const note = (mode: Mode): string => (["week", "today", "year", "month"].includes(mode) ? periodTitle({ mode: mode === "today" ? "day" : (mode as Period["mode"]), anchor: today }, t, data.settings) : "");
+  const current: Mode = period.mode === "day" ? (period.anchor === today ? "today" : "day") : (period.mode as Mode);
   const choose = (mode: Mode) => {
     if (mode === "range") {
       const [a, b] = period.mode === "range" ? periodBounds(period, data.settings) : [null, null];
@@ -83,10 +103,10 @@ function PeriodDialog({ period, onPick }: { period: Period; onPick: (p: Period) 
             key={mode}
             accessibilityRole="button"
             onPress={() => choose(mode)}
-            style={({ pressed }) => ({ width: i === 0 ? "100%" : "49%", flexGrow: i === 0 ? 0 : 1, minHeight: 88, padding: 12, borderRadius: 7, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.key })}
+            style={({ pressed }) => ({ width: i === 0 ? "100%" : "49%", flexGrow: i === 0 ? 0 : 1, minHeight: 88, padding: 12, borderRadius: 7, alignItems: "center", justifyContent: "center", backgroundColor: pressed || current === mode ? p.soft : p.key })}
           >
-            <View style={{ marginBottom: 8 }}>
-              <Icon name="calendar" size={32} color={p.ink} />
+            <View style={{ marginBottom: 6 }}>
+              <Glyph mode={mode} color={p.ink} />
             </View>
             <Text style={{ color: p.ink, fontSize: 14, textAlign: "center" }}>{t.t(label)}</Text>
             {note(mode) ? <Text style={{ color: p.ink, opacity: 0.75, fontSize: 12, marginTop: 2, textAlign: "center" }}>{note(mode)}</Text> : null}
