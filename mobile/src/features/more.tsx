@@ -11,6 +11,8 @@ import { LANGUAGES } from "../i18n/index.ts";
 import { fetcher } from "../platform/network.ts";
 import { pickTextFile, shareTextFile } from "../platform/files.ts";
 import { notificationsAllowed } from "../platform/notifications.ts";
+import { biometricAvailable } from "../platform/lock.ts";
+import { PinSettings } from "./lock.tsx";
 import { RATE_PROVIDERS } from "../services/rates/providers.ts";
 import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
@@ -182,6 +184,21 @@ export function SettingsScreen() {
       <ChoiceField label="Theme" value={t.t(THEMES.find((x) => x.value === data.settings.theme)?.label ?? "")} onPress={() => setPicking("theme")} />
       <ChoiceField label="Main currency" value={data.settings.currency} onPress={() => setPicking("currency")} />
       <Toggle label="Hide amounts" value={!!data.settings.hidden} onChange={(hidden) => setSetting({ hidden })} />
+      <Label>{t.t("Screen lock")}</Label>
+      <PinSettings />
+      {data.settings.pin ? (
+        <>
+          <Toggle
+            label="Unlock with fingerprint"
+            value={!!data.settings.biometric}
+            onChange={async (biometric) => {
+              if (biometric && !(await biometricAvailable())) return void Alert.alert(t.t("No fingerprint or face is set up on this phone."));
+              setSetting({ biometric });
+            }}
+          />
+          <Toggle label="Lock again after leaving the app" value={!!data.settings.relock} onChange={(relock) => setSetting({ relock })} />
+        </>
+      ) : null}
       <Toggle
         label="Reminders"
         value={!!data.settings.notifications}

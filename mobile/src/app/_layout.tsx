@@ -10,6 +10,7 @@ import { fetcher } from "../platform/network.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { Welcome } from "../features/welcome.tsx";
+import { LockGate } from "../features/lock.tsx";
 
 function KeepCurrent() {
   useEffect(() => {
@@ -54,6 +55,7 @@ function Ready() {
     <>
       <StatusBar style={p.dark ? "light" : "dark"} />
       <KeepCurrent />
+      <LockGate>
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: p.bg },
@@ -72,6 +74,7 @@ function Ready() {
         <Stack.Screen name="data" options={{ title: t.t("Data") }} />
         <Stack.Screen name="settings" options={{ title: t.t("Settings") }} />
       </Stack>
+      </LockGate>
     </>
   );
 }

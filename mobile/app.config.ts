@@ -38,6 +38,8 @@ const config: ExpoConfig = {
     "expo-localization",
     "expo-status-bar",
     "expo-background-task",
+    "expo-secure-store",
+    ["expo-local-authentication", { faceIDPermission: "Monivra uses Face ID to unlock the app." }],
     ["expo-notifications", { icon: "./assets/notification-icon.png", color: "#03CAA1" }],
     [
       "expo-splash-screen",

@@ -6,12 +6,12 @@ import { Alert, Pressable, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { addDays } from "../domain/dates.ts";
 import { accountById, categoryById, defaultAccountId } from "../domain/ledger.ts";
-import { convert, evaluateExpression, netAmount, typeKey } from "../domain/money.ts";
+import { applyFees, convert, evaluateExpression, netAmount, typeKey, withFee } from "../domain/money.ts";
 import { deleteOperations, isFarDate, putOperation, rememberTags } from "../domain/operations.ts";
-import type { IntervalUnit, Operation, ScheduledPayment } from "../domain/types.ts";
+import type { Fee, IntervalUnit, Operation, ScheduledPayment } from "../domain/types.ts";
 import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Badge, Button, ChoiceField, Field, Label, Screen, Segmented, Toggle } from "../ui/kit.tsx";
-import { AccountPicker, CategoryPicker, OptionPicker } from "../ui/pickers.tsx";
+import { AccountPicker, CategoryPicker, OptionPicker, Panel } from "../ui/pickers.tsx";
 import { font, radius, space } from "../ui/theme.ts";
 import { appStore } from "../ui/app-context.tsx";
 
@@ -191,6 +191,7 @@ export function OperationEditor() {
       </View>
       {draft.date > env.clock.today() && !schedule ? <Label>{t.t("A date in the future makes it a scheduled payment.")}</Label> : null}
       {draft.type !== "adjustment" ? <ChoiceField label="Repeat" value={t.t(REPEATS.find((r) => r.value === repeatValue)?.label ?? "")} onPress={() => setPicking("repeat")} /> : null}
+      {draft.type !== "adjustment" ? <FeesEditor fees={draft.fees ?? []} amount={amount} currency={account?.currency} onChange={(fees) => set({ fees })} /> : null}
       {schedule || draft.recur || draft.date > env.clock.today() ? (
         <Toggle
           label="Remind on the day of the payment"
@@ -231,5 +232,52 @@ export function OperationEditor() {
         onClose={() => setPicking(null)}
       />
     </Screen>
+  );
+}
+
+// Tax and commission: a percent or a fixed amount, deducted (the receiver gets less) or added on top;
+// applied one after another as in the first application (domain/money.ts applyFees).
+function FeesEditor({ fees, amount, currency, onChange }: { fees: Fee[]; amount: number; currency: string | undefined; onChange: (fees: Fee[]) => void }) {
+  const t = useT();
+  const money = useMoney();
+  const [open, setOpen] = useState<Fee["kind"] | null>(null);
+  const [value, setValue] = useState("");
+  const [percent, setPercent] = useState(true);
+  const [add, setAdd] = useState(false);
+  const steps = applyFees(amount, fees).steps;
+  const label = (kind: Fee["kind"]) => {
+    const fee = fees.find((f) => f.kind === kind);
+    if (!fee) return t.t("No");
+    const delta = steps.find((s) => s.fee.kind === kind)?.delta ?? 0;
+    return `${fee.percent ? fee.percent + " %" : money(Math.round((fee.value ?? 0) * 100), currency)} (${delta > 0 ? "+" : ""}${money(delta, currency)})`;
+  };
+  const edit = (kind: Fee["kind"]) => {
+    const fee = fees.find((f) => f.kind === kind);
+    setPercent(!fee || !!fee.percent);
+    setAdd(!!fee?.add);
+    setValue(fee ? String(fee.percent || fee.value || "") : "");
+    setOpen(kind);
+  };
+  const save = () => {
+    if (!open) return;
+    const n = Number(value.replace(",", "."));
+    if (!(n > 0) || !Number.isFinite(n) || (percent && n >= 100 && !add)) return Alert.alert(t.t("Enter a valid amount"));
+    onChange(withFee(fees, open, percent ? { percent: n, add } : { value: Math.round(n * 100) / 100, add }));
+    setOpen(null);
+  };
+  return (
+    <>
+      <ChoiceField label="Tax" value={label("tax")} onPress={() => edit("tax")} />
+      <ChoiceField label="Commission" value={label("commission")} onPress={() => edit("commission")} />
+      <Panel visible={open !== null} title={open === "tax" ? "Tax" : "Commission"} onClose={() => setOpen(null)}>
+        <View style={{ padding: space.l, gap: space.m }}>
+          <Segmented value={percent ? "p" : "v"} options={[{ value: "p", label: "Percent" }, { value: "v", label: "Amount" }] as const} onChange={(v) => setPercent(v === "p")} />
+          <Field label={percent ? "Percent" : "Amount"} value={value} onChange={setValue} keyboard="decimal-pad" />
+          <Toggle label="Add on top of the amount" value={add} onChange={setAdd} />
+          <Button label="Save" onPress={save} />
+          {open && fees.some((f) => f.kind === open) ? <Button label="Remove" kind="outline" onPress={() => (onChange(withFee(fees, open, null)), setOpen(null))} /> : null}
+        </View>
+      </Panel>
+    </>
   );
 }
