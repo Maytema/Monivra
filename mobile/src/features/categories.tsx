@@ -10,7 +10,7 @@ import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-con
 import { Badge, Button, ChoiceField, Field, Label, Screen, Segmented } from "../ui/kit.tsx";
 import { OptionPicker } from "../ui/pickers.tsx";
 import { font, radius, space } from "../ui/theme.ts";
-import { HeaderAdd } from "./accounts.tsx";
+import { RootHero } from "./root-hero.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";
 
@@ -28,8 +28,9 @@ export function CategoriesScreen() {
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
   const tiles = data.categories.filter((c) => c.type === catType && !c.parent && !c.archived);
   return (
-    <Screen>
-      <Stack.Screen options={{ headerRight: () => <HeaderAdd onPress={() => router.push({ pathname: "/category", params: { type: catType } })} /> }} />
+    <View style={{ flex: 1 }}>
+    <RootHero icon="plus" label="New category" onAction={() => router.push({ pathname: "/category", params: { type: catType } })} />
+    <Screen tab>
       <PeriodBar />
       <Segmented value={catType} options={KINDS} onChange={(v) => setView({ catType: v })} />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.m }}>
@@ -56,6 +57,7 @@ export function CategoriesScreen() {
       {!tiles.length ? <Button label="Create category" onPress={() => router.push({ pathname: "/category", params: { type: catType } })} /> : null}
       <Label>{t.t("Tap a category to add an operation, hold it to change the category.")}</Label>
     </Screen>
+    </View>
   );
 }
 

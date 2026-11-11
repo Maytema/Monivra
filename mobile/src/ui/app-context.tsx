@@ -3,26 +3,17 @@
 import "../platform/crypto.ts";
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import { Alert, useColorScheme } from "react-native";
-import { getLocales } from "expo-localization";
-import { createStore, type AppState, type Store } from "../application/store.ts";
+import type { AppState } from "../application/store.ts";
 import type { LedgerTx } from "../domain/change.ts";
-import { systemEnv, type Env } from "../domain/env.ts";
+import type { Env } from "../domain/env.ts";
 import { DomainError } from "../domain/errors.ts";
 import { formatAmount } from "../domain/money.ts";
 import type { LedgerData, Minor } from "../domain/types.ts";
 import { translator, type Translator } from "../i18n/index.ts";
-import { openAppDatabase } from "../platform/database.ts";
+import { appStore } from "../platform/app-store.ts";
 import { buildPalette, type Palette } from "./theme.ts";
 
-let store: Store | null = null;
-export function appStore(): Store {
-  if (!store) {
-    const language = () => getLocales()[0]?.languageCode ?? "en";
-    store = createStore(openAppDatabase(), systemEnv, language);
-    store.open();
-  }
-  return store;
-}
+export { appStore };
 
 export function useAppState(): AppState {
   const s = appStore();

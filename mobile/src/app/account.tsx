@@ -1,1 +1,1 @@
-export { AccountEditor as default } from "../features/accounts.tsx";
+export { AccountEditor as default } from "../features/account-editor.tsx";

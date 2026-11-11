@@ -17,10 +17,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Two builds with different purposes: the phone build holds only the 64-bit ARM libraries (what a
+  # physical phone needs), the emulator build only x86_64 (what the CI emulator needs). Neither carries
+  # the other's native libraries. Types and tests run once, in the phone leg.
   build:
-    name: Check and build APK
+    name: Check and build APK (${{ matrix.abi }})
     runs-on: ubuntu-latest
     timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        abi: [arm64-v8a, x86_64]
     defaults:
       run:
         working-directory: mobile
@@ -48,13 +55,18 @@ jobs:
         run: npx expo install --check
         continue-on-error: true
       - name: Tests (domain, database, rates, store, parity with the first application)
+        if: matrix.abi == 'arm64-v8a'
         run: npm test
+      - name: Structure of src/ (layers, no cycles)
+        if: matrix.abi == 'arm64-v8a'
+        run: npm run boundaries
       - name: Types
         id: types
+        if: matrix.abi == 'arm64-v8a'
         run: npx tsc --noEmit -p tsconfig.json
         continue-on-error: true
       - name: Keep package files
-        if: always()
+        if: always() && matrix.abi == 'arm64-v8a'
         uses: actions/upload-artifact@v4
         with:
           name: package-files
@@ -67,19 +79,29 @@ jobs:
           MONIVRA_VERSION_CODE: ${{ github.run_number }}
       - name: Build release APK
         working-directory: mobile/android
-        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=arm64-v8a,armeabi-v7a,x86_64
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=${{ matrix.abi }}
       - name: Keep the APK
         uses: actions/upload-artifact@v4
         with:
-          name: monivra-rn-apk
+          name: monivra-rn-apk-${{ matrix.abi }}
           path: mobile/android/app/build/outputs/apk/release/*.apk
+      - name: Size of the parts of the APK
+        run: |
+          apk=$(ls android/app/build/outputs/apk/release/*.apk | head -1)
+          { echo "apk $(stat -c %s "$apk") bytes (${{ matrix.abi }})"; unzip -lv "$apk" | awk '{print $1, $3, $8}' | sort -rn | head -25; } | tee apk-size-${{ matrix.abi }}.txt
+      - name: Keep the size report
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-size-${{ matrix.abi }}
+          path: mobile/apk-size-${{ matrix.abi }}.txt
       - name: Fail when types are wrong
-        if: steps.types.outcome == 'failure'
+        if: matrix.abi == 'arm64-v8a' && steps.types.outcome == 'failure'
         run: exit 1
 
   emulator:
     name: Smoke test on the Android emulator
     needs: build
+    if: needs.build.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -88,7 +110,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: monivra-rn-apk
+          name: monivra-rn-apk-x86_64
           path: results-apk
       - name: Allow the emulator to use hardware acceleration
         run: |
@@ -145,9 +167,10 @@ jobs:
           mkdir -p "$dir"
           cp results/package-files/* "$dir"/ 2>/dev/null || true
           if [ -d results/emulator-results ]; then mkdir -p "$dir/emulator" && cp results/emulator-results/* "$dir/emulator"/ 2>/dev/null || true; fi
-          for apk in results/monivra-rn-apk/*.apk; do
+          for apk in results/monivra-rn-apk-arm64-v8a/*.apk; do
             [ -f "$apk" ] && cp "$apk" "$dir/RESIGN-ONLY-monivra-rn-${GITHUB_RUN_NUMBER}.apk"
           done
+          cp results/apk-size-*/*.txt "$dir"/ 2>/dev/null || true
           (cd "$dir" && { sha256sum *.apk 2>/dev/null || true; } > SHA256SUMS && printf 'commit %s\nbuild %s\nemulator %s\n' "$GITHUB_SHA" "$BUILD_RESULT" "$EMULATOR_RESULT" > BUILD.txt)
           cd out
           git config user.name "github-actions[bot]"

@@ -1,6 +1,7 @@
 // More: budgets, scheduled payments, exchange rates, data, settings; and those pages.
 import { useMemo, useState } from "react";
 import { Alert, Linking, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { changeMainCurrency } from "../domain/accounts.ts";
@@ -21,7 +22,7 @@ import { appStore, showError, useCommand, useLedger, useMoney, usePalette, useT 
 import { Button, Card, ChoiceField, Field, Icon, Label, Row, Screen, Toggle } from "../ui/kit.tsx";
 import { CategoryPicker, OptionPicker, Panel } from "../ui/pickers.tsx";
 import { font, space } from "../ui/theme.ts";
-import { AmountField } from "./accounts.tsx";
+import { AmountField } from "./account-editor.tsx";
 import { useView } from "./ui-state.ts";
 
 const MENU = [
@@ -35,8 +36,10 @@ const MENU = [
 export function MoreScreen() {
   const t = useT();
   const p = usePalette();
+  const insets = useSafeAreaInsets();
   return (
-    <Screen>
+    <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: p.bg }}>
+    <Screen tab>
       <Card style={{ paddingHorizontal: space.s }}>
         {MENU.map(([label, icon, href]) => (
           <Row key={href} left={<Icon name={icon} color={p.accentInk} />} title={t.t(label)} right={<Icon name="right" size={18} color={p.muted} />} onPress={() => router.push(href)} />
@@ -44,6 +47,7 @@ export function MoreScreen() {
       </Card>
       <Label>{`Monivra ${APP_VERSION} · React Native`}</Label>
     </Screen>
+    </View>
   );
 }
 

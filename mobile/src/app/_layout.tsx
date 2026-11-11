@@ -11,6 +11,7 @@ import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
+import { SheetHost } from "../ui/sheets.tsx";
 
 function KeepCurrent() {
   useEffect(() => {
@@ -73,7 +74,9 @@ function Ready() {
         <Stack.Screen name="rates" options={{ title: t.t("Exchange rates") }} />
         <Stack.Screen name="data" options={{ title: t.t("Data") }} />
         <Stack.Screen name="settings" options={{ title: t.t("Settings") }} />
+        <Stack.Screen name="filtered" options={{ title: t.t("Operations") }} />
       </Stack>
+      <SheetHost />
       </LockGate>
     </>
   );

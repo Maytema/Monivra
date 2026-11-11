@@ -10,6 +10,7 @@ import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Badge, Card, Label, Money, Screen, Segmented } from "../ui/kit.tsx";
 import { font, space } from "../ui/theme.ts";
 import { PeriodBar } from "./period-bar.tsx";
+import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 
 export function StatisticsScreen() {
@@ -34,7 +35,9 @@ export function StatisticsScreen() {
     .filter((s) => s.type === catType)
     .reduce((n, s) => n + convert(s.amount, data.accounts.find((a) => a.id === (s.from || s.to))?.currency, data.settings.currency, data.rates), 0);
   return (
-    <Screen>
+    <View style={{ flex: 1 }}>
+    <RootHero />
+    <Screen tab>
       <PeriodBar />
       <View style={{ flexDirection: "row", gap: space.m }}>
         <Card style={{ flex: 1 }}>
@@ -79,5 +82,6 @@ export function StatisticsScreen() {
         <Text style={{ color: p.ink, fontWeight: "600" }}>{money(scheduledTotal)}</Text>
       </Card>
     </Screen>
+    </View>
   );
 }

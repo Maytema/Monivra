@@ -36,6 +36,17 @@ has "Start with a basic set" 01-first-start
 tap "Start with a basic set"
 shot 02-accounts 4
 has "Cash" 02-accounts
+has "Overall balance" 02-accounts
+# The sheet of an account opens over the list and closes with "back".
+tap "Cash"
+shot 02b-account-sheet 2
+has "Current balance" 02b-account-sheet
+has "Top up" 02b-account-sheet
+adb shell input keyevent 4; sleep 1.5
+shot 02c-sheet-closed 1
+has "Overall balance" 02c-sheet-closed
+tap "Operations"
+shot 02d-operations-empty 2
 tap "New operation"
 shot 03-editor 4
 for k in 1 2 5; do tap "$k"; done
@@ -56,6 +67,18 @@ shot 07-restarted 20
 tap "Operations"
 shot 08-operations-after-restart 3
 has "125" 08-operations-after-restart
+# Layout under other system settings: three-button navigation, a large font, a denser display.
+# (Looked at by a person: screenshots only.)
+tap "Accounts"
+adb shell cmd overlay enable com.android.internal.systemui.navbar.threebutton >/dev/null 2>&1; sleep 4
+shot 09-three-buttons 3
+adb shell settings put system font_scale 1.3; sleep 3
+shot 10-large-font 3
+adb shell settings put system font_scale 1.0
+adb shell wm density 520; sleep 3
+shot 11-dense 3
+adb shell wm density reset
+adb shell cmd overlay enable com.android.internal.systemui.navbar.gestural >/dev/null 2>&1; sleep 3
 adb shell pidof $PKG > "$OUT/pid.txt" && log "OK: running" || { log "FAIL: not running"; FAILED=1; }
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1

@@ -10,7 +10,8 @@ import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, use
 import { Badge, Button, Card, Icon, Label, Money, Row } from "../ui/kit.tsx";
 import { AccountPicker, CategoryPicker, Panel } from "../ui/pickers.tsx";
 import { ChoiceField, Field } from "../ui/kit.tsx";
-import { font, radius, space } from "../ui/theme.ts";
+import { chrome, font, radius, space } from "../ui/theme.ts";
+import { RootHero } from "./root-hero.tsx";
 import { AddButton } from "./add-button.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { useView } from "./ui-state.ts";
@@ -70,10 +71,11 @@ export function OperationsScreen() {
   }, [ops]);
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
+      <RootHero />
       <FlatList
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
-        contentContainerStyle={{ padding: space.l, paddingBottom: 100, gap: 2 }}
+        contentContainerStyle={{ padding: space.l, paddingBottom: chrome.fab + chrome.edgeGap * 2, gap: 2 }}
         ListHeaderComponent={
           <View style={{ gap: space.m, marginBottom: space.m }}>
             <PeriodBar />

@@ -7,11 +7,11 @@ import { ICONS } from "./icon-paths.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { font, radius, space } from "./theme.ts";
 
-export function Icon({ name, size = 22, color }: { name: string; size?: number; color?: ColorValue }) {
+export function Icon({ name, size = 22, color, filled = false }: { name: string; size?: number; color?: ColorValue; filled?: boolean }) {
   const p = usePalette();
   const heavy = name === "more" || name === "apps";
   return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color ?? p.ink} strokeWidth={heavy ? 3.8 : 1.7} strokeLinecap="round" strokeLinejoin="round">
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? (color ?? p.ink) : "none"} stroke={color ?? p.ink} strokeWidth={heavy ? 3.8 : 1.7} strokeLinecap="round" strokeLinejoin="round">
       <Path d={ICONS[name] ?? ICONS.wallet ?? ""} />
     </Svg>
   );
@@ -26,10 +26,13 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
   );
 }
 
-export function Screen({ children, scroll = true, padded = true }: { children: ReactNode; scroll?: boolean; padded?: boolean }) {
+// A page. A page of the stack ends above the system's bottom bar (its inset is added); a page inside
+// the tabs (`tab`) already ends above the tab bar, which carries the inset itself.
+export function Screen({ children, scroll = true, padded = true, tab = false }: { children: ReactNode; scroll?: boolean; padded?: boolean; tab?: boolean }) {
   const p = usePalette();
+  const insets = useSafeAreaInsets();
   const style = { flex: 1, backgroundColor: p.bg };
-  const content = { padding: padded ? space.l : 0, paddingBottom: 96, gap: space.m };
+  const content = { padding: padded ? space.l : 0, paddingBottom: (padded ? space.l : 0) + (tab ? 0 : insets.bottom), gap: space.m };
   return scroll ? (
     <ScrollView style={style} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
       {children}

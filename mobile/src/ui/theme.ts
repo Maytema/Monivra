@@ -32,6 +32,11 @@ export function readableOver(color: string, background: string, min = 4.5): stri
   }
   return toHex([target, target, target]);
 }
+// The same colour with an alpha channel, as `rgba()` (CSS `color-mix(in srgb, c 18%, transparent)`).
+export function alpha(color: string, share: number): string {
+  const [r, g, b] = channels(color);
+  return `rgba(${r}, ${g}, ${b}, ${share})`;
+}
 
 export interface Palette {
   dark: boolean;
@@ -76,3 +81,18 @@ export function buildPalette(accent: string, dark: boolean): Palette {
 export const space = { xs: 4, s: 8, m: 12, l: 16, xl: 24 } as const;
 export const radius = { s: 10, m: 14, l: 20, pill: 999 } as const;
 export const font = { small: 13, body: 16, title: 20, hero: 32 } as const;
+
+// Sizes of the first application's chrome (css/navbar.css, fab.css, layout.css, components.css).
+// None of them is a workaround for the system bars: the system's insets are added to them by the
+// components that sit at an edge of the screen (see `useSafeAreaInsets` in tab-bar.tsx, sheets.tsx).
+export const chrome = {
+  navPadTop: 7,
+  navMinBottom: 10,
+  navItem: 56,
+  navPill: { width: 56, height: 32, radius: 30 },
+  fab: 62,
+  edgeGap: 16,
+  contentSide: 11,
+  sheetRadius: 30,
+  dialogRadius: 28,
+} as const;

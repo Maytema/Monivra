@@ -5,7 +5,7 @@
 // This module is imported by the entry point, so the task is defined before anything else runs.
 import * as BackgroundTask from "expo-background-task";
 import * as TaskManager from "expo-task-manager";
-import { appStore } from "../ui/app-context.tsx";
+import { appStore } from "./app-store.ts";
 import { rebuildReminders } from "./notifications.ts";
 
 export const POST_DUE_TASK = "monivra-post-due";

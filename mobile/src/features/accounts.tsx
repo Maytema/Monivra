@@ -1,231 +1,213 @@
-// Accounts: the tab with the total and the groups, and the account editor.
-import { useMemo, useState } from "react";
-import { Alert, Pressable, Text, View } from "react-native";
-import { Stack, router, useLocalSearchParams } from "expo-router";
-import {
-  accountDeletionImpact,
-  accountDraft,
-  changesCurrencyOfUsedAccount,
-  checkedAccountDraft,
-  deleteAccount,
-  setArchived,
-  storeAccount,
-  type AccountDraft,
-  type CurrencyChangeMode,
-} from "../domain/accounts.ts";
-import { accountBalance, accountById, cardState, overallBalance, progressForBalance } from "../domain/ledger.ts";
-import { evaluateExpression } from "../domain/money.ts";
+// The Accounts tab (js/screens/accounts/list.js): header, tabs (Accounts / Debts / Total), groups with
+// their totals, rows with a badge, balance and progress, and the folders of finished and archived ones.
+import { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
+import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";
+import { convert } from "../domain/money.ts";
 import type { Account } from "../domain/types.ts";
-import { showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Badge, Button, Card, ChoiceField, Field, Icon, Label, Money, Row, Screen, Segmented, Toggle } from "../ui/kit.tsx";
-import { OptionPicker } from "../ui/pickers.tsx";
-import { font, space } from "../ui/theme.ts";
-import { AddButton } from "./add-button.tsx";
+import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { Button, Icon } from "../ui/kit.tsx";
+import { openCurrencySheet } from "../ui/currency-sheet.tsx";
+import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
+import { mix } from "../ui/theme.ts";
+import { isOwed, openAccountSheet, percentText } from "./account-sheet.tsx";
+import { RootHero } from "./root-hero.tsx";
 
-const GROUPS = [
-  ["Accounts", (a: Account) => a.type === "Regular"],
-  ["Savings", (a: Account) => a.type === "Savings"],
-  ["Debts", (a: Account) => a.type === "Debt"],
-] as const;
+type AccountTab = "Accounts" | "Debts" | "Total";
 
-export function AccountsScreen() {
+function useAccountParts() {
   const data = useLedger();
   const money = useMoney();
-  const p = usePalette();
-  const t = useT();
-  const [showArchived, setShowArchived] = useState(false);
-  const total = overallBalance(data);
-  const archived = data.accounts.filter((a) => a.archived);
-  const subtitle = (a: Account): string | undefined => {
-    const balance = accountBalance(data, a.id);
-    const card = cardState(a, balance);
-    if (card) return `${t.t("Available")}: ${money(card.available, a.currency, true)}`;
-    const progress = progressForBalance(a, balance);
-    if (progress?.kind === "goal") return progress.left > 0 ? `${t.t("To goal")}: ${money(progress.left, a.currency, true)}` : t.t("Goal reached");
-    if (a.type === "Debt") return t.t(balance < 0 ? "I owe" : balance > 0 ? "Owe me" : "Settled");
-    return a.description || undefined;
+  const balanceOf = (a: Account) => accountBalance(data, a.id);
+  const inMain = (n: number, from: string) => convert(n, from, data.settings.currency, data.rates);
+  const isFinished = (a: Account) => {
+    const progress = progressForBalance(a, balanceOf(a));
+    return a.type === "Debt" ? balanceOf(a) === 0 : !!progress && progress.kind === "goal" && progress.left <= 0;
   };
-  const list = (accounts: Account[]) =>
-    accounts.map((a) => {
-      const balance = accountBalance(data, a.id);
-      return (
-        <Row
-          key={a.id}
-          left={<Badge icon={a.icon} color={a.color} />}
-          title={(a.favorite ? "★ " : "") + a.name}
-          subtitle={subtitle(a)}
-          right={<Money value={balance} text={money(balance, a.currency, true)} />}
-          onPress={() => router.push({ pathname: "/account", params: { id: a.id } })}
-        />
-      );
-    });
-  return (
-    <View style={{ flex: 1 }}>
-      <Stack.Screen options={{ headerRight: () => <HeaderAdd onPress={() => router.push("/account")} /> }} />
-      <Screen>
-        <Card>
-          <Label>{t.t("Balance")}</Label>
-          <Text style={{ color: p.ink, fontSize: font.hero, fontWeight: "700" }}>{money(total, data.settings.currency, true)}</Text>
-        </Card>
-        {GROUPS.map(([title, match]) => {
-          const accounts = data.accounts.filter((a) => !a.archived && match(a));
-          if (!accounts.length) return null;
-          return (
-            <View key={title} style={{ gap: space.xs }}>
-              <Label>{t.t(title)}</Label>
-              <Card style={{ paddingHorizontal: space.s, paddingVertical: space.s }}>{list(accounts)}</Card>
-            </View>
-          );
-        })}
-        {!data.accounts.length ? <Button label="Create account" onPress={() => router.push("/account")} /> : null}
-        {archived.length ? (
-          <Pressable onPress={() => setShowArchived(!showArchived)}>
-            <Label>{`${t.t("Archive")} (${archived.length}) ${showArchived ? "▴" : "▾"}`}</Label>
-          </Pressable>
-        ) : null}
-        {showArchived ? <Card style={{ paddingHorizontal: space.s }}>{list(archived)}</Card> : null}
-      </Screen>
-      <AddButton />
-    </View>
-  );
+  return { data, money, balanceOf, inMain, isFinished };
 }
 
-export function HeaderAdd({ onPress }: { onPress: () => void }) {
+function AccountRow({ account }: { account: Account }) {
+  const { data, money, balanceOf } = useAccountParts();
   const p = usePalette();
+  const balance = balanceOf(account);
+  const progress = progressForBalance(account, balance);
   return (
-    <Pressable onPress={onPress} hitSlop={12} style={{ paddingHorizontal: space.l }}>
-      <Icon name="plus" color={p.accentInk} />
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => openAccountSheet(account.id)}
+      style={({ pressed }) => ({
+        minHeight: data.settings.bigAccounts ? 82 : 72,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 9,
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: p.line,
+        backgroundColor: pressed ? p.soft : p.key,
+      })}
+    >
+      <View style={{ width: 54, height: 54 }}>
+        <ToneBadge icon={account.icon} color={account.color} size={54} iconSize={28} />
+        {account.favorite ? (
+          <Text accessibilityLabel="Favorite" style={{ position: "absolute", right: 0, bottom: -1, fontSize: 12, lineHeight: 12, color: p.accentInk }}>
+            ★
+          </Text>
+        ) : null}
+      </View>
+      <View style={{ flex: 1, gap: 4 }}>
+        <Text numberOfLines={1} style={{ color: p.ink, fontSize: 17, lineHeight: 21 }}>
+          {account.name}
+        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <MoneyText text={money(balance, account.currency, true)} value={balance} />
+          {progress ? (
+            <>
+              <Meter percent={progress.percent} owed={isOwed(progress.kind, progress.left, debtDirection(data, account) === "I owe")} />
+              <Text style={{ minWidth: 52, textAlign: "right", color: p.inkSoft, fontSize: 15, fontVariant: ["tabular-nums"] }}>{percentText(progress.percent)}</Text>
+            </>
+          ) : null}
+        </View>
+      </View>
     </Pressable>
   );
 }
 
-// An amount typed as text (digits, a decimal comma or point, and + − × ÷).
-export function AmountField({ label, value, onChange, signed = false }: { label: string; value: number; onChange: (v: number) => void; signed?: boolean }) {
-  const [text, setText] = useState(value ? String(value / 100) : "");
+function Group({ accounts }: { accounts: Account[] }) {
   return (
-    <Field
-      label={label}
-      value={text}
-      keyboard={signed ? "numeric" : "decimal-pad"}
-      onChange={(v) => {
-        setText(v);
-        try {
-          const n = v.trim() ? evaluateExpression(v) : 0;
-          onChange(signed ? n : Math.abs(n));
-        } catch {
-          // Shown as typed; the value is taken once it reads as a number.
-        }
-      }}
-    />
+    <View style={{ gap: 16, borderRadius: 15 }}>
+      {accounts.map((a) => (
+        <AccountRow key={a.id} account={a} />
+      ))}
+    </View>
   );
 }
 
-const TYPES = [
-  { value: "Regular", label: "Regular" },
-  { value: "Savings", label: "Savings" },
-  { value: "Debt", label: "Debt" },
-] as const;
-
-export function AccountEditor() {
-  const { id } = useLocalSearchParams<{ id?: string }>();
-  const data = useLedger();
+// A folder that unfolds a list of accounts: the finished goals and debts, or the archive.
+function Folder({ title, icon, items }: { title: string; icon: string; items: Account[] }) {
+  const p = usePalette();
   const t = useT();
-  const money = useMoney();
-  const run = useCommand();
-  const existing = id ? accountById(data, id) : undefined;
-  const [draft, setDraft] = useState<AccountDraft>(() => accountDraft(data, existing));
-  const [picking, setPicking] = useState<"currency" | "debt" | null>(null);
-  const set = (patch: Partial<AccountDraft>) => setDraft((d) => ({ ...d, ...patch }));
-  const currencies = useMemo(() => Object.keys(data.rates).sort().map((c) => ({ value: c, label: c })), [data.rates]);
-
-  const save = () => {
-    let checked: AccountDraft;
-    try {
-      checked = checkedAccountDraft(data, draft);
-    } catch (error) {
-      showError(t, error);
-      return;
-    }
-    const store = (mode: CurrencyChangeMode) => {
-      if (run((tx, env) => storeAccount(tx, checked, mode, env))) router.back();
-    };
-    if (!changesCurrencyOfUsedAccount(data, checked)) return store("spent");
-    Alert.alert(t.t("Change the currency of the account?"), t.t("Choose what happens to the operations of this account."), [
-      { text: t.t("Cancel"), style: "cancel" },
-      { text: t.t("Recalculate what was spent"), onPress: () => store("spent") },
-      { text: t.t("Convert everything"), onPress: () => store("all") },
-    ]);
-  };
-
-  // Deleting an account deletes its operations and transfers, and other accounts' balances follow.
-  const remove = () => {
-    if (!existing) return;
-    const impact = accountDeletionImpact(data, existing.id);
-    const others = [...impact.otherBalances.entries()]
-      .map(([other, change]) => {
-        const a = accountById(data, other);
-        return a ? `• ${a.name}: ${change > 0 ? "+" : ""}${money(change, a.currency)}` : "";
-      })
-      .filter(Boolean)
-      .join("\n");
-    const message = [
-      t.t("Operations that will be deleted: {n}. Scheduled payments: {s}.", { n: impact.operations, s: impact.scheduled }),
-      others ? `${t.t("Balances of other accounts will change:")}\n${others}` : "",
-      t.t("This cannot be undone. Save a data file first if you may need this data."),
-    ]
-      .filter(Boolean)
-      .join("\n\n");
-    Alert.alert(t.t("Delete this account and all linked operations?"), message, [
-      { text: t.t("Cancel"), style: "cancel" },
-      {
-        text: t.t("Delete"),
-        style: "destructive",
-        onPress: () => {
-          if (run((tx) => deleteAccount(tx, existing.id))) router.back();
-        },
-      },
-    ]);
-  };
-
+  const [open, setOpen] = useState(false);
+  if (!items.length) return null;
   return (
-    <Screen>
-      <Stack.Screen options={{ title: t.t(existing ? "Change account" : "New account") }} />
-      <Field label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter a name" />
-      <Segmented value={draft.type} options={TYPES} onChange={(type) => set({ type })} />
-      <ChoiceField label="Account currency" value={draft.currency} onPress={() => setPicking("currency")} />
-      {draft.type === "Debt" ? <ChoiceField label="Type of debt" value={t.t(draft.debt)} onPress={() => setPicking("debt")} /> : null}
-      <AmountField label={draft.type === "Debt" ? "Amount of debt" : "Current balance"} value={draft.type === "Debt" ? Math.abs(draft.balance) : draft.balance} onChange={(balance) => set({ balance })} signed={draft.type !== "Debt"} />
-      {draft.type === "Regular" ? <AmountField label="Credit limit" value={draft.limit} onChange={(limit) => set({ limit })} /> : null}
-      {draft.type === "Savings" ? <AmountField label="Goal" value={draft.goal} onChange={(goal) => set({ goal })} /> : null}
-      {draft.type === "Debt" && existing ? <AmountField label="Total debt" value={draft.totalDebt ?? 0} onChange={(totalDebt) => set({ totalDebt })} /> : null}
-      <Field label="Description" value={draft.description} onChange={(description) => set({ description })} />
-      <Toggle label="Include in overall balance" value={draft.include} onChange={(include) => set({ include })} />
-      <Toggle label="Favorite" value={draft.favorite} onChange={(favorite) => set({ favorite })} hint="Used by default in new operations" />
-      {draft.type === "Debt" ? (
-        <>
-          <Toggle label="Consider as expense" value={draft.considerExpense} onChange={(considerExpense) => set({ considerExpense })} hint="Consider transfers to this account as expenses" />
-          <Toggle label="Consider as income" value={draft.considerIncome} onChange={(considerIncome) => set({ considerIncome })} hint="Consider transfers from this account as incomes" />
-        </>
+    <View style={{ marginTop: 28, borderTopWidth: 1, borderTopColor: p.line }}>
+      <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen(!open)} style={{ flexDirection: "row", alignItems: "center", gap: 12, minHeight: 56, paddingHorizontal: 4 }}>
+        <Icon name={icon} size={20} color={p.muted} />
+        <Text style={{ flex: 1, color: p.muted, fontSize: 15 }}>{`${t.t(title)} (${items.length})`}</Text>
+        <Icon name={open ? "up" : "down"} size={14} color={p.muted} />
+      </Pressable>
+      {open ? (
+        <View style={{ marginBottom: 16 }}>
+          <Group accounts={items} />
+        </View>
       ) : null}
-      <Button label={existing ? "Save" : "Create"} onPress={save} />
-      {existing ? (
-        <>
-          <Button label={existing.archived ? "Return from archive" : "Move to archive"} kind="outline" onPress={() => run((tx) => (setArchived(tx, existing.id, !existing.archived), true)) && router.back()} />
-          <Button label="Delete" kind="danger" onPress={remove} />
-        </>
+    </View>
+  );
+}
+
+function Totals() {
+  const { data, money, balanceOf } = useAccountParts();
+  const p = usePalette();
+  const t = useT();
+  const run = useCommand();
+  const live = data.accounts.filter((a) => !a.archived && a.include);
+  const excluded = data.accounts.filter((a) => !a.archived && !a.include).length;
+  return (
+    <View>
+      {(["Total", "Regular", "Savings", "Debt"] as const).map((type, index) => {
+        const rows = live.filter((a) => type === "Total" || a.type === type);
+        if (!rows.length) return null;
+        const currencies = [...new Set(rows.map((a) => a.currency))];
+        const to = data.settings.totalCurrency?.[type] || data.settings.currency;
+        const converted = rows.reduce((n, a) => n + convert(balanceOf(a), a.currency, to, data.rates), 0);
+        return (
+          <View key={type}>
+            <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type === "Debt" ? "Debts" : type} />
+            <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 13, overflow: "hidden", marginBottom: 20 }}>
+              {currencies.map((c) => {
+                const sum = rows.filter((a) => a.currency === c).reduce((n, a) => n + balanceOf(a), 0);
+                return (
+                  <View key={c} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 18, paddingHorizontal: 15 }}>
+                    <Text style={{ flex: 1, color: p.ink, fontSize: 19 }}>{c}</Text>
+                    <MoneyText text={money(sum, c)} value={sum} size={19} />
+                  </View>
+                );
+              })}
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => openCurrencySheet(to, (code) => void run((tx) => (tx.setSettings({ totalCurrency: { ...data.settings.totalCurrency, [type]: code } }), true)))}
+                style={{ padding: 18, alignItems: "center", backgroundColor: mix(p.positive, p.bg, 0.1), borderTopWidth: 1, borderTopColor: p.line }}
+              >
+                <MoneyText text={money(converted, to)} value={converted} size={20} />
+              </Pressable>
+            </View>
+          </View>
+        );
+      })}
+      {excluded ? (
+        <Text style={{ color: p.inkSoft, fontSize: 13, marginHorizontal: 4, marginTop: 12 }}>
+          {t.tc("{n} account is not counted here: it is switched off in “Include in overall balance”.", "{n} accounts are not counted here: they are switched off in “Include in overall balance”.", excluded)}
+        </Text>
       ) : null}
-      <OptionPicker visible={picking === "currency"} title="Account currency" options={currencies} value={draft.currency} onPick={(currency) => set({ currency })} onClose={() => setPicking(null)} />
-      <OptionPicker
-        visible={picking === "debt"}
-        title="Type of debt"
-        options={[
-          { value: "Owe me", label: "Owe me" },
-          { value: "I owe", label: "I owe" },
-        ]}
-        value={draft.debt}
-        onPick={(debt) => set({ debt })}
-        onClose={() => setPicking(null)}
-      />
-    </Screen>
+    </View>
+  );
+}
+
+export function AccountsScreen() {
+  const { data, money, balanceOf, inMain, isFinished } = useAccountParts();
+  const p = usePalette();
+  const t = useT();
+  const [tab, setTab] = useState<AccountTab>("Accounts");
+  const live = data.accounts.filter((a) => !a.archived);
+  const archived = data.accounts.filter((a) => a.archived);
+  const hasDebts = live.some((a) => a.type === "Debt");
+  const tabs: AccountTab[] = hasDebts ? ["Accounts", "Debts", "Total"] : ["Accounts", "Total"];
+  const shown = tabs.includes(tab) ? tab : "Accounts";
+  const list = shown === "Debts" ? live.filter((a) => a.type === "Debt") : live.filter((a) => a.type !== "Debt");
+  const completed = list.filter(isFinished);
+  const open = list.filter((a) => !isFinished(a));
+  const groups = shown === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
+
+  const header = <RootHero icon="plus" label="New account" onAction={() => router.push("/account")} />;
+  if (!data.accounts.length)
+    return (
+      <View style={{ flex: 1, backgroundColor: p.bg }}>
+        {header}
+        <View style={{ padding: 24, gap: 12, alignItems: "center" }}>
+          <Text style={{ color: p.ink, fontSize: 20, textAlign: "center" }}>{t.t("Accounts and savings will be here")}</Text>
+          <Text style={{ color: p.muted, textAlign: "center" }}>{t.t("So far, there is not a single financial or savings account. Create your first financial or savings account?")}</Text>
+          <Button label="Create" onPress={() => router.push("/account")} />
+        </View>
+      </View>
+    );
+  return (
+    <View style={{ flex: 1, backgroundColor: p.bg }}>
+      {header}
+      <TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} />
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+        {shown === "Total" ? (
+          <Totals />
+        ) : (
+          <>
+            {groups.map((type, index) => {
+              const rows = open.filter((a) => (a.type === "Debt" ? type === debtDirection(data, a) : a.type === type));
+              if (!rows.length && type !== "Savings") return null;
+              const total = rows.reduce((n, a) => n + inMain(balanceOf(a), a.currency), 0);
+              return (
+                <View key={type}>
+                  <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyText text={money(total, data.settings.currency, true)} value={total} size={19} />} />
+                  {rows.length ? <Group accounts={rows} /> : null}
+                </View>
+              );
+            })}
+            <Folder title="Completed" icon="check" items={completed} />
+          </>
+        )}
+        <Folder title="Archive" icon="archive" items={archived} />
+      </ScrollView>
+    </View>
   );
 }

@@ -3,6 +3,7 @@ import { Pressable } from "react-native";
 import { router } from "expo-router";
 import { usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
+import { chrome } from "../ui/theme.ts";
 
 export function AddButton({ params }: { params?: Record<string, string> }) {
   const p = usePalette();
@@ -14,11 +15,11 @@ export function AddButton({ params }: { params?: Record<string, string> }) {
       onPress={() => router.push({ pathname: "/operation", params: params ?? {} })}
       style={({ pressed }) => ({
         position: "absolute",
-        right: 20,
-        bottom: 20,
-        width: 62,
-        height: 62,
-        borderRadius: 31,
+        right: chrome.edgeGap,
+        bottom: chrome.edgeGap,
+        width: chrome.fab,
+        height: chrome.fab,
+        borderRadius: chrome.fab / 2,
         backgroundColor: p.accent,
         alignItems: "center",
         justifyContent: "center",
