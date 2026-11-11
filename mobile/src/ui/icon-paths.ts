@@ -5,6 +5,8 @@ export const ICONS: Record<string, string> = {
   card: "M3 5h18v14H3zM3 9h18M6 15h5m4 0h3",
   cash: "M3 6h18v13H3zM7 6c0 3-1 4-4 4m18 5c-3 0-4 1-4 4m-5-9v5m-2-1c2 2 5 0 3-1s-4-1-2-3",
   home: "m3 10 9-7 9 7v11H3zm0 0h18M9 21v-8h6v8",
+  arrowExpense: "M4 10V4h16v6M12 20V9m-6 6 6-6 6 6",
+  arrowIncome: "M12 4v15m-6-6 6 6 6-6M4 20h16",
   spark: "m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3z",
   goal: "M7 3h10v4H7zm1 4-3 11h14L16 7M12 18v5",
   pig: "M5 7 3 3l7 2c6-2 10 1 10 6h2v5h-3l-2 5h-3v-4H8v4H5l-2-7C0 11 2 8 5 7zm10 2h1",
