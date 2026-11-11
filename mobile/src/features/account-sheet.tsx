@@ -68,9 +68,9 @@ function AccountSheet({ id }: { id: string }) {
   const balance = accountBalance(data, id);
   const available = account.type === "Regular" && account.limit > 0;
   const figure = (label: string, amount: number) => (
-    <View style={{ flex: 1, minWidth: 140 }}>
-      <Text style={{ color: p.muted, fontSize: 13 }}>{t.t(label)}</Text>
-      <MoneyText text={money(amount, account.currency, true)} value={amount} size={26} style={{ marginTop: 2 }} />
+    <View style={{ flex: 1, minWidth: 140, alignItems: "center" }}>
+      <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
+      <MoneyText text={money(amount, account.currency, true)} value={amount} size={18} style={{ marginTop: 10 }} />
     </View>
   );
   // An account action replaces the sheet, so one "back" returns to the list.
@@ -81,9 +81,9 @@ function AccountSheet({ id }: { id: string }) {
   return (
     <View>
       <View style={{ marginTop: 8, marginHorizontal: 4, paddingTop: 16, paddingHorizontal: 18, paddingBottom: 18, borderWidth: 1, borderColor: p.line, borderRadius: 16 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginBottom: 14 }}>
-          <ToneBadge icon={account.icon} color={account.color} size={54} iconSize={28} />
-          <Text style={{ flex: 1, color: p.ink, fontSize: 24, fontWeight: "500" }}>{account.name}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginBottom: 20 }}>
+          <ToneBadge icon={account.icon} color={account.color} size={56} iconSize={28} />
+          <Text style={{ flex: 1, color: p.ink, fontSize: 18 }}>{account.name}</Text>
           <Pressable accessibilityRole="button" accessibilityLabel={t.t("Favorite")} hitSlop={10} onPress={() => void run((tx) => (toggleFavoriteAccount(tx, id), true))}>
             <Icon name="star" size={26} color={account.favorite ? p.accentInk : p.accent} filled={account.favorite} />
           </Pressable>
@@ -122,7 +122,7 @@ function AccountSheet({ id }: { id: string }) {
           }}
         />
         <ActionTile icon="income" label="Top up" tone="#22b573" onPress={() => start("income", "to")} />
-        <ActionTile icon="transfer" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from")} />
+        <ActionTile icon="right" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from")} />
         <ActionTile icon="expense" label="Debit" tone="#e5384f" onPress={() => start("expense", "from")} />
       </ActionGrid>
     </View>
