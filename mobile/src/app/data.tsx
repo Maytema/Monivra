@@ -1,1 +1,1 @@
-export { DataScreen as default } from "../features/more.tsx";
+export { DataScreen as default } from "../features/data.tsx";
