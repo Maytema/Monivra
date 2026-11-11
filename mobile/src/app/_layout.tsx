@@ -76,6 +76,7 @@ function Ready() {
         <Stack.Screen name="budget-details" options={{ title: t.t("Budget") }} />
         <Stack.Screen name="rates" options={{ title: t.t("Exchange rates") }} />
         <Stack.Screen name="data" options={{ title: t.t("Data") }} />
+        <Stack.Screen name="info" options={{ title: "" }} />
         <Stack.Screen name="settings" options={{ title: t.t("Settings") }} />
         <Stack.Screen name="settings-page" options={{ title: t.t("Settings") }} />
         <Stack.Screen name="filtered" options={{ title: t.t("Operations") }} />
