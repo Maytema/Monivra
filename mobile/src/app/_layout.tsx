@@ -64,6 +64,8 @@ function Ready() {
           headerStyle: { backgroundColor: p.bg },
           headerTintColor: p.ink,
           headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontSize: 22, fontWeight: "400", color: p.ink },
           // Every page of the stack ends above the system bar; the tabs carry the inset in their bar.
           contentStyle: { backgroundColor: p.bg, paddingBottom: insets.bottom },
         }}

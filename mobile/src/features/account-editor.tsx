@@ -21,6 +21,7 @@ import { accountById } from "../domain/ledger.ts";
 import { showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openAmountSheet } from "../ui/amount-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
+import { currencyName } from "../ui/currency-names.ts";
 import { openCustomize } from "../ui/customize-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText, FieldToggle } from "../ui/form.tsx";
@@ -202,7 +203,7 @@ export function AccountEditor() {
     );
   };
 
-  const amount = (label: string, value: number, onChange: (v: number) => void, signed = false, shownAs = label) => <FieldButton label={shownAs} value={money(value, draft.currency)} onPress={() => openAmountSheet(label, value, onChange, signed, draft.currency)} />;
+  const amount = (label: string, value: number, onChange: (v: number) => void, signed = false, shownAs = label) => <FieldButton inline tone={value < 0 ? "negative" : "positive"} label={shownAs} value={money(value, draft.currency)} onPress={() => openAmountSheet(label, value, onChange, signed, draft.currency)} />;
   const counterpart = accountById(data, draft.counterpart ?? "");
   const regulars = data.accounts.filter((a) => !a.archived && a.id !== draft.id);
 
@@ -224,13 +225,24 @@ export function AccountEditor() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t(editing ? "Change account" : "New account") }} />
-      <ScrollView contentContainerStyle={{ padding: space.l, gap: 14 }} keyboardShouldPersistTaps="handled">
-        <FieldText label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter a name" />
-        <FieldButton label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} right={<ToneBadge icon={draft.icon} color={draft.color} size={40} iconSize={22} />} />
+      <ScrollView contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
+        <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
+        <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} right={<ToneBadge icon={draft.icon} color={draft.color} size={40} iconSize={22} />} />
         <FieldText label="Description" value={draft.description ?? ""} onChange={(description) => set({ description })} />
-        <FieldButton label="Account type" value={t.t(draft.type)} onPress={() => sheets.open(<TypeSheet onPick={setType} />, "sheet")} />
+        <FieldButton
+          label="Account type"
+          onPress={() => sheets.open(<TypeSheet onPick={setType} />, "sheet")}
+          right={
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
+              <View style={{ width: 28, height: 28, borderRadius: 7, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}>
+                <Icon name={TYPES.find((x) => x.type === draft.type)?.icon ?? "wallet"} size={18} color={p.onAccent} />
+              </View>
+              <Text style={{ color: p.accentInk, fontSize: 15 }}>{t.t(draft.type)}</Text>
+            </View>
+          }
+        />
         {debt ? <FieldButton label="Type of debt" value={t.t(draft.debt ?? "Owe me")} onPress={() => optionDialog<"Owe me" | "I owe">("Type of debt", [{ value: "Owe me", label: "Owe me" }, { value: "I owe", label: "I owe" }], draft.debt ?? "Owe me", (v) => set({ debt: v }))} /> : null}
-        <FieldButton label="Account currency" value={draft.currency} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
+        <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {amount(debt ? "Amount of debt" : "Current balance", debt ? Math.abs(draft.balance) : draft.balance, (balance) => set({ balance }), !debt, debt && editing ? "Current debt" : undefined)}
         {debt && editing ? amount("Total debt", draft.totalDebt ?? Math.abs(draft.balance), (v) => set({ totalDebt: Math.abs(v) })) : null}
         {draft.type === "Regular" ? amount("Credit limit", draft.limit, (limit) => set({ limit })) : null}

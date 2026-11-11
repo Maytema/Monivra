@@ -79,12 +79,12 @@ export function Button({ label, onPress, kind = "primary", disabled = false }: {
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
-        { backgroundColor: bg, borderRadius: radius.pill, paddingVertical: 13, paddingHorizontal: space.xl, alignItems: "center" },
+        { backgroundColor: bg, borderRadius: radius.pill, paddingVertical: 17, paddingHorizontal: space.xl, alignItems: "center" },
         kind === "outline" && { borderWidth: 1, borderColor: p.accent },
         (pressed || disabled) && { opacity: disabled ? 0.4 : 0.75 },
       ]}
     >
-      <Text style={{ color: fg, fontSize: font.body, fontWeight: "600" }}>{t.t(label)}</Text>
+      <Text style={{ color: fg, fontSize: 17, fontWeight: "500" }}>{t.t(label)}</Text>
     </Pressable>
   );
 }
