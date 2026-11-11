@@ -20,13 +20,11 @@ export const TABS = [
 interface TabBarProps {
   state: { index: number; routes: readonly { key: string; name: string }[] };
   descriptors: Record<string, { options: { tabBarStyle?: unknown } } | undefined>;
-  navigation: {
-    emit(event: { type: "tabPress"; target: string; canPreventDefault: boolean }): { defaultPrevented?: boolean };
-    navigate(name: string): void;
-  };
+  emitter: { emit(event: { type: "tabPress"; target: string; canPreventDefault: boolean }): { defaultPrevented?: boolean } };
+  navigateToTab: (routeKey: string) => void;
 }
 
-export function TabBar({ state, descriptors, navigation }: TabBarProps) {
+export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarProps) {
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
@@ -52,8 +50,8 @@ export function TabBar({ state, descriptors, navigation }: TabBarProps) {
         const active = state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
-          const event = navigation.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
-          if (!active && !event.defaultPrevented) navigation.navigate(route.name);
+          const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
+          if (!active && !event.defaultPrevented) navigateToTab(route.key);
         };
         return (
           <Pressable
