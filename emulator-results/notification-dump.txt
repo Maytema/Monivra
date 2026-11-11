@@ -1,18 +1,18 @@
-    NotificationRecord(0x06187267: pkg=app.monivra.finance.dev user=UserHandle{0} id=1797606867 tag=null importance=4 key=0|app.monivra.finance.dev|1797606867|null|10192: Notification(channel=payments shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x18 color=0xff03caa1 vis=PRIVATE))
+    NotificationRecord(0x000afae7: pkg=app.monivra.finance.dev user=UserHandle{0} id=1780829248 tag=null importance=4 key=0|app.monivra.finance.dev|1780829248|null|10192: Notification(channel=payments shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x18 color=0xff03caa1 vis=PRIVATE))
       uid=10192 userId=0
       opPkg=app.monivra.finance.dev
       icon=Icon(typ=RESOURCE pkg=app.monivra.finance.dev id=0x7f080063)
       flags=0x18
-      key=0|app.monivra.finance.dev|1797606867|null|10192
+      key=0|app.monivra.finance.dev|1780829248|null|10192
       seen=true
-      groupKey=0|app.monivra.finance.dev|1797606867|null|10192
+      groupKey=0|app.monivra.finance.dev|1780829248|null|10192
       notification=
-            contentIntent=PendingIntent{dee4814: PendingIntentRecord{97b205c app.monivra.finance.dev startActivity (allowlist: 70ff65:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
-            deleteIntent=PendingIntent{be2f8bd: PendingIntentRecord{b3bdecf app.monivra.finance.dev broadcastIntent (allowlist: 70ff65:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+            contentIntent=PendingIntent{2c96694: PendingIntentRecord{be18019 app.monivra.finance.dev startActivity (allowlist: 6158de:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
+            deleteIntent=PendingIntent{779f53d: PendingIntentRecord{d172360 app.monivra.finance.dev broadcastIntent (allowlist: 6158de:+30s0ms/0/NOTIFICATION_SERVICE/NotificationManagerService)}}
             number=0
                 android.title=String (Scheduled payment)
-                android.text=String (Internet is due on 2026-11-10)
-                android.appInfo=ApplicationInfo (ApplicationInfo{69baeb2 app.monivra.finance.dev})
+                android.text=String (Internet is due on 2026-11-11)
+                android.appInfo=ApplicationInfo (ApplicationInfo{1d43132 app.monivra.finance.dev})
                 android.showWhen=Boolean (true)
                 android.title=String (Wi‑Fi will turn on automatically)
                 android.text=String (When you're near a high quality saved network)
@@ -20,7 +20,7 @@
                 android.text=String (Performance is impacted. To disable, check bootloader.)
                 android.title=String (Configure AT Translated Set 2 keyboard)
                 android.text=String (Tap to select language and layout)
-  mSoundNotificationKey=0|app.monivra.finance.dev|1797606867|null|10192
+  mSoundNotificationKey=0|app.monivra.finance.dev|1780829248|null|10192
   mVibrateNotificationKey=null
       AppSettings: com.android.imsserviceentitlement (10117)
       AppSettings: app.monivra.finance.dev (10192) importance=DEFAULT userSet=false

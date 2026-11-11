@@ -3,37 +3,37 @@
     "name": "the device",
     "status": "pass",
     "note": "Android 14 (API 34), x86_64, sdk_gphone64_x86_64",
-    "seconds": 1
+    "seconds": 0
   },
   {
     "name": "the release APK installs",
     "status": "pass",
     "note": "",
-    "seconds": 6
+    "seconds": 4
   },
   {
     "name": "installed package facts: ID, version, SDKs, permissions, not debuggable, no network permission",
     "status": "pass",
-    "note": "version 0.1.0-build.21, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
+    "note": "version 0.1.0-build.22, minSdk 23, targetSdk 35, permissions: android.permission.USE_BIOMETRIC, android.permission.USE_FINGERPRINT, android.permission.RECEIVE_BOOT_COMPLETED, android.permission.WAKE_LOCK, android.permission.POST_NOTIFICATIONS",
     "seconds": 0
   },
   {
     "name": "the release APK starts offline (airplane mode) and stays running",
     "status": "pass",
-    "note": "running, pid 3497, no crash",
-    "seconds": 13
+    "note": "running, pid 3216, no crash",
+    "seconds": 15
   },
   {
     "name": "the debuggable build installs over the release build (same signature)",
     "status": "pass",
     "note": "",
-    "seconds": 0
+    "seconds": 1
   },
   {
     "name": "a new install shows the welcome screen and no data",
     "status": "pass",
     "note": "",
-    "seconds": 0
+    "seconds": 1
   },
   {
     "name": "synthetic test data (a fixture of the tests, not of the app) is stored",
@@ -57,7 +57,7 @@
     "name": "data survives the process being killed and restarted",
     "status": "pass",
     "note": "",
-    "seconds": 6
+    "seconds": 8
   },
   {
     "name": "stored data lost, application installed: the internal copy restores it, with a notice",
@@ -69,19 +69,19 @@
     "name": "a damaged stored dataset is not overwritten by the internal copy",
     "status": "pass",
     "note": "",
-    "seconds": 23
+    "seconds": 24
   },
   {
     "name": "durability: a change made a moment before the process is killed is still there",
     "status": "pass",
     "note": "change kept; boot: kept",
-    "seconds": 4
+    "seconds": 9
   },
   {
     "name": "a PIN: its hash is in the keystore storage, not in the data, the copy or the log",
     "status": "pass",
     "note": "marker only in the data and copy; sealed file is not text",
-    "seconds": 4
+    "seconds": 3
   },
   {
     "name": "after a restart the lock screen asks for the PIN: wrong refused, right opens",
@@ -93,7 +93,7 @@
     "name": "leaving to Home / Recents / another app and coming back: Immediately asks for the PIN, a timed lock waits, the switch off never locks",
     "status": "pass",
     "note": "home: locked; recents: locked; app: locked; screen lock: locked; 60 s, back at once: open; switch off: open",
-    "seconds": 31
+    "seconds": 33
   },
   {
     "name": "the real system reports biometric status (no fingerprint is enrolled on the emulator)",
@@ -117,7 +117,7 @@
     "name": "Share: the system share sheet opens with the file (content address, no storage permission)",
     "status": "pass",
     "note": "",
-    "seconds": 9
+    "seconds": 11
   },
   {
     "name": "Print: the system print screen opens with the PDF and closing it answers the call",
@@ -146,7 +146,7 @@
   {
     "name": "update: a build with a higher version code installed over this one keeps data, PIN and lock",
     "status": "pass",
-    "note": "versionCode=21 minSdk=23 targetSdk=35 → versionCode=22 minSdk=23 targetSdk=35; 44 operations unchanged",
+    "note": "versionCode=22 minSdk=23 targetSdk=35 → versionCode=23 minSdk=23 targetSdk=35; 44 operations unchanged",
     "seconds": 7
   },
   {
@@ -158,20 +158,20 @@
   {
     "name": "a scheduled payment reminder is registered with Android's alarm manager",
     "status": "pass",
-    "note": "payment 2026-11-10 23:56, reminder 23:54; 3 alarm line(s) of the application",
+    "note": "payment 2026-11-11 00:27, reminder 00:25; 3 alarm line(s) of the application",
     "seconds": 12
   },
   {
     "name": "the reminder is delivered while the application is closed, and the payment is not posted until it is opened",
     "status": "pass",
-    "note": "delivered after 120 s with the application closed",
-    "seconds": 125
+    "note": "delivered after 105 s with the application closed",
+    "seconds": 110
   },
   {
     "name": "opening the application after the due time posts the payment once, with its own date and time",
     "status": "pass",
-    "note": "posted once as 2026-11-10 23:56",
-    "seconds": 197
+    "note": "posted once as 2026-11-11 00:27",
+    "seconds": 202
   },
   {
     "name": "a data file exported by the web app: previewed, a corrupt one refused with data untouched, a valid one restored",
@@ -182,13 +182,13 @@
   {
     "name": "a 94-page report in the real WebView: time of each stage and how many page pictures the preview loads (measurement, not a limit)",
     "status": "pass",
-    "note": "{\"pages\":92,\"model\":290,\"layout\":195,\"render\":7220,\"first5pagesMs\":[2499,2600,2651,2699,2750],\"pdf\":236,\"pdfKB\":254}",
-    "seconds": 8
+    "note": "{\"pages\":92,\"model\":678,\"layout\":427,\"render\":5723,\"first5pagesMs\":[1994,2065,2110,2150,2193],\"pdf\":293,\"pdfKB\":254}",
+    "seconds": 7
   },
   {
     "name": "the log holds no financial data and no crash",
     "status": "pass",
-    "note": "1332 lines of the application checked",
+    "note": "1497 lines of the application checked",
     "seconds": 0
   }
 ]
