@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
+import { Icon } from "./kit.tsx";
+import { mix } from "./theme.ts";
 
 export function DialogTitle({ children }: { children: ReactNode }) {
   const p = usePalette();
@@ -17,27 +19,46 @@ export function DialogActions({ children }: { children: ReactNode }) {
   return <View style={{ flexDirection: "row", justifyContent: "flex-end", gap: 4, marginTop: 18 }}>{children}</View>;
 }
 
+// The confirmation of the first application (ui/dialogs.js `confirmAction`): a warning sign, "Are you
+// sure?", what will happen, and two buttons one under the other — the action (red when it deletes) and
+// Cancel.
 function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
+  const button = (label: string, onPress: () => void, look: "danger" | "primary" | "outline") => (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => ({
+        minHeight: 52,
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 18,
+        marginTop: 14,
+        opacity: pressed ? 0.85 : 1,
+        borderWidth: look === "outline" ? 1 : 0,
+        borderColor: p.line,
+        backgroundColor: look === "danger" ? mix(p.negative, p.dialog, 0.16) : look === "primary" ? p.accent : "transparent",
+      })}
+    >
+      <Text style={{ color: look === "danger" ? p.negativeInk : look === "primary" ? p.onAccent : p.ink, fontSize: 15, fontWeight: "500" }}>{t.t(label)}</Text>
+    </Pressable>
+  );
   return (
     <View>
-      <DialogTitle>{t.t(title)}</DialogTitle>
-      {message ? <Text style={{ color: p.inkSoft, fontSize: 15, lineHeight: 22 }}>{message}</Text> : null}
-      <DialogActions>
-        <TextButton label="Cancel" onPress={close} />
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => {
-            close();
-            onYes();
-          }}
-          style={{ paddingHorizontal: 24, paddingVertical: 12, borderRadius: 999, backgroundColor: danger ? p.negative : p.accent }}
-        >
-          <Text style={{ color: danger ? "#ffffff" : p.onAccent, fontSize: 15, fontWeight: "600" }}>{t.t(yes)}</Text>
-        </Pressable>
-      </DialogActions>
+      <View style={{ alignItems: "center" }}>
+        <Icon name="warning" size={32} color={p.negative} />
+      </View>
+      <Text style={{ color: p.ink, fontSize: 22, textAlign: "center", marginTop: 10, marginBottom: 10 }}>{t.t("Are you sure?")}</Text>
+      <Text style={{ color: p.ink, fontSize: 15, lineHeight: 21, textAlign: "center" }}>{t.t(title)}</Text>
+      {message ? <Text style={{ color: p.inkSoft, fontSize: 14, lineHeight: 20, textAlign: "center", marginTop: 8 }}>{message}</Text> : null}
+      {button(yes, () => {
+        close();
+        onYes();
+      }, danger ? "danger" : "primary")}
+      {button("Cancel", close, "outline")}
     </View>
   );
 }
