@@ -1,7 +1,7 @@
 // "Customize icon" (js/ui/icon-picker.js): a dialog with a preview, the choice of an icon and of a
 // colour, random choices and Complete. The icon list and the colour page are pages over the whole
 // screen; each has a gear that opens its list settings.
-import { memo, useMemo, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, ScrollView, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { appStore, useLedger, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
@@ -240,6 +240,7 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
   const [hex, setHex] = useState(color.slice(1));
   const [focused, setFocused] = useState(false);
   const [onWheel, setOnWheel] = useState(false);
+  const scroller = useRef<{ scrollToEnd(o: { animated: boolean }): void } | null>(null);
   const typed = parseHex(hex);
   const wrong = hex.length > 0 && !typed && !(focused && hex.length < 6 && hex.length !== 3);
   const choose = (c: string, fromRow = false) => {
@@ -253,7 +254,7 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
   return (
     <View style={{ flex: 1 }}>
       <Head title="Choose color" gear={() => sheets.open(<ListSettings mode="color" />, "dialog")} gearLabel="Color list customization" />
-      <ScrollView scrollEnabled={!onWheel} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 12 }}>
+      <ScrollView ref={(r: { scrollToEnd(o: { animated: boolean }): void } | null) => void (scroller.current = r)} scrollEnabled={!onWheel} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 12 }}>
         <View style={{ marginHorizontal: 24, marginBottom: 18 }}>
           <Preview look={{ icon: look.icon, color }} size={32} height={62} />
         </View>
@@ -286,7 +287,11 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
             autoCorrect={false}
             keyboardType="visible-password"
             returnKeyType="done"
-            onFocus={() => setFocused(true)}
+            onFocus={() => {
+              setFocused(true);
+              // The field comes up above the keyboard once the window has shortened.
+              setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 350);
+            }}
             onBlur={() => {
               setFocused(false);
               // An unfinished code goes back to the colour that is shown.

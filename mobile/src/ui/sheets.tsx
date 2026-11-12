@@ -3,7 +3,7 @@
 // inside the app (not in a native Modal), so the same insets and theme apply to every layer; the panel
 // of a sheet adds the system's bottom inset to its own padding, and rises above the keyboard.
 import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, BackHandler, Dimensions, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Animated, BackHandler, Dimensions, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { chrome } from "./theme.ts";
@@ -122,10 +122,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             {layer.content}
           </Animated.View>
         ) : (
-        <KeyboardAvoidingView
-          behavior="padding"
-          style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, pointerEvents: "box-none" }}
-        >
+        <View style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, pointerEvents: "box-none" }}>
           {sheet ? (
             <Animated.View
               style={{
@@ -158,7 +155,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
               </ScrollView>
             </Animated.View>
           )}
-        </KeyboardAvoidingView>
+        </View>
         )}
       </View>
     </LayerContext.Provider>

@@ -122,9 +122,14 @@ function AccountSheet({ id }: { id: string }) {
             router.push({ pathname: "/filtered", params: { account: id } });
           }}
         />
-        <ActionTile icon="income" label="Top up" tone="#22b573" onPress={() => start("income", "to")} />
-        <ActionTile icon="right" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from")} />
-        <ActionTile icon="expense" label="Debit" tone="#e5384f" onPress={() => start("expense", "from")} />
+        {/* An archived account takes no new money: return it from the archive first. */}
+        {account.archived ? null : (
+          <>
+            <ActionTile icon="income" label="Top up" tone="#22b573" onPress={() => start("income", "to")} />
+            <ActionTile icon="right" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from")} />
+            <ActionTile icon="expense" label="Debit" tone="#e5384f" onPress={() => start("expense", "from")} />
+          </>
+        )}
       </ActionGrid>
     </View>
   );
