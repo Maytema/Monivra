@@ -25,10 +25,22 @@ import { currencyName } from "../ui/currency-names.ts";
 import { openCustomize } from "../ui/customize-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText, FieldToggle } from "../ui/form.tsx";
+import { openChoiceSheet, type Choice } from "../ui/choice-sheet.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { mix, space } from "../ui/theme.ts";
 import { TextButton } from "../ui/calendar-sheet.tsx";
+
+// The value of a choice field: its icon in the accent colour, then its name (as filmed).
+function IconValue({ icon, text }: { icon: string; text: string }) {
+  const p = usePalette();
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 20, minHeight: 36 }}>
+      <Icon name={icon} size={28} color={p.accentInk} />
+      <Text style={{ color: p.accentInk, fontSize: 16 }}>{text}</Text>
+    </View>
+  );
+}
 
 export function HeaderAdd({ onPress }: { onPress: () => void }) {
   const p = usePalette();
@@ -40,7 +52,7 @@ export function HeaderAdd({ onPress }: { onPress: () => void }) {
 }
 
 const TYPES = [
-  { type: "Regular", text: "Card, card or a bank account. For everyday income and expenses.", icon: "card", color: "#3f7ff0" },
+  { type: "Regular", text: "Cash, card or a bank account. For everyday income and expenses.", icon: "card", color: "#3f7ff0" },
   { type: "Savings", text: "Put money aside, with or without a goal — for a dream, a big purchase or a buffer for future events.", icon: "pig", color: "#25b57a" },
   { type: "Debt", text: "Money you borrowed or lent. Track who owes whom and how debt repayment is progressing.", icon: "document", color: "#f2812f" },
 ] as const;
@@ -66,22 +78,11 @@ function TypeChoices({ onPick }: { onPick: (type: AccountDraft["type"]) => void 
   );
 }
 
-function TypeSheet({ onPick }: { onPick: (type: AccountDraft["type"]) => void }) {
-  const p = usePalette();
-  const t = useT();
-  const close = useCloseLayer();
-  return (
-    <View>
-      <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Account type")}</Text>
-      <TypeChoices
-        onPick={(type) => {
-          close();
-          onPick(type);
-        }}
-      />
-    </View>
-  );
-}
+const ACCOUNT_TYPES: readonly Choice<AccountDraft["type"]>[] = TYPES.map((x) => ({ value: x.type, label: x.type, text: x.text, icon: x.icon, color: x.color }));
+const DEBT_KINDS: readonly Choice<"Owe me" | "I owe">[] = [
+  { value: "Owe me", label: "Owe me", text: "Money others owe you. Track who borrowed from you and repayment progress.", icon: "debt", color: "#f2812f" },
+  { value: "I owe", label: "I owe", text: "Money you owe to others. Track your debts and repayment progress.", icon: "debt", color: "#f2812f" },
+];
 
 const DEBT_SWITCHES = [
   ["considerExpense", "Consider as expense", "Consider transfers to this account as expenses"],
@@ -230,17 +231,10 @@ export function AccountEditor() {
         <FieldText label="Description" value={draft.description ?? ""} onChange={(description) => set({ description })} />
         <FieldButton
           label="Account type"
-          onPress={() => sheets.open(<TypeSheet onPick={setType} />, "sheet")}
-          right={
-            <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-              <View style={{ width: 28, height: 28, borderRadius: 7, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}>
-                <Icon name={TYPES.find((x) => x.type === draft.type)?.icon ?? "wallet"} size={18} color={p.onAccent} />
-              </View>
-              <Text style={{ color: p.accentInk, fontSize: 15 }}>{t.t(draft.type)}</Text>
-            </View>
-          }
+          onPress={() => openChoiceSheet("Select type", ACCOUNT_TYPES, draft.type, setType)}
+          right={<IconValue icon={TYPES.find((x) => x.type === draft.type)?.icon ?? "wallet"} text={t.t(draft.type)} />}
         />
-        {debt ? <FieldButton label="Type of debt" value={t.t(draft.debt ?? "Owe me")} onPress={() => optionDialog<"Owe me" | "I owe">("Type of debt", [{ value: "Owe me", label: "Owe me" }, { value: "I owe", label: "I owe" }], draft.debt ?? "Owe me", (v) => set({ debt: v }))} /> : null}
+        {debt ? <FieldButton label="Type of debt" onPress={() => openChoiceSheet("Select type", DEBT_KINDS, draft.debt ?? "Owe me", (v) => set({ debt: v }))} right={<IconValue icon="debt" text={t.t(draft.debt ?? "Owe me")} />} /> : null}
         <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {amount(debt ? "Amount of debt" : "Current balance", debt ? Math.abs(draft.balance) : draft.balance, (balance) => set({ balance }), !debt, debt && editing ? "Current debt" : undefined)}
         {debt && editing ? amount("Total debt", draft.totalDebt ?? Math.abs(draft.balance), (v) => set({ totalDebt: Math.abs(v) })) : null}

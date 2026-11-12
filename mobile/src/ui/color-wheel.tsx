@@ -1,7 +1,7 @@
 // The colour wheel of the colour picker (js/app/color-wheel.js): a ring of hues with a square of
 // saturation and brightness turned 45° inside it. The finger on the ring sets the hue, inside it
 // the square; the thumbs sit where the colour is.
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { PanResponder, View } from "react-native";
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 import { hexToHsv, hsvToHex } from "./color-tools.ts";
@@ -81,27 +81,43 @@ export function ColorWheel({ color, size, onChange }: { color: string; size: num
   );
   return (
     <View style={{ width: size, height: size, alignSelf: "center" }} {...pan.panHandlers}>
-      <Svg width={size} height={size} viewBox="0 0 100 100">
-        <Defs>
-          <LinearGradient id="wheel-hue" x1="0" y1="0" x2="1" y2="0">
-            <Stop offset="0" stopColor="#ffffff" />
-            <Stop offset="1" stopColor={hsvToHex(ch, 1, 1)} />
-          </LinearGradient>
-          <LinearGradient id="wheel-dark" x1="0" y1="1" x2="0" y2="0">
-            <Stop offset="0" stopColor="#000000" stopOpacity="1" />
-            <Stop offset="1" stopColor="#000000" stopOpacity="0" />
-          </LinearGradient>
-        </Defs>
-        {wedges.map((w, i) => (
-          <Path key={i} d={w.d} fill={w.color} />
-        ))}
-        <G rotation={45} origin="50, 50">
-          <Rect x={25} y={25} width={50} height={50} rx={3} fill="url(#wheel-hue)" />
-          <Rect x={25} y={25} width={50} height={50} rx={3} fill="url(#wheel-dark)" />
-        </G>
-      </Svg>
+      <Ring size={size} />
+      <Square size={size} hue={Math.round(ch)} />
       {thumb(ringAt, hsvToHex(ch, 1, 1))}
       {thumb(squareAt, hsvToHex(ch, cs, cv))}
     </View>
   );
 }
+
+// The ring of hues never changes: drawn once (180 wedges), not on every move of the finger.
+const Ring = memo(function Ring({ size }: { size: number }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
+      {wedges.map((w, i) => (
+        <Path key={i} d={w.d} fill={w.color} />
+      ))}
+    </Svg>
+  );
+});
+
+// The square follows only the hue.
+const Square = memo(function Square({ size, hue }: { size: number; hue: number }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
+      <Defs>
+        <LinearGradient id="wheel-hue" x1="0" y1="0" x2="1" y2="0">
+          <Stop offset="0" stopColor="#ffffff" />
+          <Stop offset="1" stopColor={hsvToHex(hue, 1, 1)} />
+        </LinearGradient>
+        <LinearGradient id="wheel-dark" x1="0" y1="1" x2="0" y2="0">
+          <Stop offset="0" stopColor="#000000" stopOpacity="1" />
+          <Stop offset="1" stopColor="#000000" stopOpacity="0" />
+        </LinearGradient>
+      </Defs>
+      <G rotation={45} origin="50, 50">
+        <Rect x={25} y={25} width={50} height={50} rx={3} fill="url(#wheel-hue)" />
+        <Rect x={25} y={25} width={50} height={50} rx={3} fill="url(#wheel-dark)" />
+      </G>
+    </Svg>
+  );
+});

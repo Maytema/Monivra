@@ -1,14 +1,14 @@
 // "Customize icon" (js/ui/icon-picker.js): a dialog with a preview, the choice of an icon and of a
 // colour, random choices and Complete. The icon list and the colour page are pages over the whole
 // screen; each has a gear that opens its list settings.
-import { useState } from "react";
-import { Dimensions, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { memo, useMemo, useState } from "react";
+import { FlatList, Pressable, ScrollView, Text, TextInput, useWindowDimensions, View } from "react-native";
 import { appStore, useLedger, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
-import { isHex, shadesOf } from "./color-tools.ts";
+import { cleanHexInput, parseHex, prettyShades, shadeRow } from "./color-tools.ts";
 import { ColorWheel } from "./color-wheel.tsx";
 import { DialogActions } from "./dialogs.tsx";
-import { ICON_GROUPS, PALETTE, QUICK_COLORS } from "./icon-groups.ts";
+import { ICON_GROUPS, PALETTE } from "./icon-groups.ts";
 import { Icon } from "./kit.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 import { mix } from "./theme.ts";
@@ -46,20 +46,12 @@ function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
   );
 }
 
-function Preview({ look, size, tall = false }: { look: Look; size: number; tall?: boolean }) {
+// The preview of the icon in its colour (the dialog and the colour page): the colour at 17 % over the
+// panel, a thin line around it.
+function Preview({ look, size, height }: { look: Look; size: number; height: number }) {
   const p = usePalette();
   return (
-    <View
-      style={{
-        height: tall ? 75 : 60,
-        borderRadius: tall ? 20 : 14,
-        alignItems: "center",
-        justifyContent: "center",
-        borderWidth: tall ? 1 : 0,
-        borderColor: p.line,
-        backgroundColor: mix(look.color, p.dark ? p.sheet : "#fffafe", tall ? 0.17 : 0.18),
-      }}
-    >
+    <View style={{ height, borderRadius: 15, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: p.line, backgroundColor: mix(look.color, p.dark ? p.sheet : "#fffafe", 0.17) }}>
       <Icon name={look.icon} size={size} color={look.color} />
     </View>
   );
@@ -71,13 +63,13 @@ function Head({ title, gear, gearLabel }: { title: string; gear: () => void; gea
   const t = useT();
   const close = useCloseLayer();
   return (
-    <View style={{ height: 76, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 18 }}>
-      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Back")} onPress={close} style={{ width: 34, height: 44, alignItems: "center", justifyContent: "center" }}>
-        <Icon name="left" size={23} color={p.ink} />
+    <View style={{ height: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 }}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Back")} onPress={close} hitSlop={8} style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
+        <Icon name="left" size={24} color={p.ink} />
       </Pressable>
-      <Text style={{ color: p.ink, fontSize: 23 }}>{t.t(title)}</Text>
-      <Pressable accessibilityRole="button" accessibilityLabel={t.t(gearLabel)} onPress={gear} style={{ width: 34, height: 44, alignItems: "center", justifyContent: "center" }}>
-        <Icon name="gear" size={23} color={p.ink} />
+      <Text numberOfLines={1} style={{ flex: 1, textAlign: "center", color: p.ink, fontSize: 23 }}>{t.t(title)}</Text>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t(gearLabel)} onPress={gear} hitSlop={8} style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
+        <Icon name="gear" size={24} color={p.ink} />
       </Pressable>
     </View>
   );
@@ -159,107 +151,160 @@ function RandomSettings() {
   );
 }
 
+// The icon list (as filmed in the reference): groups under a title with lines to both edges of the
+// screen, cells of 44 dp every 64 dp from the left, as many in a row as fit. A virtualized list of rows,
+// so the page opens at once although it holds hundreds of icons.
+const CELL = 44;
+const PITCH = 64;
+const LEFT = 10;
+type IconRow = { kind: "title"; title: string } | { kind: "icons"; key: string; icons: string[] };
+
+const IconCell = memo(function IconCell({ icon, chosen, onPick }: { icon: string; chosen: boolean; onPick: (icon: string) => void }) {
+  const p = usePalette();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={icon}
+      accessibilityState={{ selected: chosen }}
+      onPress={() => onPick(icon)}
+      style={({ pressed }) => ({ width: CELL, height: CELL, marginRight: PITCH - CELL, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center", borderColor: chosen ? p.accent : p.line, backgroundColor: chosen ? mix(p.accent, p.bg, 0.14) : pressed ? p.soft : "transparent" })}
+    >
+      <Icon name={icon} size={26} color={chosen ? p.accentInk : p.ink} />
+    </Pressable>
+  );
+});
+
 function IconPage({ value, onPick }: { value: string; onPick: (icon: string) => void }) {
   const p = usePalette();
   const t = useT();
   const data = useLedger();
   const close = useCloseLayer();
-  const flags = (data.settings.iconPickerExclusions as Flags | undefined) ?? {};
-  const used = usedBy(data, "icon", flags, "iconAccounts", "iconCategories");
+  const { width } = useWindowDimensions();
+  const perRow = Math.max(1, Math.floor((width - LEFT + (PITCH - CELL)) / PITCH));
+  const exclusions = data.settings.iconPickerExclusions as Flags | undefined;
+  const rows = useMemo(() => {
+    const used = usedBy(data, "icon", exclusions ?? {}, "iconAccounts", "iconCategories");
+    const out: IconRow[] = [];
+    for (const [title, keys] of ICON_GROUPS) {
+      const shown = keys.filter((k) => k === value || !used.has(k.toLowerCase()));
+      if (!shown.length) continue;
+      out.push({ kind: "title", title });
+      for (let i = 0; i < shown.length; i += perRow) out.push({ kind: "icons", key: `${title}:${i}`, icons: shown.slice(i, i + perRow) });
+    }
+    return out;
+  }, [data, exclusions, value, perRow]);
+  const pick = (icon: string) => {
+    close();
+    onPick(icon);
+  };
   return (
     <View style={{ flex: 1 }}>
       <Head title="Select an icon" gear={() => sheets.open(<ListSettings mode="icon" />, "dialog")} gearLabel="Icon selection settings" />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 28 }}>
-        {ICON_GROUPS.map(([title, keys]) => {
-          const shown = keys.filter((k) => k === value || !used.has(k.toLowerCase()));
-          if (!shown.length) return null;
-          return (
-            <View key={title} style={{ marginTop: 5, marginBottom: 13 }}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 9, marginBottom: 8 }}>
-                <View style={{ flex: 1, height: 1, backgroundColor: p.line }} />
-                <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(title)}</Text>
-                <View style={{ flex: 1, height: 1, backgroundColor: p.line }} />
-              </View>
-              <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                {shown.map((k) => (
-                  <View key={k} style={{ width: "16.666%", padding: 1.5 }}>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={k}
-                      onPress={() => {
-                        close();
-                        onPick(k);
-                      }}
-                      style={{ height: 44, borderRadius: 8, borderWidth: 1, alignItems: "center", justifyContent: "center", borderColor: k === value ? p.accent : p.line, backgroundColor: k === value ? mix(p.accent, p.bg, 0.14) : "transparent" }}
-                    >
-                      <Icon name={k} size={25} color={k === value ? p.accentInk : p.inkSoft} />
-                    </Pressable>
-                  </View>
-                ))}
-              </View>
+      <FlatList
+        data={rows}
+        keyExtractor={(r) => (r.kind === "title" ? "t:" + r.title : r.key)}
+        initialNumToRender={12}
+        maxToRenderPerBatch={10}
+        windowSize={7}
+        contentContainerStyle={{ paddingBottom: 28 }}
+        renderItem={({ item }) =>
+          item.kind === "title" ? (
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginTop: 14, marginBottom: 18 }}>
+              <View style={{ flex: 1, height: 1, backgroundColor: p.ink }} />
+              <Text style={{ color: p.ink, fontSize: 20 }}>{t.t(item.title)}</Text>
+              <View style={{ flex: 1, height: 1, backgroundColor: p.ink }} />
             </View>
-          );
-        })}
-      </ScrollView>
+          ) : (
+            <View style={{ flexDirection: "row", paddingLeft: LEFT, height: PITCH }}>
+              {item.icons.map((icon) => (
+                <IconCell key={icon} icon={icon} chosen={icon === value} onPick={pick} />
+              ))}
+            </View>
+          )
+        }
+      />
     </View>
   );
 }
 
-function Swatch({ color, picked, size, square = false, onPress }: { color: string; picked: boolean; size: number; square?: boolean; onPress: () => void }) {
-  return (
-    <Pressable accessibilityRole="button" accessibilityLabel={color} onPress={onPress} style={{ width: size, height: size, borderRadius: square ? 10 : size / 2, backgroundColor: color, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: "rgba(0,0,0,0.12)" }}>
-      {picked ? <Icon name="check" size={16} color="#ffffff" /> : null}
-    </Pressable>
-  );
-}
-
+// The colour page: our wheel (the owner keeps it rather than the reference's grid of tiles), one row of
+// shades of the chosen colour that fills the width, and the HEX code.
 function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => void }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
+  const { width } = useWindowDimensions();
   const [color, setColor] = useState(look.color.toLowerCase());
-  const [hex, setHex] = useState(look.color.toLowerCase());
-  const choose = (c: string) => {
-    setColor(c.toLowerCase());
-    setHex(c.toLowerCase());
+  // The shades follow the colour taken on the wheel or typed, not a shade tapped in the row.
+  const [base, setBase] = useState(color);
+  const [hex, setHex] = useState(color.slice(1));
+  const [focused, setFocused] = useState(false);
+  const typed = parseHex(hex);
+  const wrong = hex.length > 0 && !typed && !(focused && hex.length < 6 && hex.length !== 3);
+  const choose = (c: string, fromRow = false) => {
+    setColor(c);
+    if (!fromRow) setBase(c);
+    setHex(c.slice(1));
   };
-  const same = (c: string) => c.toLowerCase() === color;
-  const wheel = Math.min(280, Dimensions.get("window").width - 56);
+  const row = shadeRow(width);
+  const shades = useMemo(() => prettyShades(base, row.count), [base, row.count]);
+  const wheel = Math.min(280, width - 56);
   return (
     <View style={{ flex: 1 }}>
       <Head title="Choose color" gear={() => sheets.open(<ListSettings mode="color" />, "dialog")} gearLabel="Color list customization" />
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 8 }}>
-        <View style={{ marginHorizontal: 16, marginBottom: 14 }}>
-          <Preview look={{ icon: look.icon, color }} size={32} />
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 12 }}>
+        <View style={{ marginHorizontal: 24, marginBottom: 18 }}>
+          <Preview look={{ icon: look.icon, color }} size={32} height={62} />
         </View>
-        <ColorWheel color={color} size={wheel} onChange={choose} />
-        <View style={{ height: 18 }} />
-        <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8, paddingHorizontal: 20, marginBottom: 14 }}>
-          {QUICK_COLORS.map((c) => (
-            <Swatch key={c} color={c} size={44} picked={same(c)} onPress={() => choose(c)} />
-          ))}
+        <ColorWheel color={color} size={wheel} onChange={(c) => choose(c)} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 22, marginBottom: 18 }}>
+          {shades.map((c) => {
+            const picked = c === color;
+            return (
+              <Pressable
+                key={c}
+                accessibilityRole="button"
+                accessibilityLabel={c}
+                accessibilityState={{ selected: picked }}
+                onPress={() => choose(c, true)}
+                style={{ width: row.size, height: row.size, borderRadius: row.size / 2, backgroundColor: c, alignItems: "center", justifyContent: "center", borderWidth: picked ? 3 : 1, borderColor: picked ? p.ink : "rgba(0,0,0,0.12)" }}
+              >
+                {picked ? <Icon name="check" size={18} color={parseInt(c.slice(1), 16) > 0xa0a0a0 ? "#222222" : "#ffffff"} /> : null}
+              </Pressable>
+            );
+          })}
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8, paddingHorizontal: 20, marginBottom: 14 }}>
-          {shadesOf(color).map((c) => (
-            <Swatch key={c} color={c} size={34} square picked={same(c)} onPress={() => choose(c)} />
-          ))}
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 12, marginHorizontal: 20, marginBottom: 14, paddingHorizontal: 14, height: 46, borderRadius: 12, backgroundColor: p.key }}>
-          <Text style={{ color: p.inkSoft, fontSize: 13 }}>HEX</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", marginHorizontal: 20, paddingHorizontal: 14, height: 48, borderRadius: 12, backgroundColor: p.key, borderWidth: wrong ? 1.5 : 1, borderColor: wrong ? p.negative : p.line }}>
+          <Text style={{ color: p.inkSoft, fontSize: 13, marginRight: 12 }}>HEX</Text>
+          <Text style={{ color: p.ink, fontSize: 16, fontWeight: "500", fontFamily: "monospace" }}>#</Text>
           <TextInput
             accessibilityLabel={t.t("Color code")}
             value={hex}
-            maxLength={7}
+            maxLength={6}
             autoCapitalize="none"
             autoCorrect={false}
-            onChangeText={(v) => {
-              setHex(v);
-              const code = v.startsWith("#") ? v : "#" + v;
-              if (isHex(code)) setColor(code.toLowerCase());
+            keyboardType="visible-password"
+            returnKeyType="done"
+            onFocus={() => setFocused(true)}
+            onBlur={() => {
+              setFocused(false);
+              // An unfinished code goes back to the colour that is shown.
+              if (!parseHex(hex)) setHex(color.slice(1));
             }}
-            style={{ flex: 1, color: p.ink, fontSize: 16, fontWeight: "500", fontFamily: "monospace", padding: 0 }}
+            onChangeText={(v) => {
+              const clean = cleanHexInput(v);
+              setHex(clean);
+              const code = parseHex(clean);
+              if (code) {
+                setColor(code);
+                setBase(code);
+              }
+            }}
+            style={{ flex: 1, color: p.ink, fontSize: 16, fontWeight: "500", fontFamily: "monospace", paddingVertical: 0, paddingLeft: 2 }}
           />
+          <View style={{ width: 22, height: 22, borderRadius: 6, backgroundColor: color, borderWidth: 1, borderColor: "rgba(0,0,0,0.12)" }} />
         </View>
+        {wrong ? <Text style={{ color: p.negative, fontSize: 12, marginHorizontal: 24, marginTop: 6 }}>{t.t("Enter 6 characters: 0–9 and A–F")}</Text> : null}
       </ScrollView>
       <Pressable
         accessibilityRole="button"
@@ -267,14 +312,16 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
           close();
           onPick(color);
         }}
-        style={{ marginHorizontal: 16, marginTop: 7, marginBottom: 15, minHeight: 47, borderRadius: 40, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}
+        style={({ pressed }) => ({ marginHorizontal: 16, marginTop: 8, marginBottom: 14, height: 56, borderRadius: 28, alignItems: "center", justifyContent: "center", backgroundColor: p.accent, opacity: pressed ? 0.85 : 1 })}
       >
-        <Text style={{ color: p.onAccent, fontSize: 16, fontWeight: "600" }}>{t.t("Complete")}</Text>
+        <Text style={{ color: p.onAccent, fontSize: 17, fontWeight: "600" }}>{t.t("Complete")}</Text>
       </Pressable>
     </View>
   );
 }
 
+// "Customize icon" (as filmed): the preview, the title, two cells side by side, a column of the random
+// choices, Complete.
 function Customize({ start, onDone }: { start: Look; onDone: (look: Look) => void }) {
   const p = usePalette();
   const t = useT();
@@ -291,27 +338,39 @@ function Customize({ start, onDone }: { start: Look; onDone: (look: Look) => voi
     const pick = <T,>(list: readonly T[]): T => list[Math.floor(Math.random() * list.length)] as T;
     setLook((l) => ({ icon: what === "color" ? l.icon : pick(icons), color: what === "icon" ? l.color : pick(colors) }));
   };
-  const action = (icon: string, label: string, onPress: () => void, style: object) => (
-    <Pressable key={label} accessibilityRole="button" onPress={onPress} style={({ pressed }) => [{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12, paddingHorizontal: 13, minHeight: 52, backgroundColor: pressed ? p.soft : p.key }, style]}>
-      <View style={{ width: 24, alignItems: "center" }}>
-        <Icon name={icon} size={24} color={p.inkSoft} />
-      </View>
-      <Text style={{ flex: 1, color: p.ink, fontSize: 13, lineHeight: 16 }}>{t.t(label)}</Text>
+  const cell = p.dark ? p.key : "#faf8ff";
+  // An icon with the little sparkle of a random choice beside it.
+  const glyph = (icon: string, spark: boolean) => (
+    <View style={{ width: spark ? 38 : 26, height: 26, flexDirection: "row" }}>
+      <Icon name={icon} size={26} color={p.ink} />
+      {spark ? <Icon name="spark" size={12} color={p.ink} /> : null}
+    </View>
+  );
+  const action = (icon: string, spark: boolean, label: string, onPress: () => void, corners: object) => (
+    <Pressable key={label} accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={onPress} style={({ pressed }) => [{ flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, height: 52, borderRadius: 3, backgroundColor: pressed ? p.soft : cell }, corners]}>
+      {glyph(icon, spark)}
+      <Text numberOfLines={1} style={{ flex: 1, color: p.ink, fontSize: 14 }}>{t.t(label)}</Text>
+    </Pressable>
+  );
+  const choice = (icon: string, label: string, onPress: () => void, corners: object) => (
+    <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={onPress} style={({ pressed }) => [{ flex: 1, flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, height: 63, borderRadius: 4, backgroundColor: pressed ? p.soft : cell }, corners]}>
+      <Icon name={icon} size={26} color={p.ink} />
+      <Text numberOfLines={2} style={{ flex: 1, color: p.ink, fontSize: 14, lineHeight: 20 }}>{t.t(label)}</Text>
     </Pressable>
   );
   return (
     <View>
-      <Preview look={look} size={34} tall />
-      <Text style={{ color: p.ink, fontSize: 24, textAlign: "center", marginTop: 17, marginBottom: 18 }}>{t.t("Customize icon")}</Text>
-      <View style={{ flexDirection: "row", gap: 4, marginBottom: 15 }}>
-        <View style={{ flex: 1 }}>{action("smile", "Choose an icon", () => sheets.open(<IconPage value={look.icon} onPick={(icon) => setLook((l) => ({ ...l, icon }))} />, "full"), { minHeight: 57, borderTopLeftRadius: 16, borderBottomLeftRadius: 16 })}</View>
-        <View style={{ flex: 1 }}>{action("palette", "Choose color", () => sheets.open(<ColorPage look={look} onPick={(color) => setLook((l) => ({ ...l, color }))} />, "full"), { minHeight: 57, borderTopRightRadius: 16, borderBottomRightRadius: 16 })}</View>
+      <Preview look={look} size={34} height={61} />
+      <Text style={{ color: p.ink, fontSize: 24, textAlign: "center", marginTop: 20, marginBottom: 20 }}>{t.t("Customize icon")}</Text>
+      <View style={{ flexDirection: "row", gap: 4, marginBottom: 16 }}>
+        {choice("smile", "Choose an icon", () => sheets.open(<IconPage value={look.icon} onPick={(icon) => setLook((l) => ({ ...l, icon }))} />, "full"), { borderTopLeftRadius: 16, borderBottomLeftRadius: 16 })}
+        {choice("palette", "Choose color", () => sheets.open(<ColorPage look={look} onPick={(color) => setLook((l) => ({ ...l, color }))} />, "full"), { borderTopRightRadius: 16, borderBottomRightRadius: 16 })}
       </View>
-      <View style={{ gap: 3, borderRadius: 17, overflow: "hidden" }}>
-        {action("gear", "✦ Setting random selection", () => sheets.open(<RandomSettings />, "dialog"), { minHeight: 48 })}
-        {action("smile", "✦ Random icon", () => random("icon"), { minHeight: 48 })}
-        {action("palette", "✦ Random color", () => random("color"), { minHeight: 48 })}
-        {action("spark", "Random icon and color", () => random("both"), { minHeight: 48 })}
+      <View style={{ gap: 4 }}>
+        {action("gear", true, "Setting random selection", () => sheets.open(<RandomSettings />, "dialog"), { borderTopLeftRadius: 16, borderTopRightRadius: 16 })}
+        {action("smile", true, "Random icon", () => random("icon"), {})}
+        {action("palette", true, "Random color", () => random("color"), {})}
+        {action("spark", false, "Random icon and color", () => random("both"), { borderBottomLeftRadius: 16, borderBottomRightRadius: 16 })}
       </View>
       <Pressable
         accessibilityRole="button"
@@ -319,9 +378,9 @@ function Customize({ start, onDone }: { start: Look; onDone: (look: Look) => voi
           close();
           onDone(look);
         }}
-        style={{ marginTop: 26, minHeight: 47, borderRadius: 40, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}
+        style={({ pressed }) => ({ marginTop: 28, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", backgroundColor: p.accent, opacity: pressed ? 0.85 : 1 })}
       >
-        <Text style={{ color: p.onAccent, fontSize: 16, fontWeight: "600" }}>{t.t("Complete")}</Text>
+        <Text style={{ color: p.onAccent, fontSize: 16, fontWeight: "500" }}>{t.t("Complete")}</Text>
       </Pressable>
     </View>
   );
