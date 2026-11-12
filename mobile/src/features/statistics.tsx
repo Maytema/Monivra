@@ -12,6 +12,7 @@ import { convert, shownPercent } from "../domain/money.ts";
 import { operationsIn, periodBounds } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
+import { mix } from "../ui/theme.ts";
 import { SumTabs, ToneBadge } from "../ui/parts.tsx";
 import { numberText } from "../ui/number-text.ts";
 import { openCategorySheet } from "./category-sheet.tsx";
@@ -168,7 +169,9 @@ export function StatisticsScreen() {
       </Card>
     ),
     donut: () => {
-      const radius = 68;
+      // A thin ring with a small gap between the slices, an icon tile in the middle (ST 003).
+      const radius = 80;
+      const ring = 15;
       const circ = 2 * Math.PI * radius;
       let offset = 0;
       const label = (g: Group) => (g.id === OTHER_SLICE ? t.t(g.name) : g.name);
@@ -176,7 +179,7 @@ export function StatisticsScreen() {
         <Card key="donut">
           <View style={{ aspectRatio: 1 }}>
             <Svg accessibilityLabel="Category distribution" viewBox="0 0 190 190" style={{ width: "100%", height: "100%" }}>
-              <Circle cx={95} cy={95} r={radius} fill="none" stroke={p.line} strokeWidth={28} />
+              <Circle cx={95} cy={95} r={radius} fill="none" stroke={p.line} strokeWidth={ring} />
               {slices.map((g) => {
                 const length = sliceTotal ? (g.total / sliceTotal) * circ : 0;
                 const node = (
@@ -189,8 +192,8 @@ export function StatisticsScreen() {
                     r={radius}
                     fill="none"
                     stroke={g.color}
-                    strokeWidth={selected === g.id ? 35 : 28}
-                    strokeDasharray={`${Math.max(0, length - 1)} ${circ}`}
+                    strokeWidth={selected === g.id ? ring + 6 : ring}
+                    strokeDasharray={`${slices.length > 1 ? Math.max(0, length - 3) : length} ${circ}`}
                     strokeDashoffset={-offset}
                     transform="rotate(-90 95 95)"
                   />
@@ -200,8 +203,11 @@ export function StatisticsScreen() {
               })}
             </Svg>
             <View pointerEvents="box-none" style={{ position: "absolute", top: "28%", bottom: "28%", left: "28%", right: "28%", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <Text style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{chosen ? label(chosen) : t.t("Not selected")}</Text>
-              <Text style={{ color: p.ink, fontSize: 18, fontWeight: "600" }}>{chosen ? percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale) : money(sliceTotal, main)}</Text>
+              <View style={{ width: 56, height: 56, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: chosen ? mix(chosen.color, p.bg, 0.16) : p.key }}>
+                <Icon name={chosen?.icon ?? "dollar"} size={28} color={chosen ? chosen.color : p.inkSoft} />
+              </View>
+              <Text numberOfLines={2} style={{ color: p.muted, fontSize: 17, textAlign: "center" }}>{chosen ? label(chosen) : t.t("Not selected")}</Text>
+              {chosen ? <Text style={{ color: p.ink, fontSize: 18, fontWeight: "600" }}>{percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale)}</Text> : null}
               {chosen ? (
                 <Pressable accessibilityRole="button" onPress={() => openOperations(chosen.id, chosen.members)}>
                   <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t("Operations")}</Text>
