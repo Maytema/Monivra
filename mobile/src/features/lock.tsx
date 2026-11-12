@@ -1,13 +1,14 @@
 // The screen lock: a PIN of 4 or 6 digits (and a fingerprint or face when the person allows it). It
 // hides the application; it does not encrypt the data. Five wrong PINs in a row make the keys wait.
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
-import { AppState as SystemAppState, Pressable, Text, View } from "react-native";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Animated, AppState as SystemAppState, Pressable, Text, View } from "react-native";
 import { isValidPin, lockoutSeconds, makePin, pinMatches } from "../domain/pin.ts";
-import { biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
+import { biometricAvailable, biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
 import { appStore, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { Panel } from "../ui/pickers.tsx";
-import { font, space } from "../ui/theme.ts";
+import { mix, space } from "../ui/theme.ts";
+import { toast } from "../ui/dialogs.tsx";
 
 // ---- Lock state (lives while the application runs) ------------------------------------------------
 let lock = { locked: true, failures: 0, waitUntil: 0 };
@@ -41,6 +42,12 @@ export function LockGate({ children }: { children: ReactNode }) {
   return <LockScreen />;
 }
 
+// The prompt of the fingerprint shows by itself once each time the screen locks; after that only the
+// fingerprint key (bottom left of the keys) shows it, so cancelling it leaves the person on the keys
+// and not in a loop (js/screens/more/lock.js).
+let promptedThisLock = false;
+let prompting = false;
+
 function LockScreen() {
   const data = useLedger();
   const p = usePalette();
@@ -48,70 +55,128 @@ function LockScreen() {
   const state = useLock();
   const length = (data.settings.pin as { length?: number }).length ?? 4;
   const [typed, setTyped] = useState("");
-  const [now, setNow] = useState(Date.now());
-  const waiting = Math.max(0, Math.ceil((state.waitUntil - now) / 1000));
-  useEffect(() => {
-    if (!waiting) return;
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, [waiting]);
-  const tryBiometric = async () => {
-    if (data.settings.biometric && (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN")))) setLock({ locked: false, failures: 0 });
+  const [failed, setFailed] = useState(false);
+  const [canBiometric, setCanBiometric] = useState(false);
+  const wanted = !!data.settings.biometric;
+  const unlock = () => {
+    promptedThisLock = false;
+    setLock({ locked: false, failures: 0, waitUntil: 0 });
+  };
+  const promptBiometric = async () => {
+    if (prompting || !wanted) return;
+    prompting = true;
+    try {
+      if (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) unlock();
+    } finally {
+      prompting = false;
+    }
   };
   useEffect(() => {
-    void tryBiometric();
+    let live = true;
+    void biometricAvailable().then((ok) => {
+      if (!live) return;
+      setCanBiometric(ok);
+      if (ok && wanted && !promptedThisLock) {
+        promptedThisLock = true;
+        void promptBiometric();
+      }
+    });
+    return () => {
+      live = false;
+    };
     // Asked once when the lock screen appears.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [wanted]);
   const complete = async (pin: string) => {
+    if (Date.now() < state.waitUntil) {
+      toast(t.t("Too many attempts. Try again in {n} s.", { n: Math.ceil((state.waitUntil - Date.now()) / 1000) }));
+      setFailed(true);
+      setTyped("");
+      return;
+    }
     const record = await readPinRecord();
-    if (pinMatches(record, pin)) return setLock({ locked: false, failures: 0, waitUntil: 0 });
+    if (pinMatches(record, pin)) return unlock();
     const failures = state.failures + 1;
-    setLock({ failures, waitUntil: Date.now() + lockoutSeconds(failures) * 1000 });
-    setNow(Date.now());
+    const wait = lockoutSeconds(failures);
+    setLock({ failures, waitUntil: Date.now() + wait * 1000 });
+    toast(wait ? t.t("Too many attempts. Try again in {n} s.", { n: wait }) : t.t("Incorrect PIN"));
+    setFailed(true);
     setTyped("");
   };
   return (
-    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "center", padding: space.xl, gap: space.l }}>
-      <Icon name="lock" size={40} color={p.accentInk} />
-      <Text style={{ color: p.ink, fontSize: font.title }}>{t.t("Enter PIN")}</Text>
-      {state.failures ? <Text style={{ color: p.negativeInk }}>{waiting ? t.t("Try again in {n} s", { n: waiting }) : t.t("Wrong PIN")}</Text> : null}
-      <PinPad
-        length={length}
-        value={typed}
-        disabled={waiting > 0}
-        onChange={(v) => {
-          setTyped(v);
-          if (v.length === length) void complete(v);
-        }}
-      />
-      {data.settings.biometric ? <Button label="Use fingerprint" kind="text" onPress={() => void tryBiometric()} /> : null}
+    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <View style={{ width: "100%", maxWidth: 310, alignItems: "center" }}>
+        <Icon name="lock" size={42} color={p.ink} />
+        <Text style={{ color: p.ink, fontSize: 24, fontWeight: "500", marginTop: 14, marginBottom: 14 }}>{t.t("Enter your PIN")}</Text>
+        <PinPad
+          length={length}
+          value={typed}
+          failed={failed}
+          left={
+            wanted && canBiometric ? (
+              <Pressable accessibilityRole="button" accessibilityLabel={t.t("Unlock with fingerprint or face")} onPress={() => void promptBiometric()} style={({ pressed }) => ({ flex: 1, minHeight: 65, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
+                <Icon name="fingerprint" size={30} color={p.ink} />
+              </Pressable>
+            ) : undefined
+          }
+          onChange={(v) => {
+            setFailed(false);
+            setTyped(v);
+            if (v.length === length) void complete(v);
+          }}
+        />
+      </View>
     </View>
   );
 }
 
-// Dots and the digit keys.
-export function PinPad({ length, value, onChange, disabled = false }: { length: number; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+// The dots and the keys of a PIN (css/more.css .pin, .pin-dots): rings that fill with the accent and a
+// soft halo, a shake after a wrong PIN; three columns of keys 65 dp high with 17 dp corners, the
+// backspace a bare icon on the right, `left` the key at the bottom left (the fingerprint).
+export function PinPad({ length, value, onChange, disabled = false, failed = false, left }: { length: number; value: string; onChange: (v: string) => void; disabled?: boolean; failed?: boolean; left?: ReactNode }) {
   const p = usePalette();
-  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"];
+  const t = useT();
+  const shake = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (!failed) return;
+    Animated.sequence([
+      Animated.timing(shake, { toValue: -8, duration: 80, useNativeDriver: true }),
+      Animated.timing(shake, { toValue: 8, duration: 120, useNativeDriver: true }),
+      Animated.timing(shake, { toValue: 0, duration: 80, useNativeDriver: true }),
+    ]).start();
+  }, [failed, shake]);
+  const press = (k: string) => onChange(k === "⌫" ? value.slice(0, -1) : value.length < length ? value + k : value);
+  const key = (k: string) => (
+    <Pressable key={k} disabled={disabled} accessibilityRole="button" accessibilityLabel={k} onPress={() => press(k)} style={({ pressed }) => ({ flex: 1, minHeight: 65, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.tint, opacity: disabled ? 0.4 : 1 })}>
+      <Text style={{ color: p.ink, fontSize: 29 }}>{k}</Text>
+    </Pressable>
+  );
+  const rows = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]];
   return (
-    <View style={{ alignItems: "center", gap: space.l }}>
-      <View style={{ flexDirection: "row", gap: 14 }}>
-        {Array.from({ length }, (_, i) => (
-          <View key={i} style={{ width: 14, height: 14, borderRadius: 7, backgroundColor: i < value.length ? p.accent : p.line }} />
+    <View style={{ width: "100%", alignItems: "stretch" }}>
+      <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 18, height: 44, marginBottom: 16, transform: [{ translateX: shake }] }}>
+        {Array.from({ length }, (_, i) => {
+          const filled = i < value.length;
+          return (
+            <View key={i} style={{ width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: filled ? mix(p.accent, p.bg, 0.22) : "transparent" }}>
+              <View style={{ width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: failed ? p.negative : filled ? p.accent : p.muted, backgroundColor: filled ? p.accent : "transparent" }} />
+            </View>
+          );
+        })}
+      </Animated.View>
+      <View style={{ gap: 14, marginTop: 10 }}>
+        {rows.map((r) => (
+          <View key={r[0]} style={{ flexDirection: "row", gap: 14 }}>
+            {r.map(key)}
+          </View>
         ))}
-      </View>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", width: 264, gap: 12 }}>
-        {keys.map((k, i) => (
-          <Pressable
-            key={i}
-            disabled={!k || disabled}
-            onPress={() => onChange(k === "⌫" ? value.slice(0, -1) : value.length < length ? value + k : value)}
-            style={({ pressed }) => ({ width: 80, height: 60, borderRadius: 30, alignItems: "center", justifyContent: "center", backgroundColor: k ? (pressed ? p.soft : p.key) : "transparent", opacity: disabled ? 0.4 : 1 })}
-          >
-            <Text style={{ color: p.ink, fontSize: 24 }}>{k}</Text>
+        <View style={{ flexDirection: "row", gap: 14 }}>
+          {left ?? <View style={{ flex: 1 }} />}
+          {key("0")}
+          <Pressable disabled={disabled} accessibilityRole="button" accessibilityLabel={t.t("Backspace")} onPress={() => press("⌫")} style={({ pressed }) => ({ flex: 1, minHeight: 65, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
+            <Icon name="backspace" size={30} color={p.ink} />
           </Pressable>
-        ))}
+        </View>
       </View>
     </View>
   );
