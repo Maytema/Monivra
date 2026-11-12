@@ -205,7 +205,7 @@ export function AccountsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} />
-      <SwipePane canGo={(d) => tabs.indexOf(shown) + d >= 0 && tabs.indexOf(shown) + d < tabs.length} go={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}>
+      <SwipePane page={shown} canGo={(d) => tabs.indexOf(shown) + d >= 0 && tabs.indexOf(shown) + d < tabs.length} go={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}>
       <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         {shown === "Total" ? (
           <Totals />

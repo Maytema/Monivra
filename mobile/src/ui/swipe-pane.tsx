@@ -2,16 +2,29 @@
 // of the width (or a quick flick) it slides out and the next one slides in from the other side.
 // `go(direction)` moves to the next page and returns false at an edge, where the page only gives
 // a little, as on a rubber band.
-import { useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { Animated, Dimensions, Easing, PanResponder, View } from "react-native";
 import { gestureLock } from "./gesture-lock.ts";
 
-const SLIDE_MS = 200;
+const OUT_MS = 140;
+const IN_MS = 180;
 
-export function SwipePane({ children, go, canGo }: { children: ReactNode; go: (direction: 1 | -1) => void; canGo: (direction: 1 | -1) => boolean }) {
+// `page` names what is shown (the period, the tab): the next page slides in only once it is drawn, so
+// the old content never comes back for a moment before it changes.
+export function SwipePane({ children, go, canGo, page }: { children: ReactNode; go: (direction: 1 | -1) => void; canGo: (direction: 1 | -1) => boolean; page: string }) {
   const x = useRef(new Animated.Value(0)).current;
   const width = useRef(Dimensions.get("window").width);
   const busy = useRef(false);
+  const coming = useRef<1 | -1 | null>(null);
+  useLayoutEffect(() => {
+    const direction = coming.current;
+    if (direction === null) return;
+    coming.current = null;
+    x.setValue(direction * width.current * 0.3);
+    Animated.timing(x, { toValue: 0, duration: IN_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => {
+      busy.current = false;
+    });
+  }, [page, x]);
   const latest = useRef({ go, canGo });
   latest.current = { go, canGo };
   const pan = useRef(
@@ -31,12 +44,18 @@ export function SwipePane({ children, go, canGo }: { children: ReactNode; go: (d
           return;
         }
         busy.current = true;
-        Animated.timing(x, { toValue: -direction * width.current, duration: SLIDE_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => {
+        // Out from where the finger left it, at the speed of the flick; the new page comes in when drawn.
+        const left = width.current - Math.abs(g.dx);
+        const duration = Math.max(70, Math.min(OUT_MS, Math.abs(g.vx) > 0.1 ? left / Math.abs(g.vx) : OUT_MS));
+        Animated.timing(x, { toValue: -direction * width.current, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(() => {
+          coming.current = direction;
           latest.current.go(direction);
-          x.setValue(direction * width.current * 0.35);
-          Animated.timing(x, { toValue: 0, duration: SLIDE_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => {
-            busy.current = false;
-          });
+          // Should nothing change after all, the page comes back instead of staying away.
+          setTimeout(() => {
+            if (coming.current === null) return;
+            coming.current = null;
+            Animated.timing(x, { toValue: 0, duration: IN_MS, useNativeDriver: true }).start(() => (busy.current = false));
+          }, 800);
         });
       },
       onPanResponderTerminate: () => {

@@ -43,7 +43,7 @@ export function PeriodSwipe({ children }: { children: ReactNode }) {
   const data = useLedger();
   const { period } = useView();
   return (
-    <SwipePane canGo={() => canShiftPeriod(period)} go={(direction) => setView({ period: shiftPeriod(period, direction, data.settings) })}>
+    <SwipePane page={JSON.stringify(period)} canGo={() => canShiftPeriod(period)} go={(direction) => setView({ period: shiftPeriod(period, direction, data.settings) })}>
       {children}
     </SwipePane>
   );
