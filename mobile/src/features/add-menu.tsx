@@ -49,7 +49,7 @@ function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
   const items = (dir: Direction) => (dir === "accounts" ? data.accounts.filter((a) => !a.archived) : data.categories.filter((c) => !c.archived && !c.parent && c.type === dir));
   return (
     <View onLayout={(e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width)}>
-      <Text style={{ color: p.ink, fontSize: 25, fontWeight: "500", textAlign: "center", marginTop: 14, marginBottom: 16 }}>{t.t("Add an operation")}</Text>
+      <Text style={{ color: p.ink, fontSize: 23, textAlign: "center", marginTop: 14, marginBottom: 16 }}>{t.t("Add an operation")}</Text>
       <View style={{ flexDirection: "row", minHeight: 58, borderBottomWidth: 1, borderBottomColor: p.line }}>
         {DIRECTIONS.map((id) => (
           <Pressable key={id} accessibilityRole="tab" accessibilityState={{ selected: direction === id }} onPress={() => go(id)} style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingVertical: 14, paddingHorizontal: 5, borderBottomWidth: 3, borderBottomColor: direction === id ? p.accent : "transparent", marginBottom: -1 }}>
@@ -84,7 +84,7 @@ function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
                       <Text numberOfLines={1} style={{ color: p.ink, fontSize: 15 }}>
                         {item.name}
                       </Text>
-                      <Text numberOfLines={1} style={{ color: p.ink, opacity: 0.6, fontSize: 13, marginTop: 5 }}>
+                      <Text numberOfLines={1} style={{ color: p.ink, opacity: 0.6, fontSize: 17, marginTop: 2 }}>
                         {money(figure(data, dir, item.id), currency)}
                       </Text>
                     </View>
