@@ -239,6 +239,7 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
   const [base, setBase] = useState(color);
   const [hex, setHex] = useState(color.slice(1));
   const [focused, setFocused] = useState(false);
+  const [onWheel, setOnWheel] = useState(false);
   const typed = parseHex(hex);
   const wrong = hex.length > 0 && !typed && !(focused && hex.length < 6 && hex.length !== 3);
   const choose = (c: string, fromRow = false) => {
@@ -252,11 +253,11 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
   return (
     <View style={{ flex: 1 }}>
       <Head title="Choose color" gear={() => sheets.open(<ListSettings mode="color" />, "dialog")} gearLabel="Color list customization" />
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 12 }}>
+      <ScrollView scrollEnabled={!onWheel} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 12 }}>
         <View style={{ marginHorizontal: 24, marginBottom: 18 }}>
           <Preview look={{ icon: look.icon, color }} size={32} height={62} />
         </View>
-        <ColorWheel color={color} size={wheel} onChange={(c) => choose(c)} />
+        <ColorWheel color={color} size={wheel} onChange={(c) => choose(c)} onHold={setOnWheel} />
         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 22, marginBottom: 18 }}>
           {shades.map((c) => {
             const picked = c === color;

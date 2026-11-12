@@ -24,7 +24,8 @@ const valuesOf = (hex: string, hue: number): [number, number, number] => {
   return [s ? h : hue, s, v];
 };
 
-export function ColorWheel({ color, size, onChange }: { color: string; size: number; onChange: (hex: string) => void }) {
+// `onHold` tells the page when a finger is on the wheel, so a scrolling page stays still meanwhile.
+export function ColorWheel({ color, size, onChange, onHold }: { color: string; size: number; onChange: (hex: string) => void; onHold?: (held: boolean) => void }) {
   const hue = useRef(0);
   const [h, s, v] = valuesOf(color, hue.current);
   hue.current = h;
@@ -33,6 +34,8 @@ export function ColorWheel({ color, size, onChange }: { color: string; size: num
   const [live, setLive] = useState<[number, number, number] | null>(null);
   const latest = useRef(onChange);
   latest.current = onChange;
+  const hold = useRef(onHold);
+  hold.current = onHold;
   const shown = live ?? [h, s, v];
   const update = (x: number, y: number) => {
     const radius = state.current.size / 2;
@@ -61,11 +64,12 @@ export function ColorWheel({ color, size, onChange }: { color: string; size: num
         const radius = state.current.size / 2;
         const { locationX: x, locationY: y } = e.nativeEvent;
         state.current.mode = Math.hypot(x - radius, y - radius) / radius >= RING_INNER ? "hue" : "square";
+        hold.current?.(true);
         update(x, y);
       },
       onPanResponderMove: (e: { nativeEvent: { locationX: number; locationY: number } }) => update(e.nativeEvent.locationX, e.nativeEvent.locationY),
-      onPanResponderRelease: () => setLive(null),
-      onPanResponderTerminate: () => setLive(null),
+      onPanResponderRelease: () => (setLive(null), hold.current?.(false)),
+      onPanResponderTerminate: () => (setLive(null), hold.current?.(false)),
     }),
   ).current;
   const [ch, cs, cv] = shown;
