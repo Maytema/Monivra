@@ -230,9 +230,9 @@ export function CategoryEditor() {
     const label = a ? t.t(PLANNED[a.mode], { name: categoryById(data, a.target)?.name ?? "" }) : "";
     return (
       <View key={c.id}>
-        <Pressable accessibilityRole="button" onPress={() => !ignoreTap?.() && (isNew ? newSubMenu(c) : subMenu(c))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 16, backgroundColor: pressed ? p.soft : "transparent" })}>
-          <Text style={{ flex: 1, color: p.accentInk, fontSize: 16 }}>{c.name}</Text>
-          <Icon name="right" size={19} color={p.muted} />
+        <Pressable accessibilityRole="button" onPress={() => !ignoreTap?.() && (isNew ? newSubMenu(c) : subMenu(c))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 19, backgroundColor: pressed ? p.soft : "transparent" })}>
+          <Text style={{ flex: 1, color: p.accentInk, fontSize: 17 }}>{c.name}</Text>
+          <Icon name="right" size={20} color={p.inkSoft} />
         </Pressable>
         {label ? <Text style={{ color: p.muted, fontSize: 12, paddingBottom: 6, paddingLeft: 16 }}>→ {label}</Text> : null}
       </View>
@@ -245,11 +245,11 @@ export function CategoryEditor() {
       <ScrollView scrollEnabled={!held} contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
         <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
         <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} cell={{ node: <Icon name={draft.icon} size={26} color={draft.color} />, background: mix(draft.color, p.bg, 0.14) }} />
-        <FieldButton label="Type" right={<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={draft.type === "expense" ? "arrowExpense" : "arrowIncome"} size={24} color={p.accentInk} /><Text style={{ color: p.accentInk, fontSize: 14 }}>{t.t(draft.type === "expense" ? "Expenses" : "Incomes")}</Text></View>} onPress={() => sheets.open(<TypeSheet value={draft.type} parent={categoryById(data, draft.parent)} onPick={(type) => set({ type })} />, "sheet")} />
+        <FieldButton label="Type" right={<View style={{ flexDirection: "row", alignItems: "center", gap: 20, minHeight: 36 }}><Icon name={draft.type === "expense" ? "arrowExpense" : "arrowIncome"} size={28} color={p.accentInk} /><Text style={{ color: p.accentInk, fontSize: 16 }}>{t.t(draft.type === "expense" ? "Expenses" : "Incomes")}</Text></View>} onPress={() => sheets.open(<TypeSheet value={draft.type} parent={categoryById(data, draft.parent)} onPick={(type) => set({ type })} />, "sheet")} />
         <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {!draft.parent ? (
-          <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 13, overflow: "hidden" }}>
-            <Text style={{ color: p.ink, fontSize: 15, fontWeight: "500", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: p.line }}>{t.t("Subcategories")}</Text>
+          <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 16, overflow: "hidden" }}>
+            <Text style={{ color: p.ink, fontSize: 17, lineHeight: 22, fontWeight: "500", paddingHorizontal: 24, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: p.line }}>{t.t("Subcategories")}</Text>
             <Sortable
               items={[...active.map((c) => ({ c, isNew: false })), ...fresh.map((c) => ({ c, isNew: true }))]}
               keyOf={(x) => x.c.id}
@@ -262,7 +262,7 @@ export function CategoryEditor() {
               render={(x, ignoreTap) => chip(x.c, x.isNew, ignoreTap)}
             />
             <Pressable accessibilityRole="button" onPress={addSub} style={({ pressed }) => ({ minHeight: 56, alignItems: "center", justifyContent: "center", borderTopWidth: 1, borderTopColor: p.line, backgroundColor: pressed ? p.soft : "transparent" })}>
-              <Text style={{ color: p.accentInk, fontSize: 15 }}>{t.t("Add subcategory")}</Text>
+              <Text style={{ color: p.accentInk, fontSize: 17 }}>{t.t("Add subcategory")}</Text>
             </Pressable>
             {archived.length ? (
               <>

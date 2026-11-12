@@ -8,7 +8,7 @@ import { categoryTotalIn, reportRows } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";
 import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon, Screen } from "../ui/kit.tsx";
-import { CategoryTile, TopTabs } from "../ui/parts.tsx";
+import { CategoryTile, SegmentTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { setView, useView } from "./ui-state.ts";
 
@@ -33,7 +33,7 @@ export function CategoriesManage() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t("Change categories") }} />
-      <TopTabs
+      <SegmentTabs
         tabs={[
           { id: "expense" as const, label: "Expenses" },
           { id: "income" as const, label: "Incomes" },
@@ -42,9 +42,11 @@ export function CategoriesManage() {
         onChange={(type) => setView({ catType: type })}
       />
       <Screen padded={false} scrollEnabled={!held}>
-        <Pressable accessibilityRole="button" onPress={() => open()} style={{ margin: 16, minHeight: 56, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, borderRadius: 16, borderWidth: 1, borderColor: p.accent }}>
-          <Icon name="plus" size={17} color={p.accentInk} />
-          <Text style={{ color: p.accentInk, fontSize: 16, fontWeight: "500" }}>{t.t("Create a new category")}</Text>
+        <Pressable accessibilityRole="button" onPress={() => open()} style={({ pressed }) => ({ marginHorizontal: 11, marginTop: 14, marginBottom: 16, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 16, paddingHorizontal: 8, borderRadius: 12, borderWidth: 1, borderColor: p.line, backgroundColor: pressed ? p.soft : p.key })}>
+          <View style={{ width: 44, height: 44, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: p.nav }}>
+            <Icon name="plus" size={22} color={p.muted} />
+          </View>
+          <Text style={{ color: p.muted, fontSize: 17 }}>{t.t("Create a new category")}</Text>
         </Pressable>
         <Sortable
           items={active}

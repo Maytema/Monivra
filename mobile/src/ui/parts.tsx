@@ -199,6 +199,25 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
   );
 }
 
+// Two tabs as one segmented block (the page "Change categories", CT 005): a tinted band, the open tab
+// lifted on a light card.
+export function SegmentTabs<T extends string>({ tabs, active, onChange }: { tabs: readonly { id: T; label: string }[]; active: T; onChange: (id: T) => void }) {
+  const p = usePalette();
+  const t = useT();
+  return (
+    <View style={{ flexDirection: "row", gap: 5, backgroundColor: p.nav, borderRadius: 13, marginHorizontal: 16, marginTop: 4, marginBottom: 6, padding: 8 }}>
+      {tabs.map((tab) => {
+        const on = tab.id === active;
+        return (
+          <Pressable key={tab.id} accessibilityRole="tab" accessibilityState={{ selected: on }} onPress={() => onChange(tab.id)} style={{ flex: 1, height: 48, alignItems: "center", justifyContent: "center", borderRadius: 11, backgroundColor: on ? p.bg : "transparent" }}>
+            <Text style={{ color: on ? p.ink : p.muted, fontSize: 17 }}>{t.t(tab.label)}</Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 // The two sums of the categories and statistics tabs (components.css .sum-tabs): the chosen one is
 // lifted, the other one is muted; expenses in red, incomes in green.
 // `tinted` is the statistics look: the open tab takes the colour of its type.
@@ -229,7 +248,8 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
 // A tile of a category (categories.css .cat-tile): badge, name, the sum of the period.
 export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
   const p = usePalette();
-  const ink = tone === "pos" ? p.positiveInk : tone === "neg" ? p.negativeInk : p.muted;
+  // A figure other than zero takes the colour of the category (CT 002), zero is muted.
+  const ink = tone === "muted" ? p.muted : color;
   return (
     <Pressable
       accessibilityRole="button"
