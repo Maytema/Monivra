@@ -1,10 +1,11 @@
 // "Customize icon" (js/ui/icon-picker.js): a preview, the choice of an icon and of a color, random
 // choices, and Complete. The icon list and the color page are sheets over this dialog.
 import { useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Dimensions, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill } from "./calendar-sheet.tsx";
 import { isHex, shadesOf } from "./color-tools.ts";
+import { ColorWheel } from "./color-wheel.tsx";
 import { ICON_GROUPS, PALETTE, QUICK_COLORS } from "./icon-groups.ts";
 import { Icon } from "./kit.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
@@ -96,12 +97,8 @@ function ColorPage({ look, onPick }: { look: Look; onPick: (color: string) => vo
       <Head title="Choose color" />
       <ScrollView keyboardShouldPersistTaps="handled">
         <Preview look={{ icon: look.icon, color }} />
-        <Text style={{ color: p.muted, fontSize: 14, paddingTop: 16, paddingBottom: 8 }}>{t.t("Colors")}</Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-          {PALETTE.map((c) => (
-            <Swatch key={c} color={c} size={40} picked={same(c)} onPress={() => choose(c)} />
-          ))}
-        </View>
+        <View style={{ height: 18 }} />
+        <ColorWheel color={color} size={Math.min(280, Dimensions.get("window").width - 96)} onChange={choose} />
         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingTop: 18 }}>
           {QUICK_COLORS.map((c) => (
             <Swatch key={c} color={c} size={44} picked={same(c)} onPress={() => choose(c)} />

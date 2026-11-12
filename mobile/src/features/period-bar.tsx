@@ -1,10 +1,12 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
+import type { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 import { canShiftPeriod, shiftPeriod } from "../domain/periods.ts";
 import { useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
+import { SwipePane } from "../ui/swipe-pane.tsx";
 import { periodTitle } from "../ui/period-title.ts";
 import { setView, useView } from "./ui-state.ts";
 
@@ -33,5 +35,16 @@ export function PeriodBar() {
       </Pressable>
       {arrow(1, "right", "Next period")}
     </View>
+  );
+}
+
+// A swipe over a screen with a period bar moves to the neighbouring period.
+export function PeriodSwipe({ children }: { children: ReactNode }) {
+  const data = useLedger();
+  const { period } = useView();
+  return (
+    <SwipePane canGo={() => canShiftPeriod(period)} go={(direction) => setView({ period: shiftPeriod(period, direction, data.settings) })}>
+      {children}
+    </SwipePane>
   );
 }

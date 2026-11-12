@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
+import { moveInOrder } from "../domain/accounts.ts";
 import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { Account } from "../domain/types.ts";
@@ -10,6 +11,8 @@ import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-con
 import { Button, Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
+import { Sortable } from "../ui/sortable.tsx";
+import { SwipePane } from "../ui/swipe-pane.tsx";
 import { mix } from "../ui/theme.ts";
 import { isOwed, openAccountSheet, percentText } from "./account-sheet.tsx";
 import { RootHero } from "./root-hero.tsx";
@@ -28,7 +31,7 @@ function useAccountParts() {
   return { data, money, balanceOf, inMain, isFinished };
 }
 
-function AccountRow({ account }: { account: Account }) {
+function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () => boolean }) {
   const { data, money, balanceOf } = useAccountParts();
   const p = usePalette();
   const balance = balanceOf(account);
@@ -36,7 +39,7 @@ function AccountRow({ account }: { account: Account }) {
   return (
     <Pressable
       accessibilityRole="button"
-      onPress={() => openAccountSheet(account.id)}
+      onPress={() => !ignoreTap?.() && openAccountSheet(account.id)}
       style={({ pressed }) => ({
         minHeight: data.settings.bigAccounts ? 82 : 72,
         flexDirection: "row",
@@ -76,13 +79,26 @@ function AccountRow({ account }: { account: Account }) {
   );
 }
 
-function Group({ accounts }: { accounts: Account[] }) {
+// A group of rows; with `onHold` a long press lifts a row and it can be dragged to another place.
+function Group({ accounts, onHold }: { accounts: Account[]; onHold?: (held: boolean) => void }) {
+  const run = useCommand();
+  if (!onHold)
+    return (
+      <View style={{ gap: 16, borderRadius: 15 }}>
+        {accounts.map((a) => (
+          <AccountRow key={a.id} account={a} />
+        ))}
+      </View>
+    );
   return (
-    <View style={{ gap: 16, borderRadius: 15 }}>
-      {accounts.map((a) => (
-        <AccountRow key={a.id} account={a} />
-      ))}
-    </View>
+    <Sortable
+      items={accounts}
+      keyOf={(a) => a.id}
+      onHold={onHold}
+      style={{ gap: 16, borderRadius: 15 }}
+      onReorder={(ids) => void run((tx) => (moveInOrder(tx, "accounts", ids), true))}
+      render={(a, ignoreTap) => <AccountRow account={a} ignoreTap={ignoreTap} />}
+    />
   );
 }
 
@@ -161,6 +177,7 @@ export function AccountsScreen() {
   const p = usePalette();
   const t = useT();
   const [tab, setTab] = useState<AccountTab>("Accounts");
+  const [held, setHeld] = useState(false);
   const live = data.accounts.filter((a) => !a.archived);
   const archived = data.accounts.filter((a) => a.archived);
   const hasDebts = live.some((a) => a.type === "Debt");
@@ -187,7 +204,8 @@ export function AccountsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} />
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+      <SwipePane canGo={(d) => tabs.indexOf(shown) + d >= 0 && tabs.indexOf(shown) + d < tabs.length} go={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}>
+      <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
         {shown === "Total" ? (
           <Totals />
         ) : (
@@ -199,7 +217,7 @@ export function AccountsScreen() {
               return (
                 <View key={type}>
                   <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyText text={money(total, data.settings.currency, true)} value={total} size={19} />} />
-                  {rows.length ? <Group accounts={rows} /> : null}
+                  {rows.length ? <Group accounts={rows} onHold={setHeld} /> : null}
                 </View>
               );
             })}
@@ -208,6 +226,7 @@ export function AccountsScreen() {
         )}
         <Folder title="Archive" icon="archive" items={archived} />
       </ScrollView>
+      </SwipePane>
     </View>
   );
 }

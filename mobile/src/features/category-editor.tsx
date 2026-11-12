@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { Stack, router, useLocalSearchParams } from "expo-router";
+import { moveInOrder } from "../domain/accounts.ts";
 import { blankCategory, deleteCategory, storeCategory, type SubcategoryAction } from "../domain/categories.ts";
 import { categoryById } from "../domain/ledger.ts";
 import type { Category } from "../domain/types.ts";
@@ -18,6 +19,7 @@ import { ToneBadge } from "../ui/parts.tsx";
 import { currencyName } from "../ui/currency-names.ts";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { TextButton } from "../ui/calendar-sheet.tsx";
+import { Sortable } from "../ui/sortable.tsx";
 import { mix, space } from "../ui/theme.ts";
 import { useView } from "./ui-state.ts";
 
@@ -124,6 +126,7 @@ export function CategoryEditor() {
   };
   const [draft, setDraft] = useState<Category>(start);
   const [fresh, setFresh] = useState<Category[]>([]);
+  const [held, setHeld] = useState(false);
   const [actions, setActions] = useState<SubcategoryAction[]>([]);
   const set = (patch: Partial<Category>) => setDraft((d) => ({ ...d, ...patch }));
   const editing = !!existing;
@@ -222,12 +225,12 @@ export function CategoryEditor() {
       "Name",
     );
 
-  const chip = (c: Category, isNew: boolean) => {
+  const chip = (c: Category, isNew: boolean, ignoreTap?: () => boolean) => {
     const a = planned(c.id);
     const label = a ? t.t(PLANNED[a.mode], { name: categoryById(data, a.target)?.name ?? "" }) : "";
     return (
       <View key={c.id}>
-        <Pressable accessibilityRole="button" onPress={() => (isNew ? newSubMenu(c) : subMenu(c))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 16, backgroundColor: pressed ? p.soft : "transparent" })}>
+        <Pressable accessibilityRole="button" onPress={() => !ignoreTap?.() && (isNew ? newSubMenu(c) : subMenu(c))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 16, backgroundColor: pressed ? p.soft : "transparent" })}>
           <Text style={{ flex: 1, color: p.accentInk, fontSize: 16 }}>{c.name}</Text>
           <Icon name="right" size={19} color={p.muted} />
         </Pressable>
@@ -239,7 +242,7 @@ export function CategoryEditor() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t(editing ? "Change category" : "New category") }} />
-      <ScrollView contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
+      <ScrollView scrollEnabled={!held} contentContainerStyle={{ padding: space.l, gap: 24 }} keyboardShouldPersistTaps="handled">
         <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
         <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} cell={{ node: <Icon name={draft.icon} size={26} color={draft.color} />, background: mix(draft.color, p.bg, 0.14) }} />
         <FieldButton label="Type" right={<View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}><Icon name={draft.type === "expense" ? "arrowExpense" : "arrowIncome"} size={24} color={p.accentInk} /><Text style={{ color: p.accentInk, fontSize: 14 }}>{t.t(draft.type === "expense" ? "Expenses" : "Incomes")}</Text></View>} onPress={() => sheets.open(<TypeSheet value={draft.type} parent={categoryById(data, draft.parent)} onPick={(type) => set({ type })} />, "sheet")} />
@@ -247,7 +250,17 @@ export function CategoryEditor() {
         {!draft.parent ? (
           <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 13, overflow: "hidden" }}>
             <Text style={{ color: p.ink, fontSize: 15, fontWeight: "500", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: p.line }}>{t.t("Subcategories")}</Text>
-            {[...active.map((c) => chip(c, false)), ...fresh.map((c) => chip(c, true))]}
+            <Sortable
+              items={[...active.map((c) => ({ c, isNew: false })), ...fresh.map((c) => ({ c, isNew: true }))]}
+              keyOf={(x) => x.c.id}
+              onHold={setHeld}
+              onReorder={(ids) => {
+                const saved = ids.filter((id) => active.some((c) => c.id === id));
+                if (saved.length) run((tx) => (moveInOrder(tx, "categories", saved), true));
+                setFresh((list) => [...list].sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)));
+              }}
+              render={(x, ignoreTap) => chip(x.c, x.isNew, ignoreTap)}
+            />
             <Pressable accessibilityRole="button" onPress={addSub} style={({ pressed }) => ({ minHeight: 56, alignItems: "center", justifyContent: "center", borderTopWidth: 1, borderTopColor: p.line, backgroundColor: pressed ? p.soft : "transparent" })}>
               <Text style={{ color: p.accentInk, fontSize: 15 }}>{t.t("Add subcategory")}</Text>
             </Pressable>

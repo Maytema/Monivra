@@ -9,7 +9,7 @@ import { useLedger, useMoney } from "../ui/app-context.tsx";
 import { Button, Empty, Screen } from "../ui/kit.tsx";
 import { CategoryTile, SumTabs } from "../ui/parts.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { PeriodBar } from "./period-bar.tsx";
+import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openAccountSheet } from "./account-sheet.tsx";
@@ -30,6 +30,7 @@ export function CategoriesScreen() {
   return (
     <View style={{ flex: 1 }}>
       <RootHero icon="edit" label="Change categories" onAction={edit} />
+      <PeriodSwipe>
       <Screen padded={false}>
         <PeriodBar />
         <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
@@ -52,6 +53,7 @@ export function CategoriesScreen() {
           </View>
         )}
       </Screen>
+      </PeriodSwipe>
     </View>
   );
 }

@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { LedgerTx, applyChange } from "../src/domain/change.ts";
-import { accountDeletionImpact, accountDraft, changeAccountCurrency, checkedAccountDraft, deleteAccount, storeAccount } from "../src/domain/accounts.ts";
+import { accountDeletionImpact, accountDraft, changeAccountCurrency, checkedAccountDraft, deleteAccount, moveInOrder, storeAccount } from "../src/domain/accounts.ts";
 import { accountBalance } from "../src/domain/ledger.ts";
 import { convert, evaluateExpression, applyFees, shownPercent, typeKey } from "../src/domain/money.ts";
 import { applyBulkChanges, emptyBulkChanges, putOperation } from "../src/domain/operations.ts";
@@ -167,4 +167,16 @@ test("Add now posts one occurrence today and moves the payment on; Skip posts no
   processScheduled(tx, "daily", false, env);
   assert.equal(tx.data.ops.length, count);
   assert.equal(tx.get("scheduled", "daily")?.date, "2026-11-17");
+});
+
+test("reordering one group keeps the places of the others", () => {
+  const data = withDollars();
+  const ids = data.accounts.map((a) => a.id);
+  assert.ok(ids.length >= 3);
+  // The first and the last account form a group; their swap leaves the middle ones where they are.
+  const group = [ids[0]!, ids.at(-1)!];
+  const tx = new LedgerTx(data);
+  moveInOrder(tx, "accounts", [group[1]!, group[0]!]);
+  const next = applyChange(data, tx.change).accounts.map((a) => a.id);
+  assert.deepEqual(next, [ids.at(-1), ...ids.slice(1, -1), ids[0]]);
 });

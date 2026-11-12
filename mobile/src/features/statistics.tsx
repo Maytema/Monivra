@@ -16,7 +16,7 @@ import { SumTabs, ToneBadge } from "../ui/parts.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
 import { FiltersPanel, filtersActive } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
-import { PeriodBar } from "./period-bar.tsx";
+import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 
@@ -259,6 +259,7 @@ export function StatisticsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <RootHero icon="filter" label="Filters" onAction={() => setFiltering(true)} />
+      <PeriodSwipe>
       <View style={{ flex: 1 }}>
         <PeriodBar />
         {hasOperations ? (
@@ -275,6 +276,7 @@ export function StatisticsScreen() {
           </View>
         )}
       </View>
+      </PeriodSwipe>
       <FiltersPanel visible={filtering} filters={filters} onChange={(f) => setView({ filters: f })} onClose={() => setFiltering(false)} />
     </View>
   );

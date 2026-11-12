@@ -302,6 +302,14 @@ export function deleteAccount(tx: LedgerTx, id: string): { operations: string[];
   return { operations, accounts: [id] };
 }
 
+// Puts the items of one group (`ids`, in their new order) back into the places the group held in the
+// whole list, so the other groups keep their places (js/domain/ordering.js `reorderedList`).
 export function moveInOrder(tx: LedgerTx, key: "accounts" | "categories", ids: string[]): void {
-  tx.order(key, ids);
+  const all = tx.data[key].map((x) => x.id);
+  const known = ids.filter((id) => all.includes(id));
+  let next = 0;
+  tx.order(
+    key,
+    all.map((id) => (known.includes(id) ? known[next++]! : id)),
+  );
 }

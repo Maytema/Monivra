@@ -28,12 +28,12 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
 
 // A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab
 // bar carries the inset itself, so a page adds none.
-export function Screen({ children, scroll = true, padded = true }: { children: ReactNode; scroll?: boolean; padded?: boolean }) {
+export function Screen({ children, scroll = true, padded = true, scrollEnabled = true }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean }) {
   const p = usePalette();
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   return scroll ? (
-    <ScrollView style={style} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
+    <ScrollView style={style} scrollEnabled={scrollEnabled} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
   ) : (

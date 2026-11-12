@@ -18,7 +18,7 @@ import { Fab, MoneyText } from "../ui/parts.tsx";
 import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
-import { PeriodBar } from "./period-bar.tsx";
+import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { FiltersPanel } from "./filters-panel.tsx";
@@ -132,6 +132,9 @@ export function OperationsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
+      <PeriodBar />
+      {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
+      <PeriodSwipe>
       <FlatList
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
@@ -144,8 +147,6 @@ export function OperationsScreen() {
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }}
         ListHeaderComponent={
           <View style={{ marginHorizontal: -16 }}>
-            <PeriodBar />
-            {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
             <View style={{ paddingHorizontal: 16 }}>
               {posted.length ? (
                 <Pressable onPress={() => appStore().forgetPosted()}>
@@ -188,6 +189,7 @@ export function OperationsScreen() {
           )
         }
       />
+      </PeriodSwipe>
       {selection ? (
         <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
           {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["more", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
