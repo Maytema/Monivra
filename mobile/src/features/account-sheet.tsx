@@ -75,9 +75,9 @@ function AccountSheet({ id }: { id: string }) {
     </View>
   );
   // An account action replaces the sheet, so one "back" returns to the list.
-  const start = (type: string, key: "to" | "from") => {
+  const start = (type: string, key: "to" | "from", ask: "topup" | "debit" | "transfer") => {
     close();
-    openEditor({ type: type as "income" | "expense" | "transfer", [key]: id });
+    openEditor({ type: type as "income" | "expense" | "transfer", [key]: id, ask });
   };
   return (
     <View>
@@ -125,9 +125,9 @@ function AccountSheet({ id }: { id: string }) {
         {/* An archived account takes no new money: return it from the archive first. */}
         {account.archived ? null : (
           <>
-            <ActionTile icon="income" label="Top up" tone="#22b573" onPress={() => start("income", "to")} />
-            <ActionTile icon="right" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from")} />
-            <ActionTile icon="expense" label="Debit" tone="#e5384f" onPress={() => start("expense", "from")} />
+            <ActionTile icon="income" label="Top up" tone="#22b573" onPress={() => start("income", "to", "topup")} />
+            <ActionTile icon="right" label="Transfer" tone="#f2a313" onPress={() => start("transfer", "from", "transfer")} />
+            <ActionTile icon="expense" label="Debit" tone="#e5384f" onPress={() => start("expense", "from", "debit")} />
           </>
         )}
       </ActionGrid>

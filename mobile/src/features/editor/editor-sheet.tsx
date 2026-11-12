@@ -21,7 +21,7 @@ import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
 import { feeLabel, openFee, openRecurrence, openReminder, openTags, openTime, optionsSet, setPaymentTime } from "./options.tsx";
-import { openPartyPicker } from "./party-picker.tsx";
+import { openPartyPicker, openTransferPicker } from "./party-picker.tsx";
 import { EditorSession, newDraft, type EditorDraft, type Party } from "./session.ts";
 
 const DOUBLE_TAP_MS = 340;
@@ -40,6 +40,9 @@ export interface EditorStart {
   copy?: Partial<EditorDraft>;
   // What a scheduled payment has been given before the editor opens (date, time, repeat, reminder).
   preset?: Partial<EditorDraft>;
+  // From an account's actions: the other side is asked first ("Take from", "Add to", "To account"),
+  // and the calculator opens only once it is chosen (js/screens/operation-editor/start.js).
+  ask?: "topup" | "debit" | "transfer";
 }
 
 const ledger = (): LedgerData => {
@@ -65,7 +68,10 @@ export function openEditor(start: EditorStart): number | null {
     };
   const draft = newDraft(data, env.clock.today(), { ...(base as Partial<EditorDraft>), ...(found ? {} : start.preset) });
   const session = new EditorSession(draft, scheduled, { data: ledger, say: toast });
-  return sheets.open(<EditorSheet session={session} />, "sheet", { bare: true });
+  const open = () => sheets.open(<EditorSheet session={session} />, "sheet", { bare: true });
+  if (start.ask === "transfer") return openTransferPicker(session, open);
+  if (start.ask) return openPartyPicker(session, start.ask === "topup", false, open);
+  return open();
 }
 
 // ---- Pieces --------------------------------------------------------------------------------------

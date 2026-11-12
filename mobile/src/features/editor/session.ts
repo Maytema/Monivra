@@ -171,6 +171,11 @@ export class EditorSession {
     this.draft = { ...this.draft, ...putAccountOnSide(this.data, this.draft, incoming, accountId) };
     this.afterPartiesChange();
   }
+  // The destination of a transfer from the account it starts from (an account's "Transfer").
+  makeTransferTo(accountId: string): void {
+    this.update({ type: "transfer", category: undefined, to: accountId });
+    this.afterPartiesChange();
+  }
   // Replaces the account of a balance correction or, if the operation has only one, that one.
   replaceOwnAccount(id: string): void {
     this.update(this.draft.to ? { to: id } : { from: id });
