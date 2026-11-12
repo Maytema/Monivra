@@ -85,7 +85,9 @@ function DateRow({ session }: { session: EditorSession }) {
   const earliest = session.scheduled ? earliestScheduleDate(today) : null;
   const date = session.draft.date;
   // The year only when it is not this one (as in the reference: "Wednesday, September 30").
-  const label = `${t.weekday(date)}, ${t.day(date, date.slice(0, 4) !== today.slice(0, 4))}`;
+  // Today, yesterday and tomorrow are named instead of the week day (OP 016: "Yesterday, October 29").
+  const near = date === today ? "Today" : date === addDays(today, -1) ? "Yesterday" : date === addDays(today, 1) ? "Tomorrow" : null;
+  const label = `${near ? t.t(near) : t.weekday(date)}, ${t.day(date, date.slice(0, 4) !== today.slice(0, 4))}`;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", height: session.compact ? 48 : 52, marginBottom: session.compact ? 8 : 9 }}>
       <IconButton name="left" label="Previous day" disabled={!!earliest && date <= earliest} onPress={() => session.update({ date: addDays(date, -1) })} />

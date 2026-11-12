@@ -52,6 +52,9 @@ shot 03a-add-menu 3
 has "Add an operation" 03a-add-menu
 tap "Food"
 shot 03-editor 4
+tap "Additionally"
+shot 03b-additionally 2
+adb shell input keyevent 4; sleep 1.5
 for k in 1 2 5; do tap "$k"; done
 shot 04-amount 1
 tap "Save operation"
@@ -150,6 +153,12 @@ log "long press at: $xy"
 [ -n "$xy" ] && adb shell input swipe $xy $xy 900
 shot 18-long-press-selection 3
 has "Selected" 18-long-press-selection
+tap "More"
+shot 18b-bulk-edit 2
+back
+back
+tap "November 2026"
+shot 19-period-dialog 2
 back
 # Layout under other system settings: three-button navigation, a large font, a denser display.
 # (Looked at by a person: screenshots only.)
