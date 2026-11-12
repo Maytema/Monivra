@@ -90,8 +90,9 @@ for page in "Settings" "Scheduled payments" "Budgets" "Exchange rates"; do
   back
 done
 tap "Operations"
-tap "New operation"
-tap "Food"
+sleep 2
+tap "Food, Cash"
+sleep 2
 shot 16-editor 3
 tap "Select date"
 shot 16b-calendar 2
