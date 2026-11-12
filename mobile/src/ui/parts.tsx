@@ -143,7 +143,7 @@ export function ActionTile({ icon, label, tone, onPress }: { icon: string; label
   const columns = useContext<number>(Columns);
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={{ width: `${100 / columns}%`, alignItems: "center", gap: 8, paddingBottom: 30 }}>
-      <View style={{ width: 56, height: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: alpha(tone, 0.18) }}>
+      <View style={{ width: 56, height: 56, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: alpha(tone, 0.18) }}>
         <Icon name={icon} size={26} color={tone} />
       </View>
       <Text style={{ color: p.ink, fontSize: 14, lineHeight: 17, textAlign: "center" }}>{t.t(label)}</Text>

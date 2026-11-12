@@ -70,8 +70,8 @@ function AccountSheet({ id }: { id: string }) {
   const available = account.type === "Regular" && account.limit > 0;
   const figure = (label: string, amount: number) => (
     <View style={{ flex: 1, minWidth: 140, alignItems: "center" }}>
-      <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
-      <MoneyText text={money(amount, account.currency, true)} value={amount} size={18} style={{ marginTop: 10 }} />
+      <Text style={{ color: p.ink, fontSize: 14 }}>{t.t(label)}</Text>
+      <MoneyText text={money(amount, account.currency, true)} value={amount} size={20} style={{ marginTop: 10 }} />
     </View>
   );
   // An account action replaces the sheet, so one "back" returns to the list.
@@ -84,7 +84,7 @@ function AccountSheet({ id }: { id: string }) {
       <View style={{ marginTop: 8, marginHorizontal: 4, paddingTop: 16, paddingHorizontal: 18, paddingBottom: 18, borderWidth: 1, borderColor: p.line, borderRadius: 16 }}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginBottom: 20 }}>
           <ToneBadge icon={account.icon} color={account.color} size={56} iconSize={28} />
-          <Text style={{ flex: 1, color: p.ink, fontSize: 18 }}>{account.name}</Text>
+          <Text numberOfLines={2} style={{ flex: 1, color: p.ink, fontSize: 21 }}>{account.name}</Text>
           <Pressable accessibilityRole="button" accessibilityLabel={t.t("Favorite")} hitSlop={10} onPress={() => void run((tx) => (toggleFavoriteAccount(tx, id), true))}>
             <Icon name="star" size={26} color={account.favorite ? p.accentInk : p.accent} filled={account.favorite} />
           </Pressable>
