@@ -145,6 +145,8 @@ export function OperationsScreen() {
       {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
       <PeriodSwipe>
       <FlatList
+        // The sticky header indices must not change under a mounted list (it then draws nothing).
+        key={stickyDays.join(",")}
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
         onScroll={(e) => setAtTop(e.nativeEvent.contentOffset.y < 12)}

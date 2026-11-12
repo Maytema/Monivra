@@ -91,7 +91,7 @@ for page in "Settings" "Scheduled payments" "Budgets" "Exchange rates"; do
 done
 tap "Operations"
 sleep 2
-tap "Food, Cash"
+tap "Food, Cash, 125 KGS"
 sleep 2
 shot 16-editor 3
 tap "Select date"
@@ -105,7 +105,17 @@ adb shell input swipe 200 1500 900 1500 250
 shot 17-swipe-period 3
 adb shell input swipe 900 1500 200 1500 250
 shot 17b-swipe-back 3
-adb shell input swipe 540 990 540 990 900
+adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+xy=$(python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if n.get("content-desc") == "Food, Cash, 125 KGS":
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        print((a + c) // 2, (b + d) // 2); break
+PY
+)
+log "long press at: $xy"
+[ -n "$xy" ] && adb shell input swipe $xy $xy 900
 shot 18-long-press-selection 3
 has "Selected" 18-long-press-selection
 back
