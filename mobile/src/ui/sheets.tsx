@@ -110,7 +110,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
           <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Close" onPress={close} />
         </Animated.View>
         {full ? (
-          <Animated.View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: p.bg, paddingTop: insets.top, paddingBottom: insets.bottom, transform: [{ translateY: rise }] }}>
+          <Animated.View style={{ ...StyleSheet.absoluteFill, backgroundColor: p.bg, paddingTop: insets.top, paddingBottom: insets.bottom, transform: [{ translateY: rise }] }}>
             {layer.content}
           </Animated.View>
         ) : (
