@@ -1,6 +1,7 @@
 // Rows of the settings lists (js/ui/primitives.js `menuRowHtml`, `toggleRowHtml`): a title with a
 // caption under it, an icon at the left and a chevron or a switch at the right; no frames, as a list.
-import { Pressable, Switch, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
+import { Toggle } from "./form.tsx";
 import type { ReactNode } from "react";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
@@ -29,7 +30,7 @@ export function SwitchRow({ label, hint, value, onChange }: { label: string; hin
         <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
         {hint ? <Text style={{ color: p.muted, fontSize: 13, lineHeight: 18, marginTop: 2 }}>{t.t(hint)}</Text> : null}
       </View>
-      <Switch value={value} onValueChange={onChange} trackColor={{ true: p.accent, false: p.line }} thumbColor="#ffffff" />
+      <Toggle value={value} onChange={onChange} />
     </Pressable>
   );
 }
