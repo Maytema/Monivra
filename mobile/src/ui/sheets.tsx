@@ -7,6 +7,7 @@ import { Animated, BackHandler, Dimensions, KeyboardAvoidingView, Pressable, Scr
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { chrome } from "./theme.ts";
+import { now, perfLog } from "../platform/perf.ts";
 
 // A "full" layer is a page over the whole screen (the icon list, the colour page).
 type Kind = "sheet" | "dialog" | "full";
@@ -17,10 +18,16 @@ interface Layer {
   closing: boolean;
   // A sheet whose content brings its own side padding (the add menu), with a taller panel.
   bare: boolean;
+  // The content scrolls by itself (a long virtualized list must not sit inside another scroll view, or
+  // every row of it is drawn at once).
+  scrolls: boolean;
+  // When it was asked for (the emulator test reads how long a layer takes to appear).
+  asked: number;
 }
 
 export interface SheetOptions {
   bare?: boolean;
+  scrolls?: boolean;
 }
 
 let layers: readonly Layer[] = [];
@@ -35,7 +42,7 @@ export const sheets = {
   // Opens a layer over the current ones; returns its id.
   open(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
     const id = ++counter;
-    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare }]);
+    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, asked: now() }]);
     return id;
   },
   // Starts closing a layer (the animation removes it).
@@ -94,6 +101,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const close = () => sheets.close(layer.id);
 
   useEffect(() => {
+    if (!layer.closing) perfLog(`layer ${layer.kind} shown`, now() - layer.asked);
     Animated.timing(progress, { toValue: layer.closing ? 0 : 1, duration: layer.closing ? 160 : 220, useNativeDriver: true }).start(({ finished }) => {
       if (layer.closing && finished) publish(layers.filter((l) => l.id !== layer.id));
     });
@@ -133,9 +141,13 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
               }}
             >
               <View style={{ width: 32, height: 4, borderRadius: 8, backgroundColor: p.line, alignSelf: "center", marginBottom: layer.bare ? 8 : 12 }} />
-              <ScrollView style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-                {layer.content}
-              </ScrollView>
+              {layer.scrolls ? (
+                <View style={{ flexShrink: 1 }}>{layer.content}</View>
+              ) : (
+                <ScrollView style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+                  {layer.content}
+                </ScrollView>
+              )}
             </Animated.View>
           ) : (
             <Animated.View

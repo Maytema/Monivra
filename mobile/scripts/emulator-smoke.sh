@@ -72,8 +72,26 @@ tap "Accounts"
 tap "Cash"
 tap "Edit"
 shot 12-account-form 3
+# The icon dialog, the icon list and the colour page (pages over the whole screen).
+tap "Icon"
+shot 12c-customize-icon 2
+tap "Choose an icon"
+shot 12d-icon-page 2
+back
+tap "Choose color"
+shot 12e-color-page 2
+back
+back
+tap "Account type"
+shot 12g-select-type 2
+back
 adb shell input swipe 540 1800 540 600 300
 shot 12b-account-form-end 2
+tap "Account currency"
+shot 12f-currency-sheet 2
+adb shell input swipe 540 1900 540 900 200
+shot 12h-currency-scrolled 1
+back
 back
 tap "Categories"
 shot 13-categories 3
@@ -84,11 +102,17 @@ shot 13c-statistics-scrolled 2
 tap "Operations"
 tap "More"
 shot 14-more 3
-for page in "Settings" "Scheduled payments" "Budgets" "Exchange rates"; do
+for page in "Settings" "Scheduled payments" "Budgets"; do
   tap "$page"
   shot "15-$(echo "$page" | tr ' ' '-')" 3
   back
 done
+tap "Settings"
+for i in 1 2 3; do adb shell input swipe 540 1800 540 700 300; sleep 1; done
+tap "Exchange rates"
+shot 15-Exchange-rates 3
+back
+back
 tap "Operations"
 sleep 2
 tap "Food, Cash, 125 KGS"
@@ -134,6 +158,7 @@ adb shell cmd overlay enable com.android.internal.systemui.navbar.gestural >/dev
 adb shell pidof $PKG > "$OUT/pid.txt" && log "OK: running" || { log "FAIL: not running"; FAILED=1; }
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1
+grep "\[perf\]" "$OUT/js-log.txt" > "$OUT/perf.txt"; log "perf lines: $(wc -l < "$OUT/perf.txt")"
 if grep -q "FATAL\|AndroidRuntime" "$OUT/crash.txt"; then log "FAIL: crash (see crash.txt)"; FAILED=1; fi
 log "result: $([ $FAILED = 0 ] && echo passed || echo failed)"
 exit $FAILED

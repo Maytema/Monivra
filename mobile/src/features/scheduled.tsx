@@ -5,7 +5,6 @@
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Stack } from "expo-router";
-import { parseDate } from "../domain/dates.ts";
 import { accountById, categoryById } from "../domain/ledger.ts";
 import { applyFees } from "../domain/money.ts";
 import { earliestScheduleDate } from "../domain/operations.ts";
@@ -34,7 +33,7 @@ function useRuleText() {
   const t = useT();
   const recurText = (r: Recurrence): string => {
     const [one, many] = REPEAT[r.unit] ?? ["", ""];
-    const weekdays = r.unit === "Weeks" && r.days.length ? " · " + r.days.map((n) => new Date(Date.UTC(2024, 0, 7 + n)).toLocaleDateString(t.locale, { weekday: "short", timeZone: "UTC" })).join(", ") : "";
+    const weekdays = r.unit === "Weeks" && r.days.length ? " · " + r.days.map((n) => t.weekday(n, "short")).join(", ") : "";
     return (r.every === 1 ? t.t(one) : t.tc(one, many, r.every)) + weekdays + (r.remaining === null ? "" : ` (${t.t("Remaining: {n}", { n: r.remaining })})`);
   };
   const reminderText = (r: Reminder): string => (r.before === 0 ? t.t("On the same day at {time}", { time: r.time }) : t.t("{interval} before at {time}", { interval: `${r.before} ${t.t(r.unit)}`, time: r.time }));
@@ -103,7 +102,7 @@ function CreateDialog() {
     </Pressable>
   );
   const changeTime = (time: string) => setSetup((s) => ({ ...s, time, reminder: reminderForTime(s.reminder, s.time, time) }));
-  const dateTitle = `${parseDate(setup.date).toLocaleDateString(t.locale, { weekday: "long", timeZone: "UTC" })}, ${t.day(setup.date, true)}`;
+  const dateTitle = `${t.weekday(setup.date)}, ${t.day(setup.date, true)}`;
   return (
     <View>
       <DialogTitle>{t.t("Select date")}</DialogTitle>
@@ -136,9 +135,10 @@ export function ScheduledScreen() {
   const env = appStore().env;
   const [descending, setDescending] = useState(false);
   const missed = missedPayments(data.scheduled, env);
-  const sorted = [...data.scheduled].sort((a, b) => (descending ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date)) || (a.time ?? "").localeCompare(b.time ?? ""));
+  const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
+  const sorted = [...data.scheduled].sort((a, b) => (descending ? cmp(b.date, a.date) : cmp(a.date, b.date)) || cmp(a.time ?? "", b.time ?? ""));
   const dates = [...new Set(sorted.map((o) => o.date))];
-  const dayTitle = (date: string) => `${t.day(date)}, ${parseDate(date).toLocaleDateString(t.locale, { weekday: "long", timeZone: "UTC" })}`;
+  const dayTitle = (date: string) => `${t.day(date)}, ${t.weekday(date)}`;
   const sort = () =>
     optionDialog<"asc" | "desc">(
       "Sort by date",

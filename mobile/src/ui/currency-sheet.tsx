@@ -1,10 +1,10 @@
 // The sheet to choose a currency (js/ui/currency-picker.js): a search field (code, sign, name or country), the
 // order of the list, and sections: used first, major, other. The chosen currency is marked.
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { memo, useMemo, useState } from "react";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { CURRENCIES } from "../domain/currencies.ts";
 import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
-import { currencyName, currencySign, searchCurrencies } from "./currency-names.ts";
+import { byText, currencyName, currencySign, searchCurrencies, sortKey } from "./currency-names.ts";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 
 const POPULAR = ["USD", "EUR", "GBP", "CNY", "JPY", "CHF", "CAD", "AUD"];
@@ -14,7 +14,7 @@ const SORTS = [
   ["code", "By code"],
 ] as const;
 
-export const openCurrencySheet = (value: string, onPick: (code: string) => void): number => sheets.open(<CurrencySheet value={value} onPick={onPick} />);
+export const openCurrencySheet = (value: string, onPick: (code: string) => void): number => sheets.open(<CurrencySheet value={value} onPick={onPick} />, "sheet", { scrolls: true });
 
 function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string) => void }) {
   const data = useLedger();
@@ -26,13 +26,12 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
   const by = (data.settings.currencySort as string) || "groups";
   const sections = useMemo((): [string, string[]][] => {
     if (text.trim()) return [["", searchCurrencies(text, t.locale)]];
-    const collator = new Intl.Collator(t.locale);
-    const key = (code: string) => (by === "code" ? code : currencyName(code, t.locale));
-    const all = CURRENCIES.map((c) => c.code).sort((a, b) => collator.compare(key(a), key(b)));
+    const key = (code: string) => (by === "code" ? code.toLowerCase() : sortKey(code, t.locale));
+    const all = CURRENCIES.map((c) => c.code).sort((a, b) => byText(key(a), key(b)));
     if (by !== "groups") {
       const letters = new Map<string, string[]>();
       for (const code of all) {
-        const first = key(code).charAt(0).toLocaleUpperCase();
+        const first = key(code).charAt(0).toUpperCase();
         letters.set(first, [...(letters.get(first) ?? []), code]);
       }
       return [...letters];
@@ -45,6 +44,12 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
     ];
   }, [text, by, t.locale, data.settings.currency, data.accounts, data.categories]);
   const shown = sections.filter(([, codes]) => codes.length);
+  // One flat, virtualized list: the headings and the rows; only what is on the screen is drawn.
+  const rows = useMemo(() => shown.flatMap(([title, codes]): Row[] => [...(title ? [{ kind: "head" as const, title }] : []), ...codes.map((code) => ({ kind: "code" as const, code }))]), [shown]);
+  const pick = (code: string) => {
+    close();
+    onPick(code);
+  };
   return (
     <View style={{ maxHeight: 640 }}>
       <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Select currency")}</Text>
@@ -56,37 +61,46 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
           </Pressable>
         ))}
       </View>
-      <ScrollView keyboardShouldPersistTaps="handled">
-        {shown.map(([title, codes]) => (
-          <View key={title || "found"}>
-            {title ? <Text style={{ color: p.muted, fontSize: 14, paddingTop: 12, paddingBottom: 4 }}>{t.t(title)}</Text> : null}
-            {codes.map((code) => {
-              const sign = currencySign(code);
-              return (
-                <Pressable
-                  key={code}
-                  accessibilityRole="radio"
-                  accessibilityLabel={`${currencyName(code, t.locale)} ${code}`}
-                  accessibilityState={{ selected: code === value }}
-                  onPress={() => {
-                    close();
-                    onPick(code);
-                  }}
-                  style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 56, paddingHorizontal: 6, backgroundColor: pressed ? p.soft : "transparent" })}
-                >
-                  <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: code === value ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{code === value ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
-                  <View style={{ flex: 1 }}>
-                    <Text numberOfLines={1} style={{ color: p.ink, fontSize: 16 }}>{currencyName(code, t.locale)}</Text>
-                    <Text style={{ color: p.muted, fontSize: 12 }}>{code}</Text>
-                  </View>
-                  {sign === code ? null : <Text style={{ color: p.inkSoft, fontSize: 16 }}>{sign}</Text>}
-                </Pressable>
-              );
-            })}
-          </View>
-        ))}
-        {shown.length ? null : <Text style={{ color: p.muted, textAlign: "center", padding: 24 }}>{t.t("No currencies found")}</Text>}
-      </ScrollView>
+      <FlatList
+        data={rows}
+        keyExtractor={(r) => (r.kind === "head" ? "h:" + r.title : r.code)}
+        keyboardShouldPersistTaps="handled"
+        initialNumToRender={14}
+        maxToRenderPerBatch={16}
+        windowSize={9}
+        renderItem={({ item }) =>
+          item.kind === "head" ? (
+            <Text style={{ color: p.muted, fontSize: 14, paddingTop: 12, paddingBottom: 4 }}>{t.t(item.title)}</Text>
+          ) : (
+            <CurrencyRow code={item.code} chosen={item.code === value} locale={t.locale} onPick={pick} />
+          )
+        }
+        ListEmptyComponent={<Text style={{ color: p.muted, textAlign: "center", padding: 24 }}>{t.t("No currencies found")}</Text>}
+      />
     </View>
   );
 }
+
+type Row = { kind: "head"; title: string } | { kind: "code"; code: string };
+
+const CurrencyRow = memo(function CurrencyRow({ code, chosen, locale, onPick }: { code: string; chosen: boolean; locale: string; onPick: (code: string) => void }) {
+  const p = usePalette();
+  const sign = currencySign(code);
+  const name = currencyName(code, locale);
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityLabel={`${name} ${code}`}
+      accessibilityState={{ selected: chosen }}
+      onPress={() => onPick(code)}
+      style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 56, paddingHorizontal: 6, backgroundColor: pressed ? p.soft : "transparent" })}
+    >
+      <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: chosen ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{chosen ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+      <View style={{ flex: 1 }}>
+        <Text numberOfLines={1} style={{ color: p.ink, fontSize: 16 }}>{name}</Text>
+        <Text style={{ color: p.muted, fontSize: 12 }}>{code}</Text>
+      </View>
+      {sign === code ? null : <Text style={{ color: p.inkSoft, fontSize: 16 }}>{sign}</Text>}
+    </Pressable>
+  );
+});

@@ -34,6 +34,7 @@ function useAccountParts() {
 function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () => boolean }) {
   const { data, money, balanceOf } = useAccountParts();
   const p = usePalette();
+  const t = useT();
   const balance = balanceOf(account);
   const progress = progressForBalance(account, balance);
   return (
@@ -70,7 +71,7 @@ function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () =
           {progress ? (
             <>
               <Meter percent={progress.percent} owed={isOwed(progress.kind, progress.left, debtDirection(data, account) === "I owe")} />
-              <Text style={{ minWidth: 52, textAlign: "right", color: p.inkSoft, fontSize: 15, fontVariant: ["tabular-nums"] }}>{percentText(progress.percent)}</Text>
+              <Text style={{ minWidth: 52, textAlign: "right", color: p.inkSoft, fontSize: 15, fontVariant: ["tabular-nums"] }}>{percentText(progress.percent, t.locale)}</Text>
             </>
           ) : null}
         </View>

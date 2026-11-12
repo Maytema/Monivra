@@ -4,7 +4,7 @@
 // live in `EditorSession`; this file only draws it and forwards taps.
 import { useRef, useSyncExternalStore, type ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
-import { addDays, parseDate } from "../../domain/dates.ts";
+import { addDays } from "../../domain/dates.ts";
 import { defaultAccountId } from "../../domain/ledger.ts";
 import { applyFees } from "../../domain/money.ts";
 import { deleteOperations, earliestScheduleDate, isFarDate, putOperation, rememberTags } from "../../domain/operations.ts";
@@ -84,7 +84,7 @@ function DateRow({ session }: { session: EditorSession }) {
   const today = appStore().env.clock.today();
   const earliest = session.scheduled ? earliestScheduleDate(today) : null;
   const date = session.draft.date;
-  const label = `${parseDate(date).toLocaleDateString(t.locale, { weekday: "long", timeZone: "UTC" })}, ${t.day(date, true)}`;
+  const label = `${t.weekday(date)}, ${t.day(date, true)}`;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", height: session.compact ? 48 : 52, marginBottom: session.compact ? 8 : 9 }}>
       <IconButton name="left" label="Previous day" disabled={!!earliest && date <= earliest} onPress={() => session.update({ date: addDays(date, -1) })} />

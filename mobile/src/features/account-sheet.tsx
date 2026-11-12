@@ -10,9 +10,10 @@ import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-con
 import { Icon } from "../ui/kit.tsx";
 import { ActionGrid, ActionTile, Meter, MoneyText, ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { numberText } from "../ui/number-text.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 
-export const percentText = (percent: number): string => `${shownPercent(percent).toLocaleString(undefined, { maximumFractionDigits: 2 })}%`;
+export const percentText = (percent: number, locale = "en-US"): string => `${numberText(shownPercent(percent), locale, 2)}%`;
 
 export const openAccountSheet = (id: string): number => sheets.open(<AccountSheet id={id} />);
 
@@ -46,7 +47,7 @@ function ProgressBlock({ account }: { account: Account }) {
     <View style={{ marginTop: 14 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={{ color: p.ink, fontSize: 15 }}>{`${t.t(title)} ${m(progress.target)}`}</Text>
-        <Text style={{ color: p.inkSoft, fontSize: 15 }}>{percentText(progress.percent)}</Text>
+        <Text style={{ color: p.inkSoft, fontSize: 15 }}>{percentText(progress.percent, t.locale)}</Text>
       </View>
       <View style={{ height: 16, marginTop: 10, marginBottom: 8, flexDirection: "row" }}>
         <Meter percent={progress.percent} owed={owed} height={16} />

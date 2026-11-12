@@ -19,6 +19,7 @@ import { Meter, ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { space } from "../ui/theme.ts";
 import { periodTitle } from "../ui/period-title.ts";
+import { compactText, numberText } from "../ui/number-text.ts";
 import { DayHead, OperationRow } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
@@ -69,7 +70,7 @@ function BudgetBody({ state, pinned = false, exact = false }: { state: ReturnTyp
   const t = useT();
   const money = useMoney();
   const { b, used, left, share } = state;
-  const percent = new Intl.NumberFormat(t.locale, { maximumFractionDigits: exact ? 2 : share >= 1000 ? 1 : 2, notation: !exact && share >= 1000 ? "compact" : "standard" }).format(shownPercent(share)) + "%";
+  const percent = (!exact && share >= 1000 ? compactText(shownPercent(share), t.locale) : numberText(shownPercent(share), t.locale, 2)) + "%";
   const title = <Text numberOfLines={1} style={{ flex: pinned ? 1 : 0, color: p.ink, fontSize: 17, fontWeight: "600" }}>{b.name}</Text>;
   return (
     <View style={{ gap: 8 }}>

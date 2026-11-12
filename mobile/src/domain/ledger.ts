@@ -207,8 +207,10 @@ export const categoryFamily = (data: LedgerData, id: string): string[] => [
 ];
 
 // Newest first by day and time of day.
-export const newestFirst = (a: Operation, b: Operation): number =>
-  b.date.localeCompare(a.date) || (b.time ?? "").localeCompare(a.time ?? "") || b.id.localeCompare(a.id);
+// Plain comparison: dates and times are ISO text and ids plain ASCII, and the platform's collation is slow on
+// the phone's engine (one call through a bridge for each comparison).
+const order = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+export const newestFirst = (a: Operation, b: Operation): number => order(b.date, a.date) || order(b.time ?? "", a.time ?? "") || order(b.id, a.id);
 
 // Two amounts of a cross-currency operation, or null.
 export function amountPair(data: LedgerData, o: Operation): [[Minor, string], [Minor, string]] | null {

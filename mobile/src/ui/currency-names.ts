@@ -2,36 +2,25 @@
 // found by its code, sign, name or country, in any language of the application, and without accents.
 import { CURRENCIES, type CurrencyInfo } from "../domain/currencies.ts";
 import { NAMES } from "../i18n/names.ts";
+import { SIGNS } from "../i18n/signs.ts";
 
 const tableFor = (locale: string) => NAMES[locale.slice(0, 2)] ?? NAMES.en!;
 
+const nameCache = new Map<string, string>();
 export function currencyName(code: string, locale: string): string {
+  const key = locale.slice(0, 2) + code;
+  const cached = nameCache.get(key);
+  if (cached) return cached;
   const known = tableFor(locale).currency[code];
-  if (known) return known.charAt(0).toLocaleUpperCase(locale) + known.slice(1);
-  try {
-    const name = new Intl.DisplayNames([locale], { type: "currency" }).of(code);
-    return name ? name.charAt(0).toLocaleUpperCase(locale) + name.slice(1) : code;
-  } catch {
-    return code;
-  }
+  const name = known ? known.charAt(0).toUpperCase() + known.slice(1) : code;
+  nameCache.set(key, name);
+  return name;
 }
 
-const signCache = new Map<string, string>();
 // Short sign of a currency, for example "$"; the code itself when it has none.
-export function currencySign(code: string): string {
-  const known = signCache.get(code);
-  if (known !== undefined) return known;
-  let sign = code;
-  try {
-    sign = new Intl.NumberFormat("en-US", { style: "currency", currency: code }).formatToParts(1).find((p) => p.type === "currency")?.value || code;
-  } catch {
-    // The code stands for the sign.
-  }
-  signCache.set(code, sign);
-  return sign;
-}
+export const currencySign = (code: string): string => SIGNS[code] ?? code;
 
-const plain = (text: string): string => text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ё/g, "е");
+export const plain = (text: string): string => text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ё/g, "е");
 const fieldCache = new Map<string, string[]>();
 function fieldsOf(c: CurrencyInfo): string[] {
   const known = fieldCache.get(c.code);
@@ -69,9 +58,19 @@ function rank(c: CurrencyInfo, words: string[]): number | null {
 export function searchCurrencies(text: string, locale: string): string[] {
   const words = plain(text).split(/\s+/).filter(Boolean);
   if (!words.length) return CURRENCIES.map((c) => c.code);
-  const collator = new Intl.Collator(locale);
   return CURRENCIES.map((c) => [c.code, rank(c, words)] as const)
     .filter((x): x is readonly [string, number] => x[1] !== null)
-    .sort((a, b) => a[1] - b[1] || collator.compare(currencyName(a[0], locale), currencyName(b[0], locale)))
+    .sort((a, b) => a[1] - b[1] || byText(sortKey(a[0], locale), sortKey(b[0], locale)))
     .map(([code]) => code);
 }
+
+// Alphabetical order of names without the platform's collation (slow on the phone): lower case, no accents,
+// ё as е — the order of the Latin and Cyrillic alphabets.
+const keyCache = new Map<string, string>();
+export function sortKey(code: string, locale: string): string {
+  const key = locale.slice(0, 2) + code;
+  let value = keyCache.get(key);
+  if (value === undefined) keyCache.set(key, (value = plain(currencyName(code, locale))));
+  return value;
+}
+export const byText = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);

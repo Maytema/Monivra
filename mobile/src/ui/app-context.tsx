@@ -27,22 +27,37 @@ export function useLedger(): LedgerData {
   return state.data;
 }
 
+// One part of the ledger: the component draws again only when that part changes (an unchanged part keeps
+// its identity), not on every change of the ledger. The part has to be a plain value or an object of the
+// ledger itself, never a new object.
+export function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
+  const s = appStore();
+  return useSyncExternalStore(s.subscribe, () => {
+    const state = s.getState();
+    if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
+    return pick(state.data);
+  });
+}
+
+const translators = new Map<string, Translator>();
 export function useT(): Translator {
-  const data = useLedger();
-  return useMemo(() => translator(data.settings.language), [data.settings.language]);
+  const language = useLedgerPart((d) => d.settings.language);
+  let t = translators.get(language);
+  if (!t) translators.set(language, (t = translator(language)));
+  return t;
 }
 
 export function usePalette(): Palette {
-  const data = useLedger();
+  const accent = useLedgerPart((d) => d.settings.accent);
+  const theme = useLedgerPart((d) => d.settings.theme);
   const scheme = useColorScheme();
-  const dark = data.settings.theme === "dark" || (data.settings.theme === "system" && scheme === "dark");
-  return useMemo(() => buildPalette(data.settings.accent, dark), [data.settings.accent, dark]);
+  const dark = theme === "dark" || (theme === "system" && scheme === "dark");
+  return useMemo(() => buildPalette(accent, dark), [accent, dark]);
 }
 
 // Formats money with the person's settings; `balance` amounts are masked when values are hidden.
 export function useMoney(): (n: Minor, currency?: string, balance?: boolean) => string {
-  const data = useLedger();
-  const s = data.settings;
+  const s = useLedgerPart((d) => d.settings);
   return useCallback(
     (n, currency = s.currency, balance = false) =>
       s.hidden && (s.hiddenValues !== "Balances only" || balance) ? `•••• ${currency}` : formatAmount(n, currency, s),

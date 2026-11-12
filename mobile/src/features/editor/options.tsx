@@ -169,7 +169,7 @@ function RecurrenceDialog({ value, onDone }: { value: Recurrence | null; onDone:
   const t = useT();
   const close = useCloseLayer();
   const [r, setR] = useState<Recurrence>(value ?? { every: 1, unit: "Days", remaining: null, days: [] });
-  const weekday = (n: number) => new Date(Date.UTC(2024, 0, 7 + n)).toLocaleDateString(t.locale, { weekday: "short", timeZone: "UTC" });
+  const weekday = (n: number) => t.weekday(n, "short");
   return (
     <View>
       <DialogTitle>{t.t("Recur")}</DialogTitle>

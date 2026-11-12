@@ -1,7 +1,7 @@
 // The exchange rates page (js/screens/rates.js plus the automatic update): the switch for automatic rates, the
 // search, one row per currency with its rate and a tick that keeps it out of the update, and the reset.
 import { useMemo, useState } from "react";
-import { Linking, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { FlatList, Linking, Pressable, Text, TextInput, View } from "react-native";
 import { Stack } from "expo-router";
 import { defaultRates } from "../domain/currencies.ts";
 import { fetcher } from "../platform/network.ts";
@@ -64,7 +64,16 @@ export function RatesScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t("Exchange rates") }} />
-      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 32 }}>
+      <FlatList
+        data={codes}
+        keyExtractor={(code) => code}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 32 }}
+        initialNumToRender={12}
+        maxToRenderPerBatch={16}
+        windowSize={9}
+        ListHeaderComponent={
+          <>
         <SwitchRow label="Automatic rates" hint="Updated about twice a day from free public sources when the internet is available." value={!!data.settings.autoRates} onChange={(autoRates) => run((tx) => (tx.setSettings({ autoRates }), true))} />
         <View style={{ paddingHorizontal: 18, paddingBottom: 6 }}>
           <Button label={busy ? "Updating…" : "Update now"} kind="outline" onPress={() => void update()} disabled={busy} />
@@ -79,7 +88,9 @@ export function RatesScreen() {
         <View style={{ paddingHorizontal: 18, paddingBottom: 8 }}>
           <TextInput value={query} onChangeText={setQuery} placeholder={t.t("Code, name or country")} placeholderTextColor={p.muted} autoCorrect={false} style={{ borderWidth: 1, borderColor: p.line, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 11, color: p.ink, fontSize: 16 }} />
         </View>
-        {codes.map((code) => {
+          </>
+        }
+        renderItem={({ item: code }) => {
           const kept = fixed.includes(code);
           return (
             <View key={code} style={{ flexDirection: "row", alignItems: "center", minHeight: 64 }}>
@@ -94,7 +105,9 @@ export function RatesScreen() {
               )}
             </View>
           );
-        })}
+        }}
+        ListFooterComponent={
+          <>
         {codes.length ? null : <Text style={{ color: p.muted, textAlign: "center", padding: 24 }}>{t.t("No currencies found")}</Text>}
         <Pressable
           accessibilityRole="button"
@@ -114,7 +127,9 @@ export function RatesScreen() {
           <Icon name="repeat" size={24} color={p.inkSoft} />
           <Text style={{ color: p.ink, fontSize: 16 }}>{t.t("Restore example rates")}</Text>
         </Pressable>
-      </ScrollView>
+          </>
+        }
+      />
     </View>
   );
 }

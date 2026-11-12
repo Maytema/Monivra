@@ -119,13 +119,29 @@ const SEPARATORS: Record<string, [string, string]> = {
 };
 export const NUMBER_FORMATS = Object.keys(SEPARATORS);
 
-// A number of minor units with the chosen separators and a true minus sign.
+// A number of minor units with the chosen separators and a true minus sign. Plain integer arithmetic:
+// the engine of the phone answers toLocaleString through a slow bridge to the system, and this runs for
+// every amount on every screen.
 export function formatNumber(n: Minor, format: string, group: boolean, least: number, most = least): string {
   const [groupSign, decimalSign] = SEPARATORS[format] ?? [",", "."];
-  return (n / 100)
-    .toLocaleString("en-US", { minimumFractionDigits: least, maximumFractionDigits: most, useGrouping: group })
-    .replace("-", "−")
-    .replace(/[,.]/g, (c) => (c === "," ? groupSign : decimalSign));
+  const minor = Math.round(Math.abs(n));
+  let units: number;
+  let fraction: string;
+  if (most >= 2) {
+    units = Math.floor(minor / 100);
+    fraction = String(minor % 100).padStart(2, "0") + "0".repeat(most - 2);
+  } else {
+    const scale = 10 ** (2 - most);
+    const rounded = Math.round(minor / scale);
+    const top = 10 ** most;
+    units = Math.floor(rounded / top);
+    fraction = most ? String(rounded % top).padStart(most, "0") : "";
+  }
+  while (fraction.length > least && fraction.endsWith("0")) fraction = fraction.slice(0, -1);
+  let whole = String(units);
+  if (group && whole.length > 3) whole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, groupSign);
+  const negative = n < 0 && (units > 0 || /[1-9]/.test(fraction));
+  return (negative ? "−" : "") + whole + (fraction ? decimalSign + fraction : "");
 }
 
 export interface MoneyFormat {

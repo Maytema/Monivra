@@ -13,6 +13,7 @@ import { operationsIn, periodBounds } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { SumTabs, ToneBadge } from "../ui/parts.tsx";
+import { numberText } from "../ui/number-text.ts";
 import { openCategorySheet } from "./category-sheet.tsx";
 import { FiltersPanel, filtersActive } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
@@ -20,7 +21,7 @@ import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 
-const percentText = (percent: number, locale: string): string => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(shownPercent(percent)) + "%";
+const percentText = (percent: number, locale: string): string => numberText(shownPercent(percent), locale, 2) + "%";
 const DAY = 86400000;
 
 function Card({ children, padded = true, borderColor }: { children: ReactNode; padded?: boolean; borderColor?: string }) {
@@ -83,7 +84,7 @@ export function StatisticsScreen() {
 
   const tone = catType === "expense" ? p.negativeInk : p.positiveInk;
   const scheduledSum = (type: string) => data.scheduled.filter((o) => o.type === type).reduce((n, o) => n + convert(o.amount, accountById(data, o.from || o.to)?.currency, main, data.rates), 0);
-  const axis = (date: string) => parseDate(date).toLocaleDateString(t.locale, { day: "numeric", month: "short", timeZone: "UTC" });
+  const axis = (date: string) => t.dayMonth(date);
 
   const blocks: Record<string, () => ReactNode> = {
     flow: () => (
@@ -129,7 +130,7 @@ export function StatisticsScreen() {
                 <Fragment key={k}>
                   <Path d={`M${left} ${y}H${right}`} stroke={p.line} strokeWidth={1} strokeDasharray={k ? "4 4" : undefined} />
                   <SvgText x={left - 6} y={y + 3.5} fill={p.ink} fontSize={10} textAnchor="end">
-                    {(step * k).toLocaleString(t.locale)}
+                    {numberText(step * k, t.locale, 2)}
                   </SvgText>
                 </Fragment>
               );

@@ -96,7 +96,7 @@ function MonthYearWheels({ month, setMonth, done }: { month: string; setMonth: (
   const year = Number(month.slice(0, 4));
   const m = Number(month.slice(5, 7)) - 1;
   const months = Array.from({ length: 12 }, (_, i) => {
-    const name = new Date(Date.UTC(2026, i, 1)).toLocaleDateString(t.locale, { month: "long", timeZone: "UTC" });
+    const name = t.monthName(i);
     return name.charAt(0).toUpperCase() + name.slice(1);
   });
   const years = Array.from({ length: LAST_YEAR - FIRST_YEAR + 1 }, (_, i) => String(FIRST_YEAR + i));
@@ -126,10 +126,10 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
     d.setUTCMonth(d.getUTCMonth() + n);
     setMonth(iso(d).slice(0, 7));
   };
-  const title = first.toLocaleDateString(t.locale, { month: "long", year: "numeric", timeZone: "UTC" });
+  const title = t.monthYear(month + "-01");
   const today = systemClock.today();
   // 2026-11-01 is a Sunday.
-  const letters = Array.from({ length: 7 }, (_, i) => day(`2026-11-${String(1 + ((weekStart + i) % 7)).padStart(2, "0")}`).toLocaleDateString(t.locale, { weekday: "narrow", timeZone: "UTC" }));
+  const letters = Array.from({ length: 7 }, (_, i) => t.weekday(weekStart + i, "narrow"));
   const cells: (string | null)[] = [...Array<null>(lead).fill(null), ...Array.from({ length: count }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`)];
   const heading = (
     <Pressable accessibilityRole="button" onPress={() => setYears(!years)} style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14 }}>
@@ -194,7 +194,7 @@ function CalendarDialog({ value, done, min }: { value: string; done: (date: stri
   return (
     <View>
       <Text style={{ color: p.ink, fontSize: 14 }}>{t.t("Select date")}</Text>
-      <Text style={{ color: p.ink, fontSize: 28, marginTop: 22, marginBottom: 16 }}>{new Date(chosen + "T12:00:00Z").toLocaleDateString(t.locale, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })}</Text>
+      <Text style={{ color: p.ink, fontSize: 28, marginTop: 22, marginBottom: 16 }}>{t.shortDate(chosen)}</Text>
       <View style={{ height: 1, backgroundColor: p.line, marginHorizontal: -24 }} />
       <MonthGrid month={month} setMonth={setMonth} chosen={chosen} pick={setChosen} min={min} />
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 12, gap: 4 }}>

@@ -232,7 +232,7 @@ export function replaceLedger(db: SqlDriver, data: LedgerData, now: string): { a
 const canonical = (x: unknown): string =>
   JSON.stringify(x, (_key, value: unknown) =>
     value && typeof value === "object" && !Array.isArray(value)
-      ? Object.fromEntries(Object.entries(value as Loose).filter(([, v]) => v !== undefined && v !== null).sort(([a], [b]) => a.localeCompare(b)))
+      ? Object.fromEntries(Object.entries(value as Loose).filter(([, v]) => v !== undefined && v !== null).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
       : value,
   );
 

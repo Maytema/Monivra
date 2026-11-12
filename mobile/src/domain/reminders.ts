@@ -54,7 +54,7 @@ export function upcomingReminders(data: LedgerData, today: LocalDate, now: Local
       probe = advanced(probe);
     }
   }
-  return out.sort((a, b) => (a.day + a.time).localeCompare(b.day + b.time) || (a.key < b.key ? -1 : 1)).slice(0, limit);
+  return out.sort((a, b) => (a.day + a.time < b.day + b.time ? -1 : a.day + a.time > b.day + b.time ? 1 : 0) || (a.key < b.key ? -1 : 1)).slice(0, limit);
 }
 
 // A stable positive 31-bit number for a reminder key (the system identifies notifications by it).

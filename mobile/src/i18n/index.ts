@@ -17,7 +17,34 @@ export interface Translator {
   tc(one: string, other: string, n: number): string;
   monthYear(date: string): string;
   day(date: string, withYear?: boolean): string;
+  // Names of the week day of an ISO date, or of a week day number (0 is Sunday), and of a month (0–11).
+  weekday(date: string | number, form?: "long" | "short" | "narrow"): string;
+  monthName(index: number): string;
+  // "Thu, Nov 12" / "чт, 12 нояб.".
+  shortDate(date: string): string;
+  // "Nov 12" / "12 нояб." (the labels of a chart axis).
+  dayMonth(date: string): string;
 }
+
+// Week days and short months: built in, because the platform's dates go through a slow bridge on the
+// phone's engine and every list row asks for them.
+const WEEKDAYS: Record<string, Record<"long" | "short" | "narrow", string[]>> = {
+  en: {
+    long: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    short: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    narrow: ["S", "M", "T", "W", "T", "F", "S"],
+  },
+  ru: {
+    long: ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"],
+    short: ["вс", "пн", "вт", "ср", "чт", "пт", "сб"],
+    narrow: ["В", "П", "В", "С", "Ч", "П", "С"],
+  },
+};
+const SHORT_MONTHS: Record<string, string[]> = {
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  ru: ["янв.", "февр.", "мар.", "апр.", "мая", "июн.", "июл.", "авг.", "сент.", "окт.", "нояб.", "дек."],
+};
+const weekdayOf = (date: string): number => new Date(Date.UTC(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, Number(date.slice(8, 10)))).getUTCDay();
 
 const MONTHS: Record<string, { nominative: string[]; genitive: string[] }> = {
   en: {
@@ -69,6 +96,19 @@ export function translator(language: string): Translator {
       const m = months.genitive[Number(date.slice(5, 7)) - 1] ?? "";
       const y = withYear ? ` ${date.slice(0, 4)}` : "";
       return code === "ru" ? `${d} ${m}${y}` : `${m} ${d}${withYear ? "," + y : ""}`;
+    },
+    weekday: (date, form = "long") => (WEEKDAYS[code] ?? WEEKDAYS.en!)[form][typeof date === "number" ? ((date % 7) + 7) % 7 : weekdayOf(date)] ?? "",
+    monthName: (index) => months.nominative[index] ?? "",
+    shortDate: (date) => {
+      const w = (WEEKDAYS[code] ?? WEEKDAYS.en!).short[weekdayOf(date)];
+      const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];
+      const d = Number(date.slice(8, 10));
+      return code === "ru" ? `${w}, ${d} ${m}` : `${w}, ${m} ${d}`;
+    },
+    dayMonth: (date) => {
+      const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];
+      const d = Number(date.slice(8, 10));
+      return code === "ru" ? `${d} ${m}` : `${m} ${d}`;
     },
   };
 }
