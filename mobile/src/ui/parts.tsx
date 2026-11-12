@@ -1,7 +1,7 @@
 // Pieces that make the first application recognisable, built from the same measures as its CSS
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
-import type { ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import { Pressable, Text, View, type StyleProp, type TextStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
@@ -136,11 +136,13 @@ export function Meter({ percent, owed = false, height = 12 }: { percent: number;
 }
 
 // A round action of a sheet: a tinted tile with an icon and its name under it.
+const Columns = createContext(3);
 export function ActionTile({ icon, label, tone, onPress }: { icon: string; label: string; tone: string; onPress: () => void }) {
   const p = usePalette();
   const t = useT();
+  const columns = useContext<number>(Columns);
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={{ width: "33.33%", alignItems: "center", gap: 8, paddingBottom: 30 }}>
+    <Pressable accessibilityRole="button" onPress={onPress} style={{ width: `${100 / columns}%`, alignItems: "center", gap: 8, paddingBottom: 30 }}>
       <View style={{ width: 56, height: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: alpha(tone, 0.18) }}>
         <Icon name={icon} size={26} color={tone} />
       </View>
@@ -149,9 +151,14 @@ export function ActionTile({ icon, label, tone, onPress }: { icon: string; label
   );
 }
 
-// The grid of action tiles of a sheet (accounts.css .sheet-actions).
-export function ActionGrid({ children }: { children: ReactNode }) {
-  return <View style={{ flexDirection: "row", flexWrap: "wrap", paddingTop: 24, paddingHorizontal: 4, marginBottom: -8 }}>{children}</View>;
+// The grid of action tiles of a sheet (accounts.css .sheet-actions): three in a row; the operation
+// sheet has two (Delete, Duplicate), each in half of the width (OP 005).
+export function ActionGrid({ children, columns = 3 }: { children: ReactNode; columns?: number }) {
+  return (
+    <Columns.Provider value={columns}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", paddingTop: 24, paddingHorizontal: 4, marginBottom: -8 }}>{children}</View>
+    </Columns.Provider>
+  );
 }
 
 export function MoneyText({ text, value, size = 18, style }: { text: string; value: number; size?: number; style?: StyleProp<TextStyle> }) {

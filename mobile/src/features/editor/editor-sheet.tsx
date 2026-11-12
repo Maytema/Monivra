@@ -201,6 +201,7 @@ function Amount({ session }: { session: EditorSession }) {
   return session.compact ? (
     <Pressable accessibilityRole="button" onPress={() => session.expand()}>
       {body}
+      <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500", textAlign: "center", marginTop: -4, marginBottom: 10 }}>{t.t("Click on the value to edit")}</Text>
     </Pressable>
   ) : (
     body
@@ -466,7 +467,7 @@ function Actions({ session }: { session: EditorSession }) {
     }
   };
   return (
-    <ActionGrid>
+    <ActionGrid columns={2}>
       <ActionTile icon="trash" label="Delete" tone={p.negative} onPress={remove} />
       <ActionTile icon="copy" label="Duplicate" tone="#c04fd8" onPress={copy} />
       {session.scheduled ? (
