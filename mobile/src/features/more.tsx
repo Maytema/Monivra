@@ -1,9 +1,11 @@
 // More: budgets, scheduled payments, exchange rates, data, settings; and those pages.
+import { Fragment } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { usePalette, useT } from "../ui/app-context.tsx";
+import { HintBanner } from "../ui/hint-banner.tsx";
 import { Icon, Screen } from "../ui/kit.tsx";
 import { BrandMark } from "../ui/brand-mark.tsx";
 
@@ -53,7 +55,8 @@ export function MoreScreen() {
           <Text style={{ color: p.muted, fontSize: 14 }}>{t.t("Local data · Closed Beta")}</Text>
         </View>
         {GROUPS.map((group, i) => (
-          <View key={i} style={{ paddingVertical: 9, borderBottomWidth: i === GROUPS.length - 1 ? 0 : 1, borderBottomColor: p.line }}>
+          <Fragment key={i}>
+          <View style={{ paddingVertical: 9, borderBottomWidth: i === GROUPS.length - 1 ? 0 : 1, borderBottomColor: p.line }}>
             {group.map(([label, icon, href]) => (
               <Pressable key={href} accessibilityRole="button" onPress={() => (href.startsWith("/") ? router.push(href as "/settings") : router.push({ pathname: "/info", params: { kind: href } }))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, height: 56, paddingHorizontal: 18, backgroundColor: pressed ? p.sheet : "transparent" })}>
                 <Icon name={icon} size={24} color={p.ink} />
@@ -61,6 +64,8 @@ export function MoreScreen() {
               </Pressable>
             ))}
           </View>
+            {i === 0 ? <HintBanner plain id="shared-access" text="Shared access" onPress={() => router.push({ pathname: "/info", params: { kind: "shared" } })} /> : null}
+          </Fragment>
         ))}
         <Text style={{ color: p.muted, fontSize: 14, textAlign: "center", paddingTop: 22, paddingBottom: 24 }}>{`Monivra · ${APP_VERSION} (${t.t("Closed Beta")}) · React Native`}</Text>
       </Screen>

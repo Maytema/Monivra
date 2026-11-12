@@ -134,6 +134,19 @@ function SoonPill() {
   return <Text style={{ alignSelf: "flex-start", backgroundColor: mix(p.accent, p.bg, 0.12), color: p.accentInk, paddingVertical: 5, paddingHorizontal: 12, borderRadius: 18, overflow: "hidden", fontSize: 12 }}>{t.t("Coming soon")}</Text>;
 }
 
+// Shared access (info-pages.js `sharedAccessPage`).
+function Shared() {
+  const p = usePalette();
+  const t = useT();
+  return (
+    <View style={{ alignItems: "center", gap: 14, paddingTop: 50, paddingBottom: 20, paddingHorizontal: 24 }}>
+      <SoonPill />
+      <Icon name="user" size={52} color={p.ink} />
+      <Text style={{ color: p.ink, fontSize: 15, textAlign: "center" }}>{t.t("Shared access will be available after sign-in is added.")}</Text>
+    </View>
+  );
+}
+
 // The profile (info-pages.js `profilePage`): the orbit picture, the state of the local data, two actions.
 function Profile() {
   const p = usePalette();
@@ -284,6 +297,7 @@ function resolve(kind: string): { title: string; body: ReactNode; own?: boolean 
     case "privacyPolicy": return { title: "Privacy policy", body: <Policy /> };
     case "terms": return { title: "Terms of use", body: <Terms /> };
     case "profile": return { title: "Profile", body: <Profile />, own: true };
+    case "shared": return { title: "Shared access", body: <Shared /> };
     case "subscription": return { title: "Subscription", body: <Subscription />, own: true };
     default: return null;
   }
