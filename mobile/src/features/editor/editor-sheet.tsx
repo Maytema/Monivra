@@ -402,15 +402,17 @@ function Additional({ session }: { session: EditorSession }) {
   const version = useSyncExternalStore(session.subscribe, session.getVersion);
   void version;
   const d = session.draft;
-  const row = (title: string, icon: string, hint: string, onPress: () => void) => (
-    <Pressable key={title} accessibilityRole="button" onPress={onPress} style={{ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 62, paddingHorizontal: 4 }}>
-      <Icon name={icon} size={24} color={p.ink} />
+  // Each choice is a light card of its own (OP 016); "Fill max" leads on, so it has an arrow.
+  const row = (title: string, icon: string, hint: string, onPress: () => void, arrow = false) => (
+    <Pressable key={title} accessibilityRole="button" onPress={onPress} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, minHeight: 72, paddingHorizontal: 18, marginBottom: 8, borderRadius: 16, backgroundColor: pressed ? p.soft : p.key })}>
+      <Icon name={icon} size={26} color={p.ink} />
       <View style={{ flex: 1 }}>
-        <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(title)}</Text>
-        <Text style={{ color: p.muted, fontSize: 13 }} numberOfLines={1}>
+        <Text style={{ color: p.ink, fontSize: 17 }}>{t.t(title)}</Text>
+        <Text style={{ color: p.inkSoft, fontSize: 14, marginTop: 2 }} numberOfLines={1}>
           {hint}
         </Text>
       </View>
+      {arrow ? <Icon name="right" size={20} color={p.ink} /> : null}
     </Pressable>
   );
   const fillMax = () => {
@@ -428,12 +430,12 @@ function Additional({ session }: { session: EditorSession }) {
   };
   return (
     <View>
-      <Text style={{ color: p.ink, fontSize: 25, fontWeight: "500", textAlign: "center", marginTop: 6, marginBottom: 8 }}>{t.t("Additionally")}</Text>
-      {row("Fill max", "wallet", t.t("Use full sender account balance"), fillMax)}
+      <Text style={{ color: p.ink, fontSize: 25, textAlign: "center", marginTop: 4, marginBottom: 14 }}>{t.t("Additionally")}</Text>
+      {row("Fill max", "wallet", t.t("Use full sender account balance"), fillMax, true)}
       {session.scheduled ? row("Time", "clock", d.time ?? appStore().env.clock.time(), () => openTime(d.time ?? appStore().env.clock.time(), (time) => setPaymentTime(session, time))) : null}
       {row("Reminder", "bell", reminderText, () => openReminder(d.reminder ?? null, d.time, (reminder) => session.update({ reminder })))}
       {row("Recur", "repeat", recurText, () => openRecurrence(d.recur ?? null, (recur) => session.update({ recur })))}
-      {row("Tax", "receipt", fee("tax"), () => openFee("tax", d.fees ?? [], (fees) => session.update({ fees })))}
+      {row("Tax", "bank", fee("tax"), () => openFee("tax", d.fees ?? [], (fees) => session.update({ fees })))}
       {row("Commission", "percent", fee("commission"), () => openFee("commission", d.fees ?? [], (fees) => session.update({ fees })))}
     </View>
   );
