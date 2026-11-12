@@ -95,6 +95,14 @@ back
 back
 tap "Categories"
 shot 13-categories 3
+tap "Change categories"
+shot 13d-change-categories 3
+tap "Food"
+shot 13e-category-form 3
+adb shell input swipe 540 1800 540 700 300
+shot 13f-category-form-end 2
+back
+back
 tap "Statistics"
 shot 13b-statistics 3
 adb shell input swipe 540 1800 540 600 300

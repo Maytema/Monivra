@@ -28,6 +28,7 @@ export const ICONS: Record<string, string> = {
   more: "M12 5h.1M12 12h.1M12 19h.1",
   clipboardList: "M9 3h6v3H9zM8 4.5H5.5V21h13V4.5H16M8.5 11h7m-7 3.5h7m-7 3.5h4",
   circleUp: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-4 11 4-4 4 4",
+  moreCircle: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 11.3a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4zm4 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4zm4 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4z",
   apps: "M6 6h.1M12 6h.1M18 6h.1M6 12h.1M12 12h.1M18 12h.1M6 18h.1M12 18h.1M18 18h.1",
   plus: "M12 4v16M4 12h16",
   minus: "M5 12h14",

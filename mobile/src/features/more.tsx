@@ -56,8 +56,8 @@ export function MoreScreen() {
           <View key={i} style={{ paddingVertical: 9, borderBottomWidth: i === GROUPS.length - 1 ? 0 : 1, borderBottomColor: p.line }}>
             {group.map(([label, icon, href]) => (
               <Pressable key={href} accessibilityRole="button" onPress={() => (href.startsWith("/") ? router.push(href as "/settings") : router.push({ pathname: "/info", params: { kind: href } }))} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, height: 56, paddingHorizontal: 18, backgroundColor: pressed ? p.sheet : "transparent" })}>
-                <Icon name={icon} size={24} color={p.inkSoft} />
-                <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
+                <Icon name={icon} size={24} color={p.ink} />
+                <Text style={{ color: p.ink, fontSize: 17 }}>{t.t(label)}</Text>
               </Pressable>
             ))}
           </View>

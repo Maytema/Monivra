@@ -232,10 +232,10 @@ export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongP
     >
       <ToneBadge icon={icon} color={color} size={42} iconSize={23} radius={10} />
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text numberOfLines={1} style={{ color: p.ink, fontSize: 14, marginBottom: 3 }}>
+        <Text numberOfLines={1} style={{ color: p.ink, fontSize: 15, marginBottom: 2 }}>
           {name}
         </Text>
-        <Text numberOfLines={1} style={{ color: ink, fontSize: 13 }}>
+        <Text numberOfLines={1} style={{ color: ink, fontSize: 17 }}>
           {figure}
         </Text>
       </View>

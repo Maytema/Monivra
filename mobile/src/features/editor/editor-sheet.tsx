@@ -84,7 +84,8 @@ function DateRow({ session }: { session: EditorSession }) {
   const today = appStore().env.clock.today();
   const earliest = session.scheduled ? earliestScheduleDate(today) : null;
   const date = session.draft.date;
-  const label = `${t.weekday(date)}, ${t.day(date, true)}`;
+  // The year only when it is not this one (as in the reference: "Wednesday, September 30").
+  const label = `${t.weekday(date)}, ${t.day(date, date.slice(0, 4) !== today.slice(0, 4))}`;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", height: session.compact ? 48 : 52, marginBottom: session.compact ? 8 : 9 }}>
       <IconButton name="left" label="Previous day" disabled={!!earliest && date <= earliest} onPress={() => session.update({ date: addDays(date, -1) })} />
@@ -191,10 +192,10 @@ function Amount({ session }: { session: EditorSession }) {
   }
   const body = (
     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, minHeight: session.compact ? 64 : 76, paddingVertical: session.compact ? 3 : 0 }}>
-      <Text accessibilityLabel={session.calculatorOn ? "Calculator expression" : "Amount"} style={{ color: p.ink, fontSize: 38 }}>
+      <Text accessibilityLabel={session.calculatorOn ? "Calculator expression" : "Amount"} style={{ color: p.ink, fontSize: 35 }}>
         {session.expression()}
       </Text>
-      <Text style={{ color: p.ink, fontSize: 38 }}>{parties.currency}</Text>
+      <Text style={{ color: p.ink, fontSize: 35 }}>{parties.currency}</Text>
     </View>
   );
   return session.compact ? (
@@ -281,7 +282,7 @@ function Key({ children, onPress, label, style, tone }: { children: ReactNode; o
       accessibilityLabel={label}
       disabled={!onPress}
       onPress={onPress}
-      style={({ pressed }) => [{ flex: 1, minHeight: 54, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: tone === "confirm" ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key }, style]}
+      style={({ pressed }) => [{ flex: 1, minHeight: 60, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: tone === "confirm" ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key }, style]}
     >
       {children}
     </Pressable>
@@ -377,7 +378,7 @@ function Keypad({ session, onSave }: { session: EditorSession; onSave: (calculat
           <Icon name="backspace" size={26} color={p.ink} />
         </Key>
         <Key label="Additionally" onPress={modeTap} style={{ backgroundColor: session.calculatorOn ? mix(p.accent, p.bg, 0.18) : p.key }}>
-          <Icon name="calculator" size={26} color={session.calculatorOn ? p.accentInk : p.ink} />
+          <Icon name="moreCircle" size={28} color={session.calculatorOn ? p.accentInk : p.ink} />
           {count ? (
             <View style={{ position: "absolute", top: 4, right: 6, minWidth: 18, height: 18, paddingHorizontal: 5, borderRadius: 9, backgroundColor: mix(p.accent, p.bg, 0.3), alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: p.accentInk, fontSize: 12, fontWeight: "600" }}>{count}</Text>
