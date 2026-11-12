@@ -27,6 +27,8 @@ export interface Store {
   begin(start: "empty" | "starter", translate: (s: string) => string): void;
   run<T>(command: (tx: LedgerTx, env: Env) => T): T;
   postDueNow(): string[];
+  // Remembers operations that were posted by the application, until the person has seen them.
+  notePosted(ids: string[]): void;
   forgetPosted(): void;
   importDataFile(text: string): { accounts: number; ops: number; scheduled: number };
   exportDataFile(): string;
@@ -93,6 +95,10 @@ export function createStore(db: SqlDriver, env: Env, language: () => string): St
       const { posted } = store.run((tx) => postDue(tx, env));
       if (posted.length && state.status === "ready") set({ ...state, posted: [...state.posted, ...posted] });
       return posted;
+    },
+
+    notePosted(ids) {
+      if (ids.length && state.status === "ready") set({ ...state, posted: [...state.posted, ...ids] });
     },
 
     forgetPosted() {

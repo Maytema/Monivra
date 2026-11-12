@@ -9,6 +9,7 @@ import { appStore, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
+import { askAboutMissed } from "../features/due-payments.tsx";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
@@ -19,11 +20,12 @@ function KeepCurrent() {
     const store = appStore();
     const refresh = () => {
       store.postDueNow();
+      askAboutMissed();
       void store.updateRates(fetcher).catch(() => undefined);
     };
     refresh();
     void registerBackgroundPosting();
-    const timer = setInterval(() => store.postDueNow(), 60_000);
+    const timer = setInterval(() => (store.postDueNow(), askAboutMissed()), 60_000);
     const subscription = SystemAppState.addEventListener("change", (s) => s === "active" && refresh());
     // The system's reminders follow every change, once a burst of changes is over.
     let pending: ReturnType<typeof setTimeout> | null = null;
