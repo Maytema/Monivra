@@ -65,7 +65,7 @@ function Head({ title, gear, gearLabel }: { title: string; gear: () => void; gea
   return (
     <View style={{ height: 64, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 }}>
       <Pressable accessibilityRole="button" accessibilityLabel={t.t("Back")} onPress={close} hitSlop={8} style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
-        <Icon name="left" size={24} color={p.ink} />
+        <Icon name="back" size={24} color={p.ink} />
       </Pressable>
       <Text numberOfLines={1} style={{ flex: 1, textAlign: "center", color: p.ink, fontSize: 23 }}>{t.t(title)}</Text>
       <Pressable accessibilityRole="button" accessibilityLabel={t.t(gearLabel)} onPress={gear} hitSlop={8} style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}>
