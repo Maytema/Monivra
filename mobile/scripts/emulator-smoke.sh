@@ -97,6 +97,17 @@ tap "Select date"
 shot 16b-calendar 2
 tap "Cancel"
 back
+# Gestures: a swipe over the operations moves to the previous period; a long press on a row starts
+# the selection.
+tap "Operations"
+adb shell input swipe 200 1500 900 1500 250
+shot 17-swipe-period 3
+adb shell input swipe 900 1500 200 1500 250
+shot 17b-swipe-back 3
+adb shell input swipe 540 990 540 990 900
+shot 18-long-press-selection 3
+has "Selected" 18-long-press-selection
+back
 # Layout under other system settings: three-button navigation, a large font, a denser display.
 # (Looked at by a person: screenshots only.)
 tap "Accounts"
