@@ -1,46 +1,82 @@
-// The page with the operations of one account (opened from the account's sheet): all time, newest
-// first, in days like the Operations tab.
-import { useMemo } from "react";
-import { FlatList, Text } from "react-native";
+// The page "Filtered" (js/screens/operations/list.js `filteredView`, `openFilteredOperations`): the
+// operations of one account (all time) or of categories (the period on the screen), with the period bar
+// and its swipe, the card of a single category, and Add. The page borrows the filters and the period of
+// the Operations tab and gives them back when it closes, as the first application does.
+import { useLayoutEffect, useRef, useState } from "react";
+import { Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
-import { accountById, categoryById, categoryFamily, newestFirst } from "../domain/ledger.ts";
+import { categoryById, categoryFamily, categoryTotalIn, reportRows } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";
-import type { Operation } from "../domain/types.ts";
-import { useLedger, usePalette, useT } from "../ui/app-context.tsx";
-import { DayHead, OperationRow } from "./operation-row.tsx";
+import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { Fab, ToneBadge } from "../ui/parts.tsx";
+import { openAddMenu } from "./add-menu.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
+import { OperationsPage } from "./operations.tsx";
+import { PeriodBar, PeriodPager } from "./period-bar.tsx";
+import { getView, setView, useView } from "./ui-state.ts";
 
-type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
+const noSelection = new Set<string>();
+const openOne = (id: string) => openEditor({ id });
+const nothing = () => undefined;
 
 export function FilteredOperations() {
   const { account, category, categories } = useLocalSearchParams<{ account?: string; category?: string; categories?: string }>();
   const data = useLedger();
   const p = usePalette();
-  const t = useT();
-  const insets = useSafeAreaInsets();
-  const foundAccount = accountById(data, account);
-  const foundCategory = categoryById(data, category);
-  const filters = foundAccount ? { ...emptyFilters(), accounts: [foundAccount.id] } : foundCategory ? { ...emptyFilters(), categories: categoryFamily(data, foundCategory.id) } : categories ? { ...emptyFilters(), categories: categories.split(",") } : null;
-  const items = useMemo(() => {
-    const ops = filters ? operationsIn(data, { mode: "all", anchor: systemClock.today() }, filters).sort(newestFirst) : [];
-    const out: Item[] = [];
-    for (const date of [...new Set(ops.map((o) => o.date))]) {
-      const dayOps = ops.filter((o) => o.date === date);
-      out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
-    }
-    return out;
+  const [ready, setReady] = useState(false);
+  const before = useRef(getView());
+  // The filters (and, for an account, all time) are put in place before the first frame and taken back
+  // when the page closes.
+  useLayoutEffect(() => {
+    const saved = before.current;
+    const filters = account ? { ...emptyFilters(), accounts: [account] } : category ? { ...emptyFilters(), categories: categoryFamily(data, category) } : { ...emptyFilters(), categories: (categories ?? "").split(",").filter(Boolean) };
+    setView({ filters, period: account ? { mode: "all", anchor: systemClock.today() } : saved.period });
+    setReady(true);
+    return () => setView({ filters: saved.filters, period: saved.period });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, account, category, categories]);
+  }, []);
+  const [atTop, setAtTop] = useState(true);
+  if (!ready) return <View style={{ flex: 1, backgroundColor: p.bg }} />;
+  const single = category ? categoryById(data, category) : undefined;
   return (
-    <FlatList
-      style={{ backgroundColor: p.bg }}
-      data={items}
-      keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
-      contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 + insets.bottom }}
-      ListEmptyComponent={<Text style={{ color: p.muted, textAlign: "center", padding: 32 }}>{t.t("No operations in this period")}</Text>}
-      renderItem={({ item }) => (item.kind === "day" ? <DayHead date={item.date} ops={item.ops} /> : <OperationRow op={item.op} onPress={() => openEditor({ id: item.op.id })} />)}
-    />
+    <View style={{ flex: 1, backgroundColor: p.bg }}>
+      <PeriodPager
+        header={
+          <>
+            <PeriodBar />
+            {single ? <CategoryCard id={single.id} /> : null}
+          </>
+        }
+        render={(period, isCurrent) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={isCurrent ? setAtTop : undefined} />}
+      />
+      <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
+    </View>
+  );
+}
+
+// The card of a single category: what its operations of the period add up to (`filtered-card`).
+function CategoryCard({ id }: { id: string }) {
+  const data = useLedger();
+  const p = usePalette();
+  const t = useT();
+  const money = useMoney();
+  const { period, filters } = useView();
+  const c = categoryById(data, id);
+  if (!c) return null;
+  const ops = operationsIn(data, period, filters);
+  const total = categoryTotalIn(data, reportRows(data, ops), c);
+  return (
+    <View style={{ marginHorizontal: 16, marginBottom: 6, padding: 14, borderRadius: 14, borderWidth: 1, borderColor: p.line }}>
+      <Text style={{ color: p.muted, fontSize: 13, marginBottom: 10 }}>{t.t("Sum of operations for the period")}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+        <ToneBadge icon={c.icon} color={c.color} size={44} iconSize={24} />
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: p.ink, fontSize: 16, fontWeight: "600" }}>{c.name}</Text>
+          <Text style={{ color: p.muted, fontSize: 13 }}>{t.t("Operations: {n}", { n: ops.length })}</Text>
+        </View>
+        <Text style={{ color: p.ink, fontSize: 17 }}>{money(total, c.currency)}</Text>
+      </View>
+    </View>
   );
 }

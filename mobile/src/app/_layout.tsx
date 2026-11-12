@@ -91,7 +91,7 @@ function Ready() {
         <Stack.Screen name="info" options={{ title: "" }} />
         <Stack.Screen name="settings" options={{ title: t.t("Settings") }} />
         <Stack.Screen name="settings-page" options={{ title: t.t("Settings") }} />
-        <Stack.Screen name="filtered" options={{ title: t.t("Operations") }} />
+        <Stack.Screen name="filtered" options={{ title: t.t("Filtered") }} />
       </Stack>
       <SheetHost />
       </KeyboardAvoidingView>
