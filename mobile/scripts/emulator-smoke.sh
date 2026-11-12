@@ -90,6 +90,9 @@ shot 12d-icon-page 2
 back
 tap "Choose color"
 shot 12e-color-page 2
+tap "Color code"
+shot 12e2-color-hex-keyboard 2
+back
 back
 back
 tap "Account type"
@@ -145,6 +148,10 @@ back
 tap "Operations"
 adb shell input swipe 200 1500 900 1500 250
 shot 17-swipe-period 3
+# Half a swipe, finger still down: the neighbouring period must already be drawn.
+adb shell input motionevent DOWN 950 1500; adb shell input motionevent MOVE 800 1500; adb shell input motionevent MOVE 600 1505; adb shell input motionevent MOVE 520 1505
+shot 17a-half-swipe 1
+adb shell input motionevent MOVE 900 1500; adb shell input motionevent UP 900 1500; sleep 1
 adb shell input swipe 900 1500 200 1500 250
 shot 17b-swipe-back 3
 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1

@@ -12,7 +12,7 @@ import { Button, Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
-import { SwipePane } from "../ui/swipe-pane.tsx";
+import { Pager } from "../ui/pager.tsx";
 import { mix } from "../ui/theme.ts";
 import { isOwed, openAccountSheet, percentText } from "./account-sheet.tsx";
 import { RootHero } from "./root-hero.tsx";
@@ -184,10 +184,6 @@ export function AccountsScreen() {
   const hasDebts = live.some((a) => a.type === "Debt");
   const tabs: AccountTab[] = hasDebts ? ["Accounts", "Debts", "Total"] : ["Accounts", "Total"];
   const shown = tabs.includes(tab) ? tab : "Accounts";
-  const list = shown === "Debts" ? live.filter((a) => a.type === "Debt") : live.filter((a) => a.type !== "Debt");
-  const completed = list.filter(isFinished);
-  const open = list.filter((a) => !isFinished(a));
-  const groups = shown === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
 
   const header = <RootHero icon="plus" label="New account" onAction={() => router.push("/account")} />;
   if (!data.accounts.length)
@@ -205,29 +201,42 @@ export function AccountsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} />
-      <SwipePane page={shown} canGo={(d) => tabs.indexOf(shown) + d >= 0 && tabs.indexOf(shown) + d < tabs.length} go={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}>
-      <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-        {shown === "Total" ? (
-          <Totals />
-        ) : (
-          <>
-            {groups.map((type, index) => {
-              const rows = open.filter((a) => (a.type === "Debt" ? type === debtDirection(data, a) : a.type === type));
-              if (!rows.length && type !== "Savings") return null;
-              const total = rows.reduce((n, a) => n + inMain(balanceOf(a), a.currency), 0);
-              return (
-                <View key={type}>
-                  <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyText text={money(total, data.settings.currency, true)} value={total} size={19} />} />
-                  {rows.length ? <Group accounts={rows} onHold={setHeld} /> : null}
-                </View>
-              );
-            })}
-            <Folder title="Completed" icon="check" items={completed} />
-          </>
-        )}
-        <Folder title="Archive" icon="archive" items={archived} />
-      </ScrollView>
-      </SwipePane>
+      {/* The three tabs are pages side by side, all drawn, so a swipe uncovers the next one ready. */}
+      <Pager
+        prev={tabs[tabs.indexOf(shown) - 1] ?? null}
+        current={shown}
+        next={tabs[tabs.indexOf(shown) + 1] ?? null}
+        onMove={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}
+        render={(page) => {
+          const list = page === "Debts" ? live.filter((a) => a.type === "Debt") : live.filter((a) => a.type !== "Debt");
+          const completed = list.filter(isFinished);
+          const open = list.filter((a) => !isFinished(a));
+          const groups = page === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
+          return (
+          <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            {page === "Total" ? (
+              <Totals />
+            ) : (
+              <>
+                {groups.map((type, index) => {
+                  const rows = open.filter((a) => (a.type === "Debt" ? type === debtDirection(data, a) : a.type === type));
+                  if (!rows.length && type !== "Savings") return null;
+                  const total = rows.reduce((n, a) => n + inMain(balanceOf(a), a.currency), 0);
+                  return (
+                    <View key={type}>
+                      <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyText text={money(total, data.settings.currency, true)} value={total} size={19} />} />
+                      {rows.length ? <Group accounts={rows} onHold={setHeld} /> : null}
+                    </View>
+                  );
+                })}
+                <Folder title="Completed" icon="check" items={completed} />
+              </>
+            )}
+            <Folder title="Archive" icon="archive" items={archived} />
+          </ScrollView>
+          );
+        }}
+      />
     </View>
   );
 }

@@ -1,7 +1,7 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { Fragment, useMemo, useState, type ReactNode } from "react";
+import { Fragment, memo, useCallback, useMemo, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
@@ -9,7 +9,7 @@ import { chartBins, donutSlices, OTHER_SLICE, type Group } from "../domain/chart
 import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
-import { operationsIn, periodBounds } from "../domain/periods.ts";
+import { operationsIn, periodBounds, type Period } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
@@ -18,7 +18,7 @@ import { numberText } from "../ui/number-text.ts";
 import { openCategorySheet } from "./category-sheet.tsx";
 import { FiltersPanel, filtersActive } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
-import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
+import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 
@@ -37,12 +37,26 @@ function Heading({ children }: { children: string }) {
 }
 
 export function StatisticsScreen() {
+  const p = usePalette();
+  const { filters } = useView();
+  const [filtering, setFiltering] = useState(false);
+  const openFilters = useCallback(() => setFiltering(true), []);
+  return (
+    <View style={{ flex: 1, backgroundColor: p.bg }}>
+      <RootHero icon="filter" label="Filters" onAction={openFilters} />
+      <PeriodPager header={<PeriodBar />} render={(period) => <StatisticsPage period={period} openFilters={openFilters} />} />
+      <FiltersPanel visible={filtering} filters={filters} onChange={(f) => setView({ filters: f })} onClose={() => setFiltering(false)} />
+    </View>
+  );
+}
+
+// The blocks of one period (drawn beforehand for the neighbouring periods too).
+const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { period, catType, filters } = useView();
-  const [filtering, setFiltering] = useState(false);
+  const { catType, filters } = useView();
   const [selected, setSelected] = useState<string | null>(null);
   const today = systemClock.today();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, filters)), [data, period, filters]);
@@ -264,15 +278,11 @@ export function StatisticsScreen() {
 
   const hasOperations = data.ops.length > 0 || filtersActive(filters);
   return (
-    <View style={{ flex: 1, backgroundColor: p.bg }}>
-      <RootHero icon="filter" label="Filters" onAction={() => setFiltering(true)} />
-      <PeriodSwipe>
       <View style={{ flex: 1 }}>
-        <PeriodBar />
         {hasOperations ? (
           <>
             <SumTabs tinted active={catType} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
-            {filtersActive(filters) ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
+            {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
             <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
         ) : (
@@ -283,11 +293,8 @@ export function StatisticsScreen() {
           </View>
         )}
       </View>
-      </PeriodSwipe>
-      <FiltersPanel visible={filtering} filters={filters} onChange={(f) => setView({ filters: f })} onClose={() => setFiltering(false)} />
-    </View>
   );
-}
+});
 
 function ScrollBlocks({ children }: { children: ReactNode }) {
   return (

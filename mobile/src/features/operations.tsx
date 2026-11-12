@@ -1,14 +1,14 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
 import { newestFirst } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
-import { emptyFilters, operationsIn, periodBounds, type Filters } from "../domain/periods.ts";
+import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } from "../domain/periods.ts";
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
@@ -18,7 +18,7 @@ import { Fab, MoneyText } from "../ui/parts.tsx";
 import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
-import { PeriodBar, PeriodSwipe } from "./period-bar.tsx";
+import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { FiltersPanel } from "./filters-panel.tsx";
@@ -40,10 +40,8 @@ function balanceAt(data: ReturnType<typeof useLedger>, filters: Filters, date: s
 
 export function OperationsScreen() {
   const data = useLedger();
-  const state = useAppState();
   const p = usePalette();
   const t = useT();
-  const money = useMoney();
   const run = useCommand();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -57,7 +55,6 @@ export function OperationsScreen() {
     const [atTop, setAtTop] = useState(true);
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
-  const posted = state.status === "ready" ? state.posted : [];
 
   // The tab bar gives its place to the actions of the selection.
   useEffect(() => {
@@ -92,22 +89,6 @@ export function OperationsScreen() {
       if (planned) toast("Saved as a scheduled payment");
     });
 
-  const items = useMemo(() => {
-    const out: Item[] = [];
-    // One pass: the list is already newest first, so the days follow each other.
-    const days = new Map<string, Operation[]>();
-    for (const o of ops) {
-      const day = days.get(o.date);
-      if (day) day.push(o);
-      else days.set(o.date, [o]);
-    }
-    for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
-    return out;
-  }, [ops]);
-
-  const stickyDays = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
-  const [from, to] = periodBounds(period, data.settings);
-  const summary = data.settings.opening && ops.length > 0 && !active;
   const header = selection ? (
     <View style={{ paddingTop: insets.top + 12, paddingBottom: 8, paddingHorizontal: 12, flexDirection: "row", alignItems: "center", backgroundColor: p.bg }}>
       <Pressable accessibilityRole="button" accessibilityLabel={t.t("Exit selection")} onPress={() => (setSelection(false), setSelected([]))} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
@@ -141,15 +122,76 @@ export function OperationsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
-      <PeriodBar />
-      {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
-      <PeriodSwipe>
+      <PeriodPager
+        header={
+          <>
+            <PeriodBar />
+            {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
+          </>
+        }
+        render={(shown, isCurrent) => (
+          <OperationsPage
+            period={shown}
+            query={query}
+            active={active}
+            selection={selection}
+            selectedSet={selectedSet}
+            onPress={pressRow}
+            onLongPress={holdRow}
+            onTop={isCurrent ? setAtTop : undefined}
+          />
+        )}
+      />
+      {selection ? (
+        <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
+          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["circleUp", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
+            <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed }) => ({ flex: 1, minHeight: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: pressed ? p.soft : p.key })}>
+              <Icon name={icon} size={24} color={p.ink} />
+              <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500" }}>{t.t(label)}</Text>
+            </Pressable>
+          ))}
+        </View>
+      ) : (
+        <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
+      )}
+      <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
+    </View>
+  );
+}
+
+// The list of one period: drawn for the current period and, beforehand, for its neighbours.
+const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
+  const data = useLedger();
+  const state = useAppState();
+  const p = usePalette();
+  const t = useT();
+  const money = useMoney();
+  const { filters } = useView();
+  const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
+  const posted = state.status === "ready" ? state.posted : [];
+  const items = useMemo(() => {
+    const out: Item[] = [];
+    // One pass: the list is already newest first, so the days follow each other.
+    const days = new Map<string, Operation[]>();
+    for (const o of ops) {
+      const day = days.get(o.date);
+      if (day) day.push(o);
+      else days.set(o.date, [o]);
+    }
+    for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
+    return out;
+  }, [ops]);
+
+  const stickyDays = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
+  const [from, to] = periodBounds(period, data.settings);
+  const summary = data.settings.opening && ops.length > 0 && !active;
+  return (
       <FlatList
         // The sticky header indices must not change under a mounted list (it then draws nothing).
         key={stickyDays.join(",")}
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
-        onScroll={(e) => setAtTop(e.nativeEvent.contentOffset.y < 12)}
+        onScroll={onTop ? (e) => onTop(e.nativeEvent.contentOffset.y < 12) : undefined}
         scrollEventThrottle={64}
         stickyHeaderIndices={stickyDays}
         initialNumToRender={12}
@@ -190,24 +232,9 @@ export function OperationsScreen() {
           item.kind === "day" ? (
             <DayHead date={item.date} ops={item.ops} />
           ) : (
-            <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={pressRow} onLongPress={holdRow} />
+            <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
           )
         }
       />
-      </PeriodSwipe>
-      {selection ? (
-        <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
-          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["circleUp", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
-            <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed }) => ({ flex: 1, minHeight: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: pressed ? p.soft : p.key })}>
-              <Icon name={icon} size={24} color={p.ink} />
-              <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500" }}>{t.t(label)}</Text>
-            </Pressable>
-          ))}
-        </View>
-      ) : (
-        <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
-      )}
-      <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
-    </View>
   );
-}
+});
