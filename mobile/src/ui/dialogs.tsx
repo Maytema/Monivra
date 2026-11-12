@@ -46,6 +46,23 @@ function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: s
 export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK", message?: string): number =>
   sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} message={message} />, "dialog");
 
+// A message with OK (ui/dialogs.js showInfo).
+function Info({ text, title }: { text: string; title?: string }) {
+  const p = usePalette();
+  const t = useT();
+  const close = useCloseLayer();
+  return (
+    <View>
+      {title ? <DialogTitle>{t.t(title)}</DialogTitle> : null}
+      <Text style={{ color: p.ink, fontSize: 16, lineHeight: 23 }}>{t.t(text)}</Text>
+      <DialogActions>
+        <TextButton label="OK" onPress={close} />
+      </DialogActions>
+    </View>
+  );
+}
+export const showInfo = (text: string, title?: string): number => sheets.open(<Info text={text} title={title} />, "dialog");
+
 function Prompt({ title, initial, label, onDone }: { title: string; initial: string; label: string; onDone: (value: string) => void }) {
   const p = usePalette();
   const t = useT();
