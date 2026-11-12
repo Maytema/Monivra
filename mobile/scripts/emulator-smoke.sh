@@ -72,6 +72,13 @@ has "125" 08-operations-after-restart
 # A tour of the other screens (screenshots for a person; a missing label only logs NOT FOUND).
 back() { adb shell input keyevent 4; sleep 1.5; }
 tap "Accounts"
+tap "Total"
+shot 02e-accounts-total 2
+tap "Accounts"
+tap "Cash"
+tap "Transfer"
+shot 02f-transfer 3
+back
 tap "Cash"
 tap "Edit"
 shot 12-account-form 3
