@@ -186,8 +186,8 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
         opacity: pressed ? 0.85 : 1,
       })}
     >
-      {collapsed ? null : <Text style={{ color: p.ink, fontSize: 19, fontWeight: "600" }}>{t.t(label)}</Text>}
       <Icon name="plus" size={26} color={p.ink} />
+      {collapsed ? null : <Text style={{ color: p.ink, fontSize: 19, fontWeight: "600" }}>{t.t(label)}</Text>}
     </Pressable>
   );
 }

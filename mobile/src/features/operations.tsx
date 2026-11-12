@@ -121,7 +121,7 @@ export function OperationsScreen() {
         onPress={() => change(all ? selected.filter((id) => !here.includes(id)) : [...selected.filter((id) => !here.includes(id)), ...here])}
         style={{ minWidth: 42, height: 42, alignItems: "center", justifyContent: "center" }}
       >
-        <Icon name={all ? "circleCheck" : "check"} size={24} color={p.ink} />
+        <Icon name="clipboardList" size={26} color={p.ink} />
       </Pressable>
     </View>
   ) : search ? (
@@ -197,10 +197,10 @@ export function OperationsScreen() {
       </PeriodSwipe>
       {selection ? (
         <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
-          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["more", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
+          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["circleUp", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
             <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed }) => ({ flex: 1, minHeight: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: pressed ? p.soft : p.key })}>
-              <Icon name={icon} size={21} color={p.ink} />
-              <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
+              <Icon name={icon} size={24} color={p.ink} />
+              <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500" }}>{t.t(label)}</Text>
             </Pressable>
           ))}
         </View>

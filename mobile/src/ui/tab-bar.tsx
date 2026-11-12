@@ -6,14 +6,35 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 import { chrome } from "./theme.ts";
+import Svg, { Path } from "react-native-svg";
 
 export const TABS = [
   { name: "index", title: "Accounts", icon: "wallet" },
   { name: "categories", title: "Categories", icon: "categories" },
   { name: "operations", title: "Operations", icon: "receipt" },
   { name: "statistics", title: "Statistics", icon: "stats" },
-  { name: "more", title: "More", icon: "more" },
+  { name: "more", title: "More", icon: "apps" },
 ] as const;
+
+// The open tab shows its icon filled (as in the reference screens), the inner lines cut out in the
+// colour of the pill.
+const FILLED: Record<string, { shape: string; inner?: string }> = {
+  wallet: { shape: "M4 5h15v4H5a2 2 0 0 1 0-4zM3 7v13h18V9H5a2 2 0 0 1-2-2z", inner: "M17 13h4v4h-4z" },
+  categories: { shape: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" },
+  receipt: { shape: "M4 2l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v20l-2-2-2 2-2-2-2 2-2-2-2 2-2-2-2 2z", inner: "M7.5 7h9M7.5 11h9M7.5 15h9" },
+  stats: { shape: "M3 3h18v18H3z", inner: "M8 16v-4m4 4V7m4 9v-6" },
+};
+
+function TabIcon({ name, active, color, cut }: { name: string; active: boolean; color: string; cut: string }) {
+  const filled = active ? FILLED[name] : undefined;
+  if (!filled) return <Icon name={name} size={24} color={color} />;
+  return (
+    <Svg width={24} height={24} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
+      <Path d={filled.shape} fill={color} stroke={color} strokeWidth={1.7} />
+      {filled.inner ? <Path d={filled.inner} fill={cut} stroke={cut} strokeWidth={1.9} /> : null}
+    </Svg>
+  );
+}
 
 // The part of the navigator's props the bar uses (the navigator's own type lives in a package the
 // application does not depend on directly).
@@ -72,7 +93,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
                 backgroundColor: active ? p.soft : "transparent",
               }}
             >
-              <Icon name={tab.icon} size={24} color={color} />
+              <TabIcon name={tab.icon} active={active} color={color} cut={p.soft} />
             </View>
             <Text numberOfLines={1} style={{ color, fontSize: 12, lineHeight: 16, fontWeight: active ? "600" : "400" }}>
               {t.t(tab.title)}
