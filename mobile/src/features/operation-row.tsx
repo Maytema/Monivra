@@ -1,6 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
+import { memo } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
@@ -40,7 +41,9 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
   return t.t("1 {from} = {rate} {to}", { from: base, rate: Number(rate.toPrecision(6)), to: quote });
 }
 
-export function OperationRow({ op, selecting = false, selected = false, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; onPress: () => void; onLongPress?: () => void }) {
+// Memoised: the list passes stable handlers (they receive the id), so a row is drawn again only when
+// its own operation or its selection changes, not on every scroll or selection of another row.
+export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -63,8 +66,8 @@ export function OperationRow({ op, selecting = false, selected = false, onPress,
   return (
     <Pressable
       accessibilityRole="button"
-      onPress={onPress}
-      onLongPress={onLongPress}
+      onPress={() => onPress(op.id)}
+      onLongPress={onLongPress ? () => onLongPress(op.id) : undefined}
       style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, borderRadius: 12, backgroundColor: selected || pressed ? p.soft : "transparent" })}
     >
       {selecting && selected ? (
@@ -117,7 +120,7 @@ export function OperationRow({ op, selecting = false, selected = false, onPress,
       </View>
     </Pressable>
   );
-}
+});
 
 // Net result of one day (income minus expenses) in the main currency.
 function dayTotal(data: LedgerData, ops: Operation[]): number {

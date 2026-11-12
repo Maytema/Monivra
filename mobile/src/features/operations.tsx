@@ -1,7 +1,7 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -69,6 +69,15 @@ export function OperationsScreen() {
     if (!ids.length) setSelection(false);
   };
   const toggle = (id: string) => change(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
+  // Rows get handlers that never change; they read the current selection from here.
+  const live = useRef({ selection, toggle });
+  live.current = { selection, toggle };
+  const pressRow = useCallback((id: string) => (live.current.selection ? live.current.toggle(id) : openEditor({ id })), []);
+  const holdRow = useCallback((id: string) => {
+    setSelection(true);
+    live.current.toggle(id);
+  }, []);
+  const selectedSet = useMemo(() => new Set(selected), [selected]);
   const here = ops.map((o) => o.id);
   const chosen = here.filter((id) => selected.includes(id)).length;
   const all = !!here.length && chosen === here.length;
@@ -179,13 +188,7 @@ export function OperationsScreen() {
           item.kind === "day" ? (
             <DayHead date={item.date} ops={item.ops} />
           ) : (
-            <OperationRow
-              op={item.op}
-              selecting={selection}
-              selected={selected.includes(item.op.id)}
-              onPress={() => (selection ? toggle(item.op.id) : openEditor({ id: item.op.id }))}
-              onLongPress={() => (setSelection(true), toggle(item.op.id))}
-            />
+            <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={pressRow} onLongPress={holdRow} />
           )
         }
       />
