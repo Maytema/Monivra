@@ -3,7 +3,7 @@
 // max(48, 27 % of the width) or a quick flick moves to the neighbour; at an end the page resists.
 // What stays in place (the period bar) reads the offset from the context to move its title along.
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { Animated, Dimensions, Easing, InteractionManager, PanResponder, View } from "react-native";
+import { Animated, Dimensions, Easing, PanResponder, View } from "react-native";
 import { gestureLock } from "./gesture-lock.ts";
 
 export interface PagerMotion {
@@ -38,8 +38,8 @@ export function Pager<K extends string>({
   // The neighbours are drawn once the first page is on the screen, so opening the tab stays quick.
   const [warm, setWarm] = useState(false);
   useEffect(() => {
-    const task = InteractionManager.runAfterInteractions(() => setTimeout(() => setWarm(true), 120));
-    return () => task.cancel();
+    const timer = setTimeout(() => setWarm(true), 250);
+    return () => clearTimeout(timer);
   }, []);
   // After a move the neighbour has become the current page: the row is put back in the middle before
   // the screen is drawn again, so nothing jumps.
