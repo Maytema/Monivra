@@ -79,12 +79,34 @@ device until the emulator screenshots of the CI run have been compared with `cat
 | F-1 | Saving an unrelated change (tag, comment, date) re-priced a cross-currency amount at today's rate | Second amounts are facts; re-priced only when the amount, fees or a side's currency changes and the person did not type it | `finance-rules.test.ts` (3 tests) |
 | F-14 | Changing one account's currency with "convert everything" converted **every adjustment of every account** and counted scheduled payments in the balance correction — another account lost money, and the changed account ended at the wrong balance (probe: 2,200.00 → 1,211.43 KGS on the other account; 705.33 instead of 211.05 USD) | Only the account's own records are converted; the correction counts operations only | `finance-rules.test.ts` "F-14" |
 
+## Parity pass after the owner's film (2026-11-12, task `docs/agent/PARITY_TASK.md`)
+
+Verified on the CI emulator (screenshots in `mobile-builds/builds/<n>/emulator/`): swipe over periods
+(build 27), long press → selection mode, calendar from the operation editor, the operations list after a
+change (build 28). Coded after the film and the catalog, to be compared on the next emulator run:
+
+- **Speed — cause found:** on Hermes every `toLocaleString`, `localeCompare` and `Intl.*` call crosses a slow
+  bridge to the system; money formatting (every amount on every row), sorting of operations, day headers and
+  the currency list ran them hundreds of times per screen; the currency sheet also sat inside a ScrollView,
+  which drew all ~160 rows. Replaced by plain arithmetic and built-in tables (checked against the platform on
+  960k cases), hooks subscribe to their part of the ledger, lists are virtualized. `[perf]` timings go to the
+  system log and the emulator test keeps them in `perf.txt`.
+- Swipe: the next period/tab slides in only once drawn; no old content flashing back.
+- Account form, switches, "Select type" sheet, "Customize icon", icon page (5×64 dp grid, virtualized), colour
+  page (owner's choice: our wheel kept; one row of shades that fits the width; HEX with a fixed "#").
+- Lock screen: fingerprint key bottom left (prompt once per lock, then on the key).
+- Navigation filled icons and 3×3 "More"; FAB "+ Add"; selection icons; category tiles; donut; editor date
+  "Today/Yesterday"; "Click on the value to edit"; Additionally cards; Change categories segmented tabs.
+
 ## Not yet in the new application (next priorities)
+
+0. Photo attachments (the clip in the editor): needs `expo-image-picker`, which cannot be installed while
+   the build machine has no network for packages.
 
 1. **Emulator comparison with `catalog/`** of every screen above (the CI emulator test only drives the add flow).
 2. PDF reports (model exists in the old app; render as HTML → `expo-print`), CSV import wizard.
 3. Saved backups (list, restore with scheduled-payment modes), merge-restore, deletion modes (the Data page has data file and CSV only).
-4. Ordering by drag (categories, statistics blocks), colour wheel in the colour page, random-selection settings.
+4. Ordering of statistics blocks by drag (accounts, categories and subcategories done).
 5. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
-6. Swipe between tabs and periods, photo attachments, welcome/onboarding screens against `catalog/`.
+6. Welcome/onboarding screens (no catalog screens of them yet).
 7. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
