@@ -152,14 +152,7 @@ back
 # Gestures: a swipe over the operations moves to the previous period; a long press on a row starts
 # the selection.
 tap "Operations"
-adb shell input swipe 200 1500 900 1500 250
-shot 17-swipe-period 3
-# Half a swipe, finger still down: the neighbouring period must already be drawn.
-adb shell input motionevent DOWN 950 1500; adb shell input motionevent MOVE 800 1500; adb shell input motionevent MOVE 600 1505; adb shell input motionevent MOVE 520 1505
-shot 17a-half-swipe 1
-adb shell input motionevent MOVE 900 1500; adb shell input motionevent UP 900 1500; sleep 1
-adb shell input swipe 900 1500 200 1500 250
-shot 17b-swipe-back 3
+sleep 2
 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
 xy=$(python3 - <<'PY'
 import re, xml.etree.ElementTree as ET
@@ -176,7 +169,21 @@ has "Selected" 18-long-press-selection
 tap "More"
 shot 18b-bulk-edit 2
 back
-back
+# (the selection is closed again, then the swipes)
+tap "Exit selection"
+adb shell input swipe 200 1500 900 1500 250
+shot 17-swipe-period 3
+# Half a swipe, finger still down: the neighbouring period must already be drawn.
+adb shell input motionevent DOWN 950 1500; adb shell input motionevent MOVE 800 1500; adb shell input motionevent MOVE 600 1505; adb shell input motionevent MOVE 520 1505
+shot 17a-half-swipe 1
+adb shell input motionevent MOVE 900 1500; adb shell input motionevent UP 900 1500; sleep 1
+adb shell input swipe 900 1500 200 1500 250
+shot 17b-swipe-back 3
+# The long press once more after the swipes (only looked at).
+adb shell input swipe $xy $xy 900
+shot 18c-long-press-after-swipes 3
+grep -q 'text="Selected' "$OUT/18c-long-press-after-swipes.xml" && log "long press after swipes: works" || log "long press after swipes: NOT working"
+tap "Exit selection"
 tap "November 2026"
 shot 19-period-dialog 2
 back

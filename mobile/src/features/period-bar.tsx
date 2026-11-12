@@ -43,7 +43,7 @@ export function PeriodBar() {
     const fade = (from: number, to: number) => motion.x.interpolate({ inputRange: [from, to].sort((a, b) => a - b), outputRange: from < to ? [0, 1] : [1, 0], extrapolate: "clamp" });
     const shiftX = Animated.add(Animated.multiply(motion.x, room / w), -room);
     titles = (
-      <Animated.View style={{ flexDirection: "row", width: room * 3, transform: [{ translateX: shiftX }] }}>
+      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, flexDirection: "row", width: room * 3, transform: [{ translateX: shiftX }] }}>
         <Animated.View style={{ opacity: fade(w * 0.55, w) }}>{title(shiftPeriod(period, -1, data.settings), false)}</Animated.View>
         <Animated.View style={{ opacity: motion.x.interpolate({ inputRange: [-w * 0.45, 0, w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" }) }}>{title(period, true)}</Animated.View>
         <Animated.View style={{ opacity: fade(-w * 0.55, -w) }}>{title(shiftPeriod(period, 1, data.settings), false)}</Animated.View>
