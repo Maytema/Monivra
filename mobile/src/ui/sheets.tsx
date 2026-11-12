@@ -8,7 +8,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { chrome } from "./theme.ts";
 
-type Kind = "sheet" | "dialog";
+// A "full" layer is a page over the whole screen (the icon list, the colour page).
+type Kind = "sheet" | "dialog" | "full";
 interface Layer {
   id: number;
   kind: Kind;
@@ -101,12 +102,18 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const rise = progress.interpolate({ inputRange: [0, 1], outputRange: [Dimensions.get("window").height, 0] });
   const veil = first ? "rgba(0,0,0,0.33)" : "rgba(0,0,0,0.2)";
   const sheet = layer.kind === "sheet";
+  const full = layer.kind === "full";
   return (
     <LayerContext.Provider value={close}>
       <View style={StyleSheet.absoluteFill}>
         <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: veil, opacity: progress }]}>
           <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Close" onPress={close} />
         </Animated.View>
+        {full ? (
+          <Animated.View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: p.bg, paddingTop: insets.top, paddingBottom: insets.bottom, transform: [{ translateY: rise }] }}>
+            {layer.content}
+          </Animated.View>
+        ) : (
         <KeyboardAvoidingView
           behavior="padding"
           style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, pointerEvents: "box-none" }}
@@ -140,6 +147,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             </Animated.View>
           )}
         </KeyboardAvoidingView>
+        )}
       </View>
     </LayerContext.Provider>
   );
