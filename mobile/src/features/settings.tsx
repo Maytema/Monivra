@@ -19,6 +19,7 @@ import { Icon } from "../ui/kit.tsx";
 import { openMonthStart } from "../ui/period-dialog.tsx";
 import { Footnote, SettingRow, SwitchRow } from "../ui/rows.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { Sortable } from "../ui/sortable.tsx";
 import { openTime } from "./editor/options.tsx";
 import { PinSettings, setLock } from "./lock.tsx";
 
@@ -139,17 +140,24 @@ const STATS_BLOCKS = [
   ["tags", "Tags"],
 ] as const;
 
-// The blocks of the statistics screen, switched on and off.
+// The blocks of the statistics screen, switched on and off; the switched-on ones first, in their order,
+// and a held row is dragged to move its block (js/screens/statistics.js statsSettings).
 function StatsSettings() {
   const { s, set } = useSetting();
   const t = useT();
   const close = useCloseLayer();
+  const names = new Map<string, string>(STATS_BLOCKS);
+  const ordered = [...s.stats.filter((id) => names.has(id)), ...STATS_BLOCKS.map(([id]) => id).filter((id) => !s.stats.includes(id))];
   return (
     <View>
       <DialogTitle>{t.t("Statistics")}</DialogTitle>
-      {STATS_BLOCKS.map(([id, name]) => (
-        <SwitchRow key={id} label={name} value={s.stats.includes(id)} onChange={(on) => set({ stats: on ? [...s.stats, id] : s.stats.filter((x) => x !== id) })} />
-      ))}
+      <Footnote>Hold a row and drag it to change the order.</Footnote>
+      <Sortable
+        items={ordered}
+        keyOf={(id) => id}
+        onReorder={(ids) => set({ stats: ids.filter((id) => s.stats.includes(id)) })}
+        render={(id, ignoreTap) => <SwitchRow label={names.get(id) ?? id} value={s.stats.includes(id)} onChange={(on) => !ignoreTap() && set({ stats: on ? [...s.stats, id] : s.stats.filter((x) => x !== id) })} />}
+      />
       <DialogActions>
         <PrimaryPill label="Complete" onPress={close} />
       </DialogActions>
