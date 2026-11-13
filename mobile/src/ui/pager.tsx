@@ -34,6 +34,7 @@ export function Pager<K extends string>({
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const x = useRef(new Animated.Value(0)).current;
   const busy = useRef(false);
+  const lastMove = useRef(0);
   const moved = useRef(false);
   // The neighbours are drawn once the first page is on the screen, so opening the tab stays quick.
   const [warm, setWarm] = useState(false);
@@ -55,8 +56,15 @@ export function Pager<K extends string>({
     PanResponder.create({
       // A clearly horizontal drag is taken; a vertical one stays with the lists.
       onMoveShouldSetPanResponderCapture: (_e, g) => !busy.current && !gestureLock.held && Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
-      onPanResponderTerminationRequest: () => false,
+      // While the finger moves the pages, nothing takes the gesture away; a gesture that went quiet (its end
+      // never arrived, as after some system gestures) gives way to the next touch instead of leaving the
+      // page deaf to taps.
+      onPanResponderTerminationRequest: () => Date.now() - lastMove.current > 300,
+      onPanResponderGrant: () => {
+        lastMove.current = Date.now();
+      },
       onPanResponderMove: (_e, g) => {
+        lastMove.current = Date.now();
         const there = g.dx < 0 ? live.current.next : live.current.prev;
         x.setValue(there !== null ? g.dx : Math.sign(g.dx) * 28 * (1 - Math.exp(-Math.abs(g.dx) / 95)));
       },
