@@ -380,6 +380,7 @@ function Key({ children, onPress, label, style, tone }: { children: ReactNode; o
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      feedback
       disabled={!onPress}
       onPress={onPress}
       style={({ pressed }) => [{ flex: 1, minHeight: 60, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: tone === "confirm" ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key }, style]}

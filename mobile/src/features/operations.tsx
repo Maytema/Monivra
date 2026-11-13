@@ -110,12 +110,9 @@ export function OperationsScreen() {
         disabled={!here.length}
         onPress={() => change(all ? selected.filter((id) => !here.includes(id)) : [...selected.filter((id) => !here.includes(id)), ...here])}
         accessibilityLabel={t.t(all ? "Deselect all in this period" : "Select all in this period")}
-        style={{ minWidth: 42, height: 42, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }}
+        style={{ minWidth: 42, height: 42, alignItems: "center", justifyContent: "center" }}
       >
-        <View style={{ width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: chosen ? p.accent : p.muted, backgroundColor: chosen ? p.accent : "transparent", alignItems: "center", justifyContent: "center" }}>
-          {chosen ? <Icon name={all ? "check" : "minus"} size={15} color={p.onAccent} /> : null}
-        </View>
-        <Text style={{ color: p.muted, fontSize: 12 }}>{`${chosen}/${here.length}`}</Text>
+        <Icon name="clipboardList" size={26} color={p.ink} />
       </Pressable>
     </View>
   ) : search ? (

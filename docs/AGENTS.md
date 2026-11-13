@@ -32,7 +32,7 @@ over both.
   all screens). A patch that hides the symptom on the named screen is not a fix. The guard goes into a
   check when it can (`check-boundaries.mjs` refuses react-native's own `Pressable`, for example).
 - **One piece for one job.** The same button, dialog, row, sheet or icon is one component in
-  `mobile/src/ui` used everywhere (the "+" button is `Fab`, the pressed state is `ui/pressable.tsx`, the
+  `mobile/src/ui` used everywhere (the "+" button is `Fab`, a touch shows nothing by default and only keypad keys light up — decided once in `ui/pressable.tsx`, the
   progress dialog is `ui/progress.tsx`). Before building a window or button, search for one that does the
   same; if two look alike they must be the same component with parameters, not two copies. Example: the
   button grid at the bottom of every account card is one component whatever the account type; only its

@@ -18,6 +18,7 @@ function Key({ label, onPress, wide = 1, tall = false, confirm = false, disabled
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      feedback
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => ({ flex: wide, minHeight: tall ? 0 : 54, borderRadius: 15, alignItems: "center", justifyContent: "center", opacity: disabled ? 0.4 : 1, backgroundColor: confirm ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key })}

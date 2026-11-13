@@ -200,7 +200,7 @@ export function PinPad({ length, value, onChange, disabled = false, failed = fal
   const keyH = big ? 80 : 65;
   const gap = big ? 16 : 14;
   const key = (k: string) => (
-    <Pressable key={k} disabled={disabled} accessibilityRole="button" accessibilityLabel={k} onPress={() => press(k)} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: big ? 20 : 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.tint, opacity: disabled ? 0.4 : 1 })}>
+    <Pressable feedback key={k} disabled={disabled} accessibilityRole="button" accessibilityLabel={k} onPress={() => press(k)} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: big ? 20 : 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.tint, opacity: disabled ? 0.4 : 1 })}>
       <Text style={{ color: p.ink, fontSize: big ? 34 : 29 }}>{k}</Text>
     </Pressable>
   );
@@ -217,7 +217,7 @@ export function PinPad({ length, value, onChange, disabled = false, failed = fal
         <View style={{ flexDirection: "row", gap }}>
           {left ?? <View style={{ flex: 1 }} />}
           {key("0")}
-          <Pressable disabled={disabled} accessibilityRole="button" accessibilityLabel={t.t("Backspace")} onPress={() => press("⌫")} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
+          <Pressable feedback disabled={disabled} accessibilityRole="button" accessibilityLabel={t.t("Backspace")} onPress={() => press("⌫")} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
             <Icon name="backspace" size={big ? 36 : 30} color={p.ink} />
           </Pressable>
         </View>

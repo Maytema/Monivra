@@ -17,7 +17,7 @@ interface Options {
 function Key({ label, onPress, flex = 1, confirm = false, disabled = false, children }: { label: string; onPress: () => void; flex?: number; confirm?: boolean; disabled?: boolean; children: ReactNode }) {
   const p = usePalette();
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={label} disabled={disabled} onPress={onPress} style={({ pressed }) => ({ flex, minHeight: 54, borderRadius: 15, alignItems: "center", justifyContent: "center", opacity: disabled ? 0.4 : 1, backgroundColor: confirm ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key })}>
+    <Pressable feedback accessibilityRole="button" accessibilityLabel={label} disabled={disabled} onPress={onPress} style={({ pressed }) => ({ flex, minHeight: 54, borderRadius: 15, alignItems: "center", justifyContent: "center", opacity: disabled ? 0.4 : 1, backgroundColor: confirm ? mix(p.accent, p.bg, 0.18) : pressed ? mix(p.accent, p.bg, 0.1) : p.key })}>
       {children}
     </Pressable>
   );
