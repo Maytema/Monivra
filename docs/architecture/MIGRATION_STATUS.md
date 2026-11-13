@@ -118,5 +118,15 @@ shrinking with BitmapFactory), linked by Expo autolinking.
 
 1. Emulator comparison of every screen of the brief with the old crawl (`tools/tour/crawl-old.mjs`) — the
    tour of `scripts/emulator-smoke.sh` now covers the Data section and every Settings page.
-2. Printing and photos: verify on the emulator and on the owner's phone (camera, gallery, print dialog).
+2. **The local module `mobile/modules/monivra-native` is not yet linked**: builds 41–42 list no
+   `monivra-native` under "Using expo modules", so the clip, Print and the privacy screen stay hidden
+   (`requireOptionalNativeModule` returns null; nothing breaks). Next: read docs.expo.dev/modules/autolinking
+   for SDK 58 (how `nativeModulesDir` local modules are found; `package.json` was added in the module and
+   `expo.autolinking.nativeModulesDir` in mobile/package.json) and fix until the list shows it; then verify
+   camera, gallery and the print dialog on the emulator.
+2a. Long press after swipes (and maybe taps): the emulator log shows "row press in" without "row long
+   press" after a swipe. Temporary `[gesture]` logs in `ui/pager.tsx` and `features/operation-row.tsx`
+   print where a press lands and where the row is measured — compare them in `js-log.txt` of the next build;
+   suspicion: the measured position of the row is stale after the native-driven pager animation, so
+   Pressable treats the finger as outside the row. Remove the logs once fixed.
 3. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).

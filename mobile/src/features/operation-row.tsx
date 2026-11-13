@@ -1,7 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { memo, useRef } from "react";
+import { memo, useRef, type ComponentRef } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
@@ -48,7 +48,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const box = useRef<View>(null);
+  const box = useRef<ComponentRef<typeof View>>(null);
   const compact = useWindowDimensions().width <= 360;
   const account = accountById(data, op.from || op.to);
   const category = categoryById(data, op.category);
