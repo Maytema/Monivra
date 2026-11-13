@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <!-- Lets the camera application write a photo into this application's cache. -->
+    <provider
+      android:name="expo.modules.monivranative.MonivraPhotoProvider"
+      android:authorities="${applicationId}.monivra.photos"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/monivra_photo_paths" />
+    </provider>
+  </application>
+  <queries>
+    <intent>
+      <action android:name="android.media.action.IMAGE_CAPTURE" />
+    </intent>
+  </queries>
+</manifest>

@@ -16,6 +16,12 @@ export const usePagerMotion = (): PagerMotion | null => useContext(PagerContext)
 
 const SETTLE_MS = 220;
 
+// After a swipe moved the pages with the native driver, the layout the touch system measures for a row still
+// holds the place the page ended at, not where it was put back: a press then looks "moved out of the row" at
+// its first touch move and is cancelled (no long press). Rows inside a pager are pressed with this retention
+// offset, so a long press survives; scrolling and swiping still take the touch away through the responders.
+export const WIDE_RETENTION = { top: 4000, bottom: 4000, left: 4000, right: 4000 } as const;
+
 export function Pager<K extends string>({
   prev,
   current,
@@ -49,7 +55,6 @@ export function Pager<K extends string>({
     moved.current = false;
     x.setValue(0);
     busy.current = false;
-    console.log("[gesture] pager settled");
   }, [current, x]);
   const live = useRef({ prev, next, onMove, width });
   live.current = { prev, next, onMove, width };
@@ -60,13 +65,8 @@ export function Pager<K extends string>({
       // While the finger moves the pages, nothing takes the gesture away; a gesture that went quiet (its end
       // never arrived, as after some system gestures) gives way to the next touch instead of leaving the
       // page deaf to taps.
-      onPanResponderTerminationRequest: () => {
-        const yes = Date.now() - lastMove.current > 300;
-        console.log(`[gesture] pager termination request: ${yes}`);
-        return yes;
-      },
+      onPanResponderTerminationRequest: () => Date.now() - lastMove.current > 300,
       onPanResponderGrant: () => {
-        console.log("[gesture] pager grant");
         lastMove.current = Date.now();
       },
       onPanResponderMove: (_e, g) => {
@@ -75,7 +75,6 @@ export function Pager<K extends string>({
         x.setValue(there !== null ? g.dx : Math.sign(g.dx) * 28 * (1 - Math.exp(-Math.abs(g.dx) / 95)));
       },
       onPanResponderRelease: (_e, g) => {
-        console.log(`[gesture] pager release dx=${Math.round(g.dx)}`);
         const direction: 1 | -1 = g.dx < 0 ? 1 : -1;
         const there = direction === 1 ? live.current.next : live.current.prev;
         const w = live.current.width;
@@ -85,7 +84,6 @@ export function Pager<K extends string>({
           return;
         }
         busy.current = true;
-        console.log("[gesture] pager moves");
         const left = w - Math.abs(g.dx);
         const duration = Math.max(90, Math.min(SETTLE_MS, Math.abs(g.vx) > 0.1 ? left / Math.abs(g.vx) : SETTLE_MS));
         Animated.timing(x, { toValue: -direction * w, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(() => {
@@ -94,7 +92,6 @@ export function Pager<K extends string>({
         });
       },
       onPanResponderTerminate: () => {
-        console.log("[gesture] pager terminate");
         Animated.timing(x, { toValue: 0, duration: 200, useNativeDriver: true }).start();
       },
     }),

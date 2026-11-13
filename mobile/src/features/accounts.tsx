@@ -2,6 +2,7 @@
 // their totals, rows with a badge, balance and progress, and the folders of finished and archived ones.
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { router } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";
 import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";
@@ -41,6 +42,7 @@ function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () =
   return (
     <Pressable
       accessibilityRole="button"
+      pressRetentionOffset={WIDE_RETENTION}
       onPress={() => !ignoreTap?.() && openAccountSheet(account.id)}
       style={{
         minHeight: data.settings.bigAccounts ? 82 : 72,

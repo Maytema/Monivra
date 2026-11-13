@@ -6,6 +6,7 @@ import { Pressable, Text, View, type StyleProp, type TextStyle } from "react-nat
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
+import { WIDE_RETENTION } from "./pager.tsx";
 import { alpha, chrome, mix } from "./theme.ts";
 
 // Header of a root screen: a caption with the eye, the figure, and one round action at the right.
@@ -255,6 +256,7 @@ export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongP
       accessibilityRole="button"
       onPress={onPress}
       onLongPress={onLongPress}
+      pressRetentionOffset={WIDE_RETENTION}
       style={{ width, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 9, paddingVertical: 6, paddingHorizontal: 7, borderWidth: 1, borderColor: p.line, borderRadius: 12, backgroundColor: p.key }}
     >
       <ToneBadge icon={icon} color={color} size={42} iconSize={23} radius={10} />

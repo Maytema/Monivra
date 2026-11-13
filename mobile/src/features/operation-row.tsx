@@ -8,6 +8,7 @@ import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
+import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { MoneyText, ToneBadge } from "../ui/parts.tsx";
 import { alpha } from "../ui/theme.ts";
 
@@ -66,6 +67,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   return (
     <Pressable
       accessibilityRole="button"
+      pressRetentionOffset={WIDE_RETENTION}
       onPress={() => onPress(op.id)}
       onLongPress={onLongPress ? () => onLongPress(op.id) : undefined}
       style={{ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, marginHorizontal: -16, paddingHorizontal: 16, borderRadius: 14, backgroundColor: selected ? alpha(p.accent, 0.13) : "transparent" }}

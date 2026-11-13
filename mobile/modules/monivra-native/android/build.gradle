@@ -1,0 +1,22 @@
+// A small local module of the application (no package to install): what the first application's own
+// native plugin did and no installed library does — hiding the screen from the recent-apps preview and
+// screenshots, and printing a PDF through the system's print service.
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.monivranative'
+version = '0.1.0'
+
+android {
+  namespace "expo.modules.monivranative"
+  defaultConfig {
+    versionCode 1
+    versionName "0.1.0"
+  }
+}
+
+dependencies {
+  implementation "androidx.core:core:1.13.1"
+}
