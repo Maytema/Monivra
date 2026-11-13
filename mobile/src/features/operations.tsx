@@ -12,9 +12,9 @@ import { convert } from "../domain/money.ts";
 import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } from "../domain/periods.ts";
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
-import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
-import { Card, Icon, Label } from "../ui/kit.tsx";
+import { Icon } from "../ui/kit.tsx";
 import { Fab, MoneyText, useFabCollapse } from "../ui/parts.tsx";
 import { useSpotlit } from "../ui/spotlight.tsx";
 import { chrome } from "../ui/theme.ts";
@@ -24,6 +24,7 @@ import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
+import { PostedBanner } from "./posted-banner.tsx";
 import { listingOnTop } from "./reveal.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openBulkEdit } from "./bulk-edit.tsx";
@@ -171,13 +172,11 @@ export function OperationsScreen() {
 // The list of one period: drawn for the current period and, beforehand, for its neighbours.
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
   const data = useLedger();
-  const state = useAppState();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
   const { filters } = useView();
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
-  const posted = state.status === "ready" ? state.posted : [];
   const items = useMemo(() => {
     const out: Item[] = [];
     // One pass: the list is already newest first, so the days follow each other.
@@ -244,14 +243,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={
           <View style={{ marginHorizontal: -16 }} onLayout={(e) => (headerHeight.current = e.nativeEvent.layout.height)}>
             <View style={{ paddingHorizontal: 16 }}>
-              {posted.length ? (
-                <Pressable onPress={() => appStore().forgetPosted()}>
-                  <Card>
-                    <Text style={{ color: p.ink }}>{t.tc("A scheduled payment was added", "{n} scheduled payments were added", posted.length)}</Text>
-                    <Label>{t.t("Tap to hide")}</Label>
-                  </Card>
-                </Pressable>
-              ) : null}
+              <PostedBanner />
               {summary ? (
                 <View style={{ flexDirection: "row", justifyContent: "space-around", borderWidth: 1, borderColor: p.line, borderRadius: 10, marginBottom: 4, paddingVertical: 9, paddingHorizontal: 4, minHeight: 54 }}>
                   {([["Opening balance", balanceAt(data, filters, from, true)], ["Closing balance", balanceAt(data, filters, to, false)]] as const).map(([label, value]) => (

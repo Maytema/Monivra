@@ -16,6 +16,7 @@ import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.
 import { Sortable } from "../ui/sortable.tsx";
 import { Pager } from "../ui/pager.tsx";
 import { HintBanner } from "../ui/hint-banner.tsx";
+import { PostedBanner } from "./posted-banner.tsx";
 import { mix } from "../ui/theme.ts";
 import { isOwed, openAccountSheet, percentText } from "./account-sheet.tsx";
 import { RootHero } from "./root-hero.tsx";
@@ -218,6 +219,7 @@ export function AccountsScreen() {
           const groups = page === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
           return (
           <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+            <PostedBanner />
             {page !== "Total" && list.length > 1 ? <HintBanner id="account-reorder" text="Hold an account to drag and reorder" /> : null}
             {page === "Total" ? (
               <Totals />

@@ -6,16 +6,17 @@ import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 
 // `plain`: a row of a menu (the More tab, MR 001) instead of a tinted card.
-export function HintBanner({ id, text, onPress, plain = false }: { id: string; text: string; onPress?: () => void; plain?: boolean }) {
+// `icon`/`onClose`: the same banner for a notice that is not a one-time hint (it goes away by `onClose`).
+export function HintBanner({ id, text, onPress, plain = false, icon = "info", onClose }: { id: string; text: string; onPress?: () => void; plain?: boolean; icon?: string; onClose?: () => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const run = useCommand();
   const dismissed = data.settings.dismissedHints ?? [];
-  if (dismissed.includes(id)) return null;
+  if (!onClose && dismissed.includes(id)) return null;
   const body = (
     <>
-      <Icon name="info" size={plain ? 24 : 20} color={p.ink} />
+      <Icon name={icon} size={plain ? 24 : 20} color={p.ink} />
       <Text style={{ flex: 1, color: p.ink, fontSize: plain ? 17 : 14 }}>{t.t(text)}</Text>
     </>
   );
@@ -28,7 +29,7 @@ export function HintBanner({ id, text, onPress, plain = false }: { id: string; t
       ) : (
         <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 6 }}>{body}</View>
       )}
-      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Dismiss")} onPress={() => void run((tx) => (tx.setSettings({ dismissedHints: [...dismissed, id] }), true))} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Dismiss")} onPress={onClose ?? (() => void run((tx) => (tx.setSettings({ dismissedHints: [...dismissed, id] }), true)))} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
         <Icon name="close" size={22} color={p.ink} />
       </Pressable>
     </View>
