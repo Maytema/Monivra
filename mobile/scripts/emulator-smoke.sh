@@ -166,6 +166,23 @@ for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Securi
   fi
   back
 done
+back
+# The other pages of "More", for a side by side look with the first application.
+more_page() { # page, shot name
+  tap "$1" && shot "$2" 3
+}
+tap "More"
+for pair in "Profile:15p-profile" "Shared access:15p-shared-access" "Instructions:15p-instructions" "Support:15p-support" "About our team:15p-about" "Privacy policy:15p-privacy-policy" "Terms of use:15p-terms"; do
+  more_page "${pair%%:*}" "${pair##*:}"
+  if [ "${pair%%:*}" = "Instructions" ]; then
+    tap "Operations"; shot 15p-instructions-operations 2; back
+  fi
+  if [ "${pair%%:*}" = "Support" ]; then
+    tap "Report a bug"; shot 15p-support-bug 2; back
+  fi
+  back
+done
+tap "Settings"
 for i in 1 2 3; do adb shell input swipe 540 1800 540 700 300; sleep 1; done
 tap "Exchange rates"
 shot 15-Exchange-rates 3
