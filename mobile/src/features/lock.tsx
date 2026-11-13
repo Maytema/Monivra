@@ -68,7 +68,10 @@ function LockScreen() {
     if (prompting || !wanted) return;
     prompting = true;
     try {
-      if (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) unlock();
+      const result = await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"));
+      if (result === "ok") unlock();
+      else if (result === "lockout") toast(t.t("Too many fingerprint attempts. Use your PIN."));
+      else if (result === "failed") toast(t.t("Fingerprint or face could not be used. Use your PIN."));
     } finally {
       prompting = false;
     }

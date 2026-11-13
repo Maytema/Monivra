@@ -27,12 +27,17 @@ export async function biometricAvailable(): Promise<boolean> {
   }
 }
 
-export async function biometricUnlock(prompt: string, cancel: string): Promise<boolean> {
+// "ok", "cancelled" (the person chose the PIN, or the screen went away), "lockout" (too many wrong attempts,
+// the system blocks the sensor for a while) or "failed" (the sensor could not be used).
+export type BiometricResult = "ok" | "cancelled" | "lockout" | "failed";
+export async function biometricUnlock(prompt: string, cancel: string): Promise<BiometricResult> {
   try {
     const result = await LocalAuthentication.authenticateAsync({ promptMessage: prompt, cancelLabel: cancel, disableDeviceFallback: true });
-    return result.success;
+    if (result.success) return "ok";
+    if (result.error === "lockout") return "lockout";
+    return ["user_cancel", "system_cancel", "app_cancel", "user_fallback"].includes(result.error) ? "cancelled" : "failed";
   } catch {
-    return false;
+    return "failed";
   }
 }
 

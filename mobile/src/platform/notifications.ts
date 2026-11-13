@@ -22,6 +22,13 @@ export async function notificationsAllowed(ask: boolean): Promise<boolean> {
   return answer.granted;
 }
 
+// What the system says about notifications for this application: allowed, not asked yet, or blocked.
+export async function notificationState(): Promise<"granted" | "default" | "denied"> {
+  const current = await Notifications.getPermissionsAsync();
+  if (current.granted) return "granted";
+  return current.canAskAgain ? "default" : "denied";
+}
+
 function text(data: LedgerData, r: PlannedReminder): { title: string; body: string } {
   const t = translator(data.settings.language);
   if (r.kind === "periodic" || !r.item) return { title: "Monivra", body: t.t("Enter today’s operations") };

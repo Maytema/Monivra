@@ -18,7 +18,7 @@ checklists):
    row of the matrix; the old crawl produces the other. A person (or a script for plain layout) compares them.
    A mismatch is fixed or written down as accepted.
 4. **Texts.** Every English key of `js/i18n/ru.js` is either present in the native source or listed as dropped
-   (browser-only). Checked by a script (see MIGRATION_STATUS: 172 left to sort).
+   (browser-only). Checked by a script (`node tools/parity/texts-by-screen.mjs` writes PARITY_TEXTS.md: per screen file, the texts the native source lacks).
 
 Progress is counted in finished vertical slices (a whole flow such as "create a scheduled payment, see it,
 open it, skip it"), not in files or lines. Line counts mean nothing for equivalence.

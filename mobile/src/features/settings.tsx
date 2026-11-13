@@ -1,7 +1,7 @@
 // Settings (js/screens/settings.js, more/settings-pages.js): the list of sections, and under it the pages of
 // formatting, styles and elements, notifications, security, privacy, backups and rates. One route shows
 // a page by its name; the pages are described here as a table, as in the first application.
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -10,7 +10,7 @@ import { formatNumber, NUMBER_FORMATS } from "../domain/money.ts";
 import type { Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { biometricAvailable, biometricUnlock } from "../platform/lock.ts";
-import { notificationsAllowed, sendTestNotification } from "../platform/notifications.ts";
+import { notificationsAllowed, notificationState, sendTestNotification } from "../platform/notifications.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
@@ -167,10 +167,21 @@ function StatsSettings() {
   );
 }
 
+const NOTIFICATION_STATES = {
+  granted: "Allowed: reminders of scheduled payments come as notifications of the device, also when the app is closed.",
+  default: "Not asked yet: allow notifications when you switch them on.",
+  denied: "Blocked in the Android settings: there will be no reminders. Allow notifications for Monivra in the Android settings to get them.",
+} as const;
+
 // ---- Notifications, security, privacy -----------------------------------------------------------------
 function Notifications() {
   const { s, set } = useSetting();
   const t = useT();
+  // What the system lets the application do (js/screens/more/settings-pages.js NOTIFICATION_STATES).
+  const [state, setState] = useState<"granted" | "default" | "denied" | null>(null);
+  useEffect(() => {
+    void notificationState().then(setState).catch(() => setState(null));
+  }, [s.notifications]);
   return (
     <>
       <SwitchRow
@@ -183,6 +194,7 @@ function Notifications() {
           else showInfo("Allow notifications for Monivra in the system settings.", "Notifications are not allowed");
         }}
       />
+      {state ? <Footnote>{NOTIFICATION_STATES[state]}</Footnote> : null}
       <Switch label="Periodic reminders" k="periodic" />
       <SettingRow title="Time" caption={timeLabel(s.notificationTime, t.locale)} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} />
       <OptionsRow label="Frequency" k="notificationFrequency" options={[["Every day", "Every day"], ["Weekdays", "Weekdays"], ["Weekends", "Weekends"]]} />
@@ -217,7 +229,7 @@ function Security() {
           if (!pinOn) return toast(t.t("Set a PIN first"));
           if (!(await biometricAvailable())) return toast(t.t("Set up a fingerprint or face in your phone settings first"));
           // Switching it on needs one successful check, so a person who cannot use it is not locked out.
-          if (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) set({ biometric: true });
+          if ((await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) === "ok") set({ biometric: true });
         }}
       />
       <Switch label="Lock after leaving" k="relock" />
