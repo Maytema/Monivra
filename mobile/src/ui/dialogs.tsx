@@ -23,7 +23,7 @@ export function DialogActions({ children }: { children: ReactNode }) {
 // The confirmation of the first application (ui/dialogs.js `confirmAction`): a warning sign, "Are you
 // sure?", what will happen, and two buttons one under the other — the action (red when it deletes) and
 // Cancel.
-function Confirm({ title, yes, danger, onYes, message, makeBackup }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string; makeBackup?: () => boolean }) {
+function Confirm({ title, yes, danger, onYes, message, makeBackup, heading }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string; makeBackup?: () => boolean; heading?: string }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
@@ -51,9 +51,9 @@ function Confirm({ title, yes, danger, onYes, message, makeBackup }: { title: st
   return (
     <View>
       <View style={{ alignItems: "center" }}>
-        <Icon name="warning" size={32} color={p.negative} />
+        <Icon name={heading ? "info" : "warning"} size={32} color={heading ? p.positive : p.negative} />
       </View>
-      <Text style={{ color: p.ink, fontSize: 22, textAlign: "center", marginTop: 10, marginBottom: 10 }}>{t.t("Are you sure?")}</Text>
+      <Text style={{ color: p.ink, fontSize: 22, textAlign: "center", marginTop: 10, marginBottom: 10 }}>{t.t(heading ?? "Are you sure?")}</Text>
       <Text style={{ color: p.ink, fontSize: 15, lineHeight: 21, textAlign: "center" }}>{t.t(title)}</Text>
       {message ? <Text style={{ color: p.inkSoft, fontSize: 14, lineHeight: 20, textAlign: "center", marginTop: 8 }}>{message}</Text> : null}
       {makeBackup ? (
@@ -78,7 +78,11 @@ function Confirm({ title, yes, danger, onYes, message, makeBackup }: { title: st
 export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK", message?: string, makeBackup?: () => boolean): number =>
   sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} message={message} makeBackup={makeBackup} />, "dialog");
 
-// A message with OK (ui/dialogs.js showInfo).
+// A question that is not a warning (js confirmAction with tone "info"): a green notice icon and its own heading.
+export const confirmInfo = (heading: string, text: string, onYes: () => void, yes = "OK"): number =>
+  sheets.open(<Confirm heading={heading} title={text} yes={yes} danger={false} onYes={onYes} />, "dialog");
+
+// A message with OK (ui/dialogs.tsx showInfo).
 function Info({ text, title }: { text: string; title?: string }) {
   const p = usePalette();
   const t = useT();

@@ -13,7 +13,7 @@ import { showError, useCommand, useLedger, usePalette, useT } from "../ui/app-co
 import { appStore } from "../ui/app-context.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { openCustomize } from "../ui/customize-sheet.tsx";
-import { confirmDialog, DialogActions, DialogTitle, promptDialog, toast } from "../ui/dialogs.tsx";
+import { confirmDialog, confirmInfo, DialogActions, DialogTitle, promptDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText } from "../ui/form.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { ToneBadge } from "../ui/parts.tsx";
@@ -187,8 +187,8 @@ export function CategoryEditor() {
   const scheduleSub = (sub: string, mode: Mode, to?: string) => {
     const act = () => plan({ id: sub, mode, ...(to ? { target: to } : {}) });
     const name = categoryById(data, to)?.name ?? "";
-    if (mode === "mergeSub") confirmDialog("Merge into a subcategory?", act, false, "Schedule", t.t('All operations of this subcategory will be moved to "{name}", and this subcategory will be deleted.\n\nThe change will be applied after you tap "Save".', { name }));
-    else if (mode === "promoteSub") confirmDialog("Convert to a category?", act, false, "Schedule", t.t('This subcategory will become a standalone category, and its operations will be re-pointed to it directly.\n\nThe change will be applied after you tap "Save".'));
+    if (mode === "mergeSub") confirmInfo("Merge into a subcategory?", t.t('All operations of this subcategory will be moved to "{name}", and this subcategory will be deleted.\n\nThe change will be applied after you tap "Save".', { name }), act, "Schedule");
+    else if (mode === "promoteSub") confirmInfo("Convert to a category?", t.t('This subcategory will become a standalone category, and its operations will be re-pointed to it directly.\n\nThe change will be applied after you tap "Save".'), act, "Schedule");
     else act();
   };
 

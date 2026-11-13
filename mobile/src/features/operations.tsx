@@ -89,15 +89,18 @@ export function OperationsScreen() {
   const chosen = here.filter((id) => selected.includes(id)).length;
   const all = !!here.length && chosen === here.length;
 
-  const removeSelected = () => {
-    if (!selected.length) return;
+  // The three actions of the selection bar work on what is selected; with nothing selected they say so.
+  const withSelection = (action: () => void) => () => (selected.length ? action() : toast("Select operations"));
+  const removeSelected = withSelection(() => {
     confirmDialog("The selected operations will be permanently deleted. Recovery will only be possible if a backup is available.", () => run((tx) => (deleteOperations(tx, selected), true)) && (setSelected([]), setSelection(false)), true, "Delete", t.t("Balances of the accounts change by them."), () => { try { appStore().createBackup("safety"); return true; } catch { return false; } });
-  };
-  const changeDate = () =>
+  });
+  const changeDate = withSelection(() =>
     openCalendar(systemClock.today(), (date) => {
       const planned = run((tx, env) => applyBulkChanges(tx, selected, { ...emptyBulkChanges(), date }, env));
       if (planned) toast("Saved as a scheduled payment");
-    });
+    }),
+  );
+  const openMore = withSelection(() => openBulkEdit(selected, () => (setSelected([]), setSelection(false))));
 
   const header = selection ? (
     <View style={{ paddingTop: insets.top + 12, paddingBottom: 8, paddingHorizontal: 12, flexDirection: "row", alignItems: "center", backgroundColor: p.bg }}>
@@ -155,7 +158,7 @@ export function OperationsScreen() {
       />
       {selection ? (
         <View style={{ flexDirection: "row", gap: 12, paddingTop: 12, paddingHorizontal: 16, paddingBottom: Math.max(chrome.navMinBottom, insets.bottom), backgroundColor: p.nav }}>
-          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["circleUp", "More", () => selected.length && openBulkEdit(selected, () => (setSelected([]), setSelection(false)))]] as const).map(([icon, label, action]) => (
+          {([["trash", "Delete", removeSelected], ["calendar", "Date", changeDate], ["circleUp", "More", openMore]] as const).map(([icon, label, action]) => (
             <Pressable key={label} accessibilityRole="button" onPress={action} style={({ pressed }) => ({ flex: 1, minHeight: 56, borderRadius: 14, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: pressed ? p.soft : p.key })}>
               <Icon name={icon} size={24} color={p.ink} />
               <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500" }}>{t.t(label)}</Text>

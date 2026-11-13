@@ -16,11 +16,12 @@ import { DomainError } from "../../domain/errors.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";
 import { openCalendar } from "../../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../../ui/currency-sheet.tsx";
-import { confirmDialog, notice, promptDialog, toast } from "../../ui/dialogs.tsx";
+import { confirmDialog, confirmInfo, notice, promptDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
 import { spotlight } from "../../ui/spotlight.tsx";
 import { timeLabel } from "../../ui/time-dialog.tsx";
+import { askAboutMissed } from "../due-payments.tsx";
 import { operationShown, showOperations, showScheduled } from "../reveal.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
@@ -605,15 +606,19 @@ function EditorSheet({ session }: { session: EditorSession }) {
         if (!result) return;
         close();
         const { saved, planned } = result;
+        // A scheduled payment that is already due (an edited one with a past date) is added at once.
+        const posted = session.scheduled ? appStore().postDueNow() : [];
+        if (session.scheduled) askAboutMissed();
         // Where it went: on the scheduled payments the row is lit; elsewhere a notice leads to it.
-        if (planned || session.scheduled) {
+        if (posted.length) notice("Added to the operations", { icon: "circleCheck", tone: "positive", onTap: () => showOperations(posted) });
+        else if (planned || session.scheduled) {
           if (session.scheduled) spotlight([saved.id]);
           else notice("Payment scheduled", { icon: "calendar", tone: "accent", level: "important", detail: t.t("Will be added on {date}", { date: t.day(saved.date, true) }), onTap: () => showScheduled(saved.id) });
         } else if (operationShown(saved)) spotlight([saved.id]);
         else notice("Operation saved", { icon: "circleCheck", tone: "positive", onTap: () => showOperations([saved.id]) });
       };
       if (confirmedDate.current !== op.date && isFarDate(op.date, env.clock.today())) {
-        confirmDialog(t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), false, "Save");
+        confirmInfo("Check the date", t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), "Save");
       } else store();
     } catch (error) {
       if (error instanceof DomainError) toast(t.t(error.message, error.params));
