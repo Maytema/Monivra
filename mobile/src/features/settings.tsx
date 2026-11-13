@@ -182,7 +182,7 @@ function Notifications() {
         }}
       />
       <Switch label="Periodic reminders" k="periodic" />
-      <SettingRow title="Time" caption={s.notificationTime} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} chevron={false} />
+      <SettingRow title="Time" caption={s.notificationTime} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} />
       <OptionsRow label="Frequency" k="notificationFrequency" options={[["Every day", "Every day"], ["Weekdays", "Weekdays"], ["Weekends", "Weekends"]]} />
       <SettingRow
         title="Test notification"
