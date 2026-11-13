@@ -135,6 +135,24 @@ for page in "Settings" "Scheduled payments" "Budgets"; do
   shot "15-$(echo "$page" | tr ' ' '-')" 3
   back
 done
+# A scheduled payment: created through the dialog, then opened (the sheet has Delete, Duplicate, Skip, Add now
+# in two columns), and the page with a payment (the "Add" button, the details under the row).
+tap "Scheduled payments"
+tap "Create"
+shot 15a-schedule-create 2
+tap "Complete"
+shot 15b-schedule-menu 2
+tap "Food"
+for k in 3 7; do tap "$k"; done
+tap "Save operation"
+shot 15c-schedule-saved 3
+tap "Food"
+shot 15d-schedule-opened 3
+adb shell input swipe 540 2000 540 1000 300
+shot 15e-schedule-opened-end 2
+back
+back
+tap "More"
 tap "Settings"
 for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Security" "Privacy"; do
   tap "$page"
