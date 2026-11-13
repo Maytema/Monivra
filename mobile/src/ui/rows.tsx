@@ -26,10 +26,10 @@ export function SwitchRow({ label, hint, value, onChange }: { label: string; hin
   const p = usePalette();
   const t = useT();
   return (
-    <Pressable accessibilityRole="switch" accessibilityState={{ checked: value }} onPress={() => onChange(!value)} style={{ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 64, paddingVertical: 10, paddingHorizontal: 18 }}>
+    <Pressable accessibilityRole="switch" accessibilityState={{ checked: value }} onPress={() => onChange(!value)} style={{ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 62, paddingVertical: 17, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
       <View style={{ flex: 1 }}>
-        <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
-        {hint ? <Text style={{ color: p.muted, fontSize: 13, lineHeight: 18, marginTop: 2 }}>{t.t(hint)}</Text> : null}
+        <Text style={{ color: p.ink, fontSize: 16, lineHeight: 22 }}>{t.t(label)}</Text>
+        {hint ? <Text style={{ color: p.muted, fontSize: 13, lineHeight: 18, marginTop: 6 }}>{t.t(hint)}</Text> : null}
       </View>
       <Toggle value={value} onChange={onChange} />
     </Pressable>

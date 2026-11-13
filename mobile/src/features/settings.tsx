@@ -10,10 +10,10 @@ import type { Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { biometricAvailable, biometricUnlock } from "../platform/lock.ts";
 import { notificationsAllowed } from "../platform/notifications.ts";
-import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
-import { DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
+import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
 import { THEME_COLORS } from "../ui/icon-groups.ts";
 import { Icon } from "../ui/kit.tsx";
 import { openMonthStart } from "../ui/period-dialog.tsx";
@@ -88,11 +88,11 @@ function Formatting() {
   const money = useMoney();
   return (
     <>
-      <SettingRow title="Main currency" caption={s.currency} onPress={() => openCurrencySheet(s.currency, (code) => void run((tx) => (changeMainCurrency(tx, code), true)))} chevron={false} />
-      <SettingRow title="Currency format" caption={money(12345678900, s.currency)} onPress={() => sheets.open(<CurrencyFormat />, "sheet")} chevron={false} />
+      <SettingRow title="Main currency" caption={s.currency} onPress={() => openCurrencySheet(s.currency, (code) => void run((tx) => (changeMainCurrency(tx, code), true)))} />
+      <SettingRow title="Currency format" caption={money(12345678900, s.currency)} onPress={() => sheets.open(<CurrencyFormat />, "sheet")} />
       <Switch label="Hide cents" k="hideCents" hint="Amounts are shown rounded to whole units" />
       <OptionsRow label="Date format" k="dateFormat" options={[["month", "Month | day | year"], ["day", "Day | month | year"], ["iso", "Year | month | day"]]} />
-      <SettingRow title="Start of month" caption={String(s.monthStart)} onPress={openMonthStart} chevron={false} />
+      <SettingRow title="Start of month" caption={String(s.monthStart)} onPress={openMonthStart} />
       <OptionsRow label="First day of week" k="weekStart" options={[[1, "Monday"], [2, "Tuesday"], [3, "Wednesday"], [4, "Thursday"], [5, "Friday"], [6, "Saturday"], [0, "Sunday"]]} />
     </>
   );
@@ -232,10 +232,21 @@ function Privacy() {
 }
 
 function Backups() {
+  const t = useT();
   return (
     <>
-      <SettingRow title="Data file" caption="Save and restore all data, CSV export and import" onPress={() => router.push("/data")} />
+      <SettingRow title="Saved backups" caption="Create and restore data from automatic local copies" onPress={() => router.push({ pathname: "/data", params: { page: "backups" } })} />
       <Switch label="Save locally" k="autoBackup" hint="Copy the data locally once a day. This increases the size of the data on the device. Only the latest copies are stored." />
+      <SettingRow
+        title="Delete all local data copies"
+        caption="Delete all local backups from storage. Deleted data cannot be restored."
+        chevron={false}
+        onPress={() =>
+          appStore().backups().length
+            ? confirmDialog("Delete backups", () => (appStore().deleteData("backups"), toast(t.t("Data deleted"))), true, "Delete", t.t("The backups kept inside the app will be deleted. Your data stays."))
+            : toast(t.t("There is nothing to delete"))
+        }
+      />
     </>
   );
 }
