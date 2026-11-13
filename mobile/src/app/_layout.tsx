@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { appStore, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
-import { probeEngine } from "../platform/perf.ts";
+import { probeEngine, watchStalls } from "../platform/perf.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { askAboutMissed } from "../features/due-payments.tsx";
@@ -132,6 +132,8 @@ function Root() {
 }
 
 export default function Layout() {
+  // Only in the build made for the speed check: every long pause of the JavaScript thread is written down.
+  useEffect(watchStalls, []);
   return (
     <SafeAreaProvider>
       <Root />
