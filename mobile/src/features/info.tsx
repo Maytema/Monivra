@@ -101,15 +101,20 @@ function SupportTopic({ topic }: { topic: (typeof SUPPORT)[string] }) {
 function About() {
   const p = usePalette();
   const t = useT();
+  const text = { color: p.inkSoft, fontSize: 16, lineHeight: 24 } as const;
+  // As in the reference: the picture takes the width and about two fifths of the height, the place under it,
+  // then the text, left aligned.
   return (
-    <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 22, paddingTop: 8, paddingBottom: 32 }}>
-      <AboutArt />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 12, marginBottom: 26 }}>
-        <Icon name="pin" size={22} color={p.accentInk} />
+    <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 32 }}>
+      <View style={{ marginHorizontal: -8 }}>
+        <AboutArt />
+      </View>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 8, marginBottom: 22 }}>
+        <Icon name="pin" size={22} color={p.ink} />
         <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Bishkek, Kyrgyzstan")}</Text>
       </View>
-      <Text style={{ color: p.inkSoft, fontSize: 16, lineHeight: 24, textAlign: "center", marginBottom: 14 }}>{t.t("The {app} team works every day to make the app convenient and useful for you.", { app: "Monivra" })}</Text>
-      <Text style={{ color: p.inkSoft, fontSize: 16, lineHeight: 24, textAlign: "center" }}>{t.t("We hope our work will help you manage your money better and reach your goals!")}</Text>
+      <Text style={{ ...text, marginBottom: 18 }}>{t.t("The {app} team works every day to make the app convenient and useful for you.", { app: "Monivra" })}</Text>
+      <Text style={text}>{t.t("We hope our work will help you manage your money better and reach your goals!")}</Text>
     </View>
   );
 }
