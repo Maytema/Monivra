@@ -264,7 +264,7 @@ function Backups() {
         chevron={false}
         onPress={() =>
           appStore().backups().length
-            ? confirmDialog("Delete backups", () => (appStore().deleteData("backups"), toast(t.t("Data deleted"))), true, "Delete", t.t("The backups kept inside the app will be deleted. Your data stays."))
+            ? confirmDialog("Delete all saved backups? They cannot be restored.", () => (appStore().deleteData("backups"), toast(t.t("Backups deleted"))), false, "Delete")
             : toast(t.t("There is nothing to delete"))
         }
       />

@@ -19,6 +19,7 @@ checklists):
    A mismatch is fixed or written down as accepted.
 4. **Texts.** Every English key of `js/i18n/ru.js` is either present in the native source or listed as dropped
    (browser-only). Checked by a script (`node tools/parity/texts-by-screen.mjs` writes PARITY_TEXTS.md: per screen file, the texts the native source lacks).
+   Windows and pages: `node tools/parity/windows.mjs > docs/architecture/PARITY_WINDOWS.md` lists every `openSheet`, `confirmAction` and `openPage` call site of the first application (115), with hand-checked notes in `tools/parity/windows-notes.md`.
 
 Progress is counted in finished vertical slices (a whole flow such as "create a scheduled payment, see it,
 open it, skip it"), not in files or lines. Line counts mean nothing for equivalence.
