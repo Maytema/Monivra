@@ -118,15 +118,20 @@ shrinking with BitmapFactory), linked by Expo autolinking.
 
 1. Emulator comparison of every screen of the brief with the old crawl (`tools/tour/crawl-old.mjs`) — the
    tour of `scripts/emulator-smoke.sh` now covers the Data section and every Settings page.
-2. **The local module `mobile/modules/monivra-native` is not yet linked**: builds 41–42 list no
-   `monivra-native` under "Using expo modules", so the clip, Print and the privacy screen stay hidden
-   (`requireOptionalNativeModule` returns null; nothing breaks). Next: read docs.expo.dev/modules/autolinking
-   for SDK 58 (how `nativeModulesDir` local modules are found; `package.json` was added in the module and
-   `expo.autolinking.nativeModulesDir` in mobile/package.json) and fix until the list shows it; then verify
-   camera, gallery and the print dialog on the emulator.
-2a. Long press after swipes (and maybe taps): the emulator log shows "row press in" without "row long
-   press" after a swipe. Temporary `[gesture]` logs in `ui/pager.tsx` and `features/operation-row.tsx`
-   print where a press lands and where the row is measured — compare them in `js-log.txt` of the next build;
-   suspicion: the measured position of the row is stale after the native-driven pager animation, so
-   Pressable treats the finger as outside the row. Remove the logs once fixed.
+2. **Local module `monivra-native`**: root cause found 2026-11-13 — `mobile/.gitignore` had `android/`, which
+   also hid `modules/monivra-native/android/`, so CI never received the Kotlin code. Now `/android/` only.
+   Check in the next build: "Using expo modules" lists `monivra-native`, the Kotlin compiles (first time it is
+   built in CI — fix compile errors if any), then verify clip/photo menu (16c), Print and the privacy screen.
+2a. Long press after swipes: measured on emulator — after a swipe the row's measured x was -395 while the
+   touch was at 206 (stale layout after the native-driven pager animation), so Pressable cancelled the press.
+   Rows now use `pressRetentionOffset={WIDE_RETENTION}` (`ui/pager.tsx`); logs removed. Confirm in the next
+   build's steps.txt ("long press after swipes" must say working).
+2b. Owner's list of 2026-11-13 (film `1000033195/6`, photo of the lock screen): done in code, to be compared
+   on screenshots of the next build — no fill on plain touch (accounts, categories, operations; only the long
+   press selects), selection look (pink full-width row, accent square with a tick), lock screen (big keys, grey
+   dots, dollar sign, new fingerprint icon), wallet tab icon filled, About page picture/text, fee help and
+   reminder help dialogs, bulk edit rebuilt (clear crosses, comment dialog, transfer role, tags add/remove).
+   Still to do from the film: bottom-bar fill animation timing check, "Select operations" bar details.
+   Text parity: `scratchpad` check listed ~190 old strings absent from the new source; most are browser-only
+   or accessibility labels; the real explanations were restored (calculation, reminder, bulk edit).
 3. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
