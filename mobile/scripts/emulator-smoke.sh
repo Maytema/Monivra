@@ -185,15 +185,16 @@ more_page() { # page, shot name
 }
 tap "More"
 for pair in "Profile:15p-profile" "Shared access:15p-shared-access" "Instructions:15p-instructions" "Support:15p-support" "About our team:15p-about" "Privacy policy:15p-privacy-policy" "Terms of use:15p-terms"; do
-  more_page "${pair%%:*}" "${pair##*:}"
-  if [ "${pair%%:*}" = "Instructions" ]; then
-    tap "Operations"; shot 15p-instructions-operations 2; back
-  fi
-  if [ "${pair%%:*}" = "Support" ]; then
-    tap "Report a bug"; shot 15p-support-bug 2; back
-  fi
+  name="${pair%%:*}"
+  # The last entries of the list are below the first screen.
+  case "$name" in "Privacy policy"|"Terms of use") adb shell input swipe 540 1800 540 700 300; sleep 1;; esac
+  tap "$name" || continue
+  shot "${pair##*:}" 3
+  if [ "$name" = "Instructions" ]; then tap "Operations" && { shot 15p-instructions-operations 2; back; }; fi
+  if [ "$name" = "Support" ]; then tap "Report a bug" && { shot 15p-support-bug 2; back; }; fi
   back
 done
+adb shell input swipe 540 700 540 1800 300; sleep 1
 tap "Settings"
 for i in 1 2 3; do adb shell input swipe 540 1800 540 700 300; sleep 1; done
 tap "Exchange rates"

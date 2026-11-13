@@ -2,6 +2,7 @@
 // guides, support topics, about, privacy and terms. Texts that spoke of a browser say "device" here.
 import { useState, type ReactNode } from "react";
 import { Linking, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable } from "../ui/pressable.tsx";
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 import { Stack, router, useLocalSearchParams } from "expo-router";
@@ -70,18 +71,29 @@ function Support() {
   );
 }
 
+// A support topic (js/screens/more/support.js `supportTopicPage`): the text, under a line what will happen, and
+// the button that stays at the bottom.
 function SupportTopic({ topic }: { topic: (typeof SUPPORT)[string] }) {
   const t = useT();
+  const p = usePalette();
+  const insets = useSafeAreaInsets();
+  const note = { color: p.inkSoft, fontSize: 13, lineHeight: 20, paddingBottom: 8 } as const;
   return (
-    <Body>
-      {topic.text.map((x) => (
-        <Para key={x}>{x}</Para>
-      ))}
-      {topic.instructions ? <Button label="View instructions" kind="outline" onPress={page("instructions")} /> : null}
-      <Para>You will be redirected to the email sending application.</Para>
-      <Para>A correctly completed letter will help process your request faster.</Para>
-      <Button label="Continue" onPress={() => void Linking.openURL(`mailto:?subject=${encodeURIComponent(t.t(topic.title))}`)} />
-    </Body>
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 18, paddingTop: 12 }}>
+        {topic.text.map((x) => (
+          <Para key={x}>{x}</Para>
+        ))}
+        {topic.instructions ? <Button label="View instructions" kind="outline" onPress={page("instructions")} /> : null}
+        <View style={{ marginTop: 12, paddingTop: 16, borderTopWidth: 1, borderTopColor: p.line }}>
+          <Text style={note}>{t.t("You will be redirected to the email sending application.")}</Text>
+          <Text style={note}>{t.t("A correctly completed letter will help process your request faster.")}</Text>
+        </View>
+      </ScrollView>
+      <View style={{ paddingHorizontal: 18, paddingTop: 8, paddingBottom: Math.max(insets.bottom, 12) + 4 }}>
+        <Button label="Continue" onPress={() => void Linking.openURL(`mailto:?subject=${encodeURIComponent(t.t(topic.title))}`)} />
+      </View>
+    </View>
   );
 }
 
@@ -188,8 +200,10 @@ function Shared() {
   const t = useT();
   return (
     <View style={{ alignItems: "center", gap: 14, paddingTop: 50, paddingBottom: 20, paddingHorizontal: 24 }}>
-      <SoonPill />
-      <Icon name="user" size={52} color={p.ink} />
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+        <SoonPill />
+        <Icon name="user" size={64} color={p.accentInk} />
+      </View>
       <Text style={{ color: p.ink, fontSize: 15, textAlign: "center" }}>{t.t("Shared access will be available after sign-in is added.")}</Text>
     </View>
   );
@@ -337,7 +351,7 @@ function resolve(kind: string): { title: string; body: ReactNode; own?: boolean 
     return g ? { title: g.title, body: <Body>{g.sections.map(([h, text]) => <View key={h}><Heading>{h}</Heading><Para>{text}</Para></View>)}</Body> } : null;
   }
   const topic = SUPPORT[kind];
-  if (topic) return { title: topic.title, body: <SupportTopic topic={topic} /> };
+  if (topic) return { title: topic.title, body: <SupportTopic topic={topic} />, own: true };
   switch (kind) {
     case "instructions": return { title: "Instructions", body: <Instructions /> };
     case "support": return { title: "Support", body: <Support /> };
