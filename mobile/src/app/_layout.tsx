@@ -105,8 +105,9 @@ function Ready() {
       <SheetHost />
       </KeyboardAvoidingView>
       <NoticeHost />
-      <ToastHost />
       </LockGate>
+      {/* Above the lock screen too: it says "Incorrect PIN" in a toast. */}
+      <ToastHost />
     </>
   );
 }

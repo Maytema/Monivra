@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Animated, AppState as SystemAppState, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { isValidPin, lockoutSeconds, makePin, pinMatches } from "../domain/pin.ts";
+import { lockoutSeconds, makePin, pinMatches } from "../domain/pin.ts";
 import { biometricAvailable, biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
 import { appStore, useLedger, usePalette, useT } from "../ui/app-context.tsx";
-import { Button, Icon } from "../ui/kit.tsx";
+import { Icon } from "../ui/kit.tsx";
 import { SwitchRow } from "../ui/rows.tsx";
-import { Panel } from "../ui/pickers.tsx";
-import { mix, space } from "../ui/theme.ts";
-import { toast } from "../ui/dialogs.tsx";
+import { mix } from "../ui/theme.ts";
+import { DialogTitle, toast } from "../ui/dialogs.tsx";
+import { DigitPad } from "../ui/number-sheet.tsx";
+import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
 // ---- Lock state (lives while the application runs) ------------------------------------------------
 let lock = { locked: true, failures: 0, waitUntil: 0 };
@@ -27,7 +28,7 @@ const useLock = () =>
 
 const pinSet = (pin: unknown): boolean => !!pin && typeof pin === "object";
 
-// Shows the lock screen instead of the application while it is locked.
+// Shows the lock screen over the application while it is locked.
 export function LockGate({ children }: { children: ReactNode }) {
   const data = useLedger();
   const state = useLock();
@@ -40,8 +41,21 @@ export function LockGate({ children }: { children: ReactNode }) {
     });
     return () => sub.remove();
   }, [pin, relock, lockDelay]);
-  if (!pinSet(pin) || !state.locked) return <>{children}</>;
-  return <LockScreen />;
+  const locked = pinSet(pin) && state.locked;
+  // The application stays mounted under the lock screen, so after the PIN the person is on the same screen
+  // (the first application drew the lock screen over it); it is hidden from touch and from screen readers.
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }} pointerEvents={locked ? "none" : "auto"} importantForAccessibility={locked ? "no-hide-descendants" : "auto"} accessibilityElementsHidden={locked}>
+        {children}
+      </View>
+      {locked ? (
+        <View style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}>
+          <LockScreen />
+        </View>
+      ) : null}
+    </View>
+  );
 }
 
 // The prompt of the fingerprint shows by itself once each time the screen locks; after that only the
@@ -229,71 +243,88 @@ export function PinPad({ length, value, onChange, disabled = false, failed = fal
   );
 }
 
-// Setting, changing or removing the PIN (from Settings).
-export function PinSettings() {
-  const data = useLedger();
+// Setting or removing the PIN (js/screens/more/settings-pages.js pinSetup): one bottom sheet like the amount keypad.
+// The fields on top show the typed digits as dots, the keys below type into the active field (tap a field to
+// choose it). Only digits, at most six; a wrong count or a wrong confirmation is said at once.
+const PIN_LENGTHS = [4, 6];
+
+function PinField({ label, hint, dots, active, invalid, onPress }: { label: string; hint?: string; dots: number; active: boolean; invalid: boolean; onPress: () => void }) {
+  const p = usePalette();
   const t = useT();
-  const [step, setStep] = useState<"off" | "new" | "repeat" | "check" | null>(null);
-  const [length, setLength] = useState<4 | 6>(4);
-  const [first, setFirst] = useState("");
-  const [typed, setTyped] = useState("");
-  const [error, setError] = useState("");
-  const on = pinSet(data.settings.pin);
-  const close = () => (setStep(null), setTyped(""), setFirst(""), setError(""));
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} accessibilityState={{ selected: active }} onPress={onPress} style={{ minHeight: 64, justifyContent: "center", paddingHorizontal: 16, marginTop: 10, borderRadius: 16, borderWidth: active || invalid ? 2 : 1, borderColor: invalid ? p.negative : active ? p.accent : p.line, backgroundColor: p.bg }}>
+      <Text style={{ color: p.muted, fontSize: 13 }}>{t.t(label)}</Text>
+      {dots ? <Text style={{ color: p.ink, fontSize: 22, letterSpacing: 3 }}>{"•".repeat(dots)}</Text> : hint ? <Text style={{ color: p.muted, fontSize: 14 }}>{t.t(hint)}</Text> : <Text style={{ color: p.ink, fontSize: 20 }}>—</Text>}
+    </Pressable>
+  );
+}
+
+function PinSetup({ remove, length }: { remove: boolean; length: number }) {
+  const p = usePalette();
+  const t = useT();
+  const close = useCloseLayer();
+  const [values, setValues] = useState({ first: "", second: "" });
+  const [active, setActive] = useState<"first" | "second">("first");
+  const [tried, setTried] = useState(false); // the check was pressed with a first PIN of a wrong length
+  const size = remove ? length : Math.max(...PIN_LENGTHS);
+  const { first, second } = values;
+  const problem = remove
+    ? ""
+    : first && !PIN_LENGTHS.includes(first.length) && (tried || first.length === 5)
+      ? "Enter 4 or 6 digits"
+      : second && second.length >= first.length && second !== first
+        ? "PINs do not match"
+        : "";
   const save = (settings: Record<string, unknown>) => appStore().run((tx) => (tx.setSettings(settings), true));
-  const typedAll = async (v: string) => {
-    if (step === "new") {
-      if (!isValidPin(v)) return setError(t.t("Only 4 or 6 digits"));
-      setFirst(v);
-      setTyped("");
-      setStep("repeat");
-    } else if (step === "repeat") {
-      if (v !== first) {
-        setError(t.t("The PINs do not match"));
-        setTyped("");
-        setStep("new");
-        return;
-      }
-      await writePinRecord(makePin(v, randomSalt()));
-      save({ pin: { v: 3, length: v.length } });
-      setLock({ locked: false, failures: 0 });
-      close();
-    } else if (step === "check") {
-      if (!pinMatches(await readPinRecord(), v)) {
-        setError(t.t("Wrong PIN"));
-        setTyped("");
-        return;
-      }
+  const finish = async () => {
+    if (remove) {
+      if (!pinMatches(await readPinRecord(), first)) return void toast(t.t("Incorrect PIN"));
       await writePinRecord(null);
       save({ pin: false, biometric: false });
-      close();
+    } else {
+      await writePinRecord(makePin(first, randomSalt()));
+      // A person who turns the lock on expects the application to lock when it is left, so a new PIN also
+      // switches that on.
+      save({ pin: { v: 3, length: first.length }, relock: true });
+      setLock({ locked: false, failures: 0 });
     }
+    close();
   };
-  const currentLength = on ? ((data.settings.pin as { length?: number }).length ?? 4) : 4;
-  const padLength = step === "check" ? currentLength : length;
+  const confirm = () => {
+    if (!remove && active === "first") {
+      if (!PIN_LENGTHS.includes(first.length)) return setTried(true);
+      return setActive("second");
+    }
+    if (!remove && second !== first) return;
+    if (remove && !first) return void toast(t.t("Enter 4 or 6 digits"));
+    void finish();
+  };
+  const press = (k: string) => {
+    const text = values[active];
+    const next = k === "⌫" ? text.slice(0, -1) : /^\d$/.test(k) && text.length < size ? text + k : text;
+    setValues({ ...values, [active]: next });
+    setTried(false);
+    // A full first PIN passes on to the confirmation by itself.
+    if (!remove && active === "first" && next.length === size) setActive("second");
+  };
   return (
-    <>
-      <SwitchRow label="PIN code" value={on} onChange={() => setStep(on ? "check" : "new")} />
-      <Panel visible={step !== null} title={step === "repeat" ? "Repeat the PIN" : step === "check" ? "Enter PIN" : "New PIN"} onClose={close}>
-        <View style={{ padding: space.l, gap: space.m, alignItems: "center" }}>
-          {step === "new" ? (
-            <View style={{ flexDirection: "row", gap: space.s }}>
-              <Button label="4 digits" kind={length === 4 ? "primary" : "outline"} onPress={() => (setLength(4), setTyped(""))} />
-              <Button label="6 digits" kind={length === 6 ? "primary" : "outline"} onPress={() => (setLength(6), setTyped(""))} />
-            </View>
-          ) : null}
-          {error ? <Text style={{ color: "#b93666" }}>{error}</Text> : null}
-          <PinPad
-            length={padLength}
-            value={typed}
-            onChange={(v) => {
-              setTyped(v);
-              setError("");
-              if (v.length === padLength) void typedAll(v);
-            }}
-          />
-        </View>
-      </Panel>
-    </>
+    <View>
+      <DialogTitle>{t.t(remove ? "Turn off PIN" : "Set PIN")}</DialogTitle>
+      <PinField label={remove ? "Current PIN" : "New PIN"} hint={remove ? undefined : "Enter 4 or 6 digits"} dots={first.length} active={active === "first"} invalid={!!first && problem === "Enter 4 or 6 digits"} onPress={() => setActive("first")} />
+      {remove ? null : <PinField label="Confirm PIN" hint="Enter 4 or 6 digits" dots={second.length} active={active === "second"} invalid={problem === "PINs do not match"} onPress={() => setActive("second")} />}
+      {problem ? <Text accessibilityRole="alert" style={{ color: p.negative, fontSize: 14, marginTop: 8 }}>{t.t(problem)}</Text> : null}
+      <View style={{ marginTop: 14 }}>
+        <DigitPad onKey={press} onConfirm={confirm} confirmLabel="Save" />
+      </View>
+      <Text style={{ color: p.muted, fontSize: 13, lineHeight: 19, marginTop: 12 }}>{t.t("The PIN only hides the screen; data on the device is not encrypted.")}</Text>
+    </View>
   );
+}
+
+// The switch of the PIN (Settings → Security).
+export function PinSettings() {
+  const data = useLedger();
+  const on = pinSet(data.settings.pin);
+  const length = on ? ((data.settings.pin as { length?: number }).length ?? 4) : 4;
+  return <SwitchRow label="PIN code" value={on} onChange={() => sheets.open(<PinSetup remove={on} length={length} />, "sheet")} />;
 }

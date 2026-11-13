@@ -179,6 +179,34 @@ for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Securi
     shot 15n-run-notification 1
     adb shell cmd statusbar collapse >/dev/null 2>&1
   fi
+  if [ "$page" = "Security" ]; then
+    # The PIN: set in the bottom sheet (new PIN, then confirmation), lock now, a wrong PIN, the right one (the
+    # screen under the lock must still be the Security page), then turn the PIN off again.
+    tap "PIN code" && {
+      shot 15q-pin-setup 2
+      for k in 1 2 3 4; do tap "$k"; done
+      tap "Save"
+      shot 15q2-pin-confirm 1
+      for k in 1 2 3 4; do tap "$k"; done
+      shot 15q3-pin-typed 1
+      tap "Save"
+      sleep 2
+      shot 15q4-pin-on 2
+      tap "Lock now" && {
+        shot 15q5-lock-screen 2
+        for k in 1 1 1 1; do tap "$k"; done
+        shot 15q6-wrong-pin 1
+        for k in 1 2 3 4; do tap "$k"; done
+        shot 15q7-unlocked 3
+        tap "PIN code" && {
+          shot 15q8-pin-turn-off 2
+          for k in 1 2 3 4; do tap "$k"; done
+          tap "Save"
+          shot 15q9-pin-off 2
+        }
+      }
+    }
+  fi
   back
 done
 back
