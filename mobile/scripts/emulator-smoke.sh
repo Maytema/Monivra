@@ -135,6 +135,18 @@ for page in "Settings" "Scheduled payments" "Budgets"; do
   shot "15-$(echo "$page" | tr ' ' '-')" 3
   back
 done
+# A budget: the form of a new one, its period and category choices.
+tap "Budgets"
+tap "Create a budget"
+shot 15f-budget-form 2
+tap "Monthly"
+shot 15g-budget-period 2
+back
+tap "All categories"
+shot 15h-budget-categories 2
+back
+back
+back
 # A scheduled payment: created through the dialog, then opened (the sheet has Delete, Duplicate, Skip, Add now
 # in two columns), and the page with a payment (the "Add" button, the details under the row).
 tap "Scheduled payments"
