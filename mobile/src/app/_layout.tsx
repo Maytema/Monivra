@@ -1,7 +1,7 @@
 // The root: opens the ledger, shows the first-start choice, and keeps scheduled payments and rates
 // up to date while the application is open (at start, when it comes back, and every minute).
 import { useEffect } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, AppState as SystemAppState, Text, View } from "react-native";
+import { ActivityIndicator, KeyboardAvoidingView, AppState as SystemAppState, View } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,6 +11,7 @@ import { probeEngine } from "../platform/perf.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { askAboutMissed } from "../features/due-payments.tsx";
+import { Recovery } from "../features/recovery.tsx";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
@@ -115,13 +116,7 @@ function Root() {
         <ActivityIndicator />
       </View>
     );
-  if (state.status === "failed")
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 24 }}>
-        <Text style={{ fontSize: 18, textAlign: "center" }}>The data could not be opened. Nothing was changed.</Text>
-        <Text style={{ marginTop: 12, color: "#6f6873", textAlign: "center" }}>{state.error}</Text>
-      </View>
-    );
+  if (state.status === "failed") return <Recovery error={state.error} tooNew={state.tooNew} />;
   if (state.status === "welcome") return <Welcome />;
   return <Ready />;
 }

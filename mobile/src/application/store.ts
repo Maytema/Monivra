@@ -3,7 +3,7 @@
 // (LedgerTx), is written to the database in one transaction, and only then becomes the new state —
 // so the screens never show something that was not stored.
 import { LedgerTx, applyChange, isEmptyChange } from "../domain/change.ts";
-import { createEmptyData, createStarterData, readDataFile, writeDataFile } from "../domain/datafile.ts";
+import { completeData, createEmptyData, createStarterData, findDataProblem, readDataFile, writeDataFile } from "../domain/datafile.ts";
 import type { Env } from "../domain/env.ts";
 import { DomainError } from "../domain/errors.ts";
 import { afterDeletion, DELETIONS, planRestore, type ConflictWay, type DeletionWay, type RestoreMode, type RestoreSummary, type ScheduledWay } from "../domain/restore.ts";
@@ -12,7 +12,7 @@ import type { LedgerData } from "../domain/types.ts";
 import { addBackup, deleteAllBackups, listBackups, readBackup, type BackupInfo, type BackupReason } from "../data/backups.ts";
 export type { BackupInfo } from "../data/backups.ts";
 import { loadLedger, persistChange, replaceLedger } from "../data/repository.ts";
-import { migrate, type SqlDriver } from "../data/schema.ts";
+import { DatabaseTooNew, inTransaction, migrate, type SqlDriver } from "../data/schema.ts";
 import { RATE_PROVIDERS, type Fetcher } from "../services/rates/providers.ts";
 import { refreshRates, shouldRefresh, type RateUpdateState } from "../services/rates/refresh.ts";
 
@@ -20,7 +20,8 @@ export const APP_VERSION = "0.2.0";
 
 export type AppState =
   | { status: "loading" }
-  | { status: "failed"; error: string }
+  // The stored data could not be opened (`tooNew`: written by a newer version of the application).
+  | { status: "failed"; error: string; tooNew: boolean }
   | { status: "welcome"; data: LedgerData }
   | { status: "ready"; data: LedgerData; revision: number; posted: string[] };
 
@@ -43,11 +44,18 @@ export interface Store {
   dailyBackup(): BackupInfo | null;
   restore(incoming: LedgerData, options: { mode: RestoreMode; scheduled: ScheduledWay; conflicts: ConflictWay; safety?: boolean }): RestoreSummary;
   deleteData(way: DeletionWay, options?: { backup?: boolean }): void;
+  // Recovery when the stored data cannot be opened: the newest saved backup that is whole, bringing data
+  // back (in place, or in a fresh database when the old one cannot be written), starting empty.
+  newestWholeBackup(): { at: string; data: LedgerData } | null;
+  recoverWith(data: LedgerData): void;
+  startEmpty(): void;
   updateRates(fetcher: Fetcher, force?: boolean): Promise<RateUpdateState | null>;
   env: Env;
 }
 
-export function createStore(db: SqlDriver, env: Env, language: () => string): Store {
+// `setAside` puts an unreadable database file aside (kept, not deleted) and opens a fresh one.
+export function createStore(firstDb: SqlDriver, env: Env, language: () => string, setAside?: () => SqlDriver): Store {
+  let db = firstDb;
   let state: AppState = { status: "loading" };
   const listeners = new Set<() => void>();
   const set = (next: AppState) => {
@@ -94,7 +102,7 @@ export function createStore(db: SqlDriver, env: Env, language: () => string): St
           store.postDueNow();
         }
       } catch (error) {
-        set({ status: "failed", error: error instanceof Error ? error.message : String(error) });
+        set({ status: "failed", error: error instanceof Error ? error.message : String(error), tooNew: error instanceof DatabaseTooNew });
       }
     },
 
@@ -187,6 +195,47 @@ export function createStore(db: SqlDriver, env: Env, language: () => string): St
         const empty = createEmptyData(language());
         replaceAll(way === "everything" ? empty : keepDeviceSettings(afterDeletion(way, before, empty), before));
       } else backupsChanged();
+    },
+
+    newestWholeBackup() {
+      try {
+        for (const b of listBackups(db)) {
+          const data = readBackup(db, b.id);
+          if (data && !findDataProblem(data)) return { at: b.at, data: completeData(data as unknown as Record<string, unknown>, language()) };
+        }
+      } catch {
+        // The backups are as unreadable as the rest: there is none to offer.
+      }
+      return null;
+    },
+
+    recoverWith(data) {
+      if (state.status === "ready") throw new Error("the ledger is open");
+      if (state.status === "failed" && state.tooNew) throw new DomainError("The data was saved by a newer version of the application. Update the application.");
+      const write = () => {
+        migrate(db);
+        replaceLedger(db, data, env.clock.nowIso());
+      };
+      try {
+        write();
+      } catch (error) {
+        if (!setAside) throw error;
+        db = setAside();
+        write();
+      }
+      ready(loadLedger(db) ?? data);
+      store.postDueNow();
+    },
+
+    startEmpty() {
+      if (state.status === "failed" && state.tooNew) throw new DomainError("The data was saved by a newer version of the application. Update the application.");
+      if (setAside) db = setAside();
+      else
+        inTransaction(db, () => {
+          for (const table of ["operation", "scheduled_payment", "budget", "category", "account", "tag", "setting", "rate", "tombstone"]) db.run(`DELETE FROM ${table}`);
+        });
+      migrate(db);
+      set({ status: "welcome", data: createEmptyData(language()) });
     },
 
     // Asks the rate sources when it is time (or when forced). Failure changes nothing but the note

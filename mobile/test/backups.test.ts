@@ -138,3 +138,28 @@ test("deleting: operations only (balances go back to the opening), partial, back
   assert.equal(store.backups().length, 0);
   assert.equal(data(store).ops.length + data(store).accounts.length + data(store).categories.length, 0);
 });
+
+test("recovery: unreadable stored data opens the recovery state; the newest whole backup or a file brings it back; nothing is touched before", () => {
+  const { store, db } = openWith("sample");
+  store.createBackup("manual");
+  const before = data(store);
+  // A damaged setting: the ledger cannot be read any more.
+  db.run("UPDATE setting SET value_json = ? WHERE key = 'currency'", ["{broken"]);
+  const reopened = createStore(db, testEnv(), () => "en");
+  reopened.open();
+  const failed = reopened.getState();
+  assert.equal(failed.status, "failed");
+  assert.equal(failed.status === "failed" && failed.tooNew, false);
+  assert.equal(db.all("SELECT value_json FROM setting WHERE key = 'currency'")[0]?.value_json, "{broken", "nothing was changed");
+  const inside = reopened.newestWholeBackup();
+  assert.ok(inside);
+  reopened.recoverWith(inside!.data);
+  assert.deepEqual(compareLedgers(before, data(reopened)), []);
+  // A database of a newer version is never written.
+  db.exec("PRAGMA user_version = 99");
+  const newer = createStore(db, testEnv(), () => "en");
+  newer.open();
+  const state = newer.getState();
+  assert.equal(state.status === "failed" && state.tooNew, true);
+  assert.throws(() => newer.startEmpty());
+});
