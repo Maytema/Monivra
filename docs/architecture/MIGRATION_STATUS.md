@@ -98,15 +98,26 @@ change (build 28). Coded after the film and the catalog, to be compared on the n
 - Navigation filled icons and 3×3 "More"; FAB "+ Add"; selection icons; category tiles; donut; editor date
   "Today/Yesterday"; "Click on the value to edit"; Additionally cards; Change categories segmented tabs.
 
+## Functional pass (2026-11-13, brief "complete, responsive, functionally faithful migration")
+
+Built from the first application's code, each checked against its own results (parity fixtures written
+by `test/parity/run-old.mjs`): Data section (menu, saved backups in the database with the daily copy,
+restore page with merge/replace and the three ways for scheduled payments, data file page with Share and
+Save to a folder, deletion page with its four ways and safeguards), CSV import wizard (columns, date order,
+decimal point, UTF-8 / Windows-1251 / UTF-16, links, preview, list of left-out rows, undo, example and
+template), export page (financial summary PDF, detailed transactions PDF, CSV; preview drawn from the
+same commands as the PDF), recovery screen (unreadable data: copy, newest whole backup, data file, start
+empty with the file put aside), first-start screen, Settings › Backups and Test notification.
+
+Not possible here and why: printing a report (`expo-print`) and photo attachments (`expo-image-picker`)
+need packages, and the work environment cannot install packages (network off) — the owner can allow
+package installs in the network settings of the environment.
+
 ## Not yet in the new application (next priorities)
 
-0. Photo attachments (the clip in the editor): needs `expo-image-picker`, which cannot be installed while
-   the build machine has no network for packages.
-
-1. **Emulator comparison with `catalog/`** of every screen above (the CI emulator test only drives the add flow).
-2. PDF reports (model exists in the old app; render as HTML → `expo-print`), CSV import wizard.
-3. Saved backups (list, restore with scheduled-payment modes), merge-restore, deletion modes (the Data page has data file and CSV only).
-4. Ordering of statistics blocks by drag (accounts, categories and subcategories done).
-5. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
-6. Welcome/onboarding screens (no catalog screens of them yet).
-7. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
+1. Emulator comparison of every screen of the brief with the old crawl (`tools/tour/crawl-old.mjs`) — the
+   tour of `scripts/emulator-smoke.sh` now covers the Data section and every Settings page.
+2. Printing and photo attachments (packages above).
+3. Ordering of statistics blocks by drag (accounts, categories and subcategories done).
+4. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
+5. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
