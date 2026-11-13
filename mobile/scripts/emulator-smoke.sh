@@ -249,10 +249,15 @@ FIXTURES="$(cd "$(dirname "$0")" && pwd)/fixtures"
 adb push "$FIXTURES/receipt.jpg" /sdcard/Download/receipt.jpg >/dev/null 2>&1
 echo "this is not a picture" > /tmp/notes.jpg && adb push /tmp/notes.jpg /sdcard/Download/notes.jpg >/dev/null 2>&1
 head -c 17000000 /dev/zero > /tmp/huge.png && adb push /tmp/huge.png /sdcard/Download/huge.png >/dev/null 2>&1
+# A pushed file is not listed by the system picker until the media store knows it.
+for f in receipt.jpg notes.jpg huge.png; do
+  adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/$f" >/dev/null 2>&1
+done
+sleep 3
 pick_photo() { # file name, shot name: opens the picker from the open menu and chooses the file
   tap "Choose from gallery" || return 1
   sleep 3; shot "$2-picker" 1
-  tap "$1" || { tap "Show roots" && tap "Downloads" && tap "$1"; } || { log "picker: $1 NOT FOUND"; back; return 1; }
+  tap "$1" || { tap "Show roots" && tap "Downloads" && { shot "$2-downloads" 2; tap "$1"; }; } || { log "picker: $1 NOT FOUND"; back; return 1; }
   shot "$2" 4
 }
 PHOTO_OK=0
