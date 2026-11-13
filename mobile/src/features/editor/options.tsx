@@ -67,13 +67,14 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
   );
 }
 
+// The current choice of a list as an outlined button (js/ui/primitives.js dropdownHtml).
 function Dropdown({ text, onPress }: { text: string; onPress: () => void }) {
   const p = usePalette();
   const t = useT();
   return (
-    <Pressable onPress={onPress} style={{ marginTop: 12, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderWidth: 1, borderColor: p.muted, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 13 }}>
+    <Pressable accessibilityRole="button" onPress={onPress} style={{ height: 48, marginTop: 18, marginBottom: 4, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg }}>
       <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(text)}</Text>
-      <Icon name="down" size={18} color={p.muted} />
+      <Icon name="down" size={20} />
     </Pressable>
   );
 }
