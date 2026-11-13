@@ -191,6 +191,8 @@ shot 17b-swipe-back 3
 adb shell input swipe $xy $xy 900
 shot 18c-long-press-after-swipes 3
 grep -q 'text="Selected' "$OUT/18c-long-press-after-swipes.xml" && log "long press after swipes: works" || log "long press after swipes: NOT working"
+# A tap after the swipes must still open the operation.
+grep -q 'text="Selected' "$OUT/18c-long-press-after-swipes.xml" || { adb shell input tap $xy; shot 18d-tap-after-swipes 3; grep -q 'Click on the value to edit' "$OUT/18d-tap-after-swipes.xml" && log "tap after swipes: works" || log "tap after swipes: NOT working"; back; }
 tap "Exit selection"
 tap "November 2026"
 shot 19-period-dialog 2

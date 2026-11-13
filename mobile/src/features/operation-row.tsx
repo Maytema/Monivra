@@ -1,7 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
@@ -48,6 +48,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   const p = usePalette();
   const t = useT();
   const money = useMoney();
+  const box = useRef<View>(null);
   const compact = useWindowDimensions().width <= 360;
   const account = accountById(data, op.from || op.to);
   const category = categoryById(data, op.category);
@@ -68,7 +69,12 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
       accessibilityRole="button"
       onPress={() => onPress(op.id)}
       onLongPress={onLongPress ? () => (console.log("[gesture] row long press"), onLongPress(op.id)) : undefined}
-      onPressIn={() => console.log("[gesture] row press in")}
+      ref={box}
+      onPressIn={(e: { nativeEvent: { pageX: number; pageY: number } }) => {
+        const { pageX, pageY } = e.nativeEvent;
+        box.current?.measure((_x: number, _y: number, w: number, h: number, px: number, py: number) => console.log(`[gesture] row press in at ${Math.round(pageX)},${Math.round(pageY)}; row ${Math.round(px)},${Math.round(py)} ${Math.round(w)}x${Math.round(h)}`));
+      }}
+      onPressOut={() => console.log("[gesture] row press out")}
       style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, borderRadius: 12, backgroundColor: selected || pressed ? p.soft : "transparent" })}
     >
       {selecting && selected ? (
