@@ -215,7 +215,7 @@ function Amount({ session }: { session: EditorSession }) {
   return session.compact ? (
     <Pressable accessibilityRole="button" onPress={() => session.expand()}>
       {body}
-      <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500", textAlign: "center", marginTop: -4, marginBottom: 10 }}>{t.t("Click on the value to edit")}</Text>
+      <Text style={{ color: p.ink, fontSize: 13, fontWeight: "500", textAlign: "center", marginTop: -4, marginBottom: 10 }}>{t.t("Tap the value to edit")}</Text>
     </Pressable>
   ) : (
     body
