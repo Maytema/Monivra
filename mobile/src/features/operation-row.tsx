@@ -67,7 +67,8 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
     <Pressable
       accessibilityRole="button"
       onPress={() => onPress(op.id)}
-      onLongPress={onLongPress ? () => onLongPress(op.id) : undefined}
+      onLongPress={onLongPress ? () => (console.log("[gesture] row long press"), onLongPress(op.id)) : undefined}
+      onPressIn={() => console.log("[gesture] row press in")}
       style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, borderRadius: 12, backgroundColor: selected || pressed ? p.soft : "transparent" })}
     >
       {selecting && selected ? (
