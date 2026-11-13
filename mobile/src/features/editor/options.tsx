@@ -11,6 +11,7 @@ import { useLedger, usePalette, useT } from "../../ui/app-context.tsx";
 import { PrimaryPill, TextButton } from "../../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog, promptDialog, confirmDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
+import { openNumberSheet } from "../../ui/number-sheet.tsx";
 import { useCommand } from "../../ui/app-context.tsx";
 import { openTime, timeLabel } from "../../ui/time-dialog.tsx";
 export { openTime };
@@ -41,26 +42,26 @@ function FieldTitle({ children }: { children: string }) {
   return <Text style={{ color: p.inkSoft, fontSize: 14, marginTop: 14, marginBottom: 6 }}>{t.t(children)}</Text>;
 }
 
+// A value between two arrows (js/ui/primitives.js stepperHtml): the arrows change it by one, tapping the value
+// types it in on the number pad. An arrow that cannot go further is dimmed.
 function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string; text: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
   const p = usePalette();
-  const round = (disabled: boolean) => ({ width: 44, height: 44, borderRadius: 22, alignItems: "center" as const, justifyContent: "center" as const, backgroundColor: p.soft, opacity: disabled ? 0.4 : 1 });
+  const t = useT();
+  const box = { height: 48, borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg, alignItems: "center" as const, justifyContent: "center" as const };
+  const arrow = (name: "left" | "right", step: number, disabled: boolean, description: string) => (
+    <Pressable accessibilityRole="button" accessibilityLabel={t.t(description)} disabled={disabled} onPress={() => onStep(step)} style={{ ...box, width: 48, opacity: disabled ? 0.4 : 1 }}>
+      <Icon name={name} size={22} />
+    </Pressable>
+  );
   return (
     <View>
       <FieldTitle>{label}</FieldTitle>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-        <Pressable accessibilityLabel="−" disabled={atMin} onPress={() => onStep(-1)} style={round(atMin)}>
-          <Icon name="minus" size={20} color={p.accentInk} />
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 }}>
+        {arrow("left", -1, atMin, "Decrease")}
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ ...box, flex: 1, minWidth: 0 }}>
+          <Text style={{ color: p.ink, fontSize: 17 }}>{text}</Text>
         </Pressable>
-        <TextInput
-          value={text}
-          onChangeText={onType}
-          keyboardType="number-pad"
-          maxLength={4}
-          style={{ flex: 1, textAlign: "center", color: p.ink, fontSize: 20, borderWidth: 1, borderColor: p.muted, borderRadius: 14, paddingVertical: 8 }}
-        />
-        <Pressable accessibilityLabel="+" disabled={atMax} onPress={() => onStep(1)} style={round(atMax)}>
-          <Icon name="plus" size={20} color={p.accentInk} />
-        </Pressable>
+        {arrow("right", 1, atMax, "Increase")}
       </View>
     </View>
   );
