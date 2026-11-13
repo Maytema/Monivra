@@ -257,7 +257,7 @@ sleep 3
 pick_photo() { # file name, shot name: opens the picker from the open menu and chooses the file
   tap "Choose from gallery" || return 1
   sleep 3; shot "$2-picker" 1
-  tap "$1" || { tap "Show roots" && tap "Downloads" && { shot "$2-downloads" 2; tap "$1"; }; } || { log "picker: $1 NOT FOUND"; back; return 1; }
+  tap "$1" || { tap "Show roots" && tap "Downloads" && { tap "List view"; shot "$2-downloads" 2; tap "$1"; }; } || { log "picker: $1 NOT FOUND"; back; return 1; }
   shot "$2" 4
 }
 PHOTO_OK=0
