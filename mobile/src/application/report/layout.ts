@@ -688,7 +688,7 @@ export function layoutSummary(model: SummaryModel, ctx: Ctx): Command[][] {
     ),
   ]);
   const converted = overview.converted;
-  const label = (text) => (converted ? `${L.x.t.t(text)} (${main})` : L.x.t.t(text));
+  const label = (text: string) => (converted ? `${L.x.t.t(text)} (${main})` : L.x.t.t(text));
   const one = overview.byCurrency.length === 1 ? overview.byCurrency[0] : null;
   const cur = converted || !one ? main : one.currency;
   const [incomeValue, expenseValue, netValue] =
