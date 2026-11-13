@@ -3,8 +3,9 @@
 import { useState, type ReactNode } from "react";
 import { Linking, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AboutArt } from "./about-art.tsx";
 import { Pressable } from "../ui/pressable.tsx";
-import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
+import Svg, { Circle, G, Path } from "react-native-svg";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { useCommand, usePalette, useT } from "../ui/app-context.tsx";
@@ -94,52 +95,6 @@ function SupportTopic({ topic }: { topic: (typeof SUPPORT)[string] }) {
         <Button label="Continue" onPress={() => void Linking.openURL(`mailto:?subject=${encodeURIComponent(t.t(topic.title))}`)} />
       </View>
     </View>
-  );
-}
-
-// The picture of the About page (js/screens/about-art.js): the top of a phone with the main screen that
-// runs off the bottom and fades into the page; the new expense is already in the list, small shapes beside.
-function AboutArt() {
-  const p = usePalette();
-  const rows = [0, 1, 2, 3].map((i) => 146 + i * 34);
-  const slices: [number, number, string][] = [[46, 0, p.accent], [26, 48, p.positive], [14, 76, p.negative]];
-  const C = 2 * Math.PI * 24;
-  return (
-    <Svg width="100%" viewBox="0 0 320 252" style={{ maxWidth: 400, alignSelf: "center", aspectRatio: 320 / 252 }}>
-      <Rect x={70} y={24} width={180} height={330} rx={30} fill={p.sheet} stroke={p.accent} strokeWidth={2.5} />
-      <Rect x={140} y={34} width={40} height={5} rx={2.5} fill={p.line} />
-      <Rect x={84} y={52} width={152} height={76} rx={16} fill={p.soft} />
-      <Rect x={98} y={68} width={44} height={5} rx={2.5} fill={p.muted} opacity={0.55} />
-      <Rect x={98} y={82} width={70} height={11} rx={5.5} fill={p.accent} />
-      <Rect x={98} y={104} width={30} height={5} rx={2.5} fill={p.muted} opacity={0.55} />
-      <Rect x={134} y={104} width={22} height={5} rx={2.5} fill={p.muted} opacity={0.55} />
-      <G rotation={-90} origin="204, 90">
-        <Circle cx={204} cy={90} r={24} stroke={p.sheet} strokeWidth={9} fill="none" />
-        {slices.map(([len, start, color]) => (
-          <Circle key={start} cx={204} cy={90} r={24} stroke={color} strokeWidth={9} fill="none" strokeDasharray={`${(len / 100) * C} ${C}`} strokeDashoffset={-(start / 100) * C} />
-        ))}
-      </G>
-      {rows.map((y, i) => (
-        <G key={y}>
-          <Rect x={84} y={y} width={152} height={28} rx={10} fill={p.bg} stroke={p.line} strokeWidth={1} />
-          <Circle cx={100} cy={y + 14} r={9} fill={i === 0 ? p.negative : p.tint} />
-          {i === 0 ? <Path d={`M95 ${y + 14}h10`} stroke="#ffffff" strokeWidth={3} strokeLinecap="round" /> : null}
-          <Rect x={116} y={y + 7} width={54} height={5} rx={2.5} fill={p.muted} opacity={0.55} />
-          <Rect x={116} y={y + 16} width={30} height={4} rx={2} fill={p.line} />
-          <Rect x={196} y={y + 11} width={30} height={6} rx={3} fill={p.negative} />
-        </G>
-      ))}
-      <Defs>
-        <LinearGradient id="aboutFade" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={p.bg} stopOpacity={0} />
-          <Stop offset="1" stopColor={p.bg} stopOpacity={1} />
-        </LinearGradient>
-      </Defs>
-      <Rect x={0} y={164} width={320} height={88} fill="url(#aboutFade)" />
-      <Circle cx={34} cy={70} r={5} fill={p.tint} />
-      <Circle cx={286} cy={108} r={4} fill={mix(p.accent, p.bg, 0.4)} />
-      <Circle cx={42} cy={176} r={3.5} fill={mix(p.positive, p.bg, 0.5)} />
-    </Svg>
   );
 }
 
