@@ -32,7 +32,7 @@ export async function pickFileBytes(): Promise<{ name: string; size: number; byt
 }
 
 // Saves a file in a folder the person chooses (the system's folder picker). False when they cancel.
-export async function saveTextFile(name: string, text: string, mimeType = "application/json"): Promise<boolean> {
+export async function saveTextFile(name: string, text: string | Uint8Array, mimeType = "application/json"): Promise<boolean> {
   let folder: Directory;
   try {
     folder = await Directory.pickDirectoryAsync();
@@ -46,7 +46,7 @@ export async function saveTextFile(name: string, text: string, mimeType = "appli
 }
 
 // Writes a file to the cache and opens the system share sheet ("Save to Files", Drive, mail…).
-export async function shareTextFile(name: string, text: string, mimeType = "application/json"): Promise<void> {
+export async function shareTextFile(name: string, text: string | Uint8Array, mimeType = "application/json"): Promise<void> {
   const file = new File(Paths.cache, name);
   if (file.exists) file.delete();
   file.create();

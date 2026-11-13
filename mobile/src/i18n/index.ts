@@ -20,6 +20,8 @@ export interface Translator {
   // Names of the week day of an ISO date, or of a week day number (0 is Sunday), and of a month (0–11).
   weekday(date: string | number, form?: "long" | "short" | "narrow"): string;
   monthName(index: number): string;
+  // "Nov" / "нояб." (0–11).
+  shortMonth(index: number): string;
   // "Thu, Nov 12" / "чт, 12 нояб.".
   shortDate(date: string): string;
   // "Nov 12" / "12 нояб." (the labels of a chart axis).
@@ -99,6 +101,7 @@ export function translator(language: string): Translator {
     },
     weekday: (date, form = "long") => (WEEKDAYS[code] ?? WEEKDAYS.en!)[form][typeof date === "number" ? ((date % 7) + 7) % 7 : weekdayOf(date)] ?? "",
     monthName: (index) => months.nominative[index] ?? "",
+    shortMonth: (index) => (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[index] ?? "",
     shortDate: (date) => {
       const w = (WEEKDAYS[code] ?? WEEKDAYS.en!).short[weekdayOf(date)];
       const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];

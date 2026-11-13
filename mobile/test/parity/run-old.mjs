@@ -25,6 +25,7 @@ const result = await page.evaluate(async () => {
   const csv = await import("/js/data/csv.js");
   const restore = await import("/js/domain/restore.js");
   const csvImport = await import("/js/data/csv-import.js");
+  const reportModel = await import("/js/domain/report-model.js");
   const { createSampleData } = await import("/tests/fixtures/sample-data.js");
   const { createReportFixture } = await import("/tests/report-fixture.js");
   const user = st.appData;
@@ -184,6 +185,36 @@ const result = await page.evaluate(async () => {
           },
         };
       }
+    // Report models (numbers only; the words are the translator's).
+    const reports = [];
+    for (const [name, base] of [["report", report], ["sample", sample]])
+      for (const period of [{ mode: "all", anchor: "2026-11-11" }, { mode: "month", anchor: "2026-10-15" }, { mode: "year", anchor: "2026-06-01" }])
+        for (const filters of [st.emptyFilters(), { ...st.emptyFilters(), accounts: [base.accounts[0].id], types: ["expense", "transfer"] }]) {
+          st.setAppData(clone(base));
+          const sm = reportModel.summaryModel({ filters, period, sections: {} });
+          const dm = reportModel.detailModel({ filters, period, parts: {} });
+          reports.push({
+            name, period, filters,
+            summary: {
+              from: sm.from, to: sm.to, end: sm.end,
+              overview: sm.overview,
+              flow: sm.flow.series.map((x) => [x.key, x.income, x.expense, x.net]),
+              unit: sm.flow.unit,
+              trend: sm.trend.map((x) => [x.key, x.value]),
+              expenseCategories: sm.expenseCategories.map((x) => [x.name, x.amount]),
+              incomeCategories: sm.incomeCategories.map((x) => [x.name, x.amount]),
+              accounts: sm.accounts.map((a) => [a.id, a.opening, a.closing, a.counted]),
+              total: sm.total,
+              movements: sm.movements.map((m) => [m.count, m.amounts]),
+              savings: sm.savings.map((x) => [x.balance, x.goal, x.left, x.percent]),
+              debts: sm.debts.map((x) => [x.balance, x.total, x.left, x.percent]),
+              budgets: sm.budgets.map((x) => [x.amount, x.used, x.left, x.percent]),
+              shown: sm.shown,
+              notes: sm.notes.length,
+            },
+            detail: { rows: dm.rows.map((r) => [r.id, r.sign]), totals: dm.totals, counts: dm.counts, columns: dm.columns.map((c) => c.key), notes: dm.notes.length },
+          });
+        }
     st.setAppData(clone(report));
     const csvReport = csv.csvText(st.appData.ops);
     return {
@@ -194,6 +225,7 @@ const result = await page.evaluate(async () => {
       postDue: postDue(withSchedules),
       plans,
       imports,
+      reports,
     };
   } finally {
     st.setAppData(user);
@@ -203,6 +235,7 @@ await browser.close();
 server.close();
 
 for (const [name, data] of Object.entries(result.fixtures)) await writeFile(new URL(`${name}.json`, out), JSON.stringify(data, null, 1));
+await writeFile(new URL("old-reports.json", out), JSON.stringify(result.reports));
 await writeFile(new URL("old-import.json", out), JSON.stringify(result.imports, null, 1));
 await writeFile(new URL("old-restore.json", out), JSON.stringify(result.plans, null, 1));
 await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue, reminders: result.reminders, csvReport: result.csvReport }, null, 1));

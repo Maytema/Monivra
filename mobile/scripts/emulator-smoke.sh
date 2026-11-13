@@ -217,7 +217,15 @@ tap "Export data"
 shot 20g-export 3
 has "All time" 20g-export
 tap "Preview"
-shot 20h-export-preview 3
+shot 20h-export-preview 6
+back
+tap "Detailed transactions"
+tap "Preview"
+shot 20h2-export-detail 6
+back
+tap "CSV file"
+tap "Preview"
+shot 20h3-export-csv 3
 back
 back
 tap "Delete my data"
