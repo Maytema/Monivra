@@ -9,7 +9,7 @@ import { formatNumber, NUMBER_FORMATS } from "../domain/money.ts";
 import type { Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
 import { biometricAvailable, biometricUnlock } from "../platform/lock.ts";
-import { notificationsAllowed } from "../platform/notifications.ts";
+import { notificationsAllowed, sendTestNotification } from "../platform/notifications.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
@@ -184,6 +184,15 @@ function Notifications() {
       <Switch label="Periodic reminders" k="periodic" />
       <SettingRow title="Time" caption={s.notificationTime} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} chevron={false} />
       <OptionsRow label="Frequency" k="notificationFrequency" options={[["Every day", "Every day"], ["Weekdays", "Weekdays"], ["Weekends", "Weekends"]]} />
+      <SettingRow
+        title="Test notification"
+        icon="bell"
+        onPress={() =>
+          void sendTestNotification(s.language)
+            .then((sent) => (sent ? toast(t.t("Notification sent")) : Alert.alert(t.t("Notifications are not allowed"), t.t("Allow notifications for Monivra in the system settings."))))
+            .catch(() => toast(t.t("Notifications are not allowed")))
+        }
+      />
       <Footnote>Android may deliver a reminder a few minutes late to save battery. A payment itself is added to your operations when you open Monivra, with the date and time it was set for.</Footnote>
     </>
   );

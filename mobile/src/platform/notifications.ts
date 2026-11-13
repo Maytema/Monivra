@@ -61,3 +61,12 @@ export async function rebuildReminders(data: LedgerData, today: string, now: str
     return 0;
   }
 }
+
+// "Test notification": the periodic reminder at once. False when notifications are not allowed.
+export async function sendTestNotification(language: string): Promise<boolean> {
+  if (!(await notificationsAllowed(true))) return false;
+  const t = translator(language);
+  if (Platform.OS === "android") await Notifications.setNotificationChannelAsync(CHANNEL, { name: t.t("Scheduled payments"), importance: Notifications.AndroidImportance.HIGH });
+  await Notifications.scheduleNotificationAsync({ content: { title: "Monivra", body: t.t("Enter today’s operations"), data: { key: "test" } }, trigger: null });
+  return true;
+}
