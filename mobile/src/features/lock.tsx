@@ -185,7 +185,10 @@ function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big
   return (
     <View style={{ width: 30, height: 30, alignItems: "center", justifyContent: "center" }}>
       <Animated.View style={{ position: "absolute", width: 30, height: 30, borderRadius: 15, backgroundColor: mix(color, p.bg, 0.3), opacity: halo, transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }] }} />
-      <Animated.View style={{ width: size, height: size, borderRadius: size / 2, borderWidth: ring, borderColor: filled ? color : failed ? p.negative : p.muted, backgroundColor, transform: [{ scale: pop }] }} />
+      {/* The swell (native driver) and the colour (JS driver) are on two views: one view cannot have both. */}
+      <Animated.View style={{ transform: [{ scale: pop }] }}>
+        <Animated.View style={{ width: size, height: size, borderRadius: size / 2, borderWidth: ring, borderColor: filled ? color : failed ? p.negative : p.muted, backgroundColor }} />
+      </Animated.View>
     </View>
   );
 }
