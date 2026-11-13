@@ -41,9 +41,7 @@ export function MoreScreen() {
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: p.bg }}>
       <Screen padded={false}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12, height: 59, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
-          <View style={p.dark ? { backgroundColor: "#ffffff", borderRadius: 10, paddingVertical: 3, paddingHorizontal: 4 } : undefined}>
-            <BrandMark height={38} />
-          </View>
+          <BrandMark height={38} onDark={p.dark} />
           <Text numberOfLines={1} style={{ flexShrink: 1, color: p.ink, fontSize: 29, fontWeight: "600" }}>
             Monivra
           </Text>

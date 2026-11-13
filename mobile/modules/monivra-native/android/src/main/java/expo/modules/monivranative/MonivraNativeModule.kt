@@ -13,9 +13,13 @@ import android.util.Base64
 import androidx.core.content.FileProvider
 import expo.modules.kotlin.Promise
 import java.io.ByteArrayOutputStream
+import android.os.Build
 import android.os.Bundle
 import android.os.CancellationSignal
 import android.os.ParcelFileDescriptor
+import android.os.VibrationAttributes
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.print.PageRange
 import android.print.PrintAttributes
 import android.print.PrintDocumentAdapter
@@ -27,6 +31,8 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 private const val REQUEST_PHOTO = 46071
 private val PHOTO_TYPES = setOf("image/jpeg", "image/png", "image/webp")
@@ -108,6 +114,54 @@ class MonivraNativeModule : Module() {
         else activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
       }
       true
+    }
+
+    // PBKDF2-HMAC-SHA256, 32 bytes, as hex: the PIN check. The system's implementation takes milliseconds
+    // where the same rounds in JavaScript took seconds (src/domain/pin.ts keeps that one for the tests and
+    // for a phone without this algorithm, where this function throws and the caller falls back).
+    Function("pbkdf2") { password: String, saltHex: String, iterations: Int ->
+      val salt = ByteArray(saltHex.length / 2) { saltHex.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+      val spec = PBEKeySpec(password.toCharArray(), salt, iterations, 256)
+      try {
+        SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded.joinToString("") { "%02x".format(it) }
+      } finally {
+        spec.clearPassword()
+      }
+    }
+
+    // A short touch signal: "tick" (something was picked up or selected), "success", "warning", "error"
+    // (two quick knocks: a wrong PIN, a refused file). It is sent as touch feedback, so the phone's own
+    // setting for touch vibration decides whether and how strongly it is felt.
+    Function("haptic") { kind: String ->
+      val context = appContext.reactContext ?: return@Function false
+      val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator ?: return@Function false
+      if (!vibrator.hasVibrator()) return@Function false
+      try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          val effect = VibrationEffect.createPredefined(
+            when (kind) {
+              "error" -> VibrationEffect.EFFECT_DOUBLE_CLICK
+              "warning" -> VibrationEffect.EFFECT_HEAVY_CLICK
+              "success" -> VibrationEffect.EFFECT_CLICK
+              else -> VibrationEffect.EFFECT_TICK
+            }
+          )
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) vibrator.vibrate(effect, VibrationAttributes.createForUsage(VibrationAttributes.USAGE_TOUCH))
+          else vibrator.vibrate(effect)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          vibrator.vibrate(
+            if (kind == "error") VibrationEffect.createWaveform(longArrayOf(0, 30, 70, 30), -1)
+            else VibrationEffect.createOneShot(if (kind == "tick") 15L else 25L, VibrationEffect.DEFAULT_AMPLITUDE)
+          )
+        } else if (kind == "error") {
+          vibrator.vibrate(longArrayOf(0, 30, 70, 30), -1)
+        } else {
+          vibrator.vibrate(if (kind == "tick") 15L else 25L)
+        }
+        true
+      } catch (error: Exception) {
+        false
+      }
     }
 
     // Opens the system's print dialog for a PDF file of the application (a file:// uri).

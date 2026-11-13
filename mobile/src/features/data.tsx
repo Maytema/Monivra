@@ -10,7 +10,7 @@ import { contentsOf, DELETIONS, planRestore, type ConflictWay, type Contents, ty
 import type { LedgerData } from "../domain/types.ts";
 import type { BackupInfo } from "../application/store.ts";
 import { pickFile, saveTextFile, shareTextFile } from "../platform/files.ts";
-import { writePinRecord } from "../platform/lock.ts";
+import { removePin } from "../platform/lock.ts";
 import type { Translator } from "../i18n/index.ts";
 import { appStore, showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { confirmDialog, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
@@ -487,7 +487,7 @@ function DeleteDialog({ way, done }: { way: DeletionWay; done: () => void }) {
     close();
     try {
       appStore().deleteData(way, { backup });
-      if (way === "everything") void writePinRecord(null).catch(() => undefined);
+      if (way === "everything") void removePin().catch(() => undefined);
       done();
       toast(t.t("Data deleted"));
     } catch (error) {

@@ -102,13 +102,21 @@ export const PIN_ITERATIONS = 4000;
 
 export const isValidPin = (pin: string): boolean => /^(\d{4}|\d{6})$/.test(pin);
 
-export function makePin(pin: string, salt: Uint8Array, iterations = PIN_ITERATIONS): PinRecord {
-  return { v: 3, length: pin.length, salt: hex(salt), hash: hex(pbkdf2(utf8(pin), salt, iterations)), iterations };
+// How the hash of a PIN is derived: 32 bytes of PBKDF2-HMAC-SHA256. The phone passes the system's
+// implementation (platform/lock.ts), which takes milliseconds; the one above is the reference and the
+// fallback, and takes seconds on the phone's engine.
+export type DerivePin = (pin: string, salt: Uint8Array, iterations: number) => Uint8Array;
+export const derivePinInJs: DerivePin = (pin, salt, iterations) => pbkdf2(utf8(pin), salt, iterations);
+export const hexOf = hex;
+export const bytesOfHex = unhex;
+
+export function makePin(pin: string, salt: Uint8Array, iterations = PIN_ITERATIONS, derive: DerivePin = derivePinInJs): PinRecord {
+  return { v: 3, length: pin.length, salt: hex(salt), hash: hex(derive(pin, salt, iterations)), iterations };
 }
 
-export function pinMatches(record: PinRecord | null, typed: string): boolean {
+export function pinMatches(record: PinRecord | null, typed: string, derive: DerivePin = derivePinInJs): boolean {
   if (!record) return false;
-  const hash = pbkdf2(utf8(typed), unhex(record.salt), record.iterations);
+  const hash = derive(typed, unhex(record.salt), record.iterations);
   const wanted = unhex(record.hash);
   let difference = 0;
   for (let i = 0; i < 32; i++) difference |= (hash[i] ?? 0) ^ (wanted[i] ?? 0);

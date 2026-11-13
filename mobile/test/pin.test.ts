@@ -1,7 +1,7 @@
 // The PIN hash: published test vectors, matching, and the waiting after wrong attempts.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { lockoutSeconds, makePin, pbkdf2, pinMatches, sha256, isValidPin } from "../src/domain/pin.ts";
+import { bytesOfHex, derivePinInJs, hexOf, lockoutSeconds, makePin, pbkdf2, pinMatches, sha256, isValidPin, type DerivePin } from "../src/domain/pin.ts";
 
 const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
 const bytes = (s: string) => Uint8Array.from(s, (c) => c.charCodeAt(0));
@@ -19,4 +19,17 @@ test("a PIN matches only itself; the record holds no digits", () => {
   assert.equal(isValidPin("12345"), false);
   assert.equal(isValidPin("123456"), true);
   assert.deepEqual([4, 5, 6, 9, 12].map(lockoutSeconds), [0, 30, 60, 480, 480]);
+});
+
+test("the phone's own derivation is used when given, and a PIN set with one is accepted by the other", () => {
+  // Stands for the system's PBKDF2 (platform/lock.ts): the same bytes, counted to see that it is called.
+  let calls = 0;
+  const system: DerivePin = (pin, salt, iterations) => (calls++, derivePinInJs(pin, salt, iterations));
+  const salt = new Uint8Array(16).fill(3);
+  const bySystem = makePin("135790", salt, 50, system);
+  assert.equal(calls, 1);
+  assert.equal(pinMatches(bySystem, "135790"), true);
+  assert.equal(pinMatches(makePin("135790", salt, 50), "135790", system), true);
+  assert.equal(pinMatches(bySystem, "135791", system), false);
+  assert.deepEqual(bytesOfHex(hexOf(salt)), salt);
 });

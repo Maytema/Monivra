@@ -1,4 +1,5 @@
-// The application's own native module (modules/monivra-native): the privacy screen and printing. Absent
+// The application's own native module (modules/monivra-native): the privacy screen, printing, photos, the
+// PIN hash and touch signals. Absent
 // (an older build, a test), every call says so instead of failing.
 import { requireOptionalNativeModule } from "expo";
 import * as DocumentPicker from "expo-document-picker";
@@ -10,6 +11,8 @@ interface MonivraNative {
   printPdf(uri: string, name: string): boolean;
   takePhoto(): Promise<string | null>;
   photoDataUrl(uri: string, longSide: number, quality: number, maxBytes: number): string;
+  pbkdf2?(password: string, saltHex: string, iterations: number): string;
+  haptic?(kind: string): boolean;
 }
 const native = requireOptionalNativeModule<MonivraNative>("MonivraNative");
 
@@ -19,6 +22,24 @@ export function setSecureScreen(on: boolean): void {
   if (!native || secure === on) return;
   secure = on;
   native.setSecure(on);
+}
+
+// PBKDF2-HMAC-SHA256 by the system (hex of 32 bytes), or null where the module or the algorithm is missing.
+export function nativePbkdf2(password: string, saltHex: string, iterations: number): string | null {
+  try {
+    return native?.pbkdf2?.(password, saltHex, iterations) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// A touch signal through the module; false when it could not be given (the caller may fall back).
+export function nativeHaptic(kind: string): boolean {
+  try {
+    return native?.haptic?.(kind) ?? false;
+  } catch {
+    return false;
+  }
 }
 
 export const canPrint = (): boolean => !!native;

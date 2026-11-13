@@ -56,6 +56,30 @@ export function balanceOn(data: Pick<LedgerData, "ops">, a: Account, date: strin
   return n;
 }
 
+// The total of the accounts counted in the overall balance (only the given ones, when a filter names them), in
+// the main currency, as it was before the first day and at the end of the last day of a period. One pass over
+// the operations for both.
+export function balancesAround(data: Pick<LedgerData, "accounts" | "ops" | "rates" | "settings">, accountIds: readonly string[] | null, from: string, to: string): { opening: Minor; closing: Minor } {
+  const counted = data.accounts.filter((a) => a.include && !a.archived && (!accountIds || accountIds.includes(a.id)));
+  const before = new Map<string, Minor>(counted.map((a) => [a.id, a.opening]));
+  const after = new Map(before);
+  for (const o of data.ops) {
+    if (o.date > to) continue;
+    const early = o.date < from;
+    if (o.to && after.has(o.to)) {
+      const n = o.receive ?? o.amount;
+      after.set(o.to, (after.get(o.to) ?? 0) + n);
+      if (early) before.set(o.to, (before.get(o.to) ?? 0) + n);
+    }
+    if (o.from && after.has(o.from)) {
+      after.set(o.from, (after.get(o.from) ?? 0) - o.amount);
+      if (early) before.set(o.from, (before.get(o.from) ?? 0) - o.amount);
+    }
+  }
+  const sum = (own: Map<string, Minor>) => counted.reduce((s, a) => s + convert(own.get(a.id) ?? 0, a.currency, data.settings.currency, data.rates), 0);
+  return { opening: sum(before), closing: sum(after) };
+}
+
 // Total of the accounts included in the total, in the main currency.
 export function overallBalance(data: LedgerData): Minor {
   return data.accounts
@@ -126,7 +150,7 @@ export function cardState(a: Account, balance: Minor): CardState | null {
 
 // How a transfer also counts: money paid into a debt account that says so is an expense, money taken
 // out of one an income; between two debt accounts it is only a move.
-export function transferRoles(data: LedgerData, o: Operation): { expense: Account | null; income: Account | null } {
+export function transferRoles(data: Pick<LedgerData, "accounts">, o: Operation): { expense: Account | null; income: Account | null } {
   if (o.type !== "transfer") return { expense: null, income: null };
   const source = accountById(data, o.from),
     dest = accountById(data, o.to);
@@ -213,7 +237,7 @@ const order = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 export const newestFirst = (a: Operation, b: Operation): number => order(b.date, a.date) || order(b.time ?? "", a.time ?? "") || order(b.id, a.id);
 
 // Two amounts of a cross-currency operation, or null.
-export function amountPair(data: LedgerData, o: Operation): [[Minor, string], [Minor, string]] | null {
+export function amountPair(data: Pick<LedgerData, "accounts" | "categories" | "settings">, o: Operation): [[Minor, string], [Minor, string]] | null {
   const account = accountById(data, o.from || o.to);
   if (!account || o.fees?.length) return null;
   const main = data.settings.currency;

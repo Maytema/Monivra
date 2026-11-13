@@ -1,5 +1,6 @@
 // The Monivra mark (js/ui/brand-mark.js): two charcoal arcs and a teal check, drawn in code. The
 // colours belong to the brand and do not follow the theme.
+import { View } from "react-native";
 import Svg, { Path } from "react-native-svg";
 
 const WIDTH = 715;
@@ -10,9 +11,10 @@ const CHARCOAL = [
 ];
 const TEAL = "M629 190C626 184 623 177 618 171C613 165 607 158 600 153C593 148 584 142 578 140C572 138 598 109 563 142C528 175 403 303 369 336C335 369 364 339 360 340C356 341 350 341 346 340C342 339 339 338 334 334C329 330 324 323 318 319C312 315 306 312 301 309C296 306 292 305 285 304C278 303 270 302 262 303C254 304 245 307 238 310C231 313 228 315 221 321C214 327 201 340 196 346C191 352 193 351 193 354C193 357 181 349 195 365C209 381 260 431 278 448C296 465 294 461 301 465C308 469 317 472 323 474C329 476 331 477 338 477C345 477 358 477 367 476C376 475 384 472 390 469C396 466 400 464 405 461C410 458 386 483 421 448C456 413 583 286 618 250C653 214 626 238 629 231C632 224 633 217 633 210C633 203 632 196 629 190Z";
 
-export function BrandMark({ height }: { height: number }) {
+// `onDark`: the charcoal arcs would vanish on a dark background, so the mark sits on a white rounded tile there.
+export function BrandMark({ height, onDark = false }: { height: number; onDark?: boolean }) {
   const width = Math.round((height * WIDTH) / HEIGHT);
-  return (
+  const mark = (
     <Svg width={width} height={height} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
       {CHARCOAL.map((d) => (
         <Path key={d.slice(0, 24)} fill="#20242c" d={d} />
@@ -20,4 +22,6 @@ export function BrandMark({ height }: { height: number }) {
       <Path fill="#03caa1" d={TEAL} />
     </Svg>
   );
+  if (!onDark) return mark;
+  return <View style={{ backgroundColor: "#ffffff", borderRadius: Math.round(height * 0.26), paddingVertical: Math.round(height * 0.08), paddingHorizontal: Math.round(height * 0.1) }}>{mark}</View>;
 }

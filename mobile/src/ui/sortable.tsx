@@ -2,7 +2,8 @@
 // moving the finger carries it, the others slide out of its way, and letting go keeps the new order.
 // Lists and grids both work: the slot is the one whose centre is nearest to the lifted item.
 import { useRef, useState, type ReactNode } from "react";
-import { Animated, Easing, Vibration, View, type StyleProp, type ViewStyle } from "react-native";
+import { Animated, Easing, View, type StyleProp, type ViewStyle } from "react-native";
+import { haptic } from "../platform/haptics.ts";
 import { gestureLock } from "./gesture-lock.ts";
 
 const HOLD_MS = 380;
@@ -57,7 +58,7 @@ export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, it
     const found = press.current;
     press.current = null;
     if (!found) return;
-    Vibration.vibrate(18);
+    haptic("tick");
     drag.current = { key, keys, home: keys.indexOf(key), slot: keys.indexOf(key), x: found.x, y: found.y };
     gestureLock.set(true);
     onHold?.(true);

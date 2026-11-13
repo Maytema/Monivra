@@ -1,17 +1,17 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from "react";
 import { FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
-import { newestFirst } from "../domain/ledger.ts";
-import { convert } from "../domain/money.ts";
+import { balancesAround, newestFirst } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } from "../domain/periods.ts";
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
+import { haptic } from "../platform/haptics.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Icon } from "../ui/kit.tsx";
@@ -32,16 +32,6 @@ import { confirmDialog, toast } from "../ui/dialogs.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
 
 type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
-
-// Balance of the accounts the filter lets through, at the end of a day (or before it).
-function balanceAt(data: ReturnType<typeof useLedger>, filters: Filters, date: string, exclusive: boolean): number {
-  return data.accounts
-    .filter((a) => a.include && !a.archived && (!filters.accounts || filters.accounts.includes(a.id)))
-    .reduce((sum, a) => {
-      const own = a.opening + data.ops.filter((o) => (exclusive ? o.date < date : o.date <= date)).reduce((n, o) => n + (o.to === a.id ? (o.receive ?? o.amount) : 0) - (o.from === a.id ? o.amount : 0), 0);
-      return sum + convert(own, a.currency, data.settings.currency, data.rates);
-    }, 0);
-}
 
 export function OperationsScreen() {
   const data = useLedger();
@@ -82,6 +72,8 @@ export function OperationsScreen() {
   live.current = { selection, toggle };
   const pressRow = useCallback((id: string) => (live.current.selection ? live.current.toggle(id) : openEditor({ id })), []);
   const holdRow = useCallback((id: string) => {
+    // The selection starts with a short touch signal (js/app/long-press.js).
+    if (!live.current.selection) haptic("tick");
     setSelection(true);
     live.current.toggle(id);
   }, []);
@@ -153,6 +145,7 @@ export function OperationsScreen() {
             selectedSet={selectedSet}
             onPress={pressRow}
             onLongPress={holdRow}
+            current={isCurrent}
             onTop={isCurrent ? fab.setAtTop : undefined}
           />
         )}
@@ -173,8 +166,39 @@ export function OperationsScreen() {
   );
 }
 
-// The list of one period: drawn for the current period and, beforehand, for its neighbours.
-export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
+// The day name that stays at the top while its operations pass. It is drawn over the list from what the list
+// reports as the first visible row — not by the scroll view's own sticky headers, which for a list that
+// draws only the rows near the window pin the wrong cell (a stale row stuck at the top) and need the list to
+// be rebuilt whenever the days change. It keeps its own state, so scrolling draws only this small piece again,
+// never the list.
+interface StickyHandle {
+  first(date: string | null): void;
+  scrolled(y: number, headerHeight: number): void;
+}
+function StickyDay({ days, ref }: { days: Map<string, Operation[]>; ref: Ref<StickyHandle> }) {
+  const [date, setDate] = useState<string | null>(null);
+  const [pinned, setPinned] = useState(false);
+  useImperativeHandle(
+    ref,
+    () => ({
+      first: setDate,
+      scrolled: (y, headerHeight) => setPinned((was) => (y >= headerHeight && y > 0 ? true : was && y > headerHeight - 2 ? was : false)),
+    }),
+    [],
+  );
+  const ops = pinned && date ? days.get(date) : undefined;
+  if (!ops || !date) return null;
+  return (
+    <View pointerEvents="none" style={{ position: "absolute", top: 0, left: 16, right: 16 }}>
+      <DayHead date={date} ops={ops} />
+    </View>
+  );
+}
+
+// The list of one period: drawn for the current period and, beforehand, for its neighbours. The current page
+// draws a few screens of rows around the window; a neighbour only what the first screen shows (that is all a
+// swipe can uncover), and the rest when it becomes the current one.
+export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop, current = true }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void; current?: boolean }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -194,10 +218,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     return out;
   }, [ops]);
 
-  // The day name that stays at the top while its operations pass. It is drawn over the list from what the list
-  // reports as the first visible row — not by the scroll view's own sticky headers, which for a list that
-  // draws only the rows near the window pin the wrong cell (a stale row stuck at the top) and need the list to
-  // be rebuilt whenever the days change.
   const list = useRef<FlatList<Item>>(null);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
   const lit = useSpotlit();
@@ -209,74 +229,81 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     return () => clearTimeout(timer);
   }, [active, lit, items]);
   const dayOps = useMemo(() => new Map(items.flatMap((x) => (x.kind === "day" ? [[x.date, x.ops] as const] : []))), [items]);
-  const [stuck, setStuck] = useState<string | null>(null);
-  const [pinned, setPinned] = useState(false);
+  const sticky = useRef<StickyHandle>(null);
   const headerHeight = useRef(0);
   const viewable = useRef(({ viewableItems }: { viewableItems: { item: Item }[] }) => {
     const first = viewableItems[0]?.item;
-    setStuck(first ? (first.kind === "day" ? first.date : first.op.date) : null);
+    sticky.current?.first(first ? (first.kind === "day" ? first.date : first.op.date) : null);
   }).current;
   const scrolled = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const y = e.nativeEvent.contentOffset.y;
-      setPinned((was) => (y >= headerHeight.current && y > 0 ? true : was && y > headerHeight.current - 2 ? was : false));
+      sticky.current?.scrolled(y, headerHeight.current);
       onTop?.(y < 12);
     },
     [onTop],
   );
   const [from, to] = periodBounds(period, data.settings);
   const summary = data.settings.opening && ops.length > 0 && !active;
+  const balances = useMemo(() => (summary ? balancesAround(data, filters.accounts, from, to) : null), [summary, data, filters.accounts, from, to]);
+  // The list is given the same pieces while nothing in them changed, so a scroll or the tick of the Add
+  // button does not make it go through its rows again.
+  const header = useMemo(
+    () => (
+      <View style={{ marginHorizontal: -16 }} onLayout={(e) => (headerHeight.current = e.nativeEvent.layout.height)}>
+        <View style={{ paddingHorizontal: 16 }}>
+          <PostedBanner />
+          {balances ? (
+            <View style={{ flexDirection: "row", justifyContent: "space-around", borderWidth: 1, borderColor: p.line, borderRadius: 10, marginBottom: 4, paddingVertical: 9, paddingHorizontal: 4, minHeight: 54 }}>
+              {([["Opening balance", balances.opening], ["Closing balance", balances.closing]] as const).map(([label, value]) => (
+                <View key={label} style={{ alignItems: "center" }}>
+                  <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
+                  <MoneyText text={money(value, data.settings.currency, true)} value={value} size={17} style={{ marginTop: 4 }} />
+                </View>
+              ))}
+            </View>
+          ) : null}
+        </View>
+      </View>
+    ),
+    [balances, p, t, money, data.settings.currency],
+  );
+  const renderItem = useCallback(
+    ({ item }: { item: Item }) =>
+      item.kind === "day" ? <DayHead date={item.date} ops={item.ops} /> : <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />,
+    [selection, selectedSet, onPress, onLongPress],
+  );
+  const content = useMemo(() => ({ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         ref={list}
         onScrollToIndexFailed={({ index, averageItemLength }) => list.current?.scrollToOffset({ offset: Math.max(0, index * averageItemLength - 200), animated: true })}
         data={items}
-        keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
+        keyExtractor={keyOfItem}
         onScroll={scrolled}
         scrollEventThrottle={32}
         onViewableItemsChanged={viewable}
         viewabilityConfig={VIEWABILITY}
-        // Enough rows are drawn at once to fill the screen, and ahead of the finger a few screens of them, so
-        // that a quick scroll does not run into empty space.
-        initialNumToRender={28}
-        maxToRenderPerBatch={24}
-        updateCellsBatchingPeriod={16}
-        windowSize={13}
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }}
-        ListHeaderComponent={
-          <View style={{ marginHorizontal: -16 }} onLayout={(e) => (headerHeight.current = e.nativeEvent.layout.height)}>
-            <View style={{ paddingHorizontal: 16 }}>
-              <PostedBanner />
-              {summary ? (
-                <View style={{ flexDirection: "row", justifyContent: "space-around", borderWidth: 1, borderColor: p.line, borderRadius: 10, marginBottom: 4, paddingVertical: 9, paddingHorizontal: 4, minHeight: 54 }}>
-                  {([["Opening balance", balanceAt(data, filters, from, true)], ["Closing balance", balanceAt(data, filters, to, false)]] as const).map(([label, value]) => (
-                    <View key={label} style={{ alignItems: "center" }}>
-                      <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
-                      <MoneyText text={money(value, data.settings.currency, true)} value={value} size={17} style={{ marginTop: 4 }} />
-                    </View>
-                  ))}
-                </View>
-              ) : null}
-            </View>
-          </View>
-        }
-        ListEmptyComponent={<EmptyState kind="operations" title="Empty" hint="Start adding expenses or income and the data will appear" />}
-        renderItem={({ item }) =>
-          item.kind === "day" ? (
-            <DayHead date={item.date} ops={item.ops} />
-          ) : (
-            <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
-          )
-        }
+        // The first screen at once; then, for the current page, four screens of rows on each side of the
+        // window, a screen at a time, so a quick scroll does not run into empty space and opening the tab or
+        // moving to another period does not draw hundreds of rows before the first touch is answered.
+        initialNumToRender={FIRST_SCREEN}
+        maxToRenderPerBatch={FIRST_SCREEN}
+        updateCellsBatchingPeriod={40}
+        windowSize={current ? 9 : 1}
+        contentContainerStyle={content}
+        ListHeaderComponent={header}
+        ListEmptyComponent={EMPTY}
+        renderItem={renderItem}
       />
-      {pinned && stuck && dayOps.get(stuck) ? (
-        <View pointerEvents="none" style={{ position: "absolute", top: 0, left: 16, right: 16 }}>
-          <DayHead date={stuck} ops={dayOps.get(stuck)!} />
-        </View>
-      ) : null}
+      <StickyDay ref={sticky} days={dayOps} />
     </View>
   );
 });
 
 const VIEWABILITY = { itemVisiblePercentThreshold: 1, minimumViewTime: 0 } as const;
+// Rows that fill one screen (a row is about 74 dp high).
+const FIRST_SCREEN = 12;
+const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);
+const EMPTY = <EmptyState kind="operations" title="Empty" hint="Start adding expenses or income and the data will appear" />;

@@ -1,7 +1,7 @@
 // The bridge between the store and React: one store for the application, hooks to read it, and
 // `useCommand` that runs a command and tells the person, in their language, why it was refused.
 import "../platform/crypto.ts";
-import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import { Alert, useColorScheme } from "react-native";
 import type { AppState } from "../application/store.ts";
 import type { LedgerTx } from "../domain/change.ts";
@@ -11,6 +11,7 @@ import { formatAmount } from "../domain/money.ts";
 import type { LedgerData, Minor } from "../domain/types.ts";
 import { translator, type Translator } from "../i18n/index.ts";
 import { appStore } from "../platform/app-store.ts";
+import { haptic } from "../platform/haptics.ts";
 import { buildPalette, type Palette } from "./theme.ts";
 
 export { appStore };
@@ -39,31 +40,72 @@ export function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
   });
 }
 
+// Several parts of the ledger as one object that keeps its identity while those parts are unchanged (the lists
+// are replaced, never changed in place). A row of a list that needs the accounts and the categories is then
+// not drawn again when an operation is saved.
+const partsCache = new Map<string, Partial<LedgerData>>();
+export function useLedgerParts<K extends keyof LedgerData>(...keys: K[]): Pick<LedgerData, K> {
+  const s = appStore();
+  const name = keys.join(" ");
+  return useSyncExternalStore(s.subscribe, () => {
+    const state = s.getState();
+    if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
+    const data = state.data;
+    const last = partsCache.get(name) as Pick<LedgerData, K> | undefined;
+    if (last && keys.every((k) => last[k] === data[k])) return last;
+    const next = {} as Pick<LedgerData, K>;
+    for (const k of keys) next[k] = data[k];
+    partsCache.set(name, next);
+    return next;
+  });
+}
+
+// ---- The look: colours, language and money format ----------------------------------------------------
+// They follow the settings and are the same for every component, so they are worked out once, in LedgerLook
+// at the root, and read from context. (Each component used to subscribe to the store for them by itself:
+// an icon alone held three subscriptions.)
+
+type Money = (n: Minor, currency?: string, balance?: boolean) => string;
+const PaletteContext = createContext<Palette | null>(null);
+const TranslatorContext = createContext<Translator | null>(null);
+const MoneyContext = createContext<Money | null>(null);
+
 const translators = new Map<string, Translator>();
-export function useT(): Translator {
-  const language = useLedgerPart((d) => d.settings.language);
+const translatorFor = (language: string): Translator => {
   let t = translators.get(language);
   if (!t) translators.set(language, (t = translator(language)));
   return t;
-}
+};
 
-export function usePalette(): Palette {
-  const accent = useLedgerPart((d) => d.settings.accent);
-  const theme = useLedgerPart((d) => d.settings.theme);
-  const scheme = useColorScheme();
-  const dark = theme === "dark" || (theme === "system" && scheme === "dark");
-  return useMemo(() => buildPalette(accent, dark), [accent, dark]);
-}
-
-// Formats money with the person's settings; `balance` amounts are masked when values are hidden.
-export function useMoney(): (n: Minor, currency?: string, balance?: boolean) => string {
+export function LedgerLook({ children }: { children: ReactNode }) {
   const s = useLedgerPart((d) => d.settings);
-  return useCallback(
-    (n, currency = s.currency, balance = false) =>
-      s.hidden && (s.hiddenValues !== "Balances only" || balance) ? `•••• ${currency}` : formatAmount(n, currency, s),
-    [s],
+  const scheme = useColorScheme();
+  const dark = s.theme === "dark" || (s.theme === "system" && scheme === "dark");
+  const palette = useMemo(() => buildPalette(s.accent, dark), [s.accent, dark]);
+  const t = translatorFor(s.language);
+  // Only what the format reads, so another setting (the note of the last rate update, say) changes nothing here.
+  const { currency, hidden, hiddenValues, numberFormat, groupDigits, decimal, hideCents, currencyFirst } = s;
+  const money = useMemo<Money>(() => {
+    const format = { numberFormat, groupDigits, decimal, hideCents, currencyFirst };
+    return (n, code = currency, balance = false) => (hidden && (hiddenValues !== "Balances only" || balance) ? `•••• ${code}` : formatAmount(n, code, format));
+  }, [currency, hidden, hiddenValues, numberFormat, groupDigits, decimal, hideCents, currencyFirst]);
+  return (
+    <PaletteContext.Provider value={palette}>
+      <TranslatorContext.Provider value={t}>
+        <MoneyContext.Provider value={money}>{children}</MoneyContext.Provider>
+      </TranslatorContext.Provider>
+    </PaletteContext.Provider>
   );
 }
+
+function fromLook<T>(value: T | null): T {
+  if (value === null) throw new Error("drawn outside LedgerLook");
+  return value;
+}
+export const useT = (): Translator => fromLook(useContext(TranslatorContext));
+export const usePalette = (): Palette => fromLook(useContext(PaletteContext));
+// Formats money with the person's settings; `balance` amounts are masked when values are hidden.
+export const useMoney = (): Money => fromLook(useContext(MoneyContext));
 
 // Runs a command; a refusal is shown as a message and the result is undefined.
 export function useCommand(): <T>(command: (tx: LedgerTx, env: Env) => T) => T | undefined {
@@ -89,7 +131,9 @@ export const setMessagePresenter = (show: (text: string, title?: string) => void
 };
 export const showMessage = (text: string, title?: string): void => present(text, title);
 
+// A refusal is also felt: the action did not happen.
 export function showError(t: Translator, error: unknown): void {
+  haptic("error");
   if (error instanceof DomainError) showMessage(t.t(error.message, error.params));
   else {
     console.error(error);

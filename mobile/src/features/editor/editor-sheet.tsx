@@ -25,6 +25,7 @@ import { askAboutMissed } from "../due-payments.tsx";
 import { operationShown, showOperations, showScheduled } from "../reveal.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
+import { haptic } from "../../platform/haptics.ts";
 import { canAttachPhotos, choosePhoto, takePhoto } from "../../platform/native.ts";
 import { MAX_PHOTO_MB, PHOTO_FORMATS, toPhotoError, type PhotoProblem } from "../../platform/photo-rules.ts";
 import { feeLabel, openFee, openRecurrence, openReminder, openTags, openTime, optionsSet, setPaymentTime } from "./options.tsx";
@@ -248,6 +249,7 @@ function PhotoMenu({ session }: { session: EditorSession }) {
     } catch (error) {
       // A file that may not be attached is explained in a window, with what may be.
       const { problem } = toPhotoError(error);
+      haptic("error");
       showInfo(t.t(PHOTO_PROBLEMS[problem], { formats: PHOTO_FORMATS, max: MAX_PHOTO_MB }), t.t("Photo not attached"));
     }
   };
@@ -615,6 +617,7 @@ function EditorSheet({ session }: { session: EditorSession }) {
         });
         if (!result) return;
         close();
+        haptic("success");
         const { saved, planned } = result;
         // A scheduled payment that is already due (an edited one with a past date) is added at once.
         const posted = session.scheduled ? appStore().postDueNow() : [];
@@ -631,9 +634,11 @@ function EditorSheet({ session }: { session: EditorSession }) {
         confirmInfo("Check the date", t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), "Save");
       } else store();
     } catch (error) {
+      // Not saved: the reason is said and felt.
       if (error instanceof DomainError) toast(t.t(error.message, error.params));
       else if (error instanceof Error) toast(t.t(error.message));
       else throw error;
+      haptic("error");
     }
   };
 

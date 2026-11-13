@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- Touch signals (a wrong PIN, a refused file); a normal permission, no dialog. -->
+  <uses-permission android:name="android.permission.VIBRATE" />
   <application>
     <!-- Lets the camera application write a photo into this application's cache. -->
     <provider

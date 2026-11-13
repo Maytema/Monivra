@@ -1,11 +1,14 @@
 // The screen lock: a PIN of 4 or 6 digits (and a fingerprint or face when the person allows it). It
 // hides the application; it does not encrypt the data. Five wrong PINs in a row make the keys wait.
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, AppState as SystemAppState, Text, View } from "react-native";
+import { Animated, AppState as SystemAppState, Text, View, useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable } from "../ui/pressable.tsx";
-import { lockoutSeconds, makePin, pinMatches } from "../domain/pin.ts";
-import { biometricAvailable, biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
+import { lockoutSeconds } from "../domain/pin.ts";
+import { haptic } from "../platform/haptics.ts";
+import { biometricAvailable, biometricUnlock, checkPin, readPinRecord, removePin, storePin } from "../platform/lock.ts";
 import { appStore, useLedger, usePalette, useT } from "../ui/app-context.tsx";
+import { BrandMark } from "../ui/brand-mark.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { SwitchRow } from "../ui/rows.tsx";
 import { mix } from "../ui/theme.ts";
@@ -64,15 +67,22 @@ export function LockGate({ children }: { children: ReactNode }) {
 let promptedThisLock = false;
 let prompting = false;
 
+// How long the last dot is given to fill before the PIN is checked (the first application waited for the
+// dot's animation): the person sees every digit land, then the answer.
+const LAST_DOT_MS = 110;
+
 function LockScreen() {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const state = useLock();
+  const insets = useSafeAreaInsets();
+  const window = useWindowDimensions();
   const length = (data.settings.pin as { length?: number }).length ?? 4;
   const [typed, setTyped] = useState("");
   const [failed, setFailed] = useState(false);
   const [canBiometric, setCanBiometric] = useState(false);
+  const checking = useRef(false);
   const wanted = !!data.settings.biometric;
   const unlock = () => {
     promptedThisLock = false;
@@ -92,6 +102,8 @@ function LockScreen() {
   };
   useEffect(() => {
     let live = true;
+    // The record is fetched from the keystore while the person types, so the check itself does not wait.
+    void readPinRecord();
     void biometricAvailable().then((ok) => {
       if (!live) return;
       setCanBiometric(ok);
@@ -106,32 +118,47 @@ function LockScreen() {
     // Asked once when the lock screen appears.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wanted]);
-  const complete = async (pin: string) => {
-    if (Date.now() < state.waitUntil) {
-      toast(t.t("Too many attempts. Try again in {n} s.", { n: Math.ceil((state.waitUntil - Date.now()) / 1000) }));
-      setFailed(true);
-      setTyped("");
-      return;
-    }
-    const record = await readPinRecord();
-    if (pinMatches(record, pin)) return unlock();
-    const failures = state.failures + 1;
-    const wait = lockoutSeconds(failures);
-    setLock({ failures, waitUntil: Date.now() + wait * 1000 });
-    toast(wait ? t.t("Too many attempts. Try again in {n} s.", { n: wait }) : t.t("Incorrect PIN"));
+  // A wrong PIN: the dots empty and shake, the phone knocks twice, and the reason is said.
+  const refuse = (text: string) => {
+    haptic("error");
+    toast(text);
     setFailed(true);
     setTyped("");
   };
+  const complete = async (pin: string) => {
+    try {
+      if (Date.now() < state.waitUntil) return refuse(t.t("Too many attempts. Try again in {n} s.", { n: Math.ceil((state.waitUntil - Date.now()) / 1000) }));
+      if (await checkPin(pin)) return unlock();
+      const failures = state.failures + 1;
+      const wait = lockoutSeconds(failures);
+      setLock({ failures, waitUntil: Date.now() + wait * 1000 });
+      refuse(wait ? t.t("Too many attempts. Try again in {n} s.", { n: wait }) : t.t("Incorrect PIN"));
+    } finally {
+      checking.current = false;
+    }
+  };
+  const type = (v: string) => {
+    if (checking.current) return;
+    setFailed(false);
+    setTyped(v);
+    if (v.length !== length) return;
+    // The last dot is drawn first, then the PIN is checked.
+    checking.current = true;
+    setTimeout(() => void complete(v), LAST_DOT_MS);
+  };
+  // The keys end above the system's navigation (gesture bar or three buttons); on a short screen the
+  // picture, the gaps and the keys are smaller so that everything fits.
+  const short = window.height - insets.top - insets.bottom < 700;
   return (
-    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 110, paddingBottom: 40 }}>
+    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: insets.top + (short ? 28 : 72), paddingBottom: Math.max(insets.bottom, 12) + (short ? 16 : 28) }}>
       <View style={{ alignItems: "center" }}>
-        <Icon name="dollar" size={80} color={p.ink} />
-        <Text style={{ color: p.ink, fontSize: 22, marginTop: 50, marginBottom: 26 }}>{t.t("Enter your PIN")}</Text>
+        <BrandMark height={short ? 56 : 76} onDark={p.dark} />
+        <Text style={{ color: p.ink, fontSize: 22, marginTop: short ? 22 : 44, marginBottom: short ? 16 : 26 }}>{t.t("Enter your PIN")}</Text>
         <PinDots length={length} value={typed} failed={failed} big />
       </View>
       <View style={{ width: "100%", maxWidth: 290 }}>
         <PinPad
-          big
+          big={!short}
           hideDots
           length={length}
           value={typed}
@@ -143,11 +170,7 @@ function LockScreen() {
               </Pressable>
             ) : undefined
           }
-          onChange={(v) => {
-            setFailed(false);
-            setTyped(v);
-            if (v.length === length) void complete(v);
-          }}
+          onChange={type}
         />
       </View>
     </View>
@@ -162,12 +185,14 @@ function LockScreen() {
 // page that sets a PIN.
 function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big: boolean }) {
   const p = usePalette();
+  // Everything a dot does (filling, the swell, the halo) runs on the native driver, so it stays smooth while
+  // JavaScript is busy: the filled dot is a second view over the empty one, shown by its opacity.
   const fill = useRef(new Animated.Value(filled ? 1 : 0)).current;
   const pop = useRef(new Animated.Value(1)).current;
   const halo = useRef(new Animated.Value(0)).current;
   const first = useRef(true);
   useEffect(() => {
-    Animated.timing(fill, { toValue: filled ? 1 : 0, duration: 140, useNativeDriver: false }).start();
+    Animated.timing(fill, { toValue: filled ? 1 : 0, duration: filled ? 90 : 140, useNativeDriver: true }).start();
     if (first.current) return void (first.current = false);
     if (!filled) return;
     pop.setValue(0.7);
@@ -178,16 +203,15 @@ function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big
     ]).start();
   }, [filled, fill, pop, halo]);
   const size = big ? 20 : 18;
-  const empty = big ? mix(p.muted, p.bg, 0.35) : "transparent";
-  const color = failed ? p.negative : p.accent;
-  const backgroundColor = fill.interpolate({ inputRange: [0, 1], outputRange: [empty, color] });
-  const ring = big ? 0 : 2;
+  const round = { width: size, height: size, borderRadius: size / 2 };
+  // After a wrong PIN the empty dots are red until the next digit.
+  const empty = failed ? mix(p.negative, p.bg, big ? 0.5 : 0) : big ? mix(p.muted, p.bg, 0.35) : "transparent";
   return (
     <View style={{ width: 30, height: 30, alignItems: "center", justifyContent: "center" }}>
-      <Animated.View style={{ position: "absolute", width: 30, height: 30, borderRadius: 15, backgroundColor: mix(color, p.bg, 0.3), opacity: halo, transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }] }} />
-      {/* The swell (native driver) and the colour (JS driver) are on two views: one view cannot have both. */}
+      <Animated.View style={{ position: "absolute", width: 30, height: 30, borderRadius: 15, backgroundColor: mix(p.accent, p.bg, 0.3), opacity: halo, transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }] }} />
       <Animated.View style={{ transform: [{ scale: pop }] }}>
-        <Animated.View style={{ width: size, height: size, borderRadius: size / 2, borderWidth: ring, borderColor: filled ? color : failed ? p.negative : p.muted, backgroundColor }} />
+        <View style={{ ...round, borderWidth: big ? 0 : 2, borderColor: failed ? p.negative : p.muted, backgroundColor: empty }} />
+        <Animated.View style={{ ...round, position: "absolute", backgroundColor: p.accent, opacity: fill }} />
       </Animated.View>
     </View>
   );
@@ -198,10 +222,11 @@ export function PinDots({ length, value, failed = false, big = false }: { length
   const shake = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (!failed) return;
+    // css pin-shake: 0.35 s, 8 px to the left, then to the right, and back.
     Animated.sequence([
-      Animated.timing(shake, { toValue: -8, duration: 80, useNativeDriver: true }),
-      Animated.timing(shake, { toValue: 8, duration: 120, useNativeDriver: true }),
-      Animated.timing(shake, { toValue: 0, duration: 80, useNativeDriver: true }),
+      Animated.timing(shake, { toValue: -8, duration: 88, useNativeDriver: true }),
+      Animated.timing(shake, { toValue: 8, duration: 175, useNativeDriver: true }),
+      Animated.timing(shake, { toValue: 0, duration: 87, useNativeDriver: true }),
     ]).start();
   }, [failed, shake]);
   return (
@@ -281,11 +306,11 @@ function PinSetup({ remove, length }: { remove: boolean; length: number }) {
   const save = (settings: Record<string, unknown>) => appStore().run((tx) => (tx.setSettings(settings), true));
   const finish = async () => {
     if (remove) {
-      if (!pinMatches(await readPinRecord(), first)) return void toast(t.t("Incorrect PIN"));
-      await writePinRecord(null);
+      if (!(await checkPin(first))) return void (haptic("error"), toast(t.t("Incorrect PIN")));
+      await removePin();
       save({ pin: false, biometric: false });
     } else {
-      await writePinRecord(makePin(first, randomSalt()));
+      await storePin(first);
       // A person who turns the lock on expects the application to lock when it is left, so a new PIN also
       // switches that on.
       save({ pin: { v: 3, length: first.length }, relock: true });

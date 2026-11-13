@@ -5,7 +5,7 @@ import { ActivityIndicator, KeyboardAvoidingView, AppState as SystemAppState, Vi
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import { appStore, useAppState, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { probeEngine, watchStalls } from "../platform/perf.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
@@ -121,14 +121,19 @@ function Root() {
       </View>
     );
   if (state.status === "failed") return <Recovery error={state.error} tooNew={state.tooNew} />;
+  // LedgerLook gives the colours, the language and the money format to everything drawn inside.
   if (state.status === "welcome")
     return (
-      <>
+      <LedgerLook>
         <Welcome />
         <SheetHost />
-      </>
+      </LedgerLook>
     );
-  return <Ready />;
+  return (
+    <LedgerLook>
+      <Ready />
+    </LedgerLook>
+  );
 }
 
 export default function Layout() {

@@ -7,7 +7,7 @@ import { Pressable } from "../ui/pressable.tsx";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
-import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useLedgerParts, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { MoneyText, ToneBadge } from "../ui/parts.tsx";
@@ -17,13 +17,13 @@ import { alpha } from "../ui/theme.ts";
 type Translate = ReturnType<typeof useT>;
 
 // Name of a category as an operation shows it: a subcategory follows its category.
-function categoryTitle(data: LedgerData, id: string | undefined, t: Translate): string {
+function categoryTitle(data: Pick<LedgerData, "categories">, id: string | undefined, t: Translate): string {
   const category = categoryById(data, id);
   if (!category) return t.t("Category");
   return category.parent ? `${categoryById(data, category.parent)?.name} (${category.name})` : category.name;
 }
 
-export function operationTitle(data: LedgerData, o: Operation, t: Translate): string {
+export function operationTitle(data: Pick<LedgerData, "categories">, o: Operation, t: Translate): string {
   if (o.type === "adjustment") return t.t("Adjustment");
   if (o.type === "transfer") return t.t("Transfer");
   return categoryTitle(data, o.category, t);
@@ -31,7 +31,7 @@ export function operationTitle(data: LedgerData, o: Operation, t: Translate): st
 
 // Red for money spent, green for money earned, also for a transfer that counts as an expense or an
 // income because of a debt account.
-function tone(data: LedgerData, o: Operation): -1 | 0 | 1 {
+function tone(data: Pick<LedgerData, "accounts">, o: Operation): -1 | 0 | 1 {
   const roles = transferRoles(data, o);
   if (o.type === "expense" || (o.type === "adjustment" && o.from) || roles.expense) return -1;
   if (o.type === "income" || (o.type === "adjustment" && o.to) || roles.income) return 1;
@@ -44,10 +44,11 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
   return t.t("1 {from} = {rate} {to}", { from: base, rate: Number(rate.toPrecision(6)), to: quote });
 }
 
-// Memoised: the list passes stable handlers (they receive the id), so a row is drawn again only when
-// its own operation or its selection changes, not on every scroll or selection of another row.
+// Memoised: the list passes stable handlers (they receive the id), and the row reads only the parts of the
+// ledger it shows (accounts, categories, rates, settings), so it is drawn again only when its own operation
+// or its selection changes — not on every scroll, selection of another row or saved operation.
 export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
-  const data = useLedger();
+  const data = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const money = useMoney();
@@ -130,7 +131,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
 });
 
 // Net result of one day (income minus expenses) in the main currency.
-function dayTotal(data: LedgerData, ops: Operation[]): number {
+function dayTotal(data: Pick<LedgerData, "accounts" | "rates" | "settings">, ops: Operation[]): number {
   return ops.reduce((sum, o) => {
     const sign = o.type === "income" ? 1 : o.type === "expense" ? -1 : 0;
     const currency = accountById(data, o.from || o.to)?.currency;
@@ -140,8 +141,8 @@ function dayTotal(data: LedgerData, ops: Operation[]): number {
 }
 
 // The date of a group with its day total, and a line under it.
-export function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
-  const data = useLedger();
+export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
+  const data = useLedgerParts("accounts", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const money = useMoney();
@@ -157,7 +158,7 @@ export function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
       </View>
     </View>
   );
-}
+});
 
 // The strip under the period bar while filters are on.
 export function FilteredBanner({ onChange, onClear }: { onChange: () => void; onClear: () => void }) {
