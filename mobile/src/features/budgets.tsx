@@ -166,7 +166,7 @@ export function BudgetsScreen() {
           ),
         }}
       />
-      <PeriodBar />
+      <PeriodBar dayPicker />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 18 }}>
         {states.length ? (
           PERIODS.map((kind) => ({ kind, list: states.filter((s) => s.b.period === kind) }))
@@ -238,7 +238,7 @@ export function BudgetDetails() {
           ),
         }}
       />
-      <PeriodBar />
+      <PeriodBar dayPicker />
       <View style={{ marginHorizontal: space.l, marginBottom: 8, padding: 16, borderWidth: 1, borderColor: p.line, borderRadius: 16, backgroundColor: p.key }}>
         <BudgetBody state={budgetState(data, b, period.anchor)} pinned exact />
       </View>

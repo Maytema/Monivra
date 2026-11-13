@@ -6,6 +6,7 @@ import { canShiftPeriod, shiftPeriod } from "../domain/periods.ts";
 import type { Period } from "../domain/periods.ts";
 import { useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
+import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
 import { Pager, usePagerMotion } from "../ui/pager.tsx";
 import { periodTitle } from "../ui/period-title.ts";
@@ -13,7 +14,9 @@ import { setView, useView } from "./ui-state.ts";
 
 export { periodTitle };
 
-export function PeriodBar() {
+// `dayPicker`: the title opens the calendar and the period of the same kind around the chosen day is
+// shown (the budgets of the first application, period-picker.js dayPicker).
+export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -56,7 +59,7 @@ export function PeriodBar() {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={periodTitle(period, t, data.settings)}
-        onPress={() => openPeriodDialog(period, (next) => setView({ period: next }))}
+        onPress={() => (dayPicker ? openCalendar(period.anchor, (day) => setView({ period: { ...period, anchor: day } })) : openPeriodDialog(period, (next) => setView({ period: next })))}
         onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setRoom(e.nativeEvent.layout.width)}
         style={{ flex: 1, minHeight: 40, overflow: "hidden", alignItems: "center", justifyContent: "center" }}
       >
