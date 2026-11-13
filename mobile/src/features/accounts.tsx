@@ -10,7 +10,7 @@ import { accountBalance, debtDirection, progressForBalance } from "../domain/led
 import { convert } from "../domain/money.ts";
 import type { Account } from "../domain/types.ts";
 import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Button, Icon } from "../ui/kit.tsx";
+import { Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
@@ -18,6 +18,7 @@ import { Pager } from "../ui/pager.tsx";
 import { HintBanner } from "../ui/hint-banner.tsx";
 import { PostedBanner } from "./posted-banner.tsx";
 import { mix } from "../ui/theme.ts";
+import { EmptyState } from "../ui/empty-state.tsx";
 import { isOwed, openAccountSheet, percentText } from "./account-sheet.tsx";
 import { RootHero } from "./root-hero.tsx";
 
@@ -181,7 +182,6 @@ function Totals() {
 export function AccountsScreen() {
   const { data, money, balanceOf, inMain, isFinished } = useAccountParts();
   const p = usePalette();
-  const t = useT();
   const [tab, setTab] = useState<AccountTab>("Accounts");
   const [held, setHeld] = useState(false);
   const live = data.accounts.filter((a) => !a.archived);
@@ -195,11 +195,7 @@ export function AccountsScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: p.bg }}>
         {header}
-        <View style={{ padding: 24, gap: 12, alignItems: "center" }}>
-          <Text style={{ color: p.ink, fontSize: 20, textAlign: "center" }}>{t.t("Accounts and savings will be here")}</Text>
-          <Text style={{ color: p.muted, textAlign: "center" }}>{t.t("So far, there is not a single financial or savings account. Create your first financial or savings account?")}</Text>
-          <Button label="Create" onPress={() => router.push("/account")} />
-        </View>
+        <EmptyState kind="accounts" title="Accounts and savings will be here" hint="So far, there is not a single financial or savings account. Create your first financial or savings account?" action="Create" onAction={() => router.push("/account")} />
       </View>
     );
   return (

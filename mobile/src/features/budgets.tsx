@@ -22,6 +22,7 @@ import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { space } from "../ui/theme.ts";
 import { periodTitle } from "../ui/period-title.ts";
 import { compactText, numberText } from "../ui/number-text.ts";
+import { EmptyState } from "../ui/empty-state.tsx";
 import { DayHead, OperationRow } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
@@ -203,14 +204,7 @@ export function BudgetsScreen() {
               );
             })
         ) : (
-          <View style={{ alignItems: "center", paddingTop: 40, paddingHorizontal: 32 }}>
-            <Icon name="budget" size={88} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 20, fontWeight: "500", textAlign: "center", marginTop: 12, marginBottom: 8 }}>{t.t("Budgets will be here")}</Text>
-            <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t("So far, it's empty. Create your first budget?")}</Text>
-            <View style={{ width: "100%", maxWidth: 270, marginTop: 24 }}>
-              <Button label="Create a budget" onPress={() => router.push("/budget")} />
-            </View>
-          </View>
+          <EmptyState kind="budgets" title="Budgets will be here" hint="So far, it's empty. Create your first budget?" action="Create a budget" onAction={() => router.push("/budget")} />
         )}
       </ScrollView>
     </View>
@@ -255,11 +249,7 @@ export function BudgetDetails() {
             </View>
           ))
         ) : (
-          <View style={{ alignItems: "center", gap: 8, padding: 32 }}>
-            <Icon name="receipt" size={72} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Empty")}</Text>
-            <Text style={{ color: p.muted, fontSize: 14 }}>{t.t("No expenses of this budget in the period")}</Text>
-          </View>
+          <EmptyState kind="operations" title="Empty" hint="No expenses of this budget in the period" />
         )}
       </ScrollView>
     </View>

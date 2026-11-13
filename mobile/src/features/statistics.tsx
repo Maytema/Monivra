@@ -16,6 +16,7 @@ import { Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
 import { SumTabs, ToneBadge } from "../ui/parts.tsx";
 import { numberText } from "../ui/number-text.ts";
+import { EmptyState } from "../ui/empty-state.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
 import { filtersActive, openFilters as openFiltersSheet } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
@@ -284,11 +285,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
             <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
         ) : (
-          <View style={{ padding: 32, alignItems: "center", gap: 10 }}>
-            <Icon name="stats" size={80} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Statistics would be here")}</Text>
-            <Text style={{ color: p.muted, textAlign: "center" }}>{t.t("Start adding expenses or income and the data will appear")}</Text>
-          </View>
+          <EmptyState kind="statistics" title="Statistics would be here" hint="Start adding expenses or income and the data will appear" />
         )}
       </View>
   );

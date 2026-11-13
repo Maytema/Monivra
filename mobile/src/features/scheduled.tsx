@@ -20,6 +20,7 @@ import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { timeLabel } from "../ui/time-dialog.tsx";
 import { Spot } from "../ui/spotlight.tsx";
 import { mix } from "../ui/theme.ts";
+import { EmptyState } from "../ui/empty-state.tsx";
 import { openAddMenu } from "./add-menu.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openRecurrence, openReminder, openTime } from "./editor/options.tsx";
@@ -202,14 +203,7 @@ export function ScheduledScreen() {
             ))}
           </View>
         ) : (
-          <View style={{ alignItems: "center", paddingTop: 40, paddingHorizontal: 32 }}>
-            <Icon name="calendar" size={88} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 20, fontWeight: "500", textAlign: "center", marginTop: 12, marginBottom: 8 }}>{t.t("Scheduled payments will be here")}</Text>
-            <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t("Create your first scheduled payment")}</Text>
-            <View style={{ width: "100%", maxWidth: 270, marginTop: 24 }}>
-              <Button label="Create" onPress={openCreate} />
-            </View>
-          </View>
+          <EmptyState kind="scheduled" title="Scheduled payments will be here" hint="Create your first scheduled payment" action="Create" onAction={openCreate} />
         )}
       </Screen>
       {dates.length ? <Fab label="Add" collapsed={fab.collapsed} onPress={openCreate} /> : null}

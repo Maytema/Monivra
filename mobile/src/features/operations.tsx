@@ -29,6 +29,7 @@ import { listingOnTop } from "./reveal.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
+import { EmptyState } from "../ui/empty-state.tsx";
 
 type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
 
@@ -260,12 +261,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
             </View>
           </View>
         }
-        ListEmptyComponent={
-          <View style={{ alignItems: "center", padding: 32, gap: 8 }}>
-            <Text style={{ color: p.ink, fontSize: 20 }}>{t.t("Empty")}</Text>
-            <Text style={{ color: p.muted, textAlign: "center" }}>{t.t("Start adding expenses or income and the data will appear")}</Text>
-          </View>
-        }
+        ListEmptyComponent={<EmptyState kind="operations" title="Empty" hint="Start adding expenses or income and the data will appear" />}
         renderItem={({ item }) =>
           item.kind === "day" ? (
             <DayHead date={item.date} ops={item.ops} />

@@ -6,8 +6,9 @@ import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Period } from "../domain/periods.ts";
 import type { Category } from "../domain/types.ts";
 import { useLedger, useMoney } from "../ui/app-context.tsx";
-import { Button, Empty, Screen } from "../ui/kit.tsx";
+import { Screen } from "../ui/kit.tsx";
 import { CategoryTile, SumTabs } from "../ui/parts.tsx";
+import { EmptyState } from "../ui/empty-state.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { setView, useView } from "./ui-state.ts";
@@ -40,10 +41,7 @@ const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period
       <Screen padded={false}>
         <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
         {empty ? (
-          <View style={{ padding: 24, gap: 14 }}>
-            <Empty text="Categories will be here" />
-            <Button label="Create" onPress={create} />
-          </View>
+          <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
         ) : (
           <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 11, paddingBottom: 16 }}>
             {tiles.map((c) => {
