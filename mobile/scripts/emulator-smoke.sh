@@ -153,6 +153,9 @@ shot 16-editor 3
 tap "Select date"
 shot 16b-calendar 2
 tap "Cancel"
+tap "Attachment"
+shot 16c-photo-menu 2
+back
 back
 # Gestures: a swipe over the operations moves to the previous period; a long press on a row starts
 # the selection.

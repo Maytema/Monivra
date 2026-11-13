@@ -3,7 +3,7 @@
 // tax and commission, and the keypad — or, for an opened operation, its actions. All state and rules
 // live in `EditorSession`; this file only draws it and forwards taps.
 import { useRef, useSyncExternalStore, type ReactNode } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { addDays } from "../../domain/dates.ts";
 import { defaultAccountId } from "../../domain/ledger.ts";
 import { applyFees } from "../../domain/money.ts";
@@ -20,6 +20,7 @@ import { Icon } from "../../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
+import { canAttachPhotos, choosePhoto, takePhoto } from "../../platform/native.ts";
 import { feeLabel, openFee, openRecurrence, openReminder, openTags, openTime, optionsSet, setPaymentTime } from "./options.tsx";
 import { openPartyPicker, openTransferPicker } from "./party-picker.tsx";
 import { EditorSession, newDraft, type EditorDraft, type Party } from "./session.ts";
@@ -216,10 +217,83 @@ function Amount({ session }: { session: EditorSession }) {
   );
 }
 
+const MAX_PHOTOS = 5;
+
+// "Add photo": the camera or the gallery (js/screens/operation-editor/extras.js photoMenu).
+function PhotoMenu({ session }: { session: EditorSession }) {
+  const p = usePalette();
+  const t = useT();
+  const close = useCloseLayer();
+  const attach = (get: () => Promise<string | null>) => async () => {
+    try {
+      const photo = await get();
+      if (!photo) return;
+      session.update({ photos: [...(session.draft.photos ?? []), photo] });
+      close();
+      toast(t.t("Photo attached"));
+    } catch (error) {
+      toast(t.t(error instanceof Error ? error.message : "This image could not be opened"));
+    }
+  };
+  const row = (icon: string, label: string, onPress: () => void) => (
+    <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, minHeight: 62, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: p.line, backgroundColor: pressed ? p.soft : "transparent" })}>
+      <Icon name={icon} size={24} color={p.ink} />
+      <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
+    </Pressable>
+  );
+  return (
+    <View>
+      <Text style={{ color: p.ink, fontSize: 22, textAlign: "center", marginBottom: 10 }}>{t.t("Add photo")}</Text>
+      {row("camera", "Take a photo", () => void attach(takePhoto)())}
+      {row("image", "Choose from gallery", () => void attach(choosePhoto)())}
+    </View>
+  );
+}
+
+// An attached photo over the whole screen.
+function PhotoViewer({ src }: { src: string }) {
+  const close = useCloseLayer();
+  const t = useT();
+  return (
+    <Pressable accessibilityLabel={t.t("Close")} onPress={close} style={{ flex: 1, backgroundColor: "#000000", justifyContent: "center" }}>
+      <Image source={{ uri: src }} style={{ width: "100%", height: "100%" }} resizeMode="contain" accessibilityLabel={t.t("Photo")} />
+      <View style={{ position: "absolute", top: 12, right: 12 }}>
+        <Icon name="close" size={28} color="#ffffff" />
+      </View>
+    </Pressable>
+  );
+}
+
+function Photos({ session }: { session: EditorSession }) {
+  const p = usePalette();
+  const t = useT();
+  const photos = session.draft.photos ?? [];
+  if (!photos.length) return null;
+  return (
+    <ScrollView horizontal contentContainerStyle={{ gap: 10, paddingVertical: 8 }}>
+      {photos.map((src, i) => (
+        <View key={i} style={{ width: 72, height: 72 }}>
+          <Pressable accessibilityLabel={t.t("Open photo")} onPress={() => sheets.open(<PhotoViewer src={src} />, "full")}>
+            <Image source={{ uri: src }} style={{ width: 72, height: 72, borderRadius: 10 }} />
+          </Pressable>
+          <Pressable
+            accessibilityLabel={t.t("Remove photo")}
+            onPress={() => session.update({ photos: photos.filter((_x, k) => k !== i) })}
+            style={{ position: "absolute", top: -6, right: -6, width: 24, height: 24, borderRadius: 12, backgroundColor: p.ink, alignItems: "center", justifyContent: "center" }}
+          >
+            <Icon name="close" size={14} color={p.bg} />
+          </Pressable>
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
 function Extras({ session }: { session: EditorSession }) {
   const p = usePalette();
   const t = useT();
   const d = session.draft;
+  const addPhoto = () => ((d.photos ?? []).length >= MAX_PHOTOS ? toast(t.t("No more than {n} photos", { n: MAX_PHOTOS })) : sheets.open(<PhotoMenu session={session} />, "sheet"));
   const editComment = () => promptDialog("Comment", d.comment, (value) => session.update({ comment: value }), "Comment");
   const editTags = () => openTags(d.tags, (tags) => session.update({ tags }));
   return (
@@ -235,6 +309,7 @@ function Extras({ session }: { session: EditorSession }) {
         </View>
       ) : null}
       <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center", minHeight: session.compact ? 46 : 51, borderBottomWidth: 1, borderBottomColor: p.line }}>
+        {canAttachPhotos() ? <IconButton name="clip" label="Attachment" size={26} onPress={addPhoto} /> : null}
         <IconButton name="comment" label="Comment" onPress={editComment} />
         <IconButton name="tag" label="Tags" onPress={editTags} />
       </View>
@@ -247,6 +322,7 @@ function Extras({ session }: { session: EditorSession }) {
           ))}
         </Pressable>
       ) : null}
+      <Photos session={session} />
     </View>
   );
 }
