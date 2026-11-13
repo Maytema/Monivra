@@ -135,3 +135,10 @@ shrinking with BitmapFactory), linked by Expo autolinking.
    Text parity: `scratchpad` check listed ~190 old strings absent from the new source; most are browser-only
    or accessibility labels; the real explanations were restored (calculation, reminder, bulk edit).
 3. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
+
+
+## Проверено на эмуляторе (сборка 48, CI 43416326940)
+- Тестовое уведомление «Run notification» приходит плавающей шапкой (heads-up) — видно на 15n.
+- Выделение операций — отдельные скруглённые карточки; долгое нажатие после свайпов работает.
+- Предпросмотр отчёта открывается отдельным окном; PDF строится только при «Сохранить/Поделиться/Печать».
+- Ещё не проверено глазами: экран блокировки/ПИН-анимации, FAB в запланированных платежах с данными, «О нас», сетки кнопок 2×2, подстраницы настроек, поиск.

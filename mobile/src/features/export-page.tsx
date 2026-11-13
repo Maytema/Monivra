@@ -89,7 +89,7 @@ async function preparePages(data: LedgerData, t: Translator, d: Draft): Promise<
     layoutReport(data, words, { mode: d.mode === "detail" ? "detail" : "summary", filters: d.filters, period: d.period, sections: d.sections, parts: d.parts }, (done, total) => say(`${done} / ${total}`), signal),
   );
   if (!report) return undefined;
-  perfLog(`report ${d.mode}: ${report.pages.length} pages laid out`, started);
+  perfLog(`report ${d.mode}: ${report.pages.length} pages laid out`, now() - started);
   return { kind: "pdf", report, name: report.name, pages: report.pages };
 }
 
@@ -100,7 +100,7 @@ async function fileOf(t: Translator, job: Extract<Job, { kind: "pdf" }>): Promis
   const bytes = await withProgress("Preparing the report", t.t("Preparing…"), (say, signal) => pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
   if (bytes) {
     job.file = bytes;
-    perfLog(`report file: ${bytes.length} bytes`, started);
+    perfLog(`report file: ${bytes.length} bytes`, now() - started);
   }
   return bytes;
 }
