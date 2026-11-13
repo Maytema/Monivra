@@ -16,7 +16,7 @@ import { DomainError } from "../../domain/errors.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";
 import { openCalendar } from "../../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../../ui/currency-sheet.tsx";
-import { confirmDialog, confirmInfo, notice, promptDialog, toast } from "../../ui/dialogs.tsx";
+import { confirmDialog, confirmInfo, notice, promptDialog, showInfo, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
 import { spotlight } from "../../ui/spotlight.tsx";
@@ -26,6 +26,7 @@ import { operationShown, showOperations, showScheduled } from "../reveal.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
 import { canAttachPhotos, choosePhoto, takePhoto } from "../../platform/native.ts";
+import { MAX_PHOTO_MB, PHOTO_FORMATS, toPhotoError, type PhotoProblem } from "../../platform/photo-rules.ts";
 import { feeLabel, openFee, openRecurrence, openReminder, openTags, openTime, optionsSet, setPaymentTime } from "./options.tsx";
 import { openPartyPicker, openTransferPicker } from "./party-picker.tsx";
 import { openCalculationHelp } from "./help-texts.tsx";
@@ -224,6 +225,13 @@ function Amount({ session }: { session: EditorSession }) {
 }
 
 const MAX_PHOTOS = 5;
+const PHOTO_PROBLEMS: Record<PhotoProblem, string> = {
+  format: "This file is not a supported photo. Only pictures in these formats can be attached: {formats}. Audio, video and other files cannot.",
+  size: "This photo is too large. A photo can be up to {max} MB.",
+  damaged: "This photo is damaged and cannot be opened",
+  unreadable: "This image could not be opened",
+  cloud: "The photo is not fully on the phone. Download it first",
+};
 
 // "Add photo": the camera or the gallery (js/screens/operation-editor/extras.js photoMenu).
 function PhotoMenu({ session }: { session: EditorSession }) {
@@ -238,7 +246,9 @@ function PhotoMenu({ session }: { session: EditorSession }) {
       close();
       toast(t.t("Photo attached"));
     } catch (error) {
-      toast(t.t(error instanceof Error ? error.message : "This image could not be opened"));
+      // A file that may not be attached is explained in a window, with what may be.
+      const { problem } = toPhotoError(error);
+      showInfo(t.t(PHOTO_PROBLEMS[problem], { formats: PHOTO_FORMATS, max: MAX_PHOTO_MB }), t.t("Photo not attached"));
     }
   };
   const row = (icon: string, label: string, onPress: () => void) => (

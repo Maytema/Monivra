@@ -214,8 +214,29 @@ shot 16b-calendar 2
 tap "Cancel"
 tap "Attachment"
 shot 16c-photo-menu 2
-back
-back
+# Photos. Three files are put on the phone: a text file named like a picture and a file over the size limit
+# (each must be refused with an explanation), and a real picture, which is attached, saved with the operation
+# and seen again as a paper clip in the list. They are picked through "Choose from gallery".
+FIXTURES="$(cd "$(dirname "$0")" && pwd)/fixtures"
+adb push "$FIXTURES/receipt.jpg" /sdcard/Download/receipt.jpg >/dev/null 2>&1
+echo "this is not a picture" > /tmp/notes.jpg && adb push /tmp/notes.jpg /sdcard/Download/notes.jpg >/dev/null 2>&1
+head -c 17000000 /dev/zero > /tmp/huge.png && adb push /tmp/huge.png /sdcard/Download/huge.png >/dev/null 2>&1
+pick_photo() { # file name, shot name: opens the picker from the open menu and chooses the file
+  tap "Choose from gallery" || return 1
+  sleep 3; shot "$2-picker" 1
+  tap "$1" || { tap "Show roots" && tap "Downloads" && tap "$1"; } || { log "picker: $1 NOT FOUND"; back; return 1; }
+  shot "$2" 4
+}
+PHOTO_OK=0
+if pick_photo notes.jpg 16d-photo-not-a-picture; then tap "OK"; fi
+if pick_photo huge.png 16e-photo-too-large; then tap "OK"; fi
+if pick_photo receipt.jpg 16f-photo-attached; then
+  tap "Open photo" && { shot 16g-photo-viewer 2; back; }
+  tap "Save operation" && PHOTO_OK=1
+  tap "Operations" || true
+  shot 16h-operations-with-clip 3
+fi
+if [ "$PHOTO_OK" = 0 ]; then back; back; fi
 # Gestures: a swipe over the operations moves to the previous period; a long press on a row starts
 # the selection.
 tap "Operations"

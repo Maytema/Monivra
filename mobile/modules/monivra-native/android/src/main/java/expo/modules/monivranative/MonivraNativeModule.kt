@@ -29,6 +29,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 
 private const val REQUEST_PHOTO = 46071
+private val PHOTO_TYPES = setOf("image/jpeg", "image/png", "image/webp")
 
 class MonivraNativeModule : Module() {
   private var pendingPhoto: Promise? = null
@@ -68,16 +69,20 @@ class MonivraNativeModule : Module() {
     }
 
     // A picked or taken photo as a small JPEG data URL (js/platform/photo.js: long side 800, quality 75),
-    // turned the way the camera says it was held.
-    Function("photoDataUrl") { uri: String, longSide: Int, quality: Int ->
-      val path = Uri.parse(uri).path ?: throw Exception("The photo could not be read")
+    // turned the way the camera says it was held. Only a real JPEG, PNG or WebP picture of at most maxBytes is
+    // taken, whatever the file is called; the codes PHOTO_SIZE, PHOTO_FORMAT and PHOTO_DAMAGED tell the screen why not.
+    Function("photoDataUrl") { uri: String, longSide: Int, quality: Int, maxBytes: Double ->
+      val path = Uri.parse(uri).path ?: throw Exception("PHOTO_UNREADABLE")
+      if (File(path).length() > maxBytes) throw Exception("PHOTO_SIZE")
       val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
       BitmapFactory.decodeFile(path, bounds)
-      if (bounds.outWidth <= 0 || bounds.outHeight <= 0) throw Exception("This photo is damaged and cannot be opened")
+      val mime = bounds.outMimeType
+      if (mime == null || mime !in PHOTO_TYPES) throw Exception("PHOTO_FORMAT")
+      if (bounds.outWidth <= 0 || bounds.outHeight <= 0) throw Exception("PHOTO_DAMAGED")
       var sample = 1
       while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= longSide) sample *= 2
       val bitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample })
-        ?: throw Exception("This photo is damaged and cannot be opened")
+        ?: throw Exception("PHOTO_DAMAGED")
       val degrees = when (ExifInterface(path).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
         ExifInterface.ORIENTATION_ROTATE_90 -> 90f
         ExifInterface.ORIENTATION_ROTATE_180 -> 180f
