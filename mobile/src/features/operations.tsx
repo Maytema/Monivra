@@ -21,7 +21,7 @@ import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
-import { FiltersPanel } from "./filters-panel.tsx";
+import { openFilters } from "./filters-panel.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
@@ -49,7 +49,6 @@ export function OperationsScreen() {
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
   const setFilters = (next: Filters) => setView({ filters: next });
-  const [filtering, setFiltering] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState(false);
     const [atTop, setAtTop] = useState(true);
@@ -111,7 +110,7 @@ export function OperationsScreen() {
         <Icon name="back" size={24} color={p.ink} />
       </Pressable>
       <TextInput autoFocus value={query} onChangeText={setQuery} placeholder={t.t("Search by comments")} placeholderTextColor={p.muted} style={{ flex: 1, color: p.ink, fontSize: 16, paddingVertical: 7, paddingHorizontal: 4, borderBottomWidth: 1, borderBottomColor: p.muted }} />
-      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Filters")} onPress={() => setFiltering(true)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Filters")} onPress={() => openFilters(filters, setFilters)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center" }}>
         <Icon name={active ? "filterOff" : "filter"} size={24} color={p.ink} />
       </Pressable>
     </View>
@@ -126,7 +125,7 @@ export function OperationsScreen() {
         header={
           <>
             <PeriodBar />
-            {active ? <FilteredBanner onChange={() => setFiltering(true)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
+            {active ? <FilteredBanner onChange={() => openFilters(filters, setFilters)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
           </>
         }
         render={(shown, isCurrent) => (
@@ -154,7 +153,6 @@ export function OperationsScreen() {
       ) : (
         <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
       )}
-      <FiltersPanel visible={filtering} filters={filters} onChange={setFilters} onClose={() => setFiltering(false)} />
     </View>
   );
 }

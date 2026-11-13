@@ -16,11 +16,11 @@ import { mix } from "../ui/theme.ts";
 import { SumTabs, ToneBadge } from "../ui/parts.tsx";
 import { numberText } from "../ui/number-text.ts";
 import { openCategorySheet } from "./category-sheet.tsx";
-import { FiltersPanel, filtersActive } from "./filters-panel.tsx";
+import { filtersActive, openFilters as openFiltersSheet } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { setView, useView } from "./ui-state.ts";
+import { getView, setView, useView } from "./ui-state.ts";
 
 const percentText = (percent: number, locale: string): string => numberText(shownPercent(percent), locale, 2) + "%";
 const DAY = 86400000;
@@ -38,14 +38,11 @@ function Heading({ children }: { children: string }) {
 
 export function StatisticsScreen() {
   const p = usePalette();
-  const { filters } = useView();
-  const [filtering, setFiltering] = useState(false);
-  const openFilters = useCallback(() => setFiltering(true), []);
+  const openFilters = useCallback(() => openFiltersSheet(getView().filters, (f) => setView({ filters: f })), []);
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <RootHero icon="filter" label="Filters" onAction={openFilters} />
       <PeriodPager header={<PeriodBar />} render={(period) => <StatisticsPage period={period} openFilters={openFilters} />} />
-      <FiltersPanel visible={filtering} filters={filters} onChange={(f) => setView({ filters: f })} onClose={() => setFiltering(false)} />
     </View>
   );
 }
