@@ -192,7 +192,7 @@ export function BudgetsScreen() {
                       accessibilityRole="button"
                       onPress={() => router.push({ pathname: "/budget-details", params: { id: s.b.id } })}
                       onLongPress={() => sheets.open(<ActionsSheet b={s.b} />, "sheet")}
-                      style={({ pressed }) => ({ padding: 16, borderWidth: 1, borderColor: s.left < 0 ? p.negative : p.line, borderRadius: 16, backgroundColor: pressed ? p.soft : p.key })}
+                      style={{ padding: 16, borderWidth: 1, borderColor: s.left < 0 ? p.negative : p.line, borderRadius: 16, backgroundColor: p.key }}
                     >
                       <BudgetBody state={s} />
                     </Pressable>
