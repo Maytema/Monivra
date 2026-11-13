@@ -255,7 +255,7 @@ export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongP
       accessibilityRole="button"
       onPress={onPress}
       onLongPress={onLongPress}
-      style={({ pressed }) => ({ width, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 9, paddingVertical: 6, paddingHorizontal: 7, borderWidth: 1, borderColor: p.line, borderRadius: 12, backgroundColor: pressed ? p.soft : p.key })}
+      style={{ width, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 9, paddingVertical: 6, paddingHorizontal: 7, borderWidth: 1, borderColor: p.line, borderRadius: 12, backgroundColor: p.key }}
     >
       <ToneBadge icon={icon} color={color} size={42} iconSize={23} radius={10} />
       <View style={{ flex: 1, minWidth: 0 }}>

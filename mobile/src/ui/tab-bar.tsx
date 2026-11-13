@@ -18,8 +18,8 @@ export const TABS = [
 
 // The open tab shows its icon filled (as in the reference screens), the inner lines cut out in the
 // colour of the pill.
-const FILLED: Record<string, { shape: string; inner?: string }> = {
-  wallet: { shape: "M4 5h15v4H5a2 2 0 0 1 0-4zM3 7v13h18V9H5a2 2 0 0 1-2-2z", inner: "M17 13h4v4h-4z" },
+const FILLED: Record<string, { shape: string; inner?: string; dot?: string }> = {
+  wallet: { shape: "M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", inner: "M13 9h7v6h-7a3 3 0 0 1 0-6z", dot: "M14 10.7a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6z" },
   categories: { shape: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" },
   receipt: { shape: "M4 2l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v20l-2-2-2 2-2-2-2 2-2-2-2 2-2-2-2 2z", inner: "M7.5 7h9M7.5 11h9M7.5 15h9" },
   stats: { shape: "M3 3h18v18H3z", inner: "M8 16v-4m4 4V7m4 9v-6" },
@@ -30,8 +30,9 @@ function TabIcon({ name, active, color, cut }: { name: string; active: boolean; 
   if (!filled) return <Icon name={name} size={24} color={color} />;
   return (
     <Svg width={24} height={24} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <Path d={filled.shape} fill={color} stroke={color} strokeWidth={1.7} />
-      {filled.inner ? <Path d={filled.inner} fill={cut} stroke={cut} strokeWidth={1.9} /> : null}
+      <Path d={filled.shape} fill={color} stroke={color} strokeWidth={filled.dot ? 0.6 : 1.7} />
+      {filled.inner ? <Path d={filled.inner} fill={filled.dot ? cut : "none"} stroke={filled.dot ? "none" : cut} strokeWidth={1.9} /> : null}
+      {filled.dot ? <Path d={filled.dot} fill={color} /> : null}
     </Svg>
   );
 }

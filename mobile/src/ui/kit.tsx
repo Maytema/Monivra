@@ -93,7 +93,7 @@ export function Button({ label, onPress, kind = "primary", disabled = false }: {
 export function Row({ left, title, subtitle, right, onPress, onLongPress, selected = false }: { left?: ReactNode; title: string; subtitle?: string; right?: ReactNode; onPress?: () => void; onLongPress?: () => void; selected?: boolean }) {
   const p = usePalette();
   return (
-    <Pressable onPress={onPress} onLongPress={onLongPress} disabled={!onPress && !onLongPress} style={({ pressed }) => [styles.row, (pressed || selected) && { backgroundColor: p.soft }]}>
+    <Pressable onPress={onPress} onLongPress={onLongPress} disabled={!onPress && !onLongPress} style={[styles.row, selected && { backgroundColor: p.soft }]}>
       {left}
       <View style={{ flex: 1 }}>
         <Text style={{ color: p.ink, fontSize: font.body }} numberOfLines={1}>

@@ -105,11 +105,16 @@ function LockScreen() {
     setTyped("");
   };
   return (
-    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <View style={{ width: "100%", maxWidth: 310, alignItems: "center" }}>
-        <Icon name="lock" size={42} color={p.ink} />
-        <Text style={{ color: p.ink, fontSize: 24, fontWeight: "500", marginTop: 14, marginBottom: 14 }}>{t.t("Enter your PIN")}</Text>
+    <View style={{ flex: 1, backgroundColor: p.bg, alignItems: "center", justifyContent: "space-between", paddingHorizontal: 24, paddingTop: 110, paddingBottom: 40 }}>
+      <View style={{ alignItems: "center" }}>
+        <Icon name="dollar" size={80} color={p.ink} />
+        <Text style={{ color: p.ink, fontSize: 22, marginTop: 50, marginBottom: 26 }}>{t.t("Enter your PIN")}</Text>
+        <PinDots length={length} value={typed} failed={failed} big />
+      </View>
+      <View style={{ width: "100%", maxWidth: 290 }}>
         <PinPad
+          big
+          hideDots
           length={length}
           value={typed}
           failed={failed}
@@ -134,7 +139,7 @@ function LockScreen() {
 // The dots and the keys of a PIN (css/more.css .pin, .pin-dots): rings that fill with the accent and a
 // soft halo, a shake after a wrong PIN; three columns of keys 65 dp high with 17 dp corners, the
 // backspace a bare icon on the right, `left` the key at the bottom left (the fingerprint).
-export function PinPad({ length, value, onChange, disabled = false, failed = false, left }: { length: number; value: string; onChange: (v: string) => void; disabled?: boolean; failed?: boolean; left?: ReactNode }) {
+export function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
   const p = usePalette();
   const t = useT();
   const shake = useRef(new Animated.Value(0)).current;
@@ -146,36 +151,48 @@ export function PinPad({ length, value, onChange, disabled = false, failed = fal
       Animated.timing(shake, { toValue: 0, duration: 80, useNativeDriver: true }),
     ]).start();
   }, [failed, shake]);
+  return (
+    <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: big ? 32 : 18, height: big ? 28 : 44, marginBottom: big ? 0 : 16, transform: [{ translateX: shake }] }}>
+      {Array.from({ length }, (_, i) => {
+        const filled = i < value.length;
+        return big ? (
+          <View key={i} style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: failed ? p.negative : filled ? p.accent : mix(p.muted, p.bg, 0.35) }} />
+        ) : (
+          <View key={i} style={{ width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: filled ? mix(p.accent, p.bg, 0.22) : "transparent" }}>
+            <View style={{ width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: failed ? p.negative : filled ? p.accent : p.muted, backgroundColor: filled ? p.accent : "transparent" }} />
+          </View>
+        );
+      })}
+    </Animated.View>
+  );
+}
+
+export function PinPad({ length, value, onChange, disabled = false, failed = false, left, big = false, hideDots = false }: { big?: boolean; hideDots?: boolean; length: number; value: string; onChange: (v: string) => void; disabled?: boolean; failed?: boolean; left?: ReactNode }) {
+  const p = usePalette();
+  const t = useT();
   const press = (k: string) => onChange(k === "⌫" ? value.slice(0, -1) : value.length < length ? value + k : value);
+  const keyH = big ? 80 : 65;
+  const gap = big ? 16 : 14;
   const key = (k: string) => (
-    <Pressable key={k} disabled={disabled} accessibilityRole="button" accessibilityLabel={k} onPress={() => press(k)} style={({ pressed }) => ({ flex: 1, minHeight: 65, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.tint, opacity: disabled ? 0.4 : 1 })}>
-      <Text style={{ color: p.ink, fontSize: 29 }}>{k}</Text>
+    <Pressable key={k} disabled={disabled} accessibilityRole="button" accessibilityLabel={k} onPress={() => press(k)} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: big ? 20 : 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : p.tint, opacity: disabled ? 0.4 : 1 })}>
+      <Text style={{ color: p.ink, fontSize: big ? 34 : 29 }}>{k}</Text>
     </Pressable>
   );
   const rows = [["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"]];
   return (
     <View style={{ width: "100%", alignItems: "stretch" }}>
-      <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 18, height: 44, marginBottom: 16, transform: [{ translateX: shake }] }}>
-        {Array.from({ length }, (_, i) => {
-          const filled = i < value.length;
-          return (
-            <View key={i} style={{ width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: filled ? mix(p.accent, p.bg, 0.22) : "transparent" }}>
-              <View style={{ width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: failed ? p.negative : filled ? p.accent : p.muted, backgroundColor: filled ? p.accent : "transparent" }} />
-            </View>
-          );
-        })}
-      </Animated.View>
-      <View style={{ gap: 14, marginTop: 10 }}>
+      {hideDots ? null : <PinDots length={length} value={value} failed={failed} />}
+      <View style={{ gap, marginTop: big ? 0 : 10 }}>
         {rows.map((r) => (
-          <View key={r[0]} style={{ flexDirection: "row", gap: 14 }}>
+          <View key={r[0]} style={{ flexDirection: "row", gap }}>
             {r.map(key)}
           </View>
         ))}
-        <View style={{ flexDirection: "row", gap: 14 }}>
+        <View style={{ flexDirection: "row", gap }}>
           {left ?? <View style={{ flex: 1 }} />}
           {key("0")}
-          <Pressable disabled={disabled} accessibilityRole="button" accessibilityLabel={t.t("Backspace")} onPress={() => press("⌫")} style={({ pressed }) => ({ flex: 1, minHeight: 65, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
-            <Icon name="backspace" size={30} color={p.ink} />
+          <Pressable disabled={disabled} accessibilityRole="button" accessibilityLabel={t.t("Backspace")} onPress={() => press("⌫")} style={({ pressed }) => ({ flex: 1, minHeight: keyH, borderRadius: 17, alignItems: "center", justifyContent: "center", backgroundColor: pressed ? p.soft : "transparent" })}>
+            <Icon name="backspace" size={big ? 36 : 30} color={p.ink} />
           </Pressable>
         </View>
       </View>

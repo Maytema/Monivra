@@ -22,10 +22,11 @@ export function DialogActions({ children }: { children: ReactNode }) {
 // The confirmation of the first application (ui/dialogs.js `confirmAction`): a warning sign, "Are you
 // sure?", what will happen, and two buttons one under the other — the action (red when it deletes) and
 // Cancel.
-function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string }) {
+function Confirm({ title, yes, danger, onYes, message, makeBackup }: { title: string; yes: string; danger: boolean; onYes: () => void; message?: string; makeBackup?: () => boolean }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
+  const [backup, setBackup] = useState(false);
   const button = (label: string, onPress: () => void, look: "danger" | "primary" | "outline") => (
     <Pressable
       accessibilityRole="button"
@@ -54,8 +55,17 @@ function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: s
       <Text style={{ color: p.ink, fontSize: 22, textAlign: "center", marginTop: 10, marginBottom: 10 }}>{t.t("Are you sure?")}</Text>
       <Text style={{ color: p.ink, fontSize: 15, lineHeight: 21, textAlign: "center" }}>{t.t(title)}</Text>
       {message ? <Text style={{ color: p.inkSoft, fontSize: 14, lineHeight: 20, textAlign: "center", marginTop: 8 }}>{message}</Text> : null}
+      {makeBackup ? (
+        <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: backup }} onPress={() => setBackup(!backup)} style={{ flexDirection: "row", alignItems: "center", gap: 12, marginTop: 14, paddingVertical: 6 }}>
+          <View style={{ width: 22, height: 22, borderRadius: 4, borderWidth: 2, borderColor: backup ? p.accent : p.muted, backgroundColor: backup ? p.accent : "transparent", alignItems: "center", justifyContent: "center" }}>
+            {backup ? <Icon name="check" size={16} color={p.onAccent} /> : null}
+          </View>
+          <Text style={{ color: p.ink, fontSize: 15 }}>{t.t("Create a backup first")}</Text>
+        </Pressable>
+      ) : null}
       {button(yes, () => {
         close();
+        if (backup && makeBackup && !makeBackup()) return void showInfo("The backup could not be stored because the storage is full. Nothing was changed. Save a data file instead, or delete older backups.", "Backup not made");
         onYes();
       }, danger ? "danger" : "primary")}
       {button("Cancel", close, "outline")}
@@ -64,8 +74,8 @@ function Confirm({ title, yes, danger, onYes, message }: { title: string; yes: s
 }
 
 // A question: the dangerous action is red and says what it does ("Delete").
-export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK", message?: string): number =>
-  sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} message={message} />, "dialog");
+export const confirmDialog = (title: string, onYes: () => void, danger = false, yes = "OK", message?: string, makeBackup?: () => boolean): number =>
+  sheets.open(<Confirm title={title} yes={yes} danger={danger} onYes={onYes} message={message} makeBackup={makeBackup} />, "dialog");
 
 // A message with OK (ui/dialogs.js showInfo).
 function Info({ text, title }: { text: string; title?: string }) {

@@ -1,7 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { memo, useRef, type ComponentRef } from "react";
+import { memo } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
@@ -48,7 +48,6 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const box = useRef<ComponentRef<typeof View>>(null);
   const compact = useWindowDimensions().width <= 360;
   const account = accountById(data, op.from || op.to);
   const category = categoryById(data, op.category);
@@ -68,14 +67,8 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
     <Pressable
       accessibilityRole="button"
       onPress={() => onPress(op.id)}
-      onLongPress={onLongPress ? () => (console.log("[gesture] row long press"), onLongPress(op.id)) : undefined}
-      ref={box}
-      onPressIn={(e: { nativeEvent: { pageX: number; pageY: number } }) => {
-        const { pageX, pageY } = e.nativeEvent;
-        box.current?.measure((_x: number, _y: number, w: number, h: number, px: number, py: number) => console.log(`[gesture] row press in at ${Math.round(pageX)},${Math.round(pageY)}; row ${Math.round(px)},${Math.round(py)} ${Math.round(w)}x${Math.round(h)}`));
-      }}
-      onPressOut={() => console.log("[gesture] row press out")}
-      style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, borderRadius: 12, backgroundColor: selected || pressed ? p.soft : "transparent" })}
+      onLongPress={onLongPress ? () => onLongPress(op.id) : undefined}
+      style={{ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, marginHorizontal: -16, paddingHorizontal: 16, borderRadius: 14, backgroundColor: selected ? alpha(p.accent, 0.13) : "transparent" }}
     >
       {selecting && selected ? (
         <View style={{ width: 48, height: 48, borderRadius: 9, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}>

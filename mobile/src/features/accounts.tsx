@@ -42,7 +42,7 @@ function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () =
     <Pressable
       accessibilityRole="button"
       onPress={() => !ignoreTap?.() && openAccountSheet(account.id)}
-      style={({ pressed }) => ({
+      style={{
         minHeight: data.settings.bigAccounts ? 82 : 72,
         flexDirection: "row",
         alignItems: "center",
@@ -52,8 +52,8 @@ function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () =
         borderRadius: 15,
         borderWidth: 1,
         borderColor: p.line,
-        backgroundColor: pressed ? p.soft : p.key,
-      })}
+        backgroundColor: p.key,
+      }}
     >
       <View style={{ width: 54, height: 54 }}>
         <ToneBadge icon={account.icon} color={account.color} size={54} iconSize={28} />

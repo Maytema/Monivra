@@ -16,6 +16,7 @@ export { openTime };
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { deleteTag, rememberTags, renameTag } from "../../domain/operations.ts";
 import type { EditorSession, EditorDraft } from "./session.ts";
+import { openReminderHelp } from "./help-texts.tsx";
 
 const MAX_INTERVAL = 365;
 const UNITS: IntervalUnit[] = ["Days", "Weeks", "Months", "Years"];
@@ -274,6 +275,9 @@ function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null
         }
       />
       <FieldButton label="At" text={r.time} onPress={() => openTime(r.time, (time) => setR({ ...r, time }))} />
+      <Pressable accessibilityRole="button" onPress={openReminderHelp} style={{ minHeight: 47, borderRadius: 28, borderWidth: 1, borderColor: "#8886", alignItems: "center", justifyContent: "center", marginVertical: 12, paddingHorizontal: 12 }}>
+        <Text style={{ fontSize: 15, textAlign: "center" }}>{t.t("Important information about setting a reminder")}</Text>
+      </Pressable>
       <Footer
         off={() => {
           close();

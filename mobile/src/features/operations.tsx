@@ -80,7 +80,7 @@ export function OperationsScreen() {
 
   const removeSelected = () => {
     if (!selected.length) return;
-    confirmDialog("Delete selected operations?", () => run((tx) => (deleteOperations(tx, selected), true)) && (setSelected([]), setSelection(false)), true, "Delete", t.t("Balances of the accounts change by them."));
+    confirmDialog("The selected operations will be permanently deleted. Recovery will only be possible if a backup is available.", () => run((tx) => (deleteOperations(tx, selected), true)) && (setSelected([]), setSelection(false)), true, "Delete", t.t("Balances of the accounts change by them."), () => { try { appStore().createBackup("safety"); return true; } catch { return false; } });
   };
   const changeDate = () =>
     openCalendar(systemClock.today(), (date) => {

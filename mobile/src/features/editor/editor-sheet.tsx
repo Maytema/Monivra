@@ -23,6 +23,7 @@ import { alpha, mix } from "../../ui/theme.ts";
 import { canAttachPhotos, choosePhoto, takePhoto } from "../../platform/native.ts";
 import { feeLabel, openFee, openRecurrence, openReminder, openTags, openTime, optionsSet, setPaymentTime } from "./options.tsx";
 import { openPartyPicker, openTransferPicker } from "./party-picker.tsx";
+import { openCalculationHelp } from "./help-texts.tsx";
 import { EditorSession, newDraft, type EditorDraft, type Party } from "./session.ts";
 
 const DOUBLE_TAP_MS = 340;
@@ -334,7 +335,7 @@ function FeeLines({ session }: { session: EditorSession }) {
   const money = useMoney();
   const fees = session.draft.fees ?? [];
   if (!fees.length) return null;
-  const { steps } = applyFees(session.sentAmount(), fees);
+  const { steps, net } = applyFees(session.sentAmount(), fees);
   const parties = session.parties();
   const currency = parties.accountCurrency;
   const set = (next: Fee[]) => session.update({ fees: next });
@@ -354,6 +355,15 @@ function FeeLines({ session }: { session: EditorSession }) {
           </View>
         );
       })}
+      {fees.length ? (
+        <View style={{ flexDirection: "row", alignItems: "center", paddingLeft: 14 }}>
+          <Text style={{ flex: 1, color: p.inkSoft, fontSize: 14 }}>
+            {t.t("Result (from -> to)")}:{"\n"}
+            {money(session.sentAmount(), currency)} → {money(net, currency)}
+          </Text>
+          <IconButton name="help" label="Help" size={20} onPress={openCalculationHelp} />
+        </View>
+      ) : null}
     </View>
   );
 }
