@@ -109,15 +109,16 @@ template), export page (financial summary PDF, detailed transactions PDF, CSV; p
 same commands as the PDF), recovery screen (unreadable data: copy, newest whole backup, data file, start
 empty with the file put aside), first-start screen, Settings › Backups and Test notification.
 
-Not possible here and why: printing a report (`expo-print`) and photo attachments (`expo-image-picker`)
-need packages, and the work environment cannot install packages (network off) — the owner can allow
-package installs in the network settings of the environment.
+Printing, photos of operations and the privacy screen ("Hide preview") need native code that no installed
+package offers, and packages cannot be installed here; they are written as the application's own module
+`mobile/modules/monivra-native` (Kotlin: FLAG_SECURE, PrintManager, camera intent with a FileProvider,
+shrinking with BitmapFactory), linked by Expo autolinking.
 
 ## Not yet in the new application (next priorities)
 
 1. Emulator comparison of every screen of the brief with the old crawl (`tools/tour/crawl-old.mjs`) — the
    tour of `scripts/emulator-smoke.sh` now covers the Data section and every Settings page.
-2. Printing and photo attachments (packages above).
+2. Printing and photos: verify on the emulator and on the owner's phone (camera, gallery, print dialog).
 3. Ordering of statistics blocks by drag (accounts, categories and subcategories done).
 4. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
 5. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).

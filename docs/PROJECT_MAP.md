@@ -73,6 +73,8 @@ open that file for the reference behaviour. The first application has its own ma
 
 ## Not implemented yet (planned)
 
-Recovery screen, printing a report (needs `expo-print`), photo attachments of operations (needs
-`expo-image-picker`); packages cannot be installed while the network of the work environment is off. The list with details is kept in
+Nothing of the first application's features is left out on purpose; what is still being checked on the
+emulator is listed in [architecture/MIGRATION_STATUS.md](architecture/MIGRATION_STATUS.md). Native
+capabilities no installed library offers (privacy screen, printing, photos) live in
+`mobile/modules/monivra-native` (Kotlin) behind `src/platform/native.ts`. The list with details is kept in
 [architecture/MIGRATION_STATUS.md](architecture/MIGRATION_STATUS.md).

@@ -117,6 +117,7 @@ Details and invariants: [FINANCIAL_RULES.md](FINANCIAL_RULES.md).
 | Network for rates | `platform/network.ts` | fetch |
 | Secure random | `platform/crypto.ts` | expo-crypto |
 | Timing log | `platform/perf.ts` | console → logcat (`[perf] …`) |
+| Privacy screen (FLAG_SECURE), printing a PDF, taking and shrinking photos | `platform/native.ts` | the application's own module `mobile/modules/monivra-native` (Kotlin, linked by Expo autolinking; no package to install) |
 
 ## 11. Performance
 
