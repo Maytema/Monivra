@@ -336,9 +336,9 @@ export function SettingsScreen() {
       <Stack.Screen options={{ title: t.t("Settings") }} />
       <ScrollView>
         {SECTIONS.map(([label, caption, icon, page]) => (
-          <SettingRow key={page} title={label} caption={caption} icon={icon} onPress={go(page)} />
+          <SettingRow tall key={page} title={label} caption={caption} icon={icon} onPress={go(page)} />
         ))}
-        <SettingRow title="Exchange rates" caption="Update and edit" icon="transfer" onPress={() => router.push("/rates")} />
+        <SettingRow tall title="Exchange rates" caption="Update and edit" icon="transfer" onPress={() => router.push("/rates")} />
       </ScrollView>
     </View>
   );

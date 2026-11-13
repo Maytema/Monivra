@@ -201,11 +201,13 @@ export function BudgetsScreen() {
               );
             })
         ) : (
-          <View style={{ alignItems: "center", gap: 12, padding: 24 }}>
-            <Icon name="budget" size={80} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Budgets will be here")}</Text>
-            <Text style={{ color: p.muted, fontSize: 14 }}>{t.t("So far, it's empty. Create your first budget?")}</Text>
-            <Button label="Create a budget" onPress={() => router.push("/budget")} />
+          <View style={{ alignItems: "center", paddingTop: 40, paddingHorizontal: 32 }}>
+            <Icon name="budget" size={88} color={p.accentInk} />
+            <Text style={{ color: p.ink, fontSize: 20, fontWeight: "500", textAlign: "center", marginTop: 12, marginBottom: 8 }}>{t.t("Budgets will be here")}</Text>
+            <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t("So far, it's empty. Create your first budget?")}</Text>
+            <View style={{ width: "100%", maxWidth: 270, marginTop: 24 }}>
+              <Button label="Create a budget" onPress={() => router.push("/budget")} />
+            </View>
           </View>
         )}
       </ScrollView>

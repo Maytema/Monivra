@@ -13,7 +13,7 @@ import type { Recurrence, Reminder, ScheduledPayment } from "../domain/types.ts"
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar, PrimaryPill, TextButton } from "../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
-import { Button, Card, Empty, Icon, Label, Screen } from "../ui/kit.tsx";
+import { Button, Card, Icon, Label, Screen } from "../ui/kit.tsx";
 import { Fab } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { mix } from "../ui/theme.ts";
@@ -198,11 +198,13 @@ export function ScheduledScreen() {
             ))}
           </View>
         ) : (
-          <View style={{ padding: 32, alignItems: "center", gap: 12 }}>
-            <Icon name="calendar" size={80} color={p.accentInk} />
-            <Text style={{ color: p.ink, fontSize: 18 }}>{t.t("Scheduled payments will be here")}</Text>
-            <Empty text="Create your first scheduled payment" />
-            <Button label="Create" onPress={openCreate} />
+          <View style={{ alignItems: "center", paddingTop: 40, paddingHorizontal: 32 }}>
+            <Icon name="calendar" size={88} color={p.accentInk} />
+            <Text style={{ color: p.ink, fontSize: 20, fontWeight: "500", textAlign: "center", marginTop: 12, marginBottom: 8 }}>{t.t("Scheduled payments will be here")}</Text>
+            <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t("Create your first scheduled payment")}</Text>
+            <View style={{ width: "100%", maxWidth: 270, marginTop: 24 }}>
+              <Button label="Create" onPress={openCreate} />
+            </View>
           </View>
         )}
       </Screen>

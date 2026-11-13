@@ -6,17 +6,18 @@ import type { ReactNode } from "react";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 
-export function SettingRow({ title, caption, icon, onPress, end, chevron = true }: { title: string; caption?: string; icon?: string; onPress?: () => void; end?: ReactNode; chevron?: boolean }) {
+// `tall`: the rows of a menu page (.menu .row of the first application).
+export function SettingRow({ title, caption, icon, onPress, end, chevron = true, tall = false }: { title: string; caption?: string; icon?: string; onPress?: () => void; end?: ReactNode; chevron?: boolean; tall?: boolean }) {
   const p = usePalette();
   const t = useT();
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={t.t(title)} disabled={!onPress} onPress={onPress} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 18, minHeight: 64, paddingVertical: 10, paddingHorizontal: 18, backgroundColor: pressed ? p.sheet : "transparent" })}>
-      {icon ? <Icon name={icon} size={24} color={p.inkSoft} /> : null}
+    <Pressable accessibilityRole="button" accessibilityLabel={t.t(title)} disabled={!onPress} onPress={onPress} style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 17, minHeight: tall ? 84 : 62, paddingVertical: tall ? 22 : 17, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line, backgroundColor: pressed ? p.sheet : "transparent" })}>
+      {icon ? <Icon name={icon} size={22} color={p.inkSoft} /> : null}
       <View style={{ flex: 1 }}>
-        <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(title)}</Text>
-        {caption ? <Text style={{ color: p.muted, fontSize: 13, marginTop: 2 }}>{t.t(caption)}</Text> : null}
+        <Text style={{ color: p.ink, fontSize: 16, lineHeight: 22 }}>{t.t(title)}</Text>
+        {caption ? <Text style={{ color: p.muted, fontSize: 13, lineHeight: 18, marginTop: 6 }}>{t.t(caption)}</Text> : null}
       </View>
-      {end ?? (onPress && chevron ? <Icon name="right" size={22} color={p.muted} /> : null)}
+      {end ?? (onPress && chevron ? <View style={{ marginRight: 10 }}><Icon name="right" size={22} color={p.inkSoft} /></View> : null)}
     </Pressable>
   );
 }
