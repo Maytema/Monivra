@@ -152,6 +152,9 @@ back
 tap "Scheduled payments"
 tap "Create"
 shot 15a-schedule-create 2
+# The Recur and Reminder windows (arrow, value, arrow; the outlined list button), each closed with Cancel.
+if tap "Recur"; then shot 15a2-recur-window 2; tap "Cancel"; fi
+if tap "Reminder"; then shot 15a3-reminder-window 2; tap "Cancel"; fi
 tap "Complete"
 shot 15b-schedule-menu 2
 tap "Food"
