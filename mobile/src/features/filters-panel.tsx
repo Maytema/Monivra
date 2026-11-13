@@ -14,7 +14,7 @@ import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
 export const filtersActive = (f: Filters): boolean => !!(f.accounts || f.categories || f.types || f.tags || f.origin);
 
-const TYPE_NAMES: Record<string, string> = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
+export const TYPE_NAMES: Record<string, string> = { expense: "Expenses", income: "Incomes", transfer: "Transfers" };
 const ORIGINS: Record<string, string> = { manual: "By hand", schedule: "By schedule" };
 const ACCOUNT_GROUPS: readonly [string, (a: Account) => boolean][] = [
   ["Accounts", (a) => a.type === "Regular"],
@@ -23,7 +23,7 @@ const ACCOUNT_GROUPS: readonly [string, (a: Account) => boolean][] = [
 ];
 
 // The square check of the pickers (filter-parts.js `checkboxHtml`).
-function Check({ on }: { on: boolean }) {
+export function Check({ on }: { on: boolean }) {
   const p = usePalette();
   return (
     <View style={{ width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: on ? p.accent : p.inkSoft, backgroundColor: on ? p.accent : "transparent", alignItems: "center", justifyContent: "center" }}>
@@ -77,7 +77,7 @@ function Summary({ n }: { n: number }) {
 const rowLine = (p: ReturnType<typeof usePalette>) => ({ borderBottomWidth: 1, borderBottomColor: p.line });
 
 // One group whose head chooses everything or nothing (filters.js `multiSelect`).
-function MultiSelect({ title, items, selected, done }: { title: string; items: readonly { id: string; name: string }[]; selected: string[] | null; done: (v: string[] | null) => void }) {
+export function MultiSelect({ title, items, selected, done }: { title: string; items: readonly { id: string; name: string }[]; selected: string[] | null; done: (v: string[] | null) => void }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
@@ -116,7 +116,7 @@ function MultiSelect({ title, items, selected, done }: { title: string; items: r
 
 // Accounts grouped by kind; a group head folds the group and chooses all of it (filters.js
 // `filterAccountSelect`).
-function AccountSelect({ selected, done }: { selected: string[] | null; done: (v: string[] | null) => void }) {
+export function AccountSelect({ selected, done }: { selected: string[] | null; done: (v: string[] | null) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -177,7 +177,7 @@ function AccountSelect({ selected, done }: { selected: string[] | null; done: (v
 
 // Categories as a tree: Expenses and Incomes, their categories, and the subcategories one by one; a
 // parent with subcategories offers its own operations as "Without subcategory" (category-filter.js).
-function CategorySelect({ selected, done }: { selected: string[] | null; done: (v: string[] | null) => void }) {
+export function CategorySelect({ selected, done }: { selected: string[] | null; done: (v: string[] | null) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();

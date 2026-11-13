@@ -23,6 +23,8 @@ const result = await page.evaluate(async () => {
   const scheduled = await import("/js/domain/scheduled.js");
   const plan = await import("/js/domain/reminder-plan.js");
   const csv = await import("/js/data/csv.js");
+  const restore = await import("/js/domain/restore.js");
+  const csvImport = await import("/js/data/csv-import.js");
   const { createSampleData } = await import("/tests/fixtures/sample-data.js");
   const { createReportFixture } = await import("/tests/report-fixture.js");
   const user = st.appData;
@@ -104,6 +106,84 @@ const result = await page.evaluate(async () => {
       day: `${r.at.getFullYear()}-${pad(r.at.getMonth() + 1)}-${pad(r.at.getDate())}`,
       time: `${pad(r.at.getHours())}:${pad(r.at.getMinutes())}`,
     }));
+    // Restore plans: merging another dataset, merging a changed copy (records that differ, a category
+    // of the other kind under the same id, look-alike operations), replacing without scheduled payments.
+    const changed = clone(sample);
+    changed.ops[0].comment = "changed in the backup";
+    changed.ops[1].amount += 100;
+    const lonely = changed.categories.find((c) => c.type === "expense" && !c.parent && !changed.categories.some((x) => x.parent === c.id));
+    changed.ops = changed.ops.filter((o) => o.category !== lonely.id);
+    changed.scheduled = changed.scheduled.filter((o) => o.category !== lonely.id);
+    changed.budgets = changed.budgets.map((b) => (b.categories ? { ...b, categories: b.categories.filter((id) => id !== lonely.id) } : b)).filter((b) => b.categories === null || b.categories.length);
+    lonely.type = "income";
+    changed.ops.push({ ...clone(changed.ops[2]), id: "look-alike" });
+    changed.tags.push("from-backup");
+    const plans = [
+      ["sample+report merge keep count", sample, report, { mode: "merge", scheduled: "count", conflicts: "keep" }],
+      ["sample+changed merge keep count", sample, changed, { mode: "merge", scheduled: "count", conflicts: "keep" }],
+      ["sample+changed merge backup none", sample, changed, { mode: "merge", scheduled: "none", conflicts: "backup" }],
+      ["withSchedules+report replace none", withSchedules, report, { mode: "replace", scheduled: "none" }],
+      ["sample+withSchedules replace count", sample, withSchedules, { mode: "replace", scheduled: "count" }],
+    ].map(([name, current, incoming, options]) => {
+      const { next, summary, problem } = restore.planRestore(clone(current), clone(incoming), options);
+      const merge = summary.merge && Object.fromEntries(Object.entries(summary.merge).map(([k, r]) => [k, r.items ? { ...r, items: r.items.map((x) => x.now.id) } : r]));
+      return {
+        name,
+        current,
+        incoming,
+        options,
+        summary: { ...summary, merge },
+        problem: problem && { what: problem.what, number: problem.number },
+        next: { accounts: next.accounts.map((a) => a.id), categories: next.categories.map((c) => `${c.id}:${c.type}:${c.parent ?? ""}`), ops: next.ops.map((o) => `${o.id}:${o.amount}:${o.category ?? ""}:${o.comment}`), scheduled: next.scheduled.map((x) => x.id), budgets: next.budgets.map((b) => b.id), tags: next.tags, rates: next.rates },
+      };
+    });
+    // CSV import: the example file, the first application's own export, and a messy bank file.
+    const csvFiles = {
+      example: csv.csvExample(),
+      messy: [
+        "Дата;Сумма;Счёт;Категория;Комментарий;Теги",
+        "03.04.2026;-1 234,50;Cash;Food;обед;work| lunch",
+        "04.04.2026;2 500,00;Cash;Salary;;",
+        "31.04.2026;10,00;Cash;Food;bad date;",
+        "05.04.2026;12,345;Cash;Food;three decimals;",
+        "06.04.2026;;Cash;Food;no amount;",
+        "07.04.2026;(45,00);New card;Transport / Taxi;;",
+        '08.04.2026;"1.234,56";Cash;Food;"quoted; with delimiter";',
+        "09.04.2026;-5,00;Cash;Food;обед;",
+        "09.04.2026;-5,00;Cash;Food;обед;",
+        "01.12.2026;-7,00;Cash;Food;ahead;",
+      ].join("\n"),
+    };
+    const imports = {};
+    for (const [name, text] of Object.entries(csvFiles))
+      for (const base of ["sample", "empty"]) {
+        st.setAppData(clone(base === "sample" ? sample : { ...sample, accounts: [], categories: [], ops: [], scheduled: [], budgets: [], tags: [] }));
+        const table = csvImport.readTable(text);
+        const mapping = csvImport.guessColumns(table.headers);
+        const formats = csvImport.guessFormats(table, mapping);
+        const records = csvImport.readRecords(table, mapping, formats);
+        const refs = csvImport.referencesOf(records);
+        const links = csvImport.guessLinks(refs);
+        const plan = csvImport.planImport(records, links);
+        const d = st.appData;
+        const accountName = (id) => d.accounts.find((a) => a.id === id)?.name ?? plan.created.accounts.find((a) => a.id === id)?.name ?? "";
+        const allCategories = [...d.categories, ...plan.created.categories];
+        const categoryName = (id) => { const c = allCategories.find((x) => x.id === id); return c ? csvImport.categoryPath(c, allCategories) : ""; };
+        imports[`${name}/${base}`] = {
+          text,
+          base,
+          mapping,
+          formats,
+          problems: records.map((r) => r.problem),
+          links: { accounts: Object.entries(links.accounts).map(([k, v]) => [k, v === "new" ? "new" : accountName(v)]), categories: Object.entries(links.categories).map(([k, v]) => [k, v === "new" ? "new" : categoryName(v)]) },
+          plan: {
+            total: plan.total, duplicates: plan.duplicates, repeated: plan.repeated, ignoredSigns: plan.ignoredSigns, future: plan.future, newTags: plan.newTags, lines: plan.lines,
+            invalid: plan.invalid.map((x) => x.line),
+            created: { accounts: plan.created.accounts.map((a) => `${a.name}:${a.currency}`), categories: plan.created.categories.map((c) => `${c.type}:${categoryName(c.id)}`) },
+            ops: plan.ops.map((o) => [o.type, o.date, o.amount, accountName(o.from), accountName(o.to), categoryName(o.category), o.receive ?? null, o.comment, o.tags.join("|")].join(";")),
+          },
+        };
+      }
     st.setAppData(clone(report));
     const csvReport = csv.csvText(st.appData.ops);
     return {
@@ -112,6 +192,8 @@ const result = await page.evaluate(async () => {
       fixtures: { sample, report, withSchedules, withReminders },
       observations: { sample: observe(sample), report: observe(report) },
       postDue: postDue(withSchedules),
+      plans,
+      imports,
     };
   } finally {
     st.setAppData(user);
@@ -121,5 +203,7 @@ await browser.close();
 server.close();
 
 for (const [name, data] of Object.entries(result.fixtures)) await writeFile(new URL(`${name}.json`, out), JSON.stringify(data, null, 1));
+await writeFile(new URL("old-import.json", out), JSON.stringify(result.imports, null, 1));
+await writeFile(new URL("old-restore.json", out), JSON.stringify(result.plans, null, 1));
 await writeFile(new URL("old-observations.json", out), JSON.stringify({ now: NOW, observations: result.observations, postDue: result.postDue, reminders: result.reminders, csvReport: result.csvReport }, null, 1));
 console.log("written", Object.keys(result.fixtures).join(", "), "and old-observations.json");

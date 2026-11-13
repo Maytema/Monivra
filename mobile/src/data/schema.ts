@@ -124,6 +124,23 @@ SELECT a.id AS account_id,
 FROM account a;
 `,
   },
+  {
+    // Saved backups: copies of the whole ledger kept on the phone (the first application kept them
+    // inside its data). The ten newest are kept; see data/backups.ts.
+    version: 2,
+    sql: `
+CREATE TABLE backup (
+  id TEXT PRIMARY KEY,
+  at TEXT NOT NULL,
+  day TEXT NOT NULL,
+  reason TEXT NOT NULL CHECK (reason IN ('manual','auto','safety')),
+  build TEXT NOT NULL,
+  schema INTEGER NOT NULL,
+  summary_json TEXT NOT NULL,
+  data_json TEXT NOT NULL);
+CREATE INDEX backup_at ON backup(at);
+`,
+  },
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.at(-1)?.version ?? 0;

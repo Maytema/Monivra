@@ -187,6 +187,47 @@ tap "Exit selection"
 tap "November 2026"
 shot 19-period-dialog 2
 back
+# The Data section: saved backups (make one, open it: what merge and replace would do), the data
+# file, the import with its example, the export and its preview, the ways to delete.
+tap "More"
+tap "Data"
+shot 20-data 2
+has "Saved backups" 20-data
+tap "Saved backups"
+tap "Create a backup"
+shot 20a-backups 2
+has "Local backup" 20a-backups
+tap "Local backup"
+shot 20b-restore 3
+has "Merge data" 20b-restore
+adb shell input swipe 500 1600 500 500 300
+shot 20c-restore-scrolled 2
+back
+back
+tap "Data file"
+shot 20d-data-file 2
+back
+tap "Import data"
+shot 20e-import 2
+tap "View example"
+shot 20f-import-example 2
+back
+back
+tap "Export data"
+shot 20g-export 3
+has "All time" 20g-export
+tap "Preview"
+shot 20h-export-preview 3
+back
+back
+tap "Delete my data"
+shot 20i-deletion 2
+tap "Delete operations"
+shot 20j-delete-dialog 2
+has "Create a backup first" 20j-delete-dialog
+tap "Cancel"
+back
+back
 # Layout under other system settings: three-button navigation, a large font, a denser display.
 # (Looked at by a person: screenshots only.)
 tap "Accounts"

@@ -1,0 +1,424 @@
+{
+ "example/sample": {
+  "text": "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency,counted_as\r\nexpense,2026-03-01,12.50,USD,Wallet,,Food / Lunch,Lunch with a friend,work|lunch,,,\r\nexpense,2026-03-02,45.00,USD,Wallet,,Transport,Taxi,,,,\r\nincome,2026-03-05,2500.00,USD,,Wallet,Salary,March salary,,,,\r\ntransfer,2026-03-06,300.00,USD,Wallet,Savings,,Monthly saving,,,,\r\ntransfer,2026-03-07,100.00,USD,Wallet,Euro wallet,,Exchange,,92.00,EUR,\r\nadjustment,2026-03-08,5.00,USD,,Wallet,,Found in a coat,,,,",
+  "base": "sample",
+  "mapping": {
+   "date": 1,
+   "amount": 2,
+   "type": 0,
+   "currency": 3,
+   "from": 4,
+   "to": 5,
+   "account": -1,
+   "category": 6,
+   "comment": 7,
+   "tags": 8,
+   "to_amount": 9,
+   "to_currency": 10
+  },
+  "formats": {
+   "dateOrder": "ymd",
+   "decimal": ".",
+   "ambiguous": false
+  },
+  "problems": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "links": {
+   "accounts": [
+    [
+     "Wallet",
+     "new"
+    ],
+    [
+     "Savings",
+     "new"
+    ],
+    [
+     "Euro wallet",
+     "new"
+    ]
+   ],
+   "categories": [
+    [
+     "expense\u0000Food / Lunch",
+     "new"
+    ],
+    [
+     "expense\u0000Transport",
+     "Transport"
+    ],
+    [
+     "income\u0000Salary",
+     "Salary"
+    ]
+   ]
+  },
+  "plan": {
+   "total": 6,
+   "duplicates": 0,
+   "repeated": 0,
+   "ignoredSigns": 0,
+   "future": 0,
+   "newTags": [
+    "work",
+    "lunch"
+   ],
+   "lines": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "invalid": [],
+   "created": {
+    "accounts": [
+     "Wallet:USD",
+     "Savings:USD",
+     "Euro wallet:EUR"
+    ],
+    "categories": [
+     "expense:Food / Lunch"
+    ]
+   },
+   "ops": [
+    "expense;2026-03-01;1250;Wallet;;Food / Lunch;;Lunch with a friend;work|lunch",
+    "expense;2026-03-02;4500;Wallet;;Transport;;Taxi;",
+    "income;2026-03-05;250000;;Wallet;Salary;;March salary;",
+    "transfer;2026-03-06;30000;Wallet;Savings;;30000;Monthly saving;",
+    "transfer;2026-03-07;10000;Wallet;Euro wallet;;9200;Exchange;",
+    "adjustment;2026-03-08;500;;Wallet;;6;Found in a coat;"
+   ]
+  }
+ },
+ "example/empty": {
+  "text": "type,date,amount,currency,from,to,category,comment,tags,to_amount,to_currency,counted_as\r\nexpense,2026-03-01,12.50,USD,Wallet,,Food / Lunch,Lunch with a friend,work|lunch,,,\r\nexpense,2026-03-02,45.00,USD,Wallet,,Transport,Taxi,,,,\r\nincome,2026-03-05,2500.00,USD,,Wallet,Salary,March salary,,,,\r\ntransfer,2026-03-06,300.00,USD,Wallet,Savings,,Monthly saving,,,,\r\ntransfer,2026-03-07,100.00,USD,Wallet,Euro wallet,,Exchange,,92.00,EUR,\r\nadjustment,2026-03-08,5.00,USD,,Wallet,,Found in a coat,,,,",
+  "base": "empty",
+  "mapping": {
+   "date": 1,
+   "amount": 2,
+   "type": 0,
+   "currency": 3,
+   "from": 4,
+   "to": 5,
+   "account": -1,
+   "category": 6,
+   "comment": 7,
+   "tags": 8,
+   "to_amount": 9,
+   "to_currency": 10
+  },
+  "formats": {
+   "dateOrder": "ymd",
+   "decimal": ".",
+   "ambiguous": false
+  },
+  "problems": [
+   null,
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "links": {
+   "accounts": [
+    [
+     "Wallet",
+     "new"
+    ],
+    [
+     "Savings",
+     "new"
+    ],
+    [
+     "Euro wallet",
+     "new"
+    ]
+   ],
+   "categories": [
+    [
+     "expense\u0000Food / Lunch",
+     "new"
+    ],
+    [
+     "expense\u0000Transport",
+     "new"
+    ],
+    [
+     "income\u0000Salary",
+     "new"
+    ]
+   ]
+  },
+  "plan": {
+   "total": 6,
+   "duplicates": 0,
+   "repeated": 0,
+   "ignoredSigns": 0,
+   "future": 0,
+   "newTags": [
+    "work",
+    "lunch"
+   ],
+   "lines": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "invalid": [],
+   "created": {
+    "accounts": [
+     "Wallet:USD",
+     "Savings:USD",
+     "Euro wallet:EUR"
+    ],
+    "categories": [
+     "expense:Food",
+     "expense:Food / Lunch",
+     "expense:Transport",
+     "income:Salary"
+    ]
+   },
+   "ops": [
+    "expense;2026-03-01;1250;Wallet;;Food / Lunch;;Lunch with a friend;work|lunch",
+    "expense;2026-03-02;4500;Wallet;;Transport;;Taxi;",
+    "income;2026-03-05;250000;;Wallet;Salary;;March salary;",
+    "transfer;2026-03-06;30000;Wallet;Savings;;30000;Monthly saving;",
+    "transfer;2026-03-07;10000;Wallet;Euro wallet;;9200;Exchange;",
+    "adjustment;2026-03-08;500;;Wallet;;6;Found in a coat;"
+   ]
+  }
+ },
+ "messy/sample": {
+  "text": "Дата;Сумма;Счёт;Категория;Комментарий;Теги\n03.04.2026;-1 234,50;Cash;Food;обед;work| lunch\n04.04.2026;2 500,00;Cash;Salary;;\n31.04.2026;10,00;Cash;Food;bad date;\n05.04.2026;12,345;Cash;Food;three decimals;\n06.04.2026;;Cash;Food;no amount;\n07.04.2026;(45,00);New card;Transport / Taxi;;\n08.04.2026;\"1.234,56\";Cash;Food;\"quoted; with delimiter\";\n09.04.2026;-5,00;Cash;Food;обед;\n09.04.2026;-5,00;Cash;Food;обед;\n01.12.2026;-7,00;Cash;Food;ahead;",
+  "base": "sample",
+  "mapping": {
+   "date": 0,
+   "amount": 1,
+   "type": -1,
+   "currency": -1,
+   "from": -1,
+   "to": -1,
+   "account": 2,
+   "category": 3,
+   "comment": 4,
+   "tags": 5,
+   "to_amount": -1,
+   "to_currency": -1
+  },
+  "formats": {
+   "dateOrder": "dmy",
+   "decimal": ",",
+   "ambiguous": false
+  },
+  "problems": [
+   null,
+   null,
+   "the date is not valid",
+   "the amount has more than two decimals",
+   "the amount is missing",
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "links": {
+   "accounts": [
+    [
+     "Cash",
+     "new"
+    ],
+    [
+     "New card",
+     "new"
+    ]
+   ],
+   "categories": [
+    [
+     "expense\u0000Food",
+     "Food"
+    ],
+    [
+     "income\u0000Salary",
+     "Salary"
+    ],
+    [
+     "expense\u0000Transport / Taxi",
+     "new"
+    ],
+    [
+     "income\u0000Food",
+     "new"
+    ]
+   ]
+  },
+  "plan": {
+   "total": 10,
+   "duplicates": 0,
+   "repeated": 1,
+   "ignoredSigns": 0,
+   "future": 1,
+   "newTags": [
+    "work",
+    "lunch"
+   ],
+   "lines": [
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "invalid": [
+    4,
+    5,
+    6
+   ],
+   "created": {
+    "accounts": [
+     "Cash:KGS",
+     "New card:KGS"
+    ],
+    "categories": [
+     "expense:Transport / Taxi",
+     "income:Food"
+    ]
+   },
+   "ops": [
+    "expense;2026-04-03;123450;Cash;;Food;;обед;work|lunch",
+    "income;2026-04-04;250000;;Cash;Salary;;;",
+    "expense;2026-04-07;4500;New card;;Transport / Taxi;;;",
+    "income;2026-04-08;123456;;Cash;Food;;quoted; with delimiter;",
+    "expense;2026-04-09;500;Cash;;Food;;обед;",
+    "expense;2026-04-09;500;Cash;;Food;;обед;",
+    "expense;2026-12-01;700;Cash;;Food;;ahead;"
+   ]
+  }
+ },
+ "messy/empty": {
+  "text": "Дата;Сумма;Счёт;Категория;Комментарий;Теги\n03.04.2026;-1 234,50;Cash;Food;обед;work| lunch\n04.04.2026;2 500,00;Cash;Salary;;\n31.04.2026;10,00;Cash;Food;bad date;\n05.04.2026;12,345;Cash;Food;three decimals;\n06.04.2026;;Cash;Food;no amount;\n07.04.2026;(45,00);New card;Transport / Taxi;;\n08.04.2026;\"1.234,56\";Cash;Food;\"quoted; with delimiter\";\n09.04.2026;-5,00;Cash;Food;обед;\n09.04.2026;-5,00;Cash;Food;обед;\n01.12.2026;-7,00;Cash;Food;ahead;",
+  "base": "empty",
+  "mapping": {
+   "date": 0,
+   "amount": 1,
+   "type": -1,
+   "currency": -1,
+   "from": -1,
+   "to": -1,
+   "account": 2,
+   "category": 3,
+   "comment": 4,
+   "tags": 5,
+   "to_amount": -1,
+   "to_currency": -1
+  },
+  "formats": {
+   "dateOrder": "dmy",
+   "decimal": ",",
+   "ambiguous": false
+  },
+  "problems": [
+   null,
+   null,
+   "the date is not valid",
+   "the amount has more than two decimals",
+   "the amount is missing",
+   null,
+   null,
+   null,
+   null,
+   null
+  ],
+  "links": {
+   "accounts": [
+    [
+     "Cash",
+     "new"
+    ],
+    [
+     "New card",
+     "new"
+    ]
+   ],
+   "categories": [
+    [
+     "expense\u0000Food",
+     "new"
+    ],
+    [
+     "income\u0000Salary",
+     "new"
+    ],
+    [
+     "expense\u0000Transport / Taxi",
+     "new"
+    ],
+    [
+     "income\u0000Food",
+     "new"
+    ]
+   ]
+  },
+  "plan": {
+   "total": 10,
+   "duplicates": 0,
+   "repeated": 1,
+   "ignoredSigns": 0,
+   "future": 1,
+   "newTags": [
+    "work",
+    "lunch"
+   ],
+   "lines": [
+    2,
+    3,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "invalid": [
+    4,
+    5,
+    6
+   ],
+   "created": {
+    "accounts": [
+     "Cash:KGS",
+     "New card:KGS"
+    ],
+    "categories": [
+     "expense:Food",
+     "income:Salary",
+     "expense:Transport",
+     "expense:Transport / Taxi",
+     "income:Food"
+    ]
+   },
+   "ops": [
+    "expense;2026-04-03;123450;Cash;;Food;;обед;work|lunch",
+    "income;2026-04-04;250000;;Cash;Salary;;;",
+    "expense;2026-04-07;4500;New card;;Transport / Taxi;;;",
+    "income;2026-04-08;123456;;Cash;Food;;quoted; with delimiter;",
+    "expense;2026-04-09;500;Cash;;Food;;обед;",
+    "expense;2026-04-09;500;Cash;;Food;;обед;",
+    "expense;2026-12-01;700;Cash;;Food;;ahead;"
+   ]
+  }
+ }
+}

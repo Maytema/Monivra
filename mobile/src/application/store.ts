@@ -5,8 +5,12 @@
 import { LedgerTx, applyChange, isEmptyChange } from "../domain/change.ts";
 import { createEmptyData, createStarterData, readDataFile, writeDataFile } from "../domain/datafile.ts";
 import type { Env } from "../domain/env.ts";
-import { postDue } from "../domain/scheduled.ts";
+import { DomainError } from "../domain/errors.ts";
+import { afterDeletion, DELETIONS, planRestore, type ConflictWay, type DeletionWay, type RestoreMode, type RestoreSummary, type ScheduledWay } from "../domain/restore.ts";
+import { postDue, settleMissed } from "../domain/scheduled.ts";
 import type { LedgerData } from "../domain/types.ts";
+import { addBackup, deleteAllBackups, listBackups, readBackup, type BackupInfo, type BackupReason } from "../data/backups.ts";
+export type { BackupInfo } from "../data/backups.ts";
 import { loadLedger, persistChange, replaceLedger } from "../data/repository.ts";
 import { migrate, type SqlDriver } from "../data/schema.ts";
 import { RATE_PROVIDERS, type Fetcher } from "../services/rates/providers.ts";
@@ -32,6 +36,13 @@ export interface Store {
   forgetPosted(): void;
   importDataFile(text: string): { accounts: number; ops: number; scheduled: number };
   exportDataFile(): string;
+  // Saved backups (newest first), one backup's data, making one, restoring, deleting.
+  backups(): BackupInfo[];
+  backupData(id: string): LedgerData | null;
+  createBackup(reason?: BackupReason): BackupInfo;
+  dailyBackup(): BackupInfo | null;
+  restore(incoming: LedgerData, options: { mode: RestoreMode; scheduled: ScheduledWay; conflicts: ConflictWay; safety?: boolean }): RestoreSummary;
+  deleteData(way: DeletionWay, options?: { backup?: boolean }): void;
   updateRates(fetcher: Fetcher, force?: boolean): Promise<RateUpdateState | null>;
   env: Env;
 }
@@ -48,6 +59,21 @@ export function createStore(db: SqlDriver, env: Env, language: () => string): St
   const current = (): LedgerData => {
     if (state.status !== "ready") throw new Error("the ledger is not open");
     return state.data;
+  };
+
+  const backupsChanged = () => {
+    // The list of backups is not part of the ledger; screens that show it listen for a new revision.
+    if (state.status === "ready") set({ ...state, revision: state.revision + 1 });
+  };
+  // Settings of this phone that a restore never takes from elsewhere: the PIN lives in the phone's
+  // keystore, so the switch that says it is on must keep saying what the keystore holds.
+  const keepDeviceSettings = (next: LedgerData, now: LedgerData): LedgerData => ({
+    ...next,
+    settings: { ...next.settings, pin: now.settings.pin, biometric: now.settings.biometric, lockDelay: now.settings.lockDelay },
+  });
+  const replaceAll = (next: LedgerData) => {
+    replaceLedger(db, next, env.clock.nowIso());
+    ready(loadLedger(db) ?? next);
   };
 
   const store: Store = {
@@ -116,6 +142,51 @@ export function createStore(db: SqlDriver, env: Env, language: () => string): St
 
     exportDataFile() {
       return writeDataFile(current(), { app: "Monivra", build: APP_VERSION, exportedAt: env.clock.nowIso() });
+    },
+
+    backups: () => listBackups(db),
+    backupData: (id) => readBackup(db, id),
+
+    createBackup(reason = "manual") {
+      const info = addBackup(db, { id: env.newId(), at: env.clock.nowIso(), day: env.clock.today(), reason, build: APP_VERSION, schema: 1 }, current());
+      backupsChanged();
+      return info;
+    },
+
+    // The daily backup, when "Save locally" is on and none was made today.
+    dailyBackup() {
+      if (state.status !== "ready" || !state.data.settings.autoBackup) return null;
+      const day = env.clock.today();
+      if (listBackups(db).some((b) => b.day === day)) return null;
+      return store.createBackup("auto");
+    },
+
+    // Brings data back from a backup or a data file (`incoming` checked beforehand). The plan is
+    // checked as a whole before anything changes; `safety` makes a backup of the data first.
+    restore(incoming, { mode, scheduled, conflicts, safety = true }) {
+      const before = current();
+      const plan = planRestore(before, incoming, { mode, scheduled, conflicts });
+      if (plan.problem) throw new DomainError("This file has a record that does not pass the checks, so it cannot be restored.");
+      if (safety) store.createBackup("safety");
+      replaceAll(keepDeviceSettings(plan.next, before));
+      if (scheduled === "skip") {
+        const day = env.clock.today();
+        const due = current().scheduled.filter((x) => x.date <= day).map((x) => x.id);
+        if (due.length) store.run((tx) => due.forEach((id) => settleMissed(tx, id, false, env)));
+      }
+      store.postDueNow();
+      return plan.summary;
+    },
+
+    deleteData(way, { backup = false } = {}) {
+      const rule = DELETIONS[way];
+      const before = current();
+      if (backup && rule.backup) store.createBackup("safety");
+      if (way === "backups" || way === "everything") deleteAllBackups(db);
+      if (way !== "backups") {
+        const empty = createEmptyData(language());
+        replaceAll(way === "everything" ? empty : keepDeviceSettings(afterDeletion(way, before, empty), before));
+      } else backupsChanged();
     },
 
     // Asks the rate sources when it is time (or when forced). Failure changes nothing but the note

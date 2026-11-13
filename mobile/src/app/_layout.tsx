@@ -21,6 +21,12 @@ function KeepCurrent() {
     const store = appStore();
     const refresh = () => {
       store.postDueNow();
+      // The daily copy when "Save locally" is on (js/app/startup.js).
+      try {
+        store.dailyBackup();
+      } catch (error) {
+        console.error(error);
+      }
       askAboutMissed();
       void store.updateRates(fetcher).catch(() => undefined);
     };
