@@ -12,6 +12,7 @@ import { showError, useCommand, useLedger, useMoney, usePalette, useT } from "..
 import { appStore } from "../ui/app-context.tsx";
 import { openAmountSheet } from "../ui/amount-sheet.tsx";
 import { TextButton } from "../ui/calendar-sheet.tsx";
+import { currencyName } from "../ui/currency-names.ts";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { confirmDialog, DialogActions, optionDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText } from "../ui/form.tsx";
@@ -405,7 +406,7 @@ export function BudgetEditor() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t(existing ? "Edit budget" : "Create a budget") }} />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 14 }} keyboardShouldPersistTaps="handled">
-        <FieldText label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
+        <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
         <FieldButton
           label="Time period"
           right={
@@ -416,9 +417,9 @@ export function BudgetEditor() {
           }
           onPress={() => optionDialog<BudgetPeriod>("Choose period", PERIODS.map((x) => ({ value: x, label: NAMES[x] })), draft.period, (period) => set({ period }))}
         />
-        <FieldButton label="Categories" value={`${scope} ${t.t(draft.categories ? "(Entirely)" : "(Entire expenses)")}`} onPress={() => sheets.open(<CategorySelect selected={draft.categories} onDone={(categories) => set({ categories })} />, "sheet")} />
-        <FieldButton label="Budget currency" value={draft.currency} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
-        <FieldButton label="Budget" value={money(draft.amount, draft.currency)} onPress={() => openAmountSheet("Budget", draft.amount, (amount) => set({ amount }), false, draft.currency)} />
+        <FieldButton label="Categories" value={scope} caption={t.t(draft.categories ? "(Entirely)" : "(Entire expenses)")} onPress={() => sheets.open(<CategorySelect selected={draft.categories} onDone={(categories) => set({ categories })} />, "sheet")} />
+        <FieldButton label="Budget currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
+        <FieldButton inline label="Budget" value={money(draft.amount, draft.currency)} onPress={() => openAmountSheet("Budget", draft.amount, (amount) => set({ amount }), false, draft.currency)} />
         <View style={{ gap: 10, paddingTop: 6 }}>
           <Button label={existing ? "Save" : "Create"} onPress={save} />
           {existing ? <Button label="Delete" kind="outline" onPress={() => askDelete(run, existing.id, true)} /> : null}

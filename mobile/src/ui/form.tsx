@@ -12,7 +12,7 @@ const box = (p: ReturnType<typeof usePalette>, narrow: boolean) => ({ borderWidt
 const label = { fontSize: 17, lineHeight: 22, fontWeight: "500" as const };
 const useNarrow = () => useWindowDimensions().width < 360;
 
-export function FieldButton({ label: title, value, onPress, right, tone, inline = false, cell }: { label: string; value?: string; onPress: () => void; right?: ReactNode; tone?: "positive" | "negative"; inline?: boolean; cell?: { node: ReactNode; background: string } }) {
+export function FieldButton({ label: title, value, caption, onPress, right, tone, inline = false, cell }: { label: string; value?: string; caption?: string; onPress: () => void; right?: ReactNode; tone?: "positive" | "negative"; inline?: boolean; cell?: { node: ReactNode; background: string } }) {
   const p = usePalette();
   const t = useT();
   const narrow = useNarrow();
@@ -39,6 +39,7 @@ export function FieldButton({ label: title, value, onPress, right, tone, inline 
     <Pressable accessibilityRole="button" accessibilityLabel={t.t(title)} onPress={onPress} style={({ pressed }) => [box(p, narrow), pressed && { backgroundColor: p.soft }]}>
       <Text style={[label, { color: p.ink, marginBottom: right || value ? 16 : 0 }]}>{t.t(title)}</Text>
       {right ?? <Text style={{ color, fontSize: 16, lineHeight: 22 }}>{value}</Text>}
+      {caption ? <Text style={{ color: p.muted, fontSize: 13, marginTop: 4 }}>{caption}</Text> : null}
     </Pressable>
   );
 }
