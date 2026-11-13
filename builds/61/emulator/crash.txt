@@ -1,0 +1,172 @@
+--------- beginning of crash
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: FATAL EXCEPTION: mqt_v_native
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: Process: app.monivra.finance.next, PID: 6429
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: com.facebook.react.common.JavascriptException: Error: Attempting to run JS driven animation on animated node that has been moved to "native" earlier by starting an animation with `useNativeDriver: true`
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: This error is located at:
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at PinDot (address at index.android.bundle:1:1280766)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Animated(View) (address at index.android.bundle:1:1472034)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at PinDots (address at index.android.bundle:1:1281464)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at LockScreen (address at index.android.bundle:1:1279901)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at LockGate (address at index.android.bundle:1:1279511)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Ready (address at index.android.bundle:1:1274333)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Root (address at index.android.bundle:1:1275602)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RNCSafeAreaProvider (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at SafeAreaProvider (address at index.android.bundle:1:924393)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Layout (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at WrappedScreenComponent (address at index.android.bundle:1:1582101)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Suspense (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at ZoomTransitionTargetContextProvider (address at index.android.bundle:1:1048979)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Route (address at index.android.bundle:1:926089)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at BaseRoute (address at index.android.bundle:1:1580993)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at StaticContainer (address at index.android.bundle:1:978158)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at EnsureSingleNavigator (address at index.android.bundle:1:977122)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at PreventRemovalProvider (address at index.android.bundle:1:934980)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at SceneView (address at index.android.bundle:1:975906)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at NavigationProvider (address at index.android.bundle:1:956938)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at NavigationActivityProvider (address at index.android.bundle:1:975306)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at NavigationContent (address at index.android.bundle:1:961199)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at anonymous (address at index.android.bundle:1:1556788)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Content (address at index.android.bundle:1:1087545)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RNCSafeAreaProvider (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at SafeAreaProvider (address at index.android.bundle:1:924393)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at LinkPreviewContextProvider (address at index.android.bundle:1:1037789)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at AppWrapper (address at index.android.bundle:1:1087083)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at ThemeProvider (address at index.android.bundle:1:958270)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at EnsureSingleNavigator (address at index.android.bundle:1:977122)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at BaseNavigationContainer (address at index.android.bundle:1:1089888)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at InitialStateNavigationContainer (address at index.android.bundle:1:1089041)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at Suspense (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at NavigationContainerInner (address at index.android.bundle:1:1088380)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RoutesWithRemovalPreventedProvider (address at index.android.bundle:1:934637)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RemovalEventEmitterRegistryProvider (address at index.android.bundle:1:934497)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RemovalPreventionProvider (address at index.android.bundle:1:934899)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at ContextNavigator (address at index.android.bundle:1:1087184)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RoutingQueueProvider (address at index.android.bundle:1:961465)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at ExpoRoot (address at index.android.bundle:1:1086904)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at App (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at RCTView (<anonymous>)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at View (address at index.android.bundle:1:655704)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime:     at AppContainer (address at index.android.bundle:1:655523), stack:
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: start@1:733078
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: start@1:744924
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: animate@1:725387
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: start@1:1465138
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: anonymous@1:1689903
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitHookEffectListMount@1:558384
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571464
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571078
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571491
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571439
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: recursivelyTraversePassiveMountEffects@1:570435
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitPassiveMountOnFiber@1:571296
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: flushPassiveEffects@1:591190
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: flushPendingEffects@1:590973
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: flushSpawnedWork@1:590688
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: commitRoot@1:589655
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: completeRootWhenReady@1:577357
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: performWorkOnRoot@1:576623
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: flushSyncWorkAcrossRoots_impl@1:517147
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: anonymous@1:1427143
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(r8-map-id-39c4025941a1b1902b63c590b8b5b71f6fe6088a89048f165cb9ecb2caa075cc:104)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:958)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(r8-map-id-39c4025941a1b1902b63c590b8b5b71f6fe6088a89048f165cb9ecb2caa075cc:4)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$0(r8-map-id-39c4025941a1b1902b63c590b8b5b71f6fe6088a89048f165cb9ecb2caa075cc:29)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.a(r8-map-id-39c4025941a1b1902b63c590b8b5b71f6fe6088a89048f165cb9ecb2caa075cc:1)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at k6.run(r8-map-id-39c4025941a1b1902b63c590b8b5b71f6fe6088a89048f165cb9ecb2caa075cc:16)
+11-13 18:28:37.040  6429  6457 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1012)
