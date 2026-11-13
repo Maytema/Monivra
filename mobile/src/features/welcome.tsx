@@ -4,9 +4,8 @@ import { useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { FileProblem } from "../domain/datafile.ts";
 import { appStore, usePalette, useT } from "../ui/app-context.tsx";
-import { Button, Card, Label } from "../ui/kit.tsx";
+import { Button } from "../ui/kit.tsx";
 import { pickTextFile } from "../platform/files.ts";
-import { font, space } from "../ui/theme.ts";
 
 export function Welcome() {
   const p = usePalette();
@@ -26,21 +25,18 @@ export function Welcome() {
       setBusy(false);
     }
   };
+  // As the first application's welcome (js/screens/welcome.js): a title, a line, two ways to begin; and a
+  // third way that only this application has, bringing the data of the first one.
   return (
-    <View style={{ flex: 1, backgroundColor: p.bg, padding: space.xl, justifyContent: "center", gap: space.l }}>
-      <Text style={{ color: p.ink, fontSize: font.hero, fontWeight: "700" }}>Monivra</Text>
-      <Text style={{ color: p.inkSoft, fontSize: font.body }}>{t.t("How would you like to begin?")}</Text>
-      <Card>
-        <Button label="Start with a basic set" onPress={() => appStore().begin("starter", t.t)} disabled={busy} />
-        <Label>{t.t("A few accounts and categories that you can change or delete.")}</Label>
-      </Card>
-      <Card>
+    <View style={{ flex: 1, backgroundColor: p.bg, padding: 32, justifyContent: "center" }}>
+      <Text style={{ color: p.ink, fontSize: 26, fontWeight: "500", textAlign: "center", marginBottom: 12 }}>{t.t("Welcome to {app}", { app: "Monivra" })}</Text>
+      <Text style={{ color: p.muted, fontSize: 16, lineHeight: 23, textAlign: "center", marginBottom: 28 }}>{t.t("Start with a basic set of accounts and categories, or begin with a blank page. You can edit or delete everything later.")}</Text>
+      <View style={{ gap: 12 }}>
+        <Button label="Start with basic set" onPress={() => appStore().begin("starter", t.t)} disabled={busy} />
         <Button label="Start empty" kind="outline" onPress={() => appStore().begin("empty", t.t)} disabled={busy} />
-      </Card>
-      <Card>
-        <Button label="Bring data from the old app" kind="outline" onPress={() => void importFile()} disabled={busy} />
-        <Label>{t.t("In the old app open More → Data → Save data file, then choose that file here. The old app keeps its data.")}</Label>
-      </Card>
+        <Button label="Bring data from the old app" kind="text" onPress={() => void importFile()} disabled={busy} />
+      </View>
+      <Text style={{ color: p.muted, fontSize: 13, lineHeight: 19, textAlign: "center", marginTop: 6 }}>{t.t("In the old app open More → Data → Save data file, then choose that file here. The old app keeps its data.")}</Text>
     </View>
   );
 }

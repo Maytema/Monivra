@@ -32,8 +32,8 @@ adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAI
 adb logcat -c
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 shot 01-first-start 25
-has "Start with a basic set" 01-first-start
-tap "Start with a basic set"
+has "Start with basic set" 01-first-start
+tap "Start with basic set"
 shot 02-accounts 4
 has "Cash" 02-accounts
 has "Overall balance" 02-accounts
