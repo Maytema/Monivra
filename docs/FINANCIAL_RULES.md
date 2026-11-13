@@ -34,10 +34,13 @@ yet covered by a test of the new application. Related details: [CREDIT_MODEL.md]
 | Amounts are written as the first application wrote them (separators, minus sign) | `domain/money.ts formatNumber` | [T] "amounts are formatted exactly as the platform formatted them" (one deliberate difference: a negative amount that rounds to zero is written `0`, not `−0`) |
 | Order of operations: newest day first, then time, then id | `domain/ledger.ts newestFirst` | [T] "newest first…" |
 | Data file v1 imports whole and exports back the same ledger; a damaged file changes nothing | `domain/datafile.ts`, `data/repository.ts replaceLedger` | [T] database tests 1–3, 6 |
+| Restore and merge plans are the first application's; merging the same backup twice changes nothing; a safety backup is made first; "Skip" lets due payments go | `domain/restore.ts`, store `restore` | [P] "restore plan …"; [T] backups tests |
+| Deleting operations sets every balance back to its opening balance; a backup first when asked | store `deleteData` | [T] "deleting: operations only…" |
+| CSV import never duplicates a row already in the data, adds future rows as scheduled payments, and undo takes away exactly what it added | `domain/csv-import.ts` | [P] "CSV import …"; [T] "an exported CSV imported again adds nothing…" |
+| Report totals follow the statistics rows; balances follow only the account filter | `application/report/model.ts` | [P] "report numbers of …" |
 
-Not built in the new application yet (rules exist only in the first application, [L]): restoring and
-merging saved backups, CSV import, PDF reports. Their rules are in the sections below and in
-[DATA_SECTION.md](DATA_SECTION.md) and [EXPORT_RULES.md](EXPORT_RULES.md).
+The rules of backups, import and reports are described in [DATA_SECTION.md](DATA_SECTION.md) and
+[EXPORT_RULES.md](EXPORT_RULES.md).
 
 ## Rules of the first application (pre-merge audit)
 

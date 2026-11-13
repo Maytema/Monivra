@@ -79,8 +79,16 @@ Details and invariants: [FINANCIAL_RULES.md](FINANCIAL_RULES.md).
   `writeDataFile`, `completeData`, `findDataProblem`); store `importDataFile` replaces the ledger in one
   transaction and then compares the stored ledger with the file (`repository.ts compareLedgers`).
 - CSV of operations in the first application's columns: `domain/csv.ts`.
-- Files: `platform/files.ts` (document picker, sharing). **Not built yet**: the list of saved backups,
-  restore/merge, the CSV import wizard, PDF.
+- Saved backups: table `backup` (migration 2), `data/backups.ts`; the ten newest are kept; the daily copy is
+  made by `KeepCurrent` when "Save locally" is on. Restore and merge: `domain/restore.ts planRestore`
+  (worked out whole before anything changes; a safety backup first); the lock settings of the phone are
+  never taken from a backup. Deletion ways: `DELETIONS` in the same file, applied by the store.
+- CSV import: `domain/csv-import.ts` (pure steps), `features/import-wizard.tsx` (pages as full layers).
+- Reports: `application/report/` — the model (numbers as the first application), the A4 layout as drawing
+  commands, the PDF writer (embedded Liberation Sans, uncompressed streams), the preview draws the same
+  commands with react-native-svg.
+- Files: `platform/files.ts` (document picker, bytes of a picked file, sharing, saving into a folder the
+  person picks).
 
 ## 8. Errors
 

@@ -66,7 +66,11 @@ Checks of the first application itself (from the repository root):
   that would fail without the change; balances are checked by replaying operations, never by trusting a
   stored figure.
 - Where the first application defines the behaviour, `test/parity.test.ts` runs its code
-  (`test/parity/run-old.mjs`) and the new code on the same fixture and compares.
+  (`test/parity/run-old.mjs`) and the new code on the same fixture and compares. The same script writes
+  `old-restore.json` (restore plans), `old-import.json` (CSV import) and `old-reports.json` (report
+  numbers), checked by `test/backups.test.ts`, `test/csv-import.test.ts` and `test/report.test.ts`. Run it
+  from the repository root after changing the first application's rules:
+  `NODE_PATH=$(npm root -g) node mobile/test/parity/run-old.mjs` (needs Playwright's Chromium).
 - `test/database.test.ts` checks one-transaction writes, refusals, migrations and that the SQL view
   `account_balance` equals the application's balances.
 

@@ -8,7 +8,7 @@ import { accountBalance } from "../src/domain/ledger.ts";
 import { putOperation } from "../src/domain/operations.ts";
 import { postDue } from "../src/domain/scheduled.ts";
 import { compareLedgers, loadLedger, persistChange, replaceLedger } from "../src/data/repository.ts";
-import { migrate, SCHEMA_VERSION, DatabaseTooNew } from "../src/data/schema.ts";
+import { inTransaction, migrate, MIGRATIONS, SCHEMA_VERSION, DatabaseTooNew } from "../src/data/schema.ts";
 import { fixture, fixtureText, memoryDb, testEnv } from "./support/helpers.ts";
 
 const NOW = "2026-11-11T06:00:00.000Z";
@@ -122,4 +122,19 @@ test("the SQL view and the application compute the same balances", () => {
   persistChange(db, tx.change, next, NOW);
   for (const row of db.all<{ account_id: string; balance: number }>("SELECT account_id, balance FROM account_balance"))
     assert.equal(row.balance, accountBalance(next, row.account_id));
+});
+
+test("migration 2 (saved backups): a database of version 1 keeps every record and balance and gains the backup table", () => {
+  const db = memoryDb();
+  db.exec("PRAGMA foreign_keys = ON");
+  inTransaction(db, () => {
+    db.exec(MIGRATIONS[0]!.sql);
+    db.exec("PRAGMA user_version = 1");
+  });
+  const data = fixture("report");
+  replaceLedger(db, data, "2026-11-11T12:00:00.000Z");
+  migrate(db);
+  assert.equal(Number(db.all<{ user_version: number }>("PRAGMA user_version")[0]?.user_version), SCHEMA_VERSION);
+  assert.deepEqual(compareLedgers(data, loadLedger(db)!), []);
+  assert.deepEqual(db.all("SELECT * FROM backup"), []);
 });
