@@ -119,6 +119,4 @@ shrinking with BitmapFactory), linked by Expo autolinking.
 1. Emulator comparison of every screen of the brief with the old crawl (`tools/tour/crawl-old.mjs`) — the
    tour of `scripts/emulator-smoke.sh` now covers the Data section and every Settings page.
 2. Printing and photos: verify on the emulator and on the owner's phone (camera, gallery, print dialog).
-3. Ordering of statistics blocks by drag (accounts, categories and subcategories done).
-4. Privacy screen (hide in recents), reminder lead times other than "on the day", periodic reminder days.
-5. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
+3. Device checks on the owner's phone; background posting delays measured on two vendors (PoC P3).
