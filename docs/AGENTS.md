@@ -34,7 +34,13 @@ over both.
 - **One piece for one job.** The same button, dialog, row, sheet or icon is one component in
   `mobile/src/ui` used everywhere (the "+" button is `Fab`, the pressed state is `ui/pressable.tsx`, the
   progress dialog is `ui/progress.tsx`). Before building a window or button, search for one that does the
-  same; if two look alike they must be the same component with parameters, not two copies.
+  same; if two look alike they must be the same component with parameters, not two copies. Example: the
+  button grid at the bottom of every account card is one component whatever the account type; only its
+  list of buttons differs.
+  **Judgement, not a mechanical rule:** share when the *job* is the same (same behaviour, same reason to
+  change). Do not merge two pieces only because they look alike today — if they answer different needs
+  and would have to grow different behaviour, or the shared version would need many special cases, keep
+  them apart (and say why in a comment). Tell the owner when such a choice was made.
 - **Look at the first application first.** Before changing a screen, read its code in `js/` and look at its
   screenshots (TESTING.md), then make the native equivalent — the behaviour and the texts of the first
   application, adapted to a native application (texts that spoke of a browser are rewritten, not copied).
