@@ -135,6 +135,11 @@ for page in "Settings" "Scheduled payments" "Budgets"; do
   back
 done
 tap "Settings"
+for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Security" "Privacy"; do
+  tap "$page"
+  shot "15s-$(echo "$page" | tr ' ' '-')" 2
+  back
+done
 for i in 1 2 3; do adb shell input swipe 540 1800 540 700 300; sleep 1; done
 tap "Exchange rates"
 shot 15-Exchange-rates 3
