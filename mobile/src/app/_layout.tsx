@@ -12,6 +12,7 @@ import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { askAboutMissed } from "../features/due-payments.tsx";
 import { Recovery } from "../features/recovery.tsx";
+import { setSecureScreen } from "../platform/native.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
@@ -42,6 +43,7 @@ function KeepCurrent() {
     const plan = () => {
       const state = store.getState();
       if (state.status !== "ready" || state.data === lastData) return;
+      setSecureScreen(!!state.data.settings.hidePreview);
       lastData = state.data;
       if (pending) clearTimeout(pending);
       pending = setTimeout(() => {

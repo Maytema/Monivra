@@ -14,6 +14,7 @@ import { newestFirst } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Filters, type Period } from "../domain/periods.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { saveTextFile, shareTextFile } from "../platform/files.ts";
+import { canPrint, printPdf } from "../platform/native.ts";
 import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
@@ -83,7 +84,11 @@ function prepare(data: LedgerData, t: Translator, d: Draft): Job {
   return { kind: "pdf", ...job };
 }
 
-async function deliver(t: Translator, job: Job, how: "share" | "save") {
+async function deliver(t: Translator, job: Job, how: "share" | "save" | "print") {
+  if (how === "print") {
+    if (job.kind === "pdf" && !printPdf(job.name, job.bytes)) toast(t.t("Printing is not available on this device"));
+    return;
+  }
   const body = job.kind === "csv" ? job.text : job.bytes;
   const type = job.kind === "csv" ? "text/csv" : "application/pdf";
   try {
@@ -95,10 +100,11 @@ async function deliver(t: Translator, job: Job, how: "share" | "save") {
 }
 
 // Share and Save under a page, each with its icon above the word (file-actions of the first application).
-function FileActions({ job, busy }: { job: () => Promise<Job | null>; busy?: boolean }) {
+function FileActions({ job, busy, mode }: { job: () => Promise<Job | null>; busy?: boolean; mode: Mode }) {
   const p = usePalette();
   const t = useT();
-  const action = (icon: string, label: string, how: "share" | "save") => (
+  const print = canPrint() && mode !== "csv";
+  const action = (icon: string, label: string, how: "share" | "save" | "print") => (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t.t(label)}
@@ -114,6 +120,7 @@ function FileActions({ job, busy }: { job: () => Promise<Job | null>; busy?: boo
     <View style={{ flexDirection: "row", gap: 10 }}>
       {action("share", "Share", "share")}
       {action("save", "Save", "save")}
+      {print ? action("print", "Print", "print") : null}
     </View>
   );
 }
@@ -173,7 +180,7 @@ function Preview({ job }: { job: Job }) {
   const p = usePalette();
   const t = useT();
   const { width } = useWindowDimensions();
-  const footer = <FileActions job={async () => job} />;
+  const footer = <FileActions job={async () => job} mode={job.kind === "pdf" ? "summary" : "csv"} />;
   if (job.kind === "pdf") {
     const pageWidth = width - 36;
     return (
@@ -336,7 +343,7 @@ export function ExportPage() {
       </ScrollView>
       <View style={{ paddingHorizontal: 18, paddingTop: 8, paddingBottom: 12, gap: 10 }}>
         <Button label={busy ? "Preparing the report" : "Preview"} disabled={busy} onPress={() => void job().then((j) => j && sheets.open(<Preview job={j} />, "full"))} />
-        <FileActions job={job} busy={busy} />
+        <FileActions job={job} busy={busy} mode={mode} />
       </View>
     </View>
   );

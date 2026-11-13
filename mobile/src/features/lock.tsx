@@ -6,6 +6,7 @@ import { isValidPin, lockoutSeconds, makePin, pinMatches } from "../domain/pin.t
 import { biometricAvailable, biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
 import { appStore, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
+import { SwitchRow } from "../ui/rows.tsx";
 import { Panel } from "../ui/pickers.tsx";
 import { mix, space } from "../ui/theme.ts";
 import { toast } from "../ui/dialogs.tsx";
@@ -226,7 +227,7 @@ export function PinSettings() {
   const padLength = step === "check" ? currentLength : length;
   return (
     <>
-      <Button label={on ? "Turn off the PIN" : "Set a PIN"} kind="outline" onPress={() => setStep(on ? "check" : "new")} />
+      <SwitchRow label="PIN code" value={on} onChange={() => setStep(on ? "check" : "new")} />
       <Panel visible={step !== null} title={step === "repeat" ? "Repeat the PIN" : step === "check" ? "Enter PIN" : "New PIN"} onClose={close}>
         <View style={{ padding: space.l, gap: space.m, alignItems: "center" }}>
           {step === "new" ? (

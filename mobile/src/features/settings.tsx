@@ -202,30 +202,28 @@ function Security() {
   const { s, set } = useSetting();
   const t = useT();
   const pinOn = !!s.pin;
+  // As the first application (settings-pages.js securitySettings): every row is there; those that need a
+  // PIN say so when there is none.
   return (
     <>
-      <View style={{ paddingHorizontal: 18, paddingVertical: 8 }}>
-        <PinSettings />
-      </View>
-      {pinOn ? (
-        <>
-          <SwitchRow
-            label="Unlock with fingerprint or face"
-            value={!!s.biometric}
-            onChange={async (on) => {
-              if (!on) return void set({ biometric: false });
-              if (!(await biometricAvailable())) return toast("Set up a fingerprint or face in your phone settings first");
-              // Switching it on needs one successful check, so a person who cannot use it is not locked out.
-              if (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) set({ biometric: true });
-            }}
-          />
-          <Switch label="Lock after leaving" k="relock" />
-          <OptionsRow label="Lock delay" k="lockDelay" options={[[0, "Immediately"], [30, "30 seconds"], [60, "1 minute"], [300, "5 minutes"]]} />
-          <SettingRow title="Lock now" icon="lock" onPress={() => setLock({ locked: true })} chevron={false} />
-          {!s.relock ? <Footnote>The app asks for the PIN only when it starts. Turn on “Lock after leaving” to lock it when you switch to another app or to the home screen; the delay below then applies.</Footnote> : null}
-        </>
-      ) : null}
+      <PinSettings />
+      <SwitchRow
+        label="Unlock with fingerprint or face"
+        value={!!s.biometric}
+        onChange={async (on) => {
+          if (!on) return void set({ biometric: false });
+          if (!pinOn) return toast(t.t("Set a PIN first"));
+          if (!(await biometricAvailable())) return toast(t.t("Set up a fingerprint or face in your phone settings first"));
+          // Switching it on needs one successful check, so a person who cannot use it is not locked out.
+          if (await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) set({ biometric: true });
+        }}
+      />
+      <Switch label="Lock after leaving" k="relock" />
+      <OptionsRow label="Lock delay" k="lockDelay" options={[[0, "Immediately"], [30, "30 seconds"], [60, "1 minute"], [300, "5 minutes"]]} />
+      <SettingRow title="Lock now" icon="lock" onPress={() => (pinOn ? setLock({ locked: true }) : toast(t.t("Set a PIN first")))} />
+      {pinOn && !s.relock ? <Footnote>The app asks for the PIN only when it starts. Turn on “Lock after leaving” to lock it when you switch to another app or to the home screen; the delay below then applies.</Footnote> : null}
       <Footnote>The PIN only hides the screen; data on the device is not encrypted.</Footnote>
+      <Footnote>The fingerprint or face check is made by Android; Monivra never sees or keeps it. It opens the lock screen like the PIN does and does not encrypt your data.</Footnote>
     </>
   );
 }
