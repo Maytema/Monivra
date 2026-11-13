@@ -81,10 +81,18 @@ export function useCommand(): <T>(command: (tx: LedgerTx, env: Env) => T) => T |
   );
 }
 
+// Where messages are shown: the application's own dialog once the dialogs are loaded (ui/dialogs.tsx registers
+// it), the system's alert before that and on the recovery screen.
+let present: (text: string, title?: string) => void = (text, title) => (title ? Alert.alert(title, text) : Alert.alert(text));
+export const setMessagePresenter = (show: (text: string, title?: string) => void): void => {
+  present = show;
+};
+export const showMessage = (text: string, title?: string): void => present(text, title);
+
 export function showError(t: Translator, error: unknown): void {
-  if (error instanceof DomainError) Alert.alert(t.t(error.message, error.params));
+  if (error instanceof DomainError) showMessage(t.t(error.message, error.params));
   else {
     console.error(error);
-    Alert.alert(t.t("Something went wrong"), t.t("Nothing was changed. Please try again."));
+    showMessage(t.t("Nothing was changed. Please try again."), t.t("Something went wrong"));
   }
 }

@@ -179,9 +179,9 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
   const [labelWidth, setLabelWidth] = useState(0);
   const progress = useRef(new Animated.Value(collapsed ? 0 : 1)).current;
   useEffect(() => {
-    Animated.timing(progress, { toValue: collapsed ? 0 : 1, duration: 180, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+    Animated.timing(progress, { toValue: collapsed ? 0 : 1, duration: 280, easing: Easing.inOut(Easing.ease), useNativeDriver: false }).start();
   }, [collapsed, progress]);
-  const width = progress.interpolate({ inputRange: [0, 1], outputRange: [0, labelWidth + 10] });
+  const width = progress.interpolate({ inputRange: [0, 1], outputRange: [0, labelWidth + 11] });
   return (
     <Pressable
       accessibilityRole="button"
@@ -189,12 +189,16 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
       onPress={onPress}
       style={{ position: "absolute", right: chrome.edgeGap, bottom: chrome.edgeGap, height: chrome.fab, paddingHorizontal: 18, borderRadius: 22, flexDirection: "row", alignItems: "center", backgroundColor: p.tint, elevation: 3 }}
     >
-      <Icon name="plus" size={26} color={p.ink} />
-      <Animated.View style={{ width: labelWidth ? width : collapsed ? 0 : undefined, overflow: "hidden", opacity: progress }}>
-        <Text numberOfLines={1} onLayout={(e) => setLabelWidth(Math.ceil(e.nativeEvent.layout.width))} style={{ marginLeft: 10, color: p.ink, fontSize: 19, fontWeight: "600", width: labelWidth || undefined }}>
+      <Animated.View style={{ width, overflow: "hidden", opacity: progress }}>
+        <Text numberOfLines={1} style={{ marginRight: 10, color: p.ink, fontSize: 19, fontWeight: "600", width: labelWidth + 1 }}>
           {t.t(label)}
         </Text>
       </Animated.View>
+      {/* The name's own width, measured apart from the button (inside it, it would be squeezed to nothing while collapsed). */}
+      <Text pointerEvents="none" onLayout={(e) => setLabelWidth(Math.ceil(e.nativeEvent.layout.width))} style={{ position: "absolute", opacity: 0, fontSize: 19, fontWeight: "600" }}>
+        {t.t(label)}
+      </Text>
+      <Icon name="plus" size={26} color={p.ink} />
     </Pressable>
   );
 }

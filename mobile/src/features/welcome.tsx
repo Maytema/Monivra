@@ -1,7 +1,8 @@
 // First start: begin empty, with a basic set, or bring the data of the first application (a data file
 // saved there under More → Data).
 import { useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { showInfo } from "../ui/dialogs.tsx";
 import { FileProblem } from "../domain/datafile.ts";
 import { appStore, usePalette, useT } from "../ui/app-context.tsx";
 import { Button } from "../ui/kit.tsx";
@@ -17,10 +18,10 @@ export function Welcome() {
       const text = await pickTextFile();
       if (text === null) return;
       const counts = appStore().importDataFile(text);
-      Alert.alert(t.t("Data imported"), t.t("Accounts: {a}. Operations: {o}. Scheduled payments: {s}.", { a: counts.accounts, o: counts.ops, s: counts.scheduled }));
+      showInfo(t.t("Accounts: {a}. Operations: {o}. Scheduled payments: {s}.", { a: counts.accounts, o: counts.ops, s: counts.scheduled }), "Data imported");
     } catch (error) {
       const reason = error instanceof FileProblem && error.problem ? `${t.t(error.problem.what)} ${error.problem.number || ""}: ${t.t(error.problem.reason)}` : "";
-      Alert.alert(t.t(error instanceof FileProblem ? error.message : "The file could not be read."), reason);
+      showInfo(reason, error instanceof FileProblem ? error.message : "The file could not be read.");
     } finally {
       setBusy(false);
     }

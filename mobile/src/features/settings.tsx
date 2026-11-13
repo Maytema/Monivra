@@ -2,7 +2,7 @@
 // formatting, styles and elements, notifications, security, privacy, backups and rates. One route shows
 // a page by its name; the pages are described here as a table, as in the first application.
 import { useState, type ReactNode } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { changeMainCurrency } from "../domain/accounts.ts";
@@ -14,7 +14,7 @@ import { notificationsAllowed, sendTestNotification } from "../platform/notifica
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
-import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
+import { confirmDialog, DialogActions, DialogTitle, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
 import { THEME_COLORS } from "../ui/icon-groups.ts";
 import { Icon } from "../ui/kit.tsx";
 import { openMonthStart } from "../ui/period-dialog.tsx";
@@ -179,7 +179,7 @@ function Notifications() {
         onChange={async (on) => {
           if (!on) return void set({ notifications: false });
           if (await notificationsAllowed(true)) set({ notifications: true });
-          else Alert.alert(t.t("Notifications are not allowed"), t.t("Allow notifications for Monivra in the system settings."));
+          else showInfo("Allow notifications for Monivra in the system settings.", "Notifications are not allowed");
         }}
       />
       <Switch label="Periodic reminders" k="periodic" />
@@ -190,7 +190,7 @@ function Notifications() {
         icon="bell"
         onPress={() =>
           void sendTestNotification(s.language)
-            .then((sent) => (sent ? toast(t.t("Notification sent")) : Alert.alert(t.t("Notifications are not allowed"), t.t("Allow notifications for Monivra in the system settings."))))
+            .then((sent) => (sent ? toast(t.t("Notification sent")) : showInfo("Allow notifications for Monivra in the system settings.", "Notifications are not allowed")))
             .catch(() => toast(t.t("Notifications are not allowed")))
         }
       />

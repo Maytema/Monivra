@@ -5,7 +5,7 @@ import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react
 import { Text, TextInput, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePalette, useT } from "./app-context.tsx";
+import { setMessagePresenter, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 import { Icon } from "./kit.tsx";
@@ -94,6 +94,7 @@ function Info({ text, title }: { text: string; title?: string }) {
   );
 }
 export const showInfo = (text: string, title?: string): number => sheets.open(<Info text={text} title={title} />, "dialog");
+setMessagePresenter((text, title) => void showInfo(text, title));
 
 function Prompt({ title, initial, label, onDone }: { title: string; initial: string; label: string; onDone: (value: string) => void }) {
   const p = usePalette();

@@ -30,6 +30,7 @@ FAILED=0
 
 adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAIL: install"; cat "$OUT/install.txt"; exit 1; }
 adb logcat -c
+adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 shot 01-first-start 25
 has "Start with basic set" 01-first-start
@@ -138,6 +139,13 @@ tap "Settings"
 for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Security" "Privacy"; do
   tap "$page"
   shot "15s-$(echo "$page" | tr ' ' '-')" 2
+  if [ "$page" = "Notifications" ]; then
+    # "Run notification" must drop down from the top like the real ones (heads-up on the high-importance channel).
+    tap "Run notification"
+    sleep 1
+    shot 15n-run-notification 1
+    adb shell cmd statusbar collapse >/dev/null 2>&1
+  fi
   back
 done
 for i in 1 2 3; do adb shell input swipe 540 1800 540 700 300; sleep 1; done

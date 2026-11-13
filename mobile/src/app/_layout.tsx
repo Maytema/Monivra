@@ -119,7 +119,13 @@ function Root() {
       </View>
     );
   if (state.status === "failed") return <Recovery error={state.error} tooNew={state.tooNew} />;
-  if (state.status === "welcome") return <Welcome />;
+  if (state.status === "welcome")
+    return (
+      <>
+        <Welcome />
+        <SheetHost />
+      </>
+    );
   return <Ready />;
 }
 
