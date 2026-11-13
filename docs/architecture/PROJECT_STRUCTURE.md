@@ -1,5 +1,8 @@
 # Project structure of the React Native application
 
+> **Proposal (2026-11-11), not the built structure.** The actual layout is in [../PROJECT_MAP.md](../PROJECT_MAP.md)
+> and [../ARCHITECTURE.md](../ARCHITECTURE.md).
+
 **[R]** throughout. The new application lives in its own directory of this repository (`mobile/`) so the
 current app stays runnable as the reference until it is retired (decision Q-P2 offers a separate
 repository instead). Names are illustrative; the boundaries are the point.

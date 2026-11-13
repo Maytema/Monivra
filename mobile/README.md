@@ -1,7 +1,9 @@
 # Monivra (React Native + Expo)
 
 The new application. The first application (repository root, Capacitor) stays the reference until this
-one passes acceptance; see `docs/architecture/` and the checkpoint log `docs/architecture/MIGRATION_STATUS.md`.
+one passes acceptance. Rules of work: [../docs/AGENTS.md](../docs/AGENTS.md); map:
+[../docs/PROJECT_MAP.md](../docs/PROJECT_MAP.md); architecture: [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md);
+checks: [../docs/TESTING.md](../docs/TESTING.md); progress: [../docs/architecture/MIGRATION_STATUS.md](../docs/architecture/MIGRATION_STATUS.md).
 
 | Where | What |
 | ----- | ---- |

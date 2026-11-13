@@ -89,7 +89,7 @@ one-time scheduled payment.
 
 Limit: a payment is posted only while the application code runs (launch, return to the screen, every
 minute while open). Nothing is committed while the app is closed, and background code must not write the
-WebView's `localStorage`. See [docs/SCHEDULED_AND_NOTIFICATIONS.md](docs/SCHEDULED_AND_NOTIFICATIONS.md) for the
+WebView's `localStorage`. See [docs/SCHEDULED_AND_NOTIFICATIONS.md](../SCHEDULED_AND_NOTIFICATIONS.md) for the
 review of reminders and the requirement for a future migration (background execution, shared database).
 
 ## Filters of the history

@@ -1,5 +1,10 @@
 # Monivra architecture audit and React Native migration design
 
+> **Historical (2026-11-11).** The React Native application now exists in `mobile/`; its real architecture is
+> [../ARCHITECTURE.md](../ARCHITECTURE.md), the rules of work [../AGENTS.md](../AGENTS.md), progress
+> [MIGRATION_STATUS.md](MIGRATION_STATUS.md). These documents remain the record of the audit and the design;
+> parts of the design were not built (see ARCHITECTURE.md §12).
+
 Status: **design only**. No React Native project exists, no application code was changed, no APK was
 built. Written on branch `docs/react-native-architecture` (from `android-first-apk` at `298406b`),
 2026-11-11.

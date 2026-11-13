@@ -1,5 +1,8 @@
 # Proposed architecture (React Native + Expo + TypeScript)
 
+> **Design before the build (2026-11-11).** What was actually built: [../ARCHITECTURE.md](../ARCHITECTURE.md) (§12 lists
+> the parts of this design that were not adopted).
+
 Labels: see [README.md](README.md#evidence-labels-used-in-every-document). Everything here is **[R]**
 unless marked otherwise. Library choices and their alternatives are argued in
 [TECHNOLOGY_DECISIONS.md](TECHNOLOGY_DECISIONS.md); the tree is in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).

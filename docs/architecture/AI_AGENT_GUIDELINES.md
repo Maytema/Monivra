@@ -1,5 +1,8 @@
 # Rules for AI agents (draft of `mobile/AGENTS.md`)
 
+> **Superseded** by [../AGENTS.md](../AGENTS.md). This draft names tools that were not adopted
+> (`mobile/docs/MAP.md`, dependency-cruiser, Zod, Maestro); the map is [../PROJECT_MAP.md](../PROJECT_MAP.md).
+
 Short on purpose: an agent reads it before every task. It replaces nothing in the current app's
 `AGENTS.md` until the new app exists. Owner-facing replies stay in Russian.
 
