@@ -60,3 +60,19 @@ test("the PDF of a report is a well-formed file: header, one page object per pag
     assert.ok(job.name.endsWith("-all-time.pdf"));
   }
 });
+
+test("stepped report: the pages and the file made in steps equal the ones made at once, and cancelling stops it", async () => {
+  const { layoutReport, pdfOfPages, wasCancelled } = await import("../src/application/report/job.ts");
+  const data = fixture("sample");
+  const config = { mode: "detail" as const, filters: emptyFilters(), period: { mode: "all" as const, anchor: "2026-11-11" }, sections: {}, parts: {} };
+  const whole = buildReport(data, words, config);
+  const progress: number[] = [];
+  const pages = await layoutReport(data, words, config, (done) => progress.push(done));
+  assert.deepEqual(pages.pages, whole.pages);
+  const bytes = await pdfOfPages(pages, () => undefined);
+  assert.deepEqual(bytes, whole.bytes);
+  const stop = new AbortController();
+  stop.abort();
+  await assert.rejects(layoutReport(data, words, config, () => undefined, stop.signal), wasCancelled);
+  await assert.rejects(pdfOfPages(pages, () => undefined, stop.signal), wasCancelled);
+});

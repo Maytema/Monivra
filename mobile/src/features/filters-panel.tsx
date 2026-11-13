@@ -3,7 +3,8 @@
 // opening its own picker; "Reset all" and "Apply". A picker has its title and how many are chosen, a
 // list that scrolls, and Cancel / Confirm that stay in view. All chosen = no filter (null).
 import { useState, type ReactNode } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import type { Account } from "../domain/types.ts";
 import { emptyFilters, type Filters } from "../domain/periods.ts";
 import { useLedger, usePalette, useT } from "../ui/app-context.tsx";

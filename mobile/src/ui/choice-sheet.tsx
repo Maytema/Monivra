@@ -1,7 +1,8 @@
 // "Select type" (as filmed in the reference): a bottom sheet with its title on the left and rows of a
 // tinted icon tile, a bold name with a description under it, and a radio mark on the right; thin lines
 // between the rows. A tap picks the row and closes the sheet.
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";

@@ -1,7 +1,8 @@
 // The Accounts tab (js/screens/accounts/list.js): header, tabs (Accounts / Debts / Total), groups with
 // their totals, rows with a badge, balance and progress, and the folders of finished and archived ones.
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { router } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";

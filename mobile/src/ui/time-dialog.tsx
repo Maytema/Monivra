@@ -2,7 +2,8 @@
 // follows the finger (outer ring 1–12, inner ring 13–00 on a 24-hour clock), and a keyboard mode with two typed
 // fields. Releasing the finger on the hour moves on to the minute.
 import { useRef, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import Svg, { Circle, Line } from "react-native-svg";
 import { usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";

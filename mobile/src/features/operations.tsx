@@ -2,7 +2,8 @@
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
@@ -14,7 +15,7 @@ import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/
 import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Card, Icon, Label } from "../ui/kit.tsx";
-import { Fab, MoneyText } from "../ui/parts.tsx";
+import { Fab, MoneyText, useFabCollapse } from "../ui/parts.tsx";
 import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
@@ -51,7 +52,7 @@ export function OperationsScreen() {
   const setFilters = (next: Filters) => setView({ filters: next });
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState(false);
-    const [atTop, setAtTop] = useState(true);
+  const fab = useFabCollapse();
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
 
@@ -137,7 +138,7 @@ export function OperationsScreen() {
             selectedSet={selectedSet}
             onPress={pressRow}
             onLongPress={holdRow}
-            onTop={isCurrent ? setAtTop : undefined}
+            onTop={isCurrent ? fab.setAtTop : undefined}
           />
         )}
       />
@@ -151,7 +152,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
+        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu()} />
       )}
     </View>
   );
@@ -180,24 +181,46 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     return out;
   }, [ops]);
 
-  const stickyDays = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
+  // The day name that stays at the top while its operations pass. It is drawn over the list from what the list
+  // reports as the first visible row — not by the scroll view's own sticky headers, which for a list that
+  // draws only the rows near the window pin the wrong cell (a stale row stuck at the top) and need the list to
+  // be rebuilt whenever the days change.
+  const dayOps = useMemo(() => new Map(items.flatMap((x) => (x.kind === "day" ? [[x.date, x.ops] as const] : []))), [items]);
+  const [stuck, setStuck] = useState<string | null>(null);
+  const [pinned, setPinned] = useState(false);
+  const headerHeight = useRef(0);
+  const viewable = useRef(({ viewableItems }: { viewableItems: { item: Item }[] }) => {
+    const first = viewableItems[0]?.item;
+    setStuck(first ? (first.kind === "day" ? first.date : first.op.date) : null);
+  }).current;
+  const scrolled = useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const y = e.nativeEvent.contentOffset.y;
+      setPinned((was) => (y >= headerHeight.current && y > 0 ? true : was && y > headerHeight.current - 2 ? was : false));
+      onTop?.(y < 12);
+    },
+    [onTop],
+  );
   const [from, to] = periodBounds(period, data.settings);
   const summary = data.settings.opening && ops.length > 0 && !active;
   return (
+    <View style={{ flex: 1 }}>
       <FlatList
-        // The sticky header indices must not change under a mounted list (it then draws nothing).
-        key={stickyDays.join(",")}
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
-        onScroll={onTop ? (e) => onTop(e.nativeEvent.contentOffset.y < 12) : undefined}
-        scrollEventThrottle={64}
-        stickyHeaderIndices={stickyDays}
-        initialNumToRender={12}
-        maxToRenderPerBatch={10}
-        windowSize={7}
+        onScroll={scrolled}
+        scrollEventThrottle={32}
+        onViewableItemsChanged={viewable}
+        viewabilityConfig={VIEWABILITY}
+        // Enough rows are drawn at once to fill the screen, and ahead of the finger a few screens of them, so
+        // that a quick scroll does not run into empty space.
+        initialNumToRender={28}
+        maxToRenderPerBatch={24}
+        updateCellsBatchingPeriod={16}
+        windowSize={13}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }}
         ListHeaderComponent={
-          <View style={{ marginHorizontal: -16 }}>
+          <View style={{ marginHorizontal: -16 }} onLayout={(e) => (headerHeight.current = e.nativeEvent.layout.height)}>
             <View style={{ paddingHorizontal: 16 }}>
               {posted.length ? (
                 <Pressable onPress={() => appStore().forgetPosted()}>
@@ -234,5 +257,13 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
           )
         }
       />
+      {pinned && stuck && dayOps.get(stuck) ? (
+        <View pointerEvents="none" style={{ position: "absolute", top: 0, left: 16, right: 16 }}>
+          <DayHead date={stuck} ops={dayOps.get(stuck)!} />
+        </View>
+      ) : null}
+    </View>
   );
 });
+
+const VIEWABILITY = { itemVisiblePercentThreshold: 1, minimumViewTime: 0 } as const;

@@ -2,7 +2,8 @@
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
 import { memo } from "react";
-import { Pressable, Text, View, useWindowDimensions } from "react-native";
+import { Text, View, useWindowDimensions } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
@@ -70,7 +71,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
       pressRetentionOffset={WIDE_RETENTION}
       onPress={() => onPress(op.id)}
       onLongPress={onLongPress ? () => onLongPress(op.id) : undefined}
-      style={{ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, marginHorizontal: -16, paddingHorizontal: 16, borderRadius: 14, backgroundColor: selected ? alpha(p.accent, 0.13) : "transparent" }}
+      style={{ flexDirection: "row", alignItems: "center", gap: 16, minHeight: 70, paddingVertical: 13, marginHorizontal: -12, marginVertical: 2, paddingHorizontal: 12, borderRadius: 18, backgroundColor: selected ? alpha(p.accent, 0.13) : "transparent" }}
     >
       {selecting && selected ? (
         <View style={{ width: 48, height: 48, borderRadius: 9, alignItems: "center", justifyContent: "center", backgroundColor: p.accent }}>

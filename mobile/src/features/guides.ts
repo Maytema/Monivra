@@ -97,7 +97,7 @@ export const GUIDES: readonly Guide[] = [
     "sections": [
       [
         "Where is my data?",
-        "Only on this device, in this browser. Make a copy in More → Data before clearing browser data."
+        "Only on this device, in the application's own storage. Make a copy in More → Data before clearing the application data, uninstalling it or changing the phone."
       ],
       [
         "How do I change the currency?",

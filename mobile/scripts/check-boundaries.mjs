@@ -51,6 +51,10 @@ for (const file of files) {
         problems.push(`${relative(root, file)}: layer "${layer}" must not import layer "${targetLayer}" (${spec})`);
     } else if (FOREIGN[layer]?.test(spec)) problems.push(`${relative(root, file)}: layer "${layer}" must not import "${spec}"`);
   }
+  // One Pressable for the whole application (ui/pressable.tsx): the pressed state must not flash at the touch
+  // that starts a scroll. React Native's own Pressable is used only there.
+  if (relative(root, file) !== join("ui", "pressable.tsx") && /import\s*\{[^}]*\bPressable\b[^}]*\}\s*from\s*["']react-native["']/.test(text))
+    problems.push(`${relative(root, file)}: import Pressable from ui/pressable.tsx, not from react-native`);
   graph.set(resolve(file), deps);
 }
 // Cycles between files.

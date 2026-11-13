@@ -2,7 +2,8 @@
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
 import { Fragment, memo, useCallback, useMemo, useState, type ReactNode } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
 import { chartBins, donutSlices, OTHER_SLICE, type Group } from "../domain/chart.ts";

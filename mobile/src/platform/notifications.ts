@@ -12,7 +12,7 @@ import { translator } from "../i18n/index.ts";
 const CHANNEL = "payments";
 
 Notifications.setNotificationHandler({
-  handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false }),
+  handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: true, shouldSetBadge: false }),
 });
 
 export async function notificationsAllowed(ask: boolean): Promise<boolean> {
@@ -62,11 +62,12 @@ export async function rebuildReminders(data: LedgerData, today: string, now: str
   }
 }
 
-// "Test notification": the periodic reminder at once. False when notifications are not allowed.
+// "Run notification": the periodic reminder at once, on the same high-importance channel as the real ones, so it
+// drops down from the top like them (without the channel it fell on the default one and only showed in the shade). False when notifications are not allowed.
 export async function sendTestNotification(language: string): Promise<boolean> {
   if (!(await notificationsAllowed(true))) return false;
   const t = translator(language);
   if (Platform.OS === "android") await Notifications.setNotificationChannelAsync(CHANNEL, { name: t.t("Scheduled payments"), importance: Notifications.AndroidImportance.HIGH });
-  await Notifications.scheduleNotificationAsync({ content: { title: "Monivra", body: t.t("Enter today’s operations"), data: { key: "test" } }, trigger: null });
+  await Notifications.scheduleNotificationAsync({ content: { title: "Monivra", body: t.t("Enter today’s operations"), data: { key: "test" } }, trigger: { channelId: CHANNEL } });
   return true;
 }

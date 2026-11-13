@@ -2,7 +2,8 @@
 // subcategories with their planned actions (applied on Save), nest/move into another category,
 // archive and delete.
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";
 import { blankCategory, deleteCategory, storeCategory, type SubcategoryAction } from "../domain/categories.ts";

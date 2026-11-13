@@ -2,7 +2,8 @@
 // colour, random choices and Complete. The icon list and the colour page are pages over the whole
 // screen; each has a gear that opens its list settings.
 import { memo, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { FlatList, ScrollView, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { appStore, useLedger, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { cleanHexInput, parseHex, prettyShades, shadeRow } from "./color-tools.ts";

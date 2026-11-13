@@ -1,7 +1,8 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
 import { useState, type ReactNode } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
+import { Animated, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, shiftPeriod } from "../domain/periods.ts";
 import type { Period } from "../domain/periods.ts";
 import { useLedger, usePalette, useT } from "../ui/app-context.tsx";

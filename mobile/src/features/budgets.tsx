@@ -1,7 +1,8 @@
 // Budgets (js/screens/budgets.js, category-select.js): the list grouped by period under the period bar,
 // the page of one budget with the operations it counts, the form, and the choice of its categories.
 import { useEffect, useState, type ReactNode } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { budgetOperations, budgetState, deleteBudget, saveBudget } from "../domain/categories.ts";
 import { categoryById } from "../domain/ledger.ts";

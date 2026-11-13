@@ -29,7 +29,7 @@ export const ICONS: Record<string, string> = {
   clipboardList: "M9 3h6v3H9zM8 4.5H5.5V21h13V4.5H16M8.5 11h7m-7 3.5h7m-7 3.5h4",
   circleUp: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-4 11 4-4 4 4",
   moreCircle: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 11.3a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4zm4 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4zm4 0a.7.7 0 1 0 0 1.4.7.7 0 0 0 0-1.4z",
-  calendarX: "M4 6h16v15H4zM4 10h16M8 3v4m8-4v4M9 13l4 4m0-4-4 4m5 1 2 2 3-3",
+  calendarX: "M4 6h16v15H4zM4 10h16M8 3v4m8-4v4M9.5 13.5l5 5m0-5-5 5",
   alertCircle: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 5v5m0 3.5h.1",
   note: "M3 5h18v14H3zM7 10h10M7 14h6",
   helpScan: "M4 8V4h4m8 0h4v4m0 8v4h-4m-8 0H4v-4M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4m0 2.8h.1",

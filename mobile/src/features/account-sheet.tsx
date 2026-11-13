@@ -1,6 +1,7 @@
 // The sheet that opens when an account is tapped (js/screens/accounts/actions.js): the account in a
 // card with its balance, the progress block, and six actions in a grid.
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
 import { toggleFavoriteAccount, setArchived } from "../domain/accounts.ts";
 import { accountBalance, accountById, cardState, progressForBalance, debtDirection } from "../domain/ledger.ts";

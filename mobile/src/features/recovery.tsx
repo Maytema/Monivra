@@ -2,7 +2,8 @@
 // database file is neither changed nor deleted until the person decides: a copy can be saved or shared
 // first; restoring or starting empty puts the unreadable file aside under a dated name.
 import { useMemo, useState } from "react";
-import { Alert, Pressable, ScrollView, Text, useColorScheme, View } from "react-native";
+import { Alert, ScrollView, Text, useColorScheme, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { FileProblem, readDataFile } from "../domain/datafile.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { translator, type Translator } from "../i18n/index.ts";

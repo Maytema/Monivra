@@ -2,7 +2,8 @@
 // the saved backups, the page of one backup or data file with what merging or replacing would change,
 // the data file page and the ways to delete data. One route (`/data?page=…`) shows each page.
 import { useMemo, useState, type ReactNode } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { FileProblem, readDataFile } from "../domain/datafile.ts";
 import { contentsOf, DELETIONS, planRestore, type ConflictWay, type Contents, type DeletionWay, type RestoreSummary, type ScheduledWay } from "../domain/restore.ts";

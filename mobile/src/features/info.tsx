@@ -1,7 +1,8 @@
 // The information pages of the More menu (js/screens/more/info-pages.js, support.js): instructions with their
 // guides, support topics, about, privacy and terms. Texts that spoke of a browser say "device" here.
 import { useState, type ReactNode } from "react";
-import { Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { Linking, ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";

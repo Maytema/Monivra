@@ -209,7 +209,9 @@ function fontObjects(font: ReportFont, key: "regular" | "bold", used: Map<number
 
 // The PDF file for the pages (lists of drawing commands) with the fonts of `loadReportFonts`.
 // `language` is the language tag of the text, `title` and `subject` are shown by readers.
-export function buildPdf(pages: Command[][], { title, subject = "", language = "en" }: { title: string; subject?: string; language?: string }): Uint8Array {
+// The file made page by page: each step ends with the number of pages written, so a caller can let the screen
+// breathe between steps and show the progress; the last step returns the file.
+export function* pdfSteps(pages: Command[][], { title, subject = "", language = "en" }: { title: string; subject?: string; language?: string }): Generator<number, Uint8Array> {
   const fonts = reportFonts();
   const objects: Part[][] = [];
   const add = (parts: Part[]) => (objects.push(parts), objects.length);
@@ -218,7 +220,12 @@ export function buildPdf(pages: Command[][], { title, subject = "", language = "
   add([""]);
   add([""]);
   add([""]);
-  const contents = pages.map((commands) => pageContent(commands, fonts, used));
+  const contents: ReturnType<typeof pageContent>[] = [];
+  for (const commands of pages) {
+    contents.push(pageContent(commands, fonts, used));
+    if (contents.length % 40 === 0) yield contents.length;
+  }
+  yield pages.length;
   const fontIds = {
     F1: fontObjects(fonts.regular, "regular", used.regular, add),
     F2: fontObjects(fonts.bold, "bold", used.bold, add),
@@ -270,4 +277,12 @@ export function buildPdf(pages: Command[][], { title, subject = "", language = "
     at += piece.length;
   }
   return out;
+}
+
+export function buildPdf(pages: Command[][], meta: { title: string; subject?: string; language?: string }): Uint8Array {
+  const steps = pdfSteps(pages, meta);
+  for (;;) {
+    const step = steps.next();
+    if (step.done) return step.value;
+  }
 }

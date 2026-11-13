@@ -1,7 +1,8 @@
 // The page "Change categories" (js/screens/categories.js `categoryManageView`): two tabs, a button that
 // creates a category, the tiles that open the editor, and the archive that unfolds.
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";
 import { categoryTotalIn, reportRows } from "../domain/ledger.ts";

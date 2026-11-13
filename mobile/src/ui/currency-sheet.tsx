@@ -1,7 +1,8 @@
 // The sheet to choose a currency (js/ui/currency-picker.js): a search field (code, sign, name or country), the
 // order of the list, and sections: used first, major, other. The chosen currency is marked.
 import { memo, useMemo, useState } from "react";
-import { FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { CURRENCIES } from "../domain/currencies.ts";
 import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
 import { byText, currencyName, currencySign, searchCurrencies, sortKey } from "./currency-names.ts";

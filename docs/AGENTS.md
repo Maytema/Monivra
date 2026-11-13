@@ -26,6 +26,18 @@ over both.
   first application's counterpart, and know what a change touches.
 - **Fix the cause where it arises.** No workaround that hides a symptom, no swallowed error, no disabled
   test, no `@ts-ignore`, no hard-coded demo data.
+- **Fix a class of problem for the whole application, never one screen.** When a defect shows in one place
+  (a fill on touch, a stuck header, a button that does not shrink), find the shared cause and remove it in
+  the shared piece, then look for every other place with the same pattern (search the code, run the tour on
+  all screens). A patch that hides the symptom on the named screen is not a fix. The guard goes into a
+  check when it can (`check-boundaries.mjs` refuses react-native's own `Pressable`, for example).
+- **One piece for one job.** The same button, dialog, row, sheet or icon is one component in
+  `mobile/src/ui` used everywhere (the "+" button is `Fab`, the pressed state is `ui/pressable.tsx`, the
+  progress dialog is `ui/progress.tsx`). Before building a window or button, search for one that does the
+  same; if two look alike they must be the same component with parameters, not two copies.
+- **Look at the first application first.** Before changing a screen, read its code in `js/` and look at its
+  screenshots (TESTING.md), then make the native equivalent — the behaviour and the texts of the first
+  application, adapted to a native application (texts that spoke of a browser are rewritten, not copied).
 - **Respect the layers** of `mobile/src` (section 3 of [ARCHITECTURE.md](ARCHITECTURE.md));
   `node mobile/scripts/check-boundaries.mjs` enforces them.
 - **Keep what works.** Change only what the task needs; no drive-by renames or reformatting.

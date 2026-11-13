@@ -1,7 +1,8 @@
 // The sheet with a digit keypad for a plain number (js/ui/number-picker.js `numberPicker`): an exchange rate or a
 // day. `onDone` gets the typed text; returning false keeps the sheet open.
 import { useState, type ReactNode } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { keypadDigits } from "../domain/keypad.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";

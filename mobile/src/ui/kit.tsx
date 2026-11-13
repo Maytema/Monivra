@@ -1,6 +1,7 @@
 // Reusable pieces of every screen, built only from the theme tokens.
 import type { ReactNode } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type StyleProp, type ViewStyle } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { ICONS } from "./icon-paths.ts";
@@ -28,12 +29,12 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
 
 // A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab
 // bar carries the inset itself, so a page adds none.
-export function Screen({ children, scroll = true, padded = true, scrollEnabled = true }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean }) {
+export function Screen({ children, scroll = true, padded = true, scrollEnabled = true, onScroll }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean; onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void }) {
   const p = usePalette();
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   return scroll ? (
-    <ScrollView style={style} scrollEnabled={scrollEnabled} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
+    <ScrollView style={style} scrollEnabled={scrollEnabled} onScroll={onScroll} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
   ) : (

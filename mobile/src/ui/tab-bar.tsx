@@ -1,7 +1,8 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";

@@ -1,7 +1,8 @@
 // The calendar dialog for one date and the dialog for a range of dates (js/ui/calendar.js): a month
 // grid with arrows, the title opens a grid of years; Today, Cancel and OK under it.
 import { useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { systemClock } from "../domain/dates.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";

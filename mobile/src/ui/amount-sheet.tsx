@@ -2,7 +2,8 @@
 // the typed expression on top, operators in the first column, digits in the middle, backspace and a
 // tall confirm key at the right ("=" while an operation waits to be calculated).
 import { useState, type ReactNode } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { keypadDigits } from "../domain/keypad.ts";
 import { evaluateExpression, typeKey } from "../domain/money.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";

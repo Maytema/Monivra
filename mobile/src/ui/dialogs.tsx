@@ -2,7 +2,8 @@
 // two buttons, a line of text to fill in, a list of options, and a short message at the bottom.
 // They open on the same layer stack as sheets, so every window shares the insets and the theme.
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";

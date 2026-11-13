@@ -3,7 +3,8 @@
 // tax and commission, and the keypad — or, for an opened operation, its actions. All state and rules
 // live in `EditorSession`; this file only draws it and forwards taps.
 import { useRef, useSyncExternalStore, type ReactNode } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
+import { Pressable } from "../../ui/pressable.tsx";
 import { addDays } from "../../domain/dates.ts";
 import { defaultAccountId } from "../../domain/ledger.ts";
 import { applyFees } from "../../domain/money.ts";

@@ -1,6 +1,7 @@
 // Rows of the settings lists (js/ui/primitives.js `menuRowHtml`, `toggleRowHtml`): a title with a
 // caption under it, an icon at the left and a chevron or a switch at the right; no frames, as a list.
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { Toggle } from "./form.tsx";
 import type { ReactNode } from "react";
 import { usePalette, useT } from "./app-context.tsx";

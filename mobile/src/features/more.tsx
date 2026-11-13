@@ -1,6 +1,7 @@
 // More: budgets, scheduled payments, exchange rates, data, settings; and those pages.
 import { Fragment } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";

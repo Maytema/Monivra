@@ -1,6 +1,7 @@
 // A one-time hint with a close button; once closed it stays closed (settings.dismissedHints), as in
 // the first application (js/ui/hint.js).
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 

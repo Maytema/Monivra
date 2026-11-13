@@ -9,7 +9,7 @@ import { systemClock } from "../domain/dates.ts";
 import { categoryById, categoryFamily, categoryTotalIn, reportRows } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
-import { Fab, ToneBadge } from "../ui/parts.tsx";
+import { Fab, ToneBadge, useFabCollapse } from "../ui/parts.tsx";
 import { openAddMenu } from "./add-menu.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { OperationsPage } from "./operations.tsx";
@@ -36,7 +36,7 @@ export function FilteredOperations() {
     return () => setView({ filters: saved.filters, period: saved.period });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [atTop, setAtTop] = useState(true);
+  const fab = useFabCollapse();
   if (!ready) return <View style={{ flex: 1, backgroundColor: p.bg }} />;
   const single = category ? categoryById(data, category) : undefined;
   return (
@@ -48,9 +48,9 @@ export function FilteredOperations() {
             {single ? <CategoryCard id={single.id} /> : null}
           </>
         }
-        render={(period, isCurrent) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={isCurrent ? setAtTop : undefined} />}
+        render={(period, isCurrent) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={isCurrent ? fab.setAtTop : undefined} />}
       />
-      <Fab label="Add" collapsed={!atTop} onPress={() => openAddMenu()} />
+      <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu()} />
     </View>
   );
 }

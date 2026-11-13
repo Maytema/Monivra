@@ -1,7 +1,8 @@
 // The screen lock: a PIN of 4 or 6 digits (and a fingerprint or face when the person allows it). It
 // hides the application; it does not encrypt the data. Five wrong PINs in a row make the keys wait.
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, AppState as SystemAppState, Pressable, Text, View } from "react-native";
+import { Animated, AppState as SystemAppState, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { isValidPin, lockoutSeconds, makePin, pinMatches } from "../domain/pin.ts";
 import { biometricAvailable, biometricUnlock, randomSalt, readPinRecord, writePinRecord } from "../platform/lock.ts";
 import { appStore, useLedger, usePalette, useT } from "../ui/app-context.tsx";
@@ -139,8 +140,40 @@ function LockScreen() {
 // The dots and the keys of a PIN (css/more.css .pin, .pin-dots): rings that fill with the accent and a
 // soft halo, a shake after a wrong PIN; three columns of keys 65 dp high with 17 dp corners, the
 // backspace a bare icon on the right, `left` the key at the bottom left (the fingerprint).
-export function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
+// One dot of the entered PIN: when a digit arrives it pops (a quick swell and settle) and takes the accent
+// colour with a soft halo that fades; deleting a digit fades it back. Used by the lock screen and by every
+// page that sets a PIN.
+function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big: boolean }) {
   const p = usePalette();
+  const fill = useRef(new Animated.Value(filled ? 1 : 0)).current;
+  const pop = useRef(new Animated.Value(1)).current;
+  const halo = useRef(new Animated.Value(0)).current;
+  const first = useRef(true);
+  useEffect(() => {
+    Animated.timing(fill, { toValue: filled ? 1 : 0, duration: 140, useNativeDriver: false }).start();
+    if (first.current) return void (first.current = false);
+    if (!filled) return;
+    pop.setValue(0.7);
+    halo.setValue(1);
+    Animated.parallel([
+      Animated.spring(pop, { toValue: 1, friction: 4, tension: 220, useNativeDriver: true }),
+      Animated.timing(halo, { toValue: 0, duration: 420, useNativeDriver: true }),
+    ]).start();
+  }, [filled, fill, pop, halo]);
+  const size = big ? 20 : 18;
+  const empty = big ? mix(p.muted, p.bg, 0.35) : "transparent";
+  const color = failed ? p.negative : p.accent;
+  const backgroundColor = fill.interpolate({ inputRange: [0, 1], outputRange: [empty, color] });
+  const ring = big ? 0 : 2;
+  return (
+    <View style={{ width: 30, height: 30, alignItems: "center", justifyContent: "center" }}>
+      <Animated.View style={{ position: "absolute", width: 30, height: 30, borderRadius: 15, backgroundColor: mix(color, p.bg, 0.3), opacity: halo, transform: [{ scale: halo.interpolate({ inputRange: [0, 1], outputRange: [1, 1.25] }) }] }} />
+      <Animated.View style={{ width: size, height: size, borderRadius: size / 2, borderWidth: ring, borderColor: filled ? color : failed ? p.negative : p.muted, backgroundColor, transform: [{ scale: pop }] }} />
+    </View>
+  );
+}
+
+export function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
   const t = useT();
   const shake = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -152,17 +185,10 @@ export function PinDots({ length, value, failed = false, big = false }: { length
     ]).start();
   }, [failed, shake]);
   return (
-    <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: big ? 32 : 18, height: big ? 28 : 44, marginBottom: big ? 0 : 16, transform: [{ translateX: shake }] }}>
-      {Array.from({ length }, (_, i) => {
-        const filled = i < value.length;
-        return big ? (
-          <View key={i} style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: failed ? p.negative : filled ? p.accent : mix(p.muted, p.bg, 0.35) }} />
-        ) : (
-          <View key={i} style={{ width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: filled ? mix(p.accent, p.bg, 0.22) : "transparent" }}>
-            <View style={{ width: 18, height: 18, borderRadius: 9, borderWidth: 2, borderColor: failed ? p.negative : filled ? p.accent : p.muted, backgroundColor: filled ? p.accent : "transparent" }} />
-          </View>
-        );
-      })}
+    <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: big ? 22 : 16, height: big ? 30 : 44, marginBottom: big ? 0 : 16, transform: [{ translateX: shake }] }}>
+      {Array.from({ length }, (_, i) => (
+        <PinDot key={i} filled={i < value.length} failed={failed} big={big} />
+      ))}
     </Animated.View>
   );
 }

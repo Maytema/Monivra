@@ -1,6 +1,7 @@
 // The dialog "Time interval" (js/ui/period-picker.js): tiles for a range, all time, a day, week, today,
 // year and month, each with the range it would choose now; and the dialog for the day a month starts on.
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import Svg, { Path, Rect, Text as SvgText } from "react-native-svg";
 import { systemClock } from "../domain/dates.ts";
 import { periodBounds, type Period } from "../domain/periods.ts";
@@ -29,7 +30,7 @@ function Glyph({ mode, color }: { mode: Mode; color: string }) {
       <Rect x={5} y={8} width={30} height={27} rx={4} />
       <Path d="M5 16H35M13 4V11M27 4V11" />
       {mode === "range" ? <Path d="M12 25h.01M20 25h.01M28 25h.01" strokeWidth={4.5} /> : null}
-      {mode === "all" ? <Path d="M12 25c-3-4-7-2-7 0s4 4 7 0 5-4 8 0 7 2 7 0-4-4-7 0" transform="translate(4 0) scale(.9 1)" /> : null}
+      {mode === "all" ? <Path d="M20 26c-2-3-3.5-4-5.5-4a3.5 3.5 0 0 0 0 7c2 0 3.5-1 5.5-4s3.5-4 5.5-4a3.5 3.5 0 0 1 0 7c-2 0-3.5-1-5.5-4z" /> : null}
       {mode === "day" ? <Rect x={16} y={21} width={8} height={8} rx={1.5} fill={color} /> : null}
       {number ? (
         <SvgText x={20} y={number.length > 2 ? 30 : 31} fontSize={number.length > 2 ? 11 : 13} fontWeight="bold" fill={color} stroke="none" textAnchor="middle">

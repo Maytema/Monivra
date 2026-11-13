@@ -2,7 +2,8 @@
 // line around it, 16 dp corners and 24 dp inside; the label is 17 dp, the value under it in the accent
 // colour. Amount fields keep the label on the left and the figure on the right; switches carry a hint.
 import { useEffect, useRef, type ReactNode } from "react";
-import { Animated, Easing, Pressable, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { Animated, Easing, Text, TextInput, useWindowDimensions, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { mix } from "./theme.ts";
 

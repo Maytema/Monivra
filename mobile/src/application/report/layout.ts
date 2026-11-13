@@ -340,7 +340,12 @@ class Layout {
   // A table. `columns`: [{ label, width (a share), align }]; `rows`: arrays of cells, a cell being a
   // text or { text, color, weight, lines: [{ text, size, color, weight }] }. The heading repeats on
   // every page; a row that fits on a page is never cut by its end, a taller one continues on the next pages.
-  table(columns: TableColumn[], rows: Cell[][], { footer = null, fontSize = 9, pad = 5, appendix = null }: { footer?: Cell[] | null; fontSize?: number; pad?: number; appendix?: ((row: number) => string) | null } = {}) {
+  table(columns: TableColumn[], rows: Cell[][], options: { footer?: Cell[] | null; fontSize?: number; pad?: number; appendix?: ((row: number) => string) | null } = {}) {
+    for (const _step of this.tableSteps(columns, rows, options));
+  }
+
+  // The same table as steps: one step per few hundred rows (their number done), for a list of tens of thousands.
+  *tableSteps(columns: TableColumn[], rows: Cell[][], { footer = null, fontSize = 9, pad = 5, appendix = null }: { footer?: Cell[] | null; fontSize?: number; pad?: number; appendix?: ((row: number) => string) | null } = {}): Generator<number, void> {
     const total = columns.reduce((s, c) => s + c.weight, 0);
     const widths = columns.map((c) => (c.weight / total) * WIDTH);
     const xs = widths.reduce((acc, w, i) => [...acc, acc[i]! + w], [MARGIN]);
@@ -447,7 +452,10 @@ class Layout {
     };
     this.ensure(22 + 40);
     heading();
-    rows.forEach((cells, i) => drawRow(cells, i));
+    for (let i = 0; i < rows.length; i++) {
+      drawRow(rows[i]!, i);
+      if (i % 300 === 299) yield i + 1;
+    }
     if (footer) {
       this.ensure(30);
       this.line(MARGIN, this.y, MARGIN + WIDTH, this.y, this.palette.accent, 1.2);
@@ -952,6 +960,15 @@ export function layoutSummary(model: SummaryModel, ctx: Ctx): Command[][] {
 // ---- The detailed list ----
 
 export function layoutDetail(model: DetailModel, ctx: Ctx): Command[][] {
+  const steps = layoutDetailSteps(model, ctx);
+  for (;;) {
+    const step = steps.next();
+    if (step.done) return step.value;
+  }
+}
+
+// The detailed list as steps: each yields the number of rows laid out so far.
+export function* layoutDetailSteps(model: DetailModel, ctx: Ctx): Generator<number, Command[][]> {
   const L = new Layout(ctx);
   const mo = (n: number, c: string) => money(L.x.data, n, c);
   const sg = (n: number, c: string) => signed(L.x.data, n, c);
@@ -1000,7 +1017,7 @@ export function layoutDetail(model: DetailModel, ctx: Ctx): Command[][] {
         return text;
       }),
     );
-    L.table(columns, rows, {
+    yield* L.tableSteps(columns, rows, {
       fontSize: 8.5,
       pad: 4.5,
       appendix: (i) =>

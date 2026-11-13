@@ -2,10 +2,11 @@
 // operations (PDF) or a CSV file, each with its settings, a preview, and Share / Save. The period and the
 // filters are shared. The page opens on all time; the period shown before comes back when it is left.
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, useWindowDimensions, View } from "react-native";
+import { FlatList, ScrollView, Text, useWindowDimensions, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import Svg, { Circle, G, Line, Path, Polygon, Polyline, Rect, Text as SvgText } from "react-native-svg";
 import { Stack } from "expo-router";
-import { buildReport, periodSlug, type ReportJob } from "../application/report/job.ts";
+import { layoutReport, pdfOfPages, periodSlug, type ReportPages } from "../application/report/job.ts";
 import { ASCENT } from "../application/report/font.ts";
 import { PAGE, type Command } from "../application/report/layout.ts";
 import type { Sections } from "../application/report/model.ts";
@@ -19,6 +20,7 @@ import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { toast } from "../ui/dialogs.tsx";
+import { withProgress } from "../ui/progress.tsx";
 import { FullPage, MiniTable } from "../ui/full-page.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { periodTitle } from "../ui/period-title.ts";
@@ -58,40 +60,60 @@ interface Draft {
   parts: Record<CsvPart, boolean>;
 }
 
-// A prepared file: a CSV with the first rows for the preview, or a PDF with its pages.
-type Job = { kind: "csv"; name: string; text: string; columns: string[]; rows: string[][]; total: number } | ({ kind: "pdf" } & ReportJob);
+// A prepared file: a CSV with the first rows for the preview, or the pages of a PDF (its file is made when it is
+// saved, shared or printed, and kept for the next time).
+type Job = { kind: "csv"; name: string; text: string; columns: string[]; rows: string[][]; total: number } | { kind: "pdf"; report: ReportPages; name: string; pages: Command[][]; file?: Uint8Array };
 
-function prepare(data: LedgerData, t: Translator, d: Draft): Job {
-  if (d.mode === "csv") {
-    const ops = operationsIn(data, d.period, d.filters).sort(newestFirst);
-    const table = csvTable(data, ops, d.parts);
-    return {
-      kind: "csv",
-      name: `monivra-operations-${periodSlug(d.period, data)}.csv`,
-      // A byte order mark, so a spreadsheet reads the letters of any language.
-      text: "﻿" + csvText(data, ops, d.parts),
-      columns: table.columns.map((c) => COLUMN_LABELS[c]),
-      rows: table.rows.slice(0, PREVIEW_ROWS),
-      total: table.rows.length,
-    };
-  }
+function prepareCsv(data: LedgerData, d: Draft): Job {
+  const ops = operationsIn(data, d.period, d.filters).sort(newestFirst);
+  const table = csvTable(data, ops, d.parts);
+  return {
+    kind: "csv",
+    name: `monivra-operations-${periodSlug(d.period, data)}.csv`,
+    // A byte order mark, so a spreadsheet reads the letters of any language.
+    text: "﻿" + csvText(data, ops, d.parts),
+    columns: table.columns.map((c) => COLUMN_LABELS[c]),
+    rows: table.rows.slice(0, PREVIEW_ROWS),
+    total: table.rows.length,
+  };
+}
+
+// The pages of a report, behind the progress dialog (undefined when it was cancelled).
+async function preparePages(data: LedgerData, t: Translator, d: Draft): Promise<Job | undefined> {
   const started = now();
   const day = new Date();
   const two = (n: number) => String(n).padStart(2, "0");
   const today = `${day.getFullYear()}-${two(day.getMonth() + 1)}-${two(day.getDate())}`;
-  const job = buildReport(data, { t, periodTitle: (p) => periodTitle(p, t, data.settings), today, now: day }, { mode: d.mode, filters: d.filters, period: d.period, sections: d.sections, parts: d.parts });
-  perfLog(`report ${d.mode}: ${job.pages.length} pages, ${job.bytes.length} bytes`, started);
-  return { kind: "pdf", ...job };
+  const words = { t, periodTitle: (p: Period) => periodTitle(p, t, data.settings), today, now: day };
+  const report = await withProgress("Preparing the report", t.t("Preparing…"), (say, signal) =>
+    layoutReport(data, words, { mode: d.mode === "detail" ? "detail" : "summary", filters: d.filters, period: d.period, sections: d.sections, parts: d.parts }, (done, total) => say(`${done} / ${total}`), signal),
+  );
+  if (!report) return undefined;
+  perfLog(`report ${d.mode}: ${report.pages.length} pages laid out`, started);
+  return { kind: "pdf", report, name: report.name, pages: report.pages };
+}
+
+// The PDF file of a prepared report: made once, behind the same progress dialog.
+async function fileOf(t: Translator, job: Extract<Job, { kind: "pdf" }>): Promise<Uint8Array | undefined> {
+  if (job.file) return job.file;
+  const started = now();
+  const bytes = await withProgress("Preparing the report", t.t("Preparing…"), (say, signal) => pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
+  if (bytes) {
+    job.file = bytes;
+    perfLog(`report file: ${bytes.length} bytes`, started);
+  }
+  return bytes;
 }
 
 async function deliver(t: Translator, job: Job, how: "share" | "save" | "print") {
-  if (how === "print") {
-    if (job.kind === "pdf" && !printPdf(job.name, job.bytes)) toast(t.t("Printing is not available on this device"));
-    return;
-  }
-  const body = job.kind === "csv" ? job.text : job.bytes;
-  const type = job.kind === "csv" ? "text/csv" : "application/pdf";
   try {
+    const body = job.kind === "csv" ? job.text : await fileOf(t, job);
+    if (body === undefined) return;
+    if (how === "print") {
+      if (job.kind === "pdf" && !printPdf(job.name, body as Uint8Array)) toast(t.t("Printing is not available on this device"));
+      return;
+    }
+    const type = job.kind === "csv" ? "text/csv" : "application/pdf";
     if (how === "share") await shareTextFile(job.name, body, type);
     else if (await saveTextFile(job.name, body, type)) toast(t.t("File saved"));
   } catch (error) {
@@ -276,14 +298,15 @@ export function ExportPage() {
   }, []);
   const draft: Draft = { mode, period, filters, sections, parts };
   const key = JSON.stringify(draft);
-  // A PDF takes a moment: the buttons wait, and a second tap does nothing.
+  // A report takes a moment (tens of thousands of rows take longer): its own dialog shows the progress and can
+  // stop it; meanwhile the buttons wait, and a second tap does nothing.
   const job = async (): Promise<Job | null> => {
     if (made.current && made.current.key === key && made.current.job) return made.current.job;
     if (busy) return null;
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 30));
     try {
-      const result = prepare(data, t, draft);
+      const result = draft.mode === "csv" ? prepareCsv(data, draft) : await preparePages(data, t, draft);
+      if (!result) return null;
       made.current = { key, job: result };
       return result;
     } catch (error) {
@@ -342,7 +365,7 @@ export function ExportPage() {
         <Text style={{ color: p.muted, fontSize: 13, paddingTop: 4 }}>{t.tc("{n} operation", "{n} operations", scope)}</Text>
       </ScrollView>
       <View style={{ paddingHorizontal: 18, paddingTop: 8, paddingBottom: 12, gap: 10 }}>
-        <Button label={busy ? "Preparing the report" : "Preview"} disabled={busy} onPress={() => void job().then((j) => j && sheets.open(<Preview job={j} />, "full"))} />
+        <Button label="Preview" disabled={busy} onPress={() => void job().then((j) => j && sheets.open(<Preview job={j} />, "full"))} />
         <FileActions job={job} busy={busy} mode={mode} />
       </View>
     </View>

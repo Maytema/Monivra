@@ -2,7 +2,8 @@
 // `transferDestinationPicker`): categories and accounts as tiles, on two tabs. Choosing puts the item
 // on that side of the operation and closes the sheet.
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../../ui/pressable.tsx";
 import { accountBalance, categoryById } from "../../domain/ledger.ts";
 import type { Account, Category, LedgerData } from "../../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";

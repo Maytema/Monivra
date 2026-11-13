@@ -3,7 +3,8 @@
 // "Are you sure?" before the change is applied to all selected operations. Amounts never change with a comment,
 // tags or date (domain/operations.ts); nothing changes if one is refused.
 import { useState, type ReactNode } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { applyBulkChanges, bulkAccountProblem, emptyBulkChanges, rememberTags, type BulkChanges } from "../domain/operations.ts";
 import { useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";

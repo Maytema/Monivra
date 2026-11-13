@@ -3,7 +3,8 @@
 // (date, time, repeat, reminder, then the usual chooser); and the question about payments that are far
 // behind (add what was missed, or carry on from the next occurrence).
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack } from "expo-router";
 import { accountById, categoryById } from "../domain/ledger.ts";
 import { applyFees } from "../domain/money.ts";
@@ -14,7 +15,7 @@ import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../
 import { openCalendar, PrimaryPill, TextButton } from "../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
 import { Button, Card, Icon, Label, Screen } from "../ui/kit.tsx";
-import { Fab } from "../ui/parts.tsx";
+import { Fab, useFabCollapse } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { mix } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
@@ -133,6 +134,7 @@ export function ScheduledScreen() {
   const t = useT();
   const run = useCommand();
   const env = appStore().env;
+  const fab = useFabCollapse();
   const [descending, setDescending] = useState(false);
   const missed = missedPayments(data.scheduled, env);
   const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
@@ -161,7 +163,7 @@ export function ScheduledScreen() {
           ),
         }}
       />
-      <Screen padded={false}>
+      <Screen padded={false} onScroll={fab.onScroll}>
         {missed.map(({ item, count }) => (
           <View key={"m" + item.id} style={{ paddingHorizontal: 16, paddingTop: 12 }}>
             <Card>
@@ -208,7 +210,7 @@ export function ScheduledScreen() {
           </View>
         )}
       </Screen>
-      {dates.length ? <Fab label="Add" collapsed={false} onPress={openCreate} /> : null}
+      {dates.length ? <Fab label="Add" collapsed={fab.collapsed} onPress={openCreate} /> : null}
     </View>
   );
 }

@@ -2,7 +2,8 @@
 // operation-editor/{keypad,extras}.js): tax and commission, how a payment repeats, its reminder, the
 // time of a payment, tags. Each one edits a copy and gives it back when OK is pressed.
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { Pressable } from "../../ui/pressable.tsx";
 import { feeOfKind, withFee } from "../../domain/money.ts";
 import { comesAfterPayment, reminderForTime } from "../../domain/scheduled.ts";
 import type { Fee, IntervalUnit, Recurrence, Reminder } from "../../domain/types.ts";

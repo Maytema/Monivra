@@ -1,7 +1,8 @@
 // A page that is a layer over the whole screen (a step of a flow): back arrow, title, a scrolling body
 // and buttons pinned under it, as the pages of the first application (pageHeader + page-footer).
 import type { ReactNode } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 import { useCloseLayer } from "./sheets.tsx";

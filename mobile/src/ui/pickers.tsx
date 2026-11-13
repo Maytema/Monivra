@@ -1,6 +1,7 @@
 // Bottom panels to choose an account, a category, a currency or one of a few options.
 import type { ReactNode } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Modal, ScrollView, Text, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { accountBalance } from "../domain/ledger.ts";
 import type { Account, Category } from "../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "./app-context.tsx";

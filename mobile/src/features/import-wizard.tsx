@@ -3,7 +3,8 @@
 // look at what would be added, add it — and a page that can take it back. Nothing in the data changes
 // before the last button; every page can go back. The logic is in domain/csv-import.ts.
 import { useState, type ReactNode } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router } from "expo-router";
 import {
   applyImport,

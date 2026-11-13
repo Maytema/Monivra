@@ -3,7 +3,8 @@
 // inside the app (not in a native Modal), so the same insets and theme apply to every layer; the panel
 // of a sheet adds the system's bottom inset to its own padding, and rises above the keyboard.
 import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, BackHandler, Dimensions, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Animated, BackHandler, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { chrome } from "./theme.ts";

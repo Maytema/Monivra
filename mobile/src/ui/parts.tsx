@@ -1,8 +1,9 @@
 // Pieces that make the first application recognisable, built from the same measures as its CSS
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
-import { createContext, useContext, type ReactNode } from "react";
-import { Pressable, Text, View, type StyleProp, type TextStyle } from "react-native";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
+import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
@@ -168,36 +169,43 @@ export function MoneyText({ text, value, size = 18, style }: { text: string; val
   return <Text style={[{ color, fontSize: size, fontVariant: ["tabular-nums"] }, style]}>{text}</Text>;
 }
 
-// The floating "Add" button of the operations tab (css/fab.css): a tinted square with a plus; at the
-// top of the list its name shows next to the plus, scrolled it is only the plus. It sits above the
-// tab bar (the scene ends there) at the design's gap from the edge.
+// The floating "Add" button (css/fab.css) — the one button of every list that has it (operations, a
+// category's or account's operations, scheduled payments): a tinted square with a plus; at the top of the
+// list its name shows next to the plus, scrolled it shrinks to the plus alone, smoothly both ways. It sits
+// above the tab bar (the scene ends there) at the design's gap from the edge.
 export function Fab({ label, collapsed, onPress }: { label: string; collapsed: boolean; onPress: () => void }) {
   const p = usePalette();
   const t = useT();
+  const [labelWidth, setLabelWidth] = useState(0);
+  const progress = useRef(new Animated.Value(collapsed ? 0 : 1)).current;
+  useEffect(() => {
+    Animated.timing(progress, { toValue: collapsed ? 0 : 1, duration: 180, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start();
+  }, [collapsed, progress]);
+  const width = progress.interpolate({ inputRange: [0, 1], outputRange: [0, labelWidth + 10] });
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t.t("New operation")}
       onPress={onPress}
-      style={({ pressed }) => ({
-        position: "absolute",
-        right: chrome.edgeGap,
-        bottom: chrome.edgeGap,
-        height: chrome.fab,
-        paddingHorizontal: 18,
-        borderRadius: 22,
-        flexDirection: "row",
-        alignItems: "center",
-        gap: collapsed ? 0 : 10,
-        backgroundColor: p.tint,
-        elevation: 3,
-        opacity: pressed ? 0.85 : 1,
-      })}
+      style={{ position: "absolute", right: chrome.edgeGap, bottom: chrome.edgeGap, height: chrome.fab, paddingHorizontal: 18, borderRadius: 22, flexDirection: "row", alignItems: "center", backgroundColor: p.tint, elevation: 3 }}
     >
       <Icon name="plus" size={26} color={p.ink} />
-      {collapsed ? null : <Text style={{ color: p.ink, fontSize: 19, fontWeight: "600" }}>{t.t(label)}</Text>}
+      <Animated.View style={{ width: labelWidth ? width : collapsed ? 0 : undefined, overflow: "hidden", opacity: progress }}>
+        <Text numberOfLines={1} onLayout={(e) => setLabelWidth(Math.ceil(e.nativeEvent.layout.width))} style={{ marginLeft: 10, color: p.ink, fontSize: 19, fontWeight: "600", width: labelWidth || undefined }}>
+          {t.t(label)}
+        </Text>
+      </Animated.View>
     </Pressable>
   );
+}
+
+// "Is the list at its top?" for a list that has the Add button: pass `onScroll` to the list and `collapsed`
+// to the button. One rule for all of them.
+export function useFabCollapse(): { collapsed: boolean; onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void; setAtTop: (top: boolean) => void } {
+  const [collapsed, setCollapsed] = useState(false);
+  const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => setCollapsed(e.nativeEvent.contentOffset.y >= 12), []);
+  const setAtTop = useCallback((top: boolean) => setCollapsed(!top), []);
+  return { collapsed, onScroll, setAtTop };
 }
 
 // Two tabs as one segmented block (the page "Change categories", CT 005): a tinted band, the open tab

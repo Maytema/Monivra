@@ -1,7 +1,8 @@
 // The exchange rates page (js/screens/rates.js plus the automatic update): the switch for automatic rates, the
 // search, one row per currency with its rate and a tick that keeps it out of the update, and the reset.
 import { useMemo, useState } from "react";
-import { FlatList, Linking, Pressable, Text, TextInput, View } from "react-native";
+import { FlatList, Linking, Text, TextInput, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack } from "expo-router";
 import { defaultRates } from "../domain/currencies.ts";
 import { fetcher } from "../platform/network.ts";

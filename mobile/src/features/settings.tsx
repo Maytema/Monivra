@@ -2,7 +2,8 @@
 // formatting, styles and elements, notifications, security, privacy, backups and rates. One route shows
 // a page by its name; the pages are described here as a table, as in the first application.
 import { useState, type ReactNode } from "react";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { changeMainCurrency } from "../domain/accounts.ts";
 import { formatNumber, NUMBER_FORMATS } from "../domain/money.ts";
@@ -185,7 +186,7 @@ function Notifications() {
       <SettingRow title="Time" caption={s.notificationTime} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} />
       <OptionsRow label="Frequency" k="notificationFrequency" options={[["Every day", "Every day"], ["Weekdays", "Weekdays"], ["Weekends", "Weekends"]]} />
       <SettingRow
-        title="Test notification"
+        title="Run notification"
         icon="bell"
         onPress={() =>
           void sendTestNotification(s.language)

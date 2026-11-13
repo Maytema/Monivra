@@ -2,7 +2,8 @@
 // Expenses, Accounts (a transfer) — each a grid of what to start from. Choosing is the only way into
 // the editor; switching tabs or closing never creates an operation. The tabs also swipe.
 import { useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View, type LayoutChangeEvent } from "react-native";
+import { ScrollView, Text, View, type LayoutChangeEvent } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { accountBalance, categoryById, defaultAccountId } from "../domain/ledger.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";

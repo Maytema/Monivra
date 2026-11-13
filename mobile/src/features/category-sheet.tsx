@@ -1,7 +1,8 @@
 // The sheet of a held category tile (js/screens/categories.js `categoryActions`): its name, how many
 // operations and how much in the period, its share of all of its kind, two actions, and one row for each
 // subcategory that lists that subcategory's operations.
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
 import { categoryById, categoryTotalIn, reportRows, totalByType, categoryRows } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn } from "../domain/periods.ts";

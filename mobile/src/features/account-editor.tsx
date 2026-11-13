@@ -3,7 +3,8 @@
 // type is changed on a sheet. Icon and color are one "Icon" field; amounts open the calculator sheet;
 // a currency change of an account with records asks how to treat them.
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import {
   accountDeletionImpact,
