@@ -17,6 +17,7 @@ import { DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
 import { Button, Card, Icon, Label, Screen } from "../ui/kit.tsx";
 import { Fab, useFabCollapse } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { Spot } from "../ui/spotlight.tsx";
 import { mix } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
@@ -189,12 +190,12 @@ export function ScheduledScreen() {
                 {sorted
                   .filter((o) => o.date === date)
                   .map((o) => (
-                    <View key={o.id}>
-                      <OperationRow op={o} onPress={() => openEditor({ id: o.id, scheduled: true })} />
+                    <Spot key={o.id} id={o.id} reach={8}>
+                      <OperationRow op={o} spot={false} onPress={() => openEditor({ id: o.id, scheduled: true })} />
                       <Pressable accessibilityRole="button" onPress={() => openEditor({ id: o.id, scheduled: true })}>
                         <Details item={o} />
                       </Pressable>
-                    </View>
+                    </Spot>
                   ))}
               </View>
             ))}

@@ -4,7 +4,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { useNavigation } from "expo-router";
+import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
 import { newestFirst } from "../domain/ledger.ts";
@@ -16,6 +16,7 @@ import { appStore, useAppState, useCommand, useLedger, useMoney, usePalette, use
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Card, Icon, Label } from "../ui/kit.tsx";
 import { Fab, MoneyText, useFabCollapse } from "../ui/parts.tsx";
+import { useSpotlit } from "../ui/spotlight.tsx";
 import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
@@ -23,6 +24,7 @@ import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useView } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
+import { listingOnTop } from "./reveal.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
@@ -56,6 +58,13 @@ export function OperationsScreen() {
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
 
+  // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
+  useFocusEffect(
+    useCallback(() => {
+      listingOnTop(true);
+      return () => listingOnTop(false);
+    }, []),
+  );
   // The tab bar gives its place to the actions of the selection.
   useEffect(() => {
     navigation.setOptions({ tabBarStyle: selection ? { display: "none" } : undefined });
@@ -100,9 +109,13 @@ export function OperationsScreen() {
         accessibilityState={{ checked: all ? true : chosen ? "mixed" : false, disabled: !here.length }}
         disabled={!here.length}
         onPress={() => change(all ? selected.filter((id) => !here.includes(id)) : [...selected.filter((id) => !here.includes(id)), ...here])}
-        style={{ minWidth: 42, height: 42, alignItems: "center", justifyContent: "center" }}
+        accessibilityLabel={t.t(all ? "Deselect all in this period" : "Select all in this period")}
+        style={{ minWidth: 42, height: 42, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }}
       >
-        <Icon name="clipboardList" size={26} color={p.ink} />
+        <View style={{ width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: chosen ? p.accent : p.muted, backgroundColor: chosen ? p.accent : "transparent", alignItems: "center", justifyContent: "center" }}>
+          {chosen ? <Icon name={all ? "check" : "minus"} size={15} color={p.onAccent} /> : null}
+        </View>
+        <Text style={{ color: p.muted, fontSize: 12 }}>{`${chosen}/${here.length}`}</Text>
       </Pressable>
     </View>
   ) : search ? (
@@ -185,6 +198,16 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   // reports as the first visible row — not by the scroll view's own sticky headers, which for a list that
   // draws only the rows near the window pin the wrong cell (a stale row stuck at the top) and need the list to
   // be rebuilt whenever the days change.
+  const list = useRef<FlatList<Item>>(null);
+  // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
+  const lit = useSpotlit();
+  useEffect(() => {
+    if (!active || !lit.length) return;
+    const found = items.map((x, i) => (x.kind === "op" && lit.includes(x.op.id) ? i : -1)).filter((i) => i >= 0);
+    if (!found.length) return;
+    const timer = setTimeout(() => list.current?.scrollToIndex({ index: found[0]!, viewPosition: found.length > 1 ? 0 : 0.5, animated: true }), 120);
+    return () => clearTimeout(timer);
+  }, [active, lit, items]);
   const dayOps = useMemo(() => new Map(items.flatMap((x) => (x.kind === "day" ? [[x.date, x.ops] as const] : []))), [items]);
   const [stuck, setStuck] = useState<string | null>(null);
   const [pinned, setPinned] = useState(false);
@@ -206,6 +229,8 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   return (
     <View style={{ flex: 1 }}>
       <FlatList
+        ref={list}
+        onScrollToIndexFailed={({ index, averageItemLength }) => list.current?.scrollToOffset({ offset: Math.max(0, index * averageItemLength - 200), animated: true })}
         data={items}
         keyExtractor={(x) => (x.kind === "day" ? "d" + x.date : x.op.id)}
         onScroll={scrolled}

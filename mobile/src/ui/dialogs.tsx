@@ -9,7 +9,7 @@ import { setMessagePresenter, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 import { Icon } from "./kit.tsx";
-import { mix } from "./theme.ts";
+import { chrome, mix } from "./theme.ts";
 
 export function DialogTitle({ children }: { children: ReactNode }) {
   const p = usePalette();
@@ -198,6 +198,90 @@ export function ToastHost() {
       <View style={{ backgroundColor: p.ink, borderRadius: 14, paddingHorizontal: 18, paddingVertical: 12, maxWidth: "100%" }}>
         <Text style={{ color: p.bg, fontSize: 14 }}>{t.t(current.text)}</Text>
       </View>
+    </View>
+  );
+}
+
+// What just happened (js/ui/primitives.js `notice`): a pill with an icon at the bottom edge for what went as
+// expected ("quiet"), a card with a second line for what ended up somewhere else than one might think
+// ("important"). With `onTap` it ends in an arrow, stays longer, and a tap leads on to what it is about.
+export interface NoticeOptions {
+  icon: string;
+  tone?: "positive" | "negative" | "accent";
+  level?: "quiet" | "important";
+  detail?: string;
+  onTap?: () => void;
+}
+const NOTICE_MS = { quiet: 1600, quietTap: 3200, important: 4500 } as const;
+let current_notice: ({ id: number; text: string } & NoticeOptions) | null = null;
+const noticeListeners = new Set<() => void>();
+const subscribeNotice = (l: () => void) => (noticeListeners.add(l), () => void noticeListeners.delete(l));
+export function notice(text: string, options: NoticeOptions): void {
+  current_notice = { id: ++counter, text, ...options };
+  noticeListeners.forEach((l) => l());
+}
+
+export function NoticeHost() {
+  const current = useSyncExternalStore(subscribeNotice, () => current_notice);
+  const p = usePalette();
+  const t = useT();
+  const insets = useSafeAreaInsets();
+  const [shown, setShown] = useState<number | null>(null);
+  useEffect(() => {
+    if (!current) return;
+    setShown(current.id);
+    const stay = current.level === "important" ? NOTICE_MS.important : current.onTap ? NOTICE_MS.quietTap : NOTICE_MS.quiet;
+    const timer = setTimeout(() => setShown((id) => (id === current.id ? null : id)), stay);
+    return () => clearTimeout(timer);
+  }, [current]);
+  if (!current || shown !== current.id) return null;
+  const important = current.level === "important";
+  const tone = current.tone === "positive" ? p.positiveInk : current.tone === "negative" ? p.negativeInk : p.accentInk;
+  // Above the navigation bar and the floating button, so it never covers the list that just changed.
+  const bottom = Math.max(chrome.navMinBottom, insets.bottom) + chrome.navPadTop + chrome.navItem + chrome.edgeGap + chrome.fab + 12;
+  const body = (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+        paddingHorizontal: important ? 16 : 14,
+        paddingVertical: important ? 12 : 10,
+        width: important ? "100%" : undefined,
+        maxWidth: 420,
+        borderRadius: 16,
+        borderWidth: 1.5,
+        borderColor: mix(p.accent, p.bg, important ? 0.48 : 0.26),
+        backgroundColor: mix(p.accent, p.sheet, 0.06),
+        elevation: 4,
+      }}
+    >
+      <Icon name={current.icon} size={important ? 28 : 18} color={tone} />
+      <View style={{ flexShrink: 1 }}>
+        <Text style={{ color: p.ink, fontSize: important ? 15 : 14, fontWeight: "500" }}>{t.t(current.text)}</Text>
+        {current.detail ? <Text style={{ color: p.muted, fontSize: 13, marginTop: 1 }}>{current.detail}</Text> : null}
+      </View>
+      {current.onTap ? <Icon name="right" size={important ? 20 : 16} color={p.accentInk} /> : null}
+    </View>
+  );
+  return (
+    <View pointerEvents="box-none" style={{ position: "absolute", left: chrome.edgeGap, right: chrome.edgeGap, bottom, alignItems: "center" }}>
+      {current.onTap ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            setShown(null);
+            current.onTap?.();
+          }}
+          style={{ maxWidth: "100%", width: important ? "100%" : undefined }}
+        >
+          {body}
+        </Pressable>
+      ) : (
+        <View pointerEvents="none" style={{ maxWidth: "100%", width: important ? "100%" : undefined }}>
+          {body}
+        </View>
+      )}
     </View>
   );
 }

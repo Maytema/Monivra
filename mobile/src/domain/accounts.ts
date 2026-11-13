@@ -127,6 +127,11 @@ export function planCurrencyChange(data: LedgerData, id: string, currency: strin
     if (o.from === id) return n - ((c.amount ?? o.amount) - o.amount);
     return n + ((c.receive ?? c.amount ?? o.amount) - (o.receive ?? o.amount));
   }, 0);
+  // What the other accounts of the transfers out receive differently ("spent" only; "all" keeps their amounts).
+  const others = new Map<string, Minor>();
+  if (mode === "spent")
+    for (const c of counted)
+      if (c.op.from === id && c.receive !== undefined && c.op.to) others.set(c.op.to, (others.get(c.op.to) ?? 0) + c.receive - (c.op.receive ?? c.op.amount));
   const before = accountBalance(data, id);
   let openingAfter = a.opening || 0,
     opening = 0;
@@ -143,6 +148,7 @@ export function planCurrencyChange(data: LedgerData, id: string, currency: strin
     spentAfter: taken.reduce((n, c) => n + (c.amount ?? c.op.amount), 0),
     before,
     after: before + delta + opening,
+    others,
   };
 }
 

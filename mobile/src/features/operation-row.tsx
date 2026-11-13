@@ -11,6 +11,7 @@ import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { MoneyText, ToneBadge } from "../ui/parts.tsx";
+import { Spot } from "../ui/spotlight.tsx";
 import { alpha } from "../ui/theme.ts";
 
 type Translate = ReturnType<typeof useT>;
@@ -45,7 +46,7 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
 
 // Memoised: the list passes stable handlers (they receive the id), so a row is drawn again only when
 // its own operation or its selection changes, not on every scroll or selection of another row.
-export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
+export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -65,7 +66,7 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   const small = { fontSize: 13, textAlign: "right" as const };
   const nameSize = compact ? 15 : 17;
   const lineSize = compact ? 14 : 15;
-  return (
+  const row = (
     <Pressable
       accessibilityRole="button"
       pressRetentionOffset={WIDE_RETENTION}
@@ -123,6 +124,9 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
       </View>
     </Pressable>
   );
+  // The row is lit when it is what was just saved or looked for; a page that lights more than the row (the
+  // scheduled payments, with the details under it) does it itself.
+  return spot ? <Spot id={op.id}>{row}</Spot> : row;
 });
 
 // Net result of one day (income minus expenses) in the main currency.

@@ -16,7 +16,7 @@ import { setSecureScreen } from "../platform/native.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
-import { ToastHost } from "../ui/dialogs.tsx";
+import { NoticeHost, ToastHost } from "../ui/dialogs.tsx";
 
 function KeepCurrent() {
   useEffect(() => {
@@ -104,6 +104,7 @@ function Ready() {
       </Stack>
       <SheetHost />
       </KeyboardAvoidingView>
+      <NoticeHost />
       <ToastHost />
       </LockGate>
     </>

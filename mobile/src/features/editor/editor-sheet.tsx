@@ -16,9 +16,11 @@ import { DomainError } from "../../domain/errors.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";
 import { openCalendar } from "../../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../../ui/currency-sheet.tsx";
-import { confirmDialog, promptDialog, toast } from "../../ui/dialogs.tsx";
+import { confirmDialog, notice, promptDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
+import { spotlight } from "../../ui/spotlight.tsx";
+import { operationShown, showOperations, showScheduled } from "../reveal.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
 import { canAttachPhotos, choosePhoto, takePhoto } from "../../platform/native.ts";
@@ -345,14 +347,16 @@ function FeeLines({ session }: { session: EditorSession }) {
       {steps.map(({ fee, delta }) => {
         const size = fee.percent && fee.percent > 0 ? `${fee.percent} %` : String(fee.value);
         return (
-          <View key={fee.kind} style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: p.muted, borderRadius: 14, paddingLeft: 14 }}>
-            <Text numberOfLines={1} style={{ flex: 1, color: p.ink, fontSize: 15 }}>
-              {t.t(fee.kind === "tax" ? "Tax" : "Commission")} ({fee.add ? "+" : "−"}
-              {size}): {delta > 0 ? "+" : "−"}
-              {money(Math.abs(delta), currency)}
-            </Text>
-            <IconButton name="swap" label="Subtract / add" size={18} onPress={() => set(session.draft.fees!.map((f) => (f.kind === fee.kind ? { ...f, add: !f.add } : f)))} />
-            <IconButton name="close" label="Remove" size={18} onPress={() => set(session.draft.fees!.filter((f) => f.kind !== fee.kind))} />
+          <View key={fee.kind} style={{ flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: p.muted, borderRadius: 14 }}>
+            <Pressable accessibilityRole="button" onPress={() => openFee(fee.kind, fees, (next) => set(next))} style={{ flex: 1, paddingVertical: 12, paddingLeft: 14 }}>
+              <Text numberOfLines={1} style={{ color: p.ink, fontSize: 15 }}>
+                {t.t(fee.kind === "tax" ? "Tax" : "Commission")} ({fee.add ? "+" : "−"}
+                {size}): {delta > 0 ? "+" : "−"}
+                {money(Math.abs(delta), currency)}
+              </Text>
+            </Pressable>
+            {steps.length > 1 ? <IconButton name="swap" label="Change order" size={18} onPress={() => set([fees[1]!, fees[0]!, ...fees.slice(2)])} /> : null}
+            <IconButton name="close" label="Remove" size={18} onPress={() => set(fees.filter((f) => f.kind !== fee.kind))} />
           </View>
         );
       })}
@@ -560,7 +564,8 @@ function Actions({ session }: { session: EditorSession }) {
   const settle = (post: boolean) => {
     if (run((tx, e) => (processScheduled(tx, d.id, post, e), true))) {
       sheets.closeAll();
-      toast(post ? "Payment added" : "Payment skipped");
+      if (post) notice("Payment added", { icon: "circleCheck", tone: "positive" });
+      else notice("Payment skipped", { icon: "circleCross", tone: "negative" });
     }
   };
   return (
@@ -597,7 +602,13 @@ function EditorSheet({ session }: { session: EditorSession }) {
         });
         if (!result) return;
         close();
-        if (result.planned) toast("Payment scheduled");
+        const { saved, planned } = result;
+        // Where it went: on the scheduled payments the row is lit; elsewhere a notice leads to it.
+        if (planned || session.scheduled) {
+          if (session.scheduled) spotlight([saved.id]);
+          else notice("Payment scheduled", { icon: "calendar", tone: "accent", level: "important", detail: t.t("Will be added on {date}", { date: t.day(saved.date, true) }), onTap: () => showScheduled(saved.id) });
+        } else if (operationShown(saved)) spotlight([saved.id]);
+        else notice("Operation saved", { icon: "circleCheck", tone: "positive", onTap: () => showOperations([saved.id]) });
       };
       if (confirmedDate.current !== op.date && isFarDate(op.date, env.clock.today())) {
         confirmDialog(t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), false, "Save");

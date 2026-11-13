@@ -107,6 +107,10 @@ function CurrencyChange({ id, currency, done }: { id: string; currency: string; 
   const rows = [t.t("Balance: {before} → {after}", { before: money(spent.before, a.currency), after: money(spent.after, currency) })];
   if (spent.spentBefore !== spent.spentAfter)
     rows.push(t.t("{operations}: {before} → {after}", { operations: t.tc("{n} operation taken", "{n} operations taken", spent.taken), before: money(spent.spentBefore, a.currency), after: money(spent.spentAfter, currency) }));
+  for (const [other, delta] of spent.others) {
+    const account = accountById(data, other);
+    if (account) rows.push(t.t("{name}: received {amount}", { name: account.name, amount: (delta > 0 ? "+" : "") + money(delta, account.currency) }));
+  }
   const pick = (mode: CurrencyChangeMode) => () => {
     close();
     done(mode);

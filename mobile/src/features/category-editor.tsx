@@ -247,7 +247,7 @@ export function CategoryEditor() {
         <FieldText boxed label="Title" value={draft.name} onChange={(name) => set({ name })} placeholder="Enter the title" />
         <FieldButton inline label="Icon" onPress={() => openCustomize({ icon: draft.icon, color: draft.color }, (look) => set(look))} cell={{ node: <Icon name={draft.icon} size={26} color={draft.color} />, background: mix(draft.color, p.bg, 0.14) }} />
         <FieldButton label="Type" right={<View style={{ flexDirection: "row", alignItems: "center", gap: 20, minHeight: 36 }}><Icon name={draft.type === "expense" ? "arrowExpense" : "arrowIncome"} size={28} color={p.accentInk} /><Text style={{ color: p.accentInk, fontSize: 16 }}>{t.t(draft.type === "expense" ? "Expenses" : "Incomes")}</Text></View>} onPress={() => sheets.open(<TypeSheet value={draft.type} parent={categoryById(data, draft.parent)} onPick={(type) => set({ type })} />, "sheet")} />
-        <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
+        <FieldButton label="Category currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {!draft.parent ? (
           <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 16, overflow: "hidden" }}>
             <Text style={{ color: p.ink, fontSize: 17, lineHeight: 22, fontWeight: "500", paddingHorizontal: 24, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: p.line }}>{t.t("Subcategories")}</Text>
