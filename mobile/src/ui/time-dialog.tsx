@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import Svg, { Circle, Line } from "react-native-svg";
+import { systemHour24 } from "../platform/clock.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { toast } from "./dialogs.tsx";
@@ -20,14 +21,24 @@ const place = (turns: number, radius: number) => ({ x: Math.sin(turns * 2 * Math
 const outerHour = (slot: number) => (slot === 0 ? 12 : slot);
 const innerHour = (slot: number) => (slot === 0 ? 0 : slot + 12);
 
-// Whether the language writes the time with AM and PM.
+// Whether the time is written with AM and PM: as the phone is set when it says so, otherwise as the language of
+// the application writes it.
 export const twelveHour = (locale: string): boolean => {
+  const system = systemHour24();
+  if (system !== null) return !system;
   try {
     return /^h1[12]$/.test(new Intl.DateTimeFormat(locale, { hour: "numeric" }).resolvedOptions().hourCycle ?? "");
   } catch {
     return false;
   }
 };
+
+// "08:00 PM" or "20:00": a stored "HH:MM" as the phone writes it (js/ui/time-picker.js `timeLabel`).
+export function timeLabel(time: string, locale: string): string {
+  const [hour = 0, minute = 0] = time.split(":").map(Number);
+  const two = (n: number) => String(n).padStart(2, "0");
+  return twelveHour(locale) ? `${two(hour % 12 || 12)}:${two(minute)} ${hour < 12 ? "AM" : "PM"}` : `${two(hour)}:${two(minute)}`;
+}
 
 function Part({ text, chosen, onPress, label }: { text: string; chosen: boolean; onPress: () => void; label: string }) {
   const p = usePalette();

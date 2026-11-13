@@ -170,13 +170,13 @@ export const optionDialog = <T extends string>(title: string, options: readonly 
   sheets.open(<Options title={title} options={options} value={value} onPick={onPick} />, "dialog");
 
 // ---- The notice line ----------------------------------------------------------------------------
-let message: { id: number; text: string } | null = null;
+let message: { id: number; text: string; params?: Record<string, string | number> } | null = null;
 let counter = 0;
 const listeners = new Set<() => void>();
 const subscribe = (l: () => void) => (listeners.add(l), () => void listeners.delete(l));
 // A short message without an icon, for input mistakes and mode switches (3 s).
-export function toast(text: string): void {
-  message = { id: ++counter, text };
+export function toast(text: string, params?: Record<string, string | number>): void {
+  message = { id: ++counter, text, params };
   listeners.forEach((l) => l());
 }
 
@@ -196,7 +196,7 @@ export function ToastHost() {
   return (
     <View pointerEvents="none" style={{ position: "absolute", left: 16, right: 16, bottom: 24 + insets.bottom, alignItems: "center" }}>
       <View style={{ backgroundColor: p.ink, borderRadius: 14, paddingHorizontal: 18, paddingVertical: 12, maxWidth: "100%" }}>
-        <Text style={{ color: p.bg, fontSize: 14 }}>{t.t(current.text)}</Text>
+        <Text style={{ color: p.bg, fontSize: 14 }}>{t.t(current.text, current.params)}</Text>
       </View>
     </View>
   );

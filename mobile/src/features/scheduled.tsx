@@ -17,6 +17,7 @@ import { DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
 import { Button, Card, Icon, Label, Screen } from "../ui/kit.tsx";
 import { Fab, useFabCollapse } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { timeLabel } from "../ui/time-dialog.tsx";
 import { Spot } from "../ui/spotlight.tsx";
 import { mix } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
@@ -38,7 +39,7 @@ function useRuleText() {
     const weekdays = r.unit === "Weeks" && r.days.length ? " · " + r.days.map((n) => t.weekday(n, "short")).join(", ") : "";
     return (r.every === 1 ? t.t(one) : t.tc(one, many, r.every)) + weekdays + (r.remaining === null ? "" : ` (${t.t("Remaining: {n}", { n: r.remaining })})`);
   };
-  const reminderText = (r: Reminder): string => (r.before === 0 ? t.t("On the same day at {time}", { time: r.time }) : t.t("{interval} before at {time}", { interval: `${r.before} ${t.t(r.unit)}`, time: r.time }));
+  const reminderText = (r: Reminder): string => (r.before === 0 ? t.t("On the same day at {time}", { time: timeLabel(r.time, t.locale) }) : t.t("{interval} before at {time}", { interval: `${r.before} ${t.t(r.unit)}`, time: timeLabel(r.time, t.locale) }));
   return { recurText, reminderText };
 }
 
@@ -57,7 +58,7 @@ function Details({ item }: { item: ScheduledPayment }) {
       <Text style={{ flex: 1, color: p.ink, fontSize: 14 }}>{text}</Text>
     </View>
   );
-  const rules = [item.time ? line("clock", item.time, "t") : null, item.recur ? line("repeat", recurText(item.recur), "r") : null, item.reminder ? line("bell", reminderText(item.reminder), "b") : null].filter(Boolean);
+  const rules = [item.time ? line("clock", timeLabel(item.time, t.locale), "t") : null, item.recur ? line("repeat", recurText(item.recur), "r") : null, item.reminder ? line("bell", reminderText(item.reminder), "b") : null].filter(Boolean);
   if (!rules.length && !item.fees?.length) return null;
   return (
     <View style={{ marginLeft: 56, marginBottom: 8 }}>
@@ -110,7 +111,7 @@ function CreateDialog() {
       <DialogTitle>{t.t("Select date")}</DialogTitle>
       <View style={{ gap: 10 }}>
         {tile("calendar", "Date", dateTitle, () => openCalendar(setup.date, (date) => setSetup((s) => ({ ...s, date })), earliest), true)}
-        {tile("clock", "Time", setup.time, () => openTime(setup.time, changeTime), true)}
+        {tile("clock", "Time", timeLabel(setup.time, t.locale), () => openTime(setup.time, changeTime), true)}
         {tile("repeat", "Recur", setup.recur && recurText(setup.recur), () => openRecurrence(setup.recur, (recur) => setSetup((s) => ({ ...s, recur }))))}
         {tile("bell", "Reminder", setup.reminder && reminderText(setup.reminder), () => openReminder(setup.reminder, setup.time, (reminder) => setSetup((s) => ({ ...s, reminder }))))}
       </View>

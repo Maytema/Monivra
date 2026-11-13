@@ -12,7 +12,7 @@ import { PrimaryPill, TextButton } from "../../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog, promptDialog, confirmDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { useCommand } from "../../ui/app-context.tsx";
-import { openTime } from "../../ui/time-dialog.tsx";
+import { openTime, timeLabel } from "../../ui/time-dialog.tsx";
 export { openTime };
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { deleteTag, rememberTags, renameTag } from "../../domain/operations.ts";
@@ -111,9 +111,9 @@ function Footer({ off, ok, offLabel = "Turn off" }: { off?: () => void; ok: () =
 
 
 // A payment's time; a reminder of the same day that would come after it moves along or is dropped.
-export function setPaymentTime(session: EditorSession, time: string): void {
+export function setPaymentTime(session: EditorSession, time: string, locale: string): void {
   const kept = reminderForTime(session.draft.reminder ?? null, session.draft.time, time);
-  if (kept !== (session.draft.reminder ?? null)) toast(kept ? `Reminder moved to ${kept.time}` : "Reminder turned off: there is no time left before the payment");
+  if (kept !== (session.draft.reminder ?? null)) toast(kept ? "Reminder moved to {time}" : "Reminder turned off: there is no time left before the payment", kept ? { time: timeLabel(kept.time, locale) } : undefined);
   session.update({ reminder: kept, time });
 }
 
@@ -275,7 +275,7 @@ function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null
           )
         }
       />
-      <FieldButton label="At" text={r.time} onPress={() => openTime(r.time, (time) => setR({ ...r, time }))} />
+      <FieldButton label="At" text={timeLabel(r.time, t.locale)} onPress={() => openTime(r.time, (time) => setR({ ...r, time }))} />
       <Pressable accessibilityRole="button" onPress={openReminderHelp} style={{ minHeight: 47, borderRadius: 28, borderWidth: 1, borderColor: "#8886", alignItems: "center", justifyContent: "center", marginVertical: 12, paddingHorizontal: 12 }}>
         <Text style={{ fontSize: 15, textAlign: "center" }}>{t.t("Important information about setting a reminder")}</Text>
       </Pressable>

@@ -20,6 +20,7 @@ import { confirmDialog, notice, promptDialog, toast } from "../../ui/dialogs.tsx
 import { Icon } from "../../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../../ui/parts.tsx";
 import { spotlight } from "../../ui/spotlight.tsx";
+import { timeLabel } from "../../ui/time-dialog.tsx";
 import { operationShown, showOperations, showScheduled } from "../reveal.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
 import { alpha, mix } from "../../ui/theme.ts";
@@ -520,7 +521,7 @@ function Additional({ session }: { session: EditorSession }) {
     session.fill(available);
     close();
   };
-  const reminderText = d.reminder ? (d.reminder.before === 0 ? t.t("On the same day at {time}", { time: d.reminder.time }) : `${d.reminder.before} ${d.reminder.unit} · ${d.reminder.time}`) : t.t("Turned off");
+  const reminderText = d.reminder ? (d.reminder.before === 0 ? t.t("On the same day at {time}", { time: timeLabel(d.reminder.time, t.locale) }) : t.t("{interval} before at {time}", { interval: `${d.reminder.before} ${t.t(d.reminder.unit)}`, time: timeLabel(d.reminder.time, t.locale) })) : t.t("Turned off");
   const recurText = d.recur ? `${t.t(d.recur.unit)} × ${d.recur.every}${d.recur.remaining === null ? "" : ` (${t.t("Remaining: {n}", { n: d.recur.remaining })})`}` : t.t("Turned off");
   const fee = (kind: Fee["kind"]) => {
     const label = feeLabel(d.fees, kind);
@@ -530,7 +531,7 @@ function Additional({ session }: { session: EditorSession }) {
     <View>
       <Text style={{ color: p.ink, fontSize: 25, textAlign: "center", marginTop: 4, marginBottom: 14 }}>{t.t("Additionally")}</Text>
       {row("Fill max", "wallet", t.t("Use full sender account balance"), fillMax, true)}
-      {session.scheduled ? row("Time", "clock", d.time ?? appStore().env.clock.time(), () => openTime(d.time ?? appStore().env.clock.time(), (time) => setPaymentTime(session, time))) : null}
+      {session.scheduled ? row("Time", "clock", timeLabel(d.time ?? appStore().env.clock.time(), t.locale), () => openTime(d.time ?? appStore().env.clock.time(), (time) => setPaymentTime(session, time, t.locale))) : null}
       {row("Reminder", "bell", reminderText, () => openReminder(d.reminder ?? null, d.time, (reminder) => session.update({ reminder })))}
       {row("Recur", "repeat", recurText, () => openRecurrence(d.recur ?? null, (recur) => session.update({ recur })))}
       {row("Tax", "bank", fee("tax"), () => openFee("tax", d.fees ?? [], (fees) => session.update({ fees })))}

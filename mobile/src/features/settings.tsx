@@ -22,6 +22,7 @@ import { Footnote, SettingRow, SwitchRow } from "../ui/rows.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { openTime } from "./editor/options.tsx";
+import { timeLabel } from "../ui/time-dialog.tsx";
 import { PinSettings, setLock } from "./lock.tsx";
 
 type Key = keyof Settings & string;
@@ -183,7 +184,7 @@ function Notifications() {
         }}
       />
       <Switch label="Periodic reminders" k="periodic" />
-      <SettingRow title="Time" caption={s.notificationTime} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} />
+      <SettingRow title="Time" caption={timeLabel(s.notificationTime, t.locale)} onPress={() => openTime(s.notificationTime, (time) => set({ notificationTime: time }))} />
       <OptionsRow label="Frequency" k="notificationFrequency" options={[["Every day", "Every day"], ["Weekdays", "Weekdays"], ["Weekends", "Weekends"]]} />
       <SettingRow
         title="Run notification"
