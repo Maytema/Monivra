@@ -87,6 +87,14 @@ shot 07-restarted 20
 tap "Operations"
 shot 08-operations-after-restart 3
 has "125" 08-operations-after-restart
+# Search by comments: a word that no comment has leaves the list empty; closing the search brings it back.
+if tap "Operation search"; then
+  adb shell input text "zzqq"; sleep 2
+  shot 08b-search-nothing 1
+  tap "Close search"
+  shot 08c-search-closed 2
+  has "125" 08c-search-closed
+fi
 # A tour of the other screens (screenshots for a person; a missing label only logs NOT FOUND).
 back() { adb shell input keyevent 4; sleep 1.5; }
 tap "Accounts"
