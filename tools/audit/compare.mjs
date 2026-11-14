@@ -219,17 +219,29 @@ async function loadData() {
     if (await waitFor("Start with basic set", 90)) break;
   }
   await tap("Start with basic set", { pause: 4000 });
-  await tap("More");
-  await tap("Data");
-  await tap("Data file");
-  await tap("Restore from file", { pause: 4000 });
-  if (!(await tap("perf-data.json", { pause: 6000 }))) {
-    await tap("Show roots");
-    await tap("Downloads");
-    await tap("List view");
-    await tap("perf-data.json", { pause: 6000 });
+  // Seen in run 7: after the system file picker the first application was gone (the home screen was shown).
+  // The way is taken again (up to three times) until the restore page is there; what the system says about the
+  // application's process is kept in the log.
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    sh(`am start -n ${APPS[current].activity}`);
+    await sleep(3000);
+    if (attempt > 1) await waitFor("More", 60);
+    await tap("More");
+    await tap("Data");
+    await tap("Data file");
+    await tap("Restore from file", { pause: 4000 });
+    if (!(await tap("perf-data.json", { pause: 6000 }))) {
+      await tap("Show roots");
+      await tap("Downloads");
+      await tap("List view");
+      await tap("perf-data.json", { pause: 6000 });
+    }
+    shot(attempt === 1 ? "00-restore-page" : `00-restore-page-${attempt}`);
+    if (find("Replace data", { which: "last" })) break;
+    log(`restore page not shown (attempt ${attempt}); in front: ${sh("dumpsys activity activities | grep -m1 topResumedActivity").trim()}`);
+    log(`crash log: ${sh("logcat -d -b crash -t 20").trim().split("\n").slice(0, 12).join(" | ")}`);
+    log(`process: ${sh(`pidof ${pkg}`).trim() || "not running"}`);
   }
-  shot("00-restore-page");
   await tap("Replace data", { which: "last" });
   await tap("Confirm", { pause: 8000 });
   shot("01-after-restore");
