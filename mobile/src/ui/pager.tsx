@@ -3,6 +3,7 @@
 // max(48, 27 % of the width) or a quick flick moves to the neighbour; at an end the page resists.
 // What stays in place (the period bar, the tabs above the accounts) reads the offset from the context and
 // moves its title or underline along with the finger.
+import { countRender } from "../platform/perf.ts";
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, Easing, PanResponder, View, unstable_batchedUpdates } from "react-native";
 import { gestureLock } from "./gesture-lock.ts";
@@ -46,6 +47,7 @@ export function Pager<K extends string>({
   onMove: (direction: 1 | -1) => void;
   header?: ReactNode;
 }) {
+  countRender("pager");
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const x = useRef(new Animated.Value(0)).current;
   // The number of moves made; the strip is started again (one jump, after ~SPAN moves) when it runs out.

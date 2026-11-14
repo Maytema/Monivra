@@ -65,3 +65,19 @@ export function probeEngine(): void {
   // The pause it made is not one of the application's: the next tick of the watch starts afresh.
   setTimeout(() => (probing = false), STEP_MS * 3);
 }
+
+// How often components draw (speed-check build only): `countRender("operations page")` in a component's body
+// adds one each time it renders; the counts of each second are written as "[perf] renders <name> <n>", so a
+// part that keeps drawing while nothing happens shows up by name.
+const renders = new Map<string, number>();
+let flushing = false;
+export function countRender(name: string): void {
+  if (!PERF_BUILD) return;
+  renders.set(name, (renders.get(name) ?? 0) + 1);
+  if (flushing) return;
+  flushing = true;
+  setInterval(() => {
+    for (const [key, n] of renders) if (n) console.log(`[perf] renders ${key} ${n}`);
+    renders.clear();
+  }, 1000);
+}

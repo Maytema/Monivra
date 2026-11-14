@@ -1,5 +1,6 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
+import { countRender } from "../platform/perf.ts";
 import { useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -18,6 +19,7 @@ export { periodTitle };
 // `dayPicker`: the title opens the calendar and the period of the same kind around the chosen day is
 // shown (the budgets of the first application, period-picker.js dayPicker).
 export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
+  countRender("period bar");
   const data = useLedger();
   const p = usePalette();
   const t = useT();

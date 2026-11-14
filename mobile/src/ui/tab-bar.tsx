@@ -1,6 +1,7 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
+import { countRender } from "../platform/perf.ts";
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -48,6 +49,7 @@ interface TabBarProps {
 }
 
 export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarProps) {
+  countRender("tab bar");
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();

@@ -1,6 +1,7 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
+import { countRender } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from "react";
 import { FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -34,6 +35,7 @@ import { EmptyState } from "../ui/empty-state.tsx";
 type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
 
 export function OperationsScreen() {
+  countRender("operations screen");
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -176,6 +178,7 @@ interface StickyHandle {
   scrolled(y: number, headerHeight: number): void;
 }
 function StickyDay({ days, ref }: { days: Map<string, Operation[]>; ref: Ref<StickyHandle> }) {
+  countRender("sticky day");
   const [date, setDate] = useState<string | null>(null);
   const [pinned, setPinned] = useState(false);
   useImperativeHandle(
@@ -199,6 +202,7 @@ function StickyDay({ days, ref }: { days: Map<string, Operation[]>; ref: Ref<Sti
 // draws a few screens of rows around the window; a neighbour only what the first screen shows (that is all a
 // swipe can uncover), and the rest when it becomes the current one.
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop, current = true }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void; current?: boolean }) {
+  countRender(current ? "operations page (current)" : "operations page (neighbour)");
   const data = useLedger();
   const p = usePalette();
   const t = useT();

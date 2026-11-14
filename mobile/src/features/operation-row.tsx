@@ -1,6 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
+import { countRender } from "../platform/perf.ts";
 import { memo } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -48,6 +49,7 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
 // ledger it shows (accounts, categories, rates, settings), so it is drawn again only when its own operation
 // or its selection changes — not on every scroll, selection of another row or saved operation.
 export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
+  countRender("operation row");
   const data = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
@@ -142,6 +144,7 @@ function dayTotal(data: Pick<LedgerData, "accounts" | "rates" | "settings">, ops
 
 // The date of a group with its day total, and a line under it.
 export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
+  countRender("day head");
   const data = useLedgerParts("accounts", "rates", "settings");
   const p = usePalette();
   const t = useT();

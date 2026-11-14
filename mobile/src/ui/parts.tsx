@@ -1,6 +1,7 @@
 // Pieces that make the first application recognisable, built from the same measures as its CSS
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
+import { countRender } from "../platform/perf.ts";
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
@@ -188,6 +189,7 @@ export function MoneyText({ text, value, size = 18, style }: { text: string; val
 // list its name shows next to the plus, scrolled it shrinks to the plus alone, smoothly both ways. It sits
 // above the tab bar (the scene ends there) at the design's gap from the edge.
 export function Fab({ label, collapsed, onPress }: { label: string; collapsed: boolean; onPress: () => void }) {
+  countRender("fab");
   const p = usePalette();
   const t = useT();
   const [labelWidth, setLabelWidth] = useState(0);
