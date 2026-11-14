@@ -1,0 +1,4454 @@
+{
+ "generatedFrom": "js/ (first application) and mobile/src (React Native)",
+ "screens": [
+  {
+   "id": "SC-001",
+   "kind": "tab:accounts",
+   "rn": "app/(tabs)/index.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-002",
+   "kind": "tab:categories",
+   "rn": "app/(tabs)/categories.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-003",
+   "kind": "tab:operations",
+   "rn": "app/(tabs)/operations.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-004",
+   "kind": "tab:statistics",
+   "rn": "app/(tabs)/statistics.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-005",
+   "kind": "tab:more",
+   "rn": "app/(tabs)/more.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-006",
+   "kind": "accountEdit",
+   "rn": "app/account.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-007",
+   "kind": "accountType",
+   "rn": "features/account-editor.tsx (type step)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-008",
+   "kind": "filtered",
+   "rn": "app/filtered.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-009",
+   "kind": "categoryEdit",
+   "rn": "app/category.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-010",
+   "kind": "categoryManage",
+   "rn": "app/categories-manage.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-011",
+   "kind": "scheduled",
+   "rn": "app/scheduled.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-012",
+   "kind": "budgets",
+   "rn": "app/budgets.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-013",
+   "kind": "budgetDetails",
+   "rn": "app/budget-details.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-014",
+   "kind": "budget",
+   "rn": "app/budget.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-015",
+   "kind": "settings",
+   "rn": "app/settings.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-016",
+   "kind": "data",
+   "rn": "app/data.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-017",
+   "kind": "deletion",
+   "rn": "features/data.tsx (deletion)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-018",
+   "kind": "dataFile",
+   "rn": "features/data.tsx (data file)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-019",
+   "kind": "importData",
+   "rn": "features/data.tsx (import)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-020",
+   "kind": "export",
+   "rn": "features/export-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-021",
+   "kind": "savedBackups",
+   "rn": "features/data.tsx (backups)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-022",
+   "kind": "restoreBackup",
+   "rn": "features/data.tsx (restore)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-023",
+   "kind": "exportPreview",
+   "rn": "features/export-page.tsx (Preview)",
+   "rnExists": true
+  },
+  {
+   "id": "SC-024",
+   "kind": "importColumns",
+   "rn": "features/import-wizard.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-025",
+   "kind": "importLinks",
+   "rn": "features/import-wizard.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-026",
+   "kind": "importPreview",
+   "rn": "features/import-wizard.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-027",
+   "kind": "importDone",
+   "rn": "features/import-wizard.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-028",
+   "kind": "importExample",
+   "rn": "features/import-wizard.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-029",
+   "kind": "notifications",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-030",
+   "kind": "security",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-031",
+   "kind": "privacy",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-032",
+   "kind": "backups",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-033",
+   "kind": "rates",
+   "rn": "app/rates.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-034",
+   "kind": "profile",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-035",
+   "kind": "subscription",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-036",
+   "kind": "shared",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-037",
+   "kind": "instructions",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-038",
+   "kind": "support",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-039",
+   "kind": "about",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-040",
+   "kind": "privacyPolicy",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-041",
+   "kind": "terms",
+   "rn": "app/info.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-042",
+   "kind": "elementsOperations",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-043",
+   "kind": "elementsAccounts",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-044",
+   "kind": "elementsCategories",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-045",
+   "kind": "elementsKeyboard",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-046",
+   "kind": "formatting",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-047",
+   "kind": "styles",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-048",
+   "kind": "stylesGlobal",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-049",
+   "kind": "stylesColor",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-050",
+   "kind": "stylesNavigation",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-051",
+   "kind": "stylesElements",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-052",
+   "kind": "stylesLanguage",
+   "rn": "app/settings-page.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-053",
+   "kind": "special:welcome",
+   "rn": "features/welcome.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-054",
+   "kind": "special:recovery",
+   "rn": "features/recovery.tsx",
+   "rnExists": true
+  },
+  {
+   "id": "SC-055",
+   "kind": "special:lock",
+   "rn": "features/lock.tsx",
+   "rnExists": true
+  }
+ ],
+ "routes": [
+  {
+   "id": "RT-0001",
+   "target": "savedBackups",
+   "where": "js/data/import-export.js:36",
+   "label": "savedBackups",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (backups)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0002",
+   "target": "dataFile",
+   "where": "js/data/import-export.js:39",
+   "label": "dataFile",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (data file)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0003",
+   "target": "importData",
+   "where": "js/data/import-export.js:44",
+   "label": "importData",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (import)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0004",
+   "target": "deletion",
+   "where": "js/data/import-export.js:54",
+   "label": "deletion",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (deletion)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0005",
+   "target": "importExample",
+   "where": "js/data/import-export.js:70",
+   "label": "importExample",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0006",
+   "target": "(computed)",
+   "where": "js/screens/accounts/edit.js:34",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0007",
+   "target": "categoryManage",
+   "where": "js/screens/accounts/list.js:47",
+   "label": "categoryManage",
+   "rnLabel": true,
+   "rnWhere": "app/categories-manage.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0008",
+   "target": "accountEdit",
+   "where": "js/screens/accounts/type.js:65",
+   "label": "accountEdit",
+   "rnLabel": true,
+   "rnWhere": "app/account.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0009",
+   "target": "budgets",
+   "where": "js/screens/budgets.js:94",
+   "label": "budgets",
+   "rnLabel": true,
+   "rnWhere": "app/budgets.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0010",
+   "target": "budget",
+   "where": "js/screens/budgets.js:126",
+   "label": "budget",
+   "rnLabel": true,
+   "rnWhere": "app/budget.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0011",
+   "target": "budgetDetails",
+   "where": "js/screens/budgets.js:145",
+   "label": "budgetDetails",
+   "rnLabel": true,
+   "rnWhere": "app/budget-details.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0012",
+   "target": "categoryEdit",
+   "where": "js/screens/categories.js:149",
+   "label": "categoryEdit",
+   "rnLabel": true,
+   "rnWhere": "app/category.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0013",
+   "target": "export",
+   "where": "js/screens/export.js:56",
+   "label": "export",
+   "rnLabel": true,
+   "rnWhere": "features/export-page.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0014",
+   "target": "exportPreview",
+   "where": "js/screens/export.js:155",
+   "label": "exportPreview",
+   "rnLabel": true,
+   "rnWhere": "features/export-page.tsx (Preview)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0015",
+   "target": "importColumns",
+   "where": "js/screens/import-wizard.js:76",
+   "label": "importColumns",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0016",
+   "target": "importLinks",
+   "where": "js/screens/import-wizard.js:230",
+   "label": "importLinks",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0017",
+   "target": "importPreview",
+   "where": "js/screens/import-wizard.js:361",
+   "label": "importPreview",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0018",
+   "target": "importDone",
+   "where": "js/screens/import-wizard.js:459",
+   "label": "importDone",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0019",
+   "target": "restoreBackup",
+   "where": "js/screens/more/backup-pages.js:64",
+   "label": "restoreBackup",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (restore)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0020",
+   "target": "restoreBackup",
+   "where": "js/screens/more/backup-pages.js:77",
+   "label": "restoreBackup",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (restore)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0021",
+   "target": "(computed)",
+   "where": "js/screens/more/menu.js:33",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0022",
+   "target": "shared",
+   "where": "js/screens/more/menu.js:33",
+   "label": "shared",
+   "rnLabel": true,
+   "rnWhere": "app/info.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0023",
+   "target": "savedBackups",
+   "where": "js/screens/more/settings-pages.js:237",
+   "label": "savedBackups",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx (backups)",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0024",
+   "target": "(computed)",
+   "where": "js/screens/more/support.js:58",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0025",
+   "target": "(computed)",
+   "where": "js/screens/more/support.js:70",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0026",
+   "target": "instructions",
+   "where": "js/screens/more/support.js:77",
+   "label": "instructions",
+   "rnLabel": true,
+   "rnWhere": "app/info.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0027",
+   "target": "scheduled",
+   "where": "js/screens/operation-editor/editor.js:58",
+   "label": "scheduled",
+   "rnLabel": true,
+   "rnWhere": "app/scheduled.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0028",
+   "target": "filtered",
+   "where": "js/screens/operations/list.js:245",
+   "label": "filtered",
+   "rnLabel": true,
+   "rnWhere": "app/filtered.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  },
+  {
+   "id": "RT-0029",
+   "target": "(computed)",
+   "where": "js/screens/settings.js:50",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0030",
+   "target": "(computed)",
+   "where": "js/screens/settings.js:66",
+   "label": "(computed)",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "RT-0031",
+   "target": "scheduled",
+   "where": "js/screens/statistics.js:140",
+   "label": "scheduled",
+   "rnLabel": true,
+   "rnWhere": "app/scheduled.tsx",
+   "status": "SOURCE-MAPPED (target screen exists), UNTESTED"
+  }
+ ],
+ "overlays": [
+  {
+   "id": "OV-0001",
+   "kind": "openSheet",
+   "label": "Debit",
+   "where": "js/screens/accounts/actions.js:28",
+   "rnLabel": true,
+   "rnWhere": "features/account-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0002",
+   "kind": "openSheet",
+   "label": "Change account currency",
+   "where": "js/screens/accounts/currency-change.js:55",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0003",
+   "kind": "confirmAction",
+   "label": "Delete this account and all linked operations?",
+   "where": "js/screens/accounts/edit.js:136",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0004",
+   "kind": "openSheet",
+   "label": "Account type",
+   "where": "js/screens/accounts/type.js:44",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0005",
+   "kind": "confirmAction",
+   "label": "Delete this budget?",
+   "where": "js/screens/budgets.js:152",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0006",
+   "kind": "openSheet",
+   "label": "Operations",
+   "where": "js/screens/categories.js:117",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts features/account-sheet.tsx features/category-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0007",
+   "kind": "openSheet",
+   "label": "Choose a category",
+   "where": "js/screens/categories.js:178",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0008",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:187",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0009",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:236",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0010",
+   "kind": "openSheet",
+   "label": "Subcategory actions",
+   "where": "js/screens/categories.js:243",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: the menu has the subcategory's name as its heading (features/category-editor.tsx)"
+  },
+  {
+   "id": "OV-0011",
+   "kind": "confirmAction",
+   "label": "Delete this subcategory and its associated operations?",
+   "where": "js/screens/categories.js:266",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0012",
+   "kind": "confirmAction",
+   "label": "The planned actions on subcategories will be applied.",
+   "where": "js/screens/categories.js:296",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0013",
+   "kind": "openSheet",
+   "label": "Select type",
+   "where": "js/screens/categories.js:307",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/category-editor.tsx ui/choice-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0014",
+   "kind": "openSheet",
+   "label": "Subcategory actions",
+   "where": "js/screens/categories.js:332",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: the menu has the subcategory's name as its heading (features/category-editor.tsx)"
+  },
+  {
+   "id": "OV-0015",
+   "kind": "openSheet",
+   "label": "Subcategory",
+   "where": "js/screens/categories.js:385",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0016",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:431",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0017",
+   "kind": "openSheet",
+   "label": "Select categories",
+   "where": "js/screens/category-select.js:77",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0018",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/due-payments.js:35",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0019",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/screens/fees.js:58",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0020",
+   "kind": "openSheet",
+   "label": "Information about calculation",
+   "where": "js/screens/fees.js:132",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0021",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/screens/import-wizard.js:87",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0022",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/import-wizard.js:448",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0023",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/import-wizard.js:521",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0024",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/more/backup-pages.js:290",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0025",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/screens/more/deletion-page.js:61",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0026",
+   "kind": "openSheet",
+   "label": "PIN",
+   "where": "js/screens/more/settings-pages.js:104",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: one sheet 'Set PIN' / 'Turn off PIN' (features/lock.tsx PinSetup), verified on the RN emulator (15q)"
+  },
+  {
+   "id": "OV-0027",
+   "kind": "confirmAction",
+   "label": "Delete all saved backups? They cannot be restored.",
+   "where": "js/screens/more/settings-pages.js:249",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0028",
+   "kind": "confirmAction",
+   "label": "Delete this operation?",
+   "where": "js/screens/operation-editor/actions.js:19",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0029",
+   "kind": "confirmAction",
+   "label": "Skip this occurrence?",
+   "where": "js/screens/operation-editor/actions.js:39",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0030",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/editor.js:76",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0031",
+   "kind": "openSheet",
+   "label": "Select tags",
+   "where": "js/screens/operation-editor/extras.js:48",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0032",
+   "kind": "confirmAction",
+   "label": "Remove this tag from all operations?",
+   "where": "js/screens/operation-editor/extras.js:99",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0033",
+   "kind": "openSheet",
+   "label": "Add photo",
+   "where": "js/screens/operation-editor/extras.js:136",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0034",
+   "kind": "openSheet",
+   "label": "Photo",
+   "where": "js/screens/operation-editor/extras.js:145",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0035",
+   "kind": "openSheet",
+   "label": "Additionally",
+   "where": "js/screens/operation-editor/keypad.js:58",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/editor/options.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0036",
+   "kind": "openSheet",
+   "label": "Accounts",
+   "where": "js/screens/operation-editor/parties.js:78",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts application/report/model.ts features/accounts.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0037",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/parties.js:118",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0038",
+   "kind": "openSheet",
+   "label": "Add an operation",
+   "where": "js/screens/operation-editor/start.js:116",
+   "rnLabel": true,
+   "rnWhere": "features/add-menu.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0039",
+   "kind": "openSheet",
+   "label": "Add an operation",
+   "where": "js/screens/operations/add-menu.js:61",
+   "rnLabel": true,
+   "rnWhere": "features/add-menu.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0040",
+   "kind": "confirmAction",
+   "label": "Delete selected operations?",
+   "where": "js/screens/operations/bulk-edit.js:44",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: longer text that names the consequences, and a backup first (features/operations.tsx)"
+  },
+  {
+   "id": "OV-0041",
+   "kind": "openSheet",
+   "label": "For transfers",
+   "where": "js/screens/operations/bulk-edit.js:122",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0042",
+   "kind": "openSheet",
+   "label": "Tags",
+   "where": "js/screens/operations/bulk-edit.js:195",
+   "rnLabel": true,
+   "rnWhere": "application/report/model.ts domain/csv-import.ts domain/csv.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0043",
+   "kind": "openSheet",
+   "label": "Comment",
+   "where": "js/screens/operations/bulk-edit.js:216",
+   "rnLabel": true,
+   "rnWhere": "application/report/model.ts domain/csv-import.ts domain/csv.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0044",
+   "kind": "confirmAction",
+   "label": "The selected changes will be applied to all selected operations.",
+   "where": "js/screens/operations/bulk-edit.js:272",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0045",
+   "kind": "openSheet",
+   "label": "Bulk edit",
+   "where": "js/screens/operations/bulk-edit.js:282",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0046",
+   "kind": "openSheet",
+   "label": "Filter by categories",
+   "where": "js/screens/operations/category-filter.js:86",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0047",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/screens/operations/filters.js:42",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0048",
+   "kind": "openSheet",
+   "label": "Accounts",
+   "where": "js/screens/operations/filters.js:58",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts application/report/model.ts features/accounts.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0049",
+   "kind": "openSheet",
+   "label": "Filters",
+   "where": "js/screens/operations/filters.js:218",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx features/operations.tsx features/statistics.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0050",
+   "kind": "openSheet",
+   "label": "Account",
+   "where": "js/screens/pickers.js:62",
+   "rnLabel": true,
+   "rnWhere": "app/_layout.tsx application/report/layout.ts domain/csv-import.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0051",
+   "kind": "openSheet",
+   "label": "Category",
+   "where": "js/screens/pickers.js:79",
+   "rnLabel": true,
+   "rnWhere": "app/_layout.tsx application/report/layout.ts application/report/model.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0052",
+   "kind": "confirmAction",
+   "label": "Every rate returns to its example value and the ticks are cleared.",
+   "where": "js/screens/rates.js:105",
+   "rnLabel": true,
+   "rnWhere": "features/rates.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0053",
+   "kind": "confirmAction",
+   "label": "Start with empty data? What could not be read stays on this device as a separate copy, but this application will no longer use it.",
+   "where": "js/screens/recovery.js:38",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0054",
+   "kind": "openSheet",
+   "label": "Recur",
+   "where": "js/screens/recurrence.js:97",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0055",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/screens/recurrence.js:161",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0056",
+   "kind": "openSheet",
+   "label": "Important information about setting a reminder",
+   "where": "js/screens/recurrence.js:186",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0057",
+   "kind": "openSheet",
+   "label": "Reminder",
+   "where": "js/screens/recurrence.js:200",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0058",
+   "kind": "openSheet",
+   "label": "Select date",
+   "where": "js/screens/scheduled-budgets.js:60",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0059",
+   "kind": "openSheet",
+   "label": "Currency format",
+   "where": "js/screens/settings.js:80",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0060",
+   "kind": "openSheet",
+   "label": "Statistics",
+   "where": "js/screens/statistics.js:213",
+   "rnLabel": true,
+   "rnWhere": "features/guides.ts features/settings.tsx ui/tab-bar.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0061",
+   "kind": "openSheet",
+   "label": "Select date",
+   "where": "js/ui/calendar.js:83",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0062",
+   "kind": "openSheet",
+   "label": "Select range",
+   "where": "js/ui/calendar.js:130",
+   "rnLabel": true,
+   "rnWhere": "ui/calendar-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0063",
+   "kind": "openSheet",
+   "label": "Select currency",
+   "where": "js/ui/currency-picker.js:70",
+   "rnLabel": true,
+   "rnWhere": "ui/currency-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0064",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:11",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0065",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:21",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0066",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/ui/dialogs.js:25",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0067",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/ui/dialogs.js:57",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0068",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:85",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0069",
+   "kind": "openSheet",
+   "label": "Menu",
+   "where": "js/ui/dialogs.js:114",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "SOURCE-MAPPED: generic menu sheet (ui/dialogs.tsx menu)"
+  },
+  {
+   "id": "OV-0070",
+   "kind": "confirmAction",
+   "label": "(computed)",
+   "where": "js/ui/file-actions.js:31",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0071",
+   "kind": "confirmAction",
+   "label": "The file is ready. The browser asks for one more tap to open the share sheet.",
+   "where": "js/ui/file-actions.js:43",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: browser only; the native share sheet opens directly"
+  },
+  {
+   "id": "OV-0072",
+   "kind": "openSheet",
+   "label": "Cancel",
+   "where": "js/ui/file-actions.js:72",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0073",
+   "kind": "openSheet",
+   "label": "Setting random selection",
+   "where": "js/ui/icon-picker.js:65",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0074",
+   "kind": "openSheet",
+   "label": "Select an icon",
+   "where": "js/ui/icon-picker.js:81",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0075",
+   "kind": "openSheet",
+   "label": "List customization",
+   "where": "js/ui/icon-picker.js:118",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: titled 'Icon list customization' / 'Colors list customization' (ui/customize-sheet.tsx)"
+  },
+  {
+   "id": "OV-0076",
+   "kind": "openSheet",
+   "label": "Choose color",
+   "where": "js/ui/icon-picker.js:146",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "OV-0077",
+   "kind": "openSheet",
+   "label": "Customize icon",
+   "where": "js/ui/icon-picker.js:182",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0078",
+   "kind": "openSheet",
+   "label": "Use a non-negative amount",
+   "where": "js/ui/number-picker.js:18",
+   "rnLabel": true,
+   "rnWhere": "ui/amount-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0079",
+   "kind": "openSheet",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:82",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "OV-0080",
+   "kind": "openSheet",
+   "label": "Month starts on",
+   "where": "js/ui/period-picker.js:37",
+   "rnLabel": true,
+   "rnWhere": "ui/period-dialog.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0081",
+   "kind": "openSheet",
+   "label": "Time interval",
+   "where": "js/ui/period-picker.js:67",
+   "rnLabel": true,
+   "rnWhere": "features/period-bar.tsx ui/period-dialog.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "OV-0082",
+   "kind": "openSheet",
+   "label": "Select time",
+   "where": "js/ui/time-picker.js:204",
+   "rnLabel": true,
+   "rnWhere": "ui/time-dialog.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  }
+ ],
+ "actions": [
+  {
+   "id": "AC-0001",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/app/shell.js:57",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0002",
+   "control": "button",
+   "label": "Restore from file",
+   "where": "js/data/import-export.js:63",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0003",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/data/import-export.js:63",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0004",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/data/import-export.js:63",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0005",
+   "control": "button",
+   "label": "Select CSV file",
+   "where": "js/data/import-export.js:70",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0006",
+   "control": "button",
+   "label": "View example",
+   "where": "js/data/import-export.js:70",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0007",
+   "control": "menuRow",
+   "label": "Saved backups",
+   "where": "js/data/import-export.js:36",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx features/settings.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0008",
+   "control": "menuRow",
+   "label": "Data file",
+   "where": "js/data/import-export.js:36",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0009",
+   "control": "menuRow",
+   "label": "Import data",
+   "where": "js/data/import-export.js:41",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx features/import-wizard.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0010",
+   "control": "menuRow",
+   "label": "Export data",
+   "where": "js/data/import-export.js:46",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx features/export-page.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0011",
+   "control": "menuRow",
+   "label": "Delete my data",
+   "where": "js/data/import-export.js:51",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0012",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/actions.js:30",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0013",
+   "control": "button",
+   "label": "Change currency",
+   "where": "js/screens/accounts/currency-change.js:59",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0014",
+   "control": "button",
+   "label": "Convert everything at the current rate",
+   "where": "js/screens/accounts/currency-change.js:59",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0015",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/currency-change.js:62",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0016",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/accounts/currency-change.js:70",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0017",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/edit.js:146",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0018",
+   "control": "button",
+   "label": "Delete",
+   "where": "js/screens/accounts/edit.js:146",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0019",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/edit.js:158",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0020",
+   "control": "toggleRow",
+   "label": "(computed)",
+   "where": "js/screens/accounts/edit.js:59",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0021",
+   "control": "fieldButton",
+   "label": "(computed)",
+   "where": "js/screens/accounts/edit.js:54",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0022",
+   "control": "fieldButton",
+   "label": "(computed)",
+   "where": "js/screens/accounts/edit.js:90",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0023",
+   "control": "fieldButton",
+   "label": "Account",
+   "where": "js/screens/accounts/edit.js:96",
+   "rnLabel": true,
+   "rnWhere": "app/_layout.tsx application/report/layout.ts domain/csv-import.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0024",
+   "control": "fieldButton",
+   "label": "Type of debt",
+   "where": "js/screens/accounts/edit.js:102",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0025",
+   "control": "fieldButton",
+   "label": "Account currency",
+   "where": "js/screens/accounts/edit.js:103",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0026",
+   "control": "fieldButton",
+   "label": "Icon",
+   "where": "js/screens/accounts/edit.js:158",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0027",
+   "control": "fieldButton",
+   "label": "Account type",
+   "where": "js/screens/accounts/edit.js:158",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0028",
+   "control": "textField",
+   "label": "Title",
+   "where": "js/screens/accounts/edit.js:158",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0029",
+   "control": "textField",
+   "label": "Description",
+   "where": "js/screens/accounts/edit.js:158",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0030",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/list.js:53",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0031",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/list.js:132",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0032",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/list.js:176",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0033",
+   "control": "button",
+   "label": "Create",
+   "where": "js/screens/accounts/list.js:197",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/accounts.tsx features/budgets.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0034",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/list.js:235",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0035",
+   "control": "iconButton",
+   "label": "Close search",
+   "where": "js/screens/accounts/list.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/operations.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0036",
+   "control": "iconButton",
+   "label": "(computed)",
+   "where": "js/screens/accounts/list.js:80",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0037",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/accounts/type.js:29",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0038",
+   "control": "iconButton",
+   "label": "Back",
+   "where": "js/screens/accounts/type.js:46",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx ui/full-page.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0039",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/budgets.js:62",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0040",
+   "control": "button",
+   "label": "Create a budget",
+   "where": "js/screens/budgets.js:117",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0041",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/budgets.js:224",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0042",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/budgets.js:238",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0043",
+   "control": "button",
+   "label": "Delete",
+   "where": "js/screens/budgets.js:256",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0044",
+   "control": "iconButton",
+   "label": "Create a budget",
+   "where": "js/screens/budgets.js:102",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0045",
+   "control": "iconButton",
+   "label": "Edit budget",
+   "where": "js/screens/budgets.js:176",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0046",
+   "control": "fieldButton",
+   "label": "Time period",
+   "where": "js/screens/budgets.js:194",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0047",
+   "control": "fieldButton",
+   "label": "Categories",
+   "where": "js/screens/budgets.js:208",
+   "rnLabel": true,
+   "rnWhere": "application/report/model.ts features/budgets.tsx features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0048",
+   "control": "fieldButton",
+   "label": "Budget currency",
+   "where": "js/screens/budgets.js:219",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0049",
+   "control": "textField",
+   "label": "Title",
+   "where": "js/screens/budgets.js:194",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0050",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:43",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0051",
+   "control": "button",
+   "label": "Create",
+   "where": "js/screens/categories.js:93",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/accounts.tsx features/budgets.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0052",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:182",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0053",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/categories.js:206",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0054",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:314",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0055",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:364",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0056",
+   "control": "button",
+   "label": "Add subcategory",
+   "where": "js/screens/categories.js:382",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0057",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/categories.js:387",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0058",
+   "control": "button",
+   "label": "OK",
+   "where": "js/screens/categories.js:387",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0059",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:415",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0060",
+   "control": "button",
+   "label": "Nest into category",
+   "where": "js/screens/categories.js:415",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0061",
+   "control": "button",
+   "label": "Move into category",
+   "where": "js/screens/categories.js:415",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0062",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:417",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0063",
+   "control": "button",
+   "label": "Delete",
+   "where": "js/screens/categories.js:428",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0064",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:475",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0065",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:475",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0066",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:477",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0067",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:484",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0068",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:129",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0069",
+   "control": "menuRow",
+   "label": "Edit",
+   "where": "js/screens/categories.js:245",
+   "rnLabel": true,
+   "rnWhere": "features/account-sheet.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0070",
+   "control": "menuRow",
+   "label": "Move to a category",
+   "where": "js/screens/categories.js:252",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0071",
+   "control": "menuRow",
+   "label": "Merge into a subcategory",
+   "where": "js/screens/categories.js:255",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0072",
+   "control": "menuRow",
+   "label": "Convert to a category",
+   "where": "js/screens/categories.js:258",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0073",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/categories.js:261",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0074",
+   "control": "menuRow",
+   "label": "Delete",
+   "where": "js/screens/categories.js:264",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0075",
+   "control": "menuRow",
+   "label": "Edit",
+   "where": "js/screens/categories.js:334",
+   "rnLabel": true,
+   "rnWhere": "features/account-sheet.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0076",
+   "control": "menuRow",
+   "label": "Delete",
+   "where": "js/screens/categories.js:349",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0077",
+   "control": "fieldButton",
+   "label": "Icon",
+   "where": "js/screens/categories.js:374",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0078",
+   "control": "fieldButton",
+   "label": "Type",
+   "where": "js/screens/categories.js:374",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts application/report/model.ts domain/csv-import.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0079",
+   "control": "fieldButton",
+   "label": "Category currency",
+   "where": "js/screens/categories.js:374",
+   "rnLabel": true,
+   "rnWhere": "features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0080",
+   "control": "textField",
+   "label": "Title",
+   "where": "js/screens/categories.js:374",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0081",
+   "control": "actionTile",
+   "label": "Edit",
+   "where": "js/screens/categories.js:119",
+   "rnLabel": true,
+   "rnWhere": "features/account-sheet.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0082",
+   "control": "actionTile",
+   "label": "Operations",
+   "where": "js/screens/categories.js:119",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts features/account-sheet.tsx features/category-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0083",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/category-select.js:49",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0084",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/category-select.js:68",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0085",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/category-select.js:79",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0086",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/category-select.js:87",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0087",
+   "control": "button",
+   "label": "Confirm",
+   "where": "js/screens/category-select.js:87",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx features/bulk-edit.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0088",
+   "control": "iconButton",
+   "label": "Subcategories",
+   "where": "js/screens/category-select.js:59",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0089",
+   "control": "iconButton",
+   "label": "Close",
+   "where": "js/screens/category-select.js:79",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx ui/currency-sheet.tsx ui/sheets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0090",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/due-payments.js:76",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0091",
+   "control": "iconButton",
+   "label": "Dismiss",
+   "where": "js/screens/due-payments.js:76",
+   "rnLabel": true,
+   "rnWhere": "ui/hint-banner.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0092",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/export.js:63",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0093",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/export.js:73",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0094",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/export.js:128",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0095",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/export.js:139",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0096",
+   "control": "button",
+   "label": "Preview",
+   "where": "js/screens/export.js:175",
+   "rnLabel": true,
+   "rnWhere": "features/export-page.tsx features/import-wizard.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0097",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/fees.js:84",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0098",
+   "control": "button",
+   "label": "OK",
+   "where": "js/screens/fees.js:84",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0099",
+   "control": "button",
+   "label": "I understood",
+   "where": "js/screens/fees.js:139",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0100",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/fees.js:157",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0101",
+   "control": "iconButton",
+   "label": "Change order",
+   "where": "js/screens/fees.js:162",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0102",
+   "control": "iconButton",
+   "label": "Remove",
+   "where": "js/screens/fees.js:163",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0103",
+   "control": "iconButton",
+   "label": "Help",
+   "where": "js/screens/fees.js:169",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0104",
+   "control": "toggleRow",
+   "label": "Subtract from operation",
+   "where": "js/screens/fees.js:78",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0105",
+   "control": "toggleRow",
+   "label": "Add to operation",
+   "where": "js/screens/fees.js:81",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0106",
+   "control": "numberField",
+   "label": "Percent",
+   "where": "js/screens/fees.js:60",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0107",
+   "control": "numberField",
+   "label": "Value",
+   "where": "js/screens/fees.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0108",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/import-wizard.js:91",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0109",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/import-wizard.js:100",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0110",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/import-wizard.js:107",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0111",
+   "control": "button",
+   "label": "Next",
+   "where": "js/screens/import-wizard.js:286",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0112",
+   "control": "button",
+   "label": "Preview",
+   "where": "js/screens/import-wizard.js:353",
+   "rnLabel": true,
+   "rnWhere": "features/export-page.tsx features/import-wizard.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0113",
+   "control": "button",
+   "label": "Save the list of these rows",
+   "where": "js/screens/import-wizard.js:494",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0114",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/import-wizard.js:506",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0115",
+   "control": "button",
+   "label": "Show operations",
+   "where": "js/screens/import-wizard.js:536",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0116",
+   "control": "button",
+   "label": "Take back this import",
+   "where": "js/screens/import-wizard.js:536",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0117",
+   "control": "button",
+   "label": "Download CSV",
+   "where": "js/screens/import-wizard.js:603",
+   "rnLabel": true,
+   "rnWhere": "features/import-wizard.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0118",
+   "control": "button",
+   "label": "Create a backup",
+   "where": "js/screens/more/backup-pages.js:51",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0119",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/backup-pages.js:61",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0120",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/backup-pages.js:261",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0121",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/backup-pages.js:322",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0122",
+   "control": "button",
+   "label": "Merge data",
+   "where": "js/screens/more/backup-pages.js:336",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0123",
+   "control": "button",
+   "label": "Replace data",
+   "where": "js/screens/more/backup-pages.js:336",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0124",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/deletion-page.js:69",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0125",
+   "control": "button",
+   "label": "Save a data file first",
+   "where": "js/screens/more/deletion-page.js:79",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0126",
+   "control": "button",
+   "label": "Delete",
+   "where": "js/screens/more/deletion-page.js:90",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0127",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/more/deletion-page.js:90",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0128",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/more/deletion-page.js:106",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0129",
+   "control": "button",
+   "label": "Sign out",
+   "where": "js/screens/more/info-pages.js:22",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0130",
+   "control": "button",
+   "label": "Delete account",
+   "where": "js/screens/more/info-pages.js:22",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0131",
+   "control": "button",
+   "label": "Continue",
+   "where": "js/screens/more/info-pages.js:27",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0132",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/info-pages.js:52",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0133",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/info-pages.js:64",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0134",
+   "control": "iconButton",
+   "label": "Back",
+   "where": "js/screens/more/info-pages.js:50",
+   "rnLabel": true,
+   "rnWhere": "ui/customize-sheet.tsx ui/full-page.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0135",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/lock.js:105",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0136",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/lock.js:106",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0137",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/lock.js:113",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0138",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/menu.js:33",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0139",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/more/settings-pages.js:56",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0140",
+   "control": "menuRow",
+   "label": "Time",
+   "where": "js/screens/more/settings-pages.js:147",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0141",
+   "control": "menuRow",
+   "label": "Test notification",
+   "where": "js/screens/more/settings-pages.js:149",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "VISUAL/TEXT DIFFERENCE: called 'Run notification' (features/settings.tsx:202); behaviour the same"
+  },
+  {
+   "id": "AC-0142",
+   "control": "menuRow",
+   "label": "Lock now",
+   "where": "js/screens/more/settings-pages.js:204",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0143",
+   "control": "menuRow",
+   "label": "Saved backups",
+   "where": "js/screens/more/settings-pages.js:234",
+   "rnLabel": true,
+   "rnWhere": "features/data.tsx features/settings.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0144",
+   "control": "menuRow",
+   "label": "Delete all local data copies",
+   "where": "js/screens/more/settings-pages.js:245",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0145",
+   "control": "toggleRow",
+   "label": "Notifications",
+   "where": "js/screens/more/settings-pages.js:135",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0146",
+   "control": "toggleRow",
+   "label": "Unlock with fingerprint or face",
+   "where": "js/screens/more/settings-pages.js:167",
+   "rnLabel": true,
+   "rnWhere": "features/lock.tsx features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0147",
+   "control": "toggleRow",
+   "label": "PIN code",
+   "where": "js/screens/more/settings-pages.js:193",
+   "rnLabel": true,
+   "rnWhere": "features/lock.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0148",
+   "control": "button",
+   "label": "View instructions",
+   "where": "js/screens/more/support.js:77",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0149",
+   "control": "button",
+   "label": "Continue",
+   "where": "js/screens/more/support.js:78",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0150",
+   "control": "menuRow",
+   "label": "Repeat hints",
+   "where": "js/screens/more/support.js:48",
+   "rnLabel": true,
+   "rnWhere": "features/info.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0151",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/more/support.js:58",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0152",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/more/support.js:70",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0153",
+   "control": "actionTile",
+   "label": "Skip",
+   "where": "js/screens/operation-editor/actions.js:53",
+   "rnLabel": true,
+   "rnWhere": "domain/scheduled.ts features/due-payments.tsx features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0154",
+   "control": "actionTile",
+   "label": "Add now",
+   "where": "js/screens/operation-editor/actions.js:54",
+   "rnLabel": true,
+   "rnWhere": "domain/scheduled.ts features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0155",
+   "control": "actionTile",
+   "label": "Delete",
+   "where": "js/screens/operation-editor/actions.js:56",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0156",
+   "control": "actionTile",
+   "label": "Duplicate",
+   "where": "js/screens/operation-editor/actions.js:56",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0157",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/amount.js:201",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0158",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operation-editor/amount.js:227",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0159",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:52",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0160",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:61",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0161",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/screens/operation-editor/extras.js:62",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0162",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:162",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0163",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:184",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0164",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:187",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0165",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/extras.js:194",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0166",
+   "control": "iconButton",
+   "label": "Close",
+   "where": "js/screens/operation-editor/extras.js:147",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx ui/currency-sheet.tsx ui/sheets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0167",
+   "control": "iconButton",
+   "label": "Remove photo",
+   "where": "js/screens/operation-editor/extras.js:162",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0168",
+   "control": "iconButton",
+   "label": "Clear comment",
+   "where": "js/screens/operation-editor/extras.js:184",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0169",
+   "control": "iconButton",
+   "label": "Comment",
+   "where": "js/screens/operation-editor/extras.js:194",
+   "rnLabel": true,
+   "rnWhere": "application/report/model.ts domain/csv-import.ts domain/csv.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0170",
+   "control": "iconButton",
+   "label": "Tags",
+   "where": "js/screens/operation-editor/extras.js:194",
+   "rnLabel": true,
+   "rnWhere": "application/report/model.ts domain/csv-import.ts domain/csv.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0171",
+   "control": "menuRow",
+   "label": "Take a photo",
+   "where": "js/screens/operation-editor/extras.js:138",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0172",
+   "control": "menuRow",
+   "label": "Choose from gallery",
+   "where": "js/screens/operation-editor/extras.js:138",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0173",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operation-editor/extras.js:147",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0174",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:92",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0175",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:99",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0176",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:105",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0177",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:121",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0178",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:139",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0179",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/keypad.js:152",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0180",
+   "control": "menuRow",
+   "label": "Fill max",
+   "where": "js/screens/operation-editor/keypad.js:60",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0181",
+   "control": "menuRow",
+   "label": "Time",
+   "where": "js/screens/operation-editor/keypad.js:62",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0182",
+   "control": "menuRow",
+   "label": "Reminder",
+   "where": "js/screens/operation-editor/keypad.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0183",
+   "control": "menuRow",
+   "label": "Recur",
+   "where": "js/screens/operation-editor/keypad.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0184",
+   "control": "menuRow",
+   "label": "Tax",
+   "where": "js/screens/operation-editor/keypad.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0185",
+   "control": "menuRow",
+   "label": "Commission",
+   "where": "js/screens/operation-editor/keypad.js:69",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx features/scheduled.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0186",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/parties.js:140",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0187",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/parties.js:175",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0188",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operation-editor/view.js:34",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0189",
+   "control": "button",
+   "label": "Click on the value to edit",
+   "where": "js/screens/operation-editor/view.js:54",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "INTENTIONAL DIFFERENCE: 'Tap the value to edit' (touch wording)"
+  },
+  {
+   "id": "AC-0190",
+   "control": "iconButton",
+   "label": "Previous day",
+   "where": "js/screens/operation-editor/view.js:34",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0191",
+   "control": "iconButton",
+   "label": "Next day",
+   "where": "js/screens/operation-editor/view.js:42",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0192",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/add-menu.js:48",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0193",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/add-menu.js:59",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0194",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:38",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0195",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:38",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0196",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:38",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0197",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:100",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0198",
+   "control": "button",
+   "label": "Sender",
+   "where": "js/screens/operations/bulk-edit.js:124",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0199",
+   "control": "button",
+   "label": "Receiver",
+   "where": "js/screens/operations/bulk-edit.js:124",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0200",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/operations/bulk-edit.js:124",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0201",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:136",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0202",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:197",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0203",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:197",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0204",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/screens/operations/bulk-edit.js:197",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0205",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/bulk-edit.js:219",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0206",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/screens/operations/bulk-edit.js:224",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0207",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/operations/bulk-edit.js:291",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0208",
+   "control": "button",
+   "label": "Confirm",
+   "where": "js/screens/operations/bulk-edit.js:292",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx features/bulk-edit.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0209",
+   "control": "iconButton",
+   "label": "Clear",
+   "where": "js/screens/operations/bulk-edit.js:95",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0210",
+   "control": "iconButton",
+   "label": "Collapse all",
+   "where": "js/screens/operations/category-filter.js:84",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0211",
+   "control": "iconButton",
+   "label": "Expand all",
+   "where": "js/screens/operations/category-filter.js:84",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0212",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operations/category-filter.js:18",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0213",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operations/category-filter.js:22",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0214",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/operations/filter-parts.js:16",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0215",
+   "control": "button",
+   "label": "Confirm",
+   "where": "js/screens/operations/filter-parts.js:17",
+   "rnLabel": true,
+   "rnWhere": "features/budgets.tsx features/bulk-edit.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0216",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/filters.js:28",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0217",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/filters.js:34",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0218",
+   "control": "button",
+   "label": "Reset all",
+   "where": "js/screens/operations/filters.js:221",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0219",
+   "control": "button",
+   "label": "Apply",
+   "where": "js/screens/operations/filters.js:231",
+   "rnLabel": true,
+   "rnWhere": "features/filters-panel.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0220",
+   "control": "fieldButton",
+   "label": "(computed)",
+   "where": "js/screens/operations/filters.js:122",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0221",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operations/filters.js:68",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0222",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operations/filters.js:74",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0223",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/operations/filters.js:84",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0224",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/list.js:92",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0225",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/operations/list.js:167",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0226",
+   "control": "button",
+   "label": "Filtered data",
+   "where": "js/screens/operations/list.js:213",
+   "rnLabel": true,
+   "rnWhere": "features/operation-row.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0227",
+   "control": "iconButton",
+   "label": "Exit selection",
+   "where": "js/screens/operations/list.js:154",
+   "rnLabel": true,
+   "rnWhere": "features/operations.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0228",
+   "control": "iconButton",
+   "label": "Clear filters",
+   "where": "js/screens/operations/list.js:213",
+   "rnLabel": true,
+   "rnWhere": "features/operation-row.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0229",
+   "control": "fab",
+   "label": "Add",
+   "where": "js/screens/operations/list.js:209",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/due-payments.tsx features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0230",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/pickers.js:29",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0231",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/pickers.js:44",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0232",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/rates.js:66",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0233",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/rates.js:74",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0234",
+   "control": "menuRow",
+   "label": "Restore example rates",
+   "where": "js/screens/rates.js:104",
+   "rnLabel": true,
+   "rnWhere": "features/rates.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0235",
+   "control": "toggleRow",
+   "label": "Automatic rates",
+   "where": "js/screens/rates.js:88",
+   "rnLabel": true,
+   "rnWhere": "features/rates.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0236",
+   "control": "searchField",
+   "label": "Code, name or country",
+   "where": "js/screens/rates.js:98",
+   "rnLabel": true,
+   "rnWhere": "features/rates.tsx ui/currency-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0237",
+   "control": "button",
+   "label": "Save a copy of the data",
+   "where": "js/screens/recovery.js:54",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx platform/database.ts",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0238",
+   "control": "button",
+   "label": "Share the copy",
+   "where": "js/screens/recovery.js:54",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0239",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/recovery.js:56",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0240",
+   "control": "button",
+   "label": "Restore from a data file",
+   "where": "js/screens/recovery.js:72",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0241",
+   "control": "button",
+   "label": "Start with empty data",
+   "where": "js/screens/recovery.js:72",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0242",
+   "control": "button",
+   "label": "Turn off",
+   "where": "js/screens/recurrence.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0243",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/recurrence.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0244",
+   "control": "button",
+   "label": "OK",
+   "where": "js/screens/recurrence.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0245",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/recurrence.js:85",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0246",
+   "control": "button",
+   "label": "OK",
+   "where": "js/screens/recurrence.js:163",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0247",
+   "control": "button",
+   "label": "OK",
+   "where": "js/screens/recurrence.js:192",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0248",
+   "control": "button",
+   "label": "Important information about setting a reminder",
+   "where": "js/screens/recurrence.js:229",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0249",
+   "control": "fieldButton",
+   "label": "At",
+   "where": "js/screens/recurrence.js:224",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0250",
+   "control": "stepper",
+   "label": "Repeat every",
+   "where": "js/screens/recurrence.js:99",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0251",
+   "control": "stepper",
+   "label": "Number of repetitions",
+   "where": "js/screens/recurrence.js:125",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0252",
+   "control": "stepper",
+   "label": "Before",
+   "where": "js/screens/recurrence.js:202",
+   "rnLabel": true,
+   "rnWhere": "features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0253",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/scheduled-budgets.js:41",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0254",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/scheduled-budgets.js:48",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0255",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/scheduled-budgets.js:62",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0256",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/screens/scheduled-budgets.js:76",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0257",
+   "control": "button",
+   "label": "Create",
+   "where": "js/screens/scheduled-budgets.js:148",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/accounts.tsx features/budgets.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0258",
+   "control": "iconButton",
+   "label": "Sort by date",
+   "where": "js/screens/scheduled-budgets.js:128",
+   "rnLabel": true,
+   "rnWhere": "features/scheduled.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0259",
+   "control": "fab",
+   "label": "Add",
+   "where": "js/screens/scheduled-budgets.js:150",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/due-payments.tsx features/editor/options.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0260",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:83",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0261",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/screens/settings.js:103",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0262",
+   "control": "button",
+   "label": "Save",
+   "where": "js/screens/settings.js:104",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/category-editor.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0263",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:187",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0264",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:222",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0265",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:40",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0266",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:50",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0267",
+   "control": "menuRow",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:66",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0268",
+   "control": "menuRow",
+   "label": "Main currency",
+   "where": "js/screens/settings.js:123",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0269",
+   "control": "menuRow",
+   "label": "Currency format",
+   "where": "js/screens/settings.js:132",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0270",
+   "control": "menuRow",
+   "label": "Start of month",
+   "where": "js/screens/settings.js:145",
+   "rnLabel": true,
+   "rnWhere": "features/settings.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0271",
+   "control": "menuRow",
+   "label": "Statistics",
+   "where": "js/screens/settings.js:213",
+   "rnLabel": true,
+   "rnWhere": "features/guides.ts features/settings.tsx ui/tab-bar.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0272",
+   "control": "toggleRow",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:30",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0273",
+   "control": "toggleRow",
+   "label": "(computed)",
+   "where": "js/screens/settings.js:97",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0274",
+   "control": "button",
+   "label": "Operations",
+   "where": "js/screens/statistics.js:124",
+   "rnLabel": true,
+   "rnWhere": "application/report/layout.ts features/account-sheet.tsx features/category-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0275",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/statistics.js:140",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0276",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/statistics.js:154",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0277",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/screens/statistics.js:169",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0278",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/screens/statistics.js:235",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0279",
+   "control": "toggleRow",
+   "label": "(computed)",
+   "where": "js/screens/statistics.js:223",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0280",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/screens/statistics.js:113",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0281",
+   "control": "button",
+   "label": "Start with basic set",
+   "where": "js/screens/welcome.js:20",
+   "rnLabel": true,
+   "rnWhere": "features/welcome.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0282",
+   "control": "button",
+   "label": "Start empty",
+   "where": "js/screens/welcome.js:24",
+   "rnLabel": true,
+   "rnWhere": "features/recovery.tsx features/welcome.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0283",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/calendar.js:42",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0284",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/calendar.js:56",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0285",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/calendar.js:71",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0286",
+   "control": "button",
+   "label": "Today",
+   "where": "js/ui/calendar.js:96",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx ui/calendar-sheet.tsx ui/period-dialog.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0287",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/calendar.js:106",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0288",
+   "control": "button",
+   "label": "OK",
+   "where": "js/ui/calendar.js:106",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0289",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/calendar.js:121",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0290",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/calendar.js:132",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0291",
+   "control": "button",
+   "label": "OK",
+   "where": "js/ui/calendar.js:132",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0292",
+   "control": "iconButton",
+   "label": "Previous month",
+   "where": "js/ui/calendar.js:52",
+   "rnLabel": true,
+   "rnWhere": "ui/calendar-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0293",
+   "control": "iconButton",
+   "label": "Next month",
+   "where": "js/ui/calendar.js:52",
+   "rnLabel": true,
+   "rnWhere": "ui/calendar-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0294",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/currency-picker.js:55",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0295",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/currency-picker.js:83",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0296",
+   "control": "iconButton",
+   "label": "Close",
+   "where": "js/ui/currency-picker.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/editor/editor-sheet.tsx ui/currency-sheet.tsx ui/sheets.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0297",
+   "control": "searchField",
+   "label": "Code, name or country",
+   "where": "js/ui/currency-picker.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/rates.tsx ui/currency-sheet.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0298",
+   "control": "button",
+   "label": "OK",
+   "where": "js/ui/dialogs.js:13",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0299",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:27",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0300",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:42",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0301",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/dialogs.js:59",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0302",
+   "control": "button",
+   "label": "OK",
+   "where": "js/ui/dialogs.js:59",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0303",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/dialogs.js:83",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0304",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/dialogs.js:84",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0305",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:93",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0306",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/dialogs.js:118",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0307",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/file-actions.js:74",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0308",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/hint.js:13",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0309",
+   "control": "iconButton",
+   "label": "Dismiss",
+   "where": "js/ui/hint.js:13",
+   "rnLabel": true,
+   "rnWhere": "ui/hint-banner.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0310",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:56",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0311",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/icon-picker.js:67",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0312",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/ui/icon-picker.js:67",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0313",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:82",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0314",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:82",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0315",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:86",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0316",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:109",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0317",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/icon-picker.js:120",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0318",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/ui/icon-picker.js:120",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0319",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:137",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0320",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:148",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0321",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:148",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0322",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/ui/icon-picker.js:166",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0323",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/icon-picker.js:177",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0324",
+   "control": "button",
+   "label": "Complete",
+   "where": "js/ui/icon-picker.js:184",
+   "rnLabel": true,
+   "rnWhere": "features/bulk-edit.tsx features/editor/options.tsx features/scheduled.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0325",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:49",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0326",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:50",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0327",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:55",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0328",
+   "control": "button",
+   "label": "0",
+   "where": "js/ui/number-picker.js:60",
+   "rnLabel": false,
+   "rnWhere": "application/report/layout.ts application/report/model.ts application/report/pdf.ts",
+   "status": "SOURCE-MAPPED: digit key of ui/number-sheet.tsx DigitPad (label built in code)"
+  },
+  {
+   "id": "AC-0329",
+   "control": "button",
+   "label": ".",
+   "where": "js/ui/number-picker.js:61",
+   "rnLabel": false,
+   "rnWhere": "application/report/layout.ts domain/csv-import.ts domain/money.ts",
+   "status": "SOURCE-MAPPED: decimal key of ui/number-sheet.tsx DigitPad"
+  },
+  {
+   "id": "AC-0330",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:99",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0331",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/number-picker.js:121",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0332",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/period-picker.js:17",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0333",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/period-picker.js:44",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0334",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/period-picker.js:79",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0335",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/period-picker.js:107",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0336",
+   "control": "iconButton",
+   "label": "Previous period",
+   "where": "js/ui/period-picker.js:17",
+   "rnLabel": true,
+   "rnWhere": "features/period-bar.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0337",
+   "control": "iconButton",
+   "label": "Next period",
+   "where": "js/ui/period-picker.js:17",
+   "rnLabel": true,
+   "rnWhere": "features/period-bar.tsx",
+   "status": "SOURCE-MAPPED, UNTESTED"
+  },
+  {
+   "id": "AC-0338",
+   "control": "custom",
+   "label": "(custom markup)",
+   "where": "js/ui/primitives.js:13",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0339",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/time-picker.js:138",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0340",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/time-picker.js:145",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0341",
+   "control": "button",
+   "label": "(computed)",
+   "where": "js/ui/time-picker.js:154",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  },
+  {
+   "id": "AC-0342",
+   "control": "button",
+   "label": "Cancel",
+   "where": "js/ui/time-picker.js:210",
+   "rnLabel": true,
+   "rnWhere": "features/account-editor.tsx features/budgets.tsx features/bulk-edit.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0343",
+   "control": "button",
+   "label": "OK",
+   "where": "js/ui/time-picker.js:210",
+   "rnLabel": true,
+   "rnWhere": "features/editor/help-texts.tsx features/editor/options.tsx ui/calendar-sheet.tsx",
+   "status": "RUNTIME-EXERCISED in RN (emulator), not compared"
+  },
+  {
+   "id": "AC-0344",
+   "control": "iconButton",
+   "label": "(computed)",
+   "where": "js/ui/time-picker.js:206",
+   "rnLabel": false,
+   "rnWhere": "",
+   "status": "UNTESTED (label computed: needs a person)"
+  }
+ ]
+}
