@@ -116,6 +116,15 @@ const pct = (list, p) => {
   return s[Math.min(s.length - 1, Math.ceil((p / 100) * s.length) - 1)];
 };
 
+// The system keeps only the last ~120 frames of an application (`dumpsys gfxinfo … framestats`): a long move
+// drawn at 60 ms a frame overflows it, and its first frames are lost (runs 4 and 5 showed 118–119 frames and a
+// "late" first frame for that reason). The frames are therefore read every second during a move and after every
+// input, and merged by their start.
+let seen = new Map();
+function collect() {
+  for (const f of frames()) seen.set(f.start, f);
+}
+
 // One measured move: `act` sends the input; the frames drawn in the next `windowMs` are read.
 // Only the input itself is sent inside a move: an element is located (a uiautomator dump, ~1–2 s) before it, and a
 // quiet second follows every dump, so neither the dump nor the accessibility work it starts is counted.
@@ -123,18 +132,26 @@ const pct = (list, p) => {
 async function measure(name, act, windowMs = 4000) {
   await sleep(1000);
   sh(`dumpsys gfxinfo ${pkg} reset`);
+  seen = new Map();
   const t0 = uptimeNs();
   const ok = await act(t0);
-  await sleep(windowMs);
+  for (let waited = 0; waited < windowMs; waited += 1000) {
+    await sleep(Math.min(1000, windowMs - waited));
+    collect();
+  }
   // Frames of this move only, in order; a frame of more than ten seconds is a bad record and left out.
-  const list = frames()
+  const list = [...seen.values()]
     .filter((f) => f.start >= t0 - 5e6 && f.end > f.start && f.end - f.start < 10e9)
     .sort((a, b) => a.start - b.start);
   const durations = list.map((f) => (f.end - f.start) / 1e6);
-  // "Settled": the end of the burst of frames that the input started — the last frame before the first quiet
-  // gap of 250 ms. Frames after that gap (a looping animation, a blinking cursor) are not part of the move.
-  let settled = list[0]?.end ?? null;
-  for (let i = 1; i < list.length; i++) {
+  // "Settled": the end of the burst of frames that the last input started — the last frame before the first
+  // quiet gap of 250 ms after it. Frames after that gap (a looping animation, a blinking cursor) are not part of
+  // the move. For a move of one input the burst starts at the first frame.
+  const inputs = Array.isArray(ok) ? ok : [0];
+  const lastInput = t0 + inputs.at(-1) * 1e6;
+  const from = Math.max(0, list.findIndex((f) => f.end >= lastInput));
+  let settled = list.length ? list[from].end : null;
+  for (let i = from + 1; i < list.length; i++) {
     if (list[i].start - list[i - 1].end > 250e6) break;
     settled = list[i].end;
   }
@@ -145,6 +162,7 @@ async function measure(name, act, windowMs = 4000) {
     frames: list.length,
     firstFrameMs: list.length ? Math.round((list[0].start - t0) / 1e6) : null,
     settleMs: settled === null ? null : Math.round((settled - t0) / 1e6),
+    afterLastInputMs: settled === null ? null : Math.round((settled - lastInput) / 1e6),
     janky: durations.filter((d) => d > 16.7).length,
     p50: pct(durations, 50) && Math.round(pct(durations, 50)),
     p95: pct(durations, 95) && Math.round(pct(durations, 95)),
@@ -170,6 +188,7 @@ async function flicks(t0, count, up, gap) {
     sent.push(Math.round((uptimeNs() - t0) / 1e6));
     flick(up);
     await sleep(gap);
+    collect();
   }
   return sent;
 }
