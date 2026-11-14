@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.pdf.PdfRenderer
 import android.media.ExifInterface
 import android.net.Uri
 import android.provider.MediaStore
@@ -162,6 +164,53 @@ class MonivraNativeModule : Module() {
       } catch (error: Exception) {
         false
       }
+    }
+
+    // Pages [from, from + count) of a PDF file of the application (a file:// uri) drawn by the system's renderer
+    // as JPEG pictures `widthPx` wide, in the cache folder report-preview/<id>; resolves with their file:// uris.
+    // An async function: it runs off the JavaScript thread, so the application answers touches meanwhile.
+    AsyncFunction("renderPdfPages") { uri: String, from: Int, count: Int, widthPx: Int, id: String ->
+      val context = appContext.reactContext ?: throw Exception("PDF_NO_CONTEXT")
+      val path = Uri.parse(uri).path ?: throw Exception("PDF_UNREADABLE")
+      val folder = File(context.cacheDir, "report-preview/$id").apply { mkdirs() }
+      val made = ArrayList<String>()
+      val descriptor = ParcelFileDescriptor.open(File(path), ParcelFileDescriptor.MODE_READ_ONLY)
+      try {
+        val renderer = PdfRenderer(descriptor)
+        try {
+          val end = minOf(renderer.pageCount, from + count)
+          for (index in from until end) {
+            val page = renderer.openPage(index)
+            try {
+              val height = (widthPx.toLong() * page.height / page.width).toInt()
+              val bitmap = Bitmap.createBitmap(widthPx, height, Bitmap.Config.ARGB_8888)
+              bitmap.eraseColor(Color.WHITE)
+              page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+              val file = File(folder, "page-$index.jpg")
+              FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.JPEG, 88, it) }
+              bitmap.recycle()
+              made.add(Uri.fromFile(file).toString())
+            } finally {
+              page.close()
+            }
+          }
+        } finally {
+          renderer.close()
+        }
+      } finally {
+        descriptor.close()
+      }
+      made
+    }
+
+    // Deletes the pictures and PDF files of report previews other than `keep` (ids), so the cache does not grow.
+    Function("dropReportPreviews") { keep: List<String> ->
+      val context = appContext.reactContext ?: return@Function false
+      File(context.cacheDir, "report-preview").listFiles()?.forEach { if (it.name !in keep) it.deleteRecursively() }
+      context.cacheDir.listFiles()?.forEach {
+        if (it.name.startsWith("report-") && it.name.endsWith(".pdf") && it.name.removePrefix("report-").removeSuffix(".pdf") !in keep) it.delete()
+      }
+      true
     }
 
     // Opens the system's print dialog for a PDF file of the application (a file:// uri).

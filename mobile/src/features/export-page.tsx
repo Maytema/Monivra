@@ -1,13 +1,14 @@
 // Export data (js/screens/export.js, export-preview.js): a financial summary (PDF), the detailed list of
 // operations (PDF) or a CSV file, each with its settings, a preview, and Share / Save. The period and the
 // filters are shared. The page opens on all time; the period shown before comes back when it is left.
-import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, ScrollView, Text, useWindowDimensions, View } from "react-native";
+import { memo, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
+import { ActivityIndicator, FlatList, Image, PixelRatio, ScrollView, Text, useWindowDimensions, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import Svg, { Circle, G, Line, Path, Polygon, Polyline, Rect, Text as SvgText } from "react-native-svg";
 import { Stack } from "expo-router";
 import { layoutReport, pdfOfPages, periodSlug, type ReportPages } from "../application/report/job.ts";
 import { ASCENT } from "../application/report/font.ts";
+import { PageImages } from "../application/report/page-images.ts";
 import { PAGE, type Command } from "../application/report/layout.ts";
 import type { Sections } from "../application/report/model.ts";
 import { csvTable, csvText, COLUMN_LABELS, type CsvPart } from "../domain/csv.ts";
@@ -15,7 +16,7 @@ import { newestFirst } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Filters, type Period } from "../domain/periods.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { saveTextFile, shareTextFile } from "../platform/files.ts";
-import { canPrint, printPdf } from "../platform/native.ts";
+import { canPrint, canRenderPdf, dropReportPreviews, printPdf, renderPdfPages, writeReportPdf } from "../platform/native.ts";
 import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
@@ -61,8 +62,8 @@ interface Draft {
 }
 
 // A prepared file: a CSV with the first rows for the preview, or the pages of a PDF (its file is made when it is
-// saved, shared or printed, and kept for the next time).
-type Job = { kind: "csv"; name: string; text: string; columns: string[]; rows: string[][]; total: number } | { kind: "pdf"; report: ReportPages; name: string; pages: Command[][]; file?: Uint8Array };
+// previewed, saved, shared or printed, and kept for the next time; `images` are its pages as pictures).
+type Job = { kind: "csv"; name: string; text: string; columns: string[]; rows: string[][]; total: number } | { kind: "pdf"; report: ReportPages; name: string; pages: Command[][]; file?: Uint8Array; images?: PageImages };
 
 function prepareCsv(data: LedgerData, d: Draft): Job {
   const ops = operationsIn(data, d.period, d.filters).sort(newestFirst);
@@ -103,6 +104,56 @@ async function fileOf(t: Translator, job: Extract<Job, { kind: "pdf" }>): Promis
     perfLog(`report file: ${bytes.length} bytes`, now() - started);
   }
   return bytes;
+}
+
+// ---- Kept reports ----
+
+// Prepared reports by their settings, kept while the data is the same (any change of data makes a new ledger
+// object, and the old entries go with it): leaving the page and coming back finds them ready.
+const prepared = new WeakMap<LedgerData, Map<string, Job>>();
+const keptJob = (data: LedgerData, key: string) => prepared.get(data)?.get(key);
+function keepJob(data: LedgerData, key: string, job: Job) {
+  const map = prepared.get(data) ?? new Map<string, Job>();
+  map.set(key, job);
+  prepared.set(data, map);
+}
+
+// The previews whose pictures are kept (the newest last); older ones are stopped and their files deleted.
+const KEPT_PREVIEWS = 2;
+const previews: { id: string; images: PageImages }[] = [];
+let previewCount = 0;
+const newPreviewId = () => `${Date.now().toString(36)}-${(previewCount += 1)}`;
+function keepPreview(id: string, images: PageImages) {
+  previews.push({ id, images });
+  while (previews.length > KEPT_PREVIEWS) previews.shift()?.images.stop();
+  dropReportPreviews(previews.map((x) => x.id));
+}
+
+// The pages shown first, while the person waits; the rest are made in the background.
+const FIRST_PAGES = 3;
+
+// The pictures of a report's pages for the preview: its PDF file, then the first pages behind the progress
+// dialog. Undefined when stopped, or where the phone cannot draw a PDF (the preview then draws the pages itself).
+async function previewImages(t: Translator, job: Extract<Job, { kind: "pdf" }>, widthPx: number): Promise<PageImages | undefined> {
+  if (job.images && !job.images.stopped) return job.images;
+  if (!canRenderPdf()) return undefined;
+  const started = now();
+  const images = await withProgress("Preparing the report", t.t("Preparing…"), async (say, signal) => {
+    const bytes = job.file ?? (await pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
+    job.file = bytes;
+    const id = newPreviewId();
+    const uri = writeReportPdf(id, bytes);
+    const made = new PageImages(job.pages.length, (from, count) => renderPdfPages(uri, from, count, widthPx, id));
+    keepPreview(id, made);
+    say(t.t("Preparing the preview…"));
+    await made.first(FIRST_PAGES, (ready, total) => say(`${t.t("Preparing the preview…")} ${ready} / ${total}`), signal);
+    return made;
+  });
+  if (!images) return undefined;
+  perfLog(`report preview: first ${images.ready} of ${images.total} pages`, now() - started);
+  job.images = images;
+  images.continueInBackground();
+  return images;
 }
 
 async function deliver(t: Translator, job: Job, how: "share" | "save" | "print") {
@@ -198,11 +249,58 @@ const ReportPage = memo(function ReportPage({ commands, width }: { commands: Com
   );
 });
 
+// The pages as pictures made by the phone: a page not made yet waits in its place with a spinner, and the line
+// on top says how many are ready; it fills in by itself as the background work goes on.
+function PagePictures({ job, images, footer }: { job: Extract<Job, { kind: "pdf" }>; images: PageImages; footer: ReactNode }) {
+  const p = usePalette();
+  const t = useT();
+  const { width } = useWindowDimensions();
+  const [, changed] = useReducer((n: number) => n + 1, 0);
+  useEffect(() => images.subscribe(changed), [images]);
+  const pageWidth = width - 36;
+  const pageHeight = (pageWidth * PAGE.height) / PAGE.width;
+  const ready = images.ready;
+  const pages = t.tc("{n} page", "{n} pages", images.total);
+  return (
+    <FullPage title="Preview" footer={footer} scroll={false}>
+      <FlatList
+        data={job.pages}
+        extraData={ready}
+        keyExtractor={(_page, i) => String(i)}
+        ListHeaderComponent={
+          <Text style={{ color: p.muted, fontSize: 13, paddingBottom: 10 }}>
+            {t.t("Preview of your data · {pages}", { pages })}
+            {images.done ? "" : ` · ${t.t("Pages ready: {n} of {total}", { n: ready, total: images.total })}`}
+          </Text>
+        }
+        contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 18, gap: 12, backgroundColor: mix(p.ink, p.bg, 0.06) }}
+        getItemLayout={(_d, index) => ({ length: pageHeight + 30, offset: 34 + (pageHeight + 30) * index, index })}
+        renderItem={({ index }) => {
+          const uri = images.uris[index];
+          return (
+            <View>
+              {uri ? (
+                <Image source={{ uri }} accessibilityLabel={t.t("Page {n} of {total}", { n: index + 1, total: images.total })} style={{ width: pageWidth, height: pageHeight, borderRadius: 4, backgroundColor: "#ffffff" }} />
+              ) : (
+                <View style={{ width: pageWidth, height: pageHeight, borderRadius: 4, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                  <ActivityIndicator color={p.muted} />
+                </View>
+              )}
+              <Text style={{ color: p.muted, fontSize: 12, textAlign: "center", marginTop: 4 }}>{index + 1}</Text>
+            </View>
+          );
+        }}
+      />
+    </FullPage>
+  );
+}
+
 function Preview({ job }: { job: Job }) {
   const p = usePalette();
   const t = useT();
   const { width } = useWindowDimensions();
   const footer = <FileActions job={async () => job} mode={job.kind === "pdf" ? "summary" : "csv"} />;
+  if (job.kind === "pdf" && job.images && !job.images.stopped) return <PagePictures job={job} images={job.images} footer={footer} />;
   if (job.kind === "pdf") {
     const pageWidth = width - 36;
     return (
@@ -288,8 +386,7 @@ export function ExportPage() {
   const [sections, setSections] = useState<Record<keyof Sections, boolean>>({ charts: true, accounts: true, savings: true, debts: true, budgets: true });
   const [parts, setParts] = useState<Record<CsvPart, boolean>>({ type: true, accounts: true, amount: true, comment: true, tags: true });
   const [busy, setBusy] = useState(false);
-  // The file made last, kept while nothing it is made from changes.
-  const made = useRef<{ key: string; job: Job } | null>(null);
+  const { width } = useWindowDimensions();
   const before = useRef(getView().period);
   useEffect(() => {
     const was = before.current;
@@ -301,13 +398,14 @@ export function ExportPage() {
   // A report takes a moment (tens of thousands of rows take longer): its own dialog shows the progress and can
   // stop it; meanwhile the buttons wait, and a second tap does nothing.
   const job = async (): Promise<Job | null> => {
-    if (made.current && made.current.key === key && made.current.job) return made.current.job;
+    const kept = keptJob(data, key);
+    if (kept) return kept;
     if (busy) return null;
     setBusy(true);
     try {
       const result = draft.mode === "csv" ? prepareCsv(data, draft) : await preparePages(data, t, draft);
       if (!result) return null;
-      made.current = { key, job: result };
+      keepJob(data, key, result);
       return result;
     } catch (error) {
       showError(t, error);
@@ -316,9 +414,24 @@ export function ExportPage() {
       setBusy(false);
     }
   };
-  useEffect(() => {
-    made.current = null;
-  }, [data]);
+  // The preview: the pages as pictures where the phone can draw them (sharp, light to scroll), the first ones
+  // ready before it opens; the pictures stay for the next time while the data and the settings are the same.
+  const preview = async () => {
+    const j = await job();
+    if (!j) return;
+    if (j.kind === "pdf") {
+      setBusy(true);
+      try {
+        await previewImages(t, j, Math.min(1440, Math.round((width - 36) * PixelRatio.get())));
+      } catch (error) {
+        showError(t, error);
+        return;
+      } finally {
+        setBusy(false);
+      }
+    }
+    sheets.open(<Preview job={j} />, "full");
+  };
   const set = (part: Partial<Filters>) => setFilters((f) => ({ ...f, ...part }));
   const count = (v: string[] | null, one: string, other: string) => (v ? t.tc(one, other, v.length) : null);
   const scope = useMemo(() => operationsIn(data, period, filters).length, [data, period, filters]);
@@ -365,7 +478,7 @@ export function ExportPage() {
         <Text style={{ color: p.muted, fontSize: 13, paddingTop: 4 }}>{t.tc("{n} operation", "{n} operations", scope)}</Text>
       </ScrollView>
       <View style={{ paddingHorizontal: 18, paddingTop: 8, paddingBottom: 12, gap: 10 }}>
-        <Button label="Preview" disabled={busy} onPress={() => void job().then((j) => j && sheets.open(<Preview job={j} />, "full"))} />
+        <Button label="Preview" disabled={busy} onPress={() => void preview()} />
         <FileActions job={job} busy={busy} mode={mode} />
       </View>
     </View>

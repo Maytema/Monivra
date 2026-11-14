@@ -119,6 +119,24 @@ finish 2
 begin "save the operation"; adb shell input tap $save; finish 5
 shot 05-after-save 0
 
+# The report of all 3000 operations (many pages): the first preview waits for its first pages behind the dialog,
+# the rest are made in the background; the second opening must be at once (the pictures are kept).
+tap "More"; tap "Data"; tap "Export data" 3
+tap "Detailed transactions" 1
+begin "report preview, first time (3000 operations)"; tap "Preview" 0
+for i in $(seq 1 90); do sleep 1; adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb shell cat /sdcard/ui.xml 2>/dev/null | grep -q 'text="Preview of your data' && break; done
+log "preview open after ${i}s"
+finish 1
+shot 08-preview 0
+begin "scroll the preview (8 flicks)"
+for i in 1 2 3 4 5 6 7 8; do adb shell input swipe 540 1800 540 500 150; sleep 0.8; done
+finish 2
+shot 09-preview-scrolled 0
+back
+begin "report preview, second time"; tap "Preview" 0; sleep 3; finish 1
+shot 10-preview-again 0
+back; back; back
+
 # The lock: a PIN is set, the screen locked, the PIN typed (time from the last digit to the open screen).
 tap "More"; tap "Settings"; tap "Security"
 tap "PIN code"

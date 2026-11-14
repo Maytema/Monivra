@@ -1,5 +1,5 @@
-// The application's own native module (modules/monivra-native): the privacy screen, printing, photos, the
-// PIN hash and touch signals. Absent
+// The application's own native module (modules/monivra-native): the privacy screen, printing, report previews,
+// photos, the PIN hash and touch signals. Absent
 // (an older build, a test), every call says so instead of failing.
 import { requireOptionalNativeModule } from "expo";
 import * as DocumentPicker from "expo-document-picker";
@@ -13,6 +13,8 @@ interface MonivraNative {
   photoDataUrl(uri: string, longSide: number, quality: number, maxBytes: number): string;
   pbkdf2?(password: string, saltHex: string, iterations: number): string;
   haptic?(kind: string): boolean;
+  renderPdfPages?(uri: string, from: number, count: number, widthPx: number, id: string): Promise<string[]>;
+  dropReportPreviews?(keep: string[]): boolean;
 }
 const native = requireOptionalNativeModule<MonivraNative>("MonivraNative");
 
@@ -43,6 +45,32 @@ export function nativeHaptic(kind: string): boolean {
 }
 
 export const canPrint = (): boolean => !!native;
+
+// Report previews as pictures drawn by the phone (application/report/page-images.ts). A preview has an id; its
+// PDF is written to the cache as report-<id>.pdf and its pages go to the cache folder report-preview/<id>.
+export const canRenderPdf = (): boolean => !!native?.renderPdfPages;
+
+export function writeReportPdf(id: string, bytes: Uint8Array): string {
+  const file = new File(Paths.cache, `report-${id}.pdf`);
+  if (file.exists) file.delete();
+  file.create();
+  file.write(bytes);
+  return file.uri;
+}
+
+export function renderPdfPages(uri: string, from: number, count: number, widthPx: number, id: string): Promise<string[]> {
+  if (!native?.renderPdfPages) return Promise.reject(new Error("The pages cannot be drawn here"));
+  return native.renderPdfPages(uri, from, count, widthPx, id);
+}
+
+// Deletes the previews other than `keep` (ids).
+export function dropReportPreviews(keep: string[]): void {
+  try {
+    native?.dropReportPreviews?.(keep);
+  } catch {
+    // Only the cache: nothing is lost if it stays.
+  }
+}
 
 // Opens the system's print dialog for a PDF.
 export function printPdf(name: string, bytes: Uint8Array): boolean {
