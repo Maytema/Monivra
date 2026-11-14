@@ -322,7 +322,7 @@ const TOUR = [
     ["account-sheet", ["Wallet"]],
     ["account-edit", ["Wallet", "Edit"]],
     ["account-transfer", ["Wallet", "Transfer"]],
-    ["account-history", ["Wallet", "History"]],
+    ["account-operations", ["Wallet", { text: "Operations", which: "last" }]],
     ["completed", ["Completed (1)"]],
   ]],
   ["categories", [
@@ -332,7 +332,7 @@ const TOUR = [
     ["category-sheet", [{ long: "Food" }]],
     ["change-categories", ["Change categories"]],
     ["change-category-form", ["Change categories", "Food"]],
-    ["period-dialog", ["November 2026"]],
+    ["period-dialog", [{ period: true }]],
   ]],
   ["operations", [
     ["root", []],
@@ -341,7 +341,7 @@ const TOUR = [
     ["add-menu", ["Add"]],
     ["add-expense", ["Add", "Expense"]],
     ["search", ["Operation search"]],
-    ["period-dialog", ["November 2026"]],
+    ["period-dialog", [{ period: true }]],
   ]],
   ["statistics", [
     ["root", []],
@@ -349,11 +349,12 @@ const TOUR = [
     ["incomes", ["Incomes"]],
     ["scrolled", [{ scroll: 1 }]],
     ["scrolled-more", [{ scroll: 2 }]],
-    ["period-dialog", ["November 2026"]],
+    ["period-dialog", [{ period: true }]],
   ]],
   ["more", [
     ["root", []],
-    ...["Subscription", "Profile", "Scheduled payments", "Budgets", "Settings", "Data", "Instructions", "Support", "About our team", "Privacy policy", "Terms of use"].map((x) => [x.toLowerCase().replace(/ /g, "-"), [x]]),
+    ...["Subscription", "Profile", "Scheduled payments", "Budgets", "Settings", "Data", "Instructions", "Support", "About our team"].map((x) => [x.toLowerCase().replace(/ /g, "-"), [x]]),
+    ...["Privacy policy", "Terms of use"].map((x) => [x.toLowerCase().replace(/ /g, "-"), [{ scroll: 1 }, x]]),
     ...["Formatting", "Styles and elements", "Backups", "Notifications", "Security", "Privacy", "Exchange rates"].map((x) => ["settings-" + x.toLowerCase().replace(/ /g, "-"), ["Settings", x]]),
     ...["Saved backups", "Data file", "Import data", "Export data", "Delete my data"].map((x) => ["data-" + x.toLowerCase().replace(/ /g, "-"), ["Data", x]]),
     ["scheduled-add", ["Scheduled payments", "Add"]],
@@ -390,9 +391,19 @@ async function tour() {
       let depth = 0;
       let ok = true;
       for (const step of steps) {
-        if (typeof step === "string") ok = await tap(step, { pause: 2200 });
-        else if (step.long) {
-          const at = find(step.long);
+        // A text is matched exactly first, then as the start of an element's text (a WebView button or a
+        // merged React Native row reads "Food 26,590 KGS").
+        const tapText = async (want, which = "first") => (find(want, { which }) ? tap(want, { pause: 2200, which }) : tap(want, { pause: 2200, which, prefix: true }));
+        if (typeof step === "string") ok = await tapText(step);
+        else if (step.text) ok = await tapText(step.text, step.which);
+        else if (step.period) {
+          // The period title, whatever period is shown ("October 2026", "Week 44" …): the text between the arrows.
+          const n = nodes(dump()).find((x) => /^(January|February|March|April|May|June|July|August|September|October|November|December) \d{4}/.test(x.text || x.desc));
+          ok = !!n;
+          if (n) sh(`input tap ${Math.round((n.bounds[0] + n.bounds[2]) / 2)} ${Math.round((n.bounds[1] + n.bounds[3]) / 2)}`), await sleep(2200);
+          else log("NOT FOUND: the period title");
+        } else if (step.long) {
+          const at = find(step.long) ?? find(step.long, { prefix: true });
           ok = !!at;
           if (at) sh(`input swipe ${at.x} ${at.y} ${at.x} ${at.y} 900`), await sleep(2000);
           else log(`NOT FOUND: ${step.long}`);
