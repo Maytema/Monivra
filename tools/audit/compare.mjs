@@ -102,10 +102,17 @@ function frames() {
     const head = lines[0]?.split(",") ?? [];
     const col = (name) => head.indexOf(name);
     const [iv, done, flags] = [col("IntendedVsync"), col("FrameCompleted"), col("Flags")];
+    // Where a frame's time went (ms): the UI thread started late (busy with something else), input and
+    // animations, measure and layout of views, recording the drawing, handing it over, and the render thread
+    // drawing it (with software graphics this is where the pixels are made).
+    const phase = (a, b) => (col(a) >= 0 && col(b) >= 0 ? [col(a), col(b)] : null);
+    const PHASES = { late: phase("IntendedVsync", "HandleInputStart"), input: phase("HandleInputStart", "PerformTraversalsStart"), layout: phase("PerformTraversalsStart", "DrawStart"), record: phase("DrawStart", "SyncQueued"), sync: phase("SyncStart", "IssueDrawCommandsStart"), render: phase("IssueDrawCommandsStart", "FrameCompleted") };
     for (const line of lines.slice(1)) {
       const v = line.split(",").map(Number);
       if (v[flags] !== 0 || !v[iv] || !v[done]) continue; // skip frames marked unusable
-      rows.push({ start: v[iv], end: v[done] });
+      const parts = {};
+      for (const [name, cols] of Object.entries(PHASES)) if (cols && v[cols[0]] && v[cols[1]] >= v[cols[0]]) parts[name] = (v[cols[1]] - v[cols[0]]) / 1e6;
+      rows.push({ start: v[iv], end: v[done], parts });
     }
   }
   return rows;
@@ -167,6 +174,8 @@ async function measure(name, act, windowMs = 4000) {
     p50: pct(durations, 50) && Math.round(pct(durations, 50)),
     p95: pct(durations, 95) && Math.round(pct(durations, 95)),
     worst: durations.length ? Math.round(Math.max(...durations)) : null,
+    // Total ms of each part of the frames of this move (see frames()).
+    phases: Object.fromEntries(["late", "input", "layout", "record", "sync", "render"].map((k) => [k, Math.round(list.reduce((n, f) => n + (f.parts?.[k] ?? 0), 0))])),
   };
   log(`measured: ${JSON.stringify(result)}`);
   return result;
