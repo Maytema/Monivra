@@ -40,5 +40,6 @@ export function SwitchRow({ label, hint, value, onChange }: { label: string; hin
 export function Footnote({ children }: { children: string }) {
   const p = usePalette();
   const t = useT();
-  return <Text style={{ color: p.muted, fontSize: 13, lineHeight: 19, paddingHorizontal: 18, paddingVertical: 10 }}>{t.t(children)}</Text>;
+  // components.css .footnote: small, muted, centred, 16 px around.
+  return <Text style={{ color: p.muted, fontSize: 11, lineHeight: 15, padding: 16, textAlign: "center" }}>{t.t(children)}</Text>;
 }
