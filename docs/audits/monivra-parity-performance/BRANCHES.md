@@ -63,7 +63,14 @@
 | `fix/sheet-footer-layout` | 754cb35 | 0 | да | да | 02.11 | **SAFE DELETE CANDIDATE** |
 | `refactor/architecture-cleanup` | c865e7d | 0 | да | да | 02.11 | **SAFE DELETE CANDIDATE** |
 
-Итого: KEEP 8, SAFE DELETE CANDIDATES 19 (18 целиком в `main`, 1 целиком в `rn-migration`), MANUAL REVIEW 2.
+Итого: KEEP 7 (+ служебная `audit-results`), SAFE DELETE CANDIDATES **21** (20 целиком в `main`, 1 целиком в
+`rn-migration`), MANUAL REVIEW 2. (В первой версии этого файла было ошибочно написано «19» — пересчитано по
+таблице 14.11.)
+
+**Решение владельца 14.11: удалить 21 кандидата, две спорные оставить.** Архив всех веток перед удалением
+сделан (`git bundle`, 31 ветка, в рабочей папке сессии). Удаление из этой среды **заблокировано** прокси
+GitHub (push `--delete` и API DELETE отвечают 403) — ветки пока на месте; удалить может владелец в GitHub
+(Branches → значок корзины) или командой ниже со своего компьютера.
 
 Это совпадает с предложением от 10.11 (`docs/BRANCH_CLEANUP_PROPOSAL_RU.md`), с тремя изменениями: с тех пор
 появились `rn-migration`, `mobile-builds` и `docs/react-native-architecture` (последняя теперь целиком внутри
@@ -76,7 +83,7 @@
 git clone --mirror https://github.com/Maytema/Monivra.git monivra-mirror.git
 git -C monivra-mirror.git bundle create ../monivra-all-branches-$(date +%F).bundle --all
 ```
-Удаление 19 кандидатов одной командой (только после вашего «да»):
+Удаление 21 кандидата одной командой (одобрено владельцем 14.11):
 ```
 git push origin --delete backup-before-cleanup cleanup docs/where-to-look docs/react-native-architecture \
   feat/auto-post-due feat/budget-details feat/budget-header-add feat/budget-period feat/due-payments \
