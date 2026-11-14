@@ -42,7 +42,7 @@ GitHub Actions, `reactivecircus/android-emulator-runner@v2`: Android 14 (API 34)
 | Эмуляторный обход нового приложения (~130 шагов со скриншотами) | `mobile/scripts/emulator-smoke.sh` | прошёл (сборка 75) |
 | Замер скорости нового приложения | `mobile/scripts/emulator-perf.sh` | шаги частично сорвались из-за окна эмулятора «Pixel Launcher isn't responding» (исправлено, не перезапускалось) |
 | Тесты старого приложения в браузере и на эмуляторе | `tests/*.mjs`, `android-app/e2e/emulator.mjs` | последний прогон: сборка 22 (успех) |
-| Сравнение двух версий на одном эмуляторе | `.github/workflows/audit.yml`, `tools/audit/compare.mjs` | см. PERFORMANCE_BASELINE.md |
+| Сравнение двух версий на одном эмуляторе | `.github/workflows/audit.yml`, `tools/audit/compare.mjs` | прогоны 4–8 (основной — 8, CI 43604723871), см. PERFORMANCE_BASELINE.md |
 
 В `mobile/` нет файла блокировки зависимостей (`package-lock.json`): каждая сборка ставит последние совместимые
 версии пакетов, поэтому две сборки одного коммита могут отличаться. Это риск воспроизводимости (BL-P1-01 в

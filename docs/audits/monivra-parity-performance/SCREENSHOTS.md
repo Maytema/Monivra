@@ -18,7 +18,7 @@
 | `10-currency-list-mid-fling` | **в середине** броска вниз (с прогона 5) — видны ли пустые строки |
 | `11-currency-list-mid-fling-up` | в середине броска вверх (с прогона 5) |
 
-Скачать один файл: `git fetch origin audit-results && git show origin/audit-results:runs/5/rn/03-operations.png > rn-03.png`.
+Скачать один файл: `git fetch origin audit-results && git show origin/audit-results:runs/8/rn/03-operations.png > rn-03.png`.
 
-Прогоны: 4 — первый полный (замер касаний включал поиск элемента ~2 с, см. PERFORMANCE_BASELINE.md);
-5 — исправленный замер.
+Основной прогон — **8** (обе версии с данными). Прогоны 4–7 — промежуточные, ошибки их замера описаны в
+PERFORMANCE_ROOT_CAUSES.md. В прогоне 7 старое приложение без данных (закрылось после окна выбора файла).
