@@ -1,0 +1,176 @@
+15:50:29 app rn: app.monivra.finance.next, apks/rn-apk/app-release.apk
+15:50:31 Success
+15:50:31 
+15:50:32 on the phone: -rw-rw---- 1 u0_a177 media_rw 452162 2026-11-14 15:36 /sdcard/Download/perf-data.json
+15:50:35 Status: ok
+15:50:39 tapped: Start with basic set
+15:50:48 tapped: More
+15:50:52 tapped: Data
+15:50:55 tapped: Data file
+15:50:59 tapped: Restore from file
+15:51:05 tapped: perf-data.json
+15:51:17 tapped: Replace data
+15:51:21 tapped: Confirm
+15:51:35 am start: TotalTime: 2442
+15:51:51 measured: {"name":"cold start 1","ok":true,"frames":37,"firstFrameMs":1636,"settleMs":3068,"afterLastInputMs":3068,"janky":37,"p50":87,"p95":585,"worst":751,"phases":{"late":1459,"input":131,"layout":12,"record":27,"sync":97,"render":2177}}
+15:51:56 am start: TotalTime: 2550
+15:52:12 measured: {"name":"cold start 2","ok":true,"frames":34,"firstFrameMs":1989,"settleMs":3873,"afterLastInputMs":3873,"janky":34,"p50":86,"p95":281,"worst":700,"phases":{"late":1391,"input":93,"layout":7,"record":4,"sync":24,"render":1532}}
+15:52:17 am start: TotalTime: 2414
+15:52:33 measured: {"name":"cold start 3","ok":true,"frames":34,"firstFrameMs":1423,"settleMs":2756,"afterLastInputMs":2756,"janky":34,"p50":82,"p95":588,"worst":669,"phases":{"late":1061,"input":85,"layout":8,"record":27,"sync":38,"render":2105}}
+15:52:37 tabs at: {"Operations":{"x":540,"y":2310,"bounds":[462,2289,618,2331]},"Statistics":{"x":756,"y":2310,"bounds":[689,2289,823,2331]},"Categories":{"x":324,"y":2310,"bounds":[247,2289,401,2331]},"Accounts":{"x":108,"y":2310,"bounds":[40,2289,176,2331]}}
+15:52:42 measured: {"name":"tab Operations (first)","ok":true,"frames":98,"firstFrameMs":56,"settleMs":3444,"afterLastInputMs":3444,"janky":98,"p50":68,"p95":115,"worst":150,"phases":{"late":1446,"input":221,"layout":22,"record":708,"sync":371,"render":3115}}
+15:52:46 measured: {"name":"tab Statistics (first)","ok":true,"frames":7,"firstFrameMs":59,"settleMs":577,"afterLastInputMs":577,"janky":7,"p50":85,"p95":117,"worst":117,"phases":{"late":133,"input":66,"layout":3,"record":114,"sync":42,"render":187}}
+15:52:50 measured: {"name":"tab Categories (first)","ok":true,"frames":25,"firstFrameMs":69,"settleMs":403,"afterLastInputMs":403,"janky":25,"p50":84,"p95":109,"worst":120,"phases":{"late":401,"input":25,"layout":3,"record":10,"sync":18,"render":888}}
+15:52:54 measured: {"name":"tab Accounts (first)","ok":true,"frames":13,"firstFrameMs":46,"settleMs":98,"afterLastInputMs":98,"janky":13,"p50":67,"p95":111,"worst":111,"phases":{"late":177,"input":6,"layout":2,"record":3,"sync":5,"render":452}}
+15:52:59 measured: {"name":"tab Operations (again)","ok":true,"frames":15,"firstFrameMs":46,"settleMs":106,"afterLastInputMs":106,"janky":15,"p50":70,"p95":121,"worst":121,"phases":{"late":176,"input":13,"layout":2,"record":9,"sync":14,"render":514}}
+15:53:03 measured: {"name":"tab Statistics (again)","ok":true,"frames":1,"firstFrameMs":53,"settleMs":103,"afterLastInputMs":103,"janky":1,"p50":50,"p95":50,"worst":50,"phases":{"late":0,"input":6,"layout":0,"record":15,"sync":10,"render":18}}
+15:53:07 measured: {"name":"tab Categories (again)","ok":true,"frames":13,"firstFrameMs":53,"settleMs":89,"afterLastInputMs":89,"janky":13,"p50":83,"p95":103,"worst":103,"phases":{"late":164,"input":2,"layout":2,"record":1,"sync":6,"render":429}}
+15:53:11 measured: {"name":"tab Accounts (again)","ok":true,"frames":15,"firstFrameMs":53,"settleMs":103,"afterLastInputMs":103,"janky":14,"p50":71,"p95":111,"worst":111,"phases":{"late":180,"input":6,"layout":2,"record":3,"sync":6,"render":456}}
+15:53:13 tapped: Operations
+15:53:29 measured: {"name":"operations: 6 flicks down","ok":true,"inputsMs":[10,1210,2250,3300,4370,5510],"frames":194,"firstFrameMs":79,"settleMs":6965,"afterLastInputMs":1455,"janky":194,"p50":85,"p95":118,"worst":267,"phases":{"late":3986,"input":477,"layout":45,"record":256,"sync":716,"render":6723}}
+15:53:39 measured: {"name":"operations: 6 flicks up","ok":true,"inputsMs":[10,1050,2200,3320,4420,5540],"frames":192,"firstFrameMs":59,"settleMs":6527,"afterLastInputMs":987,"janky":192,"p50":86,"p95":150,"worst":168,"phases":{"late":4249,"input":360,"layout":39,"record":256,"sync":610,"render":7134}}
+15:53:43 measured: {"name":"operations: swipe to previous period 1","ok":true,"frames":29,"firstFrameMs":79,"settleMs":896,"afterLastInputMs":896,"janky":29,"p50":83,"p95":133,"worst":135,"phases":{"late":405,"input":70,"layout":6,"record":12,"sync":47,"render":994}}
+15:53:48 measured: {"name":"operations: swipe to previous period 2","ok":true,"frames":31,"firstFrameMs":83,"settleMs":793,"afterLastInputMs":793,"janky":30,"p50":53,"p95":86,"worst":86,"phases":{"late":288,"input":85,"layout":3,"record":21,"sync":31,"render":911}}
+15:53:52 measured: {"name":"operations: swipe to previous period 3","ok":true,"frames":33,"firstFrameMs":83,"settleMs":949,"afterLastInputMs":949,"janky":33,"p50":55,"p95":100,"worst":109,"phases":{"late":347,"input":52,"layout":6,"record":6,"sync":29,"render":940}}
+15:53:57 measured: {"name":"operations: swipe to next period 1","ok":true,"frames":30,"firstFrameMs":79,"settleMs":763,"afterLastInputMs":763,"janky":29,"p50":51,"p95":100,"worst":100,"phases":{"late":333,"input":36,"layout":3,"record":3,"sync":17,"render":874}}
+15:54:01 measured: {"name":"operations: swipe to next period 2","ok":true,"frames":33,"firstFrameMs":76,"settleMs":893,"afterLastInputMs":893,"janky":32,"p50":48,"p95":87,"worst":89,"phases":{"late":254,"input":52,"layout":6,"record":7,"sync":24,"render":941}}
+15:54:05 measured: {"name":"operations: swipe to next period 3","ok":true,"frames":31,"firstFrameMs":73,"settleMs":823,"afterLastInputMs":823,"janky":30,"p50":51,"p95":87,"worst":89,"phases":{"late":275,"input":51,"layout":7,"record":9,"sync":19,"render":843}}
+15:54:10 tapped: Categories
+15:54:20 measured: {"name":"categories: swipe to previous period 1","ok":true,"frames":27,"firstFrameMs":83,"settleMs":668,"afterLastInputMs":668,"janky":26,"p50":68,"p95":120,"worst":132,"phases":{"late":325,"input":39,"layout":3,"record":4,"sync":13,"render":961}}
+15:54:24 measured: {"name":"categories: swipe to previous period 2","ok":true,"frames":23,"firstFrameMs":83,"settleMs":683,"afterLastInputMs":683,"janky":23,"p50":61,"p95":154,"worst":176,"phases":{"late":285,"input":38,"layout":6,"record":5,"sync":10,"render":838}}
+15:54:28 measured: {"name":"categories: swipe to previous period 3","ok":true,"frames":24,"firstFrameMs":79,"settleMs":630,"afterLastInputMs":630,"janky":23,"p50":53,"p95":120,"worst":120,"phases":{"late":252,"input":33,"layout":11,"record":5,"sync":15,"render":849}}
+15:54:33 measured: {"name":"categories: swipe to next period 1","ok":true,"frames":24,"firstFrameMs":89,"settleMs":624,"afterLastInputMs":624,"janky":24,"p50":67,"p95":102,"worst":103,"phases":{"late":261,"input":21,"layout":11,"record":3,"sync":16,"render":822}}
+15:54:37 measured: {"name":"categories: swipe to next period 2","ok":true,"frames":25,"firstFrameMs":79,"settleMs":682,"afterLastInputMs":682,"janky":24,"p50":52,"p95":109,"worst":120,"phases":{"late":333,"input":30,"layout":5,"record":5,"sync":11,"render":872}}
+15:54:42 measured: {"name":"categories: swipe to next period 3","ok":true,"frames":25,"firstFrameMs":76,"settleMs":645,"afterLastInputMs":645,"janky":24,"p50":69,"p95":117,"worst":123,"phases":{"late":375,"input":29,"layout":2,"record":5,"sync":26,"render":843}}
+15:54:44 tapped: Statistics
+15:54:54 measured: {"name":"statistics: swipe to previous period 1","ok":true,"frames":12,"firstFrameMs":103,"settleMs":605,"afterLastInputMs":605,"janky":12,"p50":67,"p95":135,"worst":135,"phases":{"late":171,"input":33,"layout":4,"record":30,"sync":8,"render":413}}
+15:54:58 measured: {"name":"statistics: swipe to previous period 2","ok":true,"frames":14,"firstFrameMs":86,"settleMs":742,"afterLastInputMs":742,"janky":14,"p50":68,"p95":123,"worst":123,"phases":{"late":219,"input":46,"layout":2,"record":61,"sync":19,"render":487}}
+15:55:02 measured: {"name":"statistics: swipe to previous period 3","ok":true,"frames":14,"firstFrameMs":83,"settleMs":749,"afterLastInputMs":749,"janky":14,"p50":85,"p95":117,"worst":117,"phases":{"late":258,"input":52,"layout":1,"record":60,"sync":31,"render":467}}
+15:55:07 measured: {"name":"statistics: swipe to next period 1","ok":true,"frames":13,"firstFrameMs":86,"settleMs":641,"afterLastInputMs":641,"janky":13,"p50":72,"p95":117,"worst":117,"phases":{"late":181,"input":19,"layout":2,"record":39,"sync":25,"render":450}}
+15:55:11 measured: {"name":"statistics: swipe to next period 2","ok":true,"frames":15,"firstFrameMs":93,"settleMs":809,"afterLastInputMs":809,"janky":15,"p50":51,"p95":100,"worst":100,"phases":{"late":191,"input":31,"layout":2,"record":56,"sync":12,"render":483}}
+15:55:15 measured: {"name":"statistics: swipe to next period 3","ok":true,"frames":13,"firstFrameMs":83,"settleMs":686,"afterLastInputMs":686,"janky":13,"p50":34,"p95":103,"worst":103,"phases":{"late":119,"input":33,"layout":1,"record":53,"sync":18,"render":358}}
+15:55:22 measured: {"name":"statistics: 3 flicks down","ok":true,"inputsMs":[10,1110,2090],"frames":54,"firstFrameMs":79,"settleMs":2793,"afterLastInputMs":703,"janky":54,"p50":117,"p95":158,"worst":172,"phases":{"late":1662,"input":34,"layout":6,"record":11,"sync":67,"render":2545}}
+15:55:24 tapped: More
+15:55:28 tapped: Settings
+15:55:32 tapped: Formatting
+15:55:44 measured: {"name":"currency list: open","ok":true,"frames":19,"firstFrameMs":46,"settleMs":490,"afterLastInputMs":490,"janky":19,"p50":84,"p95":302,"worst":302,"phases":{"late":435,"input":51,"layout":3,"record":3,"sync":11,"render":857}}
+15:55:56 measured: {"name":"currency list: 8 fast flicks down","ok":true,"inputsMs":[10,670,1340,2000,2820,3700,4480,5290],"frames":151,"firstFrameMs":83,"settleMs":6290,"afterLastInputMs":1000,"janky":151,"p50":100,"p95":184,"worst":201,"phases":{"late":4228,"input":308,"layout":32,"record":149,"sync":235,"render":6619}}
+15:56:07 measured: {"name":"currency list: 8 fast flicks up","ok":true,"inputsMs":[10,660,1430,2120,2810,3280,3950,4650],"frames":136,"firstFrameMs":76,"settleMs":5793,"afterLastInputMs":1143,"janky":136,"p50":100,"p95":183,"worst":200,"phases":{"late":3713,"input":319,"layout":29,"record":128,"sync":236,"render":5646}}
+15:56:20 tour tabs: {"accounts":null,"categories":null,"operations":null,"statistics":null,"more":null}
+15:56:24 tour: accounts-root
+15:56:30 NOT FOUND: Total
+15:56:30 tour: accounts-total — path stopped
+15:56:36 NOT FOUND: New account
+15:56:36 tour: accounts-new-account — path stopped
+15:56:42 NOT FOUND: New account
+15:56:42 tour: accounts-new-account-regular — path stopped
+15:56:48 NOT FOUND: Wallet
+15:56:48 tour: accounts-account-sheet — path stopped
+15:56:54 NOT FOUND: Wallet
+15:56:54 tour: accounts-account-edit — path stopped
+15:57:00 NOT FOUND: Wallet
+15:57:00 tour: accounts-account-transfer — path stopped
+15:57:06 NOT FOUND: Wallet
+15:57:06 tour: accounts-account-history — path stopped
+15:57:12 NOT FOUND: Completed (1)
+15:57:12 tour: accounts-completed — path stopped
+15:57:16 tour: categories-root
+15:57:22 NOT FOUND: Incomes
+15:57:22 tour: categories-incomes — path stopped
+15:57:28 NOT FOUND: Food
+15:57:28 tour: categories-category-editor — path stopped
+15:57:33 NOT FOUND: Food
+15:57:33 tour: categories-category-sheet — path stopped
+15:57:39 NOT FOUND: Change categories
+15:57:39 tour: categories-change-categories — path stopped
+15:57:45 NOT FOUND: Change categories
+15:57:45 tour: categories-change-category-form — path stopped
+15:57:51 NOT FOUND: November 2026
+15:57:51 tour: categories-period-dialog — path stopped
+15:57:55 tour: operations-root
+15:58:01 NOT FOUND: Internet
+15:58:01 tour: operations-edit-operation — path stopped
+15:58:05 NOT FOUND: Internet
+15:58:05 tour: operations-selection — path stopped
+15:58:11 NOT FOUND: Add
+15:58:11 tour: operations-add-menu — path stopped
+15:58:17 NOT FOUND: Add
+15:58:17 tour: operations-add-expense — path stopped
+15:58:23 NOT FOUND: Operation search
+15:58:23 tour: operations-search — path stopped
+15:58:29 NOT FOUND: November 2026
+15:58:29 tour: operations-period-dialog — path stopped
+15:58:33 tour: statistics-root
+15:58:39 NOT FOUND: Filters
+15:58:39 tour: statistics-filters — path stopped
+15:58:45 NOT FOUND: Incomes
+15:58:45 tour: statistics-incomes — path stopped
+15:58:51 tour: statistics-scrolled
+15:58:59 tour: statistics-scrolled-more
+15:59:05 NOT FOUND: November 2026
+15:59:05 tour: statistics-period-dialog — path stopped
+15:59:09 tour: more-root
+15:59:15 NOT FOUND: Subscription
+15:59:15 tour: more-subscription — path stopped
+15:59:21 NOT FOUND: Profile
+15:59:21 tour: more-profile — path stopped
+15:59:27 NOT FOUND: Scheduled payments
+15:59:27 tour: more-scheduled-payments — path stopped
+15:59:33 NOT FOUND: Budgets
+15:59:33 tour: more-budgets — path stopped
+15:59:37 tapped: Settings
+15:59:41 tour: more-settings
+15:59:47 tapped: Data
+15:59:51 tour: more-data
+15:59:56 tapped: Instructions
+16:00:01 tour: more-instructions
+16:00:06 tapped: Support
+16:00:11 tour: more-support
+16:00:16 tapped: About our team
+16:00:30 tour: more-about-our-team
+16:00:38 NOT FOUND: Privacy policy
+16:00:38 tour: more-privacy-policy — path stopped
+16:00:44 NOT FOUND: Terms of use
+16:00:44 tour: more-terms-of-use — path stopped
+16:00:48 tapped: Settings
+16:00:52 tapped: Formatting
+16:00:57 tour: more-settings-formatting
+16:01:03 tapped: Settings
+16:01:08 tapped: Styles and elements
+16:01:12 tour: more-settings-styles-and-elements
+16:01:19 tapped: Settings
+16:01:23 tapped: Backups
+16:01:28 tour: more-settings-backups
+16:01:34 tapped: Settings
+16:01:38 tapped: Notifications
+16:01:43 tour: more-settings-notifications
+16:01:50 tapped: Settings
+16:01:54 tapped: Security
+16:01:58 tour: more-settings-security
+16:02:05 tapped: Settings
+16:02:09 tapped: Privacy
+16:02:14 tour: more-settings-privacy
+16:02:20 tapped: Settings
+16:02:24 tapped: Exchange rates
+16:02:29 tour: more-settings-exchange-rates
+16:02:36 tapped: Data
+16:02:40 tapped: Saved backups
+16:02:44 tour: more-data-saved-backups
+16:02:51 tapped: Data
+16:02:55 tapped: Data file
+16:03:00 tour: more-data-data-file
+16:03:06 tapped: Data
+16:03:11 tapped: Import data
+16:03:15 tour: more-data-import-data
+16:03:22 tapped: Data
+16:03:26 tapped: Export data
+16:03:30 tour: more-data-export-data
+16:03:37 tapped: Data
+16:03:41 tapped: Delete my data
+16:03:46 tour: more-data-delete-my-data
+16:03:52 tapped: Scheduled payments
+16:03:59 NOT FOUND: Add
+16:03:59 tour: more-scheduled-add — path stopped
+16:04:04 tapped: Budgets
+16:04:10 NOT FOUND: Add
+16:04:10 tour: more-budgets-add — path stopped
