@@ -1,0 +1,136 @@
+--------- beginning of main
+11-14 17:10:21.613  3231  3231 I ReactNativeJS: [perf] mark cold start
+11-14 17:10:25.181  3331  3471 I ReactNativeJS: Running "main"
+11-14 17:10:25.874  3331  3471 I ReactNativeJS: [perf] stall 329.0ms
+11-14 17:10:26.217  3331  3471 I ReactNativeJS: [perf] stall 242.2ms
+11-14 17:10:26.327  3331  3471 I ReactNativeJS: [perf] stall 70.8ms
+11-14 17:10:26.506  3331  3471 I ReactNativeJS: [perf] stall 98.0ms
+11-14 17:10:26.757  3331  3471 I ReactNativeJS: [perf] stall 129.6ms
+11-14 17:10:27.191  3331  3471 I ReactNativeJS: [perf] stall 50.9ms
+11-14 17:10:47.407  5040  5040 I ReactNativeJS: [perf] mark first screen: start with the basic set
+11-14 17:10:50.363  3331  3471 I ReactNativeJS: [perf] stall 73.8ms
+11-14 17:10:50.494  3331  3471 I ReactNativeJS: [perf] stall 71.8ms
+11-14 17:10:53.008  3331  3471 I ReactNativeJS: [perf] stall 50.8ms
+11-14 17:10:55.860  3331  3471 I ReactNativeJS: [perf] engine toLocaleString x200 495.1ms
+11-14 17:10:55.860  3331  3471 I ReactNativeJS: [perf] engine plain format x200 0.6ms
+11-14 17:10:55.861  3331  3471 I ReactNativeJS: [perf] engine localeCompare x200 1.0ms
+11-14 17:10:56.103  3331  3471 I ReactNativeJS: [perf] engine toLocaleDateString x200 241.6ms
+11-14 17:11:01.765  3331  3471 I ReactNativeJS: [perf] stall 153.2ms
+11-14 17:11:02.024  3331  3471 I ReactNativeJS: [perf] stall 133.3ms
+11-14 17:11:05.848  3331  3471 I ReactNativeJS: [perf] stall 149.5ms
+11-14 17:11:06.165  3331  3471 I ReactNativeJS: [perf] stall 51.7ms
+11-14 17:11:13.494  5979  5979 I ReactNativeJS: [perf] mark read the file and open the restore page
+11-14 17:11:15.822  3331  3471 I ReactNativeJS: [perf] file read: 452162 characters 76.2ms
+11-14 17:11:15.900  3331  3471 I ReactNativeJS: [perf] data file: read and checked 78.7ms
+11-14 17:11:15.900  3331  3471 I ReactNativeJS: [perf] stall 58.4ms
+11-14 17:11:15.944  3331  3471 I ReactNativeJS: [perf] restore page: merge plan 32.2ms
+11-14 17:11:15.998  3331  3471 I ReactNativeJS: [perf] restore page: replace plan 53.3ms
+11-14 17:11:16.075  3331  3471 I ReactNativeJS: [perf] stall 149.6ms
+11-14 17:11:16.309  3331  3471 I ReactNativeJS: [perf] stall 54.8ms
+11-14 17:11:16.449  3331  3471 I ReactNativeJS: [perf] stall 73.0ms
+11-14 17:11:16.578  3331  3471 I ReactNativeJS: [perf] stall 104.3ms
+11-14 17:11:16.694  3331  3471 I ReactNativeJS: [perf] stall 91.1ms
+11-14 17:11:24.828  6083  6083 I ReactNativeJS: [perf] mark restore 3000 operations
+11-14 17:11:26.836  3331  3471 I ReactNativeJS: [perf] layer dialog shown 4.8ms
+11-14 17:11:27.055  3331  3471 I ReactNativeJS: [perf] stall 74.8ms
+11-14 17:11:30.846  3331  3471 I ReactNativeJS: [perf] restore page: merge plan 57.1ms
+11-14 17:11:30.857  3331  3471 I ReactNativeJS: [perf] restore page: replace plan 10.5ms
+11-14 17:11:30.869  3331  3471 I ReactNativeJS: [perf] stall 463.2ms
+11-14 17:11:31.417  3331  3471 I ReactNativeJS: [perf] stall 57.0ms
+11-14 17:11:52.830  6282  6282 I ReactNativeJS: [perf] mark open tab Operations (first time)
+11-14 17:11:56.692  3331  3471 I ReactNativeJS: [perf] stall 50.3ms
+11-14 17:11:58.953  3331  3471 I ReactNativeJS: [perf] stall 57.2ms
+11-14 17:12:01.083  6329  6329 I ReactNativeJS: [perf] mark scroll the operations down (6 flicks)
+11-14 17:12:01.732  3331  3471 I ReactNativeJS: [perf] stall 58.0ms
+11-14 17:12:02.864  3331  3471 I ReactNativeJS: [perf] stall 94.5ms
+11-14 17:12:03.373  3331  3471 I ReactNativeJS: [perf] stall 61.5ms
+11-14 17:12:03.609  3331  3471 I ReactNativeJS: [perf] stall 83.2ms
+11-14 17:12:04.557  3331  3471 I ReactNativeJS: [perf] stall 57.7ms
+11-14 17:12:05.361  3331  3471 I ReactNativeJS: [perf] stall 148.8ms
+11-14 17:12:09.687  6397  6397 I ReactNativeJS: [perf] mark scroll the operations back up (6 flicks)
+11-14 17:12:11.963  3331  3471 I ReactNativeJS: [perf] stall 54.3ms
+11-14 17:12:18.102  6440  6440 I ReactNativeJS: [perf] mark swipe to the previous period (3 times)
+11-14 17:12:18.583  3331  3471 I ReactNativeJS: [perf] stall 87.9ms
+11-14 17:12:21.352  3331  3471 I ReactNativeJS: [perf] stall 128.8ms
+11-14 17:12:24.088  3331  3471 I ReactNativeJS: [perf] stall 126.3ms
+11-14 17:12:26.008  3331  3471 I ReactNativeJS: [perf] stall 51.3ms
+11-14 17:12:28.400  6490  6490 I ReactNativeJS: [perf] mark swipe to the next period (3 times)
+11-14 17:12:28.896  3331  3471 I ReactNativeJS: [perf] stall 73.3ms
+11-14 17:12:31.695  3331  3471 I ReactNativeJS: [perf] stall 95.0ms
+11-14 17:12:34.391  3331  3471 I ReactNativeJS: [perf] stall 76.4ms
+11-14 17:12:38.701  6534  6534 I ReactNativeJS: [perf] mark open tab Statistics (first time)
+11-14 17:12:41.542  3331  3471 I ReactNativeJS: [perf] stall 53.0ms
+11-14 17:12:46.933  6575  6575 I ReactNativeJS: [perf] mark scroll the statistics (3 flicks down, 3 up)
+11-14 17:12:47.278  3331  3471 I ReactNativeJS: [perf] stall 50.6ms
+11-14 17:12:47.985  3331  3471 I ReactNativeJS: [perf] stall 67.4ms
+11-14 17:12:55.038  6640  6640 I ReactNativeJS: [perf] mark statistics: previous period and back
+11-14 17:12:55.588  3331  3471 I ReactNativeJS: [perf] stall 140.7ms
+11-14 17:12:58.281  3331  3471 I ReactNativeJS: [perf] stall 112.7ms
+11-14 17:13:02.050  6661  6661 I ReactNativeJS: [perf] mark open tab Categories (first time)
+11-14 17:13:05.927  3331  3471 I ReactNativeJS: [perf] stall 68.6ms
+11-14 17:13:06.072  3331  3471 I ReactNativeJS: [perf] stall 64.5ms
+11-14 17:13:10.326  6706  6706 I ReactNativeJS: [perf] mark open tab Accounts
+11-14 17:13:16.488  6742  6742 I ReactNativeJS: [perf] mark tabs again: Operations, Statistics, Categories, Accounts
+11-14 17:13:38.948  3331  3471 I ReactNativeJS: [perf] stall 55.9ms
+11-14 17:13:40.692  6906  6906 I ReactNativeJS: [perf] mark open the add menu
+11-14 17:13:40.735  3331  3471 I ReactNativeJS: [perf] layer sheet shown 3.3ms
+11-14 17:13:41.020  3331  3471 I ReactNativeJS: [perf] stall 110.0ms
+11-14 17:13:41.139  3331  3471 I ReactNativeJS: [perf] stall 60.1ms
+11-14 17:13:43.751  6923  6923 I ReactNativeJS: [perf] mark choose a category (the editor opens)
+11-14 17:13:45.905  3331  3471 I ReactNativeJS: [perf] layer sheet shown 23.2ms
+11-14 17:13:57.061  7028  7028 I ReactNativeJS: [perf] mark type 1 2 5 on the keys
+11-14 17:13:59.971  7056  7056 I ReactNativeJS: [perf] mark save the operation
+11-14 17:14:00.096  3331  3471 I ReactNativeJS: [perf] stall 56.4ms
+11-14 17:14:02.276  3331  3471 I ReactNativeJS: [perf] stall 52.8ms
+11-14 17:14:02.605  3331  3471 I ReactNativeJS: [perf] stall 57.7ms
+11-14 17:14:10.978  3331  3471 I ReactNativeJS: [perf] stall 59.5ms
+11-14 17:14:11.070  3331  3471 I ReactNativeJS: [perf] stall 66.8ms
+11-14 17:14:11.182  3331  3471 I ReactNativeJS: [perf] stall 64.8ms
+11-14 17:14:14.467  3331  3471 I ReactNativeJS: [perf] stall 110.3ms
+11-14 17:14:14.762  3331  3471 I ReactNativeJS: [perf] stall 69.8ms
+11-14 17:14:14.894  3331  3471 I ReactNativeJS: [perf] stall 69.6ms
+11-14 17:14:20.415  7173  7173 I ReactNativeJS: [perf] mark report preview, first time (3000 operations)
+11-14 17:14:22.474  3331  3471 I ReactNativeJS: [perf] layer dialog shown 8.2ms
+11-14 17:14:22.811  3331  3471 I ReactNativeJS: [perf] stall 338.3ms
+11-14 17:14:23.278  3331  3471 I ReactNativeJS: [perf] report detail: 148 pages laid out 812.7ms
+11-14 17:14:23.576  3331  3471 I ReactNativeJS: [perf] layer dialog shown 297.3ms
+11-14 17:14:23.576  3331  3471 I ReactNativeJS: [perf] stall 277.2ms
+11-14 17:14:23.953  3331  3471 I ReactNativeJS: [perf] stall 350.0ms
+11-14 17:14:24.088  3331  3471 I ReactNativeJS: [perf] stall 109.9ms
+11-14 17:14:24.164  3331  3471 I ReactNativeJS: [perf] stall 51.1ms
+11-14 17:14:24.286  3331  3471 I ReactNativeJS: [perf] stall 90.6ms
+11-14 17:14:24.429  3331  3471 I ReactNativeJS: [perf] report preview: first 3 of 148 pages 1150.4ms
+11-14 17:14:24.480  3331  3471 I ReactNativeJS: [perf] layer full shown 49.6ms
+11-14 17:14:24.517  3331  3471 I ReactNativeJS: [perf] stall 79.4ms
+11-14 17:14:24.910  3331  3471 I ReactNativeJS: [perf] stall 56.5ms
+11-14 17:14:25.193  3331  3471 I ReactNativeJS: [perf] stall 90.4ms
+11-14 17:14:26.229  3331  3471 I ReactNativeJS: [perf] stall 55.6ms
+11-14 17:14:34.558  7260  7260 I ReactNativeJS: [perf] mark scroll the preview (8 flicks)
+11-14 17:14:34.818  3331  3471 I ReactNativeJS: [perf] stall 72.7ms
+11-14 17:14:36.962  3331  3471 I ReactNativeJS: [perf] stall 87.1ms
+11-14 17:14:38.058  3331  3471 I ReactNativeJS: [perf] stall 50.1ms
+11-14 17:14:38.134  3331  3471 I ReactNativeJS: [perf] stall 50.9ms
+11-14 17:14:38.369  3331  3471 I ReactNativeJS: [perf] stall 61.4ms
+11-14 17:14:38.482  3331  3471 I ReactNativeJS: [perf] stall 55.6ms
+11-14 17:14:39.469  3331  3471 I ReactNativeJS: [perf] stall 65.2ms
+11-14 17:14:41.225  3331  3471 I ReactNativeJS: [perf] stall 50.2ms
+11-14 17:14:41.390  3331  3471 I ReactNativeJS: [perf] stall 61.6ms
+11-14 17:14:42.966  3331  3471 I ReactNativeJS: [perf] stall 51.8ms
+11-14 17:14:45.458  3331  3471 I ReactNativeJS: [perf] stall 51.6ms
+11-14 17:14:46.579  7337  7337 I ReactNativeJS: [perf] mark report preview, second time
+11-14 17:14:48.672  3331  3471 I ReactNativeJS: [perf] layer full shown 6.6ms
+11-14 17:14:50.622  3331  3471 I ReactNativeJS: [perf] stall 57.8ms
+11-14 17:14:53.178  3331  3471 I ReactNativeJS: [perf] stall 56.4ms
+11-14 17:14:54.235  3331  3471 I ReactNativeJS: [perf] stall 95.6ms
+11-14 17:14:54.592  3331  3471 I ReactNativeJS: [perf] stall 171.6ms
+11-14 17:15:05.988  3331  3471 I ReactNativeJS: [perf] stall 51.1ms
+11-14 17:15:06.240  3331  3471 I ReactNativeJS: [perf] stall 72.1ms
+11-14 17:15:09.220  3331  3471 I ReactNativeJS: [perf] layer sheet shown 5.4ms
+11-14 17:15:31.876  7704  7704 I ReactNativeJS: [perf] mark save the PIN
+11-14 17:15:34.029  3331  3471 I ReactNativeJS: [perf] stall 55.5ms
+11-14 17:15:51.067  7849  7849 I ReactNativeJS: [perf] mark type a wrong PIN (1111)
+11-14 17:15:52.317  3331  3471 I ReactNativeJS: [perf] stall 71.5ms
+11-14 17:15:52.580  3331  3471 I ReactNativeJS: [perf] stall 172.8ms
+11-14 17:15:53.260  3331  3471 I ReactNativeJS: [perf] stall 54.0ms
+11-14 17:15:56.766  7999  7999 I ReactNativeJS: [perf] mark type the right PIN (1234)
+11-14 17:15:58.127  3331  3471 I ReactNativeJS: [perf] stall 90.9ms
