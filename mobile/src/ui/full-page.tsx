@@ -5,12 +5,14 @@ import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
+import { useRevealFocusedField } from "./keyboard.tsx";
 import { useCloseLayer } from "./sheets.tsx";
 
 export function FullPage({ title, children, footer, scroll = true }: { title: string; children: ReactNode; footer?: ReactNode; scroll?: boolean }) {
   const p = usePalette();
   const t = useT();
   const close = useCloseLayer();
+  const reveal = useRevealFocusedField();
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <View style={{ flexDirection: "row", alignItems: "center", height: 56, paddingHorizontal: 8 }}>
@@ -22,7 +24,7 @@ export function FullPage({ title, children, footer, scroll = true }: { title: st
         </Text>
       </View>
       {scroll ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }} keyboardShouldPersistTaps="handled">
+        <ScrollView ref={reveal.ref} onScroll={reveal.onScroll} scrollEventThrottle={32} style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }} keyboardShouldPersistTaps="handled">
           {children}
         </ScrollView>
       ) : (

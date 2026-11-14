@@ -2,11 +2,12 @@
 // a layer opens over the screen, the next one over it, "back" closes the top one. The host is drawn
 // inside the app (not in a native Modal), so the same insets and theme apply to every layer; the panel
 // of a sheet adds the system's bottom inset to its own padding, and rises above the keyboard.
-import { createContext, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, BackHandler, Dimensions, Keyboard, PanResponder, ScrollView, StyleSheet, View, type KeyboardEvent } from "react-native";
+import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
+import { Animated, BackHandler, Dimensions, PanResponder, ScrollView, StyleSheet, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
+import { useRevealFocusedField } from "./keyboard.tsx";
 import { chrome } from "./theme.ts";
 import { now, perfLog } from "../platform/perf.ts";
 
@@ -103,28 +104,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const insets = useSafeAreaInsets();
   const progress = useRef(new Animated.Value(0)).current;
   const close = () => sheets.close(layer.id);
-  // How far the keyboard reaches into this layer's own area. Measured against the layer itself, not taken from the
-  // keyboard's height: whether the window was already shortened (adjustResize, the keyboard-avoiding root) differs
-  // between phones and system bars, and the dialog must end above the keyboard on all of them.
-  const area = useRef<{ measureInWindow(done: (x: number, y: number, w: number, h: number) => void): void } | null>(null);
-  const [covered, setCovered] = useState(0);
-  const scroller = useRef<{ scrollToEnd(options: { animated: boolean }): void } | null>(null);
-  // With the keyboard up, a dialog shows its end (the field and its buttons), not its top.
-  useEffect(() => {
-    if (!covered) return;
-    const timer = setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 90);
-    return () => clearTimeout(timer);
-  }, [covered]);
-  useEffect(() => {
-    const shown = Keyboard.addListener("keyboardDidShow", (e: KeyboardEvent) => {
-      area.current?.measureInWindow((_x, y, _w, h) => setCovered(Math.max(0, Math.round(y + h - e.endCoordinates.screenY))));
-    });
-    const hidden = Keyboard.addListener("keyboardDidHide", () => setCovered(0));
-    return () => {
-      shown.remove();
-      hidden.remove();
-    };
-  }, []);
+  const reveal = useRevealFocusedField();
 
   useEffect(() => {
     if (!layer.closing) perfLog(`layer ${layer.kind} shown`, now() - layer.asked);
@@ -161,7 +141,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             {layer.content}
           </Animated.View>
         ) : (
-        <View ref={(node: unknown) => void (area.current = node as typeof area.current)} collapsable={false} style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, paddingBottom: (sheet ? 0 : 20) + covered, pointerEvents: "box-none" }}>
+        <View style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, pointerEvents: "box-none" }}>
           {sheet ? (
             <Animated.View
               style={{
@@ -180,7 +160,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
               {layer.scrolls ? (
                 <View style={{ flexShrink: 1 }}>{layer.content}</View>
               ) : (
-                <ScrollView style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+                <ScrollView ref={reveal.ref} onScroll={reveal.onScroll} scrollEventThrottle={32} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
                   {layer.content}
                 </ScrollView>
               )}
@@ -189,7 +169,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             <Animated.View
               style={{ opacity: progress, backgroundColor: p.dialog, borderRadius: chrome.dialogRadius, padding: 24, maxHeight: "91%" }}
             >
-              <ScrollView ref={(node: unknown) => void (scroller.current = node as typeof scroller.current)} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
+              <ScrollView ref={reveal.ref} onScroll={reveal.onScroll} scrollEventThrottle={32} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
                 {layer.content}
               </ScrollView>
             </Animated.View>

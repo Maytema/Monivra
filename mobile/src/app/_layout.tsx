@@ -1,7 +1,8 @@
 // The root: opens the ledger, shows the first-start choice, and keeps scheduled payments and rates
 // up to date while the application is open (at start, when it comes back, and every minute).
 import { useEffect } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, AppState as SystemAppState, View } from "react-native";
+import { ActivityIndicator, AppState as SystemAppState, View } from "react-native";
+import { KeyboardPad } from "../ui/keyboard.tsx";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -75,7 +76,7 @@ function Ready() {
       <LockGate>
       {/* The keyboard shortens the whole window, as adjustResize did in the first application: every
           page, sheet and dialog ends above it, and a scrolling page keeps its focused field in view. */}
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <KeyboardPad>
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: p.bg },
@@ -103,7 +104,7 @@ function Ready() {
         <Stack.Screen name="filtered" options={{ title: t.t("Filtered") }} />
       </Stack>
       <SheetHost />
-      </KeyboardAvoidingView>
+      </KeyboardPad>
       <NoticeHost />
       </LockGate>
       {/* Above the lock screen too: it says "Incorrect PIN" in a toast. */}

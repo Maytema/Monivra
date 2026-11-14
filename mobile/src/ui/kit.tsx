@@ -5,6 +5,7 @@ import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { ICONS } from "./icon-paths.ts";
+import { useRevealFocusedField } from "./keyboard.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { font, radius, space } from "./theme.ts";
 
@@ -35,8 +36,9 @@ export function Screen({ children, scroll = true, padded = true, scrollEnabled =
   const p = usePalette();
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
+  const reveal = useRevealFocusedField();
   return scroll ? (
-    <ScrollView style={style} scrollEnabled={scrollEnabled} onScroll={onScroll} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
+    <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
       {children}
     </ScrollView>
   ) : (
