@@ -43,7 +43,7 @@ const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period
         {empty ? (
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
         ) : (
-          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 11, paddingBottom: 16 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
             {tiles.map((c) => {
               const total = categoryTotalIn(data, rows, c);
               return <CategoryTile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} onPress={() => openEditor({ type: c.type === "income" ? "income" : "expense", category: c.id })} onLongPress={() => openCategorySheet(c.id)} />;

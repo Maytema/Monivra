@@ -68,6 +68,9 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   const [from, to] = periodBounds(period, data.settings);
   const start = from.startsWith("0000") ? firstOperation : from;
   const end = to > today ? today : to;
+  // The chart covers the whole period, as in the first application (statistics.js: bins from the period's
+  // start to its end, days still to come stay empty); "all time" ends today. The averages count up to today.
+  const chartEnd = from.startsWith("0000") ? today : to;
   const days = Math.max(1, Math.round((parseDate(end).getTime() - parseDate(start).getTime()) / DAY) + 1);
 
   // Category totals; only what happened in the period is listed.
@@ -122,7 +125,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
       </Card>
     ),
     bar: () => {
-      const { income: inc, expense: exp } = chartBins(rows, start, end);
+      const { income: inc, expense: exp } = chartBins(rows, start, chartEnd);
       const series = catType === "income" ? inc : exp;
       const top = Math.max(1, ...series);
       // A round upper bound split in four steps, labelled on the left (the original's axis). The amounts are
@@ -163,7 +166,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
               {axis(start)}
             </SvgText>
             <SvgText x={right} y={207} fill={p.muted} fontSize={10} textAnchor="end">
-              {axis(end)}
+              {axis(chartEnd)}
             </SvgText>
           </Svg>
         </Card>

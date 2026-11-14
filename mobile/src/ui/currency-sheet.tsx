@@ -57,6 +57,12 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
       ]),
     [shown],
   );
+  const offsets = useMemo(() => {
+    const out: number[] = [];
+    let y = 0;
+    for (const r of rows) out.push(y), (y += rowHeight(r));
+    return out;
+  }, [rows]);
   const pick = (code: string) => {
     close();
     onPick(code);
@@ -87,13 +93,18 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
         keyboardShouldPersistTaps="handled"
         initialNumToRender={14}
         maxToRenderPerBatch={16}
-        windowSize={9}
+        windowSize={13}
+        // Every row and heading has a fixed height, so the list knows where any row is without drawing the ones
+        // before it: a fast fling lands on rows that are drawn at once, not on empty space being measured.
+        getItemLayout={(_rows, index) => ({ length: rowHeight(rows[index]), offset: offsets[index] ?? 0, index })}
         contentContainerStyle={{ paddingTop: 8, paddingHorizontal: 16, paddingBottom: 16 }}
         renderItem={({ item }) =>
           item.kind === "head" ? (
-            <Text style={{ color: p.muted, fontSize: 14, fontWeight: "500", marginTop: 14, marginBottom: 8, marginHorizontal: 4 }}>{t.t(item.title)}</Text>
+            <View style={{ height: HEAD_HEIGHT, justifyContent: "flex-end", paddingBottom: 8, paddingHorizontal: 4 }}>
+              <Text numberOfLines={1} style={{ color: p.muted, fontSize: 14, fontWeight: "500" }}>{t.t(item.title)}</Text>
+            </View>
           ) : (
-            <View style={{ backgroundColor: p.soft, paddingTop: item.first ? 4 : 0, paddingBottom: item.last ? 4 : 0, borderTopLeftRadius: item.first ? 14 : 0, borderTopRightRadius: item.first ? 14 : 0, borderBottomLeftRadius: item.last ? 14 : 0, borderBottomRightRadius: item.last ? 14 : 0 }}>
+            <View style={{ height: rowHeight(item), backgroundColor: p.soft, paddingTop: item.first ? 4 : 0, paddingBottom: item.last ? 4 : 0, borderTopLeftRadius: item.first ? 14 : 0, borderTopRightRadius: item.first ? 14 : 0, borderBottomLeftRadius: item.last ? 14 : 0, borderBottomRightRadius: item.last ? 14 : 0 }}>
               <CurrencyRow code={item.code} chosen={item.code === value} locale={t.locale} onPick={pick} />
             </View>
           )
@@ -105,6 +116,10 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
 }
 
 type Row = { kind: "head"; title: string } | { kind: "code"; code: string; first: boolean; last: boolean };
+// Heights of the list's pieces (dp): a heading, a currency row (the first and last of a card are 4 dp taller).
+const HEAD_HEIGHT = 44;
+const ROW_HEIGHT = 56;
+const rowHeight = (r: Row | undefined): number => (!r ? ROW_HEIGHT : r.kind === "head" ? HEAD_HEIGHT : ROW_HEIGHT + (r.first ? 4 : 0) + (r.last ? 4 : 0));
 
 const CurrencyRow = memo(function CurrencyRow({ code, chosen, locale, onPick }: { code: string; chosen: boolean; locale: string; onPick: (code: string) => void }) {
   const p = usePalette();
@@ -116,7 +131,7 @@ const CurrencyRow = memo(function CurrencyRow({ code, chosen, locale, onPick }: 
       accessibilityLabel={`${name} ${code}`}
       accessibilityState={{ selected: chosen }}
       onPress={() => onPick(code)}
-      style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 14, minHeight: 56, paddingVertical: 6, paddingHorizontal: 18, borderRadius: 14, backgroundColor: pressed || chosen ? p.tint : "transparent" })}
+      style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 14, height: ROW_HEIGHT, paddingVertical: 6, paddingHorizontal: 18, borderRadius: 14, backgroundColor: pressed || chosen ? p.tint : "transparent" })}
     >
       <View style={{ width: 23, height: 23, borderRadius: 12, borderWidth: 2, borderColor: chosen ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{chosen ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
       <View style={{ flex: 1 }}>
