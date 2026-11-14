@@ -37,9 +37,18 @@ const log = (line) => {
 
 // ---- Finding things on the screen --------------------------------------------------------------------------
 
+// A WebView gives its page to the accessibility tree only some of the time right after a dump connects (seen in
+// run 5: the first application's page was on the screen, the dump held an empty WebView for minutes). A dump
+// with a WebView that has no children is taken again, a few times, before it is used.
+let dumpNote = "";
 function dump() {
-  sh("uiautomator dump /sdcard/ui.xml >/dev/null 2>&1");
-  return sh("cat /sdcard/ui.xml");
+  let xml = "";
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    dumpNote = sh("uiautomator dump /sdcard/ui.xml 2>&1").trim();
+    xml = sh("cat /sdcard/ui.xml");
+    if (!/class="android\.webkit\.WebView"[^>]*\/>/.test(xml)) return xml;
+  }
+  return xml;
 }
 const unescape = (s) => s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
 function nodes(xml) {
@@ -58,7 +67,7 @@ function find(want, { which = "first", prefix = false, xml = dump() } = {}) {
   const match = (s) => (prefix ? s.startsWith(want) : s === want);
   const found = nodes(xml).filter((n) => (match(n.text) || match(n.desc)) && n.bounds[2] > n.bounds[0] && n.bounds[3] > n.bounds[1]);
   if (!found.length) return null;
-  const n = which === "last" ? found.at(-1) : found[0];
+  const n = which === "last" ? found.at(-1) : which === "lowest" ? found.reduce((a, b) => (b.bounds[1] > a.bounds[1] ? b : a)) : found[0];
   return { x: Math.round((n.bounds[0] + n.bounds[2]) / 2), y: Math.round((n.bounds[1] + n.bounds[3]) / 2), bounds: n.bounds };
 }
 async function tap(want, options = {}) {
@@ -174,7 +183,7 @@ async function waitFor(want, seconds) {
     if (find(want)) return true;
     await sleep(2000);
   }
-  log(`NOT SHOWN within ${seconds}s: ${want}`);
+  log(`NOT SHOWN within ${seconds}s: ${want} (last dump: ${dumpNote})`);
   return false;
 }
 
@@ -188,7 +197,7 @@ async function loadData() {
   sh("am force-stop " + pkg);
   for (let attempt = 1; attempt <= 3; attempt++) {
     log(sh(`am start -W -n ${APPS[current].activity}`).match(/Status: \w+|Error.*$/m)?.[0] ?? "started?");
-    if (await waitFor("Start with basic set", 40)) break;
+    if (await waitFor("Start with basic set", 90)) break;
   }
   await tap("Start with basic set", { pause: 4000 });
   await tap("More");
@@ -236,7 +245,8 @@ async function runApp(app, apk) {
   // Tabs: the first opening of each, then once more.
   // The tab bar does not move, so every tab is located once, before the moves.
   const xml = dump();
-  const tabs = Object.fromEntries(["Operations", "Statistics", "Categories", "Accounts"].map((t) => [t, find(t, { xml })]));
+  // The tab bar is the lowest match: the accounts page has its own "Accounts" tab at the top.
+  const tabs = Object.fromEntries(["Operations", "Statistics", "Categories", "Accounts"].map((t) => [t, find(t, { xml, which: "lowest" })]));
   log(`tabs at: ${JSON.stringify(tabs)}`);
   for (const round of ["first", "again"])
     for (const tab of Object.keys(tabs)) R(await measure(`tab ${tab} (${round})`, async () => tapAt(tabs[tab]), 3000));
