@@ -1,0 +1,251 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                421ms      329ms      2       7   6 (85.71%)  450ms  450ms
+first screen: start with the basic set                   1443ms      284ms     10       5  5 (100.00%)  250ms  250ms
+read the file and open the restore page                  1174ms      366ms      7      24  20 (83.33%)  250ms  350ms
+restore 3000 operations                                  2214ms     1817ms      7      28  26 (92.86%)  150ms  150ms
+open tab Operations (first time)                         1266ms       95ms     19     121 106 (87.60%)  109ms  150ms
+scroll the operations down (6 flicks)                    2152ms      294ms     20     118 102 (86.44%)  117ms  150ms
+scroll the operations back up (6 flicks)                 1760ms      399ms     10     122 108 (88.52%)  117ms  250ms
+swipe to the previous period (3 times)                    843ms      348ms      4      44  38 (86.36%)   93ms  117ms
+swipe to the next period (3 times)                        638ms      248ms      5      45  38 (84.44%)   89ms  101ms
+open tab Statistics (first time)                          215ms       91ms      3       4   3 (75.00%)  133ms  133ms
+scroll the statistics (3 flicks down, 3 up)               491ms       99ms      7      40  35 (87.50%)  150ms  150ms
+statistics: previous period and back                      444ms      216ms      3      27  20 (74.07%)   93ms  113ms
+open tab Categories (first time)                            0ms        0ms      0       3   2 (66.67%)   48ms   48ms
+open tab Accounts                                           0ms        0ms      0       1  1 (100.00%)   34ms   34ms
+tabs again: Operations, Statistics, Categories, Acco       87ms       87ms      1       4  4 (100.00%)   93ms   93ms
+open the add menu                                         150ms      150ms      1       8   7 (87.50%)  250ms  250ms
+choose a category (the editor opens)                      103ms      103ms      1       8  8 (100.00%)  150ms  150ms
+type 1 2 5 on the keys                                      0ms        0ms      0       6  6 (100.00%)   48ms   48ms
+save the operation                                       1298ms      190ms     15      67  56 (83.58%)  101ms  129ms
+report preview, first time (3000 operations)             2000ms      388ms     13     120 115 (95.83%)  105ms  150ms
+scroll the preview (8 flicks)                            1258ms      117ms     18     185 171 (92.43%)  121ms  150ms
+report preview, second time                              1790ms      180ms     26      19 19 (100.00%)  150ms  150ms
+save the PIN                                               77ms       77ms      1       8   7 (87.50%)   85ms   85ms
+type a wrong PIN (1111)                                   348ms       89ms      5      64  50 (78.12%)   97ms  121ms
+type the right PIN (1234)                                 372ms      100ms      5      52  44 (84.62%)   93ms  121ms
+all moves                                               20543ms
+
+first screen: start with the basic set   | renders root hero 1
+first screen: start with the basic set   | renders pager 3
+first screen: start with the basic set   | renders tab bar 2
+first screen: start with the basic set   | engine toLocaleString x200 615.9ms
+first screen: start with the basic set   | engine plain format x200 4.1ms
+first screen: start with the basic set   | engine localeCompare x200 2.2ms
+first screen: start with the basic set   | engine toLocaleDateString x200 370.8ms
+first screen: start with the basic set   | renders tab bar 2
+first screen: start with the basic set   | renders tab bar 1
+first screen: start with the basic set   | renders tab bar 1
+read the file and open the restore page  | file read: 452162 characters 166.6ms
+read the file and open the restore page  | data file: read and checked 212.6ms
+read the file and open the restore page  | restore page: merge plan 51.4ms
+read the file and open the restore page  | restore page: replace plan 33.5ms
+read the file and open the restore page  | renders tab bar 1
+restore 3000 operations                  | layer dialog shown 4.0ms
+restore 3000 operations                  | restore page: merge plan 159.0ms
+restore 3000 operations                  | restore page: replace plan 42.2ms
+restore 3000 operations                  | renders root hero 1
+restore 3000 operations                  | renders pager 1
+restore 3000 operations                  | renders tab bar 1
+open tab Operations (first time)         | renders operations screen 2
+open tab Operations (first time)         | renders root hero 2
+open tab Operations (first time)         | renders pager 3
+open tab Operations (first time)         | renders period bar 3
+open tab Operations (first time)         | renders operations page (current) 1
+open tab Operations (first time)         | renders day head 4
+open tab Operations (first time)         | renders operation row 19
+open tab Operations (first time)         | renders fab 3
+open tab Operations (first time)         | renders tab bar 3
+open tab Operations (first time)         | renders pager 1
+open tab Operations (first time)         | renders period bar 1
+open tab Operations (first time)         | renders operations page (neighbour) 2
+open tab Operations (first time)         | renders day head 2
+open tab Operations (first time)         | renders operation row 10
+scroll the operations down (6 flicks)    | renders operations screen 2
+scroll the operations down (6 flicks)    | renders root hero 1
+scroll the operations down (6 flicks)    | renders pager 1
+scroll the operations down (6 flicks)    | renders period bar 1
+scroll the operations down (6 flicks)    | renders operations page (neighbour) 2
+scroll the operations down (6 flicks)    | renders day head 4
+scroll the operations down (6 flicks)    | renders fab 1
+scroll the operations down (6 flicks)    | renders operation row 14
+scroll the operations down (6 flicks)    | renders operation row 8
+scroll the operations down (6 flicks)    | renders day head 1
+scroll the operations down (6 flicks)    | renders operation row 19
+scroll the operations down (6 flicks)    | renders day head 3
+scroll the operations down (6 flicks)    | renders operation row 16
+scroll the operations down (6 flicks)    | renders day head 2
+scroll the operations down (6 flicks)    | renders operation row 13
+scroll the operations down (6 flicks)    | renders day head 2
+scroll the operations down (6 flicks)    | renders operation row 6
+scroll the operations back up (6 flicks) | renders operation row 3
+scroll the operations back up (6 flicks) | renders day head 1
+scroll the operations back up (6 flicks) | renders operation row 20
+scroll the operations back up (6 flicks) | renders day head 3
+scroll the operations back up (6 flicks) | renders operation row 10
+scroll the operations back up (6 flicks) | renders day head 1
+scroll the operations back up (6 flicks) | renders operation row 13
+scroll the operations back up (6 flicks) | renders day head 2
+scroll the operations back up (6 flicks) | renders day head 2
+scroll the operations back up (6 flicks) | renders operation row 11
+scroll the operations back up (6 flicks) | renders operation row 6
+scroll the operations back up (6 flicks) | renders day head 1
+scroll the operations back up (6 flicks) | renders operations screen 1
+scroll the operations back up (6 flicks) | renders root hero 1
+scroll the operations back up (6 flicks) | renders pager 1
+scroll the operations back up (6 flicks) | renders period bar 1
+scroll the operations back up (6 flicks) | renders operations page (neighbour) 2
+scroll the operations back up (6 flicks) | renders day head 2
+scroll the operations back up (6 flicks) | renders fab 1
+swipe to the previous period (3 times)   | renders operations screen 1
+swipe to the previous period (3 times)   | renders root hero 1
+swipe to the previous period (3 times)   | renders pager 1
+swipe to the previous period (3 times)   | renders period bar 1
+swipe to the previous period (3 times)   | renders operations page (neighbour) 2
+swipe to the previous period (3 times)   | renders day head 6
+swipe to the previous period (3 times)   | renders operation row 20
+swipe to the previous period (3 times)   | renders operations page (current) 1
+swipe to the previous period (3 times)   | renders fab 1
+swipe to the previous period (3 times)   | renders operation row 7
+swipe to the previous period (3 times)   | renders day head 1
+swipe to the previous period (3 times)   | renders operations screen 1
+swipe to the previous period (3 times)   | renders root hero 1
+swipe to the previous period (3 times)   | renders pager 1
+swipe to the previous period (3 times)   | renders period bar 1
+swipe to the previous period (3 times)   | renders operations page (neighbour) 2
+swipe to the previous period (3 times)   | renders day head 8
+swipe to the previous period (3 times)   | renders operation row 25
+swipe to the previous period (3 times)   | renders operations page (current) 1
+swipe to the previous period (3 times)   | renders fab 1
+swipe to the previous period (3 times)   | renders operations screen 1
+swipe to the previous period (3 times)   | renders root hero 1
+swipe to the previous period (3 times)   | renders pager 1
+swipe to the previous period (3 times)   | renders period bar 1
+swipe to the previous period (3 times)   | renders operations page (neighbour) 2
+swipe to the previous period (3 times)   | renders day head 9
+swipe to the previous period (3 times)   | renders operation row 26
+swipe to the previous period (3 times)   | renders operations page (current) 1
+swipe to the previous period (3 times)   | renders fab 1
+swipe to the next period (3 times)       | renders operations screen 1
+swipe to the next period (3 times)       | renders root hero 1
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page (neighbour) 2
+swipe to the next period (3 times)       | renders day head 8
+swipe to the next period (3 times)       | renders operations page (current) 1
+swipe to the next period (3 times)       | renders operation row 10
+swipe to the next period (3 times)       | renders fab 1
+swipe to the next period (3 times)       | renders operation row 5
+swipe to the next period (3 times)       | renders day head 2
+swipe to the next period (3 times)       | renders operations screen 1
+swipe to the next period (3 times)       | renders root hero 1
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page (neighbour) 2
+swipe to the next period (3 times)       | renders day head 6
+swipe to the next period (3 times)       | renders operation row 20
+swipe to the next period (3 times)       | renders operations page (current) 1
+swipe to the next period (3 times)       | renders fab 1
+swipe to the next period (3 times)       | renders operation row 7
+swipe to the next period (3 times)       | renders day head 1
+swipe to the next period (3 times)       | renders operations screen 1
+swipe to the next period (3 times)       | renders root hero 1
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page (neighbour) 2
+swipe to the next period (3 times)       | renders day head 6
+swipe to the next period (3 times)       | renders operation row 19
+swipe to the next period (3 times)       | renders operations page (current) 1
+swipe to the next period (3 times)       | renders fab 1
+open tab Statistics (first time)         | renders root hero 1
+open tab Statistics (first time)         | renders pager 3
+open tab Statistics (first time)         | renders period bar 3
+open tab Statistics (first time)         | renders tab bar 2
+statistics: previous period and back     | renders operations screen 1
+statistics: previous period and back     | renders root hero 1
+statistics: previous period and back     | renders pager 2
+statistics: previous period and back     | renders period bar 2
+statistics: previous period and back     | renders operations page (neighbour) 2
+statistics: previous period and back     | renders day head 8
+statistics: previous period and back     | renders operation row 10
+statistics: previous period and back     | renders operations page (current) 1
+statistics: previous period and back     | renders fab 1
+statistics: previous period and back     | renders operation row 7
+statistics: previous period and back     | renders day head 1
+statistics: previous period and back     | renders operations screen 1
+statistics: previous period and back     | renders root hero 1
+statistics: previous period and back     | renders pager 2
+statistics: previous period and back     | renders period bar 2
+statistics: previous period and back     | renders operations page (neighbour) 2
+statistics: previous period and back     | renders day head 7
+statistics: previous period and back     | renders operations page (current) 1
+statistics: previous period and back     | renders fab 1
+statistics: previous period and back     | renders operation row 7
+open tab Categories (first time)         | renders root hero 1
+open tab Categories (first time)         | renders pager 2
+open tab Categories (first time)         | renders period bar 2
+open tab Categories (first time)         | renders tab bar 2
+open tab Categories (first time)         | renders pager 1
+open tab Categories (first time)         | renders period bar 1
+open tab Accounts                        | renders tab bar 2
+tabs again: Operations, Statistics, Cate | renders tab bar 2
+tabs again: Operations, Statistics, Cate | renders tab bar 2
+tabs again: Operations, Statistics, Cate | renders tab bar 2
+tabs again: Operations, Statistics, Cate | renders tab bar 2
+tabs again: Operations, Statistics, Cate | renders tab bar 2
+open the add menu                        | layer sheet shown 7.5ms
+choose a category (the editor opens)     | layer sheet shown 33.1ms
+save the operation                       | renders root hero 4
+save the operation                       | renders pager 4
+save the operation                       | renders period bar 3
+save the operation                       | renders operations screen 1
+save the operation                       | renders operations page (neighbour) 2
+save the operation                       | renders day head 5
+save the operation                       | renders operations page (current) 1
+save the operation                       | renders operation row 1
+save the operation                       | renders fab 1
+save the operation                       | renders operations page (neighbour) 2
+save the operation                       | renders operations page (current) 1
+save the operation                       | renders tab bar 2
+save the operation                       | renders tab bar 1
+save the operation                       | renders tab bar 1
+save the operation                       | renders period bar 6
+save the operation                       | renders root hero 2
+save the operation                       | renders pager 3
+save the operation                       | renders operations screen 1
+save the operation                       | renders operations page (current) 1
+save the operation                       | renders day head 4
+save the operation                       | renders operation row 19
+save the operation                       | renders fab 1
+save the operation                       | renders period bar 1
+report preview, first time (3000 operati | layer dialog shown 16.3ms
+report preview, first time (3000 operati | renders period bar 1
+report preview, first time (3000 operati | report detail: 148 pages laid out 1004.1ms
+report preview, first time (3000 operati | layer dialog shown 372.3ms
+report preview, first time (3000 operati | report preview: first 3 of 148 pages 1466.3ms
+report preview, first time (3000 operati | layer full shown 19.9ms
+report preview, first time (3000 operati | renders period bar 1
+report preview, second time              | layer full shown 8.4ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | renders root hero 2
+report preview, second time              | renders pager 3
+report preview, second time              | renders period bar 3
+report preview, second time              | renders operations screen 1
+report preview, second time              | renders operations page (neighbour) 2
+report preview, second time              | renders day head 6
+report preview, second time              | renders operation row 29
+report preview, second time              | renders operations page (current) 1
+report preview, second time              | renders fab 1
+report preview, second time              | renders tab bar 1
+report preview, second time              | renders tab bar 1
+report preview, second time              | renders tab bar 1
+report preview, second time              | layer sheet shown 10.3ms
+save the PIN                             | renders root hero 4
+save the PIN                             | renders pager 4
+save the PIN                             | renders period bar 3
+save the PIN                             | renders operations screen 1
+save the PIN                             | renders operations page (neighbour) 2
+save the PIN                             | renders day head 5
+save the PIN                             | renders operation row 28
+save the PIN                             | renders operations page (current) 1
+save the PIN                             | renders fab 1
