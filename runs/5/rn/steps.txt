@@ -1,0 +1,58 @@
+13:49:35 app rn: app.monivra.finance.next, apks/rn-apk/app-release.apk
+13:49:36 Success
+13:49:36 
+13:49:36 on the phone: -rw-rw---- 1 u0_a191 media_rw 452162 2026-11-14 13:37 /sdcard/Download/perf-data.json
+13:49:40 Status: ok
+13:49:45 tapped: Start with basic set
+13:49:51 tapped: More
+13:49:55 tapped: Data
+13:49:59 tapped: Data file
+13:50:02 tapped: Restore from file
+13:50:09 tapped: perf-data.json
+13:50:19 tapped: Replace data
+13:50:23 tapped: Confirm
+13:50:38 am start: TotalTime: 2740
+13:50:54 measured: {"name":"cold start 1","ok":true,"frames":30,"firstFrameMs":2366,"settleMs":4887,"janky":28,"p50":103,"p95":350,"worst":608}
+13:50:59 am start: TotalTime: 2994
+13:51:14 measured: {"name":"cold start 2","ok":true,"frames":27,"firstFrameMs":1813,"settleMs":3871,"janky":27,"p50":117,"p95":391,"worst":885}
+13:51:19 am start: TotalTime: 2886
+13:51:35 measured: {"name":"cold start 3","ok":true,"frames":26,"firstFrameMs":1846,"settleMs":3749,"janky":26,"p50":117,"p95":357,"worst":840}
+13:51:39 tabs at: {"Operations":{"x":540,"y":2264,"bounds":[432,2190,648,2337]},"Statistics":{"x":756,"y":2264,"bounds":[648,2190,864,2337]},"Categories":{"x":324,"y":2264,"bounds":[216,2190,432,2337]},"Accounts":{"x":270,"y":433,"bounds":[0,370,540,496]}}
+13:51:44 measured: {"name":"tab Operations (first)","ok":true,"frames":74,"firstFrameMs":83,"settleMs":3158,"janky":74,"p50":89,"p95":134,"worst":145}
+13:51:48 measured: {"name":"tab Statistics (first)","ok":true,"frames":8,"firstFrameMs":29,"settleMs":773,"janky":8,"p50":85,"p95":161,"worst":161}
+13:51:52 measured: {"name":"tab Categories (first)","ok":true,"frames":24,"firstFrameMs":69,"settleMs":424,"janky":24,"p50":105,"p95":122,"worst":124}
+13:51:56 measured: {"name":"tab Accounts (first)","ok":true,"frames":15,"firstFrameMs":46,"settleMs":429,"janky":15,"p50":137,"p95":167,"worst":167}
+13:52:00 measured: {"name":"tab Operations (again)","ok":true,"frames":7,"firstFrameMs":66,"settleMs":400,"janky":7,"p50":122,"p95":152,"worst":152}
+13:52:04 measured: {"name":"tab Statistics (again)","ok":true,"frames":1,"firstFrameMs":66,"settleMs":134,"janky":1,"p50":68,"p95":68,"worst":68}
+13:52:08 measured: {"name":"tab Categories (again)","ok":true,"frames":12,"firstFrameMs":69,"settleMs":139,"janky":12,"p50":75,"p95":128,"worst":128}
+13:52:13 measured: {"name":"tab Accounts (again)","ok":true,"frames":15,"firstFrameMs":56,"settleMs":406,"janky":15,"p50":159,"p95":182,"worst":182}
+13:52:15 tapped: Operations
+13:52:29 measured: {"name":"operations: 6 flicks down","ok":true,"inputsMs":[20,940,1900,2880,3820,4760],"frames":94,"firstFrameMs":56,"settleMs":253,"janky":94,"p50":72,"p95":121,"worst":136}
+13:52:38 measured: {"name":"operations: 6 flicks up","ok":true,"inputsMs":[20,880,1750,2610,3480,4350],"frames":0,"firstFrameMs":null,"settleMs":null,"janky":0,"p50":null,"p95":null,"worst":null}
+13:52:42 measured: {"name":"operations: swipe to previous period 1","ok":true,"frames":23,"firstFrameMs":89,"settleMs":925,"janky":23,"p50":100,"p95":185,"worst":193}
+13:52:47 measured: {"name":"operations: swipe to previous period 2","ok":true,"frames":23,"firstFrameMs":89,"settleMs":790,"janky":22,"p50":90,"p95":122,"worst":127}
+13:52:51 measured: {"name":"operations: swipe to previous period 3","ok":true,"frames":23,"firstFrameMs":86,"settleMs":740,"janky":23,"p50":75,"p95":131,"worst":133}
+13:52:55 measured: {"name":"operations: swipe to next period 1","ok":true,"frames":23,"firstFrameMs":83,"settleMs":654,"janky":22,"p50":71,"p95":109,"worst":135}
+13:53:00 measured: {"name":"operations: swipe to next period 2","ok":true,"frames":24,"firstFrameMs":96,"settleMs":829,"janky":24,"p50":85,"p95":134,"worst":134}
+13:53:04 measured: {"name":"operations: swipe to next period 3","ok":true,"frames":22,"firstFrameMs":96,"settleMs":729,"janky":22,"p50":85,"p95":134,"worst":156}
+13:53:09 tapped: Categories
+13:53:18 measured: {"name":"categories: swipe to previous period 1","ok":true,"frames":24,"firstFrameMs":93,"settleMs":721,"janky":23,"p50":72,"p95":155,"worst":156}
+13:53:23 measured: {"name":"categories: swipe to previous period 2","ok":true,"frames":23,"firstFrameMs":89,"settleMs":773,"janky":23,"p50":101,"p95":123,"worst":143}
+13:53:27 measured: {"name":"categories: swipe to previous period 3","ok":true,"frames":22,"firstFrameMs":83,"settleMs":669,"janky":21,"p50":81,"p95":116,"worst":121}
+13:53:31 measured: {"name":"categories: swipe to next period 1","ok":true,"frames":25,"firstFrameMs":86,"settleMs":722,"janky":25,"p50":68,"p95":121,"worst":134}
+13:53:36 measured: {"name":"categories: swipe to next period 2","ok":true,"frames":25,"firstFrameMs":86,"settleMs":786,"janky":25,"p50":77,"p95":134,"worst":165}
+13:53:40 measured: {"name":"categories: swipe to next period 3","ok":true,"frames":26,"firstFrameMs":93,"settleMs":759,"janky":26,"p50":89,"p95":120,"worst":124}
+13:53:42 tapped: Statistics
+13:53:52 measured: {"name":"statistics: swipe to previous period 1","ok":true,"frames":11,"firstFrameMs":113,"settleMs":708,"janky":11,"p50":94,"p95":136,"worst":136}
+13:53:57 measured: {"name":"statistics: swipe to previous period 2","ok":true,"frames":11,"firstFrameMs":96,"settleMs":782,"janky":11,"p50":90,"p95":153,"worst":153}
+13:54:01 measured: {"name":"statistics: swipe to previous period 3","ok":true,"frames":12,"firstFrameMs":99,"settleMs":835,"janky":12,"p50":59,"p95":169,"worst":169}
+13:54:05 measured: {"name":"statistics: swipe to next period 1","ok":true,"frames":13,"firstFrameMs":83,"settleMs":716,"janky":13,"p50":73,"p95":137,"worst":137}
+13:54:10 measured: {"name":"statistics: swipe to next period 2","ok":true,"frames":13,"firstFrameMs":83,"settleMs":837,"janky":12,"p50":88,"p95":154,"worst":154}
+13:54:14 measured: {"name":"statistics: swipe to next period 3","ok":true,"frames":13,"firstFrameMs":99,"settleMs":800,"janky":13,"p50":75,"p95":135,"worst":135}
+13:54:20 measured: {"name":"statistics: 3 flicks down","ok":true,"inputsMs":[20,970,1890],"frames":45,"firstFrameMs":76,"settleMs":1663,"janky":45,"p50":152,"p95":234,"worst":285}
+13:54:22 tapped: More
+13:54:26 tapped: Settings
+13:54:31 tapped: Formatting
+13:54:43 measured: {"name":"currency list: open","ok":true,"frames":18,"firstFrameMs":46,"settleMs":570,"janky":18,"p50":101,"p95":333,"worst":333}
+13:54:53 measured: {"name":"currency list: 8 fast flicks down","ok":true,"inputsMs":[20,580,1110,1550,2000,2530,3010,3550],"frames":99,"firstFrameMs":73,"settleMs":900,"janky":99,"p50":100,"p95":177,"worst":208}
+13:55:03 measured: {"name":"currency list: 8 fast flicks up","ok":true,"inputsMs":[20,540,1000,1440,2000,2550,3060,3650],"frames":87,"firstFrameMs":99,"settleMs":767,"janky":87,"p50":101,"p95":136,"worst":150}
