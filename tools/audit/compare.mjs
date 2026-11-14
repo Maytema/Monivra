@@ -108,10 +108,14 @@ const pct = (list, p) => {
 };
 
 // One measured move: `act` sends the input; the frames drawn in the next `windowMs` are read.
+// Only the input itself is sent inside a move: an element is located (a uiautomator dump, ~1–2 s) before it, and a
+// quiet second follows every dump, so neither the dump nor the accessibility work it starts is counted.
+// `act` may return the times of its inputs (ms from the start), kept as `inputsMs`.
 async function measure(name, act, windowMs = 4000) {
+  await sleep(1000);
   sh(`dumpsys gfxinfo ${pkg} reset`);
   const t0 = uptimeNs();
-  const ok = await act();
+  const ok = await act(t0);
   await sleep(windowMs);
   // Frames of this move only, in order; a frame of more than ten seconds is a bad record and left out.
   const list = frames()
@@ -128,6 +132,7 @@ async function measure(name, act, windowMs = 4000) {
   const result = {
     name,
     ok: ok !== false,
+    inputsMs: Array.isArray(ok) ? ok : undefined,
     frames: list.length,
     firstFrameMs: list.length ? Math.round((list[0].start - t0) / 1e6) : null,
     settleMs: settled === null ? null : Math.round((settled - t0) / 1e6),
@@ -148,6 +153,19 @@ const shot = (name) => {
 // ---- The moves ---------------------------------------------------------------------------------------------
 
 const flick = (up) => sh(up ? "input swipe 540 1700 540 600 120" : "input swipe 540 600 540 1700 120");
+// `count` flicks `gap` ms apart; returns when each was sent (ms from t0) so a late first frame can be told apart
+// from a late input.
+async function flicks(t0, count, up, gap) {
+  const sent = [];
+  for (let i = 0; i < count; i++) {
+    sent.push(Math.round((uptimeNs() - t0) / 1e6));
+    flick(up);
+    await sleep(gap);
+  }
+  return sent;
+}
+// Taps a point located beforehand.
+const tapAt = (at) => (at ? (sh(`input tap ${at.x} ${at.y}`), true) : false);
 const swipePeriod = (toPrevious) => sh(toPrevious ? "input swipe 150 1300 950 1300 200" : "input swipe 950 1300 150 1300 200");
 
 // Waits until a text is on the screen (the first start of a WebView can take long); true when it came.
@@ -216,14 +234,18 @@ async function runApp(app, apk) {
   shot("02-started");
 
   // Tabs: the first opening of each, then once more.
+  // The tab bar does not move, so every tab is located once, before the moves.
+  const xml = dump();
+  const tabs = Object.fromEntries(["Operations", "Statistics", "Categories", "Accounts"].map((t) => [t, find(t, { xml })]));
+  log(`tabs at: ${JSON.stringify(tabs)}`);
   for (const round of ["first", "again"])
-    for (const tab of ["Operations", "Statistics", "Categories", "Accounts"]) R(await measure(`tab ${tab} (${round})`, () => tap(tab, { pause: 0 }), 3000));
+    for (const tab of Object.keys(tabs)) R(await measure(`tab ${tab} (${round})`, async () => tapAt(tabs[tab]), 3000));
 
   // The operations list: flicks down and up, then period swipes.
   await tap("Operations", { pause: 3000 });
   shot("03-operations");
-  R(await measure("operations: 6 flicks down", async () => { for (let i = 0; i < 6; i++) flick(true), await sleep(700); }, 2500));
-  R(await measure("operations: 6 flicks up", async () => { for (let i = 0; i < 6; i++) flick(false), await sleep(700); }, 2500));
+  R(await measure("operations: 6 flicks down", (t0) => flicks(t0, 6, true, 700), 2500));
+  R(await measure("operations: 6 flicks up", (t0) => flicks(t0, 6, false, 700), 2500));
   for (let i = 1; i <= 3; i++) R(await measure(`operations: swipe to previous period ${i}`, async () => swipePeriod(true), 3000));
   for (let i = 1; i <= 3; i++) R(await measure(`operations: swipe to next period ${i}`, async () => swipePeriod(false), 3000));
   shot("04-operations-after-swipes");
@@ -237,17 +259,33 @@ async function runApp(app, apk) {
   shot("06-statistics");
   for (let i = 1; i <= 3; i++) R(await measure(`statistics: swipe to previous period ${i}`, async () => swipePeriod(true), 3000));
   for (let i = 1; i <= 3; i++) R(await measure(`statistics: swipe to next period ${i}`, async () => swipePeriod(false), 3000));
-  R(await measure("statistics: 3 flicks down", async () => { for (let i = 0; i < 3; i++) flick(true), await sleep(700); }, 2500));
+  R(await measure("statistics: 3 flicks down", (t0) => flicks(t0, 3, true, 700), 2500));
 
   // The currency list (about 200 currencies) from the settings: open, then fast flicks through it.
   await tap("More");
   await tap("Settings", { pause: 2500 });
   await tap("Formatting", { pause: 2500 });
   shot("07-formatting");
-  R(await measure("currency list: open", () => tap("Main currency", { pause: 0 }), 4000));
+  const field = find("Main currency");
+  R(await measure("currency list: open", async () => tapAt(field), 4000));
   shot("08-currency-list");
-  R(await measure("currency list: 8 fast flicks", async () => { for (let i = 0; i < 8; i++) flick(true), await sleep(250); }, 2500));
+  R(await measure("currency list: 8 fast flicks down", (t0) => flicks(t0, 8, true, 250), 2500));
   shot("09-currency-list-flicked");
+  R(await measure("currency list: 8 fast flicks up", (t0) => flicks(t0, 8, false, 250), 2500));
+  // What the list shows in the middle of a fast fling (blank rows or not): the picture is taken right after the
+  // second of two quick flicks, while the list is still moving.
+  flick(true);
+  await sleep(150);
+  flick(true);
+  sh("screencap -p /sdcard/fling.png");
+  adb("pull", "/sdcard/fling.png", join(out, "10-currency-list-mid-fling.png"));
+  await sleep(2500);
+  flick(false);
+  await sleep(150);
+  flick(false);
+  sh("screencap -p /sdcard/fling.png");
+  adb("pull", "/sdcard/fling.png", join(out, "11-currency-list-mid-fling-up.png"));
+  await sleep(2500);
   sh("input keyevent 4");
   await sleep(1500);
   sh("input keyevent 4");
