@@ -32,7 +32,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - name: Build (no owner key: a key made for this run only)
+      - name: "Build (no owner key: a key made for this run only)"
         run: bash android-app/scripts/ci-build.sh
       - name: Size of the parts of the APK
         run: |
@@ -63,7 +63,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Install dependencies (as mobile.yml: there is no lock file)
+      - name: "Install dependencies (as mobile.yml: there is no lock file)"
         run: |
           npm install --no-audit --no-fund
           npx expo install expo-router expo-sqlite expo-document-picker expo-file-system expo-sharing expo-crypto \
