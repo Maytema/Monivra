@@ -256,6 +256,109 @@ async function loadData() {
   shot("01-after-restore");
 }
 
+
+// ---- The tour of the sections (parity walk) -------------------------------------------------------------------
+// The same paths in both applications, two or three levels deep, without carrying anything out (no Save, Delete,
+// Confirm): each step is a tap (or a long press) on a text or a label, then a picture and the screen's tree, so
+// the two versions can be put side by side. A path stops at the first label that is not on the screen (written
+// to the log as NOT FOUND — itself a difference to look at). After a path the application is taken back to the
+// section by Back presses and, when it was left, started again.
+const TOUR = [
+  ["accounts", [
+    ["root", []],
+    ["total", ["Total"]],
+    ["new-account", ["New account"]],
+    ["new-account-regular", ["New account", "Regular"]],
+    ["account-sheet", ["Wallet"]],
+    ["account-edit", ["Wallet", "Edit"]],
+    ["account-transfer", ["Wallet", "Transfer"]],
+    ["account-history", ["Wallet", "History"]],
+    ["completed", ["Completed (1)"]],
+  ]],
+  ["categories", [
+    ["root", []],
+    ["incomes", ["Incomes"]],
+    ["category-editor", ["Food"]],
+    ["category-sheet", [{ long: "Food" }]],
+    ["change-categories", ["Change categories"]],
+    ["change-category-form", ["Change categories", "Food"]],
+    ["period-dialog", ["November 2026"]],
+  ]],
+  ["operations", [
+    ["root", []],
+    ["edit-operation", ["Internet"]],
+    ["selection", [{ long: "Internet" }]],
+    ["add-menu", ["Add"]],
+    ["add-expense", ["Add", "Expense"]],
+    ["search", ["Operation search"]],
+    ["period-dialog", ["November 2026"]],
+  ]],
+  ["statistics", [
+    ["root", []],
+    ["filters", ["Filters"]],
+    ["incomes", ["Incomes"]],
+    ["scrolled", [{ scroll: 1 }]],
+    ["scrolled-more", [{ scroll: 2 }]],
+    ["period-dialog", ["November 2026"]],
+  ]],
+  ["more", [
+    ["root", []],
+    ...["Subscription", "Profile", "Scheduled payments", "Budgets", "Settings", "Data", "Instructions", "Support", "About our team", "Privacy policy", "Terms of use"].map((x) => [x.toLowerCase().replace(/ /g, "-"), [x]]),
+    ...["Formatting", "Styles and elements", "Backups", "Notifications", "Security", "Privacy", "Exchange rates"].map((x) => ["settings-" + x.toLowerCase().replace(/ /g, "-"), ["Settings", x]]),
+    ...["Saved backups", "Data file", "Import data", "Export data", "Delete my data"].map((x) => ["data-" + x.toLowerCase().replace(/ /g, "-"), ["Data", x]]),
+    ["scheduled-add", ["Scheduled payments", "Add"]],
+    ["budgets-add", ["Budgets", "Add"]],
+  ]],
+];
+const TAB_LABEL = { accounts: "Accounts", categories: "Categories", operations: "Operations", statistics: "Statistics", more: "More" };
+
+const inFront = () => sh("dumpsys window | grep -m1 mCurrentFocus").includes(pkg);
+async function toSection(section, tabs) {
+  if (!inFront()) {
+    sh(`am start -n ${APPS[current].activity}`);
+    await sleep(5000);
+  }
+  const at = tabs[section];
+  if (at) sh(`input tap ${at.x} ${at.y}`);
+  await sleep(2000);
+}
+async function tour() {
+  const dir = join(out, "tour");
+  mkdirSync(dir, { recursive: true });
+  const xml = dump();
+  const tabs = Object.fromEntries(Object.entries(TAB_LABEL).map(([k, label]) => [k, find(label, { xml, which: "lowest" })]));
+  log(`tour tabs: ${JSON.stringify(tabs)}`);
+  for (const [section, paths] of TOUR) {
+    for (const [name, steps] of paths) {
+      await toSection(section, tabs);
+      let depth = 0;
+      let ok = true;
+      for (const step of steps) {
+        if (typeof step === "string") ok = await tap(step, { pause: 2200 });
+        else if (step.long) {
+          const at = find(step.long);
+          ok = !!at;
+          if (at) sh(`input swipe ${at.x} ${at.y} ${at.x} ${at.y} 900`), await sleep(2000);
+          else log(`NOT FOUND: ${step.long}`);
+        } else if (step.scroll) {
+          for (let i = 0; i < step.scroll; i++) sh("input swipe 540 1800 540 700 400"), await sleep(1200);
+          depth--; // a scroll opens nothing
+        }
+        if (!ok) break;
+        depth++;
+      }
+      const file = `${section}-${name}`;
+      if (ok) {
+        sh(`screencap -p /sdcard/t.png`);
+        adb("pull", "/sdcard/t.png", join(dir, `${file}.png`));
+        writeFileSync(join(dir, `${file}.xml`), dump());
+        log(`tour: ${file}`);
+      } else log(`tour: ${file} — path stopped`);
+      for (let i = 0; i < depth; i++) sh("input keyevent 4"), await sleep(1300);
+    }
+  }
+}
+
 let current = "";
 async function runApp(app, apk) {
   current = app;
@@ -267,6 +370,13 @@ async function runApp(app, apk) {
   log(adb("install", "-r", apk).trim().split("\n").at(-1));
   writeFileSync(join(out, "package.txt"), sh(`dumpsys package ${pkg} | grep -E "versionName|versionCode|flags=|pkgFlags"`));
   await loadData();
+  // AUDIT_MODE: "measure" (the speed moves), "tour" (the parity walk) or both (default).
+  const mode = process.env.AUDIT_MODE || "both";
+  if (mode === "tour") {
+    await tour();
+    sh(`am force-stop ${pkg}`);
+    return;
+  }
   const results = [];
   const R = (r) => results.push(r);
 
@@ -342,6 +452,7 @@ async function runApp(app, apk) {
   await sleep(1500);
 
   writeFileSync(join(out, "results.json"), JSON.stringify(results, null, 1));
+  if (mode === "both") await tour();
   sh(`am force-stop ${pkg}`);
 }
 
