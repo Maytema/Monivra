@@ -125,11 +125,12 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
       const { income: inc, expense: exp } = chartBins(rows, start, end);
       const series = catType === "income" ? inc : exp;
       const top = Math.max(1, ...series);
-      // A round upper bound split in four steps, labelled on the left (the original's axis).
-      const raw = top / 4;
+      // A round upper bound split in four steps, labelled on the left (the original's axis). The amounts are
+      // minor units (cents); the labels are in whole units, as every amount is shown.
+      const raw = top / 100 / 4;
       const unit = 10 ** Math.floor(Math.log10(raw));
       const step = [1, 2, 2.5, 5, 10].map((k) => k * unit).find((v) => v >= raw) ?? unit * 10;
-      const max = step * 4;
+      const max = step * 4 * 100;
       const bins = series.length;
       const left = 46;
       const right = 332;
