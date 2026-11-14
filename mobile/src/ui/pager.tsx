@@ -102,10 +102,10 @@ export function Pager<K extends string>({
         Animated.timing(x, { toValue: -(b + direction) * w, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(({ finished }) => {
           // One commit: the strip's count and the owner's page change together, so the page now in the middle
           // keeps its place and its content; the offset is already where it should be.
-          unstable_batchedUpdates(() => {
-            setBase(b + direction);
-            live.current.onMove(direction);
-          });
+          unstable_batchedUpdates((d: 1 | -1) => {
+            setBase(b + d);
+            live.current.onMove(d);
+          }, direction);
           busy.current = false;
           if (!finished) x.setValue(-(b + direction) * w);
         });
