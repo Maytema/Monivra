@@ -15,8 +15,9 @@
 | applicationId | `app.monivra.finance` (выпуск), `app.monivra.finance.dev` (тестовые сборки, их ставил владелец) | `app.monivra.finance.next` |
 | Тип сборки в замерах | **release** (`assembleRelease`, скрипт `android-app/scripts/ci-build.sh`), подписан ключом одного прогона | **release** (`assembleRelease`, только x86_64 для эмулятора), без замеров внутри (`EXPO_PUBLIC_PERF` не задан) |
 | Движок | системный WebView (Chromium, V8) | Hermes, новая архитектура (в RN 0.88 она единственная) |
-| Минификация кода Java/Kotlin (R8) | — | не включена (Expo по умолчанию) |
+| Сжатие кода Java/Kotlin (R8) | — | по всей видимости включено: сборка 5 упала из-за удалённого сжатием класса WorkManager, добавлены правила `keep` (`mobile/app.config.ts:42–53`); флаг в Gradle не проверен |
 | Размер APK (arm64, телефон) | ~3,7 МБ (сборка 21: 3 764 255 байт) | ~31,2 МБ (сборка 75: 31 224 828 байт) |
+| Размер APK в аудите | 3 767 515 байт | 31 932 046 байт (x86_64) — разбивка в PERFORMANCE_ROOT_CAUSES.md, R-6 |
 
 ## Эмулятор (один и тот же для обеих версий)
 
@@ -35,7 +36,7 @@ GitHub Actions, `reactivecircus/android-emulator-runner@v2`: Android 14 (API 34)
 
 | Набор | Где | Результат |
 |---|---|---|
-| Модульные тесты нового приложения (домен, база, курсы, отчёт, расчёты, сравнение со старым кодом) | `mobile/test/*.test.ts`, `npm test` | 102 прошли, 0 упали (локально, 14.11) |
+| Модульные тесты нового приложения (домен, база, курсы, отчёт, расчёты, сравнение со старым кодом) | `mobile/test/*.test.ts`, `npm test` | 102 прошли, 0 упали (локально, 14.11, перепроверено в ходе аудита) |
 | Проверка слоёв | `mobile/scripts/check-boundaries.mjs` | в порядке |
 | Типы | CI `mobile.yml` (`tsc --noEmit`) | прошли (CI 43553020079) |
 | Эмуляторный обход нового приложения (~130 шагов со скриншотами) | `mobile/scripts/emulator-smoke.sh` | прошёл (сборка 75) |
@@ -44,5 +45,5 @@ GitHub Actions, `reactivecircus/android-emulator-runner@v2`: Android 14 (API 34)
 | Сравнение двух версий на одном эмуляторе | `.github/workflows/audit.yml`, `tools/audit/compare.mjs` | см. PERFORMANCE_BASELINE.md |
 
 В `mobile/` нет файла блокировки зависимостей (`package-lock.json`): каждая сборка ставит последние совместимые
-версии пакетов, поэтому две сборки одного коммита могут отличаться. Это риск воспроизводимости (BL-P2 в
+версии пакетов, поэтому две сборки одного коммита могут отличаться. Это риск воспроизводимости (BL-P1-01 в
 PRIORITIZED_BACKLOG.md).
