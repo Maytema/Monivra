@@ -113,13 +113,24 @@ async function measure(name, act, windowMs = 4000) {
   const t0 = uptimeNs();
   const ok = await act();
   await sleep(windowMs);
-  const list = frames().filter((f) => f.start >= t0 - 5e6);
+  // Frames of this move only, in order; a frame of more than ten seconds is a bad record and left out.
+  const list = frames()
+    .filter((f) => f.start >= t0 - 5e6 && f.end > f.start && f.end - f.start < 10e9)
+    .sort((a, b) => a.start - b.start);
   const durations = list.map((f) => (f.end - f.start) / 1e6);
+  // "Settled": the end of the burst of frames that the input started — the last frame before the first quiet
+  // gap of 250 ms. Frames after that gap (a looping animation, a blinking cursor) are not part of the move.
+  let settled = list[0]?.end ?? null;
+  for (let i = 1; i < list.length; i++) {
+    if (list[i].start - list[i - 1].end > 250e6) break;
+    settled = list[i].end;
+  }
   const result = {
     name,
     ok: ok !== false,
     frames: list.length,
-    settleMs: list.length ? Math.round((Math.max(...list.map((f) => f.end)) - t0) / 1e6) : null,
+    firstFrameMs: list.length ? Math.round((list[0].start - t0) / 1e6) : null,
+    settleMs: settled === null ? null : Math.round((settled - t0) / 1e6),
     janky: durations.filter((d) => d > 16.7).length,
     p50: pct(durations, 50) && Math.round(pct(durations, 50)),
     p95: pct(durations, 95) && Math.round(pct(durations, 95)),
@@ -139,11 +150,28 @@ const shot = (name) => {
 const flick = (up) => sh(up ? "input swipe 540 1700 540 600 120" : "input swipe 540 600 540 1700 120");
 const swipePeriod = (toPrevious) => sh(toPrevious ? "input swipe 150 1300 950 1300 200" : "input swipe 950 1300 150 1300 200");
 
+// Waits until a text is on the screen (the first start of a WebView can take long); true when it came.
+async function waitFor(want, seconds) {
+  for (let i = 0; i < seconds / 2; i++) {
+    if (find(want)) return true;
+    await sleep(2000);
+  }
+  log(`NOT SHOWN within ${seconds}s: ${want}`);
+  return false;
+}
+
 async function loadData() {
   // The same file and the same way for both applications: More → Data → Data file → Restore from file → Replace.
+  // The file is put on the phone again just before, and checked, so the picker lists it.
+  sh("mkdir -p /sdcard/Download");
+  log(adb("push", "perf-data.json", "/sdcard/Download/perf-data.json").trim().split("\n").at(-1) ?? "");
+  sh("am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Download/perf-data.json");
+  log(`on the phone: ${sh("ls -l /sdcard/Download/perf-data.json").trim()}`);
   sh("am force-stop " + pkg);
-  sh(`am start -n ${APPS[current].activity}`);
-  await sleep(9000);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    log(sh(`am start -W -n ${APPS[current].activity}`).match(/Status: \w+|Error.*$/m)?.[0] ?? "started?");
+    if (await waitFor("Start with basic set", 40)) break;
+  }
   await tap("Start with basic set", { pause: 4000 });
   await tap("More");
   await tap("Data");
