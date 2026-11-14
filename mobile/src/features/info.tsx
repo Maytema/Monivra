@@ -252,11 +252,19 @@ function Subscription() {
   const t = useT();
   const [plan, setPlan] = useState<string>("Lifetime");
   const notYet = () => showInfo("Store billing is not connected yet.");
+  const insets = useSafeAreaInsets();
+  // No page header: as the first application (info-pages.js .sub-head), the back arrow and the title line
+  // "Use the full potential of the application!" come under the "Coming soon" pill.
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView contentContainerStyle={{ paddingTop: 14, paddingHorizontal: 20, paddingBottom: 24 }}>
         <SoonPill />
-        <Text style={{ color: p.ink, fontSize: 19, lineHeight: 24, textAlign: "center", marginVertical: 12 }}>{t.t("Use the full potential of the application!")}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 6, marginBottom: 10 }}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.t("Back")} onPress={() => router.back()} hitSlop={8} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center" }}>
+            <Icon name="back" size={24} color={p.ink} />
+          </Pressable>
+          <Text style={{ flex: 1, color: p.ink, fontSize: 19, lineHeight: 24, textAlign: "center", marginRight: 48 }}>{t.t("Use the full potential of the application!")}</Text>
+        </View>
         <View style={{ gap: 10, paddingHorizontal: 8, paddingTop: 8, marginBottom: 13 }}>
           {PLANS.map((x, i) => {
             const on = plan === x.key;
@@ -305,7 +313,7 @@ function Subscription() {
 }
 
 // `own`: the page scrolls by itself (and may pin something under it).
-function resolve(kind: string): { title: string; body: ReactNode; own?: boolean } | null {
+function resolve(kind: string): { title: string; body: ReactNode; own?: boolean; bare?: boolean } | null {
   if (kind.startsWith("guide:")) {
     const g = GUIDES.find((x) => x.id === kind.slice(6));
     return g ? { title: g.title, body: <Body>{g.sections.map(([h, text]) => <View key={h}><Heading>{h}</Heading><Para>{text}</Para></View>)}</Body> } : null;
@@ -320,7 +328,7 @@ function resolve(kind: string): { title: string; body: ReactNode; own?: boolean 
     case "terms": return { title: "Terms of use", body: <Terms /> };
     case "profile": return { title: "Profile", body: <Profile />, own: true };
     case "shared": return { title: "Shared access", body: <Shared /> };
-    case "subscription": return { title: "Subscription", body: <Subscription />, own: true };
+    case "subscription": return { title: "Subscription", body: <Subscription />, own: true, bare: true };
     default: return null;
   }
 }
@@ -333,7 +341,7 @@ export function InfoPage() {
   if (!found) return null;
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
-      <Stack.Screen options={{ title: t.t(found.title) }} />
+      <Stack.Screen options={{ title: t.t(found.title), headerShown: !found.bare }} />
       {found.own ? found.body : <ScrollView contentContainerStyle={{ flexGrow: 1 }}>{found.body}</ScrollView>}
     </View>
   );
