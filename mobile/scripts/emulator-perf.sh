@@ -66,6 +66,10 @@ finish() {
   { echo "== $MOVE"; adb shell dumpsys gfxinfo $PKG | grep -E "Total frames rendered|Janky frames|50th percentile|90th percentile|95th percentile|99th percentile|Number Slow UI thread|Number Frame deadline missed"; } >> "$OUT/gfx.txt"
 }
 
+# The busy emulator often shows "Pixel Launcher isn't responding" over the application; the system is asked
+# not to show such windows (the tap retry below stays as a second line).
+adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1
+adb shell settings put secure anr_show_background 0 >/dev/null 2>&1
 adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAIL: install"; cat "$OUT/install.txt"; exit 1; }
 adb logcat -c
 adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
