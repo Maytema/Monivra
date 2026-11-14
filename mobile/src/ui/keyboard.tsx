@@ -25,8 +25,11 @@ export function KeyboardPad({ children }: { children: ReactNode }) {
     };
   }, []);
   return (
-    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1, paddingBottom: pad }}>
-      {children}
+    // The outer frame keeps the window's size (it is what is measured); the inner one is shortened by a margin, not
+    // by padding: pages drawn with absolute positioning (the layers of ui/sheets.tsx) are placed against the box of
+    // their parent, padding included, and would stay under the keyboard.
+    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }}>
+      <View style={{ flex: 1, marginBottom: pad }}>{children}</View>
     </View>
   );
 }
