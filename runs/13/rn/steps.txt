@@ -1,0 +1,81 @@
+17:22:17 app rn: app.monivra.finance.next, apks/rn-apk/app-release.apk
+17:22:19 Success
+17:22:19 
+17:22:19 on the phone: -rw-rw---- 1 u0_a184 media_rw 452162 2026-11-14 17:09 /sdcard/Download/perf-data.json
+17:22:21 Status: ok
+17:22:26 tapped: Start with basic set
+17:22:35 tapped: More
+17:22:38 tapped: Data
+17:22:42 tapped: Data file
+17:22:45 tapped: Restore from file
+17:22:51 tapped: perf-data.json
+17:23:03 tapped: Replace data
+17:23:07 tapped: Confirm
+17:23:21 am start: TotalTime: 1812
+17:23:37 measured: {"name":"cold start 1","ok":true,"frames":38,"firstFrameMs":1073,"settleMs":2098,"afterLastInputMs":2098,"janky":38,"p50":68,"p95":233,"worst":486,"phases":{"late":1083,"input":81,"layout":8,"record":28,"sync":43,"render":1398}}
+17:23:40 am start: TotalTime: 817
+17:23:56 measured: {"name":"cold start 2","ok":true,"frames":41,"firstFrameMs":1316,"settleMs":2434,"afterLastInputMs":2434,"janky":41,"p50":70,"p95":167,"worst":517,"phases":{"late":1154,"input":21,"layout":10,"record":4,"sync":26,"render":1565}}
+17:24:00 am start: TotalTime: 1707
+17:24:16 measured: {"name":"cold start 3","ok":true,"frames":38,"firstFrameMs":993,"settleMs":2895,"afterLastInputMs":2895,"janky":37,"p50":67,"p95":272,"worst":633,"phases":{"late":1345,"input":27,"layout":21,"record":4,"sync":24,"render":1470}}
+17:24:20 tabs at: {"Operations":{"x":540,"y":2310,"bounds":[462,2289,618,2331]},"Statistics":{"x":756,"y":2310,"bounds":[689,2289,823,2331]},"Categories":{"x":324,"y":2310,"bounds":[247,2289,401,2331]},"Accounts":{"x":108,"y":2310,"bounds":[40,2289,176,2331]}}
+17:24:24 measured: {"name":"tab Operations (first)","ok":true,"frames":94,"firstFrameMs":50,"settleMs":383,"afterLastInputMs":383,"janky":94,"p50":56,"p95":87,"worst":101,"phases":{"late":1173,"input":159,"layout":18,"record":479,"sync":318,"render":2592}}
+17:24:29 measured: {"name":"tab Statistics (first)","ok":true,"frames":8,"firstFrameMs":10,"settleMs":310,"afterLastInputMs":310,"janky":8,"p50":69,"p95":100,"worst":100,"phases":{"late":115,"input":37,"layout":2,"record":113,"sync":37,"render":222}}
+17:24:33 measured: {"name":"tab Categories (first)","ok":true,"frames":32,"firstFrameMs":46,"settleMs":130,"afterLastInputMs":130,"janky":31,"p50":58,"p95":86,"worst":88,"phases":{"late":266,"input":32,"layout":4,"record":8,"sync":23,"render":980}}
+17:24:37 measured: {"name":"tab Accounts (first)","ok":true,"frames":15,"firstFrameMs":40,"settleMs":94,"afterLastInputMs":94,"janky":14,"p50":52,"p95":86,"worst":86,"phases":{"late":134,"input":7,"layout":2,"record":4,"sync":5,"render":421}}
+17:24:41 measured: {"name":"tab Operations (again)","ok":true,"frames":16,"firstFrameMs":43,"settleMs":93,"afterLastInputMs":93,"janky":16,"p50":39,"p95":75,"worst":75,"phases":{"late":116,"input":8,"layout":2,"record":4,"sync":7,"render":410}}
+17:24:45 measured: {"name":"tab Statistics (again)","ok":true,"frames":1,"firstFrameMs":40,"settleMs":90,"afterLastInputMs":90,"janky":1,"p50":50,"p95":50,"worst":50,"phases":{"late":0,"input":5,"layout":0,"record":13,"sync":8,"render":24}}
+17:24:49 measured: {"name":"tab Categories (again)","ok":true,"frames":15,"firstFrameMs":66,"settleMs":103,"afterLastInputMs":103,"janky":15,"p50":53,"p95":100,"worst":100,"phases":{"late":131,"input":1,"layout":2,"record":1,"sync":6,"render":452}}
+17:24:53 measured: {"name":"tab Accounts (again)","ok":true,"frames":16,"firstFrameMs":43,"settleMs":80,"afterLastInputMs":80,"janky":16,"p50":36,"p95":84,"worst":84,"phases":{"late":54,"input":6,"layout":2,"record":3,"sync":5,"render":419}}
+17:24:55 tapped: Operations
+17:25:10 measured: {"name":"operations: 6 flicks down","ok":true,"inputsMs":[10,1080,2130,3180,4250,5410],"frames":222,"firstFrameMs":73,"settleMs":6406,"afterLastInputMs":996,"janky":222,"p50":70,"p95":122,"worst":227,"phases":{"late":3971,"input":392,"layout":64,"record":204,"sync":491,"render":7385}}
+17:25:20 measured: {"name":"operations: 6 flicks up","ok":true,"inputsMs":[10,1070,2090,3160,4280,5340],"frames":230,"firstFrameMs":70,"settleMs":6854,"afterLastInputMs":1514,"janky":230,"p50":67,"p95":104,"worst":134,"phases":{"late":3210,"input":382,"layout":48,"record":227,"sync":576,"render":6845}}
+17:25:25 measured: {"name":"operations: swipe to previous period 1","ok":true,"frames":29,"firstFrameMs":90,"settleMs":845,"afterLastInputMs":845,"janky":28,"p50":51,"p95":152,"worst":155,"phases":{"late":323,"input":32,"layout":3,"record":6,"sync":27,"render":847}}
+17:25:29 measured: {"name":"operations: swipe to previous period 2","ok":true,"frames":34,"firstFrameMs":83,"settleMs":750,"afterLastInputMs":750,"janky":33,"p50":36,"p95":71,"worst":86,"phases":{"late":164,"input":53,"layout":4,"record":4,"sync":14,"render":851}}
+17:25:33 measured: {"name":"operations: swipe to previous period 3","ok":true,"frames":29,"firstFrameMs":76,"settleMs":710,"afterLastInputMs":710,"janky":27,"p50":35,"p95":97,"worst":100,"phases":{"late":191,"input":34,"layout":3,"record":13,"sync":22,"render":773}}
+17:25:38 measured: {"name":"operations: swipe to next period 1","ok":true,"frames":30,"firstFrameMs":80,"settleMs":630,"afterLastInputMs":630,"janky":29,"p50":50,"p95":74,"worst":83,"phases":{"late":262,"input":35,"layout":3,"record":3,"sync":16,"render":778}}
+17:25:42 measured: {"name":"operations: swipe to next period 2","ok":true,"frames":32,"firstFrameMs":86,"settleMs":775,"afterLastInputMs":775,"janky":30,"p50":35,"p95":69,"worst":75,"phases":{"late":213,"input":34,"layout":3,"record":4,"sync":18,"render":777}}
+17:25:47 measured: {"name":"operations: swipe to next period 3","ok":true,"frames":31,"firstFrameMs":83,"settleMs":800,"afterLastInputMs":800,"janky":30,"p50":49,"p95":71,"worst":71,"phases":{"late":210,"input":60,"layout":4,"record":8,"sync":21,"render":791}}
+17:25:51 tapped: Categories
+17:26:01 measured: {"name":"categories: swipe to previous period 1","ok":true,"frames":29,"firstFrameMs":90,"settleMs":608,"afterLastInputMs":608,"janky":29,"p50":52,"p95":117,"worst":117,"phases":{"late":272,"input":45,"layout":3,"record":3,"sync":43,"render":938}}
+17:26:05 measured: {"name":"categories: swipe to previous period 2","ok":true,"frames":30,"firstFrameMs":83,"settleMs":733,"afterLastInputMs":733,"janky":30,"p50":57,"p95":117,"worst":119,"phases":{"late":350,"input":54,"layout":3,"record":11,"sync":16,"render":1053}}
+17:26:09 measured: {"name":"categories: swipe to previous period 3","ok":true,"frames":28,"firstFrameMs":83,"settleMs":634,"afterLastInputMs":634,"janky":27,"p50":51,"p95":83,"worst":85,"phases":{"late":201,"input":31,"layout":3,"record":10,"sync":19,"render":888}}
+17:26:14 measured: {"name":"categories: swipe to next period 1","ok":true,"frames":28,"firstFrameMs":73,"settleMs":540,"afterLastInputMs":540,"janky":28,"p50":59,"p95":91,"worst":103,"phases":{"late":298,"input":48,"layout":3,"record":3,"sync":13,"render":893}}
+17:26:18 measured: {"name":"categories: swipe to next period 2","ok":true,"frames":26,"firstFrameMs":73,"settleMs":523,"afterLastInputMs":523,"janky":26,"p50":52,"p95":85,"worst":100,"phases":{"late":210,"input":55,"layout":3,"record":15,"sync":19,"render":807}}
+17:26:23 measured: {"name":"categories: swipe to next period 3","ok":true,"frames":29,"firstFrameMs":80,"settleMs":613,"afterLastInputMs":613,"janky":28,"p50":56,"p95":100,"worst":102,"phases":{"late":284,"input":42,"layout":6,"record":4,"sync":17,"render":873}}
+17:26:25 tapped: Statistics
+17:26:34 measured: {"name":"statistics: swipe to previous period 1","ok":true,"frames":13,"firstFrameMs":90,"settleMs":556,"afterLastInputMs":556,"janky":13,"p50":50,"p95":67,"worst":67,"phases":{"late":95,"input":24,"layout":1,"record":33,"sync":17,"render":349}}
+17:26:39 measured: {"name":"statistics: swipe to previous period 2","ok":true,"frames":15,"firstFrameMs":86,"settleMs":636,"afterLastInputMs":636,"janky":15,"p50":53,"p95":101,"worst":101,"phases":{"late":161,"input":22,"layout":1,"record":46,"sync":15,"render":462}}
+17:26:43 measured: {"name":"statistics: swipe to previous period 3","ok":true,"frames":16,"firstFrameMs":86,"settleMs":637,"afterLastInputMs":637,"janky":16,"p50":46,"p95":102,"worst":102,"phases":{"late":162,"input":34,"layout":2,"record":46,"sync":15,"render":415}}
+17:26:47 measured: {"name":"statistics: swipe to next period 1","ok":true,"frames":14,"firstFrameMs":76,"settleMs":517,"afterLastInputMs":517,"janky":14,"p50":34,"p95":67,"worst":67,"phases":{"late":34,"input":31,"layout":7,"record":22,"sync":15,"render":366}}
+17:26:52 measured: {"name":"statistics: swipe to next period 2","ok":true,"frames":16,"firstFrameMs":86,"settleMs":687,"afterLastInputMs":687,"janky":16,"p50":68,"p95":102,"worst":102,"phases":{"late":180,"input":25,"layout":1,"record":42,"sync":28,"render":486}}
+17:26:56 measured: {"name":"statistics: swipe to next period 3","ok":true,"frames":17,"firstFrameMs":76,"settleMs":660,"afterLastInputMs":660,"janky":17,"p50":67,"p95":88,"worst":88,"phases":{"late":188,"input":23,"layout":1,"record":41,"sync":16,"render":576}}
+17:27:02 measured: {"name":"statistics: 3 flicks down","ok":true,"inputsMs":[10,1000,2030],"frames":64,"firstFrameMs":70,"settleMs":2722,"afterLastInputMs":692,"janky":64,"p50":101,"p95":137,"worst":152,"phases":{"late":1478,"input":48,"layout":21,"record":15,"sync":84,"render":2651}}
+17:27:04 tapped: More
+17:27:08 tapped: Settings
+17:27:12 tapped: Formatting
+17:27:24 measured: {"name":"currency list: open","ok":true,"frames":23,"firstFrameMs":43,"settleMs":443,"afterLastInputMs":443,"janky":22,"p50":51,"p95":183,"worst":234,"phases":{"late":318,"input":29,"layout":5,"record":8,"sync":16,"render":839}}
+17:27:35 measured: {"name":"currency list: 8 fast flicks down","ok":true,"inputsMs":[10,520,1170,1780,2400,3090,3810,4500],"frames":166,"firstFrameMs":60,"settleMs":5481,"afterLastInputMs":981,"janky":165,"p50":83,"p95":150,"worst":167,"phases":{"late":3564,"input":121,"layout":30,"record":185,"sync":224,"render":6317}}
+17:27:46 measured: {"name":"currency list: 8 fast flicks up","ok":true,"inputsMs":[10,600,1290,1910,2510,3020,3590,4260],"frames":150,"firstFrameMs":63,"settleMs":5265,"afterLastInputMs":1005,"janky":150,"p50":82,"p95":150,"worst":158,"phases":{"late":3093,"input":201,"layout":34,"record":145,"sync":165,"render":5583}}
+17:28:17 visual: {"name":"tab Operations (first)","ok":true,"changes":94,"visualMs":241}
+17:28:25 visual: {"name":"tab Statistics (first)","ok":true,"changes":5,"visualMs":19}
+17:28:33 visual: {"name":"tab Categories (first)","ok":true,"changes":27,"visualMs":62}
+17:28:40 visual: {"name":"tab Operations (again)","ok":true,"changes":15,"visualMs":15}
+17:28:47 visual: {"name":"tab Statistics (again)","ok":true,"changes":1,"visualMs":0}
+17:28:55 visual: {"name":"tab Categories (again)","ok":true,"changes":14,"visualMs":8}
+17:29:04 visual: {"name":"operations: swipe to previous period 1","ok":true,"changes":26,"visualMs":818}
+17:29:11 visual: {"name":"operations: swipe to previous period 2","ok":true,"changes":28,"visualMs":588}
+17:29:19 visual: {"name":"operations: one flick down 1","ok":true,"changes":63,"visualMs":2245}
+17:29:27 visual: {"name":"operations: one flick down 2","ok":true,"changes":61,"visualMs":2233}
+17:29:37 visual: {"name":"categories: swipe to previous period 1","ok":true,"changes":26,"visualMs":592}
+17:29:44 visual: {"name":"categories: swipe to previous period 2","ok":true,"changes":25,"visualMs":549}
+17:29:53 visual: {"name":"statistics: swipe to previous period 1","ok":true,"changes":14,"visualMs":580}
+17:30:01 visual: {"name":"statistics: swipe to previous period 2","ok":true,"changes":14,"visualMs":592}
+17:30:09 visual: {"name":"statistics: one flick down","ok":true,"changes":26,"visualMs":1041}
+17:30:13 tapped: Settings
+17:30:17 tapped: Formatting
+17:30:29 visual: {"name":"currency list: open","ok":true,"changes":22,"visualMs":481}
+17:30:37 visual: {"name":"currency list: one fast flick","ok":true,"changes":59,"visualMs":2226}
+17:30:58 trace: 
+17:31:07 trace: 
+17:31:17 trace: 
+17:31:27 trace: 

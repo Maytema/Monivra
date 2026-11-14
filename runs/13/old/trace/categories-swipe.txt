@@ -1,0 +1,94 @@
+#=#=#                                                                                                                                                     1.0%###################                                                       27.1%######################################################################## 100.0%
+Downloading https://commondatastorage.googleapis.com/perfetto-luci-artifacts/v59.1/linux-amd64/trace_processor_shell
+CPU time by thread (ms):
+  RenderThread                      770
+  Chrome_InProcGp                   414
+  vra.finance.dev                    26
+  VizWebView                         21
+  Chrome_IOThread                     6
+  binder:10300_2                      5
+  Chrome_ChildIOT                     1
+  GPU completion                      1
+  binder:10300_3                      1
+  binder:10300_1                      1
+  ThreadPoolForeg                     1
+  HWC release                         0
+  binder:10300_4                      0
+
+main: slices (level, name, count, total ms, longest ms)
+  0 Choreographer#doFrame #                                                   40    1195.7     67.5
+  1   Choreographer#doFrame - resynced to # in #.#ms                            24     856.4     65.0
+  2     traversal                                                                 22     675.4     61.4
+  1   traversal                                                                 10     289.8     67.2
+  2     draw                                                                      10     289.5     67.2
+  2     animation                                                                 24     178.5     54.4
+  1   animation                                                                 15      45.9     15.7
+  2     input                                                                      4       2.2      1.2
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xd#ab#aa#                    1       1.8      1.8
+  1   input                                                                      6       1.3      0.4
+  0 Choreographer#onVsync #                                                   40       0.5      0.1
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xda#d#                       1       0.3      0.3
+  2     Choreographer#scheduleVsyncLocked                                         14       0.3      0.1
+  1   ViewPostImeInputStage id=#xda#d#                                           1       0.3      0.3
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xfcac#                       1       0.2      0.2
+  1   ViewPostImeInputStage id=#xd#ab#aa#                                        1       0.2      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#b#                        1       0.2      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xcbe#b#f                     1       0.2      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xe#bb#                       1       0.1      0.1
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xdc#                         1       0.1      0.1
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#fe#                       1       0.1      0.1
+  0 Choreographer#scheduleVsyncLocked                                          2       0.0      0.0
+  1   EarlyPostImeInputStage id=#xda#d#                                          1       0.0      0.0
+  0 monitor contention with owner RenderThread (#) at boolean android.os.M     1       0.0      0.0
+
+RenderThread: slices (level, name, count, total ms, longest ms)
+  0 DrawFrames #                                                              32    1324.2     76.5
+  1   Drawing  #.# #.# #.# #.#                                                  32    1306.9     76.5
+  2     eglSwapBuffersWithDamageKHR                                               32     854.2     60.4
+  2     WebViewFunctor::drawGl                                                    32     442.3     66.3
+  2     reportMetricsWithPresentTime                                              32       3.5      2.6
+  1   syncFrameState                                                            32       1.1      0.1
+  2     prepareTree                                                               32       0.9      0.1
+  2     auto skgpu::v#::OpsTask::onExecute(GrOpFlushState *)::(anonymous class    32       0.7      0.1
+  2     flush commands                                                            32       0.2      0.0
+  2     dispatchSetFrameTimelineInfo                                              32       0.1      0.0
+  1   query                                                                     64       0.1      0.0
+  2     auto skgpu::v#::OpsTask::onPrepare(GrOpFlushState *)::(anonymous class    32       0.1      0.0
+  2     glDisable encode                                                         128       0.1      0.0
+  2     query                                                                     64       0.0      0.0
+  2     glPixelStorei encode                                                      64       0.0      0.0
+  1   eglBeginFrame                                                             32       0.0      0.0
+  0 notifyFramePending                                                        32       0.0      0.0
+  2     glDepthMask encode                                                        32       0.0      0.0
+  2     glFrontFace encode                                                        32       0.0      0.0
+  2     glLineWidth encode                                                        32       0.0      0.0
+  2     glBindFramebuffer encode                                                  32       0.0      0.0
+  2     glViewport encode                                                         32       0.0      0.0
+  2     glScissor encode                                                          32       0.0      0.0
+  2     glEnable encode                                                           32       0.0      0.0
+
+Chrome_InProcGp: slices (level, name, count, total ms, longest ms)
+  0 rcCreateSyncKHR encode                                                    36     177.9     22.4
+  0 glGenFramebuffers encode                                                  93     102.6     37.4
+  0 rcCreateClientImage encode                                                26      82.1     79.2
+  0 rcClientWaitSyncKHR encode                                                20      54.6     18.9
+  0 rcDestroySyncKHR encode                                                   71      39.7     15.1
+  0 glBufferDataSyncAEMU encode                                               40      26.9     12.1
+  0 glGenTextures encode                                                      32      20.8     12.2
+  0 glTexSubImage#D encode                                                    10       7.0      2.4
+  0 glBufferSubData encode                                                    34       2.0      0.1
+  0 rcDestroyClientImage encode                                               26       1.5      0.1
+  0 glVertexAttribPointerOffset encode                                      1252       0.5      0.0
+  0 glGenBuffers encode                                                        6       0.4      0.1
+  0 glVertexAttribDivisor encode                                             812       0.3      0.0
+  0 glEnableVertexAttribArray encode                                         497       0.3      0.1
+  0 glDisableVertexAttribArray encode                                        699       0.2      0.0
+  0 glUniform#f encode                                                       396       0.2      0.0
+  0 glUseProgram encode                                                      310       0.2      0.0
+  0 glBindTexture encode                                                     142       0.2      0.1
+  0 glBindBuffer encode                                                      251       0.1      0.0
+  0 glUnmapBufferAEMU encode                                                   2       0.1      0.1
+  0 glBindFramebuffer encode                                                 243       0.1      0.0
+  0 glDisable encode                                                         227       0.1      0.0
+  0 glTexParameteri encode                                                   244       0.1      0.0
+  0 glBlitFramebuffer encode                                                  47       0.1      0.1

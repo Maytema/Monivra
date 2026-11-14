@@ -1,0 +1,55 @@
+CPU time by thread (ms):
+  RenderThread                     1313
+  mqt_v_js                          242
+  ra.finance.next                   171
+  Jit thread pool                    34
+  binder:14579_5                     13
+  binder:14579_2                      8
+  HWC release                         4
+  GPU completion                      1
+  binder:14579_4                      0
+  binder:14579_3                      0
+
+main: slices (level, name, count, total ms, longest ms)
+  0 Choreographer#doFrame #                                                  258    1580.4     70.6
+  1   traversal                                                                 51     983.4     70.3
+  2     draw                                                                      51     976.5     70.2
+  1   Choreographer#doFrame - resynced to # in #.#ms                            26     501.5     32.6
+  2     traversal                                                                 25     443.2     32.3
+  1   animation                                                                232      81.5     31.8
+  2     animation                                                                 26      58.1     22.7
+  2     MountItemDispatcher::mountViews mountItems to execute                     35      50.0     31.7
+  2     MountItemDispatcher::mountViews preMountItems                              2      10.3      9.2
+  1   input                                                                      9       7.4      3.3
+  2     Choreographer#scheduleVsyncLocked                                        226       6.3      2.2
+  2     MountItemDispatcher::premountViews                                         4       4.8      4.8
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#f#f#                      1       3.3      3.3
+  0 Choreographer#onVsync #                                                  258       1.4      0.0
+  2     BatchEventDispatchedListeners                                            232       1.2      0.1
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xd#c                         1       1.0      1.0
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#cbfa                      1       0.8      0.8
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xfbacb#e                     1       0.7      0.7
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xffb#cfc                     1       0.7      0.7
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xdc#f                        1       0.6      0.6
+  1   ViewPostImeInputStage id=#xffb#cfc                                         1       0.6      0.6
+  1   ViewPostImeInputStage id=#xdc#f                                            1       0.5      0.5
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#fc#                       1       0.4      0.4
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xe#                          1       0.4      0.4
+
+RenderThread: slices (level, name, count, total ms, longest ms)
+  0 DrawFrames #                                                              76    1853.3     50.6
+  1   Drawing  #.#  #.# #.# #.#                                                 76    1729.3     50.3
+  2     eglSwapBuffersWithDamageKHR                                               76    1367.0     49.5
+  2     flush commands                                                            76     297.9     20.6
+  1   syncFrameState                                                            76      89.1     17.1
+  2     prepareTree                                                               76      81.8     17.0
+  2     dispatchSetFrameTimelineInfo                                              76       1.8      1.5
+  2     reportMetricsWithPresentTime                                              76       1.4      0.1
+  1   query                                                                    152       0.2      0.0
+  0 notifyFramePending                                                        76       0.1      0.1
+  2     query                                                                    152       0.1      0.0
+  1   eglBeginFrame                                                             76       0.1      0.0
+
+mqt_v_js: slices (level, name, count, total ms, longest ms)
+  0 monitor contention with owner main (#) at boolean android.os.MessageQu     1       0.0      0.0
+  1   Lock contention on a monitor lock (owner tid: #)                           1       0.0      0.0
