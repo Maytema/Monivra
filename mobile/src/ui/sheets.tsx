@@ -2,8 +2,8 @@
 // a layer opens over the screen, the next one over it, "back" closes the top one. The host is drawn
 // inside the app (not in a native Modal), so the same insets and theme apply to every layer; the panel
 // of a sheet adds the system's bottom inset to its own padding, and rises above the keyboard.
-import { createContext, useContext, useEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
-import { Animated, BackHandler, Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { createContext, useContext, useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Animated, BackHandler, Dimensions, Keyboard, PanResponder, ScrollView, StyleSheet, View, type KeyboardEvent } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
@@ -22,6 +22,8 @@ interface Layer {
   // The content scrolls by itself (a long virtualized list must not sit inside another scroll view, or
   // every row of it is drawn at once).
   scrolls: boolean;
+  // A full page that a swipe down closes (an information page without its own scrolling).
+  swipeDown: boolean;
   // When it was asked for (the emulator test reads how long a layer takes to appear).
   asked: number;
 }
@@ -29,6 +31,7 @@ interface Layer {
 export interface SheetOptions {
   bare?: boolean;
   scrolls?: boolean;
+  swipeDown?: boolean;
 }
 
 let layers: readonly Layer[] = [];
@@ -43,7 +46,7 @@ export const sheets = {
   // Opens a layer over the current ones; returns its id.
   open(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
     const id = ++counter;
-    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, asked: now() }]);
+    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown, asked: now() }]);
     return id;
   },
   // Starts closing a layer (the animation removes it).
@@ -100,6 +103,28 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const insets = useSafeAreaInsets();
   const progress = useRef(new Animated.Value(0)).current;
   const close = () => sheets.close(layer.id);
+  // How far the keyboard reaches into this layer's own area. Measured against the layer itself, not taken from the
+  // keyboard's height: whether the window was already shortened (adjustResize, the keyboard-avoiding root) differs
+  // between phones and system bars, and the dialog must end above the keyboard on all of them.
+  const area = useRef<View>(null);
+  const [covered, setCovered] = useState(0);
+  const scroller = useRef<ScrollView>(null);
+  // With the keyboard up, a dialog shows its end (the field and its buttons), not its top.
+  useEffect(() => {
+    if (!covered) return;
+    const timer = setTimeout(() => scroller.current?.scrollToEnd({ animated: true }), 90);
+    return () => clearTimeout(timer);
+  }, [covered]);
+  useEffect(() => {
+    const shown = Keyboard.addListener("keyboardDidShow", (e: KeyboardEvent) => {
+      area.current?.measureInWindow((_x, y, _w, h) => setCovered(Math.max(0, Math.round(y + h - e.endCoordinates.screenY))));
+    });
+    const hidden = Keyboard.addListener("keyboardDidHide", () => setCovered(0));
+    return () => {
+      shown.remove();
+      hidden.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (!layer.closing) perfLog(`layer ${layer.kind} shown`, now() - layer.asked);
@@ -109,6 +134,19 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   }, [layer.closing, layer.id, progress]);
 
   const rise = progress.interpolate({ inputRange: [0, 1], outputRange: [Dimensions.get("window").height, 0] });
+  // Dragging a page down follows the finger; past a third of a second's flick or 120 px it closes.
+  const drag = useRef(new Animated.Value(0)).current;
+  const swipe = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_e, g) => g.dy > 14 && g.dy > Math.abs(g.dx) * 1.5,
+      onPanResponderMove: (_e, g) => drag.setValue(Math.max(0, g.dy)),
+      onPanResponderRelease: (_e, g) => {
+        if (g.dy > 120 || g.vy > 0.9) sheets.close(layer.id);
+        else Animated.spring(drag, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start();
+      },
+      onPanResponderTerminate: () => Animated.spring(drag, { toValue: 0, useNativeDriver: true, bounciness: 0 }).start(),
+    }),
+  ).current;
   const veil = first ? "rgba(0,0,0,0.33)" : "rgba(0,0,0,0.2)";
   const sheet = layer.kind === "sheet";
   const full = layer.kind === "full";
@@ -119,11 +157,11 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
           <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Close" onPress={close} />
         </Animated.View>
         {full ? (
-          <Animated.View style={{ ...StyleSheet.absoluteFill, backgroundColor: p.bg, paddingTop: insets.top, paddingBottom: insets.bottom, transform: [{ translateY: rise }] }}>
+          <Animated.View {...(layer.swipeDown ? swipe.panHandlers : {})} style={{ ...StyleSheet.absoluteFill, backgroundColor: p.bg, paddingTop: insets.top, paddingBottom: insets.bottom, transform: [{ translateY: layer.swipeDown ? Animated.add(rise, drag) : rise }] }}>
             {layer.content}
           </Animated.View>
         ) : (
-        <View style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, pointerEvents: "box-none" }}>
+        <View ref={area} collapsable={false} style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, paddingBottom: (sheet ? 0 : 20) + covered, pointerEvents: "box-none" }}>
           {sheet ? (
             <Animated.View
               style={{
@@ -151,7 +189,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             <Animated.View
               style={{ opacity: progress, backgroundColor: p.dialog, borderRadius: chrome.dialogRadius, padding: 24, maxHeight: "91%" }}
             >
-              <ScrollView style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
+              <ScrollView ref={scroller} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
                 {layer.content}
               </ScrollView>
             </Animated.View>

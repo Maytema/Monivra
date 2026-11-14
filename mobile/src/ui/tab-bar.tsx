@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
-import { Icon } from "./kit.tsx";
+import { ICONS } from "./icon-paths.ts";
 import { chrome } from "./theme.ts";
 import Svg, { Path } from "react-native-svg";
 
@@ -18,24 +18,14 @@ export const TABS = [
   { name: "more", title: "More", icon: "apps" },
 ] as const;
 
-// The open tab shows its icon filled (as in the reference screens), the inner lines cut out in the
-// colour of the pill.
-const FILLED: Record<string, { shape: string; inner?: string; dot?: string }> = {
-  // Same silhouette as the outline icon (flap on top, body, clasp on the right), only filled.
-  wallet: { shape: "M4 5h15v4H5a2 2 0 0 1 0-4zM3 7h18v13H3z", inner: "M17 13h4v4h-4z", dot: "M18.6 14.4a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z" },
-  categories: { shape: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" },
-  receipt: { shape: "M4 2l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v20l-2-2-2 2-2-2-2 2-2-2-2 2-2-2-2 2z", inner: "M7.5 7h9M7.5 11h9M7.5 15h9" },
-  stats: { shape: "M3 3h18v18H3z", inner: "M8 16v-4m4 4V7m4 9v-6" },
-};
-
-function TabIcon({ name, active, color, cut }: { name: string; active: boolean; color: string; cut: string }) {
-  const filled = active ? FILLED[name] : undefined;
-  if (!filled) return <Icon name={name} size={24} color={color} />;
+// All five icons are drawn the same way and at the same size; the open tab differs by its colour, its pill and a
+// slightly heavier line. (A filled glyph changed the shape of the icons — the wallet and the receipt turned into
+// solid blocks — and the icons no longer looked equally big.)
+function TabIcon({ name, active, color }: { name: string; active: boolean; color: string }) {
+  const heavy = name === "apps";
   return (
-    <Svg width={24} height={24} viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
-      <Path d={filled.shape} fill={color} stroke={color} strokeWidth={filled.dot ? 0.6 : 1.7} />
-      {filled.inner ? <Path d={filled.inner} fill={filled.dot ? cut : "none"} stroke={filled.dot ? "none" : cut} strokeWidth={1.9} /> : null}
-      {filled.dot ? <Path d={filled.dot} fill={color} /> : null}
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={heavy ? 3.8 : active ? 2.1 : 1.7} strokeLinecap="round" strokeLinejoin="round">
+      <Path d={ICONS[name] ?? ""} />
     </Svg>
   );
 }
@@ -98,7 +88,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
                 backgroundColor: active ? p.soft : "transparent",
               }}
             >
-              <TabIcon name={tab.icon} active={active} color={color} cut={p.soft} />
+              <TabIcon name={tab.icon} active={active} color={color} />
             </View>
             <Text numberOfLines={1} style={{ color, fontSize: 12, lineHeight: 16, fontWeight: active ? "600" : "400" }}>
               {t.t(tab.title)}

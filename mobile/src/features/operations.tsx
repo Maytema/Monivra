@@ -2,7 +2,7 @@
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
 import { countRender } from "../platform/perf.ts";
-import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BackHandler, FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
@@ -182,36 +182,6 @@ export function OperationsScreen() {
   );
 }
 
-// The day name that stays at the top while its operations pass. It is drawn over the list from what the list
-// reports as the first visible row — not by the scroll view's own sticky headers, which for a list that
-// draws only the rows near the window pin the wrong cell (a stale row stuck at the top) and need the list to
-// be rebuilt whenever the days change. It keeps its own state, so scrolling draws only this small piece again,
-// never the list.
-interface StickyHandle {
-  first(date: string | null): void;
-  scrolled(y: number, headerHeight: number): void;
-}
-function StickyDay({ days, ref }: { days: Map<string, Operation[]>; ref: Ref<StickyHandle> }) {
-  countRender("sticky day");
-  const [date, setDate] = useState<string | null>(null);
-  const [pinned, setPinned] = useState(false);
-  useImperativeHandle(
-    ref,
-    () => ({
-      first: setDate,
-      scrolled: (y, headerHeight) => setPinned((was) => (y >= headerHeight && y > 0 ? true : was && y > headerHeight - 2 ? was : false)),
-    }),
-    [],
-  );
-  const ops = pinned && date ? days.get(date) : undefined;
-  if (!ops || !date) return null;
-  return (
-    <View pointerEvents="none" style={{ position: "absolute", top: 0, left: 16, right: 16 }}>
-      <DayHead date={date} ops={ops} />
-    </View>
-  );
-}
-
 // The list of one period: drawn for the current period and, beforehand, for its neighbours. The current page
 // draws a few screens of rows around the window; a neighbour only what the first screen shows (that is all a
 // swipe can uncover), and the rest when it becomes the current one.
@@ -246,18 +216,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     const timer = setTimeout(() => list.current?.scrollToIndex({ index: found[0]!, viewPosition: found.length > 1 ? 0 : 0.5, animated: true }), 120);
     return () => clearTimeout(timer);
   }, [active, lit, items]);
-  const dayOps = useMemo(() => new Map(items.flatMap((x) => (x.kind === "day" ? [[x.date, x.ops] as const] : []))), [items]);
-  const sticky = useRef<StickyHandle>(null);
-  const headerHeight = useRef(0);
-  const viewable = useRef(({ viewableItems }: { viewableItems: { item: Item }[] }) => {
-    const first = viewableItems[0]?.item;
-    sticky.current?.first(first ? (first.kind === "day" ? first.date : first.op.date) : null);
-  }).current;
   const scrolled = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const y = e.nativeEvent.contentOffset.y;
-      sticky.current?.scrolled(y, headerHeight.current);
-      onTop?.(y < 12);
+      onTop?.(e.nativeEvent.contentOffset.y < 12);
     },
     [onTop],
   );
@@ -268,7 +229,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   // button does not make it go through its rows again.
   const header = useMemo(
     () => (
-      <View style={{ marginHorizontal: -16 }} onLayout={(e) => (headerHeight.current = e.nativeEvent.layout.height)}>
+      <View style={{ marginHorizontal: -16 }}>
         <View style={{ paddingHorizontal: 16 }}>
           <PostedBanner />
           {balances ? (
@@ -304,8 +265,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         keyExtractor={keyOfItem}
         onScroll={scrolled}
         scrollEventThrottle={32}
-        onViewableItemsChanged={viewable}
-        viewabilityConfig={VIEWABILITY}
         // The first screen at once; then, for the current page, two screens of rows on each side of the window
         // in few large steps. Every step is a commit that lays out and redraws the whole list: a system trace of
         // the first opening of the tab (audit run 12) showed ~90 commits and redrawn frames over 3.6 s with steps
@@ -319,12 +278,10 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
       />
-      <StickyDay ref={sticky} days={dayOps} />
     </View>
   );
 });
 
-const VIEWABILITY = { itemVisiblePercentThreshold: 1, minimumViewTime: 0 } as const;
 // Rows that fill one screen (a row is about 74 dp high).
 const FIRST_SCREEN = 12;
 const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);

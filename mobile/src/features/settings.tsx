@@ -16,6 +16,7 @@ import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
 import { THEME_COLORS } from "../ui/icon-groups.ts";
+import { mix } from "../ui/theme.ts";
 import { Icon } from "../ui/kit.tsx";
 import { openMonthStart } from "../ui/period-dialog.tsx";
 import { Footnote, SettingRow, SwitchRow } from "../ui/rows.tsx";
@@ -103,16 +104,27 @@ function Formatting() {
 // ---- Styles and elements ----------------------------------------------------------------------------
 const go = (page: string) => () => router.push({ pathname: "/settings-page", params: { page } });
 
+// The colours of the application, four in a row: each in a soft tile of its own tint; the chosen one shows a white
+// disc with a check mark in the colour.
 function ColorTheme() {
   const { s, set } = useSetting();
   const p = usePalette();
   return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 14, padding: 18, justifyContent: "center" }}>
-      {THEME_COLORS.map((c) => (
-        <Pressable key={c} accessibilityRole="button" accessibilityLabel={c} accessibilityState={{ selected: s.accent === c }} onPress={() => set({ accent: c })} style={{ width: "21%", aspectRatio: 1, borderRadius: 18, backgroundColor: c, alignItems: "center", justifyContent: "center", borderWidth: s.accent === c ? 3 : 0, borderColor: p.ink }}>
-          {s.accent === c ? <Icon name="check" size={26} color="#ffffff" /> : null}
-        </Pressable>
-      ))}
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, padding: 16 }}>
+      {THEME_COLORS.map((c) => {
+        const on = s.accent === c;
+        return (
+          <Pressable key={c} accessibilityRole="button" accessibilityLabel={c} accessibilityState={{ selected: on }} onPress={() => set({ accent: c })} style={{ width: "22.6%", aspectRatio: 1, borderRadius: 22, backgroundColor: mix(c, p.bg, 0.14), alignItems: "center", justifyContent: "center" }}>
+            <View style={{ width: "78%", aspectRatio: 1, borderRadius: 999, backgroundColor: c, alignItems: "center", justifyContent: "center" }}>
+              {on ? (
+                <View style={{ width: "52%", aspectRatio: 1, borderRadius: 999, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                  <Icon name="check" size={20} color={c} />
+                </View>
+              ) : null}
+            </View>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }

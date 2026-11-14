@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { usePalette, useT } from "../ui/app-context.tsx";
+import { openSharedAccess } from "./shared-access.tsx";
 import { HintBanner } from "../ui/hint-banner.tsx";
 import { Icon, Screen } from "../ui/kit.tsx";
 import { BrandMark } from "../ui/brand-mark.tsx";
@@ -63,7 +64,7 @@ export function MoreScreen() {
               </Pressable>
             ))}
           </View>
-            {i === 0 ? <HintBanner plain id="shared-access" text="Shared access" onPress={() => router.push({ pathname: "/info", params: { kind: "shared" } })} /> : null}
+            {i === 0 ? <HintBanner plain id="shared-access" text="Shared access" onPress={openSharedAccess} /> : null}
           </Fragment>
         ))}
         <Text style={{ color: p.muted, fontSize: 14, textAlign: "center", paddingTop: 22, paddingBottom: 24 }}>{`Monivra · ${APP_VERSION} (${t.t("Closed Beta")}) · React Native`}</Text>

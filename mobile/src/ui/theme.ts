@@ -89,7 +89,7 @@ export const chrome = {
   navPadTop: 7,
   navMinBottom: 10,
   navItem: 56,
-  navPill: { width: 56, height: 32, radius: 30 },
+  navPill: { width: 56, height: 32, radius: 16 },
   fab: 62,
   edgeGap: 16,
   contentSide: 11,
