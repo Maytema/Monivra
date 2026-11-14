@@ -271,7 +271,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
             <View style={{ flex: 1 }}>
               <Text style={{ color: p.ink, fontSize: 16 }}>{g.name}</Text>
               <View style={{ height: 14, borderRadius: 7, backgroundColor: p.tint, overflow: "hidden", marginTop: 6 }}>
-                <View style={{ width: `${total ? (g.total / total) * 100 : 0}%`, height: 14, borderRadius: 7, backgroundColor: p.accent }} />
+                <View style={{ width: `${total ? (g.total / total) * 100 : 0}%`, height: 14, borderRadius: 7, backgroundColor: g.color }} />
               </View>
             </View>
             <View style={{ alignItems: "flex-end" }}>
