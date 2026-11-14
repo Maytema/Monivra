@@ -1,0 +1,116 @@
+app old: app.monivra.finance.dev, apks/old-apk/monivra-0.1.0-build.8.apk
+Success
+
+on the phone: -rw-rw---- 1 u0_a182 media_rw 452162 2026-11-14 14:36 /sdcard/Download/perf-data.json
+Status: ok
+tapped: Start with basic set
+tapped: More
+tapped: Data
+tapped: Data file
+tapped: Restore from file
+tapped: perf-data.json
+tapped: Replace data
+tapped: Confirm
+am start: TotalTime: 3994
+measured: {"name":"cold start 1","ok":true,"frames":4,"firstFrameMs":2880,"settleMs":6230,"afterLastInputMs":6230,"janky":4,"p50":2667,"p95":3051,"worst":3051}
+am start: TotalTime: 3607
+measured: {"name":"cold start 2","ok":true,"frames":5,"firstFrameMs":2660,"settleMs":5764,"afterLastInputMs":5764,"janky":5,"p50":2802,"p95":2821,"worst":2821}
+am start: TotalTime: 2881
+measured: {"name":"cold start 3","ok":true,"frames":6,"firstFrameMs":2516,"settleMs":5533,"afterLastInputMs":5533,"janky":6,"p50":218,"p95":2700,"worst":2700}
+tabs at: {"Operations":{"x":541,"y":2233,"bounds":[430,2157,651,2309]},"Statistics":{"x":757,"y":2233,"bounds":[648,2157,866,2309]},"Categories":{"x":324,"y":2233,"bounds":[215,2157,433,2309]},"Accounts":{"x":109,"y":2233,"bounds":[0,2157,217,2309]}}
+measured: {"name":"tab Operations (first)","ok":true,"frames":2,"firstFrameMs":103,"settleMs":1146,"afterLastInputMs":1146,"janky":2,"p50":43,"p95":1002,"worst":1002}
+measured: {"name":"tab Statistics (first)","ok":true,"frames":2,"firstFrameMs":66,"settleMs":600,"afterLastInputMs":600,"janky":2,"p50":50,"p95":484,"worst":484}
+measured: {"name":"tab Categories (first)","ok":true,"frames":15,"firstFrameMs":66,"settleMs":1117,"afterLastInputMs":1117,"janky":15,"p50":137,"p95":417,"worst":417}
+measured: {"name":"tab Accounts (first)","ok":true,"frames":2,"firstFrameMs":53,"settleMs":138,"afterLastInputMs":138,"janky":2,"p50":34,"p95":67,"worst":67}
+measured: {"name":"tab Operations (again)","ok":true,"frames":2,"firstFrameMs":93,"settleMs":228,"afterLastInputMs":228,"janky":2,"p50":51,"p95":100,"worst":100}
+measured: {"name":"tab Statistics (again)","ok":true,"frames":2,"firstFrameMs":73,"settleMs":173,"afterLastInputMs":173,"janky":2,"p50":50,"p95":67,"worst":67}
+measured: {"name":"tab Categories (again)","ok":true,"frames":17,"firstFrameMs":63,"settleMs":930,"afterLastInputMs":930,"janky":17,"p50":135,"p95":184,"worst":184}
+measured: {"name":"tab Accounts (again)","ok":true,"frames":2,"firstFrameMs":53,"settleMs":153,"afterLastInputMs":153,"janky":2,"p50":50,"p95":50,"worst":50}
+tapped: Operations
+measured: {"name":"operations: 6 flicks down","ok":true,"inputsMs":[20,1100,2390,3670,4740,5820],"frames":104,"firstFrameMs":96,"settleMs":6319,"afterLastInputMs":499,"janky":104,"p50":149,"p95":189,"worst":254}
+measured: {"name":"operations: 6 flicks up","ok":true,"inputsMs":[20,1160,2250,3190,4090,5280],"frames":72,"firstFrameMs":90,"settleMs":5907,"afterLastInputMs":627,"janky":72,"p50":134,"p95":170,"worst":185}
+measured: {"name":"operations: swipe to previous period 1","ok":true,"frames":12,"firstFrameMs":180,"settleMs":1180,"afterLastInputMs":1180,"janky":12,"p50":136,"p95":217,"worst":217}
+measured: {"name":"operations: swipe to previous period 2","ok":true,"frames":12,"firstFrameMs":223,"settleMs":1173,"afterLastInputMs":1173,"janky":12,"p50":134,"p95":169,"worst":169}
+measured: {"name":"operations: swipe to previous period 3","ok":true,"frames":14,"firstFrameMs":213,"settleMs":1232,"afterLastInputMs":1232,"janky":14,"p50":152,"p95":172,"worst":172}
+measured: {"name":"operations: swipe to next period 1","ok":true,"frames":14,"firstFrameMs":216,"settleMs":1221,"afterLastInputMs":1221,"janky":14,"p50":138,"p95":190,"worst":190}
+measured: {"name":"operations: swipe to next period 2","ok":true,"frames":11,"firstFrameMs":230,"settleMs":1151,"afterLastInputMs":1151,"janky":11,"p50":153,"p95":184,"worst":184}
+measured: {"name":"operations: swipe to next period 3","ok":true,"frames":14,"firstFrameMs":186,"settleMs":1173,"afterLastInputMs":1173,"janky":14,"p50":150,"p95":200,"worst":200}
+tapped: Categories
+measured: {"name":"categories: swipe to previous period 1","ok":true,"frames":28,"firstFrameMs":93,"settleMs":1627,"afterLastInputMs":1627,"janky":28,"p50":133,"p95":168,"worst":184}
+measured: {"name":"categories: swipe to previous period 2","ok":true,"frames":26,"firstFrameMs":90,"settleMs":1590,"afterLastInputMs":1590,"janky":26,"p50":134,"p95":202,"worst":218}
+measured: {"name":"categories: swipe to previous period 3","ok":true,"frames":27,"firstFrameMs":83,"settleMs":1567,"afterLastInputMs":1567,"janky":27,"p50":135,"p95":200,"worst":217}
+measured: {"name":"categories: swipe to next period 1","ok":true,"frames":26,"firstFrameMs":106,"settleMs":1573,"afterLastInputMs":1573,"janky":26,"p50":150,"p95":185,"worst":185}
+measured: {"name":"categories: swipe to next period 2","ok":true,"frames":27,"firstFrameMs":93,"settleMs":1543,"afterLastInputMs":1543,"janky":27,"p50":134,"p95":167,"worst":184}
+measured: {"name":"categories: swipe to next period 3","ok":true,"frames":26,"firstFrameMs":76,"settleMs":1460,"afterLastInputMs":1460,"janky":26,"p50":137,"p95":188,"worst":200}
+tapped: Statistics
+measured: {"name":"statistics: swipe to previous period 1","ok":true,"frames":10,"firstFrameMs":80,"settleMs":981,"afterLastInputMs":981,"janky":10,"p50":117,"p95":417,"worst":417}
+measured: {"name":"statistics: swipe to previous period 2","ok":true,"frames":12,"firstFrameMs":93,"settleMs":794,"afterLastInputMs":794,"janky":12,"p50":136,"p95":157,"worst":157}
+measured: {"name":"statistics: swipe to previous period 3","ok":true,"frames":13,"firstFrameMs":90,"settleMs":823,"afterLastInputMs":823,"janky":13,"p50":134,"p95":174,"worst":174}
+measured: {"name":"statistics: swipe to next period 1","ok":true,"frames":12,"firstFrameMs":90,"settleMs":757,"afterLastInputMs":757,"janky":12,"p50":136,"p95":168,"worst":168}
+measured: {"name":"statistics: swipe to next period 2","ok":true,"frames":11,"firstFrameMs":93,"settleMs":743,"afterLastInputMs":743,"janky":11,"p50":118,"p95":168,"worst":168}
+measured: {"name":"statistics: swipe to next period 3","ok":true,"frames":10,"firstFrameMs":80,"settleMs":698,"afterLastInputMs":698,"janky":10,"p50":134,"p95":172,"worst":172}
+measured: {"name":"statistics: 3 flicks down","ok":true,"inputsMs":[10,920,1800],"frames":14,"firstFrameMs":90,"settleMs":759,"afterLastInputMs":-1041,"janky":14,"p50":133,"p95":154,"worst":154}
+tapped: More
+tapped: Settings
+tapped: Formatting
+measured: {"name":"currency list: open","ok":true,"frames":2,"firstFrameMs":100,"settleMs":189,"afterLastInputMs":189,"janky":2,"p50":39,"p95":69,"worst":69}
+measured: {"name":"currency list: 8 fast flicks down","ok":true,"inputsMs":[20,650,1460,2090,2550,2970,3400,3840],"frames":44,"firstFrameMs":93,"settleMs":2144,"afterLastInputMs":-1696,"janky":44,"p50":118,"p95":152,"worst":157}
+measured: {"name":"currency list: 8 fast flicks up","ok":true,"inputsMs":[20,520,990,1810,2470,3340,4060,4550],"frames":89,"firstFrameMs":83,"settleMs":5984,"afterLastInputMs":1434,"janky":89,"p50":124,"p95":169,"worst":184}
+app rn: app.monivra.finance.next, apks/rn-apk/app-release.apk
+Success
+
+on the phone: -rw-rw---- 1 u0_a182 media_rw 452162 2026-11-14 14:36 /sdcard/Download/perf-data.json
+Status: ok
+tapped: Start with basic set
+tapped: More
+tapped: Data
+tapped: Data file
+tapped: Restore from file
+tapped: perf-data.json
+tapped: Replace data
+tapped: Confirm
+am start: TotalTime: 3000
+measured: {"name":"cold start 1","ok":true,"frames":31,"firstFrameMs":2266,"settleMs":4123,"afterLastInputMs":4123,"janky":31,"p50":102,"p95":334,"worst":824}
+am start: TotalTime: 2592
+measured: {"name":"cold start 2","ok":true,"frames":31,"firstFrameMs":1883,"settleMs":3818,"afterLastInputMs":3818,"janky":31,"p50":102,"p95":368,"worst":851}
+am start: TotalTime: 2490
+measured: {"name":"cold start 3","ok":true,"frames":28,"firstFrameMs":1890,"settleMs":3791,"afterLastInputMs":3791,"janky":28,"p50":103,"p95":320,"worst":967}
+tabs at: {"Operations":{"x":540,"y":2310,"bounds":[462,2289,618,2331]},"Statistics":{"x":756,"y":2310,"bounds":[689,2289,823,2331]},"Categories":{"x":324,"y":2310,"bounds":[247,2289,401,2331]},"Accounts":{"x":108,"y":2310,"bounds":[40,2289,176,2331]}}
+measured: {"name":"tab Operations (first)","ok":true,"frames":89,"firstFrameMs":73,"settleMs":3455,"afterLastInputMs":3455,"janky":89,"p50":84,"p95":118,"worst":151}
+measured: {"name":"tab Statistics (first)","ok":true,"frames":10,"firstFrameMs":16,"settleMs":800,"afterLastInputMs":800,"janky":10,"p50":100,"p95":133,"worst":133}
+measured: {"name":"tab Categories (first)","ok":true,"frames":24,"firstFrameMs":60,"settleMs":394,"afterLastInputMs":394,"janky":24,"p50":71,"p95":103,"worst":111}
+measured: {"name":"tab Accounts (first)","ok":true,"frames":13,"firstFrameMs":46,"settleMs":101,"afterLastInputMs":101,"janky":13,"p50":69,"p95":125,"worst":125}
+measured: {"name":"tab Operations (again)","ok":true,"frames":14,"firstFrameMs":50,"settleMs":117,"afterLastInputMs":117,"janky":13,"p50":54,"p95":101,"worst":101}
+measured: {"name":"tab Statistics (again)","ok":true,"frames":1,"firstFrameMs":63,"settleMs":164,"afterLastInputMs":164,"janky":1,"p50":101,"p95":101,"worst":101}
+measured: {"name":"tab Categories (again)","ok":true,"frames":13,"firstFrameMs":60,"settleMs":110,"afterLastInputMs":110,"janky":13,"p50":82,"p95":117,"worst":117}
+measured: {"name":"tab Accounts (again)","ok":true,"frames":14,"firstFrameMs":56,"settleMs":123,"afterLastInputMs":123,"janky":14,"p50":50,"p95":136,"worst":136}
+tapped: Operations
+measured: {"name":"operations: 6 flicks down","ok":true,"inputsMs":[10,1110,2310,3590,4770,6000],"frames":183,"firstFrameMs":90,"settleMs":7094,"afterLastInputMs":1094,"janky":183,"p50":100,"p95":152,"worst":304}
+measured: {"name":"operations: 6 flicks up","ok":true,"inputsMs":[20,1130,2430,3680,4750,5820],"frames":196,"firstFrameMs":86,"settleMs":7389,"afterLastInputMs":1569,"janky":196,"p50":88,"p95":129,"worst":169}
+measured: {"name":"operations: swipe to previous period 1","ok":true,"frames":36,"firstFrameMs":83,"settleMs":1250,"afterLastInputMs":1250,"janky":36,"p50":75,"p95":183,"worst":205}
+measured: {"name":"operations: swipe to previous period 2","ok":true,"frames":30,"firstFrameMs":83,"settleMs":883,"afterLastInputMs":883,"janky":30,"p50":67,"p95":113,"worst":117}
+measured: {"name":"operations: swipe to previous period 3","ok":true,"frames":32,"firstFrameMs":96,"settleMs":997,"afterLastInputMs":997,"janky":32,"p50":51,"p95":101,"worst":111}
+measured: {"name":"operations: swipe to next period 1","ok":true,"frames":29,"firstFrameMs":80,"settleMs":780,"afterLastInputMs":780,"janky":29,"p50":52,"p95":89,"worst":92}
+measured: {"name":"operations: swipe to next period 2","ok":true,"frames":31,"firstFrameMs":86,"settleMs":920,"afterLastInputMs":920,"janky":31,"p50":52,"p95":101,"worst":102}
+measured: {"name":"operations: swipe to next period 3","ok":true,"frames":30,"firstFrameMs":93,"settleMs":943,"afterLastInputMs":943,"janky":29,"p50":50,"p95":102,"worst":118}
+tapped: Categories
+measured: {"name":"categories: swipe to previous period 1","ok":true,"frames":26,"firstFrameMs":90,"settleMs":758,"afterLastInputMs":758,"janky":26,"p50":68,"p95":167,"worst":186}
+measured: {"name":"categories: swipe to previous period 2","ok":true,"frames":23,"firstFrameMs":86,"settleMs":745,"afterLastInputMs":745,"janky":22,"p50":80,"p95":133,"worst":169}
+measured: {"name":"categories: swipe to previous period 3","ok":true,"frames":25,"firstFrameMs":90,"settleMs":708,"afterLastInputMs":708,"janky":24,"p50":74,"p95":135,"worst":139}
+measured: {"name":"categories: swipe to next period 1","ok":true,"frames":24,"firstFrameMs":80,"settleMs":698,"afterLastInputMs":698,"janky":24,"p50":69,"p95":117,"worst":141}
+measured: {"name":"categories: swipe to next period 2","ok":true,"frames":25,"firstFrameMs":86,"settleMs":775,"afterLastInputMs":775,"janky":25,"p50":70,"p95":104,"worst":139}
+measured: {"name":"categories: swipe to next period 3","ok":true,"frames":25,"firstFrameMs":80,"settleMs":685,"afterLastInputMs":685,"janky":25,"p50":57,"p95":102,"worst":121}
+tapped: Statistics
+measured: {"name":"statistics: swipe to previous period 1","ok":true,"frames":14,"firstFrameMs":96,"settleMs":797,"afterLastInputMs":797,"janky":14,"p50":84,"p95":137,"worst":137}
+measured: {"name":"statistics: swipe to previous period 2","ok":true,"frames":14,"firstFrameMs":86,"settleMs":818,"afterLastInputMs":818,"janky":14,"p50":72,"p95":134,"worst":134}
+measured: {"name":"statistics: swipe to previous period 3","ok":true,"frames":11,"firstFrameMs":90,"settleMs":748,"afterLastInputMs":748,"janky":11,"p50":93,"p95":142,"worst":142}
+measured: {"name":"statistics: swipe to next period 1","ok":true,"frames":14,"firstFrameMs":86,"settleMs":756,"afterLastInputMs":756,"janky":14,"p50":67,"p95":150,"worst":150}
+measured: {"name":"statistics: swipe to next period 2","ok":true,"frames":13,"firstFrameMs":86,"settleMs":803,"afterLastInputMs":803,"janky":13,"p50":69,"p95":167,"worst":167}
+measured: {"name":"statistics: swipe to next period 3","ok":true,"frames":13,"firstFrameMs":83,"settleMs":717,"afterLastInputMs":717,"janky":13,"p50":89,"p95":117,"worst":117}
+measured: {"name":"statistics: 3 flicks down","ok":true,"inputsMs":[10,1130,2010],"frames":50,"firstFrameMs":73,"settleMs":2777,"afterLastInputMs":767,"janky":50,"p50":135,"p95":187,"worst":201}
+tapped: More
+tapped: Settings
+tapped: Formatting
+measured: {"name":"currency list: open","ok":true,"frames":19,"firstFrameMs":50,"settleMs":519,"afterLastInputMs":519,"janky":19,"p50":81,"p95":334,"worst":334}
+measured: {"name":"currency list: 8 fast flicks down","ok":true,"inputsMs":[20,660,1150,1770,2400,3200,4070,5000],"frames":138,"firstFrameMs":86,"settleMs":6161,"afterLastInputMs":1161,"janky":138,"p50":104,"p95":202,"worst":222}
+measured: {"name":"currency list: 8 fast flicks up","ok":true,"inputsMs":[10,660,1460,2200,2780,3210,3680,4270],"frames":111,"firstFrameMs":73,"settleMs":5459,"afterLastInputMs":1189,"janky":111,"p50":101,"p95":184,"worst":219}
