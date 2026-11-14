@@ -49,6 +49,16 @@ export function storePin(pin: string): Promise<void> {
 
 export const removePin = (): Promise<void> => writePinRecord(null);
 
+// What the phone can do (js/platform biometricState): no sensor, a sensor with nothing enrolled, or ready.
+export async function biometricState(): Promise<"unsupported" | "notEnrolled" | "available"> {
+  try {
+    if (!(await LocalAuthentication.hasHardwareAsync())) return "unsupported";
+    return (await LocalAuthentication.isEnrolledAsync()) ? "available" : "notEnrolled";
+  } catch {
+    return "unsupported";
+  }
+}
+
 export async function biometricAvailable(): Promise<boolean> {
   try {
     return (await LocalAuthentication.hasHardwareAsync()) && (await LocalAuthentication.isEnrolledAsync());

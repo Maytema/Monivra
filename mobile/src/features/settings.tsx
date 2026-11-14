@@ -9,7 +9,7 @@ import { changeMainCurrency } from "../domain/accounts.ts";
 import { formatNumber, NUMBER_FORMATS } from "../domain/money.ts";
 import type { Settings } from "../domain/types.ts";
 import { LANGUAGES } from "../i18n/index.ts";
-import { biometricAvailable, biometricUnlock } from "../platform/lock.ts";
+import { biometricAvailable, biometricState, biometricUnlock } from "../platform/lock.ts";
 import { notificationsAllowed, notificationState, sendTestNotification } from "../platform/notifications.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { TextButton, PrimaryPill } from "../ui/calendar-sheet.tsx";
@@ -215,13 +215,20 @@ function Security() {
   const { s, set } = useSetting();
   const t = useT();
   const pinOn = !!s.pin;
+  // The fingerprint row as the first application (settings-pages.js biometricRow): not there on a phone without
+  // a sensor, "Not set up on this phone" while nothing is enrolled.
+  const [bio, setBio] = useState<"unsupported" | "notEnrolled" | "available" | null>(null);
+  useEffect(() => {
+    void biometricState().then(setBio);
+  }, []);
   // As the first application (settings-pages.js securitySettings): every row is there; those that need a
   // PIN say so when there is none.
   return (
     <>
       <PinSettings />
-      <SwitchRow
+      {bio === "unsupported" ? null : <SwitchRow
         label="Unlock with fingerprint or face"
+        hint={bio === "notEnrolled" ? "Not set up on this phone" : undefined}
         value={!!s.biometric}
         onChange={async (on) => {
           if (!on) return void set({ biometric: false });
@@ -230,7 +237,7 @@ function Security() {
           // Switching it on needs one successful check, so a person who cannot use it is not locked out.
           if ((await biometricUnlock(t.t("Unlock Monivra"), t.t("Use PIN"))) === "ok") set({ biometric: true });
         }}
-      />
+      />}
       <Switch label="Lock after leaving" k="relock" />
       <OptionsRow label="Lock delay" k="lockDelay" options={[[0, "Immediately"], [30, "30 seconds"], [60, "1 minute"], [300, "5 minutes"]]} />
       <SettingRow title="Lock now" icon="lock" onPress={() => (pinOn ? setLock({ locked: true }) : toast(t.t("Set a PIN first")))} />
