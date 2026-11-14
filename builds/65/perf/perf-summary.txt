@@ -1,0 +1,20 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                               9781ms     6449ms     24       9   8 (88.89%)  350ms  350ms
+restore 3000 operations                                  2990ms      705ms     29      46  35 (76.09%)  113ms  150ms
+statistics: previous period and back                      446ms      201ms      4      27  22 (81.48%)   81ms   89ms
+open tab Accounts                                           0ms        0ms      0      15  11 (73.33%)   73ms   73ms
+tabs again: Operations, Statistics, Categories, Acco        0ms        0ms      0      46  29 (63.04%)   65ms   77ms
+open the add menu                                         277ms      154ms      3       8  8 (100.00%)  150ms  150ms
+type 1 2 5 on the keys                                      0ms        0ms      0       6  6 (100.00%)   32ms   32ms
+save the operation                                        440ms       89ms      7      83  60 (72.29%)   81ms  101ms
+save the PIN                                              353ms       79ms      6       9   6 (66.67%)   81ms   81ms
+all moves                                               14286ms
+
+cold start                               | engine toLocaleString x200 674.2ms
+cold start                               | engine plain format x200 0.4ms
+cold start                               | engine localeCompare x200 1.7ms
+cold start                               | engine toLocaleDateString x200 383.0ms
+restore 3000 operations                  | layer dialog shown 5.3ms
+open the add menu                        | layer sheet shown 3.0ms
+open the add menu                        | layer sheet shown 22.9ms
+save the operation                       | layer sheet shown 5.7ms
