@@ -50,13 +50,7 @@ export const canPrint = (): boolean => !!native;
 // PDF is written to the cache as report-<id>.pdf and its pages go to the cache folder report-preview/<id>.
 export const canRenderPdf = (): boolean => !!native?.renderPdfPages;
 
-export function writeReportPdf(id: string, bytes: Uint8Array): string {
-  const file = new File(Paths.cache, `report-${id}.pdf`);
-  if (file.exists) file.delete();
-  file.create();
-  file.write(bytes);
-  return file.uri;
-}
+export const writeReportPdf = (id: string, bytes: Uint8Array): Promise<string> => cacheFile(`report-${id}.pdf`, bytes);
 
 export function renderPdfPages(uri: string, from: number, count: number, widthPx: number, id: string): Promise<string[]> {
   if (!native?.renderPdfPages) return Promise.reject(new Error("The pages cannot be drawn here"));
@@ -72,14 +66,20 @@ export function dropReportPreviews(keep: string[]): void {
   }
 }
 
-// Opens the system's print dialog for a PDF.
-export function printPdf(name: string, bytes: Uint8Array): boolean {
-  if (!native) return false;
+// Writes bytes to a file of the cache and gives its uri. Awaited: from SDK 58 a write finishes later (a promise),
+// and a file handed on before that would be empty or cut short.
+async function cacheFile(name: string, bytes: Uint8Array): Promise<string> {
   const file = new File(Paths.cache, name);
   if (file.exists) file.delete();
   file.create();
-  file.write(bytes);
-  return native.printPdf(file.uri, name);
+  await file.write(bytes);
+  return file.uri;
+}
+
+// Opens the system's print dialog for a PDF.
+export async function printPdf(name: string, bytes: Uint8Array): Promise<boolean> {
+  if (!native) return false;
+  return native.printPdf(await cacheFile(name, bytes), name);
 }
 
 // Photos of operations: taken with the camera or chosen, shrunk to a small JPEG data URL (long side 800,

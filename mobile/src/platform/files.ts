@@ -41,7 +41,9 @@ export async function saveTextFile(name: string, text: string | Uint8Array, mime
   }
   if (!folder) return false;
   const file = folder.createFile(name, mimeType);
-  file.write(text);
+  // Awaited: from SDK 58 the write finishes later (a promise), so returning at once would report a file that
+  // is not all there yet.
+  await file.write(text);
   return true;
 }
 
@@ -50,6 +52,6 @@ export async function shareTextFile(name: string, text: string | Uint8Array, mim
   const file = new File(Paths.cache, name);
   if (file.exists) file.delete();
   file.create();
-  file.write(text);
+  await file.write(text);
   await Sharing.shareAsync(file.uri, { mimeType, dialogTitle: name });
 }

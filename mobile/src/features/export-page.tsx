@@ -142,7 +142,7 @@ async function previewImages(t: Translator, job: Extract<Job, { kind: "pdf" }>, 
     const bytes = job.file ?? (await pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
     job.file = bytes;
     const id = newPreviewId();
-    const uri = writeReportPdf(id, bytes);
+    const uri = await writeReportPdf(id, bytes);
     const made = new PageImages(job.pages.length, (from, count) => renderPdfPages(uri, from, count, widthPx, id));
     keepPreview(id, made);
     say(t.t("Preparing the preview…"));
@@ -161,7 +161,7 @@ async function deliver(t: Translator, job: Job, how: "share" | "save" | "print")
     const body = job.kind === "csv" ? job.text : await fileOf(t, job);
     if (body === undefined) return;
     if (how === "print") {
-      if (job.kind === "pdf" && !printPdf(job.name, body as Uint8Array)) toast(t.t("Printing is not available on this device"));
+      if (job.kind === "pdf" && !(await printPdf(job.name, body as Uint8Array))) toast(t.t("Printing is not available on this device"));
       return;
     }
     const type = job.kind === "csv" ? "text/csv" : "application/pdf";
