@@ -55,8 +55,8 @@ function Details({ item }: { item: ScheduledPayment }) {
   const { steps, net } = applyFees(item.amount, item.fees);
   const line = (icon: string, text: string, key: string) => (
     <View key={key} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 3 }}>
-      <Icon name={icon} size={18} color={p.muted} />
-      <Text style={{ flex: 1, color: p.ink, fontSize: 14 }}>{text}</Text>
+      <Icon name={icon} size={20} color={p.accentInk} />
+      <Text style={{ flex: 1, color: p.accentInk, fontSize: 15 }}>{text}</Text>
     </View>
   );
   const rules = [item.time ? line("clock", timeLabel(item.time, t.locale), "t") : null, item.recur ? line("repeat", recurText(item.recur), "r") : null, item.reminder ? line("bell", reminderText(item.reminder), "b") : null].filter(Boolean);
@@ -64,25 +64,25 @@ function Details({ item }: { item: ScheduledPayment }) {
   return (
     <View style={{ marginLeft: 56, marginBottom: 8 }}>
       {item.fees?.length ? (
-        <View style={{ paddingBottom: 4 }}>
+        <View style={{ paddingVertical: 6, marginBottom: 4, borderTopWidth: 1, borderBottomWidth: 1, borderColor: p.line }}>
           {steps.map(({ fee, delta }) => (
             <View key={fee.kind} style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 3 }}>
-              <Icon name="link" size={18} color={p.muted} />
-              <Text style={{ flex: 1, color: p.ink, fontSize: 14 }}>
+              <Icon name="link" size={20} color={p.ink} />
+              <Text style={{ flex: 1, color: p.ink, fontSize: 15 }}>
                 {t.t(fee.kind === "tax" ? "Tax" : "Commission")} ({fee.add ? "+" : "−"}
                 {fee.percent && fee.percent > 0 ? `${fee.percent} %` : fee.value})
               </Text>
-              <Text style={{ color: delta < 0 ? p.negativeInk : p.positiveInk, fontSize: 14 }}>{money(Math.abs(delta), account?.currency)}</Text>
+              <Text style={{ color: delta < 0 ? p.negativeInk : p.positiveInk, fontSize: 15 }}>{money(Math.abs(delta), account?.currency)}</Text>
             </View>
           ))}
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 3 }}>
-            <Icon name={account?.icon ?? "wallet"} size={18} color={p.muted} />
-            <Text style={{ flex: 1, color: p.muted, fontSize: 14 }}>{t.t("Operation")}</Text>
-            <Text style={{ color: p.muted, fontSize: 14 }}>{money(net, account?.currency)}</Text>
+            <Icon name={account?.icon ?? "wallet"} size={20} color={account?.color ?? p.muted} />
+            <Text style={{ flex: 1, color: p.muted, fontSize: 15 }}>{t.t("Operation")}</Text>
+            <Text style={{ color: p.muted, fontSize: 15 }}>{money(net, account?.currency)}</Text>
           </View>
         </View>
       ) : null}
-      {rules.length ? <View style={{ borderRadius: 10, backgroundColor: mix(p.accent, p.bg, 0.08), paddingHorizontal: 12, paddingVertical: 6 }}>{rules}</View> : null}
+      {rules.length ? <View style={{ paddingVertical: 2 }}>{rules}</View> : null}
     </View>
   );
 }
@@ -188,7 +188,7 @@ export function ScheduledScreen() {
           <View style={{ paddingHorizontal: 11, paddingBottom: 96 }}>
             {dates.map((date) => (
               <View key={date}>
-                <Text style={{ color: p.inkSoft, fontSize: 15, fontWeight: "500", paddingTop: 16, paddingBottom: 6, paddingHorizontal: 5 }}>{dayTitle(date)}</Text>
+                <Text style={{ color: p.ink, fontSize: 17, textAlign: "center", paddingTop: 22, paddingBottom: 8, paddingHorizontal: 5 }}>{dayTitle(date)}</Text>
                 {sorted
                   .filter((o) => o.date === date)
                   .map((o) => (
