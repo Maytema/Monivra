@@ -106,9 +106,9 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   // How far the keyboard reaches into this layer's own area. Measured against the layer itself, not taken from the
   // keyboard's height: whether the window was already shortened (adjustResize, the keyboard-avoiding root) differs
   // between phones and system bars, and the dialog must end above the keyboard on all of them.
-  const area = useRef<View>(null);
+  const area = useRef<{ measureInWindow(done: (x: number, y: number, w: number, h: number) => void): void } | null>(null);
   const [covered, setCovered] = useState(0);
-  const scroller = useRef<ScrollView>(null);
+  const scroller = useRef<{ scrollToEnd(options: { animated: boolean }): void } | null>(null);
   // With the keyboard up, a dialog shows its end (the field and its buttons), not its top.
   useEffect(() => {
     if (!covered) return;
@@ -161,7 +161,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             {layer.content}
           </Animated.View>
         ) : (
-        <View ref={area} collapsable={false} style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, paddingBottom: (sheet ? 0 : 20) + covered, pointerEvents: "box-none" }}>
+        <View ref={(node: unknown) => void (area.current = node as typeof area.current)} collapsable={false} style={{ flex: 1, justifyContent: sheet ? "flex-end" : "center", padding: sheet ? 0 : 20, paddingBottom: (sheet ? 0 : 20) + covered, pointerEvents: "box-none" }}>
           {sheet ? (
             <Animated.View
               style={{
@@ -189,7 +189,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
             <Animated.View
               style={{ opacity: progress, backgroundColor: p.dialog, borderRadius: chrome.dialogRadius, padding: 24, maxHeight: "91%" }}
             >
-              <ScrollView ref={scroller} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
+              <ScrollView ref={(node: unknown) => void (scroller.current = node as typeof scroller.current)} style={{ flexGrow: 0 }} keyboardShouldPersistTaps="handled">
                 {layer.content}
               </ScrollView>
             </Animated.View>
