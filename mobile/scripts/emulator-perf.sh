@@ -48,7 +48,9 @@ back() { adb shell input keyevent 4; sleep 1.2; }
 # A measured move: the mark goes to the same log as the application's lines, the frame counters start at zero.
 begin() {
   MOVE="$1"
-  adb shell log -t ReactNativeJS "[perf] mark $MOVE"
+  # One quoted string for the phone's shell: a name with brackets would otherwise be a syntax error there and
+  # the mark would be lost.
+  adb shell "log -t ReactNativeJS '[perf] mark $MOVE'"
   adb shell dumpsys gfxinfo $PKG reset >/dev/null 2>&1
 }
 finish() {
@@ -65,11 +67,15 @@ adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file
 begin "cold start"
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 finish 25
+begin "first screen: start with the basic set"
 tap "Start with basic set" 4
+finish 1
 
 # The large ledger comes in as a data file, the way a person moves data from the first application.
 tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
-tap "perf-data.json" 4 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 4; }
+begin "read the file and open the restore page"
+tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
+finish 1
 shot 00-restore-page 2
 begin "restore 3000 operations"
 tap "Replace data" 1.5 last; tap "Confirm" 1
