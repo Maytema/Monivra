@@ -29,12 +29,14 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
 
 // A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab
 // bar carries the inset itself, so a page adds none.
-export function Screen({ children, scroll = true, padded = true, scrollEnabled = true, onScroll }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean; onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void }) {
+// `bar`: the scroll bar; the pages that swipe and the More menu have none (components.css: .swipe-page > .content
+// and .more-menu set scrollbar-width: none).
+export function Screen({ children, scroll = true, padded = true, scrollEnabled = true, onScroll, bar = true }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean; onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void; bar?: boolean }) {
   const p = usePalette();
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   return scroll ? (
-    <ScrollView style={style} scrollEnabled={scrollEnabled} onScroll={onScroll} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
+    <ScrollView style={style} scrollEnabled={scrollEnabled} onScroll={onScroll} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
       {children}
     </ScrollView>
   ) : (

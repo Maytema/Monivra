@@ -39,7 +39,7 @@ export function MoreScreen() {
   const insets = useSafeAreaInsets();
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: p.bg }}>
-      <Screen padded={false}>
+      <Screen padded={false} bar={false}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12, height: 59, paddingHorizontal: 18, borderBottomWidth: 1, borderBottomColor: p.line }}>
           <BrandMark height={38} onDark={p.dark} />
           <Text numberOfLines={1} style={{ flexShrink: 1, color: p.ink, fontSize: 29, fontWeight: "600" }}>

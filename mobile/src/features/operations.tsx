@@ -282,6 +282,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     <View style={{ flex: 1 }}>
       <FlatList
         ref={list}
+        // No scroll bar on a swiped page (components.css .swipe-page > .content); its fading after each step of
+        // the first opening is one of the redraws seen in the trace of that opening.
+        showsVerticalScrollIndicator={false}
         onScrollToIndexFailed={({ index, averageItemLength }) => list.current?.scrollToOffset({ offset: Math.max(0, index * averageItemLength - 200), animated: true })}
         data={items}
         keyExtractor={keyOfItem}

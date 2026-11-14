@@ -38,7 +38,7 @@ const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period
   const create = () => router.push({ pathname: "/category", params: { type: catType } });
   const empty = !tiles.length && !debts.length;
   return (
-      <Screen padded={false}>
+      <Screen padded={false} bar={false}>
         <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
         {empty ? (
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />

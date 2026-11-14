@@ -215,7 +215,7 @@ export function AccountsScreen() {
           const open = list.filter((a) => !isFinished(a));
           const groups = page === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
           return (
-          <ScrollView scrollEnabled={!held} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+          <ScrollView scrollEnabled={!held} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             <PostedBanner />
             {page !== "Total" && list.length > 1 ? <HintBanner id="account-reorder" text="Hold an account to drag and reorder" /> : null}
             {page === "Total" ? (
