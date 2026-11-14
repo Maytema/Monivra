@@ -1,7 +1,7 @@
 // The calendar dialog for one date and the dialog for a range of dates (js/ui/calendar.js): a month
 // grid with arrows, the title opens a grid of years; Today, Cancel and OK under it.
 import { useRef, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { systemClock } from "../domain/dates.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";
@@ -34,47 +34,51 @@ export function PrimaryPill({ label, onPress, disabled = false }: { label: strin
 
 const ROW = 44;
 const SEEN = 5;
+const CELL = 38;
 const FIRST_YEAR = 1900;
 const LAST_YEAR = 2100;
 
 // One column of the month/year chooser: a snapping list whose middle row is the chosen one; rows
-// fade with the distance from it.
+// fade with the distance from it. Virtualized (200 years), rows are fixed height.
 function Wheel({ items, index, onIndex, align }: { items: string[]; index: number; onIndex: (i: number) => void; align: "flex-end" | "flex-start" }) {
   const p = usePalette();
-  const ref = useRef<{ scrollTo(to: { y: number; animated: boolean }): void } | null>(null);
+  const ref = useRef<FlatList<string> | null>(null);
   const [shown, setShown] = useState(index);
+  const clamp = (y: number) => Math.max(0, Math.min(items.length - 1, Math.round(y / ROW)));
   const settle = (y: number) => {
-    const i = Math.max(0, Math.min(items.length - 1, Math.round(y / ROW)));
+    const i = clamp(y);
     setShown(i);
-    return i;
+    onIndex(i);
   };
   return (
     <View style={{ flex: 1, height: ROW * SEEN }}>
-      <ScrollView
-        ref={(node) => {
-          ref.current = node;
-        }}
+      <FlatList
+        ref={ref}
+        data={items}
+        keyExtractor={(label) => label}
         showsVerticalScrollIndicator={false}
         snapToInterval={ROW}
         decelerationRate="fast"
-        scrollEventThrottle={16}
-        contentOffset={{ x: 0, y: index * ROW }}
+        initialScrollIndex={index}
+        getItemLayout={(_, i) => ({ length: ROW, offset: ROW * i, index: i })}
+        windowSize={5}
+        initialNumToRender={SEEN + 4}
+        scrollEventThrottle={32}
         contentContainerStyle={{ paddingVertical: ROW * Math.floor(SEEN / 2) }}
-        onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
-          const i = Math.max(0, Math.min(items.length - 1, Math.round(e.nativeEvent.contentOffset.y / ROW)));
+        onScroll={(e) => {
+          const i = clamp(e.nativeEvent.contentOffset.y);
           if (i !== shown) setShown(i);
         }}
-        onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { y: number } } }) => onIndex(settle(e.nativeEvent.contentOffset.y))}
-        onScrollEndDrag={(e: { nativeEvent: { contentOffset: { y: number } } }) => onIndex(settle(e.nativeEvent.contentOffset.y))}
-      >
-        {items.map((label, i) => {
+        onMomentumScrollEnd={(e) => settle(e.nativeEvent.contentOffset.y)}
+        onScrollEndDrag={(e) => settle(e.nativeEvent.contentOffset.y)}
+        extraData={shown}
+        renderItem={({ item: label, index: i }) => {
           const far = Math.abs(i - shown);
           return (
             <Pressable
-              key={label}
               accessibilityRole="button"
               onPress={() => {
-                ref.current?.scrollTo({ y: i * ROW, animated: true });
+                ref.current?.scrollToOffset({ offset: i * ROW, animated: true });
                 setShown(i);
                 onIndex(i);
               }}
@@ -83,8 +87,8 @@ function Wheel({ items, index, onIndex, align }: { items: string[]; index: numbe
               <Text style={{ color: p.ink, fontSize: far === 0 ? 18 : 16, fontWeight: far === 0 ? "600" : "400", opacity: far === 0 ? 1 : far === 1 ? 0.7 : 0.35 }}>{label}</Text>
             </Pressable>
           );
-        })}
-      </ScrollView>
+        }}
+      />
     </View>
   );
 }
@@ -113,11 +117,10 @@ function MonthYearWheels({ month, setMonth, done }: { month: string; setMonth: (
   );
 }
 
-function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setMonth: (m: string) => void; chosen: string | null; pick: (date: string) => void; min?: string | null }) {
+function MonthGrid({ month, setMonth, chosen, pick, min, years, setYears }: { month: string; setMonth: (m: string) => void; chosen: string | null; pick: (date: string) => void; min?: string | null; years: boolean; setYears: (on: boolean) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
-  const [years, setYears] = useState(false);
   const first = day(month + "-01");
   const weekStart = data.settings.weekStart;
   const lead = (first.getUTCDay() - weekStart + 7) % 7;
@@ -132,6 +135,8 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
   // 2026-11-01 is a Sunday.
   const letters = Array.from({ length: 7 }, (_, i) => t.weekday(weekStart + i, "narrow"));
   const cells: (string | null)[] = [...Array<null>(lead).fill(null), ...Array.from({ length: count }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`)];
+  const padded = [...cells, ...Array<null>((7 - (cells.length % 7)) % 7).fill(null)];
+  const weeks = Array.from({ length: padded.length / 7 }, (_, w) => padded.slice(w * 7, w * 7 + 7));
   const heading = (
     <Pressable accessibilityRole="button" onPress={() => setYears(!years)} style={{ flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14 }}>
       <Text style={{ color: p.accentInk, fontSize: 17, fontWeight: "600" }}>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
@@ -141,14 +146,14 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
   if (years)
     return (
       <View>
-        <View style={{ alignItems: "flex-start", marginTop: 8, marginBottom: 4 }}>{heading}</View>
+        <View style={{ alignItems: "flex-start", marginTop: 4, marginBottom: 2 }}>{heading}</View>
         <MonthYearWheels month={month} setMonth={setMonth} done={() => setYears(false)} />
       </View>
     );
   const blocked = !!min && month <= monthOf(min);
   return (
     <View>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 8, marginBottom: 4 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4, marginBottom: 2 }}>
         {heading}
         <View style={{ flexDirection: "row" }}>
           <Pressable accessibilityRole="button" accessibilityLabel={t.t("Previous month")} disabled={blocked} onPress={() => move(-1)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center", opacity: blocked ? 0.4 : 1 }}>
@@ -159,47 +164,107 @@ function MonthGrid({ month, setMonth, chosen, pick, min }: { month: string; setM
           </Pressable>
         </View>
       </View>
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+      <View style={{ flexDirection: "row" }}>
         {letters.map((l, i) => (
-          <Text key={i} style={{ width: "14.285%", textAlign: "center", paddingVertical: 10, color: p.ink, fontSize: 14, textTransform: "uppercase" }}>
+          <Text key={i} style={{ flex: 1, textAlign: "center", paddingVertical: 6, color: p.muted, fontSize: 13, textTransform: "uppercase" }}>
             {l}
           </Text>
         ))}
-        {cells.map((date, i) => {
-          if (!date) return <View key={i} style={{ width: "14.285%", aspectRatio: 1 }} />;
-          const off = !!min && date < min;
-          const active = date === chosen;
-          return (
-            <Pressable
-              key={i}
-              disabled={off}
-              onPress={() => pick(date)}
-              style={{ width: "14.285%", aspectRatio: 1, alignItems: "center", justifyContent: "center", borderRadius: 999, backgroundColor: active ? p.accent : "transparent", borderWidth: date === today && !active ? 1.5 : 0, borderColor: p.accent, opacity: off ? 0.4 : 1 }}
-            >
-              <Text style={{ color: active ? p.onAccent : off ? p.muted : p.ink, fontSize: 15 }}>{Number(date.slice(8))}</Text>
-            </Pressable>
-          );
-        })}
       </View>
+      {weeks.map((week, w) => (
+        <View key={w} style={{ flexDirection: "row" }}>
+          {week.map((date, i) => {
+            if (!date) return <View key={i} style={{ flex: 1, height: CELL }} />;
+            const off = !!min && date < min;
+            const active = date === chosen;
+            return (
+              <View key={i} style={{ flex: 1, height: CELL, alignItems: "center", justifyContent: "center" }}>
+                <Pressable
+                  disabled={off}
+                  onPress={() => pick(date)}
+                  style={{ width: CELL, height: CELL, alignItems: "center", justifyContent: "center", borderRadius: 999, backgroundColor: active ? p.accent : "transparent", borderWidth: date === today && !active ? 1.5 : 0, borderColor: p.accent, opacity: off ? 0.4 : 1 }}
+                >
+                  <Text style={{ color: active ? p.onAccent : off ? p.muted : p.ink, fontSize: 15 }}>{Number(date.slice(8))}</Text>
+                </Pressable>
+              </View>
+            );
+          })}
+        </View>
+      ))}
     </View>
   );
+}
+
+// Manual entry: the order of the parts follows the setting "Date format" (month | day | year by default).
+const ORDER: Record<string, { hint: string; parts: ("y" | "m" | "d")[]; sep: string }> = {
+  month: { hint: "MM/DD/YYYY", parts: ["m", "d", "y"], sep: "/" },
+  day: { hint: "DD/MM/YYYY", parts: ["d", "m", "y"], sep: "/" },
+  iso: { hint: "YYYY-MM-DD", parts: ["y", "m", "d"], sep: "-" },
+};
+export function typedDate(text: string, format: string): string | null {
+  const order = ORDER[format] ?? ORDER.month!;
+  const pieces = text.trim().split(/[^0-9]+/).filter(Boolean);
+  if (pieces.length !== 3) return null;
+  const v: Record<string, number> = {};
+  order.parts.forEach((k, i) => (v[k] = Number(pieces[i])));
+  const { y, m, d } = v as { y: number; m: number; d: number };
+  if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1) return null;
+  if (d > new Date(Date.UTC(y, m, 0)).getUTCDate()) return null;
+  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
 function CalendarDialog({ value, done, min }: { value: string; done: (date: string) => void; min?: string | null }) {
   const p = usePalette();
   const t = useT();
+  const data = useLedger();
   const close = useCloseLayer();
   const [chosen, setChosen] = useState(value);
   const [month, setMonth] = useState(monthOf(value));
+  const [mode, setMode] = useState<"days" | "years" | "input">("days");
+  const [text, setText] = useState("");
   const today = systemClock.today();
+  const order = ORDER[data.settings.dateFormat] ?? ORDER.month!;
+  const typed = mode === "input" ? typedDate(text, data.settings.dateFormat) : null;
+  const typedOk = typed !== null && (!min || typed >= min);
+  const toggleInput = () => {
+    if (mode === "input") {
+      setMode("days");
+      return;
+    }
+    const [y, m, d] = [chosen.slice(0, 4), chosen.slice(5, 7), chosen.slice(8, 10)];
+    const parts = { y, m, d };
+    setText(order.parts.map((k) => parts[k]).join(order.sep));
+    setMode("input");
+  };
   return (
     <View>
       <Text style={{ color: p.ink, fontSize: 14 }}>{t.t("Select date")}</Text>
-      <Text style={{ color: p.ink, fontSize: 28, marginTop: 22, marginBottom: 16 }}>{t.shortDate(chosen)}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", marginTop: 14, marginBottom: 12 }}>
+        <Text style={{ flex: 1, color: p.ink, fontSize: 28 }}>{mode === "input" ? t.t("Entered date") : t.shortDate(chosen)}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(mode === "input" ? "Select date" : "Entered date")} onPress={toggleInput} style={{ padding: 6 }}>
+          <Icon name={mode === "input" ? "calendar" : "edit"} size={24} color={p.ink} />
+        </Pressable>
+      </View>
       <View style={{ height: 1, backgroundColor: p.line, marginHorizontal: -24 }} />
-      <MonthGrid month={month} setMonth={setMonth} chosen={chosen} pick={setChosen} min={min} />
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 12, gap: 4 }}>
-        {min && min > today ? null : (
+      {mode === "input" ? (
+        <View style={{ marginTop: 18, marginBottom: 8 }}>
+          <Text style={{ position: "absolute", left: 12, top: -9, zIndex: 1, paddingHorizontal: 4, backgroundColor: p.dialog, color: p.accentInk, fontSize: 12 }}>{t.t("Date")}</Text>
+          <TextInput
+            autoFocus
+            value={text}
+            onChangeText={setText}
+            placeholder={order.hint}
+            placeholderTextColor={p.muted}
+            keyboardType="numbers-and-punctuation"
+            maxLength={10}
+            style={{ height: 56, borderWidth: 2, borderColor: typed === null && text ? p.negative : p.accent, borderRadius: 6, paddingHorizontal: 14, color: p.ink, fontSize: 18 }}
+          />
+        </View>
+      ) : (
+        <MonthGrid month={month} setMonth={setMonth} chosen={chosen} pick={setChosen} min={min} years={mode === "years"} setYears={(on) => setMode(on ? "years" : "days")} />
+      )}
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end", marginTop: 8, gap: 4 }}>
+        {mode !== "days" || (min && min > today) ? null : (
           <View style={{ marginRight: "auto" }}>
             <TextButton
               label="Today"
@@ -213,9 +278,14 @@ function CalendarDialog({ value, done, min }: { value: string; done: (date: stri
         <TextButton label="Cancel" onPress={close} />
         <TextButton
           label="OK"
+          disabled={mode === "input" && !typedOk}
           onPress={() => {
+            // In the month and year chooser OK only confirms them: the day is chosen afterwards.
+            if (mode === "years") return setMode("days");
+            const result = mode === "input" ? typed : chosen;
+            if (!result) return;
             close();
-            done(chosen);
+            done(result);
           }}
         />
       </View>

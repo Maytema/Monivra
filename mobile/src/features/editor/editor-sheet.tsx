@@ -151,7 +151,8 @@ function Parties({ session }: { session: EditorSession }) {
         <PartyTile caption={targetCaption} party={target} onPress={() => openPartyPicker(session, false, isAdjustment && raise)} />
       </View>
       {subcategories.length && root ? (
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+        // One row that scrolls sideways, so many subcategories do not make the card tall.
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ flexGrow: 0, marginHorizontal: -16, marginBottom: 10 }} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>
           {subcategories.map((x) => {
             const on = d.category === x.id;
             return (
@@ -160,7 +161,7 @@ function Parties({ session }: { session: EditorSession }) {
               </Pressable>
             );
           })}
-        </View>
+        </ScrollView>
       ) : null}
     </View>
   );

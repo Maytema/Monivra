@@ -21,7 +21,8 @@ export const TABS = [
 // The open tab shows its icon filled (as in the reference screens), the inner lines cut out in the
 // colour of the pill.
 const FILLED: Record<string, { shape: string; inner?: string; dot?: string }> = {
-  wallet: { shape: "M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", inner: "M13 9h7v6h-7a3 3 0 0 1 0-6z", dot: "M14 10.7a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6z" },
+  // Same silhouette as the outline icon (flap on top, body, clasp on the right), only filled.
+  wallet: { shape: "M4 5h15v4H5a2 2 0 0 1 0-4zM3 7h18v13H3z", inner: "M17 13h4v4h-4z", dot: "M18.6 14.4a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z" },
   categories: { shape: "m12 2 4 7H8zM3 13h7v8H3zm15 0a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" },
   receipt: { shape: "M4 2l2 2 2-2 2 2 2-2 2 2 2-2 2 2 2-2v20l-2-2-2 2-2-2-2 2-2-2-2 2-2-2-2 2z", inner: "M7.5 7h9M7.5 11h9M7.5 15h9" },
   stats: { shape: "M3 3h18v18H3z", inner: "M8 16v-4m4 4V7m4 9v-6" },

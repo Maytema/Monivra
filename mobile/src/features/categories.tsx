@@ -1,5 +1,5 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
-import { memo, useMemo } from "react";
+import { memo, useCallback, useDeferredValue, useMemo } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
@@ -17,19 +17,21 @@ import { openAccountSheet } from "./account-sheet.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
 
 export function CategoriesScreen() {
+  const { catType } = useView();
+  // The neighbouring pages follow the type a moment later, at low priority: the shown page switches first.
+  const later = useDeferredValue(catType);
   return (
     <View style={{ flex: 1 }}>
       <RootHero icon="edit" label="Change categories" onAction={() => router.push({ pathname: "/categories-manage" })} />
-      <PeriodPager header={<PeriodBar />} render={(period) => <CategoriesPage period={period} />} />
+      <PeriodPager header={<PeriodBar />} render={(period, isCurrent) => <CategoriesPage period={period} catType={isCurrent ? catType : later} />} />
     </View>
   );
 }
 
 // The sums and the tiles of one period (drawn beforehand for the neighbouring periods too).
-const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period }) {
+const CategoriesPage = memo(function CategoriesPage({ period, catType }: { period: Period; catType: "expense" | "income" }) {
   const data = useLedger();
   const money = useMoney();
-  const { catType } = useView();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
   const tiles = data.categories.filter((c) => c.type === catType && !c.parent && !c.archived);
   // A debt account can stand among the categories, as an expense or as an income.
@@ -46,7 +48,7 @@ const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period
           <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
             {tiles.map((c) => {
               const total = categoryTotalIn(data, rows, c);
-              return <CategoryTile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} onPress={() => openEditor({ type: c.type === "income" ? "income" : "expense", category: c.id })} onLongPress={() => openCategorySheet(c.id)} />;
+              return <CategoryCell key={c.id} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} />;
             })}
             {debts.map((a) => {
               const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: catType, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
@@ -57,4 +59,11 @@ const CategoriesPage = memo(function CategoriesPage({ period }: { period: Period
         )}
       </Screen>
   );
+});
+
+// A tile with handlers of its own, so a redraw of the page leaves tiles whose sum did not change alone.
+const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone }: { id: string; type: string; icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted" }) {
+  const open = useCallback(() => openEditor({ type: type === "income" ? "income" : "expense", category: id }), [id, type]);
+  const hold = useCallback(() => openCategorySheet(id), [id]);
+  return <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} />;
 });

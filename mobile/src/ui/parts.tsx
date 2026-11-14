@@ -2,7 +2,7 @@
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
 import { countRender } from "../platform/perf.ts";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, memo, startTransition, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -42,15 +42,8 @@ export function Hero({
         accessibilityLabel={t.t("Toggle balance visibility")}
         accessibilityState={{ selected: hidden }}
         onPress={onToggleHidden}
-        style={({ pressed }) => ({
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 7,
-          minHeight: 30,
-          paddingHorizontal: 10,
-          borderRadius: 10,
-          backgroundColor: pressed ? alpha(p.accent, 0.11) : "transparent",
-        })}
+        squish={0.88}
+        style={{ flexDirection: "row", alignItems: "center", gap: 7, minHeight: 30, paddingHorizontal: 10, borderRadius: 10 }}
       >
         <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(caption)}</Text>
         <Icon name={hidden ? "eye" : "eyeOpen"} size={16} color={p.ink} />
@@ -253,15 +246,23 @@ export function SegmentTabs<T extends string>({ tabs, active, onChange }: { tabs
 export function SumTabs({ active, expense, income, onChange, tinted = false }: { active: "expense" | "income"; expense: string; income: string; onChange: (type: "expense" | "income") => void; tinted?: boolean }) {
   const p = usePalette();
   const t = useT();
+  // The press is shown at once; the heavy part (the tiles or charts of the other type) is drawn as a
+  // transition, so the touch never waits for it and a quick second touch is not queued behind it.
+  const [shown, setShown] = useState(active);
+  useEffect(() => setShown(active), [active]);
+  const choose = (type: "expense" | "income") => {
+    setShown(type);
+    startTransition(() => onChange(type));
+  };
   const tab = (type: "expense" | "income", label: string, text: string) => {
-    const on = active === type;
+    const on = shown === type;
     const tint = type === "expense" ? p.negative : p.positive;
     return (
       <Pressable
         key={type}
         accessibilityRole="tab"
         accessibilityState={{ selected: on }}
-        onPress={() => onChange(type)}
+        onPress={() => choose(type)}
         style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 3, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: on && tinted ? tint : "transparent", backgroundColor: on ? (tinted ? mix(tint, p.bg, 0.16) : p.bg) : "transparent" }}
       >
         <Text style={{ color: on ? p.ink : p.muted, fontSize: 14 }}>{t.t(label)}</Text>
@@ -275,7 +276,7 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
 }
 
 // A tile of a category (categories.css .cat-tile): badge, name, the sum of the period.
-export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
+export const CategoryTile = memo(function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
   const p = usePalette();
   // A figure other than zero takes the colour of the category (CT 002), zero is muted.
   const ink = tone === "muted" ? p.muted : color;
@@ -298,4 +299,4 @@ export function CategoryTile({ icon, color, name, figure, tone, onPress, onLongP
       </View>
     </Pressable>
   );
-}
+});

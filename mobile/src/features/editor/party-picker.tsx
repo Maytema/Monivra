@@ -1,13 +1,14 @@
 // The sheet behind a tile of the editor (js/screens/operation-editor/parties.js `counterpartyPicker`,
 // `transferDestinationPicker`): categories and accounts as tiles, on two tabs. Choosing puts the item
 // on that side of the operation and closes the sheet.
-import { useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Text, View } from "react-native";
 import { Pressable } from "../../ui/pressable.tsx";
-import { accountBalance, categoryById } from "../../domain/ledger.ts";
+import { accountBalance, categoryTotals } from "../../domain/ledger.ts";
 import type { Account, Category, LedgerData } from "../../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";
-import { MoneyText, ToneBadge, TopTabs } from "../../ui/parts.tsx";
+import { PagedTabs } from "../../ui/paged-tabs.tsx";
+import { MoneyText, ToneBadge } from "../../ui/parts.tsx";
 import { Icon } from "../../ui/kit.tsx";
 import { convert } from "../../domain/money.ts";
 import { sheets, useCloseLayer } from "../../ui/sheets.tsx";
@@ -15,7 +16,7 @@ import type { EditorSession } from "./session.ts";
 
 type Tab = "category" | "account";
 
-export function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
+export const Tile = memo(function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
   const p = usePalette();
   return (
     <Pressable
@@ -34,7 +35,7 @@ export function Tile({ icon, color, name, figure, onPress }: { icon: string; col
       </View>
     </Pressable>
   );
-}
+});
 
 // Account cards grouped by kind, each group with its total in the main currency (js/screens/pickers.js
 // `accountCardsHtml`): one list design wherever an account is asked for.
@@ -81,7 +82,7 @@ export function AccountCards({ accounts, chosen, onPick }: { accounts: readonly 
   );
 }
 
-export const sum = (data: LedgerData, category: Category): number => data.ops.filter((o) => o.category === category.id || categoryById(data, o.category)?.parent === category.id).reduce((n, o) => n + o.amount, 0);
+export const sum = (data: LedgerData, category: Category): number => categoryTotals(data).get(category.id) ?? 0;
 
 // `toAccount`: the destination of a transfer (accounts only). `onChosen` runs after the choice (the
 // editor opens then when the picker came first, from an account's actions).
@@ -113,22 +114,31 @@ function Picker({ session, incoming, accountsOnly, toAccount = false, title, onC
   return (
     <View>
       <Text style={{ color: p.ink, fontSize: 25, fontWeight: "500", textAlign: "center", marginTop: 6, marginBottom: 12 }}>{t.t(title)}</Text>
-      {accountsOnly || toAccount ? null : (
-        <TopTabs
+      {accountsOnly || toAccount ? (
+        <AccountCards accounts={list} onPick={pickAccount} />
+      ) : (
+        <PagedTabs
           tabs={[
             { id: "category" as Tab, label: incoming ? "Incomes" : "Expenses" },
             { id: "account" as Tab, label: "Accounts" },
           ]}
           active={tab}
           onChange={setTab}
+          render={(id) =>
+            id === "category" ? (
+              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
+                {categories.map((c) => (
+                  <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => pickCategory(c.id)} />
+                ))}
+              </View>
+            ) : (
+              <View style={{ paddingTop: 18 }}>
+                <AccountCards accounts={list} onPick={pickAccount} />
+              </View>
+            )
+          }
         />
       )}
-      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: tab === "category" && !toAccount ? 30 : 0 }}>
-        {tab === "category" && !toAccount
-          ? categories.map((c) => <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => pickCategory(c.id)} />)
-          : null}
-      </View>
-      {tab === "account" || toAccount ? <AccountCards accounts={list} onPick={pickAccount} /> : null}
     </View>
   );
 }
@@ -156,20 +166,26 @@ function ChoiceSheet({ mode, onPick }: { mode: "account" | "category"; onPick: (
     <View>
       <Text style={{ color: p.ink, fontSize: 25, fontWeight: "500", textAlign: "center", marginTop: 6, marginBottom: 12 }}>{t.t(mode === "account" ? "Select account" : "Select category")}</Text>
       {mode === "category" ? (
-        <TopTabs
+        <PagedTabs
           tabs={[
             { id: "expense" as const, label: "Expenses" },
             { id: "income" as const, label: "Incomes" },
           ]}
           active={kind}
           onChange={setKind}
+          render={(k) => (
+            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
+              {data.categories.filter((c) => !c.archived && !c.parent && c.type === k).map((c) => (
+                <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => done(c.id)} />
+              ))}
+            </View>
+          )}
         />
-      ) : null}
-      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
-        {mode === "account"
-          ? data.accounts.filter((a) => !a.archived).map((a) => <Tile key={a.id} icon={a.icon} color={a.color} name={a.name} figure={money(accountBalance(data, a.id), a.currency)} onPress={() => done(a.id)} />)
-          : data.categories.filter((c) => !c.archived && !c.parent && c.type === kind).map((c) => <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => done(c.id)} />)}
-      </View>
+      ) : (
+        <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
+          {data.accounts.filter((a) => !a.archived).map((a) => <Tile key={a.id} icon={a.icon} color={a.color} name={a.name} figure={money(accountBalance(data, a.id), a.currency)} onPress={() => done(a.id)} />)}
+        </View>
+      )}
     </View>
   );
 }

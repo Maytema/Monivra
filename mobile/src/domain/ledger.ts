@@ -23,6 +23,23 @@ export function categoryById(data: Pick<LedgerData, "categories">, id: string | 
   return map.get(id);
 }
 
+// What every category holds, with its subcategories, summed over all operations in one pass (the pickers
+// and the add menu show one figure per tile; walking the operations once per tile is what made them slow).
+const totalMaps = new WeakMap<readonly Operation[], Map<string, Minor>>();
+export function categoryTotals(data: Pick<LedgerData, "ops" | "categories">): Map<string, Minor> {
+  let totals = totalMaps.get(data.ops);
+  if (totals) return totals;
+  totals = new Map();
+  for (const o of data.ops) {
+    if (!o.category) continue;
+    totals.set(o.category, (totals.get(o.category) ?? 0) + o.amount);
+    const parent = categoryById(data, o.category)?.parent;
+    if (parent) totals.set(parent, (totals.get(parent) ?? 0) + o.amount);
+  }
+  totalMaps.set(data.ops, totals);
+  return totals;
+}
+
 // ---- Balances -----------------------------------------------------------------------------------
 
 // What one operation does to one account.
