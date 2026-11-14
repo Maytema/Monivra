@@ -1,0 +1,84 @@
+version name: 0.1.0-build.4   version code: 4
+signing: EPHEMERAL one-run key (no owner key in the secrets): for the emulator test only, not for phones
+application id: app.monivra.finance.dev
+git commit: dfce26c9ecd5038fb011346d9f6938b446f70014
+
+=== monivra-0.1.0-build.4-debuggable.apk
+size: 4718684 bytes
+sha256: 6b447db7ba904e618b0981fa3f827184015e751495b4d81067d74eeec69d39a3
+  package: name='app.monivra.finance.dev' versionCode='4' versionName='0.1.0-build.4' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+  minSdkVersion:'23'
+  targetSdkVersion:'35'
+  uses-permission: name='android.permission.USE_BIOMETRIC'
+  uses-permission: name='android.permission.USE_FINGERPRINT'
+  uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+  uses-permission: name='android.permission.WAKE_LOCK'
+  uses-permission: name='android.permission.POST_NOTIFICATIONS'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  application-label:'Monivra'
+  application-debuggable
+  launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
+  signature:
+    Verifies
+    Verified using v1 scheme (JAR signing): true
+    Verified using v2 scheme (APK Signature Scheme v2): true
+    Verified using v3 scheme (APK Signature Scheme v3): false
+    Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+    Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+    Verified using v4 scheme (APK Signature Scheme v4): false
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 5cd32e4e725b74c80efc2883359ce1f2fedcddc00348c7a8569992c07a01794e
+  debuggable: yes (test build only)
+
+=== monivra-0.1.0-build.4.apk
+size: 3767515 bytes
+sha256: e80ef14ae15e59f5e08d244aead77217bc63b16c32683817a7054e3404838182
+  package: name='app.monivra.finance.dev' versionCode='4' versionName='0.1.0-build.4' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+  minSdkVersion:'23'
+  targetSdkVersion:'35'
+  uses-permission: name='android.permission.USE_BIOMETRIC'
+  uses-permission: name='android.permission.USE_FINGERPRINT'
+  uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+  uses-permission: name='android.permission.WAKE_LOCK'
+  uses-permission: name='android.permission.POST_NOTIFICATIONS'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  application-label:'Monivra'
+  launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
+  signature:
+    Verifies
+    Verified using v1 scheme (JAR signing): true
+    Verified using v2 scheme (APK Signature Scheme v2): true
+    Verified using v3 scheme (APK Signature Scheme v3): false
+    Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+    Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+    Verified using v4 scheme (APK Signature Scheme v4): false
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 5cd32e4e725b74c80efc2883359ce1f2fedcddc00348c7a8569992c07a01794e
+  debuggable: no
+
+=== upgrade-test-debuggable.apk
+size: 4718681 bytes
+sha256: 2c3b05dd4e48e4b8d827d13f4b3f6b4cfe68de406abcb397279567a72a9115cc
+  package: name='app.monivra.finance.dev' versionCode='5' versionName='0.1.0-build.4-next' platformBuildVersionName='15' platformBuildVersionCode='35' compileSdkVersion='35' compileSdkVersionCodename='15'
+  minSdkVersion:'23'
+  targetSdkVersion:'35'
+  uses-permission: name='android.permission.USE_BIOMETRIC'
+  uses-permission: name='android.permission.USE_FINGERPRINT'
+  uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+  uses-permission: name='android.permission.WAKE_LOCK'
+  uses-permission: name='android.permission.POST_NOTIFICATIONS'
+  uses-permission: name='app.monivra.finance.dev.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+  application-label:'Monivra'
+  application-debuggable
+  launchable-activity: name='app.monivra.finance.MainActivity'  label='Monivra' icon=''
+  signature:
+    Verifies
+    Verified using v1 scheme (JAR signing): true
+    Verified using v2 scheme (APK Signature Scheme v2): true
+    Verified using v3 scheme (APK Signature Scheme v3): false
+    Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+    Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+    Verified using v4 scheme (APK Signature Scheme v4): false
+    V2 Signer: certificate DN: CN=Monivra CI one-run key
+    V2 Signer: certificate SHA-256 digest: 5cd32e4e725b74c80efc2883359ce1f2fedcddc00348c7a8569992c07a01794e
+  debuggable: yes (test build only)
