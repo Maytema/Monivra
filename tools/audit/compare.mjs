@@ -9,7 +9,7 @@
 //     number and is the same for both applications.
 // Results: <out>/<app>/results.json, steps.txt, screenshots and accessibility dumps per move.
 // Usage: node tools/audit/compare.mjs <out-dir> <app>=<apk> [<app>=<apk> ...]   (app: old | rn)
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { mkdirSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -180,6 +180,41 @@ async function measure(name, act, windowMs = 4000) {
   log(`measured: ${JSON.stringify(result)}`);
   return result;
 }
+// The same move measured on the screen itself: the system records the screen (a frame only when something on
+// it changes), and the move lasts from its first change to the last change before 400 ms of stillness. This
+// does not depend on how an application draws (a WebView composes many of its frames where `gfxinfo` does not
+// see them), so it is the fair way to compare the two versions. Kept as `visual` next to the frame numbers.
+function videoFrames(file) {
+  try {
+    return execFileSync("ffprobe", ["-v", "error", "-select_streams", "v", "-show_entries", "frame=pts_time", "-of", "csv=p=0", file], { encoding: "utf8" })
+      .split("\n").map(Number).filter((t) => Number.isFinite(t)).sort((a, b) => a - b);
+  } catch {
+    return [];
+  }
+}
+async function measureVideo(name, act, seconds = 5) {
+  await sleep(1000);
+  const dir = join(out, "video");
+  mkdirSync(dir, { recursive: true });
+  const rec = spawn("adb", ["shell", `screenrecord --size 540x1200 --bit-rate 4000000 --time-limit ${seconds} /sdcard/v.mp4`], { stdio: "ignore" });
+  await sleep(1500);
+  const ok = await act();
+  await new Promise((done) => rec.on("exit", done));
+  await sleep(800);
+  const file = join(dir, `${name.replace(/[^a-z0-9]+/gi, "-")}.mp4`);
+  adb("pull", "/sdcard/v.mp4", file);
+  const times = videoFrames(file).filter((t) => t > 1.0); // what changed after the recording had settled
+  let first = times[0] ?? null;
+  let last = first;
+  for (let i = 1; i < times.length; i++) {
+    if (times[i] - times[i - 1] > 0.4) break;
+    last = times[i];
+  }
+  const result = { name, ok: ok !== false, changes: times.length, visualMs: first === null ? null : Math.round((last - first) * 1000) };
+  log(`visual: ${JSON.stringify(result)}`);
+  return result;
+}
+
 const shot = (name) => {
   sh(`screencap -p /sdcard/s.png`);
   adb("pull", "/sdcard/s.png", join(out, `${name}.png`));
@@ -325,7 +360,13 @@ async function toSection(section, tabs) {
 async function tour() {
   const dir = join(out, "tour");
   mkdirSync(dir, { recursive: true });
-  const xml = dump();
+  // Back to the tabs first: the measurements end on a settings page, where the tab bar is not shown.
+  let xml = dump();
+  for (let i = 0; i < 6 && !(find("More", { xml, which: "lowest" })?.y > 1900); i++) {
+    if (!inFront()) sh(`am start -n ${APPS[current].activity}`), await sleep(5000);
+    else sh("input keyevent 4"), await sleep(1500);
+    xml = dump();
+  }
   const tabs = Object.fromEntries(Object.entries(TAB_LABEL).map(([k, label]) => [k, find(label, { xml, which: "lowest" })]));
   log(`tour tabs: ${JSON.stringify(tabs)}`);
   for (const [section, paths] of TOUR) {
@@ -452,6 +493,40 @@ async function runApp(app, apk) {
   await sleep(1500);
 
   writeFileSync(join(out, "results.json"), JSON.stringify(results, null, 1));
+
+  // The same kinds of moves measured on screen recordings (see measureVideo), from a fresh start.
+  const visual = [];
+  const V = (r) => visual.push(r);
+  sh(`am force-stop ${pkg}`);
+  await sleep(1500);
+  sh(`am start -n ${APPS[app].activity}`);
+  await sleep(9000);
+  const vxml = dump();
+  const vtabs = Object.fromEntries(["Operations", "Statistics", "Categories", "Accounts", "More"].map((t) => [t, find(t, { xml: vxml, which: "lowest" })]));
+  for (const tab of ["Operations", "Statistics", "Categories"]) V(await measureVideo(`tab ${tab} (first)`, async () => tapAt(vtabs[tab]), 6));
+  for (const tab of ["Operations", "Statistics", "Categories"]) V(await measureVideo(`tab ${tab} (again)`, async () => tapAt(vtabs[tab]), 5));
+  tapAt(vtabs.Operations);
+  await sleep(2500);
+  for (let i = 1; i <= 2; i++) V(await measureVideo(`operations: swipe to previous period ${i}`, async () => swipePeriod(true), 5));
+  for (let i = 1; i <= 2; i++) V(await measureVideo(`operations: one flick down ${i}`, async () => flick(true), 6));
+  tapAt(vtabs.Categories);
+  await sleep(2500);
+  for (let i = 1; i <= 2; i++) V(await measureVideo(`categories: swipe to previous period ${i}`, async () => swipePeriod(true), 5));
+  tapAt(vtabs.Statistics);
+  await sleep(2500);
+  for (let i = 1; i <= 2; i++) V(await measureVideo(`statistics: swipe to previous period ${i}`, async () => swipePeriod(true), 5));
+  V(await measureVideo("statistics: one flick down", async () => flick(true), 6));
+  tapAt(vtabs.More);
+  await sleep(2000);
+  await tap("Settings", { pause: 2500 });
+  await tap("Formatting", { pause: 2500 });
+  const vfield = find("Main currency");
+  V(await measureVideo("currency list: open", async () => tapAt(vfield), 5));
+  V(await measureVideo("currency list: one fast flick", async () => flick(true), 6));
+  sh("input keyevent 4");
+  await sleep(1500);
+  writeFileSync(join(out, "visual.json"), JSON.stringify(visual, null, 1));
+
   if (mode === "both") await tour();
   sh(`am force-stop ${pkg}`);
 }
