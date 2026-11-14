@@ -38,3 +38,12 @@ test("newest first: by day, then time, then id, without the platform's collation
   const list = [op("a", "2026-01-02"), op("b", "2026-01-03", "09:00"), op("c", "2026-01-03", "10:00"), op("d", "2026-01-03", "10:00"), op("e", "2025-12-31")];
   assert.deepEqual(list.sort(newestFirst).map((o) => o.id), ["d", "c", "b", "a", "e"]);
 });
+
+test("a date is valid exactly when the calendar has it (the same answers as parsing it)", async () => {
+  const { isValidDate } = await import("../src/domain/dates.ts");
+  const byParsing = (s: string) => /^\d{4}-\d{2}-\d{2}$/.test(s) && !Number.isNaN(Date.parse(s + "T12:00:00Z")) && new Date(s + "T12:00:00Z").toISOString().slice(0, 10) === s;
+  const samples = ["2026-02-28", "2026-02-29", "2024-02-29", "1900-02-29", "2000-02-29", "2026-04-31", "2026-12-31", "2026-13-01", "2026-00-10", "2026-01-00", "0000-01-01", "9999-12-31", "2026-1-01", "x", ""];
+  for (let year of [1999, 2000, 2023, 2024, 2100]) for (let m = 0; m <= 13; m++) for (let d = 0; d <= 32; d++) samples.push(`${year}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`);
+  for (const s of samples) assert.equal(isValidDate(s), byParsing(s), s);
+  assert.equal(isValidDate(20260101), false);
+});

@@ -17,11 +17,18 @@ export const addDays = (s: LocalDate, n: number): LocalDate => {
   return toIsoDate(d);
 };
 
-export const isValidDate = (s: unknown): s is LocalDate =>
-  typeof s === "string" &&
-  /^\d{4}-\d{2}-\d{2}$/.test(s) &&
-  !Number.isNaN(Date.parse(s + "T12:00:00Z")) &&
-  new Date(s + "T12:00:00Z").toISOString().slice(0, 10) === s;
+// A calendar date "YYYY-MM-DD" that exists (the 30th of February does not). Plain arithmetic, not the engine's
+// date parsing: it runs for every operation when a data file is checked, and dates are slow on the phone's
+// engine. The same answers as parsing it (proleptic Gregorian calendar, years 0000–9999).
+export const isValidDate = (s: unknown): s is LocalDate => {
+  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const year = Number(s.slice(0, 4));
+  const month = Number(s.slice(5, 7));
+  const day = Number(s.slice(8, 10));
+  if (month < 1 || month > 12 || day < 1) return false;
+  const leap = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  return day <= (month === 2 ? (leap ? 29 : 28) : [4, 6, 9, 11].includes(month) ? 30 : 31);
+};
 
 export const isValidTime = (s: unknown): s is LocalTime =>
   typeof s === "string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(s);

@@ -11,6 +11,7 @@ import type { LedgerData } from "../domain/types.ts";
 import type { BackupInfo } from "../application/store.ts";
 import { pickFile, saveTextFile, shareTextFile } from "../platform/files.ts";
 import { removePin } from "../platform/lock.ts";
+import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { appStore, showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { confirmDialog, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
@@ -278,6 +279,14 @@ function WayCard({ title, problem, problemText, children }: { title: string; pro
   );
 }
 
+// How long a step took, written to the log for the speed check.
+function timed<T>(label: string, work: () => T): T {
+  const started = now();
+  const result = work();
+  perfLog(label, now() - started);
+  return result;
+}
+
 function RestorePage({ source, id }: { source: string; id?: string }) {
   const p = usePalette();
   const t = useT();
@@ -305,8 +314,8 @@ function RestorePage({ source, id }: { source: string; id?: string }) {
       rows: [["File", f.name], ["Created", f.exportedAt ? moment(t, f.exportedAt) : t.t("unknown")], ["Data format version", String(f.data.schema)], ["Application build", f.build || t.t("unknown")]] as [string, string][],
     };
   }, [source, id, t]);
-  const merge = useMemo(() => (origin ? planRestore(here, origin.data, { mode: "merge", scheduled, conflicts }) : null), [here, origin, scheduled, conflicts]);
-  const replace = useMemo(() => (origin ? planRestore(here, origin.data, { mode: "replace", scheduled, conflicts }) : null), [here, origin, scheduled, conflicts]);
+  const merge = useMemo(() => (origin ? timed("restore page: merge plan", () => planRestore(here, origin.data, { mode: "merge", scheduled, conflicts })) : null), [here, origin, scheduled, conflicts]);
+  const replace = useMemo(() => (origin ? timed("restore page: replace plan", () => planRestore(here, origin.data, { mode: "replace", scheduled, conflicts })) : null), [here, origin, scheduled, conflicts]);
   if (!origin || !merge || !replace) return <Page title="Restore from backup"><Footnote>There is nothing to restore</Footnote></Page>;
   const c = contentsOf(origin.data);
   const held: [string, string][] = [
@@ -396,7 +405,7 @@ export async function chooseDataFile(t: Translator): Promise<void> {
     const store = appStore();
     const state = store.getState();
     const language = state.status === "ready" ? state.data.settings.language : "en";
-    const { data, meta } = readDataFile(file.text, language);
+    const { data, meta } = timed("data file: read and checked", () => readDataFile(file.text, language));
     chosenFile = { name: file.name, data, exportedAt: meta.exportedAt, build: meta.build };
     go("restore", { source: "file" });
   } catch (error) {
