@@ -3,7 +3,7 @@
 // button, and the selection mode with its own header and actions.
 import { countRender } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from "react";
-import { FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { BackHandler, FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -57,6 +57,20 @@ export function OperationsScreen() {
     useCallback(() => {
       listingOnTop(true);
       return () => listingOnTop(false);
+    }, []),
+  );
+  // The system Back first leaves the selection, then the search, as in the first application
+  // (js/ui/navigation.js goBack); only then does it go to the previous tab.
+  const exits = useRef({ selection, search });
+  exits.current = { selection, search };
+  useFocusEffect(
+    useCallback(() => {
+      const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+        if (exits.current.selection) return setSelection(false), setSelected([]), true;
+        if (exits.current.search) return setSearch(false), setQuery(""), true;
+        return false;
+      });
+      return () => sub.remove();
     }, []),
   );
   // The tab bar gives its place to the actions of the selection.
