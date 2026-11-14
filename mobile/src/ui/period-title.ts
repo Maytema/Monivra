@@ -1,4 +1,4 @@
-// The text of a period ("October 2026", "30 October 2026", "25 Oct – 31 Oct").
+// The text of a period ("October 2026", "October 30, 2026", "Oct 25 – 31"), as js/domain/finance.js periodTitle.
 import { periodBounds, type Period } from "../domain/periods.ts";
 import type { Translator } from "../i18n/index.ts";
 
@@ -8,6 +8,6 @@ export function periodTitle(p: Period, t: Translator, settings: { weekStart: num
   if (p.mode === "month") return t.monthYear(a);
   if (p.mode === "year") return a.slice(0, 4);
   if (p.mode === "day") return t.day(a);
-  return `${t.day(a, a.slice(0, 4) !== b.slice(0, 4))} – ${t.day(b)}`;
+  return t.range(a, b);
 }
 

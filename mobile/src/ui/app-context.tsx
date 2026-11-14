@@ -71,9 +71,10 @@ const TranslatorContext = createContext<Translator | null>(null);
 const MoneyContext = createContext<Money | null>(null);
 
 const translators = new Map<string, Translator>();
-const translatorFor = (language: string): Translator => {
-  let t = translators.get(language);
-  if (!t) translators.set(language, (t = translator(language)));
+const translatorFor = (language: string, dateFormat: string): Translator => {
+  const key = `${language} ${dateFormat}`;
+  let t = translators.get(key);
+  if (!t) translators.set(key, (t = translator(language, dateFormat)));
   return t;
 };
 
@@ -82,7 +83,7 @@ export function LedgerLook({ children }: { children: ReactNode }) {
   const scheme = useColorScheme();
   const dark = s.theme === "dark" || (s.theme === "system" && scheme === "dark");
   const palette = useMemo(() => buildPalette(s.accent, dark), [s.accent, dark]);
-  const t = translatorFor(s.language);
+  const t = translatorFor(s.language, s.dateFormat);
   // Only what the format reads, so another setting (the note of the last rate update, say) changes nothing here.
   const { currency, hidden, hiddenValues, numberFormat, groupDigits, decimal, hideCents, currencyFirst } = s;
   const money = useMemo<Money>(() => {
