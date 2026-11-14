@@ -134,6 +134,8 @@ for i in $(seq 1 90); do sleep 1; adb shell uiautomator dump /sdcard/ui.xml >/de
 log "preview open after ${i}s"
 finish 1
 shot 08-preview 0
+# A refusal leaves a message window: closed, so the moves after this one still find their way.
+grep -q 'text="Preview of your data' /tmp/ui.xml 2>/dev/null || { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1; grep -q 'text="Preview of your data' /tmp/ui.xml || { log "FAIL: the preview did not open"; tap "OK" 1 || true; }; }
 begin "scroll the preview (8 flicks)"
 for i in 1 2 3 4 5 6 7 8; do adb shell input swipe 540 1800 540 500 150; sleep 0.8; done
 finish 2
