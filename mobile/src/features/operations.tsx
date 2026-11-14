@@ -285,13 +285,14 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         scrollEventThrottle={32}
         onViewableItemsChanged={viewable}
         viewabilityConfig={VIEWABILITY}
-        // The first screen at once; then, for the current page, four screens of rows on each side of the
-        // window, a screen at a time, so a quick scroll does not run into empty space and opening the tab or
-        // moving to another period does not draw hundreds of rows before the first touch is answered.
+        // The first screen at once; then, for the current page, two screens of rows on each side of the window
+        // in few large steps. Every step is a commit that lays out and redraws the whole list: a system trace of
+        // the first opening of the tab (audit run 12) showed ~90 commits and redrawn frames over 3.6 s with steps
+        // of one screen and a window of four screens each side; the first application shows the period at once.
         initialNumToRender={FIRST_SCREEN}
-        maxToRenderPerBatch={FIRST_SCREEN}
-        updateCellsBatchingPeriod={40}
-        windowSize={current ? 9 : 1}
+        maxToRenderPerBatch={FIRST_SCREEN * 3}
+        updateCellsBatchingPeriod={120}
+        windowSize={current ? 5 : 1}
         contentContainerStyle={content}
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}

@@ -52,10 +52,11 @@ export function Pager<K extends string>({
   const [base, setBase] = useState(0);
   const busy = useRef(false);
   const lastMove = useRef(0);
-  // The neighbours are drawn once the first page is on the screen, so opening the tab stays quick.
+  // The neighbours are drawn once the first page is on the screen and has settled, so opening the tab stays
+  // quick and their mounting does not interleave with the first page's own steps.
   const [warm, setWarm] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => setWarm(true), 250);
+    const timer = setTimeout(() => setWarm(true), 700);
     return () => clearTimeout(timer);
   }, []);
   // A new width (rotation, split screen) or a new start of the strip: the pages are put where they rest.
