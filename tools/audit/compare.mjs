@@ -215,6 +215,21 @@ async function measureVideo(name, act, seconds = 5) {
   return result;
 }
 
+// A system trace (Perfetto) of one move: scheduling, graphics, views and the application's own sections, to
+// see which thread does the work. Summarised in the workflow by tools/audit/trace-summary.py.
+async function traceMove(name, act, seconds = 7) {
+  await sleep(1000);
+  const dir = join(out, "trace");
+  mkdirSync(dir, { recursive: true });
+  const device = `/data/misc/perfetto-traces/${name.replace(/[^a-z0-9]+/gi, "-")}.pftrace`;
+  const rec = spawn("adb", ["shell", `perfetto -o ${device} -t ${seconds}s -b 64mb -a ${pkg} sched freq gfx view input am wm dalvik hal`], { stdio: "ignore" });
+  await sleep(2000);
+  await act();
+  await new Promise((done) => rec.on("exit", done));
+  await sleep(1000);
+  log(`trace: ${adb("pull", device, join(dir, device.split("/").at(-1))).trim().split("\n").at(-1)}`);
+}
+
 const shot = (name) => {
   sh(`screencap -p /sdcard/s.png`);
   adb("pull", "/sdcard/s.png", join(out, `${name}.png`));
@@ -526,6 +541,21 @@ async function runApp(app, apk) {
   sh("input keyevent 4");
   await sleep(1500);
   writeFileSync(join(out, "visual.json"), JSON.stringify(visual, null, 1));
+
+  // System traces of the first opening of the operations and of a period swipe on the categories, from a fresh start.
+  sh(`am force-stop ${pkg}`);
+  await sleep(1500);
+  sh(`am start -n ${APPS[app].activity}`);
+  await sleep(9000);
+  await traceMove("tab-operations-first", async () => tapAt(vtabs.Operations), 7);
+  await sleep(2000);
+  await traceMove("operations-flick", async () => flick(true), 5);
+  tapAt(vtabs.Categories);
+  await sleep(3000);
+  await traceMove("categories-swipe", async () => swipePeriod(true), 5);
+  tapAt(vtabs.Statistics);
+  await sleep(3000);
+  await traceMove("statistics-flick", async () => flick(true), 5);
 
   if (mode === "both") await tour();
   sh(`am force-stop ${pkg}`);

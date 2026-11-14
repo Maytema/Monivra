@@ -127,6 +127,19 @@ jobs:
           disable-animations: false
           emulator-options: -no-window -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           script: AUDIT_MODE=$(grep '^AUDIT_MODE=' tools/audit/config.env | cut -d= -f2-) bash tools/audit/run-compare.sh
+      - name: "Summaries of the system traces (Perfetto trace processor)"
+        if: always()
+        run: |
+          pip install --quiet perfetto pandas || true
+          for app in old rn; do
+            pkg=$([ $app = old ] && echo app.monivra.finance.dev || echo app.monivra.finance.next)
+            for t in audit-results/$app/trace/*.pftrace; do
+              [ -f "$t" ] || continue
+              python3 tools/audit/trace-summary.py "$t" "$pkg" > "${t%.pftrace}.txt" 2>&1 || true
+              # The first application's page is drawn in the WebView's own process.
+              [ $app = old ] && python3 tools/audit/trace-summary.py "$t" com.google.android.webview > "${t%.pftrace}-webview.txt" 2>&1 || true
+            done
+          done
       - name: Keep the sizes
         if: always()
         run: cp apks/old-apk/*.txt apks/rn-apk/*.txt audit-results/ 2>/dev/null || true
