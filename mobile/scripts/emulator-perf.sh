@@ -29,7 +29,15 @@ if found:
     print((a + c) // 2, (b + d) // 2)
 PY
 )
-  if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
+  if [ -z "$xy" ]; then
+    # A system window of the emulator ("Pixel Launcher isn't responding") can cover the application: it is
+    # answered "Wait" and the tap tried once more.
+    if [ -z "${RETRY:-}" ] && grep -q "isn't responding" /tmp/ui.xml 2>/dev/null; then
+      log "system window: isn't responding — Wait"
+      RETRY=1 tap "Wait" 1 && { RETRY=1 tap "$@"; return $?; }
+    fi
+    log "NOT FOUND: $1"; return 1
+  fi
   adb shell input tap $xy; log "tapped: $1"; sleep "${2:-1.5}"
 }
 # Where an element is, without tapping it (the taps of a measured move must not be delayed by a dump).
