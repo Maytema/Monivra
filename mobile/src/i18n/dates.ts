@@ -13,6 +13,9 @@ export interface DateWords {
   shortDate(date: string): string;
   // "Nov 12" / "12 нояб." (the labels of a chart axis).
   dayMonth(date: string): string;
+  // "Nov 14, 2026" / "14 Nov 2026" / "14 нояб. 2026 г." — Intl's dateStyle "medium" (the backups of
+  // js/screens/more/backup-pages.js).
+  mediumDate(date: string): string;
   // A range of days in the compact form of the period bar: "Nov 8 – 14", "Oct 26 – Nov 1", "8–14 нояб."; the
   // year only outside the current one (js/domain/finance.js rangeLabel, which used Intl formatRange).
   range(from: string, to: string): string;
@@ -98,6 +101,13 @@ export function dateWords(code: string, dateFormat = "month"): DateWords {
       const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];
       const d = Number(date.slice(8, 10));
       return code === "ru" ? `${w}, ${d} ${m}` : `${w}, ${m} ${d}`;
+    },
+    mediumDate: (date) => {
+      if (dateFormat === "iso") return date;
+      const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];
+      const d = Number(date.slice(8, 10));
+      const y = date.slice(0, 4);
+      return code === "ru" ? `${d} ${m} ${y} г.` : dayFirst ? `${d} ${m} ${y}` : `${m} ${d}, ${y}`;
     },
     dayMonth: (date) => {
       const m = (SHORT_MONTHS[code] ?? SHORT_MONTHS.en!)[Number(date.slice(5, 7)) - 1];

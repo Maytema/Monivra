@@ -15,6 +15,7 @@ import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { appStore, showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { confirmDialog, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
+import { twelveHour } from "../ui/time-dialog.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
 import { Footnote, SettingRow } from "../ui/rows.tsx";
@@ -34,8 +35,11 @@ function moment(t: Translator, iso: string | undefined): string {
   if (!iso) return t.t("unknown");
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return t.t("unknown");
+  // As the first application: the medium date and the short time as the phone writes it ("Nov 14, 2026, 4:20 PM").
   const day = `${d.getFullYear()}-${two(d.getMonth() + 1)}-${two(d.getDate())}`;
-  return `${t.day(day)}, ${two(d.getHours())}:${two(d.getMinutes())}`;
+  const h = d.getHours();
+  const time = twelveHour(t.locale) ? `${h % 12 || 12}:${two(d.getMinutes())} ${h < 12 ? "AM" : "PM"}` : `${two(h)}:${two(d.getMinutes())}`;
+  return `${t.mediumDate(day)}, ${time}`;
 }
 
 const BACKUP_TITLES: Record<string, string> = { auto: "Automatic backup", safety: "Backup before a change" };

@@ -186,7 +186,6 @@ function Notifications() {
     <>
       <SwitchRow
         label="Notifications"
-        hint="Notifications about scheduled payments, also when the app is closed. They remind; the payment is recorded when the app runs."
         value={!!s.notifications}
         onChange={async (on) => {
           if (!on) return void set({ notifications: false });

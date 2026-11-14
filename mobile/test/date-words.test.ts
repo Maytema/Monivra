@@ -35,3 +35,10 @@ test("a day follows the date format: month first, day first, or as stored", () =
   assert.equal(dateWords("ru", "month").day("2026-11-12"), "12 ноября 2026");
   assert.equal(dateWords("en", "iso").range(`${year}-11-08`, `${year}-11-14`), "11-08 – 11-14");
 });
+
+test("a medium date as Intl's dateStyle medium writes it (the backups list of the first application)", () => {
+  for (const [language, format, locale] of [["en", "month", "en-US"], ["en", "day", "en-GB"], ["ru", "month", "ru-RU"]] as const) {
+    const t = dateWords(language, format);
+    for (const [a] of days) assert.equal(plain(t.mediumDate(a!)), plain(new Intl.DateTimeFormat(locale, { timeZone: "UTC", dateStyle: "medium" }).format(new Date(a + "T00:00:00Z"))), `${locale} ${a}`);
+  }
+});
