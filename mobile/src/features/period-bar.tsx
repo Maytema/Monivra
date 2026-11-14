@@ -31,18 +31,20 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
       <Icon name={icon} size={22} color={p.ink} />
     </Pressable>
   );
-  const title = (shown: Period, current: boolean) => (
+  const title = (shown: Period) => (
     <View style={{ width: room || undefined, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 }}>
       <Text numberOfLines={1} style={{ color: p.ink, fontSize: 15 }}>
         {periodTitle(shown, t, data.settings)}
       </Text>
-      {current ? <Icon name="down" size={14} color={p.ink} /> : <View style={{ width: 14 }} />}
+      {/* Every title has the arrow: the neighbour that a swipe brings to the middle looks the same before and
+          after the move is taken over by React (no arrow popping in a few frames later). */}
+      <Icon name="down" size={14} color={p.ink} />
     </View>
   );
   // While a swipe moves the pages, the titles move along between the arrows and fade out before they
   // reach them; the arrows stay where they are. The titles are placed by the pager's count of moves and follow
   // its offset on the native side, so after a move nothing is put back (no flash of the previous title).
-  let titles: ReactNode = title(period, true);
+  let titles: ReactNode = title(period);
   if (motion && room && !fixed) {
     const { width: w, base, x } = motion;
     const rest = -base * w;
@@ -56,7 +58,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
       <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: room, transform: [{ translateX: Animated.multiply(x, room / w) }] }}>
         {([-1, 0, 1] as const).map((k) => (
           <Animated.View key={JSON.stringify(shown(k))} style={{ position: "absolute", top: 0, bottom: 0, left: (base + k) * room, width: room, justifyContent: "center", opacity: opacity(k) }}>
-            {title(shown(k), k === 0)}
+            {title(shown(k))}
           </Animated.View>
         ))}
       </Animated.View>
