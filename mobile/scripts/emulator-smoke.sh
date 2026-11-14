@@ -25,6 +25,23 @@ PY
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
   adb shell input tap $xy; log "tapped: $1"; sleep 1.5
 }
+# tap_part TEXT FX FY: taps a point inside the element (FX, FY: fractions of its width and height), e.g. the top
+# of the statistics ring.
+tap_part() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  local xy
+  xy=$(python3 - "$1" "$2" "$3" <<'PY'
+import re, sys, xml.etree.ElementTree as ET
+want, fx, fy = sys.argv[1], float(sys.argv[2]), float(sys.argv[3])
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if n.get("text") == want or n.get("content-desc") == want:
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        print(int(a + (c - a) * fx), int(b + (d - b) * fy)); break
+PY
+)
+  if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
+  adb shell input tap $xy; log "tapped: $1 at $2 $3"; sleep 1.5
+}
 has() { grep -q "text=\"[^\"]*$1" "$OUT/$2.xml" && log "OK: '$1' on $2" || { log "FAIL: '$1' not on $2"; FAILED=1; }; }
 FAILED=0
 
@@ -121,6 +138,8 @@ tap "Statistics"
 shot 13b-statistics 3
 adb shell input swipe 540 1800 540 600 300
 shot 13c-statistics-scrolled 2
+# The ring: the top of the band chooses the first slice (its name, sum and share in the middle), again clears it.
+if tap_part "Category distribution" 0.5 0.08; then shot 13c2-donut-chosen 1; tap_part "Category distribution" 0.5 0.08; shot 13c3-donut-cleared 1; fi
 tap "Filters"
 shot 13g-filters 2
 tap "All accounts"

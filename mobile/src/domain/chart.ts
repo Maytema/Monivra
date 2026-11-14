@@ -41,3 +41,30 @@ export function chartBins(rows: readonly { date: string; reportType: "income" | 
   }
   return { income, expense, days };
 }
+
+// ---- The ring of the donut ---------------------------------------------------------------------------
+
+// A slice as a part of the circle: from `start` to `end`, in turns (0 at twelve o'clock, clockwise, 1 a full circle).
+export interface Arc {
+  id: string;
+  start: number;
+  end: number;
+}
+
+// The slices one after another around the circle, each as wide as its share.
+export function donutArcs(slices: readonly Group[]): Arc[] {
+  const total = slices.reduce((sum, g) => sum + g.total, 0);
+  if (total <= 0) return [];
+  let at = 0;
+  return slices.map((g) => ({ id: g.id, start: at, end: (at += g.total / total) }));
+}
+
+// The slice under a touch at (dx, dy) from the centre of the ring, or null when the touch is not on the band
+// between `inner` and `outer` (a band wider than the drawn ring, so a finger does not have to be exact).
+// The angle alone decides which slice: nothing depends on how the ring is painted.
+export function sliceAt(arcs: readonly Arc[], dx: number, dy: number, inner: number, outer: number): string | null {
+  const distance = Math.hypot(dx, dy);
+  if (distance < inner || distance > outer || !arcs.length) return null;
+  const turn = (Math.atan2(dx, -dy) / (2 * Math.PI) + 1) % 1;
+  return (arcs.find((a) => turn >= a.start && turn < a.end) ?? arcs[arcs.length - 1]!).id;
+}

@@ -6,7 +6,7 @@ import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
-import { chartBins, donutSlices, OTHER_SLICE, type Group } from "../domain/chart.ts";
+import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } from "../domain/chart.ts";
 import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
@@ -57,6 +57,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   const money = useMoney();
   const { catType, filters } = useView();
   const [selected, setSelected] = useState<string | null>(null);
+  const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, filters)), [data, period, filters]);
   const income = totalByType(rows, "income");
@@ -182,50 +183,81 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
       </Card>
     ),
     donut: () => {
-      // A thin ring with a small gap between the slices, an icon tile in the middle (ST 003).
+      // A thin ring with a small gap between the slices (ST 003). One touch layer over the ring finds the slice by
+      // the angle of the touch (domain/chart.ts sliceAt), so a finger near a slice picks that slice; the same
+      // slice again, or a touch off the ring, clears the choice. With nothing chosen the middle shows the total
+      // of the period (expenses or income, as chosen above); with a slice chosen, its name, sum and share.
       const radius = 80;
       const ring = 15;
       const circ = 2 * Math.PI * radius;
-      let offset = 0;
+      const arcs = donutArcs(slices);
       const label = (g: Group) => (g.id === OTHER_SLICE ? t.t(g.name) : g.name);
+      const touch = (x: number, y: number) => {
+        if (!ringSize) return;
+        const scale = 190 / ringSize; // the drawing is 190 units wide
+        const id = sliceAt(arcs, x * scale - 95, y * scale - 95, radius - ring * 2, radius + ring * 1.6);
+        setSelected(id === null || id === selected ? null : id);
+      };
       return (
         <Card key="donut">
-          <View style={{ aspectRatio: 1 }}>
+          <View style={{ aspectRatio: 1 }} onLayout={(e) => setRingSize(e.nativeEvent.layout.width)}>
             <Svg accessibilityLabel="Category distribution" viewBox="0 0 190 190" style={{ width: "100%", height: "100%" }}>
               <Circle cx={95} cy={95} r={radius} fill="none" stroke={p.line} strokeWidth={ring} />
-              {slices.map((g) => {
-                const length = sliceTotal ? (g.total / sliceTotal) * circ : 0;
-                const node = (
+              {arcs.map((a, i) => {
+                const g = slices[i] as Group;
+                const length = (a.end - a.start) * circ;
+                const on = selected === g.id;
+                return (
                   <Circle
                     key={g.id}
-                    accessibilityLabel={label(g)}
-                    onPress={() => setSelected(selected === g.id ? null : g.id)}
                     cx={95}
                     cy={95}
                     r={radius}
                     fill="none"
                     stroke={g.color}
-                    strokeWidth={selected === g.id ? ring + 6 : ring}
+                    opacity={selected && !on ? 0.35 : 1}
+                    strokeWidth={on ? ring + 6 : ring}
                     strokeDasharray={`${slices.length > 1 ? Math.max(0, length - 3) : length} ${circ}`}
-                    strokeDashoffset={-offset}
+                    strokeDashoffset={-a.start * circ}
                     transform="rotate(-90 95 95)"
                   />
                 );
-                offset += length;
-                return node;
               })}
             </Svg>
-            <View pointerEvents="box-none" style={{ position: "absolute", top: "28%", bottom: "28%", left: "28%", right: "28%", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <View style={{ width: 56, height: 56, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: chosen ? mix(chosen.color, p.bg, 0.16) : p.key }}>
-                <Icon name={chosen?.icon ?? "dollar"} size={28} color={chosen ? chosen.color : p.inkSoft} />
-              </View>
-              <Text numberOfLines={2} style={{ color: p.muted, fontSize: 17, textAlign: "center" }}>{chosen ? label(chosen) : t.t("Not selected")}</Text>
-              {chosen ? <Text style={{ color: p.ink, fontSize: 18, fontWeight: "600" }}>{percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale)}</Text> : null}
+            {/* For screen readers the ring is one adjustable element: swipe up and down to go through the slices. */}
+            <Pressable
+              accessibilityRole="adjustable"
+              accessibilityLabel={t.t("Category distribution")}
+              accessibilityValue={{ text: chosen ? `${label(chosen)}, ${money(chosen.total, main)}` : `${t.t(catType === "expense" ? "Expenses" : "Income")}, ${money(total, main)}` }}
+              accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
+              onAccessibilityAction={(e) => {
+                const at = slices.findIndex((g) => g.id === selected);
+                const next = e.nativeEvent.actionName === "increment" ? at + 1 : at - 1;
+                setSelected(next >= 0 && next < slices.length ? (slices[next] as Group).id : null);
+              }}
+              onPress={(e) => touch(e.nativeEvent.locationX, e.nativeEvent.locationY)}
+              style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+            />
+            <View pointerEvents="box-none" style={{ position: "absolute", top: "24%", bottom: "24%", left: "24%", right: "24%", alignItems: "center", justifyContent: "center", gap: 4 }}>
               {chosen ? (
-                <Pressable accessibilityRole="button" onPress={() => openOperations(chosen.id, chosen.members)}>
-                  <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t("Operations")}</Text>
-                </Pressable>
-              ) : null}
+                <>
+                  <View pointerEvents="none" style={{ width: 40, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: mix(chosen.color, p.bg, 0.16) }}>
+                    <Icon name={chosen.icon ?? "dollar"} size={22} color={chosen.color} />
+                  </View>
+                  <Text pointerEvents="none" numberOfLines={1} style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{label(chosen)}</Text>
+                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 18, fontWeight: "600", textAlign: "center" }}>{money(chosen.total, main)}</Text>
+                  <Text pointerEvents="none" style={{ color: p.ink, fontSize: 14 }}>{percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale)}</Text>
+                  <Pressable accessibilityRole="button" hitSlop={8} onPress={() => openOperations(chosen.id, chosen.members)}>
+                    <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t("Operations")}</Text>
+                  </Pressable>
+                </>
+              ) : (
+                <>
+                  <Text pointerEvents="none" style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{t.t(catType === "expense" ? "Expenses" : "Income")}</Text>
+                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 21, fontWeight: "600", textAlign: "center" }}>{money(total, main)}</Text>
+                  {slices.length ? <Text pointerEvents="none" style={{ color: p.muted, fontSize: 12, textAlign: "center", marginTop: 2 }}>{t.t("Tap a part of the ring")}</Text> : null}
+                </>
+              )}
             </View>
           </View>
         </Card>

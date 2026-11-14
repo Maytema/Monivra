@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { chartBins, donutSlices, OTHER_SLICE, type Group } from "../src/domain/chart.ts";
+import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } from "../src/domain/chart.ts";
 
 const g = (id: string, total: number): Group => ({ id, name: id, color: "#000000", total });
 
@@ -35,4 +35,29 @@ test("bars: each operation lands in the part of the period it falls into; at mos
   const week = chartBins([{ date: "2026-10-03", reportType: "expense", reportAmount: 7 }], "2026-10-01", "2026-10-07");
   assert.equal(week.expense.length, 7);
   assert.equal(week.expense[2], 7);
+});
+
+// The ring: the slices around the circle and the slice under a touch.
+const arcs = donutArcs([g("a", 50), g("b", 25), g("c", 25)]);
+
+test("each slice is as wide as its share, one after another", () => {
+  assert.deepEqual(arcs, [
+    { id: "a", start: 0, end: 0.5 },
+    { id: "b", start: 0.5, end: 0.75 },
+    { id: "c", start: 0.75, end: 1 },
+  ]);
+  assert.deepEqual(donutArcs([g("a", 0)]), []);
+});
+
+test("the angle of the touch picks the slice: twelve o'clock is the start, clockwise", () => {
+  assert.equal(sliceAt(arcs, 10, -80, 60, 100), "a"); // just right of twelve
+  assert.equal(sliceAt(arcs, 80, 0, 60, 100), "a"); // three o'clock: a quarter
+  assert.equal(sliceAt(arcs, -10, 80, 60, 100), "b"); // just left of six
+  assert.equal(sliceAt(arcs, -80, -5, 60, 100), "c"); // nine o'clock and a little up
+});
+
+test("a touch off the band of the ring picks nothing", () => {
+  assert.equal(sliceAt(arcs, 0, -10, 60, 100), null); // the middle
+  assert.equal(sliceAt(arcs, 0, -120, 60, 100), null); // outside
+  assert.equal(sliceAt([], 0, -80, 60, 100), null);
 });
