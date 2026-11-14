@@ -1,0 +1,48 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                               1111ms      463ms      5       9  9 (100.00%)  450ms  450ms
+first screen: start with the basic set                   1517ms      346ms     12      27  23 (85.19%)   93ms  200ms
+read the file and open the restore page                   776ms      443ms      4      22  20 (90.91%)  133ms  200ms
+restore 3000 operations                                  1498ms     1184ms      6      40  32 (80.00%)  150ms  150ms
+open tab Operations (first time)                          818ms       96ms     12     148 115 (77.70%)   97ms  117ms
+scroll the operations down (6 flicks)                    1533ms      212ms     16     150 118 (78.67%)  101ms  250ms
+scroll the operations back up (6 flicks)                 1623ms      185ms     18     173 136 (78.61%)   97ms  117ms
+swipe to the previous period (3 times)                   1177ms      403ms      9      87  70 (80.46%)   93ms  117ms
+swipe to the next period (3 times)                        429ms      160ms      3      94  75 (79.79%)   69ms  105ms
+open tab Statistics (first time)                           66ms       66ms      1       4  4 (100.00%)  150ms  150ms
+scroll the statistics (3 flicks down, 3 up)               392ms       90ms      6      52  47 (90.38%)  129ms  150ms
+statistics: previous period and back                      355ms      184ms      2      29  25 (86.21%)  105ms  117ms
+open tab Categories (first time)                           58ms       58ms      1      24  20 (83.33%)   77ms  101ms
+open tab Accounts                                           0ms        0ms      0      14  11 (78.57%)   89ms  101ms
+tabs again: Operations, Statistics, Categories, Acco      114ms       57ms      2      42  32 (76.19%)   85ms  101ms
+open the add menu                                         196ms      144ms      2       8  8 (100.00%)  150ms  150ms
+choose a category (the editor opens)                        0ms        0ms      0       8  8 (100.00%)  113ms  113ms
+type 1 2 5 on the keys                                      0ms        0ms      0       6  6 (100.00%)   34ms   34ms
+save the operation                                       1120ms      168ms     11      72  57 (79.17%)   93ms  117ms
+report preview, first time (3000 operations)             2022ms      383ms     12     124 120 (96.77%)  101ms  150ms
+scroll the preview (8 flicks)                             858ms       91ms     13     171 152 (88.89%)  109ms  150ms
+report preview, second time                              1344ms      147ms     17      20  15 (75.00%)  150ms  150ms
+save the PIN                                              165ms       98ms      2       8   6 (75.00%)   73ms   73ms
+type a wrong PIN (1111)                                   294ms       86ms      4      78  62 (79.49%)   85ms  121ms
+type the right PIN (1234)                                 204ms       81ms      3      60  47 (78.33%)   85ms  117ms
+all moves                                               17669ms
+
+first screen: start with the basic set   | engine toLocaleString x200 1268.4ms
+first screen: start with the basic set   | engine plain format x200 3.4ms
+first screen: start with the basic set   | engine localeCompare x200 7.3ms
+first screen: start with the basic set   | engine toLocaleDateString x200 1429.0ms
+read the file and open the restore page  | file read: 452162 characters 33.4ms
+read the file and open the restore page  | data file: read and checked 154.1ms
+read the file and open the restore page  | restore page: merge plan 50.5ms
+read the file and open the restore page  | restore page: replace plan 196.2ms
+restore 3000 operations                  | layer dialog shown 7.0ms
+restore 3000 operations                  | restore page: merge plan 107.1ms
+restore 3000 operations                  | restore page: replace plan 20.4ms
+open the add menu                        | layer sheet shown 3.3ms
+choose a category (the editor opens)     | layer sheet shown 35.3ms
+report preview, first time (3000 operati | layer dialog shown 10.3ms
+report preview, first time (3000 operati | report detail: 148 pages laid out 988.8ms
+report preview, first time (3000 operati | layer dialog shown 386.1ms
+report preview, first time (3000 operati | report preview: first 3 of 148 pages 1502.0ms
+report preview, first time (3000 operati | layer full shown 95.2ms
+report preview, second time              | layer full shown 11.4ms
+report preview, second time              | layer sheet shown 11.1ms
