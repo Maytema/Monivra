@@ -1,0 +1,28 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                669ms      216ms      4       8  8 (100.00%)  450ms  450ms
+first screen: start with the basic set                     53ms       53ms      1       0            -      -      -
+read the file and open the restore page                     0ms        0ms      0       0            -      -      -
+restore 3000 operations                                     0ms        0ms      0       0            -      -      -
+open tab Operations (first time)                            0ms        0ms      0       0            -      -      -
+scroll the operations down (6 flicks)                       0ms        0ms      0       0            -      -      -
+scroll the operations back up (6 flicks)                    0ms        0ms      0       0            -      -      -
+swipe to the previous period (3 times)                      0ms        0ms      0       0            -      -      -
+swipe to the next period (3 times)                          0ms        0ms      0       0            -      -      -
+open tab Statistics (first time)                            0ms        0ms      0       0            -      -      -
+scroll the statistics (3 flicks down, 3 up)                 0ms        0ms      0       0            -      -      -
+statistics: previous period and back                        0ms        0ms      0       0            -      -      -
+open tab Categories (first time)                            0ms        0ms      0       0            -      -      -
+open tab Accounts                                           0ms        0ms      0       0            -      -      -
+tabs again: Operations, Statistics, Categories, Acco        0ms        0ms      0       0            -      -      -
+open the add menu                                           0ms        0ms      0       0            -      -      -
+choose a category (the editor opens)                        0ms        0ms      0       0            -      -      -
+type 1 2 5 on the keys                                      0ms        0ms      0       0            -      -      -
+save the operation                                          0ms        0ms      0       0            -      -      -
+report preview, first time (3000 operations)                0ms        0ms      0       0            -      -      -
+scroll the preview (8 flicks)                               0ms        0ms      0       0            -      -      -
+report preview, second time                                 0ms        0ms      0       0            -      -      -
+save the PIN                                                0ms        0ms      0       0            -      -      -
+type a wrong PIN (1111)                                     0ms        0ms      0       0            -      -      -
+type the right PIN (1234)                                   0ms        0ms      0       0            -      -      -
+all moves                                                 722ms
+
