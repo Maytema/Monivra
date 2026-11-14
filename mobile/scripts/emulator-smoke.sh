@@ -337,6 +337,23 @@ tap "Exit selection"
 tap "November 2026"
 shot 19-period-dialog 2
 back
+# Swipes recorded on video (looked at frame by frame): the underline of the accounts tabs must move with the
+# finger, and a period swipe on the categories must never show the period it left again for a moment.
+record() { adb shell "screenrecord --time-limit $2 /sdcard/$1.mp4" >/dev/null 2>&1 & REC=$!; sleep 1; }
+stop_record() { wait $REC 2>/dev/null; sleep 1; adb pull "/sdcard/$1.mp4" "$OUT/$1.mp4" >/dev/null 2>&1 && log "video: $1.mp4" || log "video: $1 not recorded"; }
+tap "Accounts"
+record 19a-accounts-tabs-swipe 8
+adb shell input motionevent DOWN 950 1500; adb shell input motionevent MOVE 800 1500; adb shell input motionevent MOVE 600 1505; adb shell input motionevent MOVE 520 1505
+shot 19a-accounts-half-swipe 1
+adb shell input motionevent MOVE 300 1505; adb shell input motionevent UP 300 1505; sleep 1.5
+adb shell input swipe 200 1500 950 1500 250; sleep 1.5
+stop_record 19a-accounts-tabs-swipe
+tap "Categories"
+sleep 2
+record 19b-categories-period-swipes 12
+for i in 1 2 3; do adb shell input swipe 200 1300 950 1300 200; sleep 1.2; done
+for i in 1 2 3; do adb shell input swipe 950 1300 200 1300 200; sleep 1.2; done
+stop_record 19b-categories-period-swipes
 # The Data section: saved backups (make one, open it: what merge and replace would do), the data
 # file, the import with its example, the export and its preview, the ways to delete.
 tap "More"

@@ -1,20 +1,29 @@
 // Pages side by side under the finger (js/app/swipe.js): the previous, the current and the next page are
 // drawn beforehand, so whatever part of a neighbour a swipe uncovers is already there. A swipe past
 // max(48, 27 % of the width) or a quick flick moves to the neighbour; at an end the page resists.
-// What stays in place (the period bar) reads the offset from the context to move its title along.
+// What stays in place (the period bar, the tabs above the accounts) reads the offset from the context and
+// moves its title or underline along with the finger.
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { Animated, Dimensions, Easing, PanResponder, View } from "react-native";
+import { Animated, Dimensions, Easing, PanResponder, View, unstable_batchedUpdates } from "react-native";
 import { gestureLock } from "./gesture-lock.ts";
 
+// Where the pages are: `x` is the offset of the row of pages in px, and the page in the middle at rest is at
+// x = -base × width. `base` counts the moves made (+1 to the next page, -1 to the previous one). Whatever moves
+// with the pages (the period titles, the underline of the tabs) places itself by `base` in React and follows `x`
+// on the native side: the offset after a move is −width × (number of the move), so nothing has to be put back.
 export interface PagerMotion {
-  // Horizontal offset of the pages in px: negative while the next page comes in.
   x: Animated.Value;
+  base: number;
   width: number;
 }
 const PagerContext = createContext<PagerMotion | null>(null);
 export const usePagerMotion = (): PagerMotion | null => useContext(PagerContext);
 
 const SETTLE_MS = 220;
+// The pages sit on a long strip (SPAN widths on each side of the start) so that after a move only React props
+// change, never the animated offset: before, the offset was put back to the middle after every move, and the
+// native side could show that before the new pages were mounted — the previous period flashed for a frame.
+const SPAN = 500;
 
 // After a swipe moved the pages with the native driver, the layout the touch system measures for a row still
 // holds the place the page ended at, not where it was put back: a press then looks "moved out of the row" at
@@ -39,25 +48,28 @@ export function Pager<K extends string>({
 }) {
   const [width, setWidth] = useState(Dimensions.get("window").width);
   const x = useRef(new Animated.Value(0)).current;
+  // The number of moves made; the strip is started again (one jump, after ~SPAN moves) when it runs out.
+  const [base, setBase] = useState(0);
   const busy = useRef(false);
   const lastMove = useRef(0);
-  const moved = useRef(false);
   // The neighbours are drawn once the first page is on the screen, so opening the tab stays quick.
   const [warm, setWarm] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setWarm(true), 250);
     return () => clearTimeout(timer);
   }, []);
-  // After a move the neighbour has become the current page: the row is put back in the middle before
-  // the screen is drawn again, so nothing jumps.
+  // A new width (rotation, split screen) or a new start of the strip: the pages are put where they rest.
   useLayoutEffect(() => {
-    if (!moved.current) return;
-    moved.current = false;
-    x.setValue(0);
+    x.setValue(-base * width);
     busy.current = false;
-  }, [current, x]);
-  const live = useRef({ prev, next, onMove, width });
-  live.current = { prev, next, onMove, width };
+  }, [width, x]); // eslint-disable-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    if (Math.abs(base) < SPAN - 2) return;
+    setBase(0);
+    x.setValue(0);
+  }, [base, x]);
+  const live = useRef({ prev, next, onMove, width, base });
+  live.current = { prev, next, onMove, width, base };
   const pan = useRef(
     PanResponder.create({
       // A clearly horizontal drag is taken; a vertical one stays with the lists.
@@ -71,45 +83,54 @@ export function Pager<K extends string>({
       },
       onPanResponderMove: (_e, g) => {
         lastMove.current = Date.now();
+        const { width: w, base: b } = live.current;
         const there = g.dx < 0 ? live.current.next : live.current.prev;
-        x.setValue(there !== null ? g.dx : Math.sign(g.dx) * 28 * (1 - Math.exp(-Math.abs(g.dx) / 95)));
+        x.setValue(-b * w + (there !== null ? g.dx : Math.sign(g.dx) * 28 * (1 - Math.exp(-Math.abs(g.dx) / 95))));
       },
       onPanResponderRelease: (_e, g) => {
         const direction: 1 | -1 = g.dx < 0 ? 1 : -1;
+        const { width: w, base: b } = live.current;
         const there = direction === 1 ? live.current.next : live.current.prev;
-        const w = live.current.width;
         const far = Math.abs(g.dx) > Math.max(48, w * 0.27) || (Math.abs(g.dx) > 30 && Math.abs(g.vx) > 0.5);
         if (!far || there === null) {
-          Animated.timing(x, { toValue: 0, duration: 240, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+          Animated.timing(x, { toValue: -b * w, duration: 240, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
           return;
         }
         busy.current = true;
         const left = w - Math.abs(g.dx);
         const duration = Math.max(90, Math.min(SETTLE_MS, Math.abs(g.vx) > 0.1 ? left / Math.abs(g.vx) : SETTLE_MS));
-        Animated.timing(x, { toValue: -direction * w, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(() => {
-          moved.current = true;
-          live.current.onMove(direction);
+        Animated.timing(x, { toValue: -(b + direction) * w, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(({ finished }) => {
+          // One commit: the strip's count and the owner's page change together, so the page now in the middle
+          // keeps its place and its content; the offset is already where it should be.
+          unstable_batchedUpdates(() => {
+            setBase(b + direction);
+            live.current.onMove(direction);
+          });
+          busy.current = false;
+          if (!finished) x.setValue(-(b + direction) * w);
         });
       },
       onPanResponderTerminate: () => {
-        Animated.timing(x, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+        const { width: w, base: b } = live.current;
+        Animated.timing(x, { toValue: -b * w, duration: 200, useNativeDriver: true }).start();
       },
     }),
   ).current;
-  const page = (key: K | null, isCurrent: boolean, slot: string) => (
-    <View key={key ?? slot} style={{ width, height: "100%", overflow: "hidden" }}>
-      {key !== null && (isCurrent || warm) ? render(key, isCurrent) : null}
-    </View>
-  );
+  const page = (key: K | null, isCurrent: boolean, slot: -1 | 0 | 1) =>
+    key === null ? null : (
+      <View key={key} style={{ position: "absolute", top: 0, bottom: 0, left: (SPAN + base + slot) * width, width, overflow: "hidden" }}>
+        {isCurrent || warm ? render(key, isCurrent) : null}
+      </View>
+    );
   return (
-    <PagerContext.Provider value={{ x, width }}>
+    <PagerContext.Provider value={{ x, base, width }}>
       <View style={{ flex: 1 }} onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setWidth(e.nativeEvent.layout.width || width)} {...pan.panHandlers}>
         {header}
         <View style={{ flex: 1, overflow: "hidden" }}>
-          <Animated.View style={{ flexDirection: "row", width: width * 3, height: "100%", transform: [{ translateX: Animated.add(x, -width) }] }}>
-            {page(prev, false, "no-previous")}
-            {page(current, true, "current")}
-            {page(next, false, "no-next")}
+          <Animated.View style={{ position: "absolute", top: 0, bottom: 0, left: -SPAN * width, width: (2 * SPAN + 1) * width, transform: [{ translateX: x }] }}>
+            {page(prev, false, -1)}
+            {page(current, true, 0)}
+            {page(next, false, 1)}
           </Animated.View>
         </View>
       </View>

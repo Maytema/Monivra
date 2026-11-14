@@ -7,7 +7,7 @@ import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
-import { WIDE_RETENTION } from "./pager.tsx";
+import { usePagerMotion, WIDE_RETENTION } from "./pager.tsx";
 import { alpha, chrome, mix } from "./theme.ts";
 
 // Header of a root screen: a caption with the eye, the figure, and one round action at the right.
@@ -83,22 +83,36 @@ export function Hero({
 }
 
 // The strip of tabs under a header: the open one has a thick accent line (components.css .tabs).
-export function TopTabs<T extends string>({ tabs, active, onChange }: { tabs: readonly { id: T; label: string }[]; active: T; onChange: (id: T) => void }) {
+// `followPager`: the tabs are the pages of the Pager they sit in (its header) — the underline then moves with
+// the finger during a swipe, as in the first application (js/app/swipe.js tabs-progress), not after it.
+export function TopTabs<T extends string>({ tabs, active, onChange, followPager = false }: { tabs: readonly { id: T; label: string }[]; active: T; onChange: (id: T) => void; followPager?: boolean }) {
   const p = usePalette();
   const t = useT();
+  const motion = usePagerMotion();
+  const [room, setRoom] = useState(0);
+  const moving = followPager && motion && room > 0;
+  const index = Math.max(0, tabs.findIndex((tab) => tab.id === active));
+  const tabWidth = room / Math.max(1, tabs.length);
   return (
-    <View style={{ flexDirection: "row", borderBottomWidth: 1, borderBottomColor: p.line }}>
+    <View onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setRoom(e.nativeEvent.layout.width)} style={{ flexDirection: "row", borderBottomWidth: 1, borderBottomColor: p.line }}>
       {tabs.map((tab) => (
         <Pressable
           key={tab.id}
           accessibilityRole="tab"
           accessibilityState={{ selected: tab.id === active }}
           onPress={() => onChange(tab.id)}
-          style={{ flex: 1, height: 48, alignItems: "center", justifyContent: "center", borderBottomWidth: 3, borderBottomColor: tab.id === active ? p.accent : "transparent", marginBottom: -1 }}
+          style={{ flex: 1, height: 48, alignItems: "center", justifyContent: "center", borderBottomWidth: 3, borderBottomColor: !moving && tab.id === active ? p.accent : "transparent", marginBottom: -1 }}
         >
           <Text style={{ color: p.ink, fontSize: 14, fontWeight: tab.id === active ? "600" : "500" }}>{t.t(tab.label)}</Text>
         </Pressable>
       ))}
+      {moving ? (
+        // Placed by the pager's count of moves, moved by its offset: −offset / page width tabs.
+        <Animated.View
+          pointerEvents="none"
+          style={{ position: "absolute", bottom: -1, height: 3, width: tabWidth, left: (index - motion.base) * tabWidth, backgroundColor: p.accent, transform: [{ translateX: Animated.multiply(motion.x, -tabWidth / motion.width) }] }}
+        />
+      ) : null}
     </View>
   );
 }

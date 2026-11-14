@@ -201,9 +201,10 @@ export function AccountsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
-      <TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} />
-      {/* The three tabs are pages side by side, all drawn, so a swipe uncovers the next one ready. */}
+      {/* The three tabs are pages side by side, all drawn, so a swipe uncovers the next one ready; the tabs
+          sit in the pager's header so their underline follows the finger. */}
       <Pager
+        header={<TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} followPager />}
         prev={tabs[tabs.indexOf(shown) - 1] ?? null}
         current={shown}
         next={tabs[tabs.indexOf(shown) + 1] ?? null}

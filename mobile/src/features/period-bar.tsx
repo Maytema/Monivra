@@ -40,17 +40,25 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
     </View>
   );
   // While a swipe moves the pages, the titles move along between the arrows and fade out before they
-  // reach them; the arrows stay where they are.
+  // reach them; the arrows stay where they are. The titles are placed by the pager's count of moves and follow
+  // its offset on the native side, so after a move nothing is put back (no flash of the previous title).
   let titles: ReactNode = title(period, true);
   if (motion && room && !fixed) {
-    const w = motion.width;
-    const fade = (from: number, to: number) => motion.x.interpolate({ inputRange: [from, to].sort((a, b) => a - b), outputRange: from < to ? [0, 1] : [1, 0], extrapolate: "clamp" });
-    const shiftX = Animated.add(Animated.multiply(motion.x, room / w), -room);
+    const { width: w, base, x } = motion;
+    const rest = -base * w;
+    // Opacity of the title `k` places away (-1 previous, 0 this, 1 next) by the offset from rest.
+    const opacity = (k: -1 | 0 | 1) =>
+      k === 0
+        ? x.interpolate({ inputRange: [rest - w * 0.45, rest, rest + w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" })
+        : x.interpolate({ inputRange: k === -1 ? [rest + w * 0.55, rest + w] : [rest - w, rest - w * 0.55], outputRange: k === -1 ? [0, 1] : [1, 0], extrapolate: "clamp" });
+    const shown = (k: -1 | 0 | 1) => (k === 0 ? period : shiftPeriod(period, k, data.settings));
     titles = (
-      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, flexDirection: "row", width: room * 3, transform: [{ translateX: shiftX }] }}>
-        <Animated.View style={{ opacity: fade(w * 0.55, w) }}>{title(shiftPeriod(period, -1, data.settings), false)}</Animated.View>
-        <Animated.View style={{ opacity: motion.x.interpolate({ inputRange: [-w * 0.45, 0, w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" }) }}>{title(period, true)}</Animated.View>
-        <Animated.View style={{ opacity: fade(-w * 0.55, -w) }}>{title(shiftPeriod(period, 1, data.settings), false)}</Animated.View>
+      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: room, transform: [{ translateX: Animated.multiply(x, room / w) }] }}>
+        {([-1, 0, 1] as const).map((k) => (
+          <Animated.View key={JSON.stringify(shown(k))} style={{ position: "absolute", top: 0, bottom: 0, left: (base + k) * room, width: room, justifyContent: "center", opacity: opacity(k) }}>
+            {title(shown(k), k === 0)}
+          </Animated.View>
+        ))}
       </Animated.View>
     );
   }
