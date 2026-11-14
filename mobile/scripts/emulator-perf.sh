@@ -14,16 +14,19 @@ APK=$(ls results-apk/*.apk | head -1)
 HERE="$(cd "$(dirname "$0")" && pwd)"
 log() { echo "$*" | tee -a "$OUT/steps.txt"; }
 shot() { sleep "${2:-1}"; adb exec-out screencap -p > "$OUT/$1.png"; }
+# tap TEXT [PAUSE] [last]: taps the element whose text or description is TEXT; with "last", the last of several
+# (a button below a heading of the same words).
 tap() {
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
   local xy
-  xy=$(python3 - "$1" <<'PY'
+  xy=$(python3 - "$1" "${3:-first}" <<'PY'
 import re, sys, xml.etree.ElementTree as ET
-want = sys.argv[1]
-for n in ET.parse("/tmp/ui.xml").iter("node"):
-    if n.get("text") == want or n.get("content-desc") == want:
-        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
-        print((a + c) // 2, (b + d) // 2); break
+want, which = sys.argv[1], sys.argv[2]
+found = [n for n in ET.parse("/tmp/ui.xml").iter("node") if n.get("text") == want or n.get("content-desc") == want]
+if found:
+    n = found[-1] if which == "last" else found[0]
+    a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+    print((a + c) // 2, (b + d) // 2)
 PY
 )
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
@@ -69,7 +72,7 @@ tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
 tap "perf-data.json" 4 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 4; }
 shot 00-restore-page 2
 begin "restore 3000 operations"
-tap "Replace data"; tap "Confirm" 1
+tap "Replace data" 1.5 last; tap "Confirm" 1
 finish 20
 shot 01-after-restore 1
 
