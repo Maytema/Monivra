@@ -3,7 +3,7 @@
 // it moves with the finger and with the animation after a tap, never after the page has settled. One
 // logic for all of them (the accounts tab and the period pages use `Pager`, which also keeps neighbours).
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Animated, ScrollView, Text, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { Animated, Text, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 
@@ -36,7 +36,7 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
   const p = usePalette();
   const [width, setWidth] = useState(0);
   const index = Math.max(0, tabs.findIndex((tab) => tab.id === active));
-  const scroller = useRef<ScrollView | null>(null);
+  const scroller = useRef<{ scrollTo(to: { x: number; animated: boolean }): void } | null>(null);
   const x = useRef(new Animated.Value(0)).current;
   const setLive = useRef<(i: number) => void>(() => undefined);
   const last = useRef(index);
@@ -84,7 +84,7 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
       {width ? (
         <Animated.ScrollView
           ref={(node: unknown) => {
-            scroller.current = node as ScrollView | null;
+            scroller.current = node as { scrollTo(to: { x: number; animated: boolean }): void } | null;
           }}
           horizontal
           pagingEnabled
