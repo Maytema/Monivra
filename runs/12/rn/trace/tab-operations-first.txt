@@ -1,0 +1,68 @@
+CPU time by thread (ms):
+  RenderThread                     2954
+  ra.finance.next                  1187
+  mqt_v_js                          884
+  Jit thread pool                   185
+  HeapTaskDaemon                    142
+  ReferenceQueueD                    23
+  HybridData Dest                    21
+  binder:18429_2                     19
+  GPU completion                     10
+  binder:18429_4                      9
+  binder:18429_3                      2
+  HWC release                         2
+  FinalizerDaemon                     1
+  mqt_v_native                        0
+
+main: slices (level, name, count, total ms, longest ms)
+  0 Choreographer#doFrame #                                                  304    4256.2     70.7
+  1   traversal                                                                 98    2198.7     53.7
+  2     draw                                                                      98    2182.9     53.6
+  1   Choreographer#doFrame - resynced to # in #.#ms                            76    1870.7     70.6
+  2     traversal                                                                 70    1776.9     70.0
+  1   animation                                                                228     181.2     15.2
+  2     MountItemDispatcher::mountViews mountItems to execute                     93      97.2     13.5
+  2     animation                                                                 76      93.9     10.8
+  2     MountItemDispatcher::premountViews                                         8      41.1      7.9
+  2     Choreographer#scheduleVsyncLocked                                        193      13.0      4.2
+  2     MountItemDispatcher::mountViews preMountItems                              2       9.3      6.9
+  0 Choreographer#onVsync #                                                  304       2.5      0.1
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xeded#af#                    1       2.2      2.2
+  1   EarlyPostImeInputStage id=#xeded#af#                                       1       1.4      1.4
+  2     BatchEventDispatchedListeners                                            228       1.2      0.1
+  1   ViewPostImeInputStage id=#xeded#af#                                        1       0.7      0.7
+  2     TouchesHelper.sentTouchEventModern(topTouchStart)                          1       0.2      0.2
+  0 Blocking on WeakGlobal access                                              1       0.2      0.2
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xee#fcf                      1       0.2      0.2
+  1   ViewPostImeInputStage id=#xee#fcf                                          1       0.2      0.2
+  2     dispatchApplyInsets                                                        1       0.1      0.1
+  2     TouchesHelper.sentTouchEventModern(topTouchEnd)                            1       0.0      0.0
+  0 monitor contention with owner RenderThread (#) at boolean android.os.M     1       0.0      0.0
+  1   Lock contention on a monitor lock (owner tid: #)                           1       0.0      0.0
+
+RenderThread: slices (level, name, count, total ms, longest ms)
+  0 DrawFrames #                                                             167    4436.0     64.5
+  1   Drawing  #.#  #.# #.# #.#                                                150    3777.2     61.5
+  2     eglSwapBuffersWithDamageKHR                                              150    2848.2     54.1
+  2     flush commands                                                           150     756.3     24.4
+  1   syncFrameState                                                           167     326.5     18.2
+  2     prepareTree                                                              167     312.7     18.1
+  2     dispatchSetFrameTimelineInfo                                             150       3.3      2.6
+  2     reportMetricsWithPresentTime                                             149       3.0      0.1
+  1   query                                                                    368       1.8      1.0
+  2     query                                                                    368       0.3      0.0
+  1   eglBeginFrame                                                            150       0.1      0.0
+  0 notifyFramePending                                                       167       0.1      0.0
+  2     glGenTextures encode                                                       1       0.1      0.1
+  2     Texture upload(#) #x#                                                      1       0.1      0.1
+  2     glTexParameteri encode                                                     4       0.0      0.0
+  2     glBindTexture encode                                                       1       0.0      0.0
+  2     glTexStorage#D encode                                                      1       0.0      0.0
+
+mqt_v_js: slices (level, name, count, total ms, longest ms)
+  0 Run checkpoint function                                                    1       0.1      0.1
+  0 Loading font /system/fonts/NotoSansSymbols-Regular-Subsetted.ttf           1       0.1      0.1
+  1   Lock contention on GC barrier lock (owner tid: #)                          1       0.1      0.1
+  0 monitor contention with owner main (#) at boolean android.os.MessageQu     3       0.0      0.0
+  1   Lock contention on a monitor lock (owner tid: #)                           3       0.0      0.0
+  0 Lock contention on thread suspend count lock (owner tid: #)                1       0.0      0.0

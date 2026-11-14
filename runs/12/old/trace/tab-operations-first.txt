@@ -1,0 +1,90 @@
+CPU time by thread (ms):
+  Chrome_InProcGp                   743
+  RenderThread                       47
+  vra.finance.dev                     6
+  ThreadPoolForeg                     3
+  Chrome_IOThread                     2
+  VizWebView                          1
+  binder:10459_1                      1
+  ThreadPoolServi                     0
+  Chrome_ChildIOT                     0
+  ThreadPoolSingl                     0
+  GoogleApiHandle                     0
+  HWC release                         0
+  binder:10459_2                      0
+  Chrome_ProcessL                     0
+
+main: slices (level, name, count, total ms, longest ms)
+  0 Choreographer#doFrame #                                                    8      43.2     40.9
+  1   traversal                                                                  2      40.9     40.4
+  2     draw                                                                       2      40.8     40.3
+  1   animation                                                                  7       2.1      0.6
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xc#d#ae                      1       0.7      0.7
+  1   ViewPostImeInputStage id=#xc#d#ae                                          1       0.6      0.6
+  2     Choreographer#scheduleVsyncLocked                                          6       0.2      0.0
+  0 Choreographer#scheduleVsyncLocked                                          2       0.2      0.1
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xcf#                         1       0.2      0.2
+  1   ViewPostImeInputStage id=#xcf#                                             1       0.2      0.2
+  0 Choreographer#onVsync #                                                    8       0.1      0.0
+  1   EarlyPostImeInputStage id=#xc#d#ae                                         1       0.1      0.1
+  1   Choreographer#doFrame - resynced to # in #.#ms                             1       0.0      0.0
+  0 monitor contention with owner RenderThread (#) at boolean android.os.M     1       0.0      0.0
+  2     animation                                                                  1       0.0      0.0
+  1   Lock contention on a monitor lock (owner tid: #)                           1       0.0      0.0
+  2     WebViewChromiumFactoryProvider.startYourEngines                            2       0.0      0.0
+  0 processInputEventForCompatibility                                          2       0.0      0.0
+  1   EarlyPostImeInputStage id=#xcf#                                            1       0.0      0.0
+  1   NativePostImeInputStage id=#xc#d#ae                                        1       0.0      0.0
+  1   NativePostImeInputStage id=#xcf#                                           1       0.0      0.0
+
+RenderThread: slices (level, name, count, total ms, longest ms)
+  0 DrawFrames #                                                               2     768.8    744.0
+  1   Drawing  #.# #.# #.# #.#                                                   2     768.6    743.9
+  2     WebViewFunctor::drawGl                                                     2     740.8    738.6
+  2     eglSwapBuffersWithDamageKHR                                                2      27.1     22.2
+  2     reportMetricsWithPresentTime                                               2       0.1      0.1
+  1   syncFrameState                                                             2       0.1      0.1
+  2     prepareTree                                                                2       0.1      0.1
+  2     auto skgpu::v#::OpsTask::onExecute(GrOpFlushState *)::(anonymous class     2       0.0      0.0
+  2     flush commands                                                             2       0.0      0.0
+  1   query                                                                      4       0.0      0.0
+  2     dispatchSetFrameTimelineInfo                                               2       0.0      0.0
+  2     glDisable encode                                                           8       0.0      0.0
+  2     auto skgpu::v#::OpsTask::onPrepare(GrOpFlushState *)::(anonymous class     2       0.0      0.0
+  2     query                                                                      4       0.0      0.0
+  0 notifyFramePending                                                         2       0.0      0.0
+  2     glPixelStorei encode                                                       4       0.0      0.0
+  1   eglBeginFrame                                                              2       0.0      0.0
+  2     glFrontFace encode                                                         2       0.0      0.0
+  2     glScissor encode                                                           2       0.0      0.0
+  2     glDepthMask encode                                                         2       0.0      0.0
+  2     glViewport encode                                                          2       0.0      0.0
+  2     glEnable encode                                                            2       0.0      0.0
+  2     glLineWidth encode                                                         2       0.0      0.0
+  2     glBindFramebuffer encode                                                   2       0.0      0.0
+
+Chrome_InProcGp: slices (level, name, count, total ms, longest ms)
+  0 rcCreateSyncKHR encode                                                    13     417.0    289.3
+  0 glCreateProgram encode                                                     9     243.6     57.8
+  0 glGenSamplers encode                                                       1      29.5     29.5
+  0 glGetShaderiv encode                                                      18      10.6      3.0
+  0 glTexSubImage#D encode                                                     9       8.8      2.5
+  0 glGetUniformLocation encode                                               88       4.6      0.1
+  0 glGetProgramiv encode                                                     72       4.1      0.2
+  0 glCreateShader encode                                                     18       3.1      1.1
+  0 glGenFramebuffers encode                                                  41       2.7      0.2
+  0 glGetActiveUniform encode                                                 44       2.4      0.1
+  0 glGenTextures encode                                                      23       2.4      0.5
+  0 glBufferDataSyncAEMU encode                                               22       1.4      0.2
+  0 rcCreateClientImage encode                                                13       1.0      0.2
+  0 glGetActiveAttrib encode                                                  19       1.0      0.1
+  0 glGetAttribLocation encode                                                19       1.0      0.1
+  0 glBufferSubData encode                                                    15       0.8      0.1
+  0 glGenBuffers encode                                                        7       0.5      0.1
+  0 glUnmapBufferAEMU encode                                                   2       0.1      0.1
+  0 glVertexAttribPointerOffset encode                                       179       0.1      0.0
+  0 glDisableVertexAttribArray encode                                        151       0.1      0.0
+  0 glTexParameteri encode                                                   116       0.0      0.0
+  0 glVertexAttribDivisor encode                                             111       0.0      0.0
+  0 glDisable encode                                                          80       0.0      0.0
+  0 glBindTexture encode                                                      74       0.0      0.0

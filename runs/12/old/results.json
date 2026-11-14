@@ -1,0 +1,743 @@
+[
+ {
+  "name": "cold start 1",
+  "ok": true,
+  "frames": 13,
+  "firstFrameMs": 2885,
+  "settleMs": 6219,
+  "afterLastInputMs": 6219,
+  "janky": 13,
+  "p50": 117,
+  "p95": 2750,
+  "worst": 2750,
+  "phases": {
+   "late": 3081,
+   "input": 24,
+   "layout": 0,
+   "record": 6,
+   "sync": 4,
+   "render": 3229
+  }
+ },
+ {
+  "name": "cold start 2",
+  "ok": true,
+  "frames": 11,
+  "firstFrameMs": 2475,
+  "settleMs": 6142,
+  "afterLastInputMs": 6142,
+  "janky": 11,
+  "p50": 123,
+  "p95": 3203,
+  "worst": 3203,
+  "phases": {
+   "late": 658,
+   "input": 26,
+   "layout": 1,
+   "record": 4,
+   "sync": 4,
+   "render": 3284
+  }
+ },
+ {
+  "name": "cold start 3",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 2768,
+  "settleMs": 5271,
+  "afterLastInputMs": 5271,
+  "janky": 2,
+  "p50": 2186,
+  "p95": 2483,
+  "worst": 2483,
+  "phases": {
+   "late": 445,
+   "input": 36,
+   "layout": 0,
+   "record": 0,
+   "sync": 0,
+   "render": 2147
+  }
+ },
+ {
+  "name": "tab Operations (first)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 78,
+  "settleMs": 912,
+  "afterLastInputMs": 912,
+  "janky": 2,
+  "p50": 67,
+  "p95": 771,
+  "worst": 771,
+  "phases": {
+   "late": 1,
+   "input": 1,
+   "layout": 0,
+   "record": 0,
+   "sync": 0,
+   "render": 833
+  }
+ },
+ {
+  "name": "tab Statistics (first)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 55,
+  "settleMs": 493,
+  "afterLastInputMs": 493,
+  "janky": 2,
+  "p50": 38,
+  "p95": 391,
+  "worst": 391,
+  "phases": {
+   "late": 1,
+   "input": 1,
+   "layout": 0,
+   "record": 1,
+   "sync": 0,
+   "render": 426
+  }
+ },
+ {
+  "name": "tab Categories (first)",
+  "ok": true,
+  "frames": 15,
+  "firstFrameMs": 38,
+  "settleMs": 1069,
+  "afterLastInputMs": 1069,
+  "janky": 15,
+  "p50": 136,
+  "p95": 417,
+  "worst": 417,
+  "phases": {
+   "late": 670,
+   "input": 16,
+   "layout": 0,
+   "record": 2,
+   "sync": 32,
+   "render": 1055
+  }
+ },
+ {
+  "name": "tab Accounts (first)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 55,
+  "settleMs": 122,
+  "afterLastInputMs": 122,
+  "janky": 2,
+  "p50": 34,
+  "p95": 50,
+  "worst": 50,
+  "phases": {
+   "late": 0,
+   "input": 1,
+   "layout": 0,
+   "record": 0,
+   "sync": 0,
+   "render": 81
+  }
+ },
+ {
+  "name": "tab Operations (again)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 65,
+  "settleMs": 166,
+  "afterLastInputMs": 166,
+  "janky": 2,
+  "p50": 51,
+  "p95": 67,
+  "worst": 67,
+  "phases": {
+   "late": 7,
+   "input": 3,
+   "layout": 0,
+   "record": 0,
+   "sync": 1,
+   "render": 105
+  }
+ },
+ {
+  "name": "tab Statistics (again)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 58,
+  "settleMs": 159,
+  "afterLastInputMs": 159,
+  "janky": 2,
+  "p50": 47,
+  "p95": 50,
+  "worst": 50,
+  "phases": {
+   "late": 12,
+   "input": 1,
+   "layout": 0,
+   "record": 1,
+   "sync": 0,
+   "render": 84
+  }
+ },
+ {
+  "name": "tab Categories (again)",
+  "ok": true,
+  "frames": 19,
+  "firstFrameMs": 58,
+  "settleMs": 926,
+  "afterLastInputMs": 926,
+  "janky": 19,
+  "p50": 119,
+  "p95": 168,
+  "worst": 168,
+  "phases": {
+   "late": 482,
+   "input": 89,
+   "layout": 1,
+   "record": 13,
+   "sync": 19,
+   "render": 981
+  }
+ },
+ {
+  "name": "tab Accounts (again)",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 52,
+  "settleMs": 120,
+  "afterLastInputMs": 120,
+  "janky": 2,
+  "p50": 34,
+  "p95": 35,
+  "worst": 35,
+  "phases": {
+   "late": 1,
+   "input": 2,
+   "layout": 0,
+   "record": 0,
+   "sync": 0,
+   "render": 66
+  }
+ },
+ {
+  "name": "operations: 6 flicks down",
+  "ok": true,
+  "inputsMs": [
+   10,
+   910,
+   1830,
+   2740,
+   3630,
+   4700
+  ],
+  "frames": 56,
+  "firstFrameMs": 78,
+  "settleMs": 5279,
+  "afterLastInputMs": 579,
+  "janky": 56,
+  "p50": 117,
+  "p95": 185,
+  "worst": 210,
+  "phases": {
+   "late": 1509,
+   "input": 251,
+   "layout": 12,
+   "record": 15,
+   "sync": 64,
+   "render": 2873
+  }
+ },
+ {
+  "name": "operations: 6 flicks up",
+  "ok": true,
+  "inputsMs": [
+   10,
+   1090,
+   2040,
+   3140,
+   4120,
+   5000
+  ],
+  "frames": 65,
+  "firstFrameMs": 72,
+  "settleMs": 1540,
+  "afterLastInputMs": -3460,
+  "janky": 65,
+  "p50": 132,
+  "p95": 156,
+  "worst": 172,
+  "phases": {
+   "late": 1953,
+   "input": 378,
+   "layout": 2,
+   "record": 16,
+   "sync": 99,
+   "render": 3360
+  }
+ },
+ {
+  "name": "operations: swipe to previous period 1",
+  "ok": true,
+  "frames": 13,
+  "firstFrameMs": 142,
+  "settleMs": 959,
+  "afterLastInputMs": 959,
+  "janky": 13,
+  "p50": 123,
+  "p95": 154,
+  "worst": 154,
+  "phases": {
+   "late": 308,
+   "input": 19,
+   "layout": 0,
+   "record": 2,
+   "sync": 1,
+   "render": 739
+  }
+ },
+ {
+  "name": "operations: swipe to previous period 2",
+  "ok": true,
+  "frames": 9,
+  "firstFrameMs": 195,
+  "settleMs": 795,
+  "afterLastInputMs": 795,
+  "janky": 9,
+  "p50": 117,
+  "p95": 157,
+  "worst": 157,
+  "phases": {
+   "late": 212,
+   "input": 32,
+   "layout": 0,
+   "record": 4,
+   "sync": 3,
+   "render": 553
+  }
+ },
+ {
+  "name": "operations: swipe to previous period 3",
+  "ok": true,
+  "frames": 9,
+  "firstFrameMs": 172,
+  "settleMs": 772,
+  "afterLastInputMs": 772,
+  "janky": 9,
+  "p50": 127,
+  "p95": 135,
+  "worst": 135,
+  "phases": {
+   "late": 187,
+   "input": 33,
+   "layout": 0,
+   "record": 1,
+   "sync": 20,
+   "render": 482
+  }
+ },
+ {
+  "name": "operations: swipe to next period 1",
+  "ok": true,
+  "frames": 8,
+  "firstFrameMs": 155,
+  "settleMs": 739,
+  "afterLastInputMs": 739,
+  "janky": 8,
+  "p50": 138,
+  "p95": 167,
+  "worst": 167,
+  "phases": {
+   "late": 271,
+   "input": 12,
+   "layout": 0,
+   "record": 1,
+   "sync": 8,
+   "render": 455
+  }
+ },
+ {
+  "name": "operations: swipe to next period 2",
+  "ok": true,
+  "frames": 10,
+  "firstFrameMs": 168,
+  "settleMs": 835,
+  "afterLastInputMs": 835,
+  "janky": 10,
+  "p50": 100,
+  "p95": 183,
+  "worst": 183,
+  "phases": {
+   "late": 262,
+   "input": 28,
+   "layout": 0,
+   "record": 27,
+   "sync": 29,
+   "render": 543
+  }
+ },
+ {
+  "name": "operations: swipe to next period 3",
+  "ok": true,
+  "frames": 8,
+  "firstFrameMs": 148,
+  "settleMs": 699,
+  "afterLastInputMs": 699,
+  "janky": 8,
+  "p50": 117,
+  "p95": 150,
+  "worst": 150,
+  "phases": {
+   "late": 276,
+   "input": 6,
+   "layout": 0,
+   "record": 2,
+   "sync": 5,
+   "render": 445
+  }
+ },
+ {
+  "name": "categories: swipe to previous period 1",
+  "ok": true,
+  "frames": 30,
+  "firstFrameMs": 88,
+  "settleMs": 1507,
+  "afterLastInputMs": 1507,
+  "janky": 30,
+  "p50": 116,
+  "p95": 153,
+  "worst": 156,
+  "phases": {
+   "late": 784,
+   "input": 217,
+   "layout": 1,
+   "record": 3,
+   "sync": 21,
+   "render": 1535
+  }
+ },
+ {
+  "name": "categories: swipe to previous period 2",
+  "ok": true,
+  "frames": 31,
+  "firstFrameMs": 75,
+  "settleMs": 1542,
+  "afterLastInputMs": 1542,
+  "janky": 31,
+  "p50": 119,
+  "p95": 159,
+  "worst": 169,
+  "phases": {
+   "late": 888,
+   "input": 151,
+   "layout": 1,
+   "record": 4,
+   "sync": 19,
+   "render": 1601
+  }
+ },
+ {
+  "name": "categories: swipe to previous period 3",
+  "ok": true,
+  "frames": 28,
+  "firstFrameMs": 72,
+  "settleMs": 1522,
+  "afterLastInputMs": 1522,
+  "janky": 28,
+  "p50": 133,
+  "p95": 167,
+  "worst": 171,
+  "phases": {
+   "late": 788,
+   "input": 203,
+   "layout": 1,
+   "record": 3,
+   "sync": 50,
+   "render": 1528
+  }
+ },
+ {
+  "name": "categories: swipe to next period 1",
+  "ok": true,
+  "frames": 28,
+  "firstFrameMs": 82,
+  "settleMs": 1465,
+  "afterLastInputMs": 1465,
+  "janky": 28,
+  "p50": 117,
+  "p95": 178,
+  "worst": 184,
+  "phases": {
+   "late": 727,
+   "input": 289,
+   "layout": 11,
+   "record": 6,
+   "sync": 23,
+   "render": 1397
+  }
+ },
+ {
+  "name": "categories: swipe to next period 2",
+  "ok": true,
+  "frames": 28,
+  "firstFrameMs": 58,
+  "settleMs": 1442,
+  "afterLastInputMs": 1442,
+  "janky": 28,
+  "p50": 121,
+  "p95": 157,
+  "worst": 183,
+  "phases": {
+   "late": 790,
+   "input": 109,
+   "layout": 1,
+   "record": 3,
+   "sync": 57,
+   "render": 1442
+  }
+ },
+ {
+  "name": "categories: swipe to next period 3",
+  "ok": true,
+  "frames": 30,
+  "firstFrameMs": 58,
+  "settleMs": 1542,
+  "afterLastInputMs": 1542,
+  "janky": 30,
+  "p50": 126,
+  "p95": 167,
+  "worst": 168,
+  "phases": {
+   "late": 913,
+   "input": 226,
+   "layout": 1,
+   "record": 3,
+   "sync": 36,
+   "render": 1660
+  }
+ },
+ {
+  "name": "statistics: swipe to previous period 1",
+  "ok": true,
+  "frames": 10,
+  "firstFrameMs": 88,
+  "settleMs": 772,
+  "afterLastInputMs": 772,
+  "janky": 10,
+  "p50": 136,
+  "p95": 270,
+  "worst": 270,
+  "phases": {
+   "late": 392,
+   "input": 35,
+   "layout": 0,
+   "record": 1,
+   "sync": 11,
+   "render": 703
+  }
+ },
+ {
+  "name": "statistics: swipe to previous period 2",
+  "ok": true,
+  "frames": 10,
+  "firstFrameMs": 85,
+  "settleMs": 693,
+  "afterLastInputMs": 693,
+  "janky": 10,
+  "p50": 135,
+  "p95": 196,
+  "worst": 196,
+  "phases": {
+   "late": 304,
+   "input": 58,
+   "layout": 0,
+   "record": 1,
+   "sync": 3,
+   "render": 583
+  }
+ },
+ {
+  "name": "statistics: swipe to previous period 3",
+  "ok": true,
+  "frames": 10,
+  "firstFrameMs": 85,
+  "settleMs": 720,
+  "afterLastInputMs": 720,
+  "janky": 10,
+  "p50": 133,
+  "p95": 150,
+  "worst": 150,
+  "phases": {
+   "late": 280,
+   "input": 25,
+   "layout": 0,
+   "record": 1,
+   "sync": 8,
+   "render": 550
+  }
+ },
+ {
+  "name": "statistics: swipe to next period 1",
+  "ok": true,
+  "frames": 12,
+  "firstFrameMs": 88,
+  "settleMs": 705,
+  "afterLastInputMs": 705,
+  "janky": 12,
+  "p50": 117,
+  "p95": 135,
+  "worst": 135,
+  "phases": {
+   "late": 251,
+   "input": 76,
+   "layout": 0,
+   "record": 1,
+   "sync": 3,
+   "render": 644
+  }
+ },
+ {
+  "name": "statistics: swipe to next period 2",
+  "ok": true,
+  "frames": 12,
+  "firstFrameMs": 78,
+  "settleMs": 695,
+  "afterLastInputMs": 695,
+  "janky": 12,
+  "p50": 100,
+  "p95": 151,
+  "worst": 151,
+  "phases": {
+   "late": 229,
+   "input": 89,
+   "layout": 0,
+   "record": 1,
+   "sync": 16,
+   "render": 683
+  }
+ },
+ {
+  "name": "statistics: swipe to next period 3",
+  "ok": true,
+  "frames": 11,
+  "firstFrameMs": 88,
+  "settleMs": 689,
+  "afterLastInputMs": 689,
+  "janky": 11,
+  "p50": 134,
+  "p95": 150,
+  "worst": 150,
+  "phases": {
+   "late": 266,
+   "input": 26,
+   "layout": 0,
+   "record": 1,
+   "sync": 13,
+   "render": 570
+  }
+ },
+ {
+  "name": "statistics: 3 flicks down",
+  "ok": true,
+  "inputsMs": [
+   10,
+   940,
+   1810
+  ],
+  "frames": 15,
+  "firstFrameMs": 88,
+  "settleMs": 773,
+  "afterLastInputMs": -1037,
+  "janky": 15,
+  "p50": 133,
+  "p95": 152,
+  "worst": 152,
+  "phases": {
+   "late": 448,
+   "input": 72,
+   "layout": 0,
+   "record": 13,
+   "sync": 25,
+   "render": 766
+  }
+ },
+ {
+  "name": "currency list: open",
+  "ok": true,
+  "frames": 2,
+  "firstFrameMs": 88,
+  "settleMs": 158,
+  "afterLastInputMs": 158,
+  "janky": 2,
+  "p50": 37,
+  "p95": 51,
+  "worst": 51,
+  "phases": {
+   "late": 1,
+   "input": 1,
+   "layout": 0,
+   "record": 0,
+   "sync": 0,
+   "render": 83
+  }
+ },
+ {
+  "name": "currency list: 8 fast flicks down",
+  "ok": true,
+  "inputsMs": [
+   10,
+   680,
+   1640,
+   2240,
+   2930,
+   3600,
+   4030,
+   4450
+  ],
+  "frames": 77,
+  "firstFrameMs": 88,
+  "settleMs": 3622,
+  "afterLastInputMs": -828,
+  "janky": 77,
+  "p50": 119,
+  "p95": 151,
+  "worst": 153,
+  "phases": {
+   "late": 2012,
+   "input": 463,
+   "layout": 2,
+   "record": 9,
+   "sync": 73,
+   "render": 3717
+  }
+ },
+ {
+  "name": "currency list: 8 fast flicks up",
+  "ok": true,
+  "inputsMs": [
+   10,
+   690,
+   1250,
+   1690,
+   2320,
+   2820,
+   3530,
+   4170
+  ],
+  "frames": 93,
+  "firstFrameMs": 62,
+  "settleMs": 4865,
+  "afterLastInputMs": 695,
+  "janky": 93,
+  "p50": 105,
+  "p95": 139,
+  "worst": 152,
+  "phases": {
+   "late": 2142,
+   "input": 461,
+   "layout": 3,
+   "record": 12,
+   "sync": 120,
+   "render": 4361
+  }
+ }
+]

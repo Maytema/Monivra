@@ -1,0 +1,93 @@
+CPU time by thread (ms):
+  RenderThread                      934
+  Chrome_InProcGp                   344
+  vra.finance.dev                    33
+  HeapTaskDaemon                     11
+  VizWebView                          9
+  Chrome_IOThread                     6
+  binder:10459_2                      3
+  ThreadPoolForeg                     1
+  FinalizerDaemon                     1
+  Chrome_ChildIOT                     1
+  binder:10459_1                      1
+  ReferenceQueueD                     1
+  GPU completion                      0
+  ThreadPoolSingl                     0
+
+main: slices (level, name, count, total ms, longest ms)
+  0 Choreographer#doFrame #                                                   39    1180.1    124.9
+  1   Choreographer#doFrame - resynced to # in #.#ms                            18     872.0     66.5
+  2     traversal                                                                 17     692.2     54.9
+  1   traversal                                                                  7     235.1    113.3
+  2     draw                                                                       7     234.9    113.3
+  2     animation                                                                 18     179.6     47.7
+  1   animation                                                                 20      70.0     49.1
+  1   input                                                                      5       1.8      0.6
+  2     Choreographer#scheduleVsyncLocked                                         20       0.8      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xf#cf#f#a                    1       0.5      0.5
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xd#e#b#c#                    1       0.3      0.3
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xe#e#ecc#                    1       0.3      0.3
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xc#bc#                       1       0.3      0.3
+  0 Choreographer#onVsync #                                                   39       0.3      0.0
+  1   ViewPostImeInputStage id=#xe#e#ecc#                                        1       0.3      0.3
+  0 deliverInputEvent src=#x# eventTimeNano=# id=#xe#d#a                       1       0.2      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xd#be#                       1       0.2      0.2
+  1   ViewPostImeInputStage id=#xe#d#a                                           1       0.2      0.2
+  2     deliverInputEvent src=#x# eventTimeNano=# id=#xed#c#                       1       0.2      0.2
+  0 providerRemove                                                             1       0.1      0.1
+  1   EarlyPostImeInputStage id=#xe#e#ecc#                                       1       0.0      0.0
+  0 Choreographer#scheduleVsyncLocked                                          1       0.0      0.0
+  0 monitor contention with owner FinalizerDaemon (#) at boolean android.o     1       0.0      0.0
+  1   Lock contention on a monitor lock (owner tid: #)                           1       0.0      0.0
+
+RenderThread: slices (level, name, count, total ms, longest ms)
+  0 DrawFrames #                                                              24    1182.0    125.0
+  1   Drawing  #.# #.# #.# #.#                                                  24    1161.1    124.6
+  2     eglSwapBuffersWithDamageKHR                                               24     856.6     46.2
+  2     WebViewFunctor::drawGl                                                    24     291.5    103.1
+  2     glDisable encode                                                          96       1.2      1.1
+  1   syncFrameState                                                            24       0.9      0.1
+  2     prepareTree                                                               24       0.8      0.1
+  2     reportMetricsWithPresentTime                                              24       0.8      0.1
+  2     auto skgpu::v#::OpsTask::onExecute(GrOpFlushState *)::(anonymous class    24       0.5      0.0
+  2     flush commands                                                            24       0.1      0.0
+  2     dispatchSetFrameTimelineInfo                                              24       0.1      0.0
+  1   query                                                                     48       0.1      0.0
+  2     auto skgpu::v#::OpsTask::onPrepare(GrOpFlushState *)::(anonymous class    24       0.1      0.0
+  2     query                                                                     48       0.0      0.0
+  2     glPixelStorei encode                                                      48       0.0      0.0
+  1   eglBeginFrame                                                             24       0.0      0.0
+  0 notifyFramePending                                                        24       0.0      0.0
+  2     glDepthMask encode                                                        24       0.0      0.0
+  2     glFrontFace encode                                                        24       0.0      0.0
+  2     glViewport encode                                                         24       0.0      0.0
+  2     glLineWidth encode                                                        24       0.0      0.0
+  2     glBindFramebuffer encode                                                  24       0.0      0.0
+  2     glScissor encode                                                          24       0.0      0.0
+  2     glEnable encode                                                           24       0.0      0.0
+
+Chrome_InProcGp: slices (level, name, count, total ms, longest ms)
+  0 rcCreateSyncKHR encode                                                    11     234.1     85.1
+  0 glGenTextures encode                                                      16     145.8     44.2
+  0 glGenFramebuffers encode                                                  29     105.7     30.8
+  0 rcCreateClientImage encode                                                10       7.3      4.8
+  0 glBufferDataSyncAEMU encode                                               23       6.8      3.0
+  0 glTexSubImage#D encode                                                     7       5.7      2.1
+  0 glBufferSubData encode                                                    17       1.7      0.3
+  0 rcClientWaitSyncKHR encode                                                 2       0.9      0.8
+  0 glGenBuffers encode                                                        6       0.7      0.2
+  0 glUnmapBufferAEMU encode                                                   2       0.2      0.1
+  0 rcDestroySyncKHR encode                                                    2       0.1      0.1
+  0 glVertexAttribPointerOffset encode                                       198       0.1      0.0
+  0 glDisableVertexAttribArray encode                                        155       0.1      0.0
+  0 glVertexAttribDivisor encode                                             128       0.1      0.0
+  0 glUniform#f encode                                                        96       0.1      0.0
+  0 glTexParameteri encode                                                    95       0.0      0.0
+  0 glBindTexture encode                                                      57       0.0      0.0
+  0 glEnableVertexAttribArray encode                                          65       0.0      0.0
+  0 glBindFramebuffer encode                                                  61       0.0      0.0
+  0 glUseProgram encode                                                       55       0.0      0.0
+  0 glUniform#fv encode                                                       58       0.0      0.0
+  0 glDisable encode                                                          62       0.0      0.0
+  0 glBindBuffer encode                                                       49       0.0      0.0
+  0 glPixelStorei encode                                                      33       0.0      0.0
