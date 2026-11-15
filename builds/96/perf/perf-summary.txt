@@ -1,13 +1,13 @@
 move                                                   JS busy   longest pauses  frames        janky    p90    p99
-cold start                                                738ms      321ms      4       7   6 (85.71%)  300ms  300ms
-first screen: start with the basic set                   1164ms      213ms     12       5   4 (80.00%)  200ms  200ms
-read the file and open the restore page                   910ms      232ms      8      26  20 (76.92%)  200ms  200ms
-restore 3000 operations                                  1230ms      868ms      7      30  27 (90.00%)  121ms  150ms
-open tab Operations (first time)                          448ms       98ms      7     160 119 (74.38%)   93ms  150ms
-scroll the operations down (6 flicks)                    3085ms      651ms     18     135  99 (73.33%)  109ms  200ms
-scroll the operations back up (6 flicks)                 2381ms      484ms     10     140 112 (80.00%)   97ms  150ms
-swipe to the previous period (3 times)                   1050ms      167ms     11      67  51 (76.12%)   89ms  133ms
-swipe to the next period (3 times)                          0ms        0ms      0       -            -      -      -
+cold start                                                671ms      454ms      3       8   7 (87.50%)  400ms  400ms
+first screen: start with the basic set                   1360ms      305ms     12       3  3 (100.00%)  300ms  300ms
+read the file and open the restore page                   797ms      451ms      4      24  20 (83.33%)  200ms  300ms
+restore 3000 operations                                  1241ms     1033ms      4      29  27 (93.10%)  150ms  150ms
+open tab Operations (first time)                          570ms       89ms      9     165 120 (72.73%)   93ms  117ms
+scroll the operations down (6 flicks)                    3007ms      495ms     13     144 110 (76.39%)  117ms  150ms
+scroll the operations back up (6 flicks)                 2258ms      381ms     14     143 112 (78.32%)  105ms  150ms
+swipe to the previous period (3 times)                   1607ms      203ms     15      55  39 (70.91%)  113ms  150ms
+swipe to the next period (3 times)                       1097ms      980ms      3       -            -      -      -
 open tab Statistics (first time)                            0ms        0ms      0       -            -      -      -
 scroll the statistics (3 flicks down, 3 up)                 0ms        0ms      0       -            -      -      -
 statistics: previous period and back                        0ms        0ms      0       -            -      -      -
@@ -24,26 +24,26 @@ report preview, second time                                 0ms        0ms      
 save the PIN                                                0ms        0ms      0       -            -      -      -
 type a wrong PIN (1111)                                     0ms        0ms      0       -            -      -      -
 type the right PIN (1234)                                   0ms        0ms      0       -            -      -      -
-all moves                                               11006ms
+all moves                                               12606ms
 
 first screen: start with the basic set   | renders root hero 1
 first screen: start with the basic set   | renders pager 3
 first screen: start with the basic set   | renders tab bar 2
-first screen: start with the basic set   | engine toLocaleString x200 749.0ms
-first screen: start with the basic set   | engine plain format x200 1.1ms
-first screen: start with the basic set   | engine localeCompare x200 1.9ms
-first screen: start with the basic set   | engine toLocaleDateString x200 349.2ms
+first screen: start with the basic set   | engine toLocaleString x200 590.9ms
+first screen: start with the basic set   | engine plain format x200 0.6ms
+first screen: start with the basic set   | engine localeCompare x200 1.4ms
+first screen: start with the basic set   | engine toLocaleDateString x200 312.7ms
 first screen: start with the basic set   | renders tab bar 2
 first screen: start with the basic set   | renders tab bar 1
 first screen: start with the basic set   | renders tab bar 1
-read the file and open the restore page  | file read: 452162 characters 10.0ms
-read the file and open the restore page  | data file: read and checked 224.0ms
-read the file and open the restore page  | restore page: merge plan 95.9ms
-read the file and open the restore page  | restore page: replace plan 76.4ms
+read the file and open the restore page  | file read: 452162 characters 7.5ms
+read the file and open the restore page  | data file: read and checked 47.0ms
+read the file and open the restore page  | restore page: merge plan 242.3ms
+read the file and open the restore page  | restore page: replace plan 126.1ms
 read the file and open the restore page  | renders tab bar 1
-restore 3000 operations                  | layer dialog shown 7.4ms
-restore 3000 operations                  | restore page: merge plan 95.1ms
-restore 3000 operations                  | restore page: replace plan 26.9ms
+restore 3000 operations                  | layer dialog shown 8.1ms
+restore 3000 operations                  | restore page: merge plan 81.9ms
+restore 3000 operations                  | restore page: replace plan 16.1ms
 restore 3000 operations                  | renders root hero 1
 restore 3000 operations                  | renders pager 1
 restore 3000 operations                  | renders tab bar 1
@@ -66,25 +66,26 @@ scroll the operations down (6 flicks)    | renders root hero 1
 scroll the operations down (6 flicks)    | renders pager 1
 scroll the operations down (6 flicks)    | renders period bar 1
 scroll the operations down (6 flicks)    | renders operations page (neighbour) 2
-scroll the operations down (6 flicks)    | renders day head 10
+scroll the operations down (6 flicks)    | renders day head 12
 scroll the operations down (6 flicks)    | renders fab 1
-scroll the operations down (6 flicks)    | renders operation row 57
-scroll the operations down (6 flicks)    | renders operation row 7
-scroll the operations down (6 flicks)    | renders day head 1
-scroll the operations down (6 flicks)    | renders operation row 57
-scroll the operations down (6 flicks)    | renders day head 8
-scroll the operations down (6 flicks)    | renders operation row 76
-scroll the operations down (6 flicks)    | renders day head 14
-scroll the operations down (6 flicks)    | renders operation row 82
+scroll the operations down (6 flicks)    | renders operation row 71
+scroll the operations down (6 flicks)    | renders operation row 64
+scroll the operations down (6 flicks)    | renders day head 9
+scroll the operations down (6 flicks)    | renders operation row 118
+scroll the operations down (6 flicks)    | renders day head 18
+scroll the operations down (6 flicks)    | renders operation row 70
 scroll the operations down (6 flicks)    | renders day head 11
-scroll the operations back up (6 flicks) | renders operation row 68
-scroll the operations back up (6 flicks) | renders day head 11
-scroll the operations back up (6 flicks) | renders operation row 43
+scroll the operations back up (6 flicks) | renders operation row 9
+scroll the operations back up (6 flicks) | renders day head 2
+scroll the operations back up (6 flicks) | renders operation row 59
+scroll the operations back up (6 flicks) | renders day head 9
+scroll the operations back up (6 flicks) | renders operation row 66
+scroll the operations back up (6 flicks) | renders day head 10
+scroll the operations back up (6 flicks) | renders operation row 57
+scroll the operations back up (6 flicks) | renders day head 10
+scroll the operations back up (6 flicks) | renders operation row 52
 scroll the operations back up (6 flicks) | renders day head 7
-scroll the operations back up (6 flicks) | renders operation row 100
-scroll the operations back up (6 flicks) | renders day head 18
-scroll the operations back up (6 flicks) | renders operation row 31
-scroll the operations back up (6 flicks) | renders day head 5
+scroll the operations back up (6 flicks) | renders operation row 1
 scroll the operations back up (6 flicks) | renders operations screen 1
 scroll the operations back up (6 flicks) | renders root hero 1
 scroll the operations back up (6 flicks) | renders pager 1
@@ -97,9 +98,20 @@ swipe to the previous period (3 times)   | renders root hero 1
 swipe to the previous period (3 times)   | renders pager 1
 swipe to the previous period (3 times)   | renders period bar 1
 swipe to the previous period (3 times)   | renders operations page (neighbour) 2
-swipe to the previous period (3 times)   | renders day head 32
-swipe to the previous period (3 times)   | renders operation row 152
+swipe to the previous period (3 times)   | renders day head 16
+swipe to the previous period (3 times)   | renders operation row 60
 swipe to the previous period (3 times)   | renders operations page (current) 1
 swipe to the previous period (3 times)   | renders fab 1
-swipe to the previous period (3 times)   | renders operation row 163
-swipe to the previous period (3 times)   | renders day head 31
+swipe to the previous period (3 times)   | renders operation row 209
+swipe to the previous period (3 times)   | renders day head 37
+swipe to the previous period (3 times)   | renders operation row 46
+swipe to the previous period (3 times)   | renders day head 10
+swipe to the next period (3 times)       | renders operations screen 1
+swipe to the next period (3 times)       | renders root hero 1
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page (neighbour) 2
+swipe to the next period (3 times)       | renders day head 63
+swipe to the next period (3 times)       | renders operation row 308
+swipe to the next period (3 times)       | renders operations page (current) 1
+swipe to the next period (3 times)       | renders fab 1
