@@ -1,0 +1,368 @@
+--------- beginning of main
+11-15 19:56:48.855  3645  3645 I ReactNativeJS: [perf] mark cold start
+11-15 19:56:52.584  3718  3774 I ReactNativeJS: Running "main"
+11-15 19:56:53.192  3718  3774 I ReactNativeJS: [perf] stall 251.7ms
+11-15 19:56:53.415  3718  3774 I ReactNativeJS: [perf] stall 77.0ms
+11-15 19:56:53.567  3718  3774 I ReactNativeJS: [perf] stall 76.5ms
+11-15 19:57:14.945  4997  4997 I ReactNativeJS: [perf] mark first screen: start with the basic set
+11-15 19:57:17.462  3718  3774 I ReactNativeJS: [perf] stall 103.1ms
+11-15 19:57:17.636  3718  3774 I ReactNativeJS: [perf] stall 121.1ms
+11-15 19:57:18.415  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:57:18.415  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:57:18.415  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:57:23.202  3718  3774 I ReactNativeJS: [perf] engine toLocaleString x200 736.8ms
+11-15 19:57:23.202  3718  3774 I ReactNativeJS: [perf] engine plain format x200 0.4ms
+11-15 19:57:23.205  3718  3774 I ReactNativeJS: [perf] engine localeCompare x200 2.3ms
+11-15 19:57:23.544  3718  3774 I ReactNativeJS: [perf] engine toLocaleDateString x200 339.2ms
+11-15 19:57:25.532  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:57:29.181  3718  3774 I ReactNativeJS: [perf] stall 100.0ms
+11-15 19:57:29.472  3718  3774 I ReactNativeJS: [perf] stall 229.6ms
+11-15 19:57:29.594  3718  3774 I ReactNativeJS: [perf] stall 97.6ms
+11-15 19:57:29.638  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:57:33.230  3718  3774 I ReactNativeJS: [perf] stall 56.8ms
+11-15 19:57:33.322  3718  3774 I ReactNativeJS: [perf] stall 67.1ms
+11-15 19:57:33.409  3718  3774 I ReactNativeJS: [perf] stall 62.4ms
+11-15 19:57:33.699  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:57:40.806  5925  5925 I ReactNativeJS: [perf] mark read the file and open the restore page
+11-15 19:57:43.324  3718  3774 I ReactNativeJS: [perf] file read: 452162 characters 46.0ms
+11-15 19:57:43.663  3718  3774 I ReactNativeJS: [perf] data file: read and checked 339.3ms
+11-15 19:57:43.664  3718  3774 I ReactNativeJS: [perf] stall 314.9ms
+11-15 19:57:43.789  3718  3774 I ReactNativeJS: [perf] restore page: merge plan 87.1ms
+11-15 19:57:43.813  3718  3774 I ReactNativeJS: [perf] restore page: replace plan 23.7ms
+11-15 19:57:43.874  3718  3774 I ReactNativeJS: [perf] stall 185.0ms
+11-15 19:57:44.050  3718  3774 I ReactNativeJS: [perf] stall 85.6ms
+11-15 19:57:44.236  3718  3774 I ReactNativeJS: [perf] stall 56.8ms
+11-15 19:57:44.324  3718  3774 I ReactNativeJS: [perf] stall 63.1ms
+11-15 19:57:44.324  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:57:44.430  3718  3774 I ReactNativeJS: [perf] stall 80.7ms
+11-15 19:57:44.549  3718  3774 I ReactNativeJS: [perf] stall 94.2ms
+11-15 19:57:52.483  6026  6026 I ReactNativeJS: [perf] mark restore 3000 operations
+11-15 19:57:54.587  3718  3774 I ReactNativeJS: [perf] layer dialog shown 4.6ms
+11-15 19:57:59.698  3718  3774 I ReactNativeJS: [perf] restore page: merge plan 101.1ms
+11-15 19:57:59.717  3718  3774 I ReactNativeJS: [perf] restore page: replace plan 18.7ms
+11-15 19:57:59.741  3718  3774 I ReactNativeJS: [perf] stall 1301.1ms
+11-15 19:57:59.741  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:57:59.741  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:57:59.741  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:57:59.976  3718  3774 I ReactNativeJS: [perf] stall 52.2ms
+11-15 19:58:00.113  3718  3774 I ReactNativeJS: [perf] stall 52.1ms
+11-15 19:58:00.230  3718  3774 I ReactNativeJS: [perf] stall 50.9ms
+11-15 19:58:20.729  6188  6188 I ReactNativeJS: [perf] mark open tab Operations (first time)
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders operations screen 2
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders root hero 2
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders period bar 3
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders day head 4
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders operation row 19
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders fab 3
+11-15 19:58:22.989  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders day head 2
+11-15 19:58:23.971  3718  3774 I ReactNativeJS: [perf] renders operation row 10
+11-15 19:58:24.047  3718  3774 I ReactNativeJS: [perf] stall 51.0ms
+11-15 19:58:25.768  3718  3774 I ReactNativeJS: [perf] stall 53.5ms
+11-15 19:58:26.288  3718  3774 I ReactNativeJS: [perf] stall 53.0ms
+11-15 19:58:27.378  3718  3774 I ReactNativeJS: [perf] stall 58.6ms
+11-15 19:58:28.255  3718  3774 I ReactNativeJS: [perf] stall 61.2ms
+11-15 19:58:29.127  6226  6226 I ReactNativeJS: [perf] mark scroll the operations down (6 flicks)
+11-15 19:58:29.764  3718  3774 I ReactNativeJS: [perf] stall 54.2ms
+11-15 19:58:30.286  3718  3774 I ReactNativeJS: [perf] stall 320.5ms
+11-15 19:58:30.428  3718  3774 I ReactNativeJS: [perf] stall 117.0ms
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:30.429  3718  3774 I ReactNativeJS: [perf] renders day head 13
+11-15 19:58:30.430  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:30.430  3718  3774 I ReactNativeJS: [perf] renders operation row 80
+11-15 19:58:30.535  3718  3774 I ReactNativeJS: [perf] stall 54.4ms
+11-15 19:58:30.692  3718  3774 I ReactNativeJS: [perf] stall 87.6ms
+11-15 19:58:30.836  3718  3774 I ReactNativeJS: [perf] stall 79.4ms
+11-15 19:58:31.008  3718  3774 I ReactNativeJS: [perf] stall 98.3ms
+11-15 19:58:31.251  3718  3774 I ReactNativeJS: [perf] stall 178.7ms
+11-15 19:58:31.461  3718  3774 I ReactNativeJS: [perf] renders operation row 61
+11-15 19:58:31.461  3718  3774 I ReactNativeJS: [perf] renders day head 11
+11-15 19:58:31.461  3718  3774 I ReactNativeJS: [perf] stall 185.5ms
+11-15 19:58:31.858  3718  3774 I ReactNativeJS: [perf] stall 242.9ms
+11-15 19:58:32.135  3718  3774 I ReactNativeJS: [perf] renders operation row 35
+11-15 19:58:32.135  3718  3774 I ReactNativeJS: [perf] renders day head 6
+11-15 19:58:33.109  3718  3774 I ReactNativeJS: [perf] stall 98.9ms
+11-15 19:58:33.180  3718  3774 I ReactNativeJS: [perf] renders operation row 42
+11-15 19:58:33.181  3718  3774 I ReactNativeJS: [perf] renders day head 8
+11-15 19:58:33.819  3718  3774 I ReactNativeJS: [perf] stall 415.6ms
+11-15 19:58:34.177  3718  3774 I ReactNativeJS: [perf] renders operation row 40
+11-15 19:58:34.177  3718  3774 I ReactNativeJS: [perf] renders day head 5
+11-15 19:58:34.517  3718  3774 I ReactNativeJS: [perf] stall 140.1ms
+11-15 19:58:34.612  3718  3774 I ReactNativeJS: [perf] stall 70.3ms
+11-15 19:58:37.751  6268  6268 I ReactNativeJS: [perf] mark scroll the operations back up (6 flicks)
+11-15 19:58:38.144  3718  3774 I ReactNativeJS: [perf] stall 102.1ms
+11-15 19:58:38.275  3718  3774 I ReactNativeJS: [perf] renders operation row 9
+11-15 19:58:38.275  3718  3774 I ReactNativeJS: [perf] renders day head 2
+11-15 19:58:38.404  3718  3774 I ReactNativeJS: [perf] stall 51.3ms
+11-15 19:58:38.609  3718  3774 I ReactNativeJS: [perf] stall 131.5ms
+11-15 19:58:38.889  3718  3774 I ReactNativeJS: [perf] stall 167.3ms
+11-15 19:58:38.968  3718  3774 I ReactNativeJS: [perf] stall 54.7ms
+11-15 19:58:39.294  3718  3774 I ReactNativeJS: [perf] renders day head 10
+11-15 19:58:39.297  3718  3774 I ReactNativeJS: [perf] renders operation row 71
+11-15 19:58:39.633  3718  3774 I ReactNativeJS: [perf] stall 145.9ms
+11-15 19:58:39.713  3718  3774 I ReactNativeJS: [perf] stall 55.8ms
+11-15 19:58:40.159  3718  3774 I ReactNativeJS: [perf] stall 270.0ms
+11-15 19:58:40.312  3718  3774 I ReactNativeJS: [perf] renders operation row 62
+11-15 19:58:40.316  3718  3774 I ReactNativeJS: [perf] renders day head 10
+11-15 19:58:40.897  3718  3774 I ReactNativeJS: [perf] stall 267.1ms
+11-15 19:58:41.322  3718  3774 I ReactNativeJS: [perf] renders operation row 40
+11-15 19:58:41.323  3718  3774 I ReactNativeJS: [perf] renders day head 7
+11-15 19:58:41.955  3718  3774 I ReactNativeJS: [perf] stall 142.2ms
+11-15 19:58:42.216  3718  3774 I ReactNativeJS: [perf] stall 60.2ms
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders operation row 31
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders day head 7
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:42.367  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:46.241  6311  6311 I ReactNativeJS: [perf] mark swipe to the previous period (3 times)
+11-15 19:58:46.452  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:58:46.452  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:58:46.833  3718  3774 I ReactNativeJS: [perf] stall 127.8ms
+11-15 19:58:46.954  3718  3774 I ReactNativeJS: [perf] stall 96.1ms
+11-15 19:58:47.061  3718  3774 I ReactNativeJS: [perf] stall 82.1ms
+11-15 19:58:47.148  3718  3774 I ReactNativeJS: [perf] stall 61.2ms
+11-15 19:58:47.262  3718  3774 I ReactNativeJS: [perf] stall 88.5ms
+11-15 19:58:47.403  3718  3774 I ReactNativeJS: [perf] stall 116.4ms
+11-15 19:58:47.543  3718  3774 I ReactNativeJS: [perf] stall 114.0ms
+11-15 19:58:47.543  3718  3774 I ReactNativeJS: [perf] renders root hero 2
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders pager 2
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders day head 59
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders operation row 284
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:58:47.544  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:47.672  3718  3774 I ReactNativeJS: [perf] stall 75.6ms
+11-15 19:58:48.482  3718  3774 I ReactNativeJS: [perf] renders operation row 21
+11-15 19:58:48.482  3718  3774 I ReactNativeJS: [perf] renders day head 4
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] stall 205.5ms
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders day head 35
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders operation row 19
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:58:49.631  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:49.892  3718  3774 I ReactNativeJS: [perf] stall 92.6ms
+11-15 19:58:50.022  3718  3774 I ReactNativeJS: [perf] stall 104.5ms
+11-15 19:58:50.118  3718  3774 I ReactNativeJS: [perf] stall 70.7ms
+11-15 19:58:50.515  3718  3774 I ReactNativeJS: [perf] renders operation row 138
+11-15 19:58:50.515  3718  3774 I ReactNativeJS: [perf] renders day head 28
+11-15 19:58:52.338  3718  3774 I ReactNativeJS: [perf] stall 156.5ms
+11-15 19:58:52.498  3718  3774 I ReactNativeJS: [perf] stall 134.9ms
+11-15 19:58:52.561  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:58:52.562  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:58:52.562  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:52.562  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:52.562  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:52.562  3718  3774 I ReactNativeJS: [perf] renders day head 50
+11-15 19:58:52.563  3718  3774 I ReactNativeJS: [perf] renders operation row 77
+11-15 19:58:52.563  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:58:52.563  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:52.776  3718  3774 I ReactNativeJS: [perf] stall 74.7ms
+11-15 19:58:53.565  3718  3774 I ReactNativeJS: [perf] renders operation row 83
+11-15 19:58:53.565  3718  3774 I ReactNativeJS: [perf] renders day head 14
+11-15 19:58:56.601  6353  6353 I ReactNativeJS: [perf] mark swipe to the next period (3 times)
+11-15 19:58:57.174  3718  3774 I ReactNativeJS: [perf] stall 114.1ms
+11-15 19:58:57.369  3718  3774 I ReactNativeJS: [perf] stall 62.5ms
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders day head 48
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders operation row 70
+11-15 19:58:57.632  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:58:58.649  3718  3774 I ReactNativeJS: [perf] renders operation row 71
+11-15 19:58:58.649  3718  3774 I ReactNativeJS: [perf] renders day head 15
+11-15 19:58:59.674  3718  3774 I ReactNativeJS: [perf] renders root hero 2
+11-15 19:58:59.674  3718  3774 I ReactNativeJS: [perf] renders pager 2
+11-15 19:58:59.985  3718  3774 I ReactNativeJS: [perf] stall 159.5ms
+11-15 19:59:00.099  3718  3774 I ReactNativeJS: [perf] stall 88.6ms
+11-15 19:59:00.199  3718  3774 I ReactNativeJS: [perf] stall 75.8ms
+11-15 19:59:00.385  3718  3774 I ReactNativeJS: [perf] stall 96.5ms
+11-15 19:59:00.473  3718  3774 I ReactNativeJS: [perf] stall 62.8ms
+11-15 19:59:00.659  3718  3774 I ReactNativeJS: [perf] stall 161.0ms
+11-15 19:59:00.752  3718  3774 I ReactNativeJS: [perf] stall 67.7ms
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders day head 59
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders operation row 284
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:59:00.753  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:59:00.876  3718  3774 I ReactNativeJS: [perf] stall 50.3ms
+11-15 19:59:01.715  3718  3774 I ReactNativeJS: [perf] renders operation row 21
+11-15 19:59:01.715  3718  3774 I ReactNativeJS: [perf] renders day head 4
+11-15 19:59:02.735  3718  3774 I ReactNativeJS: [perf] stall 154.9ms
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders day head 6
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders operation row 19
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:59:02.743  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:59:06.950  6396  6396 I ReactNativeJS: [perf] mark open tab Statistics (first time)
+11-15 19:59:09.849  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:59:09.849  3718  3774 I ReactNativeJS: [perf] renders pager 2
+11-15 19:59:09.849  3718  3774 I ReactNativeJS: [perf] renders period bar 2
+11-15 19:59:09.849  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:59:10.071  3718  3774 I ReactNativeJS: [perf] stall 134.2ms
+11-15 19:59:10.865  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:59:10.865  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:59:15.405  6439  6439 I ReactNativeJS: [perf] mark scroll the statistics (3 flicks down, 3 up)
+11-15 19:59:15.772  3718  3774 I ReactNativeJS: [perf] stall 61.2ms
+11-15 19:59:16.533  3718  3774 I ReactNativeJS: [perf] stall 68.5ms
+11-15 19:59:23.593  6505  6505 I ReactNativeJS: [perf] mark statistics: previous period and back
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] stall 171.4ms
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders pager 4
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders period bar 2
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders day head 10
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders operation row 14
+11-15 19:59:24.146  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:59:24.147  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:59:24.256  3718  3774 I ReactNativeJS: [perf] stall 84.9ms
+11-15 19:59:24.361  3718  3774 I ReactNativeJS: [perf] stall 80.4ms
+11-15 19:59:24.517  3718  3774 I ReactNativeJS: [perf] stall 74.2ms
+11-15 19:59:24.713  3718  3774 I ReactNativeJS: [perf] stall 170.3ms
+11-15 19:59:24.861  3718  3774 I ReactNativeJS: [perf] stall 123.0ms
+11-15 19:59:25.149  3718  3774 I ReactNativeJS: [perf] renders operation row 361
+11-15 19:59:25.149  3718  3774 I ReactNativeJS: [perf] renders day head 66
+11-15 19:59:26.946  3718  3774 I ReactNativeJS: [perf] stall 178.5ms
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders root hero 3
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders pager 4
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders period bar 2
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders day head 46
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 19:59:27.182  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 19:59:30.654  6527  6527 I ReactNativeJS: [perf] mark open tab Categories (first time)
+11-15 19:59:33.282  3718  3774 I ReactNativeJS: [perf] renders root hero 1
+11-15 19:59:33.282  3718  3774 I ReactNativeJS: [perf] renders pager 2
+11-15 19:59:33.282  3718  3774 I ReactNativeJS: [perf] renders period bar 2
+11-15 19:59:33.282  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:59:34.299  3718  3774 I ReactNativeJS: [perf] renders pager 1
+11-15 19:59:34.299  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 19:59:39.227  6566  6566 I ReactNativeJS: [perf] mark open tab Accounts
+11-15 19:59:41.419  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:59:42.432  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 19:59:45.411  6600  6600 I ReactNativeJS: [perf] mark tabs again: Operations, Statistics, Categories, Accounts
+11-15 19:59:47.623  3718  3774 I ReactNativeJS: [perf] stall 53.9ms
+11-15 19:59:48.532  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:59:52.599  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 19:59:56.665  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 20:00:00.732  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 20:00:06.135  3718  3774 I ReactNativeJS: [perf] stall 61.9ms
+11-15 20:00:06.832  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 20:00:09.680  6765  6765 I ReactNativeJS: [perf] mark open the add menu
+11-15 20:00:09.718  3718  3774 I ReactNativeJS: [perf] layer sheet shown 2.8ms
+11-15 20:00:10.048  3718  3774 I ReactNativeJS: [perf] stall 118.6ms
+11-15 20:00:10.141  3718  3774 I ReactNativeJS: [perf] stall 68.6ms
+11-15 20:00:12.756  6783  6783 I ReactNativeJS: [perf] mark choose a category (the editor opens)
+11-15 20:00:14.999  3718  3774 I ReactNativeJS: [perf] layer sheet shown 16.6ms
+11-15 20:00:26.666  6897  6897 I ReactNativeJS: [perf] mark type 1 2 5 on the keys
+11-15 20:00:29.593  6927  6927 I ReactNativeJS: [perf] mark save the operation
+11-15 20:00:37.349  3718  3774 I ReactNativeJS: [perf] renders tab bar 2
+11-15 20:00:40.885  3718  3774 I ReactNativeJS: [perf] stall 54.4ms
+11-15 20:00:41.166  3718  3774 I ReactNativeJS: [perf] stall 79.0ms
+11-15 20:00:41.281  3718  3774 I ReactNativeJS: [perf] stall 69.0ms
+11-15 20:00:41.416  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:00:44.421  3718  3774 I ReactNativeJS: [perf] stall 164.7ms
+11-15 20:00:44.488  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:00:44.488  3718  3774 I ReactNativeJS: [perf] renders period bar 6
+11-15 20:00:44.488  3718  3774 I ReactNativeJS: [perf] renders root hero 2
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders day head 4
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders operation row 19
+11-15 20:00:44.492  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 20:00:44.687  3718  3774 I ReactNativeJS: [perf] stall 90.6ms
+11-15 20:00:44.772  3718  3774 I ReactNativeJS: [perf] stall 60.3ms
+11-15 20:00:44.895  3718  3774 I ReactNativeJS: [perf] stall 97.3ms
+11-15 20:00:49.565  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 20:00:50.345  7041  7041 I ReactNativeJS: [perf] mark report preview, first time (3000 operations)
+11-15 20:00:52.552  3718  3774 I ReactNativeJS: [perf] stall 94.7ms
+11-15 20:00:52.616  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 20:00:52.867  3718  3774 I ReactNativeJS: [perf] report detail: 148 pages laid out 417.4ms
+11-15 20:00:52.945  3718  3774 I ReactNativeJS: [perf] stall 87.8ms
+11-15 20:00:53.026  3718  3774 I ReactNativeJS: [perf] stall 56.1ms
+11-15 20:00:53.108  3718  3774 I ReactNativeJS: [perf] stall 51.5ms
+11-15 20:00:53.300  3718  3774 I ReactNativeJS: [perf] stall 106.5ms
+11-15 20:00:53.413  3718  3774 I ReactNativeJS: [perf] report preview: first 3 of 148 pages 545.3ms
+11-15 20:00:53.423  3718  3774 I ReactNativeJS: [perf] layer full shown 10.5ms
+11-15 20:00:53.479  3718  3774 I ReactNativeJS: [perf] stall 55.6ms
+11-15 20:00:53.576  3718  3774 I ReactNativeJS: [perf] stall 50.9ms
+11-15 20:00:53.644  3718  3774 I ReactNativeJS: [perf] renders period bar 1
+11-15 20:00:54.181  3718  3774 I ReactNativeJS: [perf] stall 53.1ms
+11-15 20:00:54.450  3718  3774 I ReactNativeJS: [perf] stall 92.7ms
+11-15 20:00:55.193  3718  3774 I ReactNativeJS: [perf] stall 69.8ms
+11-15 20:01:04.628  7138  7138 I ReactNativeJS: [perf] mark scroll the preview (8 flicks)
+11-15 20:01:05.631  3718  3774 I ReactNativeJS: [perf] stall 52.9ms
+11-15 20:01:05.914  3718  3774 I ReactNativeJS: [perf] stall 65.3ms
+11-15 20:01:06.101  3718  3774 I ReactNativeJS: [perf] stall 54.0ms
+11-15 20:01:06.439  3718  3774 I ReactNativeJS: [perf] stall 97.6ms
+11-15 20:01:09.515  3718  3774 I ReactNativeJS: [perf] stall 63.6ms
+11-15 20:01:11.960  3718  3774 I ReactNativeJS: [perf] stall 52.0ms
+11-15 20:01:12.311  3718  3774 I ReactNativeJS: [perf] stall 85.9ms
+11-15 20:01:16.688  7236  7236 I ReactNativeJS: [perf] mark report preview, second time
+11-15 20:01:18.790  3718  3774 I ReactNativeJS: [perf] layer full shown 6.6ms
+11-15 20:01:18.949  3718  3774 I ReactNativeJS: [perf] stall 69.2ms
+11-15 20:01:23.232  3718  3774 I ReactNativeJS: [perf] stall 75.0ms
+11-15 20:01:24.435  3718  3774 I ReactNativeJS: [perf] stall 111.7ms
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders root hero 2
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders pager 3
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders period bar 3
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders day head 6
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders operation row 29
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 20:01:25.232  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 20:01:26.249  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:01:32.576  3718  3774 I ReactNativeJS: [perf] stall 51.9ms
+11-15 20:01:32.788  3718  3774 I ReactNativeJS: [perf] stall 52.1ms
+11-15 20:01:33.365  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:01:36.499  3718  3774 I ReactNativeJS: [perf] renders tab bar 1
+11-15 20:01:36.500  3718  3774 I ReactNativeJS: [perf] stall 54.7ms
+11-15 20:01:39.655  3718  3774 I ReactNativeJS: [perf] layer sheet shown 5.8ms
+11-15 20:02:02.810  7605  7605 I ReactNativeJS: [perf] mark save the PIN
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders root hero 4
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders pager 4
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders period bar 3
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders operations screen 1
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders operations page (neighbour) 2
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders day head 6
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders operation row 27
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders operations page (current) 1
+11-15 20:02:04.996  3718  3774 I ReactNativeJS: [perf] renders fab 1
+11-15 20:02:22.208  7753  7753 I ReactNativeJS: [perf] mark type a wrong PIN (1111)
+11-15 20:02:23.584  3718  3774 I ReactNativeJS: [perf] stall 81.8ms
+11-15 20:02:23.756  3718  3774 I ReactNativeJS: [perf] stall 59.2ms
+11-15 20:02:27.885  7804  7804 I ReactNativeJS: [perf] mark type the right PIN (1234)
