@@ -1,0 +1,1091 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                888ms      472ms      5       8   7 (87.50%)  450ms  450ms
+first screen: start with the basic set                   1185ms      339ms     10       5   4 (80.00%)  250ms  250ms
+read the file and open the restore page                  1135ms      770ms      6      24  20 (83.33%)  200ms  250ms
+restore 3000 operations                                  1453ms     1085ms      5      27  26 (96.30%)  150ms  150ms
+open tab Operations (first time)                         2056ms      175ms     24     128 111 (86.72%)  121ms  200ms
+scroll the operations down (6 flicks)                    3597ms      365ms     24     145 121 (83.45%)  101ms  129ms
+scroll the operations back up (6 flicks)                    0ms        0ms      0       0            -      -      -
+swipe to the previous period (3 times)                   1268ms      398ms      9      64  53 (82.81%)  101ms  125ms
+swipe to the next period (3 times)                       1050ms      422ms      6      66  53 (80.30%)  101ms  125ms
+open tab Statistics (first time)                          203ms      133ms      2       5   4 (80.00%)  109ms  109ms
+scroll the statistics (3 flicks down, 3 up)               334ms      151ms      4      51  44 (86.27%)  129ms  250ms
+statistics: previous period and back                     1076ms      375ms      8      43  37 (86.05%)  125ms  250ms
+open tab Categories (first time)                            0ms        0ms      0       7   6 (85.71%)   48ms   48ms
+open tab Accounts                                           0ms        0ms      0       3   1 (33.33%)   48ms   48ms
+tabs again: Operations, Statistics, Categories, Acco       53ms       53ms      1      13  10 (76.92%)   85ms  101ms
+tab back and forth, 1.5s apart (Operations → Statist        0ms        0ms      0       6   5 (83.33%)   65ms   65ms
+tab back and forth, 0.8s apart (Operations → Statist        0ms        0ms      0       6  6 (100.00%)   69ms   69ms
+tab back and forth, 0.4s apart (Operations → Statist       75ms       75ms      1       6   4 (66.67%)  101ms  101ms
+tab chain quickly: Categories, Accounts, Statistics,      131ms       72ms      2      20  18 (90.00%)  125ms  125ms
+two quick period swipes (0.35s apart)                     630ms      161ms      6      42  34 (80.95%)   85ms  105ms
+swipe back and forth quickly (0.35s apart)               2021ms      765ms     13      33  24 (72.73%)  113ms  150ms
+statistics: Incomes                                      4568ms      264ms     51     347 299 (86.17%)   89ms  117ms
+statistics: Expenses                                    10557ms      446ms     91     344 285 (82.85%)   89ms  109ms
+open Budgets                                             1422ms      221ms     13      37  31 (83.78%)  133ms  200ms
+open Scheduled payments                                   526ms      104ms      8      30  24 (80.00%)  150ms  150ms
+open the add menu                                         190ms      128ms      2       9  9 (100.00%)  150ms  150ms
+add menu: tap the tab Incomes, then Expenses                0ms        0ms      0      18  17 (94.44%)  105ms  105ms
+choose a category (the editor opens)                       96ms       96ms      1       8   7 (87.50%)  150ms  150ms
+type 1 2 5 on the keys                                     79ms       79ms      1       7  7 (100.00%)  117ms  117ms
+save the operation                                        856ms      174ms      8       0            -      -      -
+report preview, first time (3000 operations)             1180ms      200ms     10     105 101 (96.19%)   97ms  150ms
+scroll the preview (8 flicks)                             616ms       95ms      9     202 176 (87.13%)  105ms  133ms
+report preview, second time                              2386ms      196ms     32      19  16 (84.21%)  150ms  150ms
+save the PIN                                              203ms       78ms      3      23  21 (91.30%)  117ms  150ms
+type a wrong PIN (1111)                                   258ms      201ms      2      76  54 (71.05%)   97ms  117ms
+type the right PIN (1234)                                 437ms      164ms      5      59  44 (74.58%)   85ms  109ms
+all moves                                               40530ms
+
+first screen: start with the basic set   | renders root hero 1
+first screen: start with the basic set   | renders pager 3
+first screen: start with the basic set   | renders tab bar 2
+first screen: start with the basic set   | engine toLocaleString x200 680.0ms
+first screen: start with the basic set   | engine plain format x200 2.9ms
+first screen: start with the basic set   | engine localeCompare x200 2.2ms
+first screen: start with the basic set   | engine toLocaleDateString x200 606.7ms
+first screen: start with the basic set   | tab press more (asked index, shown index)
+first screen: start with the basic set   | tab shown more 91.7ms
+first screen: start with the basic set   | renders tab bar 5
+first screen: start with the basic set   | tab shown more 31.2ms
+first screen: start with the basic set   | renders tab bar 1
+first screen: start with the basic set   | tab shown more 25.1ms
+first screen: start with the basic set   | renders tab bar 1
+read the file and open the restore page  | file read: 452162 characters 21.9ms
+read the file and open the restore page  | data file: read and checked 209.0ms
+read the file and open the restore page  | restore page: merge plan 249.9ms
+read the file and open the restore page  | restore page: replace plan 197.0ms
+read the file and open the restore page  | tab shown more 7099.1ms
+read the file and open the restore page  | renders tab bar 1
+restore 3000 operations                  | layer dialog shown 30.3ms
+restore 3000 operations                  | restore page: merge plan 127.1ms
+restore 3000 operations                  | restore page: replace plan 24.4ms
+restore 3000 operations                  | tab shown more 1107.3ms
+restore 3000 operations                  | renders root hero 1
+restore 3000 operations                  | renders pager 1
+restore 3000 operations                  | renders tab bar 1
+open tab Operations (first time)         | tab press operations (asked more, shown more)
+open tab Operations (first time)         | operations page built 29.9ms
+open tab Operations (first time)         | tab shown operations 76.6ms
+open tab Operations (first time)         | tab shown operations 97.5ms
+open tab Operations (first time)         | list ready 80.0ms
+open tab Operations (first time)         | renders tab bar 5
+open tab Operations (first time)         | renders operations screen 2
+open tab Operations (first time)         | renders root hero 2
+open tab Operations (first time)         | renders pager 3
+open tab Operations (first time)         | renders period bar 3
+open tab Operations (first time)         | renders operations page 1
+open tab Operations (first time)         | renders fab 3
+open tab Operations (first time)         | renders day head 2
+open tab Operations (first time)         | renders operation row 12
+open tab Operations (first time)         | operations page built 11.2ms
+open tab Operations (first time)         | operations page built 7.5ms
+open tab Operations (first time)         | list ready 38.0ms
+open tab Operations (first time)         | renders tab bar 1
+open tab Operations (first time)         | renders pager 1
+open tab Operations (first time)         | renders period bar 1
+open tab Operations (first time)         | renders operations page 2
+open tab Operations (first time)         | renders day head 2
+open tab Operations (first time)         | renders operation row 10
+scroll the operations down (6 flicks)    | renders operations screen 1
+scroll the operations down (6 flicks)    | renders root hero 1
+scroll the operations down (6 flicks)    | renders pager 1
+scroll the operations down (6 flicks)    | renders period bar 1
+scroll the operations down (6 flicks)    | renders day head 2
+scroll the operations down (6 flicks)    | renders fab 1
+scroll the operations down (6 flicks)    | renders operation row 1
+scroll the operations down (6 flicks)    | touch lag 71.5ms
+scroll the operations down (6 flicks)    | renders operation row 20
+scroll the operations down (6 flicks)    | renders day head 8
+scroll the operations down (6 flicks)    | renders operation row 9
+scroll the operations down (6 flicks)    | renders day head 3
+scroll the operations down (6 flicks)    | touch lag 18.2ms
+scroll the operations down (6 flicks)    | renders operation row 17
+scroll the operations down (6 flicks)    | renders day head 5
+scroll the operations down (6 flicks)    | touch lag 210.3ms
+scroll the operations down (6 flicks)    | renders operation row 17
+scroll the operations down (6 flicks)    | renders day head 4
+scroll the operations down (6 flicks)    | renders operation row 20
+scroll the operations down (6 flicks)    | renders day head 7
+scroll the operations down (6 flicks)    | renders operation row 1
+swipe to the previous period (3 times)   | operations page built 32.7ms
+swipe to the previous period (3 times)   | swipe: pages built 58.1ms
+swipe to the previous period (3 times)   | swipe: next frame 107.4ms
+swipe to the previous period (3 times)   | operations page built 37.1ms
+swipe to the previous period (3 times)   | list ready 95.0ms
+swipe to the previous period (3 times)   | renders pager 2
+swipe to the previous period (3 times)   | renders period bar 2
+swipe to the previous period (3 times)   | renders operations page 2
+swipe to the previous period (3 times)   | renders day head 5
+swipe to the previous period (3 times)   | renders operation row 9
+swipe to the previous period (3 times)   | operations page built 43.9ms
+swipe to the previous period (3 times)   | swipe: pages built 168.2ms
+swipe to the previous period (3 times)   | renders pager 1
+swipe to the previous period (3 times)   | renders period bar 1
+swipe to the previous period (3 times)   | renders operations page 1
+swipe to the previous period (3 times)   | renders day head 3
+swipe to the previous period (3 times)   | operations page built 89.9ms
+swipe to the previous period (3 times)   | swipe: next frame 602.4ms
+swipe to the previous period (3 times)   | list ready 380.0ms
+swipe to the previous period (3 times)   | renders pager 1
+swipe to the previous period (3 times)   | renders period bar 1
+swipe to the previous period (3 times)   | renders operations page 1
+swipe to the previous period (3 times)   | renders day head 3
+swipe to the previous period (3 times)   | renders operation row 11
+swipe to the previous period (3 times)   | operations page built 10.2ms
+swipe to the previous period (3 times)   | swipe: pages built 86.3ms
+swipe to the previous period (3 times)   | operations page built 16.1ms
+swipe to the previous period (3 times)   | swipe: next frame 217.4ms
+swipe to the previous period (3 times)   | list ready 85.0ms
+swipe to the previous period (3 times)   | renders pager 2
+swipe to the previous period (3 times)   | renders period bar 2
+swipe to the previous period (3 times)   | renders operations page 2
+swipe to the previous period (3 times)   | renders day head 6
+swipe to the previous period (3 times)   | renders operation row 11
+swipe to the next period (3 times)       | swipe: pages built 15.5ms
+swipe to the next period (3 times)       | operations page built 74.9ms
+swipe to the next period (3 times)       | operations page built 59.4ms
+swipe to the next period (3 times)       | operations page built 68.5ms
+swipe to the next period (3 times)       | swipe: next frame 447.5ms
+swipe to the next period (3 times)       | list ready 343.0ms
+swipe to the next period (3 times)       | list ready 338.0ms
+swipe to the next period (3 times)       | list ready 388.0ms
+swipe to the next period (3 times)       | renders pager 3
+swipe to the next period (3 times)       | renders period bar 2
+swipe to the next period (3 times)       | renders operations page 3
+swipe to the next period (3 times)       | renders day head 8
+swipe to the next period (3 times)       | renders operation row 30
+swipe to the next period (3 times)       | operations page built 10.6ms
+swipe to the next period (3 times)       | swipe: pages built 20.5ms
+swipe to the next period (3 times)       | operations page built 24.9ms
+swipe to the next period (3 times)       | swipe: next frame 164.3ms
+swipe to the next period (3 times)       | list ready 120.0ms
+swipe to the next period (3 times)       | renders pager 2
+swipe to the next period (3 times)       | renders period bar 2
+swipe to the next period (3 times)       | renders operations page 2
+swipe to the next period (3 times)       | renders day head 4
+swipe to the next period (3 times)       | renders operation row 12
+swipe to the next period (3 times)       | operations page built 10.1ms
+swipe to the next period (3 times)       | swipe: pages built 29.7ms
+swipe to the next period (3 times)       | swipe: next frame 75.9ms
+swipe to the next period (3 times)       | operations page built 48.5ms
+swipe to the next period (3 times)       | renders pager 2
+swipe to the next period (3 times)       | renders period bar 2
+swipe to the next period (3 times)       | renders operations page 2
+swipe to the next period (3 times)       | renders day head 2
+open tab Statistics (first time)         | tab press statistics (asked operations, shown operations)
+open tab Statistics (first time)         | tab shown statistics 150.9ms
+open tab Statistics (first time)         | renders tab bar 4
+open tab Statistics (first time)         | renders root hero 1
+open tab Statistics (first time)         | renders pager 2
+open tab Statistics (first time)         | renders period bar 2
+open tab Statistics (first time)         | renders pager 1
+open tab Statistics (first time)         | renders period bar 1
+statistics: previous period and back     | swipe: pages built 106.7ms
+statistics: previous period and back     | operations page built 90.5ms
+statistics: previous period and back     | operations page built 75.4ms
+statistics: previous period and back     | operations page built 70.7ms
+statistics: previous period and back     | swipe: next frame 535.3ms
+statistics: previous period and back     | list ready 221.0ms
+statistics: previous period and back     | list ready 234.0ms
+statistics: previous period and back     | list ready 264.0ms
+statistics: previous period and back     | renders pager 4
+statistics: previous period and back     | renders period bar 4
+statistics: previous period and back     | renders operations page 3
+statistics: previous period and back     | renders day head 7
+statistics: previous period and back     | renders operation row 31
+statistics: previous period and back     | operations page built 67.6ms
+statistics: previous period and back     | swipe: pages built 76.7ms
+statistics: previous period and back     | renders pager 4
+statistics: previous period and back     | renders period bar 4
+statistics: previous period and back     | renders operations page 2
+statistics: previous period and back     | renders day head 2
+statistics: previous period and back     | swipe: next frame 122.7ms
+statistics: previous period and back     | operations page built 268.3ms
+statistics: previous period and back     | renders pager 1
+statistics: previous period and back     | renders period bar 1
+open tab Categories (first time)         | tab press categories (asked statistics, shown statistics)
+open tab Categories (first time)         | renders tab bar 1
+open tab Categories (first time)         | tab shown categories 78.8ms
+open tab Categories (first time)         | renders root hero 1
+open tab Categories (first time)         | renders pager 3
+open tab Categories (first time)         | renders period bar 3
+open tab Categories (first time)         | renders tab bar 3
+open tab Accounts                        | tab press index (asked categories, shown categories)
+open tab Accounts                        | tab shown index 38.6ms
+open tab Accounts                        | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | tab shown operations 31.2ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press statistics (asked operations, shown operations)
+tabs again: Operations, Statistics, Cate | tab shown statistics 55.0ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press categories (asked statistics, shown statistics)
+tabs again: Operations, Statistics, Cate | tab shown categories 39.7ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press index (asked categories, shown categories)
+tabs again: Operations, Statistics, Cate | tab shown index 31.9ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | tab shown operations 33.7ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tab back and forth, 1.5s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 1.5s apart (Operatio | tab shown statistics 31.3ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 4
+tab back and forth, 1.5s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 1.5s apart (Operatio | tab shown operations 41.8ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 4
+tab back and forth, 0.8s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.8s apart (Operatio | tab shown statistics 32.7ms
+tab back and forth, 0.8s apart (Operatio | renders tab bar 4
+tab back and forth, 0.8s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.8s apart (Operatio | tab shown operations 38.3ms
+tab back and forth, 0.8s apart (Operatio | renders tab bar 4
+tab back and forth, 0.4s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.4s apart (Operatio | tab shown statistics 32.0ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 4
+tab back and forth, 0.4s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.4s apart (Operatio | tab shown operations 52.6ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 4
+tab chain quickly: Categories, Accounts, | tab press categories (asked operations, shown operations)
+tab chain quickly: Categories, Accounts, | tab shown categories 35.0ms
+tab chain quickly: Categories, Accounts, | layer dialog shown 10.7ms
+tab chain quickly: Categories, Accounts, | renders tab bar 4
+tab chain quickly: Categories, Accounts, | tab press operations (asked categories, shown categories)
+tab chain quickly: Categories, Accounts, | tab shown operations 37.2ms
+tab chain quickly: Categories, Accounts, | renders tab bar 4
+two quick period swipes (0.35s apart)    | operations page built 50.4ms
+two quick period swipes (0.35s apart)    | swipe: pages built 94.8ms
+two quick period swipes (0.35s apart)    | swipe: next frame 166.4ms
+two quick period swipes (0.35s apart)    | renders pager 7
+two quick period swipes (0.35s apart)    | renders period bar 7
+two quick period swipes (0.35s apart)    | renders operations page 2
+two quick period swipes (0.35s apart)    | operations page built 263.4ms
+two quick period swipes (0.35s apart)    | operations page built 40.8ms
+two quick period swipes (0.35s apart)    | swipe: pages built 136.4ms
+two quick period swipes (0.35s apart)    | swipe: next frame 206.9ms
+two quick period swipes (0.35s apart)    | operations page built 145.0ms
+two quick period swipes (0.35s apart)    | renders pager 9
+two quick period swipes (0.35s apart)    | renders period bar 9
+two quick period swipes (0.35s apart)    | renders operations page 2
+swipe back and forth quickly (0.35s apar | swipe: pages built 70.4ms
+swipe back and forth quickly (0.35s apar | operations page built 350.3ms
+swipe back and forth quickly (0.35s apar | operations page built 339.2ms
+swipe back and forth quickly (0.35s apar | operations page built 386.8ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 870.9ms
+swipe back and forth quickly (0.35s apar | renders pager 6
+swipe back and forth quickly (0.35s apar | renders period bar 6
+swipe back and forth quickly (0.35s apar | renders operations page 3
+swipe back and forth quickly (0.35s apar | renders day head 2
+swipe back and forth quickly (0.35s apar | renders operation row 5
+swipe back and forth quickly (0.35s apar | list ready 488.0ms
+swipe back and forth quickly (0.35s apar | operations page built 16.8ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 77.8ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 118.1ms
+swipe back and forth quickly (0.35s apar | operations page built 57.0ms
+swipe back and forth quickly (0.35s apar | renders pager 8
+swipe back and forth quickly (0.35s apar | renders period bar 8
+swipe back and forth quickly (0.35s apar | renders operations page 2
+swipe back and forth quickly (0.35s apar | renders operation row 7
+swipe back and forth quickly (0.35s apar | tab press statistics (asked operations, shown operations)
+swipe back and forth quickly (0.35s apar | tab shown statistics 30.5ms
+swipe back and forth quickly (0.35s apar | operations page built 34.5ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 56.9ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 109.6ms
+swipe back and forth quickly (0.35s apar | operations page built 70.0ms
+swipe back and forth quickly (0.35s apar | list ready 123.0ms
+swipe back and forth quickly (0.35s apar | operations page built 31.4ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 51.5ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 67.0ms
+swipe back and forth quickly (0.35s apar | operations page built 19.3ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 35.5ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 57.9ms
+swipe back and forth quickly (0.35s apar | renders tab bar 4
+swipe back and forth quickly (0.35s apar | renders pager 23
+swipe back and forth quickly (0.35s apar | renders period bar 20
+swipe back and forth quickly (0.35s apar | renders operations page 5
+swipe back and forth quickly (0.35s apar | renders day head 2
+swipe back and forth quickly (0.35s apar | renders operation row 12
+swipe back and forth quickly (0.35s apar | operations page built 24.5ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 60.5ms
+swipe back and forth quickly (0.35s apar | operations page built 69.3ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 148.4ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 295.2ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 203.2ms
+swipe back and forth quickly (0.35s apar | operations page built 22.2ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 46.5ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 64.9ms
+swipe back and forth quickly (0.35s apar | operations page built 35.7ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 59.6ms
+swipe back and forth quickly (0.35s apar | renders pager 24
+swipe back and forth quickly (0.35s apar | renders period bar 21
+swipe back and forth quickly (0.35s apar | renders operations page 4
+swipe back and forth quickly (0.35s apar | swipe: next frame 86.0ms
+swipe back and forth quickly (0.35s apar | operations page built 41.4ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 106.2ms
+swipe back and forth quickly (0.35s apar | operations page built 79.4ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 135.1ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 348.8ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 190.1ms
+swipe back and forth quickly (0.35s apar | operations page built 32.0ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 58.0ms
+swipe back and forth quickly (0.35s apar | renders pager 21
+swipe back and forth quickly (0.35s apar | renders period bar 15
+swipe back and forth quickly (0.35s apar | renders operations page 3
+swipe back and forth quickly (0.35s apar | swipe: next frame 73.2ms
+swipe back and forth quickly (0.35s apar | operations page built 13.6ms
+swipe back and forth quickly (0.35s apar | swipe: pages built 26.8ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 45.5ms
+statistics: Incomes                      | operations page built 70.4ms
+statistics: Incomes                      | swipe: pages built 154.8ms
+statistics: Incomes                      | operations page built 42.0ms
+statistics: Incomes                      | swipe: pages built 77.6ms
+statistics: Incomes                      | swipe: next frame 303.5ms
+statistics: Incomes                      | swipe: next frame 107.4ms
+statistics: Incomes                      | renders pager 23
+statistics: Incomes                      | renders period bar 17
+statistics: Incomes                      | renders operations page 3
+statistics: Incomes                      | operations page built 25.3ms
+statistics: Incomes                      | swipe: pages built 47.0ms
+statistics: Incomes                      | swipe: next frame 70.9ms
+statistics: Incomes                      | operations page built 19.5ms
+statistics: Incomes                      | swipe: pages built 38.0ms
+statistics: Incomes                      | swipe: next frame 106.6ms
+statistics: Incomes                      | operations page built 90.8ms
+statistics: Incomes                      | swipe: pages built 118.1ms
+statistics: Incomes                      | operations page built 40.4ms
+statistics: Incomes                      | swipe: pages built 63.7ms
+statistics: Incomes                      | swipe: next frame 242.6ms
+statistics: Incomes                      | swipe: next frame 93.6ms
+statistics: Incomes                      | renders pager 28
+statistics: Incomes                      | renders period bar 22
+statistics: Incomes                      | renders operations page 4
+statistics: Incomes                      | operations page built 22.7ms
+statistics: Incomes                      | swipe: pages built 49.5ms
+statistics: Incomes                      | operations page built 20.7ms
+statistics: Incomes                      | swipe: pages built 38.2ms
+statistics: Incomes                      | swipe: next frame 156.3ms
+statistics: Incomes                      | swipe: next frame 87.3ms
+statistics: Incomes                      | operations page built 29.1ms
+statistics: Incomes                      | swipe: pages built 93.9ms
+statistics: Incomes                      | operations page built 62.2ms
+statistics: Incomes                      | swipe: pages built 90.8ms
+statistics: Incomes                      | swipe: next frame 252.7ms
+statistics: Incomes                      | renders pager 23
+statistics: Incomes                      | renders period bar 20
+statistics: Incomes                      | renders operations page 4
+statistics: Incomes                      | swipe: next frame 119.3ms
+statistics: Incomes                      | operations page built 28.0ms
+statistics: Incomes                      | swipe: pages built 58.3ms
+statistics: Incomes                      | swipe: next frame 77.0ms
+statistics: Incomes                      | operations page built 14.1ms
+statistics: Incomes                      | swipe: pages built 25.9ms
+statistics: Incomes                      | swipe: next frame 42.3ms
+statistics: Incomes                      | operations page built 39.8ms
+statistics: Incomes                      | swipe: pages built 109.8ms
+statistics: Incomes                      | operations page built 37.0ms
+statistics: Incomes                      | swipe: pages built 76.4ms
+statistics: Incomes                      | renders pager 29
+statistics: Incomes                      | renders period bar 23
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | swipe: next frame 284.7ms
+statistics: Incomes                      | swipe: next frame 115.8ms
+statistics: Incomes                      | operations page built 34.3ms
+statistics: Incomes                      | swipe: pages built 69.6ms
+statistics: Incomes                      | swipe: next frame 84.8ms
+statistics: Incomes                      | operations page built 19.0ms
+statistics: Incomes                      | swipe: pages built 34.6ms
+statistics: Incomes                      | swipe: next frame 61.3ms
+statistics: Incomes                      | renders pager 19
+statistics: Incomes                      | renders period bar 13
+statistics: Incomes                      | renders operations page 3
+statistics: Incomes                      | operations page built 28.5ms
+statistics: Incomes                      | swipe: pages built 87.8ms
+statistics: Incomes                      | swipe: next frame 128.4ms
+statistics: Incomes                      | operations page built 24.0ms
+statistics: Incomes                      | swipe: pages built 47.4ms
+statistics: Incomes                      | swipe: next frame 95.6ms
+statistics: Incomes                      | operations page built 17.5ms
+statistics: Incomes                      | swipe: pages built 66.3ms
+statistics: Incomes                      | swipe: next frame 85.5ms
+statistics: Incomes                      | operations page built 15.5ms
+statistics: Incomes                      | swipe: pages built 38.1ms
+statistics: Incomes                      | swipe: next frame 55.8ms
+statistics: Incomes                      | renders pager 29
+statistics: Incomes                      | renders period bar 23
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | operations page built 52.3ms
+statistics: Incomes                      | swipe: pages built 92.3ms
+statistics: Incomes                      | operations page built 25.0ms
+statistics: Incomes                      | swipe: pages built 50.5ms
+statistics: Incomes                      | swipe: next frame 205.8ms
+statistics: Incomes                      | swipe: next frame 78.6ms
+statistics: Incomes                      | operations page built 19.1ms
+statistics: Incomes                      | swipe: pages built 56.0ms
+statistics: Incomes                      | swipe: next frame 77.6ms
+statistics: Incomes                      | operations page built 25.8ms
+statistics: Incomes                      | swipe: pages built 45.6ms
+statistics: Incomes                      | swipe: next frame 70.5ms
+statistics: Incomes                      | renders pager 27
+statistics: Incomes                      | renders period bar 21
+statistics: Incomes                      | renders operations page 4
+statistics: Incomes                      | operations page built 41.0ms
+statistics: Incomes                      | swipe: pages built 84.7ms
+statistics: Incomes                      | operations page built 37.8ms
+statistics: Incomes                      | swipe: pages built 56.7ms
+statistics: Incomes                      | swipe: next frame 246.5ms
+statistics: Incomes                      | swipe: next frame 84.2ms
+statistics: Incomes                      | operations page built 24.2ms
+statistics: Incomes                      | swipe: pages built 43.1ms
+statistics: Incomes                      | swipe: next frame 60.7ms
+statistics: Incomes                      | operations page built 16.0ms
+statistics: Incomes                      | swipe: pages built 33.6ms
+statistics: Incomes                      | swipe: next frame 61.8ms
+statistics: Incomes                      | renders pager 29
+statistics: Incomes                      | renders period bar 23
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | operations page built 41.4ms
+statistics: Incomes                      | swipe: pages built 89.2ms
+statistics: Incomes                      | swipe: next frame 123.6ms
+statistics: Incomes                      | operations page built 25.5ms
+statistics: Incomes                      | swipe: pages built 51.5ms
+statistics: Incomes                      | swipe: next frame 94.4ms
+statistics: Incomes                      | operations page built 17.7ms
+statistics: Incomes                      | swipe: pages built 64.9ms
+statistics: Incomes                      | swipe: next frame 86.6ms
+statistics: Incomes                      | renders pager 19
+statistics: Incomes                      | renders period bar 16
+statistics: Incomes                      | renders operations page 3
+statistics: Incomes                      | operations page built 15.6ms
+statistics: Incomes                      | swipe: pages built 36.8ms
+statistics: Incomes                      | swipe: next frame 66.2ms
+statistics: Incomes                      | operations page built 41.3ms
+statistics: Incomes                      | swipe: pages built 71.2ms
+statistics: Incomes                      | operations page built 39.4ms
+statistics: Incomes                      | swipe: pages built 89.6ms
+statistics: Incomes                      | swipe: next frame 259.6ms
+statistics: Incomes                      | swipe: next frame 121.2ms
+statistics: Incomes                      | renders pager 21
+statistics: Incomes                      | renders period bar 15
+statistics: Incomes                      | renders operations page 3
+statistics: Incomes                      | operations page built 17.9ms
+statistics: Incomes                      | swipe: pages built 46.2ms
+statistics: Incomes                      | swipe: next frame 64.9ms
+statistics: Incomes                      | operations page built 13.0ms
+statistics: Incomes                      | swipe: pages built 26.2ms
+statistics: Incomes                      | swipe: next frame 53.0ms
+statistics: Incomes                      | operations page built 31.1ms
+statistics: Incomes                      | swipe: pages built 56.9ms
+statistics: Incomes                      | operations page built 43.2ms
+statistics: Incomes                      | swipe: pages built 97.4ms
+statistics: Incomes                      | swipe: next frame 332.0ms
+statistics: Incomes                      | swipe: next frame 198.9ms
+statistics: Incomes                      | renders pager 28
+statistics: Incomes                      | renders period bar 22
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | operations page built 41.8ms
+statistics: Incomes                      | swipe: pages built 73.4ms
+statistics: Incomes                      | swipe: next frame 90.0ms
+statistics: Incomes                      | operations page built 34.1ms
+statistics: Incomes                      | swipe: pages built 55.9ms
+statistics: Incomes                      | swipe: next frame 87.7ms
+statistics: Incomes                      | operations page built 59.4ms
+statistics: Incomes                      | swipe: pages built 117.5ms
+statistics: Incomes                      | operations page built 30.0ms
+statistics: Incomes                      | swipe: pages built 53.8ms
+statistics: Incomes                      | swipe: next frame 289.3ms
+statistics: Incomes                      | swipe: next frame 105.4ms
+statistics: Incomes                      | renders pager 26
+statistics: Incomes                      | renders period bar 23
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | operations page built 24.8ms
+statistics: Incomes                      | swipe: pages built 50.4ms
+statistics: Incomes                      | swipe: next frame 67.1ms
+statistics: Incomes                      | operations page built 18.9ms
+statistics: Incomes                      | swipe: pages built 39.3ms
+statistics: Incomes                      | swipe: next frame 62.9ms
+statistics: Incomes                      | operations page built 26.2ms
+statistics: Incomes                      | swipe: pages built 52.2ms
+statistics: Incomes                      | swipe: next frame 95.4ms
+statistics: Incomes                      | operations page built 32.5ms
+statistics: Incomes                      | swipe: pages built 53.4ms
+statistics: Incomes                      | renders pager 29
+statistics: Incomes                      | renders period bar 23
+statistics: Incomes                      | renders operations page 5
+statistics: Incomes                      | swipe: next frame 89.6ms
+statistics: Incomes                      | operations page built 19.3ms
+statistics: Incomes                      | swipe: pages built 44.5ms
+statistics: Incomes                      | swipe: next frame 63.3ms
+statistics: Incomes                      | operations page built 27.5ms
+statistics: Incomes                      | swipe: pages built 50.3ms
+statistics: Incomes                      | swipe: next frame 67.9ms
+statistics: Incomes                      | operations page built 47.5ms
+statistics: Incomes                      | swipe: pages built 120.2ms
+statistics: Incomes                      | renders pager 22
+statistics: Incomes                      | renders period bar 16
+statistics: Incomes                      | renders operations page 3
+statistics: Incomes                      | operations page built 31.7ms
+statistics: Incomes                      | swipe: pages built 53.3ms
+statistics: Incomes                      | swipe: next frame 238.9ms
+statistics: Incomes                      | swipe: next frame 72.3ms
+statistics: Incomes                      | operations page built 13.6ms
+statistics: Incomes                      | swipe: pages built 26.1ms
+statistics: Incomes                      | swipe: next frame 40.9ms
+statistics: Incomes                      | operations page built 26.6ms
+statistics: Incomes                      | swipe: pages built 45.6ms
+statistics: Incomes                      | swipe: next frame 108.0ms
+statistics: Expenses                     | renders pager 24
+statistics: Expenses                     | renders period bar 18
+statistics: Expenses                     | renders operations page 4
+statistics: Expenses                     | operations page built 91.8ms
+statistics: Expenses                     | swipe: pages built 223.8ms
+statistics: Expenses                     | operations page built 28.2ms
+statistics: Expenses                     | swipe: pages built 66.9ms
+statistics: Expenses                     | swipe: next frame 448.5ms
+statistics: Expenses                     | swipe: next frame 156.8ms
+statistics: Expenses                     | operations page built 33.1ms
+statistics: Expenses                     | swipe: pages built 62.1ms
+statistics: Expenses                     | swipe: next frame 81.5ms
+statistics: Expenses                     | operations page built 31.1ms
+statistics: Expenses                     | swipe: pages built 47.5ms
+statistics: Expenses                     | swipe: next frame 69.6ms
+statistics: Expenses                     | renders pager 29
+statistics: Expenses                     | renders period bar 23
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 45.9ms
+statistics: Expenses                     | swipe: pages built 99.4ms
+statistics: Expenses                     | operations page built 68.3ms
+statistics: Expenses                     | swipe: pages built 94.1ms
+statistics: Expenses                     | swipe: next frame 270.8ms
+statistics: Expenses                     | swipe: next frame 142.5ms
+statistics: Expenses                     | operations page built 21.1ms
+statistics: Expenses                     | swipe: pages built 42.6ms
+statistics: Expenses                     | swipe: next frame 61.9ms
+statistics: Expenses                     | renders pager 20
+statistics: Expenses                     | renders period bar 17
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 14.6ms
+statistics: Expenses                     | swipe: pages built 31.9ms
+statistics: Expenses                     | swipe: next frame 54.2ms
+statistics: Expenses                     | operations page built 38.6ms
+statistics: Expenses                     | swipe: pages built 80.5ms
+statistics: Expenses                     | operations page built 21.2ms
+statistics: Expenses                     | swipe: pages built 40.5ms
+statistics: Expenses                     | swipe: next frame 218.3ms
+statistics: Expenses                     | swipe: next frame 63.6ms
+statistics: Expenses                     | renders pager 21
+statistics: Expenses                     | renders period bar 15
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 22.9ms
+statistics: Expenses                     | swipe: pages built 42.5ms
+statistics: Expenses                     | operations page built 20.9ms
+statistics: Expenses                     | swipe: pages built 40.8ms
+statistics: Expenses                     | swipe: next frame 137.4ms
+statistics: Expenses                     | swipe: next frame 70.7ms
+statistics: Expenses                     | operations page built 88.2ms
+statistics: Expenses                     | swipe: pages built 110.9ms
+statistics: Expenses                     | operations page built 39.8ms
+statistics: Expenses                     | swipe: pages built 59.2ms
+statistics: Expenses                     | swipe: next frame 306.1ms
+statistics: Expenses                     | swipe: next frame 133.5ms
+statistics: Expenses                     | renders pager 26
+statistics: Expenses                     | renders period bar 20
+statistics: Expenses                     | renders operations page 4
+statistics: Expenses                     | operations page built 26.7ms
+statistics: Expenses                     | swipe: pages built 61.2ms
+statistics: Expenses                     | swipe: next frame 78.2ms
+statistics: Expenses                     | operations page built 16.0ms
+statistics: Expenses                     | swipe: pages built 33.0ms
+statistics: Expenses                     | swipe: next frame 56.1ms
+statistics: Expenses                     | operations page built 33.1ms
+statistics: Expenses                     | swipe: pages built 65.1ms
+statistics: Expenses                     | operations page built 34.5ms
+statistics: Expenses                     | swipe: pages built 88.9ms
+statistics: Expenses                     | swipe: next frame 277.7ms
+statistics: Expenses                     | swipe: next frame 176.2ms
+statistics: Expenses                     | renders pager 28
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 14.4ms
+statistics: Expenses                     | swipe: pages built 35.5ms
+statistics: Expenses                     | swipe: next frame 51.3ms
+statistics: Expenses                     | operations page built 14.6ms
+statistics: Expenses                     | swipe: pages built 40.5ms
+statistics: Expenses                     | swipe: next frame 59.7ms
+statistics: Expenses                     | operations page built 36.5ms
+statistics: Expenses                     | swipe: pages built 98.2ms
+statistics: Expenses                     | swipe: next frame 130.0ms
+statistics: Expenses                     | operations page built 37.9ms
+statistics: Expenses                     | swipe: pages built 118.1ms
+statistics: Expenses                     | renders pager 25
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 4
+statistics: Expenses                     | swipe: next frame 238.8ms
+statistics: Expenses                     | operations page built 33.2ms
+statistics: Expenses                     | swipe: pages built 76.0ms
+statistics: Expenses                     | swipe: next frame 109.8ms
+statistics: Expenses                     | operations page built 17.5ms
+statistics: Expenses                     | swipe: pages built 31.8ms
+statistics: Expenses                     | swipe: next frame 50.6ms
+statistics: Expenses                     | operations page built 21.5ms
+statistics: Expenses                     | swipe: pages built 118.8ms
+statistics: Expenses                     | operations page built 36.5ms
+statistics: Expenses                     | swipe: pages built 81.1ms
+statistics: Expenses                     | renders pager 28
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | swipe: next frame 265.5ms
+statistics: Expenses                     | swipe: next frame 122.0ms
+statistics: Expenses                     | operations page built 16.3ms
+statistics: Expenses                     | swipe: pages built 42.9ms
+statistics: Expenses                     | swipe: next frame 57.5ms
+statistics: Expenses                     | operations page built 14.8ms
+statistics: Expenses                     | swipe: pages built 42.4ms
+statistics: Expenses                     | swipe: next frame 88.2ms
+statistics: Expenses                     | renders pager 19
+statistics: Expenses                     | renders period bar 13
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 41.2ms
+statistics: Expenses                     | swipe: pages built 138.7ms
+statistics: Expenses                     | operations page built 34.8ms
+statistics: Expenses                     | swipe: pages built 64.6ms
+statistics: Expenses                     | swipe: next frame 302.5ms
+statistics: Expenses                     | swipe: next frame 94.0ms
+statistics: Expenses                     | operations page built 24.3ms
+statistics: Expenses                     | swipe: pages built 52.7ms
+statistics: Expenses                     | swipe: next frame 98.0ms
+statistics: Expenses                     | operations page built 23.4ms
+statistics: Expenses                     | swipe: pages built 63.6ms
+statistics: Expenses                     | swipe: next frame 94.9ms
+statistics: Expenses                     | renders pager 28
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 129.1ms
+statistics: Expenses                     | swipe: pages built 179.8ms
+statistics: Expenses                     | operations page built 46.4ms
+statistics: Expenses                     | swipe: pages built 73.9ms
+statistics: Expenses                     | swipe: next frame 312.4ms
+statistics: Expenses                     | swipe: next frame 99.2ms
+statistics: Expenses                     | operations page built 18.1ms
+statistics: Expenses                     | swipe: pages built 56.1ms
+statistics: Expenses                     | renders pager 18
+statistics: Expenses                     | renders period bar 15
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | swipe: next frame 73.9ms
+statistics: Expenses                     | operations page built 15.0ms
+statistics: Expenses                     | swipe: pages built 30.2ms
+statistics: Expenses                     | swipe: next frame 61.6ms
+statistics: Expenses                     | operations page built 64.8ms
+statistics: Expenses                     | swipe: pages built 116.1ms
+statistics: Expenses                     | operations page built 30.4ms
+statistics: Expenses                     | swipe: pages built 76.6ms
+statistics: Expenses                     | swipe: next frame 271.7ms
+statistics: Expenses                     | swipe: next frame 104.4ms
+statistics: Expenses                     | renders pager 22
+statistics: Expenses                     | renders period bar 16
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 27.3ms
+statistics: Expenses                     | swipe: pages built 54.5ms
+statistics: Expenses                     | swipe: next frame 74.9ms
+statistics: Expenses                     | operations page built 13.5ms
+statistics: Expenses                     | swipe: pages built 25.6ms
+statistics: Expenses                     | swipe: next frame 44.7ms
+statistics: Expenses                     | operations page built 57.0ms
+statistics: Expenses                     | swipe: pages built 77.2ms
+statistics: Expenses                     | operations page built 40.0ms
+statistics: Expenses                     | swipe: pages built 62.0ms
+statistics: Expenses                     | swipe: next frame 315.2ms
+statistics: Expenses                     | swipe: next frame 183.0ms
+statistics: Expenses                     | renders pager 28
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 17.5ms
+statistics: Expenses                     | swipe: pages built 39.6ms
+statistics: Expenses                     | swipe: next frame 67.0ms
+statistics: Expenses                     | operations page built 15.3ms
+statistics: Expenses                     | swipe: pages built 30.9ms
+statistics: Expenses                     | swipe: next frame 51.8ms
+statistics: Expenses                     | operations page built 97.5ms
+statistics: Expenses                     | swipe: pages built 133.1ms
+statistics: Expenses                     | operations page built 66.4ms
+statistics: Expenses                     | swipe: pages built 99.8ms
+statistics: Expenses                     | swipe: next frame 309.4ms
+statistics: Expenses                     | renders pager 26
+statistics: Expenses                     | renders period bar 23
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | swipe: next frame 136.5ms
+statistics: Expenses                     | operations page built 20.8ms
+statistics: Expenses                     | swipe: pages built 79.0ms
+statistics: Expenses                     | swipe: next frame 93.3ms
+statistics: Expenses                     | operations page built 13.3ms
+statistics: Expenses                     | swipe: pages built 25.9ms
+statistics: Expenses                     | swipe: next frame 42.2ms
+statistics: Expenses                     | operations page built 68.3ms
+statistics: Expenses                     | swipe: pages built 93.7ms
+statistics: Expenses                     | operations page built 202.5ms
+statistics: Expenses                     | swipe: pages built 370.0ms
+statistics: Expenses                     | renders pager 29
+statistics: Expenses                     | renders period bar 23
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | swipe: next frame 660.8ms
+statistics: Expenses                     | operations page built 27.1ms
+statistics: Expenses                     | swipe: pages built 78.2ms
+statistics: Expenses                     | swipe: next frame 578.5ms
+statistics: Expenses                     | swipe: next frame 106.8ms
+statistics: Expenses                     | operations page built 74.3ms
+statistics: Expenses                     | operations page built 26.2ms
+statistics: Expenses                     | swipe: pages built 47.4ms
+statistics: Expenses                     | swipe: next frame 132.1ms
+statistics: Expenses                     | renders pager 14
+statistics: Expenses                     | renders period bar 14
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 158.9ms
+statistics: Expenses                     | swipe: pages built 207.1ms
+statistics: Expenses                     | operations page built 23.2ms
+statistics: Expenses                     | swipe: pages built 49.3ms
+statistics: Expenses                     | swipe: next frame 350.0ms
+statistics: Expenses                     | swipe: next frame 77.4ms
+statistics: Expenses                     | operations page built 180.0ms
+statistics: Expenses                     | operations page built 42.4ms
+statistics: Expenses                     | swipe: pages built 56.3ms
+statistics: Expenses                     | renders pager 20
+statistics: Expenses                     | renders period bar 20
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | renders day head 2
+statistics: Expenses                     | renders operation row 5
+statistics: Expenses                     | list ready 331.0ms
+statistics: Expenses                     | operations page built 57.5ms
+statistics: Expenses                     | swipe: pages built 72.9ms
+statistics: Expenses                     | swipe: next frame 194.6ms
+statistics: Expenses                     | swipe: next frame 113.7ms
+statistics: Expenses                     | operations page built 28.9ms
+statistics: Expenses                     | swipe: pages built 72.1ms
+statistics: Expenses                     | operations page built 25.1ms
+statistics: Expenses                     | swipe: pages built 155.9ms
+statistics: Expenses                     | swipe: next frame 298.6ms
+statistics: Expenses                     | swipe: next frame 208.7ms
+statistics: Expenses                     | renders pager 21
+statistics: Expenses                     | renders period bar 15
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | renders operation row 7
+statistics: Expenses                     | operations page built 26.0ms
+statistics: Expenses                     | swipe: pages built 53.9ms
+statistics: Expenses                     | swipe: next frame 69.6ms
+statistics: Expenses                     | operations page built 13.3ms
+statistics: Expenses                     | swipe: pages built 36.6ms
+statistics: Expenses                     | swipe: next frame 59.7ms
+statistics: Expenses                     | operations page built 34.6ms
+statistics: Expenses                     | swipe: pages built 129.9ms
+statistics: Expenses                     | operations page built 31.8ms
+statistics: Expenses                     | swipe: pages built 58.6ms
+statistics: Expenses                     | swipe: next frame 293.8ms
+statistics: Expenses                     | swipe: next frame 139.2ms
+statistics: Expenses                     | renders pager 29
+statistics: Expenses                     | renders period bar 23
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 18.7ms
+statistics: Expenses                     | swipe: pages built 37.3ms
+statistics: Expenses                     | swipe: next frame 57.3ms
+statistics: Expenses                     | operations page built 16.5ms
+statistics: Expenses                     | swipe: pages built 32.4ms
+statistics: Expenses                     | swipe: next frame 50.8ms
+statistics: Expenses                     | operations page built 78.7ms
+statistics: Expenses                     | swipe: pages built 109.0ms
+statistics: Expenses                     | operations page built 19.6ms
+statistics: Expenses                     | swipe: pages built 44.6ms
+statistics: Expenses                     | swipe: next frame 241.5ms
+statistics: Expenses                     | swipe: next frame 66.6ms
+statistics: Expenses                     | renders pager 28
+statistics: Expenses                     | renders period bar 22
+statistics: Expenses                     | renders operations page 5
+statistics: Expenses                     | operations page built 20.7ms
+statistics: Expenses                     | swipe: pages built 33.6ms
+statistics: Expenses                     | swipe: next frame 52.1ms
+statistics: Expenses                     | operations page built 15.9ms
+statistics: Expenses                     | swipe: pages built 40.6ms
+statistics: Expenses                     | swipe: next frame 66.4ms
+statistics: Expenses                     | operations page built 43.9ms
+statistics: Expenses                     | swipe: pages built 116.8ms
+statistics: Expenses                     | operations page built 51.4ms
+statistics: Expenses                     | swipe: pages built 70.4ms
+statistics: Expenses                     | swipe: next frame 502.6ms
+statistics: Expenses                     | renders pager 24
+statistics: Expenses                     | renders period bar 21
+statistics: Expenses                     | renders operations page 4
+statistics: Expenses                     | swipe: next frame 320.7ms
+statistics: Expenses                     | operations page built 23.7ms
+statistics: Expenses                     | swipe: pages built 48.5ms
+statistics: Expenses                     | swipe: next frame 65.0ms
+statistics: Expenses                     | operations page built 14.8ms
+statistics: Expenses                     | swipe: pages built 37.2ms
+statistics: Expenses                     | swipe: next frame 61.1ms
+statistics: Expenses                     | renders pager 18
+statistics: Expenses                     | renders period bar 12
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | operations page built 137.8ms
+statistics: Expenses                     | swipe: pages built 177.8ms
+statistics: Expenses                     | operations page built 26.1ms
+statistics: Expenses                     | swipe: pages built 106.0ms
+statistics: Expenses                     | swipe: next frame 408.5ms
+statistics: Expenses                     | swipe: next frame 168.5ms
+statistics: Expenses                     | operations page built 47.4ms
+statistics: Expenses                     | swipe: pages built 101.2ms
+statistics: Expenses                     | swipe: next frame 117.1ms
+statistics: Expenses                     | operations page built 55.3ms
+statistics: Expenses                     | operations page built 23.0ms
+statistics: Expenses                     | swipe: pages built 35.3ms
+statistics: Expenses                     | swipe: next frame 163.3ms
+statistics: Expenses                     | renders pager 29
+statistics: Expenses                     | renders period bar 26
+statistics: Expenses                     | renders operations page 6
+statistics: Expenses                     | operations page built 173.2ms
+statistics: Expenses                     | operations page built 88.2ms
+statistics: Expenses                     | swipe: pages built 305.9ms
+statistics: Expenses                     | list ready 386.0ms
+statistics: Expenses                     | operations page built 145.1ms
+statistics: Expenses                     | swipe: pages built 195.7ms
+statistics: Expenses                     | swipe: next frame 701.3ms
+statistics: Expenses                     | renders day head 2
+statistics: Expenses                     | renders operation row 12
+statistics: Expenses                     | renders pager 10
+statistics: Expenses                     | renders period bar 10
+statistics: Expenses                     | renders operations page 2
+statistics: Expenses                     | swipe: next frame 318.6ms
+statistics: Expenses                     | operations page built 19.8ms
+statistics: Expenses                     | swipe: pages built 45.5ms
+statistics: Expenses                     | swipe: next frame 70.4ms
+statistics: Expenses                     | operations page built 49.6ms
+statistics: Expenses                     | operations page built 24.2ms
+statistics: Expenses                     | swipe: pages built 52.1ms
+statistics: Expenses                     | swipe: next frame 86.4ms
+statistics: Expenses                     | operations page built 45.8ms
+statistics: Expenses                     | swipe: pages built 101.2ms
+statistics: Expenses                     | operations page built 33.9ms
+statistics: Expenses                     | swipe: pages built 91.0ms
+statistics: Expenses                     | swipe: next frame 261.5ms
+statistics: Expenses                     | renders pager 29
+statistics: Expenses                     | renders period bar 26
+statistics: Expenses                     | renders operations page 6
+statistics: Expenses                     | swipe: next frame 123.6ms
+statistics: Expenses                     | operations page built 67.8ms
+statistics: Expenses                     | list ready 188.0ms
+statistics: Expenses                     | operations page built 55.1ms
+statistics: Expenses                     | swipe: pages built 73.8ms
+statistics: Expenses                     | swipe: next frame 105.7ms
+statistics: Expenses                     | operations page built 21.8ms
+statistics: Expenses                     | swipe: pages built 89.3ms
+statistics: Expenses                     | swipe: next frame 139.6ms
+statistics: Expenses                     | renders pager 17
+statistics: Expenses                     | renders period bar 14
+statistics: Expenses                     | renders operations page 3
+statistics: Expenses                     | renders day head 2
+statistics: Expenses                     | renders operation row 12
+statistics: Expenses                     | operations page built 55.7ms
+statistics: Expenses                     | swipe: pages built 173.2ms
+statistics: Expenses                     | operations page built 20.1ms
+statistics: Expenses                     | swipe: pages built 40.4ms
+statistics: Expenses                     | swipe: next frame 330.7ms
+statistics: Expenses                     | swipe: next frame 82.9ms
+statistics: Expenses                     | tab press more (asked statistics, shown statistics)
+statistics: Expenses                     | touch lag 32.8ms
+statistics: Expenses                     | tab shown more 74.8ms
+statistics: Expenses                     | operations page built 14.0ms
+statistics: Expenses                     | swipe: pages built 33.4ms
+statistics: Expenses                     | swipe: next frame 51.3ms
+statistics: Expenses                     | operations page built 13.1ms
+statistics: Expenses                     | swipe: pages built 23.6ms
+statistics: Expenses                     | swipe: next frame 40.1ms
+statistics: Expenses                     | renders pager 26
+statistics: Expenses                     | renders period bar 20
+statistics: Expenses                     | renders operations page 4
+statistics: Expenses                     | renders tab bar 4
+statistics: Expenses                     | operations page built 14.5ms
+statistics: Expenses                     | swipe: pages built 26.4ms
+statistics: Expenses                     | swipe: next frame 54.8ms
+statistics: Expenses                     | operations page built 13.5ms
+statistics: Expenses                     | swipe: pages built 24.8ms
+statistics: Expenses                     | swipe: next frame 38.1ms
+statistics: Expenses                     | operations page built 25.9ms
+statistics: Expenses                     | swipe: pages built 39.4ms
+statistics: Expenses                     | operations page built 14.6ms
+statistics: Expenses                     | swipe: pages built 25.1ms
+statistics: Expenses                     | swipe: next frame 94.0ms
+statistics: Expenses                     | swipe: next frame 40.7ms
+statistics: Expenses                     | renders pager 26
+statistics: Expenses                     | renders period bar 20
+statistics: Expenses                     | renders operations page 4
+open Budgets                             | operations page built 25.5ms
+open Budgets                             | swipe: pages built 37.9ms
+open Budgets                             | operations page built 15.4ms
+open Budgets                             | swipe: pages built 37.7ms
+open Budgets                             | swipe: next frame 138.8ms
+open Budgets                             | swipe: next frame 81.4ms
+open Budgets                             | operations page built 13.1ms
+open Budgets                             | swipe: pages built 30.9ms
+open Budgets                             | swipe: next frame 44.0ms
+open Budgets                             | operations page built 17.4ms
+open Budgets                             | swipe: pages built 28.5ms
+open Budgets                             | swipe: next frame 46.0ms
+open Budgets                             | renders pager 29
+open Budgets                             | renders period bar 23
+open Budgets                             | renders operations page 5
+open Budgets                             | operations page built 14.7ms
+open Budgets                             | swipe: pages built 26.7ms
+open Budgets                             | swipe: next frame 43.9ms
+open Budgets                             | operations page built 12.9ms
+open Budgets                             | swipe: pages built 23.8ms
+open Budgets                             | swipe: next frame 37.8ms
+open Budgets                             | operations page built 18.1ms
+open Budgets                             | swipe: pages built 31.0ms
+open Budgets                             | swipe: next frame 45.8ms
+open Budgets                             | operations page built 18.2ms
+open Budgets                             | swipe: pages built 30.3ms
+open Budgets                             | swipe: next frame 47.6ms
+open Budgets                             | renders pager 32
+open Budgets                             | renders period bar 26
+open Budgets                             | renders operations page 6
+open Budgets                             | operations page built 13.7ms
+open Budgets                             | swipe: pages built 25.7ms
+open Budgets                             | swipe: next frame 45.3ms
+open Budgets                             | operations page built 19.0ms
+open Budgets                             | swipe: pages built 43.4ms
+open Budgets                             | touch lag 23.1ms
+open Budgets                             | swipe: next frame 73.0ms
+open Budgets                             | tab shown more 19.1ms
+open Budgets                             | operations page built 125.6ms
+open Budgets                             | swipe: pages built 198.7ms
+open Budgets                             | operations page built 45.6ms
+open Budgets                             | swipe: pages built 103.8ms
+open Budgets                             | swipe: next frame 375.1ms
+open Budgets                             | renders pager 26
+open Budgets                             | renders period bar 27
+open Budgets                             | renders operations page 5
+open Budgets                             | renders tab bar 1
+open Budgets                             | swipe: next frame 144.6ms
+open Budgets                             | operations page built 16.1ms
+open Budgets                             | swipe: pages built 28.4ms
+open Budgets                             | swipe: next frame 47.4ms
+open Budgets                             | operations page built 15.6ms
+open Budgets                             | swipe: pages built 31.6ms
+open Budgets                             | swipe: next frame 49.3ms
+open Budgets                             | operations page built 49.5ms
+open Budgets                             | swipe: pages built 64.3ms
+open Budgets                             | renders pager 22
+open Budgets                             | renders period bar 19
+open Budgets                             | renders operations page 3
+open Budgets                             | swipe: next frame 205.2ms
+open Budgets                             | operations page built 23.1ms
+open Budgets                             | swipe: pages built 45.9ms
+open Budgets                             | swipe: next frame 88.0ms
+open Budgets                             | operations page built 14.9ms
+open Budgets                             | swipe: pages built 33.8ms
+open Budgets                             | swipe: next frame 52.7ms
+open Budgets                             | operations page built 17.7ms
+open Budgets                             | swipe: pages built 53.6ms
+open Budgets                             | swipe: next frame 70.7ms
+open Budgets                             | renders pager 24
+open Budgets                             | renders period bar 21
+open Budgets                             | renders operations page 4
+open Budgets                             | operations page built 16.4ms
+open Budgets                             | swipe: pages built 29.5ms
+open Budgets                             | swipe: next frame 52.3ms
+open Budgets                             | operations page built 17.4ms
+open Budgets                             | swipe: pages built 43.9ms
+open Budgets                             | swipe: next frame 65.3ms
+open Budgets                             | operations page built 15.1ms
+open Budgets                             | swipe: pages built 27.1ms
+open Budgets                             | swipe: next frame 45.9ms
+open Budgets                             | operations page built 14.9ms
+open Budgets                             | swipe: pages built 31.3ms
+open Budgets                             | swipe: next frame 47.3ms
+open Budgets                             | renders pager 31
+open Budgets                             | renders period bar 29
+open Budgets                             | renders operations page 6
+open Budgets                             | operations page built 14.9ms
+open Budgets                             | swipe: pages built 27.0ms
+open Budgets                             | swipe: next frame 47.1ms
+open Budgets                             | operations page built 17.7ms
+open Budgets                             | swipe: pages built 34.3ms
+open Budgets                             | swipe: next frame 53.9ms
+open Budgets                             | operations page built 16.0ms
+open Budgets                             | swipe: pages built 36.1ms
+open Budgets                             | swipe: next frame 56.3ms
+open Budgets                             | tab shown more 4361.9ms
+open Budgets                             | operations page built 25.5ms
+open Budgets                             | operations page built 16.5ms
+open Budgets                             | swipe: pages built 45.4ms
+open Budgets                             | swipe: next frame 176.4ms
+open Budgets                             | renders pager 35
+open Budgets                             | renders period bar 32
+open Budgets                             | renders operations page 5
+open Budgets                             | renders tab bar 1
+open Budgets                             | operations page built 21.4ms
+open Budgets                             | swipe: pages built 135.7ms
+open Budgets                             | swipe: next frame 246.7ms
+open Budgets                             | operations page built 14.5ms
+open Budgets                             | swipe: pages built 27.3ms
+open Budgets                             | swipe: next frame 48.5ms
+open Budgets                             | operations page built 32.1ms
+open Scheduled payments                  | renders pager 17
+open Scheduled payments                  | renders period bar 14
+open Scheduled payments                  | renders operations page 4
+open Scheduled payments                  | tab shown more 22.1ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab shown more 4331.2ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab press operations (asked more, shown more)
+open Scheduled payments                  | tab shown operations 32.2ms
+open Scheduled payments                  | renders tab bar 5
+open Scheduled payments                  | tab press operations (asked operations, shown operations)
+open Scheduled payments                  | tab press dropped: already asked
+open the add menu                        | layer sheet shown 3.3ms
+choose a category (the editor opens)     | layer sheet shown 24.1ms
+save the operation                       | tab press more (asked operations, shown operations)
+save the operation                       | tab shown more 30.3ms
+save the operation                       | renders tab bar 4
+save the operation                       | tab shown more 22.5ms
+save the operation                       | renders tab bar 1
+save the operation                       | tab shown more 31.8ms
+save the operation                       | operations page built 69.9ms
+save the operation                       | list ready 81.0ms
+save the operation                       | renders tab bar 1
+save the operation                       | renders period bar 9
+save the operation                       | renders pager 6
+save the operation                       | renders operations page 1
+save the operation                       | renders day head 2
+save the operation                       | renders operation row 12
+save the operation                       | renders period bar 1
+report preview, first time (3000 operati | report detail: 148 pages laid out 452.9ms
+report preview, first time (3000 operati | renders period bar 1
+report preview, first time (3000 operati | layer dialog shown 4.0ms
+report preview, first time (3000 operati | report preview: first 3 of 148 pages 1215.1ms
+report preview, first time (3000 operati | layer full shown 107.4ms
+report preview, first time (3000 operati | renders period bar 1
+scroll the preview (8 flicks)            | touch lag 46.0ms
+report preview, second time              | layer full shown 11.1ms
+report preview, second time              | tab shown more 5593.4ms
+report preview, second time              | operations page built 142.9ms
+report preview, second time              | operations page built 109.4ms
+report preview, second time              | operations page built 101.5ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | renders pager 6
+report preview, second time              | renders period bar 6
+report preview, second time              | renders operations page 3
+report preview, second time              | tab shown more 6817.1ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | tab press more (asked more, shown more)
+report preview, second time              | tab press dropped: already asked
+report preview, second time              | tab shown more 25.9ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | tab shown more 22.3ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | layer sheet shown 10.5ms
+save the PIN                             | operations page built 48.7ms
+save the PIN                             | operations page built 48.0ms
+save the PIN                             | operations page built 47.3ms
+save the PIN                             | renders root hero 4
+save the PIN                             | renders pager 4
+save the PIN                             | renders period bar 3
+save the PIN                             | renders operations screen 2
+save the PIN                             | renders operations page 3
+save the PIN                             | renders fab 1
