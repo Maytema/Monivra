@@ -1,7 +1,7 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { Fragment, memo, useCallback, useMemo, useState, type ReactNode } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
@@ -44,13 +44,13 @@ export function StatisticsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <RootHero icon="filter" label="Filters" onAction={openFilters} />
-      <PeriodPager header={<PeriodBar />} render={(period) => <StatisticsPage period={period} openFilters={openFilters} />} />
+      <PeriodPager header={<PeriodBar />} render={(period, isCurrent) => <StatisticsPage period={period} openFilters={openFilters} current={isCurrent} />} />
     </View>
   );
 }
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
-const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
+const StatisticsPage = memo(function StatisticsPage({ period, openFilters, current }: { period: Period; openFilters: () => void; current: boolean }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -318,7 +318,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
           <>
             <SumTabs tinted active={catType} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
-            <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
+            <ScrollBlocks current={current}>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
         ) : (
           <EmptyState kind="statistics" title="Statistics would be here" hint="Start adding expenses or income and the data will appear" />
@@ -327,9 +327,39 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   );
 });
 
-function ScrollBlocks({ children }: { children: ReactNode }) {
+// The pages of the periods share one scroll position: the neighbours follow the open page while it scrolls, so a swipe
+// to another period shows the new page at the same place, not at the top.
+type Scroller = { scrollTo(options: { x?: number; y?: number; animated?: boolean }): void };
+const scrollers = new Set<Scroller>();
+let sharedOffset = 0;
+
+function ScrollBlocks({ children, current }: { children: ReactNode; current: boolean }) {
+  const mine = useRef<Scroller | null>(null);
+  useEffect(
+    () => () => {
+      if (mine.current) scrollers.delete(mine.current);
+    },
+    [],
+  );
   return (
-    <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      ref={(node: Scroller | null) => {
+        if (mine.current && mine.current !== node) scrollers.delete(mine.current);
+        mine.current = node;
+        if (node) scrollers.add(node);
+      }}
+      onContentSizeChange={() => {
+        if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
+      }}
+      scrollEventThrottle={16}
+      onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
+        if (!current) return;
+        sharedOffset = e.nativeEvent.contentOffset.y;
+        for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
+      }}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
+      showsVerticalScrollIndicator={false}
+    >
       {children}
     </ScrollView>
   );

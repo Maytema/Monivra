@@ -86,9 +86,9 @@ function AccountSheet({ id }: { id: string }) {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginBottom: 20 }}>
           <ToneBadge icon={account.icon} color={account.color} size={56} iconSize={28} />
           <Text numberOfLines={2} style={{ flex: 1, color: p.ink, fontSize: 21 }}>{account.name}</Text>
-          <Pressable accessibilityRole="button" accessibilityLabel={t.t("Favorite")} hitSlop={10} onPress={() => void run((tx) => (toggleFavoriteAccount(tx, id), true))}>
+          {account.archived ? null : <Pressable accessibilityRole="button" accessibilityLabel={t.t("Favorite")} hitSlop={10} onPress={() => void run((tx) => (toggleFavoriteAccount(tx, id), true))}>
             <Icon name="star" size={26} color={account.favorite ? p.accentInk : p.accent} filled={account.favorite} />
-          </Pressable>
+          </Pressable>}
         </View>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 14 }}>
           {figure("Current balance", balance)}

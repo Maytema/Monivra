@@ -213,6 +213,31 @@ export function typedDate(text: string, format: string): string | null {
   return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
+// Typing only digits: the field puts the separators in itself. A month whose first digit is above 1 and a day whose first
+// digit is above 3 can only be one digit long, so they are completed (with a leading zero) at once: 8152001 → 08/15/2001.
+// `growing` is false while the text is being deleted, so the separator the person just erased does not come back.
+export function maskDate(text: string, format: string, growing = true): string {
+  const order = ORDER[format] ?? ORDER.month!;
+  const digits = text.replace(/[^0-9]/g, "").slice(0, 8);
+  let rest = digits;
+  const out: string[] = [];
+  let complete = false;
+  for (const [i, part] of order.parts.entries()) {
+    if (rest === "") {
+      complete = false;
+      break;
+    }
+    const size = part === "y" ? 4 : part === "m" ? (rest[0]! > "1" ? 1 : 2) : rest[0]! > "3" ? 1 : 2;
+    const piece = rest.slice(0, size);
+    rest = rest.slice(size);
+    complete = piece.length === size;
+    out.push(complete && size === 1 ? "0" + piece : piece);
+    if (!complete || i === order.parts.length - 1) break;
+  }
+  const last = out.length;
+  return out.join(order.sep) + (growing && complete && last < order.parts.length ? order.sep : "");
+}
+
 function CalendarDialog({ value, done, min }: { value: string; done: (date: string) => void; min?: string | null }) {
   const p = usePalette();
   const t = useT();
@@ -252,7 +277,7 @@ function CalendarDialog({ value, done, min }: { value: string; done: (date: stri
           <TextInput
             autoFocus
             value={text}
-            onChangeText={setText}
+            onChangeText={(next) => setText((before) => maskDate(next, data.settings.dateFormat, next.length > before.length))}
             placeholder={order.hint}
             placeholderTextColor={p.muted}
             keyboardType="numbers-and-punctuation"

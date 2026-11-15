@@ -42,7 +42,7 @@ export function Hero({
         accessibilityLabel={t.t("Toggle balance visibility")}
         accessibilityState={{ selected: hidden }}
         onPress={onToggleHidden}
-        squish={0.88}
+        squish={0.94}
         style={{ flexDirection: "row", alignItems: "center", gap: 7, minHeight: 30, paddingHorizontal: 10, borderRadius: 10 }}
       >
         <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(caption)}</Text>

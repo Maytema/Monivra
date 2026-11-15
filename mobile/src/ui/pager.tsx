@@ -73,16 +73,40 @@ export function Pager<K extends string>({
   }, [base, x]);
   const live = useRef({ prev, next, onMove, width, base });
   live.current = { prev, next, onMove, width, base };
+  // The move that was decided and is settling (the offset goes there on the native side); it is committed once, either
+  // when it has settled or when the next swipe starts.
+  const pending = useRef<{ base: number; direction: 1 | -1 } | null>(null);
+  const commit = () => {
+    const move = pending.current;
+    if (!move) return;
+    pending.current = null;
+    // One commit: the strip's count and the owner's page change together, so the page now in the middle keeps its
+    // place and its content; the offset is already where it should be.
+    live.current = { ...live.current, base: move.base + move.direction };
+    unstable_batchedUpdates((d: 1 | -1) => {
+      setBase(move.base + d);
+      live.current.onMove(d);
+    }, move.direction);
+    busy.current = false;
+  };
   const pan = useRef(
     PanResponder.create({
       // A clearly horizontal drag is taken; a vertical one stays with the lists.
-      onMoveShouldSetPanResponderCapture: (_e, g) => !busy.current && !gestureLock.held && Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
+      onMoveShouldSetPanResponderCapture: (_e, g) => !gestureLock.held && Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
       // While the finger moves the pages, nothing takes the gesture away; a gesture that went quiet (its end
       // never arrived, as after some system gestures) gives way to the next touch instead of leaving the
       // page deaf to taps.
       onPanResponderTerminationRequest: () => Date.now() - lastMove.current > 300,
       onPanResponderGrant: () => {
         lastMove.current = Date.now();
+        // A new swipe while the last one is still settling: that one is finished at once (it was decided) and the
+        // finger takes the page from where the move ended, so quick swipes one after another all count.
+        if (pending.current) {
+          x.stopAnimation();
+          const move = pending.current;
+          x.setValue(-(move.base + move.direction) * live.current.width);
+          commit();
+        }
       },
       onPanResponderMove: (_e, g) => {
         lastMove.current = Date.now();
@@ -100,17 +124,15 @@ export function Pager<K extends string>({
           return;
         }
         busy.current = true;
+        pending.current = { base: b, direction };
         const left = w - Math.abs(g.dx);
         const duration = Math.max(90, Math.min(SETTLE_MS, Math.abs(g.vx) > 0.1 ? left / Math.abs(g.vx) : SETTLE_MS));
         Animated.timing(x, { toValue: -(b + direction) * w, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(({ finished }) => {
-          // One commit: the strip's count and the owner's page change together, so the page now in the middle
-          // keeps its place and its content; the offset is already where it should be.
-          unstable_batchedUpdates((d: 1 | -1) => {
-            setBase(b + d);
-            live.current.onMove(d);
-          }, direction);
-          busy.current = false;
-          if (!finished) x.setValue(-(b + direction) * w);
+          if (!finished) {
+            // Stopped by the next swipe, which finishes the move itself.
+            return;
+          }
+          commit();
         });
       },
       onPanResponderTerminate: () => {

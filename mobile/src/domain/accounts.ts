@@ -273,7 +273,10 @@ function recordDebtOperation(tx: LedgerTx, accountId: string, counterpartId: str
 
 // One favorite at most.
 export function toggleFavoriteAccount(tx: LedgerTx, id: string): void {
-  const was = accountById(tx.data, id)?.favorite;
+  const target = accountById(tx.data, id);
+  // An archived account cannot be the favourite: it cannot be used until it is returned from the archive.
+  if (!target || target.archived) return;
+  const was = target.favorite;
   tx.put(
     "accounts",
     ...tx.data.accounts.filter((a) => a.favorite !== (!was && a.id === id)).map((a) => ({ ...a, favorite: !was && a.id === id })),
@@ -282,7 +285,7 @@ export function toggleFavoriteAccount(tx: LedgerTx, id: string): void {
 
 export function setArchived(tx: LedgerTx, id: string, archived: boolean): void {
   const a = accountById(tx.data, id);
-  if (a) tx.put("accounts", { ...a, archived });
+  if (a) tx.put("accounts", { ...a, archived, favorite: archived ? false : a.favorite });
 }
 
 // What deleting an account takes with it: its operations (transfers included) and scheduled

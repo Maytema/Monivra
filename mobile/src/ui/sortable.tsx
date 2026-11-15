@@ -5,6 +5,7 @@ import { useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, View, type StyleProp, type ViewStyle } from "react-native";
 import { haptic } from "../platform/haptics.ts";
 import { gestureLock } from "./gesture-lock.ts";
+import { usePalette } from "./app-context.tsx";
 
 const HOLD_MS = 380;
 const MOVE_TOLERANCE = 10;
@@ -35,6 +36,7 @@ export interface SortableProps<T> {
 }
 
 export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, itemStyle, fixed }: SortableProps<T>) {
+  const p = usePalette();
   const rects = useRef(new Map<string, Rect>());
   const shifts = useRef(new Map<string, Animated.ValueXY>());
   const press = useRef<{ key: string; x: number; y: number; timer: ReturnType<typeof setTimeout> } | null>(null);
@@ -59,6 +61,8 @@ export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, it
     press.current = null;
     if (!found) return;
     haptic("tick");
+    // From the moment the item is lifted, the touch that holds it must not open it when the finger is released.
+    recent.current = true;
     drag.current = { key, keys, home: keys.indexOf(key), slot: keys.indexOf(key), x: found.x, y: found.y };
     gestureLock.set(true);
     onHold?.(true);
@@ -145,6 +149,7 @@ export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, it
             style={[itemStyle, { zIndex: on ? 10 : 0, elevation: on ? 8 : 0, transform: [{ translateX: shiftOf(key).x }, { translateY: shiftOf(key).y }, { rotate: on ? "-3deg" : "0deg" }, { scale: on ? 1.03 : 1 }] }]}
           >
             {render(item, ignoreTap)}
+            {on ? <View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, borderRadius: 16, borderWidth: 1.5, borderColor: p.accent }} /> : null}
           </Animated.View>
         );
       })}

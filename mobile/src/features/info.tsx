@@ -263,7 +263,7 @@ function Subscription() {
           <Pressable accessibilityRole="button" accessibilityLabel={t.t("Back")} onPress={() => router.back()} hitSlop={8} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center" }}>
             <Icon name="back" size={24} color={p.ink} />
           </Pressable>
-          <Text style={{ flex: 1, color: p.ink, fontSize: 19, lineHeight: 24, textAlign: "center", marginRight: 48 }}>{t.t("Use the full potential of the application!")}</Text>
+          <Text numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.8} style={{ flex: 1, color: p.ink, fontSize: 18, lineHeight: 23, textAlign: "center" }}>{t.t("Use the full potential of the application!")}</Text>
         </View>
         <View style={{ gap: 10, paddingHorizontal: 8, paddingTop: 8, marginBottom: 13 }}>
           {PLANS.map((x, i) => {

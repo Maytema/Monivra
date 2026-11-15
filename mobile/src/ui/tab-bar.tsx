@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { ICONS } from "./icon-paths.ts";
 import { chrome } from "./theme.ts";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Path, Rect } from "react-native-svg";
 
 export const TABS = [
   { name: "index", title: "Accounts", icon: "wallet" },
@@ -75,19 +75,24 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
             accessibilityLabel={t.t(tab.title)}
-            onPress={press}
+            onPressIn={press}
             style={{ flex: 1, minWidth: 0, minHeight: chrome.navItem, alignItems: "center", justifyContent: "center", gap: 4 }}
           >
             <View
               style={{
                 width: chrome.navPill.width,
                 height: chrome.navPill.height,
-                borderRadius: chrome.navPill.radius,
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: active ? p.soft : "transparent",
               }}
             >
+              {/* Drawn as a shape, not as the view's background: the background lost its rounded corners on some
+                  devices while the tab changed. */}
+              {active ? (
+                <Svg width={chrome.navPill.width} height={chrome.navPill.height} style={{ position: "absolute", left: 0, top: 0 }}>
+                  <Rect x={0} y={0} width={chrome.navPill.width} height={chrome.navPill.height} rx={chrome.navPill.radius} ry={chrome.navPill.radius} fill={p.soft} />
+                </Svg>
+              ) : null}
               <TabIcon name={tab.icon} active={active} color={color} />
             </View>
             <Text numberOfLines={1} style={{ color, fontSize: 12, lineHeight: 16, fontWeight: active ? "600" : "400" }}>

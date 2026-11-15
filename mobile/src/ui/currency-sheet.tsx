@@ -82,8 +82,8 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
       </View>
       <View style={{ flexDirection: "row", gap: 8, paddingTop: 10, paddingBottom: 6, paddingHorizontal: 17 }}>
         {SORTS.map(([id, label]) => (
-          <Pressable key={id} accessibilityRole="button" accessibilityState={{ selected: by === id }} onPress={() => run((tx) => (tx.setSettings({ currencySort: id }), true))} style={{ flex: 1, minHeight: 40, paddingHorizontal: 8, alignItems: "center", justifyContent: "center", borderRadius: 20, borderWidth: 1, borderColor: by === id ? p.accent : p.line, backgroundColor: by === id ? p.accent : "transparent" }}>
-            <Text style={{ color: by === id ? p.onAccent : p.ink, fontSize: 14 }}>{t.t(label)}</Text>
+          <Pressable key={id} accessibilityRole="button" accessibilityState={{ selected: by === id }} onPress={() => run((tx) => (tx.setSettings({ currencySort: id }), true))} style={{ flex: 1, minWidth: 0, minHeight: 40, paddingHorizontal: 4, alignItems: "center", justifyContent: "center", borderRadius: 20, borderWidth: 1, borderColor: by === id ? p.accent : p.line, backgroundColor: by === id ? p.accent : "transparent" }}>
+            <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} style={{ width: "100%", textAlign: "center", color: by === id ? p.onAccent : p.ink, fontSize: 14 }}>{t.t(label)}</Text>
           </Pressable>
         ))}
       </View>
@@ -104,7 +104,7 @@ function CurrencySheet({ value, onPick }: { value: string; onPick: (code: string
               <Text numberOfLines={1} style={{ color: p.muted, fontSize: 14, fontWeight: "500" }}>{t.t(item.title)}</Text>
             </View>
           ) : (
-            <View style={{ height: rowHeight(item), backgroundColor: p.soft, paddingTop: item.first ? 4 : 0, paddingBottom: item.last ? 4 : 0, borderTopLeftRadius: item.first ? 14 : 0, borderTopRightRadius: item.first ? 14 : 0, borderBottomLeftRadius: item.last ? 14 : 0, borderBottomRightRadius: item.last ? 14 : 0 }}>
+            <View style={{ height: rowHeight(item), paddingTop: item.first ? 4 : 0, paddingBottom: item.last ? 4 : 0 }}>
               <CurrencyRow code={item.code} chosen={item.code === value} locale={t.locale} onPick={pick} />
             </View>
           )

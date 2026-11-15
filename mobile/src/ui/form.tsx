@@ -50,10 +50,15 @@ export function FieldText({ label: title, value, onChange, placeholder, boxed = 
   const p = usePalette();
   const t = useT();
   const narrow = useNarrow();
+  const input = useRef<{ focus(): void } | null>(null);
+  // The whole card is the touch target of the field, not only the thin line of the input.
   return (
-    <View style={box(p, narrow)}>
+    <Pressable accessible={false} onPress={() => input.current?.focus()} style={box(p, narrow)}>
       <Text style={[label, { color: p.ink, marginBottom: boxed ? 18 : 12 }]}>{t.t(title)}</Text>
       <TextInput
+        ref={(node: { focus(): void } | null) => {
+          input.current = node;
+        }}
         accessibilityLabel={t.t(title)}
         value={value}
         onChangeText={onChange}
@@ -65,7 +70,7 @@ export function FieldText({ label: title, value, onChange, placeholder, boxed = 
             : { alignSelf: value ? "stretch" : "flex-start", minWidth: 28, color: p.accentInk, fontSize: 16, paddingVertical: 4, paddingHorizontal: 0, borderBottomWidth: 1, borderBottomColor: p.accentInk }
         }
       />
-    </View>
+    </Pressable>
   );
 }
 
