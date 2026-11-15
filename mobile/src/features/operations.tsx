@@ -258,6 +258,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   return (
     <View style={{ flex: 1 }}>
       <FlatList
+        // A list that had no day heads and now has them (the first operation was saved) is built anew: with sticky
+        // heads switched on afterwards the platform list stayed empty until the next start (emulator, build 96–98).
+        key={sticky.length ? "days" : "none"}
         ref={list}
         // No scroll bar on a swiped page (components.css .swipe-page > .content); its fading after each step of
         // the first opening is one of the redraws seen in the trace of that opening.
