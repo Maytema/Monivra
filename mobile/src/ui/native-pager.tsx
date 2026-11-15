@@ -117,6 +117,7 @@ export function Pager<K extends string>({
       at.current = near;
       setIndex(near);
       follow(near);
+      asked.current = true;
       pager.current?.setPage(near);
       return;
     }
@@ -125,6 +126,7 @@ export function Pager<K extends string>({
       at.current = found;
       setIndex(found);
       setShown(found);
+      asked.current = true;
       pager.current?.setPageWithoutAnimation(found);
       return;
     }
@@ -168,9 +170,25 @@ export function Pager<K extends string>({
     perfLog("swipe: pages built", now() - since);
     requestAnimationFrame(() => perfLog("swipe: next frame", now() - since));
   }, [index]);
+  // A page is taken only from the person's swipe (between "dragging" and "idle") or from a move this pager asked for.
+  // The native pager also reports pages by itself: a tab that is left is frozen and hidden, its pager loses its size
+  // and chose another page — taken as a swipe, it changed the shared period, the statistics on the screen drew it,
+  // and the two kept answering each other (10 s of the JavaScript thread, speed check build 102). Such a report is
+  // refused and the pager is put back on its page.
+  const touched = useRef(false);
+  const asked = useRef(false);
+  const hidden = useRef(false);
   const selected = (page: number) => {
     const from = at.current;
-    if (page === from) return;
+    if (page === from) {
+      asked.current = false;
+      return;
+    }
+    if (!touched.current && !asked.current) {
+      requestAnimationFrame(() => pager.current?.setPageWithoutAnimation(at.current));
+      return;
+    }
+    asked.current = false;
     if (PERF_BUILD) chosenAt.current = now();
     at.current = page;
     passed.current.add(String(row.keys[page]));
@@ -197,7 +215,21 @@ export function Pager<K extends string>({
   const reach = warm ? 1 : 0;
   return (
     <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
-      <View style={{ flex: 1 }} onLayout={(e: { nativeEvent: { layout: { width: number } } }) => setWidth(e.nativeEvent.layout.width || width)}>
+      <View
+        style={{ flex: 1 }}
+        onLayout={(e: { nativeEvent: { layout: { width: number } } }) => {
+          const w = e.nativeEvent.layout.width;
+          // Shown again after being hidden (no size): the pager is put back on its page, at rest.
+          if (w && hidden.current) {
+            hidden.current = false;
+            pager.current?.setPageWithoutAnimation(at.current);
+            position.setValue(at.current);
+            offset.setValue(0);
+          }
+          if (!w) hidden.current = true;
+          setWidth(w || width);
+        }}
+      >
         {header}
         <AnimatedPagerView
           key={row.id}
@@ -213,10 +245,13 @@ export function Pager<K extends string>({
           onPageSelected={(e: { nativeEvent: { position: number } }) => selected(e.nativeEvent.position)}
           onPageScrollStateChanged={(e: { nativeEvent: { pageScrollState: string } }) => {
             const state = e.nativeEvent.pageScrollState;
+            if (state === "dragging") touched.current = true;
             if (state !== "idle" && !pagerMotion.moving) pagerMotion.since = Date.now();
             pagerMotion.moving = state !== "idle";
             if (state === "idle") {
               pagerMotion.until = Date.now() + 150;
+              touched.current = false;
+              asked.current = false;
               quiet();
             }
           }}
