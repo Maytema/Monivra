@@ -50,6 +50,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // a moment), and in that moment `state` still names the old tab: a press on the tab just left was taken for "already
   // here" and dropped, so going back needed two presses. The decision is made from what was asked for, not from the draw.
   const asked = useRef(state.routes[state.index]?.key);
+  const shown = useRef(state);
+  shown.current = state;
   useEffect(() => {
     asked.current = state.routes[state.index]?.key;
   }, [state.index, state.routes]);
@@ -80,7 +82,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
           if (event.defaultPrevented) return;
           asked.current = route.key;
           // If the navigator did not take it, the next press must not be taken for "already there".
-          setTimeout(() => (asked.current = state.routes[state.index]?.key), 600);
+          setTimeout(() => (asked.current = shown.current.routes[shown.current.index]?.key), 600);
           navigateToTab(route.key);
         };
         return (
