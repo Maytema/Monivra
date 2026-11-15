@@ -1,28 +1,26 @@
-// A figure whose digits roll like a counter when it changes: each digit is a column of 0–9 that slides up or down to
-// the new digit, left to right with a small delay, and slows at the end. The first drawing shows the figure at once.
-// Only the digits move (native driver); signs, separators and the currency stay as text.
+// A figure whose changed digits slide in from below, left to right with a small delay, and slow at the end. The first
+// drawing shows the figure at once. Only the digits move (native driver); signs, separators and the currency stay as text.
 import { memo, useEffect, useRef } from "react";
 import { Animated, Easing, Text, View } from "react-native";
 
-const COLUMN = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9";
-
+// A digit that changed slides in from below and fades in (the old one is replaced at once), slowing at the end. It is
+// always drawn as plain text, so it can never be hidden by a clip: the first version, a clipped column of 0–9, came out
+// blank on the emulator.
 const Digit = memo(function Digit({ digit, delay, color, size, line }: { digit: number; delay: number; color: string; size: number; line: number }) {
-  const y = useRef(new Animated.Value(-digit * line)).current;
+  const t = useRef(new Animated.Value(1)).current;
   const first = useRef(true);
   useEffect(() => {
     if (first.current) {
       first.current = false;
-      y.setValue(-digit * line);
       return;
     }
-    Animated.timing(y, { toValue: -digit * line, duration: 650, delay, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
-  }, [digit, line, delay, y]);
+    t.setValue(0);
+    Animated.timing(t, { toValue: 1, duration: 520, delay, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+  }, [digit, delay, t]);
   return (
-    <View style={{ height: line, overflow: "hidden" }}>
-      <Animated.View style={{ transform: [{ translateY: y }] }}>
-        <Text style={{ color, fontSize: size, lineHeight: line, fontVariant: ["tabular-nums"] }}>{COLUMN}</Text>
-      </Animated.View>
-    </View>
+    <Animated.Text style={{ color, fontSize: size, lineHeight: line, fontVariant: ["tabular-nums"], opacity: t, transform: [{ translateY: t.interpolate({ inputRange: [0, 1], outputRange: [line * 0.6, 0] }) }] }}>
+      {digit}
+    </Animated.Text>
   );
 });
 
