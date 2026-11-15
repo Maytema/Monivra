@@ -23,14 +23,14 @@ const GROUPS = [
   ],
   [
     ["Settings", "gear", "/settings"],
-    ["Data", "receipt", "/data"],
+    ["Data", "database", "/data"],
   ],
   [
     ["Instructions", "play", "instructions"],
     ["Support", "help", "support"],
-    ["About our team", "info", "about"],
-    ["Privacy policy", "shield", "privacyPolicy"],
-    ["Terms of use", "receipt", "terms"],
+    ["About our team", "team", "about"],
+    ["Privacy policy", "shieldSearch", "privacyPolicy"],
+    ["Terms of use", "checklist", "terms"],
   ],
 ] as const;
 

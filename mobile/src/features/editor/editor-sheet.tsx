@@ -494,10 +494,10 @@ function Keypad({ session, onSave }: { session: EditorSession; onSave: (calculat
         <Key label="Backspace" onPress={press("⌫")}>
           <Icon name="backspace" size={26} color={p.ink} />
         </Key>
-        <Key label="Additionally" onPress={modeTap} style={{ backgroundColor: session.calculatorOn ? mix(p.accent, p.bg, 0.18) : p.key }}>
+        <Key label="Additionally" onPress={modeTap} style={{ backgroundColor: session.calculatorOn ? mix(p.accent, p.bg, 0.28) : p.key, borderWidth: 1.5, borderColor: session.calculatorOn ? p.accent : "transparent" }}>
           <Icon name="calculator" size={28} color={session.calculatorOn ? p.accentInk : p.ink} />
           {/* The light under the key: on while the calculator mode is on. */}
-          <View style={{ position: "absolute", bottom: 7, width: 22, height: 4, borderRadius: 2, backgroundColor: session.calculatorOn ? p.accent : "transparent" }} />
+          <View style={{ position: "absolute", bottom: 7, width: 22, height: 4, borderRadius: 2, backgroundColor: session.calculatorOn ? p.accentInk : "transparent" }} />
           {count ? (
             <View style={{ position: "absolute", top: 4, right: 6, minWidth: 18, height: 18, paddingHorizontal: 5, borderRadius: 9, backgroundColor: mix(p.accent, p.bg, 0.3), alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: p.accentInk, fontSize: 12, fontWeight: "600" }}>{count}</Text>

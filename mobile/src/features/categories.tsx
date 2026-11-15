@@ -44,8 +44,7 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
   const create = () => router.push({ pathname: "/category", params: { type: catType } });
   const emptyOf = (kind: "expense" | "income") => !data.categories.some((c) => c.type === kind && !c.parent && !c.archived) && !data.accounts.some((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
   return (
-      <Screen padded={false} bar={false}>
-        <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
+      <Screen padded={false} bar={false} pinned={<SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />}>
         {emptyOf(catType) ? (
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
         ) : null}

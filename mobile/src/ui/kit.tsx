@@ -33,16 +33,20 @@ export function Badge({ icon, color, size = 40 }: { icon: string; color: string;
 // bar carries the inset itself, so a page adds none.
 // `bar`: the scroll bar; the pages that swipe and the More menu have none (components.css: .swipe-page > .content
 // and .more-menu set scrollbar-width: none).
-export function Screen({ children, scroll = true, padded = true, scrollEnabled = true, onScroll, bar = true }: { children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean; onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void; bar?: boolean }) {
+export function Screen({ children, scroll = true, padded = true, scrollEnabled = true, onScroll, bar = true, pinned }: { pinned?: ReactNode; children: ReactNode; scroll?: boolean; padded?: boolean; scrollEnabled?: boolean; onScroll?: (e: NativeSyntheticEvent<NativeScrollEvent>) => void; bar?: boolean }) {
   const p = usePalette();
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   const reveal = useRevealFocusedField();
   const free = useVerticalScroll();
+  // `pinned` stays above the scrolling part (the switch Expenses / Incomes does not scroll away with the tiles).
   return scroll ? (
+    <>
+    {pinned}
     <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled && free} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
       {children}
     </ScrollView>
+    </>
   ) : (
     <View style={[style, content]}>{children}</View>
   );

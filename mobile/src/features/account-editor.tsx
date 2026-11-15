@@ -81,8 +81,8 @@ function TypeChoices({ onPick }: { onPick: (type: AccountDraft["type"]) => void 
 
 const ACCOUNT_TYPES: readonly Choice<AccountDraft["type"]>[] = TYPES.map((x) => ({ value: x.type, label: x.type, text: x.text, icon: x.icon, color: x.color }));
 const DEBT_KINDS: readonly Choice<"Owe me" | "I owe">[] = [
-  { value: "Owe me", label: "Owe me", text: "Money others owe you. Track who borrowed from you and repayment progress.", icon: "debt", color: "#f2812f" },
-  { value: "I owe", label: "I owe", text: "Money you owe to others. Track your debts and repayment progress.", icon: "debt", color: "#f2812f" },
+  { value: "Owe me", label: "Owe me", text: "Money others owe you. Track who borrowed from you and repayment progress.", icon: "debtOweMe", color: "#f2812f" },
+  { value: "I owe", label: "I owe", text: "Money you owe to others. Track your debts and repayment progress.", icon: "debtIOwe", color: "#f2812f" },
 ];
 
 const DEBT_SWITCHES = [

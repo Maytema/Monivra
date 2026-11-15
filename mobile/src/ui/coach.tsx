@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { Text, useWindowDimensions, View } from "react-native";
 import { router } from "expo-router";
+import Svg, { Path, Rect as SvgRect } from "react-native-svg";
 import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 
@@ -16,6 +17,7 @@ export interface TourStep {
   tab?: string;
 }
 
+const RADIUS = 14;
 const targets = new Map<string, Set<Measurable>>();
 type Tour = { steps: readonly TourStep[]; index: number } | null;
 let tour: Tour = null;
@@ -121,11 +123,15 @@ function Step({ tour: { steps, index } }: { tour: NonNullable<Tour> }) {
   const below = hole.y + hole.h + 190 < height;
   return (
     <Pressable accessibilityRole="button" accessibilityLabel={t.t("Next")} onPress={next} style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0 }}>
-      <View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, right: 0, height: hole.y, backgroundColor: dim }} />
-      <View pointerEvents="none" style={{ position: "absolute", left: 0, top: hole.y + hole.h, right: 0, bottom: 0, backgroundColor: dim }} />
-      <View pointerEvents="none" style={{ position: "absolute", left: 0, top: hole.y, width: hole.x, height: hole.h, backgroundColor: dim }} />
-      <View pointerEvents="none" style={{ position: "absolute", left: hole.x + hole.w, top: hole.y, right: 0, height: hole.h, backgroundColor: dim }} />
-      <View pointerEvents="none" style={{ position: "absolute", left: hole.x, top: hole.y, width: hole.w, height: hole.h, borderRadius: 14, borderWidth: 2, borderColor: p.accent }} />
+      {/* One shape for the dim and the frame: the dim has a hole with the same rounded corners as the frame drawn on it. */}
+      <Svg width={width} height={height} style={{ position: "absolute", left: 0, top: 0 }} pointerEvents="none">
+        <Path
+          fillRule="evenodd"
+          fill={dim}
+          d={`M0 0H${width}V${height}H0Z M${hole.x + RADIUS} ${hole.y}H${hole.x + hole.w - RADIUS}A${RADIUS} ${RADIUS} 0 0 1 ${hole.x + hole.w} ${hole.y + RADIUS}V${hole.y + hole.h - RADIUS}A${RADIUS} ${RADIUS} 0 0 1 ${hole.x + hole.w - RADIUS} ${hole.y + hole.h}H${hole.x + RADIUS}A${RADIUS} ${RADIUS} 0 0 1 ${hole.x} ${hole.y + hole.h - RADIUS}V${hole.y + RADIUS}A${RADIUS} ${RADIUS} 0 0 1 ${hole.x + RADIUS} ${hole.y}Z`}
+        />
+        <SvgRect x={hole.x} y={hole.y} width={hole.w} height={hole.h} rx={RADIUS} ry={RADIUS} fill="none" stroke={p.accent} strokeWidth={2} />
+      </Svg>
       <View
         pointerEvents="none"
         style={{ position: "absolute", left: 16, right: 16, ...(below ? { top: hole.y + hole.h + 14 } : { bottom: height - hole.y + 14 }), backgroundColor: p.sheet, borderRadius: 16, padding: 16, gap: 10 }}

@@ -9,7 +9,7 @@ import Svg, { Circle, G, Path } from "react-native-svg";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { APP_VERSION } from "../application/store.ts";
 import { useCommand, usePalette, useT } from "../ui/app-context.tsx";
-import { showInfo, toast } from "../ui/dialogs.tsx";
+import { showInfo } from "../ui/dialogs.tsx";
 import { mix } from "../ui/theme.ts";
 import { Button, Icon } from "../ui/kit.tsx";
 import { Footnote, SettingRow } from "../ui/rows.tsx";
@@ -56,8 +56,8 @@ function Instructions() {
       <View style={{ paddingHorizontal: 18, paddingTop: 14 }}>
         <Text style={{ fontSize: 16 }}>{t.t("Learn the basics of {app}", { app: "Monivra" })}</Text>
       </View>
-      <SettingRow title="Show the main features" caption="A short tour of the application" onPress={() => startTour(TOUR)} />
-      <SettingRow title="Repeat hints" caption="Restart tooltips throughout the application" chevron={false} onPress={() => (run((tx) => (tx.setSettings({ dismissedHints: [] }), true)), toast("Hints will be shown again"))} />
+      {/* One button: the tips that were closed come back, and the tour of the main things starts. */}
+      <SettingRow title="Repeat hints" caption="Restart tooltips throughout the application" chevron={false} onPress={() => (run((tx) => (tx.setSettings({ dismissedHints: [] }), true)), startTour(TOUR))} />
       {GUIDES.map((g) => (
         <SettingRow key={g.id} title={g.title} caption={g.about} onPress={page("guide:" + g.id)} />
       ))}
