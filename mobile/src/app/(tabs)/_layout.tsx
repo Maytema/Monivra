@@ -8,7 +8,10 @@ export default function TabsLayout() {
   const p = usePalette();
   const t = useT();
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false, freezeOnBlur: true, sceneStyle: { backgroundColor: p.bg } }}>
+    <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ // Screens are not frozen when left: thawing a frozen tab took the JavaScript thread for a long moment, taps queued up behind
+    // it and came out as "every second press does nothing". The cost moves to the rare moment data changes.
+    headerShown: false,
+    freezeOnBlur: false, sceneStyle: { backgroundColor: p.bg } }}>
       {TABS.map((tab) => (
         <Tabs.Screen key={tab.name} name={tab.name} options={{ title: t.t(tab.title) }} />
       ))}

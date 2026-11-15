@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import { ActivityIndicator, AppState as SystemAppState, View } from "react-native";
 import { KeyboardPad } from "../ui/keyboard.tsx";
 import { Stack } from "expo-router";
+import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import { setAppVersion } from "../application/store.ts";
 import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { probeEngine, watchStalls } from "../platform/perf.ts";
@@ -19,6 +21,8 @@ import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
 import { CoachHost } from "../ui/coach.tsx";
 import { NoticeHost, ToastHost } from "../ui/dialogs.tsx";
+
+setAppVersion(Constants.expoConfig?.version ?? "0.0.0");
 
 function KeepCurrent() {
   useEffect(() => {

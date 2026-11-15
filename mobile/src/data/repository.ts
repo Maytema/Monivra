@@ -148,7 +148,8 @@ export function loadLedger(db: SqlDriver): LedgerData | null {
   const settings = Object.fromEntries(settingsRows.map((r) => [r.key, JSON.parse(r.value_json) as unknown])) as Settings;
   return {
     schema: 1,
-    accounts: db.all<Row>("SELECT * FROM account ORDER BY sort_index, rowid").map(accountOf),
+    // One favourite at most (a data file made elsewhere may name several): the first one stays.
+    accounts: db.all<Row>("SELECT * FROM account ORDER BY sort_index, rowid").map(accountOf).map((a, i, all) => (a.favorite && all.findIndex((x) => x.favorite) !== i ? { ...a, favorite: false } : a)),
     categories: db.all<Row>("SELECT * FROM category ORDER BY sort_index, rowid").map(categoryOf),
     ops: db.all<Row>("SELECT * FROM operation ORDER BY rowid").map(opOf),
     scheduled: db.all<Row>("SELECT * FROM scheduled_payment ORDER BY rowid").map(scheduledOf),

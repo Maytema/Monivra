@@ -39,6 +39,42 @@ import javax.crypto.spec.PBEKeySpec
 private const val REQUEST_PHOTO = 46071
 private val PHOTO_TYPES = setOf("image/jpeg", "image/png", "image/webp")
 
+// Box blur of a bitmap: three passes of a running average along rows and columns.
+private fun blur(source: Bitmap, radius: Int): Bitmap {
+  val w = source.width
+  val h = source.height
+  var pixels = IntArray(w * h)
+  source.getPixels(pixels, 0, w, 0, 0, w, h)
+  var other = IntArray(w * h)
+  fun pass(from: IntArray, to: IntArray, length: Int, lines: Int, step: Int, jump: Int) {
+    val span = radius * 2 + 1
+    for (line in 0 until lines) {
+      val start = line * jump
+      var a = 0; var r = 0; var g = 0; var b = 0
+      for (k in -radius..radius) {
+        val p = from[start + minOf(length - 1, maxOf(0, k)) * step]
+        a += p ushr 24; r += (p shr 16) and 255; g += (p shr 8) and 255; b += p and 255
+      }
+      for (i in 0 until length) {
+        to[start + i * step] = ((a / span) shl 24) or ((r / span) shl 16) or ((g / span) shl 8) or (b / span)
+        val out = from[start + minOf(length - 1, maxOf(0, i - radius)) * step]
+        val into = from[start + minOf(length - 1, i + radius + 1) * step]
+        a += (into ushr 24) - (out ushr 24)
+        r += ((into shr 16) and 255) - ((out shr 16) and 255)
+        g += ((into shr 8) and 255) - ((out shr 8) and 255)
+        b += (into and 255) - (out and 255)
+      }
+    }
+  }
+  repeat(3) {
+    pass(pixels, other, w, h, 1, w)
+    pass(other, pixels, h, w, w, 1)
+  }
+  val result = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+  result.setPixels(pixels, 0, w, 0, 0, w, h)
+  return result
+}
+
 class MonivraNativeModule : Module() {
   private var focusWatcher: android.view.ViewTreeObserver.OnWindowFocusChangeListener? = null
   private var cover: android.view.View? = null
@@ -129,17 +165,19 @@ class MonivraNativeModule : Module() {
               cover = null
             } else if (cover == null && decor.width > 0 && decor.height > 0) {
               try {
-                // Small copy, scaled up with filtering twice: a cheap blur that needs no extra library.
-                val w = maxOf(1, decor.width / 24)
-                val h = maxOf(1, decor.height / 24)
+                // A small copy of the screen, blurred (box blur, three passes ≈ Gaussian), shown stretched over the screen
+                // with smooth filtering: the layout stays recognisable, the text and the numbers do not.
+                val w = maxOf(8, decor.width / 10)
+                val h = maxOf(8, decor.height / 10)
                 val small = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
                 val canvas = android.graphics.Canvas(small)
                 canvas.scale(w.toFloat() / decor.width, h.toFloat() / decor.height)
                 decor.draw(canvas)
+                val blurred = blur(small, 4)
                 val view = android.widget.ImageView(activity)
                 view.scaleType = android.widget.ImageView.ScaleType.FIT_XY
-                view.setImageBitmap(Bitmap.createScaledBitmap(small, w * 3, h * 3, true))
-                view.setColorFilter(Color.argb(70, 255, 255, 255), android.graphics.PorterDuff.Mode.SRC_OVER)
+                view.setImageBitmap(blurred)
+                view.setColorFilter(Color.argb(60, 255, 255, 255), android.graphics.PorterDuff.Mode.SRC_OVER)
                 decor.addView(view, android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT))
                 cover = view
               } catch (error: Throwable) {

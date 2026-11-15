@@ -53,8 +53,8 @@ function Instructions() {
   const run = useCommand();
   return (
     <>
-      <View style={{ paddingHorizontal: 18, paddingTop: 14 }}>
-        <Text style={{ fontSize: 16 }}>{t.t("Learn the basics of {app}", { app: "Monivra" })}</Text>
+      <View style={{ paddingHorizontal: 18, paddingTop: 18, paddingBottom: 16 }}>
+        <Text style={{ fontSize: 16, textAlign: "center" }}>{t.t("Learn the basics of {app}", { app: "Monivra" })}</Text>
       </View>
       {/* One button: the tips that were closed come back, and the tour of the main things starts. */}
       <SettingRow title="Repeat hints" caption="Restart tooltips throughout the application" chevron={false} onPress={() => (run((tx) => (tx.setSettings({ dismissedHints: [] }), true)), startTour(TOUR))} />
@@ -359,4 +359,4 @@ export function InfoPage() {
   );
 }
 
-export const appVersionLine = (closedBeta: string): string => `Monivra · ${APP_VERSION} (${closedBeta}) · React Native`;
+export const appVersionLine = (closedBeta: string): string => `Monivra · ${APP_VERSION} (${closedBeta})`;

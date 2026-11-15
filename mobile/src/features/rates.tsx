@@ -4,17 +4,15 @@ import { useMemo, useState } from "react";
 import { FlatList, Linking, Text, TextInput, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { Stack } from "expo-router";
-import { defaultRates } from "../domain/currencies.ts";
 import { fetcher } from "../platform/network.ts";
 import { RATE_PROVIDERS } from "../services/rates/providers.ts";
 import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { currencyName, searchCurrencies } from "../ui/currency-names.ts";
-import { confirmDialog, toast } from "../ui/dialogs.tsx";
+import { toast } from "../ui/dialogs.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { openNumberSheet } from "../ui/number-sheet.tsx";
 import { Footnote, SwitchRow } from "../ui/rows.tsx";
-import { mix } from "../ui/theme.ts";
 
 export function RatesScreen() {
   const data = useLedger();
@@ -110,24 +108,6 @@ export function RatesScreen() {
         ListFooterComponent={
           <>
         {codes.length ? null : <Text style={{ color: p.muted, textAlign: "center", padding: 24 }}>{t.t("No currencies found")}</Text>}
-        <Pressable
-          accessibilityRole="button"
-          onPress={() =>
-            confirmDialog(
-              "Every rate returns to its example value and the ticks are cleared.",
-              () => {
-                run((tx) => (tx.setRates(defaultRates()), tx.setSettings({ fixedRates: [] }), true));
-                toast("Rates restored");
-              },
-              false,
-              "Restore",
-            )
-          }
-          style={{ flexDirection: "row", alignItems: "center", gap: 18, minHeight: 56, paddingHorizontal: 18, backgroundColor: mix(p.accent, p.bg, 0.04) }}
-        >
-          <Icon name="repeat" size={24} color={p.inkSoft} />
-          <Text style={{ color: p.ink, fontSize: 16 }}>{t.t("Restore example rates")}</Text>
-        </Pressable>
           </>
         }
       />

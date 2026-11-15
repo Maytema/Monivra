@@ -16,7 +16,12 @@ import { DatabaseTooNew, inTransaction, migrate, type SqlDriver } from "../data/
 import { RATE_PROVIDERS, type Fetcher } from "../services/rates/providers.ts";
 import { refreshRates, shouldRefresh, type RateUpdateState } from "../services/rates/refresh.ts";
 
-export const APP_VERSION = "0.2.0";
+// The version of the application: set once at start from the installed build (app/_layout.tsx), so every place that shows
+// or writes it (the menu, the information pages, data files, backups) reads the same one. The default is for tests.
+export let APP_VERSION = "0.0.0";
+export function setAppVersion(version: string): void {
+  APP_VERSION = version;
+}
 
 export type AppState =
   | { status: "loading" }

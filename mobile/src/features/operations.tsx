@@ -252,6 +252,8 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
       item.kind === "day" ? <DayHead date={item.date} ops={item.ops} /> : <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />,
     [selection, selectedSet, onPress, onLongPress],
   );
+  // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
+  const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const content = useMemo(() => ({ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   return (
     <View style={{ flex: 1 }}>
@@ -274,6 +276,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         updateCellsBatchingPeriod={120}
         windowSize={current ? 5 : 1}
         contentContainerStyle={content}
+        stickyHeaderIndices={sticky}
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}

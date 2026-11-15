@@ -14,8 +14,8 @@ import { BrandMark } from "../ui/brand-mark.tsx";
 // The groups of the menu (js/screens/more/menu.js). Pages that are not built yet are not listed.
 const GROUPS = [
   [
-    ["Subscription", "star", "subscription"],
-    ["Profile", "user", "profile"],
+    ["Subscription", "award", "subscription"],
+    ["Profile", "userCircle", "profile"],
   ],
   [
     ["Scheduled payments", "calendar", "/scheduled"],
@@ -67,7 +67,7 @@ export function MoreScreen() {
             {i === 0 ? <HintBanner plain id="shared-access" text="Shared access" onPress={openSharedAccess} /> : null}
           </Fragment>
         ))}
-        <Text style={{ color: p.muted, fontSize: 14, textAlign: "center", paddingTop: 22, paddingBottom: 24 }}>{`Monivra · ${APP_VERSION} (${t.t("Closed Beta")}) · React Native`}</Text>
+        <Text style={{ color: p.muted, fontSize: 14, textAlign: "center", paddingTop: 22, paddingBottom: 24 }}>{`Monivra · ${APP_VERSION}`}</Text>
       </Screen>
     </View>
   );

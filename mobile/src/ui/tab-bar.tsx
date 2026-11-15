@@ -79,6 +79,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
           if (event.defaultPrevented) return;
           asked.current = route.key;
+          // If the navigator did not take it, the next press must not be taken for "already there".
+          setTimeout(() => (asked.current = state.routes[state.index]?.key), 600);
           navigateToTab(route.key);
         };
         return (

@@ -3,13 +3,15 @@
 // by a data file (export in the old app, import here).
 import type { ExpoConfig } from "expo/config";
 
+// The version is written once, in package.json.
+const { version } = require("./package.json") as { version: string };
 const versionCode = Number(process.env.MONIVRA_VERSION_CODE ?? "1");
 
 const config: ExpoConfig = {
   name: "Monivra",
   slug: "monivra",
   scheme: "monivra",
-  version: "0.2.3",
+  version,
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",
