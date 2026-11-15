@@ -26,7 +26,7 @@ import { EmptyState } from "../ui/empty-state.tsx";
 import { DayHead, OperationRow } from "./operation-row.tsx";
 import { PeriodBar } from "./period-bar.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
-import { getView, setView, useView } from "./ui-state.ts";
+import { getView, setView, useViewPeriod } from "./ui-state.ts";
 
 const PERIODS: readonly BudgetPeriod[] = ["day", "week", "month", "year"];
 const NAMES: Record<BudgetPeriod, string> = { day: "Daily", week: "Weekly", month: "Monthly", year: "Yearly" };
@@ -154,7 +154,7 @@ export function BudgetsScreen() {
   const t = useT();
   const money = useMoney();
   useMonthPeriod("month");
-  const { period } = useView();
+  const period = useViewPeriod();
   const states = data.budgets.map((b) => budgetState(data, b, period.anchor));
   const main = data.settings.currency;
   return (
@@ -218,7 +218,7 @@ export function BudgetDetails() {
   const t = useT();
   const b = data.budgets.find((x) => x.id === id);
   useMonthPeriod(b?.period ?? "month");
-  const { period } = useView();
+  const period = useViewPeriod();
   if (!b) return null;
   const ops = budgetOperations(data, b, period.anchor);
   const dates = [...new Set(ops.map((o) => o.date))];

@@ -1,6 +1,6 @@
 {
   "name": "monivra-mobile",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "private": true,
   "main": "index.ts",
   "description": "Monivra on React Native + Expo. The first application (repository root) stays the reference until this one passes acceptance.",
@@ -14,6 +14,7 @@
     "i18n": "node scripts/convert-strings.mjs"
   },
   "dependencies": {
+    "@shopify/flash-list": "2.3.2",
     "expo": "~58.0.0",
     "expo-background-task": "~58.0.13",
     "expo-constants": "~58.0.16",

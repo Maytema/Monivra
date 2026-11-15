@@ -92,6 +92,8 @@ export function readTable(input: string): Table {
   const text = input.replace(/^﻿/, "");
   if (!text.trim()) throw new CsvProblem("The file is empty.");
   if (text.includes("\u0000")) throw new CsvProblem("This is not a text file.");
+  // A data file of Monivra (JSON) chosen here by mistake read as a table of one column "{": it is named instead.
+  if (/^\s*[{[]/.test(text)) throw new CsvProblem("This is a Monivra data file, not a table. Open it in More → Data → Data file → Restore from file.");
   const delimiter = guessDelimiter(text);
   const all: { line: number; cells: string[] }[] = [];
   let cells: string[] = [];

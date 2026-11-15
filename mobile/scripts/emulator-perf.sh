@@ -125,10 +125,63 @@ begin "tabs again: Operations, Statistics, Categories, Accounts"
 for name in Operations Statistics Categories Accounts; do xy=$(where "$name"); adb shell input tap $xy; sleep 2; done
 finish 2
 
+# The owner's complaints, one move each (build 100 on): a tab pressed soon after another one, two quick period
+# swipes, the expense/income switch of the statistics, the pages that open slowly, a tab of a sheet chosen by a tap.
+# shown_tab: the tab the bar shows as open (its "selected" state), written to the steps.
+shown_tab() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  python3 - <<'PY'
+import xml.etree.ElementTree as ET
+names = ["Accounts", "Categories", "Operations", "Statistics", "More"]
+found = [n.get("content-desc") for n in ET.parse("/tmp/ui.xml").iter("node") if n.get("content-desc") in names and n.get("selected") == "true"]
+print(found[0] if found else "none")
+PY
+}
+ops=$(where "Operations"); stats=$(where "Statistics"); cats=$(where "Categories"); accs=$(where "Accounts")
+adb shell input tap $ops; sleep 3
+for gap in 1.5 0.8 0.4; do
+  begin "tab back and forth, ${gap}s apart (Operations → Statistics → Operations)"
+  adb shell input tap $stats; sleep $gap; adb shell input tap $ops
+  finish 3
+  log "after back and forth (${gap}s): shown $(shown_tab) (expected Operations)"
+done
+begin "tab chain quickly: Categories, Accounts, Statistics, Operations (0.5s apart)"
+for xy in "$cats" "$accs" "$stats" "$ops"; do adb shell input tap $xy; sleep 0.5; done
+finish 3
+log "after the chain: shown $(shown_tab) (expected Operations)"
+period_title() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1; python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+t = [n.get("text") for n in ET.parse("/tmp/ui.xml").iter("node") if re.match(r"^[A-Z][a-z]+ \d{4}$", n.get("text") or "")]
+print(t[0] if t else "?")
+PY
+}
+before=$(period_title)
+begin "two quick period swipes (0.35s apart)"
+adb shell input swipe 900 1500 250 1500 120; sleep 0.35; adb shell input swipe 900 1500 250 1500 120
+finish 3
+log "two quick swipes: $before → $(period_title) (expected two months later)"
+before=$(period_title)
+begin "swipe back and forth quickly (0.35s apart)"
+adb shell input swipe 250 1500 900 1500 120; sleep 0.35; adb shell input swipe 900 1500 250 1500 120
+finish 3
+log "back and forth: $before → $(period_title) (expected the same)"
+adb shell input tap $stats; sleep 3
+begin "statistics: Incomes"; tap "Incomes" 0; finish 3
+begin "statistics: Expenses"; tap "Expenses" 0; finish 3
+tap "More"
+begin "open Budgets"; tap "Budgets" 0; finish 4
+shot 11-budgets 0
+back
+begin "open Scheduled payments"; tap "Scheduled payments" 0; finish 4
+shot 12-scheduled 0
+back
+adb shell input tap $ops; sleep 2
+
 # A new expense with the keys, saved: the list must take it without drawing everything again.
 tap "Operations"
 xy=$(where "New operation")
 begin "open the add menu"; adb shell input tap $xy; finish 3
+begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2; tap "Expenses" 0; finish 2
 begin "choose a category (the editor opens)"; tap "Food" 0 || tap "Internet" 0; finish 3
 k1=$(where "1"); k2=$(where "2"); k5=$(where "5"); save=$(where "Save operation")
 begin "type 1 2 5 on the keys"

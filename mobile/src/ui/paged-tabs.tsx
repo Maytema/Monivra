@@ -2,7 +2,7 @@
 // pickers of a category or account): the underline is placed from the scroll offset on the native side, so
 // it moves with the finger and with the animation after a tap, never after the page has settled. One
 // logic for all of them (the accounts tab and the period pages use `Pager`, which also keeps neighbours).
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
@@ -40,6 +40,7 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
   const x = useRef(new Animated.Value(0)).current;
   const setLive = useRef<(i: number) => void>(() => undefined);
   const last = useRef(index);
+  const first = useRef(index);
   // The other pages are drawn a moment after the first, so the sheet opens as fast as one page.
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -55,16 +56,22 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
   const register = useCallback((set: (i: number) => void) => {
     setLive.current = set;
   }, []);
-  const onScroll = Animated.event([{ nativeEvent: { contentOffset: { x } } }], {
-    useNativeDriver: true,
-    listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const i = Math.max(0, Math.min(tabs.length - 1, Math.round(e.nativeEvent.contentOffset.x / (width || 1))));
-      if (i !== last.current) {
-        last.current = i;
-        setLive.current(i);
-      }
-    },
-  });
+  // Made once per width: a new event on every draw was attached to the native scroll again, mid-animation.
+  const count = tabs.length;
+  const onScroll = useMemo(
+    () =>
+      Animated.event([{ nativeEvent: { contentOffset: { x } } }], {
+        useNativeDriver: true,
+        listener: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+          const i = Math.max(0, Math.min(count - 1, Math.round(e.nativeEvent.contentOffset.x / (width || 1))));
+          if (i !== last.current) {
+            last.current = i;
+            setLive.current(i);
+          }
+        },
+      }),
+    [x, width, count],
+  );
   const tabWidth = width / tabs.length;
   return (
     <View onLayout={(e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width)}>
@@ -92,7 +99,9 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
           onScroll={onScroll}
-          contentOffset={{ x: index * width, y: 0 }}
+          // Only where it starts: given again on every draw, the offset of the tab chosen by a tap was applied in the
+          // middle of the animated scroll to it, and the underline jumped there and back.
+          contentOffset={{ x: first.current * width, y: 0 }}
           onMomentumScrollEnd={(e: NativeSyntheticEvent<NativeScrollEvent>) => {
             const next = tabs[Math.round(e.nativeEvent.contentOffset.x / width)];
             if (next && next.id !== active) onChange(next.id);

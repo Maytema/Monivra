@@ -10,9 +10,9 @@ import type { RateUpdateState } from "../services/rates/refresh.ts";
 import { appStore, useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { currencyName, searchCurrencies } from "../ui/currency-names.ts";
 import { toast } from "../ui/dialogs.tsx";
-import { Button, Icon } from "../ui/kit.tsx";
+import { Icon } from "../ui/kit.tsx";
 import { openNumberSheet } from "../ui/number-sheet.tsx";
-import { Footnote, SwitchRow } from "../ui/rows.tsx";
+import { SwitchRow } from "../ui/rows.tsx";
 
 export function RatesScreen() {
   const data = useLedger();
@@ -73,19 +73,23 @@ export function RatesScreen() {
         windowSize={9}
         ListHeaderComponent={
           <>
-        <SwitchRow label="Automatic rates" hint="Updated about twice a day from free public sources when the internet is available." value={!!data.settings.autoRates} onChange={(autoRates) => run((tx) => (tx.setSettings({ autoRates }), true))} />
-        <View style={{ paddingHorizontal: 18, paddingBottom: 6 }}>
-          <Button label={busy ? "Updating…" : "Update now"} kind="outline" onPress={() => void update()} disabled={busy} />
+        <SwitchRow label="Automatic rates" value={!!data.settings.autoRates} onChange={(autoRates) => run((tx) => (tx.setSettings({ autoRates }), true))} />
+        {/* One quiet line: when the rates were last asked for, and a small button to ask now. */}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 18, paddingTop: 2, paddingBottom: 10 }}>
+          <Text style={{ flex: 1, color: p.muted, fontSize: 13, lineHeight: 18 }}>{state ? `${t.t("Last attempt")}: ${state.at.slice(0, 16).replace("T", " ")} UTC · ${state.ok ? t.t("updated") : t.t("no source answered")}` : ""}</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel={t.t("Update now")} disabled={busy} onPress={() => void update()} style={{ flexDirection: "row", alignItems: "center", gap: 6, height: 36, paddingHorizontal: 14, borderRadius: 18, backgroundColor: p.soft, opacity: busy ? 0.6 : 1 }}>
+            <Icon name="repeat" size={17} color={p.accentInk} />
+            <Text style={{ color: p.accentInk, fontSize: 14, fontWeight: "600" }}>{t.t(busy ? "Updating…" : "Update now")}</Text>
+          </Pressable>
         </View>
-        {state ? <Footnote>{`${t.t("Last attempt")}: ${state.at.slice(0, 16).replace("T", " ")} UTC · ${state.ok ? t.t("updated") : t.t("no source answered")}`}</Footnote> : null}
         {RATE_PROVIDERS.filter((x) => x.attribution && usedProviders.has(x.id)).map((x) => (
-          <Text key={x.id} style={{ color: p.accentInk, fontSize: 13, paddingHorizontal: 18, paddingBottom: 6 }} onPress={() => void Linking.openURL(x.attribution!.url)}>
+          <Text key={x.id} style={{ color: p.accentInk, fontSize: 12, paddingHorizontal: 18, paddingBottom: 6 }} onPress={() => void Linking.openURL(x.attribution!.url)}>
             {x.attribution!.text}
           </Text>
         ))}
-        <Footnote>Tick a currency to keep its rate out of the automatic update. An edited rate is ticked automatically.</Footnote>
         <View style={{ paddingHorizontal: 18, paddingBottom: 8 }}>
           <TextInput value={query} onChangeText={setQuery} placeholder={t.t("Code, name or country")} placeholderTextColor={p.muted} autoCorrect={false} style={{ borderWidth: 1, borderColor: p.line, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 11, color: p.ink, fontSize: 16 }} />
+          <Text style={{ color: p.muted, fontSize: 12, lineHeight: 16, marginTop: 8 }}>{t.t("Tick a currency to keep its rate out of the automatic update. An edited rate is ticked automatically.")}</Text>
         </View>
           </>
         }

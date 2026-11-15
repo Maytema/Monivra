@@ -11,6 +11,30 @@ export function perfLog(label: string, ms: number): void {
   console.log(`[perf] ${label} ${ms.toFixed(1)}ms`);
 }
 
+// A plain line (speed-check build only): what happened, without a time.
+export function perfNote(text: string): void {
+  if (PERF_BUILD) console.log(`[perf] ${text}`);
+}
+
+// Touches (speed-check build only). The system stamps a touch when the finger lands; the JavaScript thread sees it
+// when it is free. The two clocks have different starts, so the delay is read against the quickest touch seen:
+// "touch lag 180ms" means this touch waited 180 ms longer than the quickest one for the thread.
+let touchBase = Number.POSITIVE_INFINITY;
+let lastTouch = 0;
+export function noteTouch(timestamp: number): void {
+  if (!PERF_BUILD) return;
+  const at = now();
+  lastTouch = at;
+  const gap = at - timestamp;
+  if (gap < touchBase) touchBase = gap;
+  const lag = gap - touchBase;
+  if (lag > 16) perfLog("touch lag", lag);
+}
+// The time from the last touch to now ("tab shown Statistics 420ms": from the finger to the drawn screen).
+export function sinceTouch(label: string): void {
+  if (PERF_BUILD && lastTouch) perfLog(label, now() - lastTouch);
+}
+
 // The JavaScript thread is busy for as long as a timer comes late: every pause longer than a few frames is
 // written down ("[perf] stall 240.0ms"). The check script writes a mark before each thing it does, so a
 // stall is read against the last mark.

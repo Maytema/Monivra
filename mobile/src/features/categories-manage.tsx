@@ -11,14 +11,15 @@ import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-con
 import { Icon, Screen } from "../ui/kit.tsx";
 import { CategoryTile, SegmentTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
-import { setView, useView } from "./ui-state.ts";
+import { setView, useViewPeriod, useViewCatType } from "./ui-state.ts";
 
 export function CategoriesManage() {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { period, catType } = useView();
+  const period = useViewPeriod();
+  const catType = useViewCatType();
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [held, setHeld] = useState(false);
   const run = useCommand();

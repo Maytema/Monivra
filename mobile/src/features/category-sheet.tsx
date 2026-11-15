@@ -10,7 +10,7 @@ import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { ActionGrid, ActionTile, ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
-import { useView } from "./ui-state.ts";
+import { useViewPeriod } from "./ui-state.ts";
 
 
 export const openCategorySheet = (id: string): number => sheets.open(<CategorySheet id={id} />);
@@ -21,7 +21,7 @@ function CategorySheet({ id }: { id: string }) {
   const t = useT();
   const money = useMoney();
   const close = useCloseLayer();
-  const { period } = useView();
+  const period = useViewPeriod();
   const c = categoryById(data, id);
   if (!c) return null;
   const rows = reportRows(data, operationsIn(data, period, emptyFilters()));

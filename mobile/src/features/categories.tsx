@@ -12,13 +12,13 @@ import { CategoryTile, SumTabs } from "../ui/parts.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { setView, useView } from "./ui-state.ts";
+import { setView, useViewCatType } from "./ui-state.ts";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { openAccountSheet } from "./account-sheet.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
 
 export function CategoriesScreen() {
-  const { catType } = useView();
+  const catType = useViewCatType();
   // The neighbouring pages follow the type a moment later, at low priority: the shown page switches first.
   const later = useDeferredValue(catType);
   return (

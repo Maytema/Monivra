@@ -207,10 +207,9 @@ export function AccountsScreen() {
           sit in the pager's header so their underline follows the finger. */}
       <Pager
         header={<TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} followPager />}
-        prev={tabs[tabs.indexOf(shown) - 1] ?? null}
         current={shown}
-        next={tabs[tabs.indexOf(shown) + 1] ?? null}
-        onMove={(d) => setTab(tabs[tabs.indexOf(shown) + d] ?? shown)}
+        step={(key, n) => tabs[tabs.indexOf(key) + n] ?? null}
+        onMove={(d) => setTab((was) => tabs[tabs.indexOf(was) + d] ?? was)}
         render={(page) => {
           const list = page === "Debts" ? live.filter((a) => a.type === "Debt") : live.filter((a) => a.type !== "Debt");
           const completed = list.filter(isFinished);

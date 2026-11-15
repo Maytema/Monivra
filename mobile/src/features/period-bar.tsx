@@ -1,7 +1,7 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
 import { countRender } from "../platform/perf.ts";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, shiftPeriod } from "../domain/periods.ts";
@@ -12,7 +12,7 @@ import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
 import { Pager, usePagerMotion } from "../ui/pager.tsx";
 import { periodTitle } from "../ui/period-title.ts";
-import { setView, useView } from "./ui-state.ts";
+import { getView, setView, useViewPeriod } from "./ui-state.ts";
 
 export { periodTitle };
 
@@ -23,7 +23,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
-  const { period } = useView();
+  const period = useViewPeriod();
   const motion = usePagerMotion();
   const [room, setRoom] = useState(0);
   const fixed = !canShiftPeriod(period);
@@ -87,20 +87,30 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 // with the period bar (and whatever else stays in place) above them.
 export function PeriodPager({ header, render }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode }) {
   const data = useLedger();
-  const { period } = useView();
-  const can = canShiftPeriod(period);
-  const keyOf = (x: Period) => JSON.stringify(x) as string;
-  const prev = can ? shiftPeriod(period, -1, data.settings) : null;
-  const next = can ? shiftPeriod(period, 1, data.settings) : null;
-  const byKey = new Map<string, Period>([[keyOf(period), period], ...(prev ? [[keyOf(prev), prev] as const] : []), ...(next ? [[keyOf(next), next] as const] : [])]);
+  const period = useViewPeriod();
+  // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
+  const known = useRef(new Map<string, Period>());
+  const keyOf = (x: Period): string => {
+    const key = JSON.stringify(x);
+    known.current.set(key, x);
+    return key;
+  };
+  const periodOf = (key: string): Period => known.current.get(key) ?? (JSON.parse(key) as Period);
+  const settings = data.settings;
   return (
     <Pager
-      prev={prev ? keyOf(prev) : null}
       current={keyOf(period)}
-      next={next ? keyOf(next) : null}
+      step={(key, n) => {
+        const shown = periodOf(key);
+        return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
+      }}
       header={header}
-      render={(key, isCurrent) => render(byKey.get(key) ?? period, isCurrent)}
-      onMove={(direction) => setView({ period: shiftPeriod(period, direction, data.settings) })}
+      render={(key, isCurrent) => render(periodOf(key), isCurrent)}
+      onMove={(steps) => {
+        let next = getView().period;
+        for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);
+        setView({ period: next });
+      }}
     />
   );
 }

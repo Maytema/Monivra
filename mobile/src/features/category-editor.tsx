@@ -22,7 +22,7 @@ import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { TextButton } from "../ui/calendar-sheet.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { mix, space } from "../ui/theme.ts";
-import { useView } from "./ui-state.ts";
+import { useViewCatType } from "./ui-state.ts";
 
 type Mode = SubcategoryAction["mode"];
 const PLANNED: Record<Mode, string> = { moveSub: "Move to {name}", mergeSub: "Merge into {name}", promoteSub: "Make a category", archiveSub: "Move to archive", restoreSub: "Return from archive", deleteSub: "Delete" };
@@ -117,7 +117,7 @@ export function CategoryEditor() {
   const p = usePalette();
   const t = useT();
   const run = useCommand();
-  const { catType } = useView();
+  const catType = useViewCatType();
   const existing = id ? categoryById(data, id) : undefined;
   const start = (): Category => {
     if (existing) return { ...existing };

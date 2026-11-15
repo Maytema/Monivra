@@ -272,20 +272,9 @@ export function PinPad({ length, value, onChange, disabled = false, failed = fal
 }
 
 // Setting or removing the PIN (js/screens/more/settings-pages.js pinSetup): one bottom sheet like the amount keypad.
-// The fields on top show the typed digits as dots, the keys below type into the active field (tap a field to
-// choose it). Only digits, at most six; a wrong count or a wrong confirmation is said at once.
+// The dots of the lock screen show the PIN being typed (first the new one, then its confirmation; backspace on an
+// empty confirmation goes back). Only digits, at most six; a wrong count or a wrong confirmation is said at once.
 const PIN_LENGTHS = [4, 6];
-
-function PinField({ label, hint, dots, active, invalid, onPress }: { label: string; hint?: string; dots: number; active: boolean; invalid: boolean; onPress: () => void }) {
-  const p = usePalette();
-  const t = useT();
-  return (
-    <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} accessibilityState={{ selected: active }} onPress={onPress} style={{ minHeight: 64, justifyContent: "center", paddingHorizontal: 16, marginTop: 10, borderRadius: 16, borderWidth: active || invalid ? 2 : 1, borderColor: invalid ? p.negative : active ? p.accent : p.line, backgroundColor: p.bg }}>
-      <Text style={{ color: p.muted, fontSize: 13 }}>{t.t(label)}</Text>
-      {dots ? <Text style={{ color: p.ink, fontSize: 22, letterSpacing: 3 }}>{"•".repeat(dots)}</Text> : hint ? <Text style={{ color: p.muted, fontSize: 14 }}>{t.t(hint)}</Text> : <Text style={{ color: p.ink, fontSize: 20 }}>—</Text>}
-    </Pressable>
-  );
-}
 
 function PinSetup({ remove, length }: { remove: boolean; length: number }) {
   const p = usePalette();
@@ -329,22 +318,31 @@ function PinSetup({ remove, length }: { remove: boolean; length: number }) {
   };
   const press = (k: string) => {
     const text = values[active];
+    // Backspace on an empty confirmation goes back to the first PIN.
+    if (k === "⌫" && !remove && active === "second" && !text) return setActive("first");
     const next = k === "⌫" ? text.slice(0, -1) : /^\d$/.test(k) && text.length < size ? text + k : text;
     setValues({ ...values, [active]: next });
     setTried(false);
     // A full first PIN passes on to the confirmation by itself.
     if (!remove && active === "first" && next.length === size) setActive("second");
   };
+  // The dots of the lock screen instead of fields: one row for the PIN being typed, a line above saying which one.
+  const typed = values[active];
+  const dots = remove ? length : active === "second" && PIN_LENGTHS.includes(first.length) ? first.length : size;
+  const hint = !remove && active === "first" && !first ? "Enter 4 or 6 digits" : "";
   return (
     <View>
       <DialogTitle>{t.t(remove ? "Turn off PIN" : "Set PIN")}</DialogTitle>
-      <PinField label={remove ? "Current PIN" : "New PIN"} hint={remove ? undefined : "Enter 4 or 6 digits"} dots={first.length} active={active === "first"} invalid={!!first && problem === "Enter 4 or 6 digits"} onPress={() => setActive("first")} />
-      {remove ? null : <PinField label="Confirm PIN" hint="Enter 4 or 6 digits" dots={second.length} active={active === "second"} invalid={problem === "PINs do not match"} onPress={() => setActive("second")} />}
-      {problem ? <Text accessibilityRole="alert" style={{ color: p.negative, fontSize: 14, marginTop: 8 }}>{t.t(problem)}</Text> : null}
-      <View style={{ marginTop: 14 }}>
+      <Text style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{t.t(remove ? "Current PIN" : active === "first" ? "New PIN" : "Confirm PIN")}</Text>
+      <View style={{ marginTop: 16 }}>
+        <PinDots length={dots} value={typed} failed={!!problem} />
+      </View>
+      <Text accessibilityRole={problem ? "alert" : undefined} style={{ minHeight: 20, color: problem ? p.negative : p.muted, fontSize: 14, textAlign: "center", marginTop: 6 }}>
+        {problem || hint ? t.t(problem || hint) : ""}
+      </Text>
+      <View style={{ marginTop: 10 }}>
         <DigitPad onKey={press} onConfirm={confirm} confirmLabel="Save" />
       </View>
-      <Text style={{ color: p.muted, fontSize: 13, lineHeight: 19, marginTop: 12 }}>{t.t("The PIN only hides the screen; data on the device is not encrypted.")}</Text>
     </View>
   );
 }

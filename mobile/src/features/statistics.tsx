@@ -23,7 +23,7 @@ import { filtersActive, openFilters as openFiltersSheet } from "./filters-panel.
 import { FilteredBanner } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { getView, setView, useView } from "./ui-state.ts";
+import { getView, setView, useViewCatType, useViewFilters } from "./ui-state.ts";
 
 const percentText = (percent: number, locale: string): string => numberText(shownPercent(percent), locale, 2) + "%";
 const DAY = 86400000;
@@ -56,7 +56,8 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { catType: asked, filters } = useView();
+  const asked = useViewCatType();
+  const filters = useViewFilters();
   // The tab shows the choice at once; the blocks below follow a moment later (and the neighbouring pages after the
   // open one), so the switch is not held up by drawing the charts again.
   const catType = useDeferredValue(asked);

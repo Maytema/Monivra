@@ -1,8 +1,8 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
-import { countRender } from "../platform/perf.ts";
-import { useEffect, useRef } from "react";
+import { countRender, perfNote, sinceTouch } from "../platform/perf.ts";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -52,8 +52,14 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   const asked = useRef(state.routes[state.index]?.key);
   const shown = useRef(state);
   shown.current = state;
+  // The pill moves to the pressed tab at once, in a frame of its own; the screen is built after that frame. Before, the
+  // pill moved only together with the new screen, so for the moment the screen took the press looked lost and was
+  // pressed again.
+  const [pressed, setPressed] = useState<string | null>(null);
   useEffect(() => {
     asked.current = state.routes[state.index]?.key;
+    setPressed(null);
+    sinceTouch("tab shown " + (state.routes[state.index]?.name ?? "?"));
   }, [state.index, state.routes]);
   // A screen hides the bar while it has its own actions there (the selection of operations).
   const current = state.routes[state.index];
@@ -74,16 +80,23 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
       {state.routes.map((route, index) => {
         const tab = TABS.find((x) => x.name === route.name);
         if (!tab) return null;
-        const active = state.index === index;
+        const active = pressed ? pressed === route.key : state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
-          if (asked.current === route.key) return;
+          perfNote(`tab press ${route.name} (asked ${state.routes.find((r) => r.key === asked.current)?.name}, shown ${state.routes[state.index]?.name})`);
+          if (asked.current === route.key) return perfNote("tab press dropped: already asked");
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
           if (event.defaultPrevented) return;
           asked.current = route.key;
-          // If the navigator did not take it, the next press must not be taken for "already there".
-          setTimeout(() => (asked.current = shown.current.routes[shown.current.index]?.key), 600);
-          navigateToTab(route.key);
+          setPressed(route.key);
+          requestAnimationFrame(() => {
+            navigateToTab(route.key);
+            // If the navigator did not take it, the bar shows where it is and the next press is taken again.
+            setTimeout(() => {
+              const now = shown.current.routes[shown.current.index]?.key;
+              if (now !== route.key && asked.current === route.key) (asked.current = now), setPressed(null);
+            }, 1500);
+          });
         };
         return (
           <Pressable

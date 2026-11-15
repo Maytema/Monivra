@@ -6,6 +6,7 @@
 // `useRevealFocusedField` goes on a scrolling body: when the keyboard comes up and the focused field lies below
 // the keyboard's top edge, the body scrolls just far enough to bring it above — and only the body that holds
 // the field does it.
+import { PERF_BUILD, noteTouch } from "../platform/perf.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Keyboard, TextInput, View, type KeyboardEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 
@@ -28,7 +29,7 @@ export function KeyboardPad({ children }: { children: ReactNode }) {
     // The outer frame keeps the window's size (it is what is measured); the inner one is shortened by a margin, not
     // by padding: pages drawn with absolute positioning (the layers of ui/sheets.tsx) are placed against the box of
     // their parent, padding included, and would stay under the keyboard.
-    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }}>
+    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }} onTouchStart={PERF_BUILD ? (e: { nativeEvent: { timestamp: number } }) => noteTouch(e.nativeEvent.timestamp) : undefined}>
       <View style={{ flex: 1, marginBottom: pad }}>{children}</View>
     </View>
   );

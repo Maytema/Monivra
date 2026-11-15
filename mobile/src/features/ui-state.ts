@@ -18,11 +18,25 @@ const subscribe = (fn: () => void) => {
   return () => listeners.delete(fn);
 };
 
+// A part given again with the same contents keeps the old object: nobody subscribed to it draws again, and a change
+// that changes nothing (the budgets setting the month that is already shown) wakes nobody at all.
+const samePeriod = (a: Period, b: Period) => a.mode === b.mode && a.anchor === b.anchor && a.from === b.from && a.to === b.to;
+const sameFilters = (a: Filters, b: Filters) => JSON.stringify(a) === JSON.stringify(b);
 export function setView(change: Partial<ViewState>): void {
-  state = { ...state, ...change };
+  const next: ViewState = { ...state };
+  let changed = false;
+  if (change.period && !samePeriod(change.period, state.period)) (next.period = change.period), (changed = true);
+  if (change.catType && change.catType !== state.catType) (next.catType = change.catType), (changed = true);
+  if (change.filters && !sameFilters(change.filters, state.filters)) (next.filters = change.filters), (changed = true);
+  if (!changed) return;
+  state = next;
   for (const fn of listeners) fn();
 }
 
 export const getView = (): ViewState => state;
 
 export const useView = (): ViewState => useSyncExternalStore(subscribe, () => state);
+// One part each: a screen that shows the period does not draw again when the expense/income tab changes, and so on.
+export const useViewPeriod = (): Period => useSyncExternalStore(subscribe, () => state.period);
+export const useViewCatType = (): ViewState["catType"] => useSyncExternalStore(subscribe, () => state.catType);
+export const useViewFilters = (): Filters => useSyncExternalStore(subscribe, () => state.filters);

@@ -14,7 +14,7 @@ import { openAddMenu } from "./add-menu.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import { OperationsPage } from "./operations.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { getView, setView, useView } from "./ui-state.ts";
+import { getView, setView, useViewPeriod, useViewFilters } from "./ui-state.ts";
 
 const noSelection = new Set<string>();
 const openOne = (id: string) => openEditor({ id });
@@ -61,7 +61,8 @@ function CategoryCard({ id }: { id: string }) {
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { period, filters } = useView();
+  const period = useViewPeriod();
+  const filters = useViewFilters();
   const c = categoryById(data, id);
   if (!c) return null;
   const ops = operationsIn(data, period, filters);

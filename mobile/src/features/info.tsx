@@ -43,9 +43,9 @@ const TOUR: readonly TourStep[] = [
   { tab: "/categories", target: "sum-tabs", text: "Here you switch between expenses and incomes." },
   { target: "first-category", text: "Tap a category to add an expense or an income to it. Press and hold it to see its operations." },
   { tab: "/", target: "tab-index", text: "Accounts: your cash, cards and debts. Add the first one with the plus at the top." },
-  { target: "tab-operations", text: "Operations: everything you have added, by day." },
-  { target: "tab-statistics", text: "Statistics: charts and totals for the period you choose." },
-  { target: "tab-more", text: "More: scheduled payments, budgets, settings and data." },
+  { tab: "/operations", target: "tab-operations", text: "Operations: everything you have added, by day." },
+  { tab: "/statistics", target: "tab-statistics", text: "Statistics: charts and totals for the period you choose." },
+  { tab: "/more", target: "tab-more", text: "More: scheduled payments, budgets, settings and data." },
 ];
 
 function Instructions() {

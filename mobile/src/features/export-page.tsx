@@ -29,7 +29,7 @@ import { sheets } from "../ui/sheets.tsx";
 import { mix } from "../ui/theme.ts";
 import { AccountSelect, CategorySelect, Check, MultiSelect, TYPE_NAMES } from "./filters-panel.tsx";
 import { PeriodBar } from "./period-bar.tsx";
-import { getView, setView, useView } from "./ui-state.ts";
+import { getView, setView, useViewPeriod } from "./ui-state.ts";
 
 type Mode = "summary" | "detail" | "csv";
 const MODES: [Mode, string, string, string][] = [
@@ -380,7 +380,7 @@ export function ExportPage() {
   const p = usePalette();
   const t = useT();
   const data = useLedger();
-  const { period } = useView();
+  const period = useViewPeriod();
   const [mode, setMode] = useState<Mode>("summary");
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [sections, setSections] = useState<Record<keyof Sections, boolean>>({ charts: true, accounts: true, savings: true, debts: true, budgets: true });

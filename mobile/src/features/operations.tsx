@@ -3,7 +3,8 @@
 // button, and the selection mode with its own header and actions.
 import { countRender } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { BackHandler, FlatList, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { FlashList, type FlashListRef } from "@shopify/flash-list";
+import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,7 +24,7 @@ import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { setView, useView } from "./ui-state.ts";
+import { setView, useViewPeriod, useViewFilters } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
 import { PostedBanner } from "./posted-banner.tsx";
 import { listingOnTop } from "./reveal.ts";
@@ -42,7 +43,8 @@ export function OperationsScreen() {
   const run = useCommand();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { period, filters } = useView();
+  const period = useViewPeriod();
+  const filters = useViewFilters();
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
   const setFilters = (next: Filters) => setView({ filters: next });
@@ -191,7 +193,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { filters } = useView();
+  const filters = useViewFilters();
   const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
   const items = useMemo(() => {
     const out: Item[] = [];
@@ -206,7 +208,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     return out;
   }, [ops]);
 
-  const list = useRef<FlatList<Item>>(null);
+  const list = useRef<FlashListRef<Item>>(null);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
   const lit = useSpotlit();
   useEffect(() => {
@@ -257,29 +259,24 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const content = useMemo(() => ({ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        // A list that had no day heads and now has them (the first operation was saved) is built anew: with sticky
-        // heads switched on afterwards the platform list stayed empty until the next start (emulator, build 96–98).
-        key={sticky.length ? "days" : "none"}
+      <FlashList
         ref={list}
-        // No scroll bar on a swiped page (components.css .swipe-page > .content); its fading after each step of
-        // the first opening is one of the redraws seen in the trace of that opening.
+        // No scroll bar on a swiped page (components.css .swipe-page > .content).
         showsVerticalScrollIndicator={false}
-        onScrollToIndexFailed={({ index, averageItemLength }) => list.current?.scrollToOffset({ offset: Math.max(0, index * averageItemLength - 200), animated: true })}
         data={items}
         keyExtractor={keyOfItem}
+        // Day heads and rows are kept apart, so a row scrolled away is reused for the next row, not for a head.
+        getItemType={typeOfItem}
         onScroll={scrolled}
         scrollEventThrottle={32}
-        // The first screen at once; then, for the current page, two screens of rows on each side of the window
-        // in few large steps. Every step is a commit that lays out and redraws the whole list: a system trace of
-        // the first opening of the tab (audit run 12) showed ~90 commits and redrawn frames over 3.6 s with steps
-        // of one screen and a window of four screens each side; the first application shows the period at once.
-        initialNumToRender={FIRST_SCREEN}
-        maxToRenderPerBatch={FIRST_SCREEN * 3}
-        updateCellsBatchingPeriod={120}
-        windowSize={current ? 5 : 1}
+        // FlashList draws what is on the screen and reuses the rows that leave it: a neighbour page (the one a swipe
+        // uncovers) draws only its first screen, the current one a screen more on each side.
+        drawDistance={current ? 600 : 0}
         contentContainerStyle={content}
+        // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away:
+        // one head drawn over the list and moved by the platform, not a head per day following the scroll.
         stickyHeaderIndices={sticky}
+        stickyHeaderConfig={STICKY}
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
@@ -288,7 +285,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   );
 });
 
-// Rows that fill one screen (a row is about 74 dp high).
-const FIRST_SCREEN = 12;
 const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);
+const typeOfItem = (x: Item): string => x.kind;
+const STICKY = { useNativeDriver: true, hideRelatedCell: true } as const;
 const EMPTY = <EmptyState kind="operations" title="Empty" hint="Start adding expenses or income and the data will appear" />;
