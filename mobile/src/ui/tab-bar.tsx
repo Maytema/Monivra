@@ -9,6 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
 import { ICONS } from "./icon-paths.ts";
 import { chrome } from "./theme.ts";
+import { coachRef } from "./coach.tsx";
 import Svg, { Path, Rect } from "react-native-svg";
 
 export const TABS = [
@@ -90,6 +91,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
             style={{ flex: 1, minWidth: 0, minHeight: chrome.navItem, alignItems: "center", justifyContent: "center", gap: 4 }}
           >
             <View
+              ref={coachRef("tab-" + tab.name)}
+              collapsable={false}
               style={{
                 width: chrome.navPill.width,
                 height: chrome.navPill.height,

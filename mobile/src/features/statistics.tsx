@@ -4,6 +4,7 @@
 import { Fragment, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
+import { useVerticalScroll } from "../ui/gesture-lock.ts";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
 import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } from "../domain/chart.ts";
@@ -338,6 +339,7 @@ let sharedOffset = 0;
 
 function ScrollBlocks({ children, current }: { children: ReactNode; current: boolean }) {
   const mine = useRef<Scroller | null>(null);
+  const free = useVerticalScroll();
   useEffect(
     () => () => {
       if (mine.current) scrollers.delete(mine.current);
@@ -354,6 +356,7 @@ function ScrollBlocks({ children, current }: { children: ReactNode; current: boo
       onContentSizeChange={() => {
         if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
       }}
+      scrollEnabled={free}
       scrollEventThrottle={16}
       onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
         if (!current) return;

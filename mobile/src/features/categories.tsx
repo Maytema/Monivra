@@ -1,4 +1,5 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
+import { useCoachTarget } from "../ui/coach.tsx";
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
@@ -67,9 +68,9 @@ const TileGrid = memo(function TileGrid({ data, rows, kind, money }: { data: Ret
   const tone = (total: number) => (total === 0 ? "muted" : kind === "income" ? "pos" : "neg");
   return (
     <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
-      {tiles.map((c) => {
+      {tiles.map((c, index) => {
         const total = categoryTotalIn(data, rows, c);
-        return <CategoryCell key={c.id} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} />;
+        return <CategoryCell key={c.id} first={index === 0} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} />;
       })}
       {debts.map((a) => {
         const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: kind, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
@@ -81,8 +82,16 @@ const TileGrid = memo(function TileGrid({ data, rows, kind, money }: { data: Ret
 });
 
 // A tile with handlers of its own, so a redraw of the page leaves tiles whose sum did not change alone.
-const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone }: { id: string; type: string; icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted" }) {
+const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone, first = false }: { first?: boolean; id: string; type: string; icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted" }) {
   const open = useCallback(() => openEditor({ type: type === "income" ? "income" : "expense", category: id }), [id, type]);
   const hold = useCallback(() => openCategorySheet(id), [id]);
+  const coach = useCoachTarget("first-category");
+  // The first tile can be lit by the introduction tour; it sits in a box of its own for that (the box has the tile's width).
+  if (first)
+    return (
+      <View ref={coach} collapsable={false} style={{ width: "48.5%" }}>
+        <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} width="100%" />
+      </View>
+    );
   return <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} />;
 });

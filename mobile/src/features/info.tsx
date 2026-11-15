@@ -14,6 +14,7 @@ import { mix } from "../ui/theme.ts";
 import { Button, Icon } from "../ui/kit.tsx";
 import { Footnote, SettingRow } from "../ui/rows.tsx";
 import { GUIDES } from "./guides.ts";
+import { startTour, type TourStep } from "../ui/coach.tsx";
 
 const SUPPORT: Record<string, { title: string; icon: string; text: readonly string[]; instructions?: boolean }> = {
   refund: { title: "Request a refund", icon: "calendarX", text: ["Please write the date of the purchase and the store where it was made, so that we can find it.", "Write anything else you consider important. We will definitely read everything you send."] },
@@ -37,6 +38,16 @@ function Para({ children }: { children: string }) {
 }
 const Body = ({ children }: { children: ReactNode }) => <View style={{ padding: 18 }}>{children}</View>;
 
+// The introduction: only the main things, one lit element at a time.
+const TOUR: readonly TourStep[] = [
+  { tab: "/categories", target: "sum-tabs", text: "Here you switch between expenses and incomes." },
+  { target: "first-category", text: "Tap a category to add an expense or an income to it. Press and hold it to see its operations." },
+  { tab: "/", target: "tab-index", text: "Accounts: your cash, cards and debts. Add the first one with the plus at the top." },
+  { target: "tab-operations", text: "Operations: everything you have added, by day." },
+  { target: "tab-statistics", text: "Statistics: charts and totals for the period you choose." },
+  { target: "tab-more", text: "More: scheduled payments, budgets, settings and data." },
+];
+
 function Instructions() {
   const t = useT();
   const run = useCommand();
@@ -45,6 +56,7 @@ function Instructions() {
       <View style={{ paddingHorizontal: 18, paddingTop: 14 }}>
         <Text style={{ fontSize: 16 }}>{t.t("Learn the basics of {app}", { app: "Monivra" })}</Text>
       </View>
+      <SettingRow title="Show the main features" caption="A short tour of the application" onPress={() => startTour(TOUR)} />
       <SettingRow title="Repeat hints" caption="Restart tooltips throughout the application" chevron={false} onPress={() => (run((tx) => (tx.setSettings({ dismissedHints: [] }), true)), toast("Hints will be shown again"))} />
       {GUIDES.map((g) => (
         <SettingRow key={g.id} title={g.title} caption={g.about} onPress={page("guide:" + g.id)} />

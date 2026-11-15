@@ -36,10 +36,18 @@ function ProgressDialog({ title, progress }: { title: string; progress: Progress
   );
 }
 
-// Runs the work behind the dialog; the result is undefined when it was cancelled.
+// Runs the work; the dialog appears only if it takes longer than SHOW_AFTER_MS (a dialog that flashes for a blink looks
+// like a fault) and, once shown, stays at least KEEP_MS so it is readable. The result is undefined when it was cancelled.
+const SHOW_AFTER_MS = 600;
+const KEEP_MS = 500;
 export async function withProgress<T>(title: string, firstText: string, work: (say: (text: string) => void, signal: AbortSignal) => Promise<T>): Promise<T | undefined> {
   const progress: Progress = { text: firstText, stop: new AbortController(), done: false, listeners: new Set() };
-  const id = sheets.open(<ProgressDialog title={title} progress={progress} />, "dialog");
+  let id: number | null = null;
+  let shownAt = 0;
+  const timer = setTimeout(() => {
+    shownAt = Date.now();
+    id = sheets.open(<ProgressDialog title={title} progress={progress} />, "dialog");
+  }, SHOW_AFTER_MS);
   const say = (text: string) => {
     progress.text = text;
     progress.listeners.forEach((l) => l());
@@ -50,7 +58,13 @@ export async function withProgress<T>(title: string, firstText: string, work: (s
     if (progress.stop.signal.aborted) return undefined;
     throw error;
   } finally {
+    clearTimeout(timer);
     progress.done = true;
-    sheets.close(id);
+    if (id !== null) {
+      const left = KEEP_MS - (Date.now() - shownAt);
+      const shown = id;
+      if (left > 0) await new Promise<void>((resolve) => setTimeout(resolve, left));
+      sheets.close(shown);
+    }
   }
 }

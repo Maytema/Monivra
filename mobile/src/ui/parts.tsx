@@ -1,6 +1,7 @@
 // Pieces that make the first application recognisable, built from the same measures as its CSS
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
+import { useCoachTarget } from "./coach.tsx";
 import { RollingFigure } from "./rolling.tsx";
 import { countRender } from "../platform/perf.ts";
 import { createContext, memo, startTransition, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
@@ -247,6 +248,7 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
   const t = useT();
   // The press is shown at once; the heavy part (the tiles or charts of the other type) is drawn as a
   // transition, so the touch never waits for it and a quick second touch is not queued behind it.
+  const coach = useCoachTarget("sum-tabs");
   const [shown, setShown] = useState(active);
   useEffect(() => setShown(active), [active]);
   const choose = (type: "expense" | "income") => {
@@ -271,7 +273,7 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
       </Pressable>
     );
   };
-  return <View style={{ flexDirection: "row", gap: 5, backgroundColor: p.nav, borderRadius: 13, marginHorizontal: 16, marginTop: 9, marginBottom: 18, padding: 8, minHeight: 90 }}>{[tab("expense", "Expenses", expense), tab("income", "Incomes", income)]}</View>;
+  return <View ref={coach} collapsable={false} style={{ flexDirection: "row", gap: 5, backgroundColor: p.nav, borderRadius: 13, marginHorizontal: 16, marginTop: 9, marginBottom: 18, padding: 8, minHeight: 90 }}>{[tab("expense", "Expenses", expense), tab("income", "Incomes", income)]}</View>;
 }
 
 // A tile of a category (categories.css .cat-tile): badge, name, the sum of the period.

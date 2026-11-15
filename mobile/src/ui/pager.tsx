@@ -6,7 +6,7 @@
 import { countRender } from "../platform/perf.ts";
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, Easing, PanResponder, View, unstable_batchedUpdates } from "react-native";
-import { gestureLock } from "./gesture-lock.ts";
+import { gestureLock, swipeLock } from "./gesture-lock.ts";
 
 // Where the pages are: `x` is the offset of the row of pages in px, and the page in the middle at rest is at
 // x = -base × width. `base` counts the moves made (+1 to the next page, -1 to the previous one). Whatever moves
@@ -92,12 +92,13 @@ export function Pager<K extends string>({
   const pan = useRef(
     PanResponder.create({
       // A clearly horizontal drag is taken; a vertical one stays with the lists.
-      onMoveShouldSetPanResponderCapture: (_e, g) => !gestureLock.held && Math.abs(g.dx) > 10 && Math.abs(g.dx) > Math.abs(g.dy) * 1.4,
+      onMoveShouldSetPanResponderCapture: (_e, g) => !gestureLock.held && Math.abs(g.dx) > 7 && Math.abs(g.dx) > Math.abs(g.dy) * 1.15,
       // While the finger moves the pages, nothing takes the gesture away; a gesture that went quiet (its end
       // never arrived, as after some system gestures) gives way to the next touch instead of leaving the
       // page deaf to taps.
       onPanResponderTerminationRequest: () => Date.now() - lastMove.current > 300,
       onPanResponderGrant: () => {
+        swipeLock.set(true);
         lastMove.current = Date.now();
         // A new swipe while the last one is still settling: that one is finished at once (it was decided) and the
         // finger takes the page from where the move ended, so quick swipes one after another all count.
@@ -115,6 +116,7 @@ export function Pager<K extends string>({
         x.setValue(-b * w + (there !== null ? g.dx : Math.sign(g.dx) * 28 * (1 - Math.exp(-Math.abs(g.dx) / 95))));
       },
       onPanResponderRelease: (_e, g) => {
+        swipeLock.set(false);
         const direction: 1 | -1 = g.dx < 0 ? 1 : -1;
         const { width: w, base: b } = live.current;
         const there = direction === 1 ? live.current.next : live.current.prev;
@@ -136,6 +138,7 @@ export function Pager<K extends string>({
         });
       },
       onPanResponderTerminate: () => {
+        swipeLock.set(false);
         const { width: w, base: b } = live.current;
         Animated.timing(x, { toValue: -b * w, duration: 200, useNativeDriver: true }).start();
       },

@@ -1,4 +1,5 @@
 // Reusable pieces of every screen, built only from the theme tokens.
+import { useVerticalScroll } from "./gesture-lock.ts";
 import type { ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type ViewStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
@@ -37,8 +38,9 @@ export function Screen({ children, scroll = true, padded = true, scrollEnabled =
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   const reveal = useRevealFocusedField();
+  const free = useVerticalScroll();
   return scroll ? (
-    <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
+    <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled && free} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
       {children}
     </ScrollView>
   ) : (

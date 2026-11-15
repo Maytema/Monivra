@@ -17,6 +17,7 @@ import { setSecureScreen } from "../platform/native.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
+import { CoachHost } from "../ui/coach.tsx";
 import { NoticeHost, ToastHost } from "../ui/dialogs.tsx";
 
 function KeepCurrent() {
@@ -104,6 +105,7 @@ function Ready() {
         <Stack.Screen name="filtered" options={{ title: t.t("Filtered") }} />
       </Stack>
       <SheetHost />
+      <CoachHost />
       </KeyboardPad>
       <NoticeHost />
       </LockGate>

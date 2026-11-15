@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
+import { useVerticalScroll } from "../ui/gesture-lock.ts";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { router } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";
@@ -184,6 +185,7 @@ export function AccountsScreen() {
   const p = usePalette();
   const [tab, setTab] = useState<AccountTab>("Accounts");
   const [held, setHeld] = useState(false);
+  const free = useVerticalScroll();
   const live = data.accounts.filter((a) => !a.archived);
   const archived = data.accounts.filter((a) => a.archived);
   const hasDebts = live.some((a) => a.type === "Debt");
@@ -215,7 +217,7 @@ export function AccountsScreen() {
           const open = list.filter((a) => !isFinished(a));
           const groups = page === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
           return (
-          <ScrollView scrollEnabled={!held} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+          <ScrollView scrollEnabled={!held && free} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             <PostedBanner />
             {page !== "Total" && list.length > 1 ? <HintBanner id="account-reorder" text="Hold an account to drag and reorder" /> : null}
             {page === "Total" ? (

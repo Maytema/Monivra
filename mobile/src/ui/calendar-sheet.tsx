@@ -1,7 +1,7 @@
 // The calendar dialog for one date and the dialog for a range of dates (js/ui/calendar.js): a month
 // grid with arrows, the title opens a grid of years; Today, Cancel and OK under it.
 import { useRef, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, PanResponder, Text, TextInput, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { systemClock } from "../domain/dates.ts";
 import { useLedger, usePalette, useT } from "./app-context.tsx";
@@ -130,6 +130,19 @@ function MonthGrid({ month, setMonth, chosen, pick, min, years, setYears }: { mo
     d.setUTCMonth(d.getUTCMonth() + n);
     setMonth(iso(d).slice(0, 7));
   };
+  // A swipe along the month turns the page, like the arrows: to the left the next month, to the right the previous one.
+  const turn = useRef({ move, blocked: false });
+  turn.current = { move, blocked: !!min && month <= monthOf(min) };
+  const swipe = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponderCapture: (_e, g) => Math.abs(g.dx) > 12 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
+      onPanResponderRelease: (_e, g) => {
+        if (Math.abs(g.dx) < 40) return;
+        if (g.dx < 0) turn.current.move(1);
+        else if (!turn.current.blocked) turn.current.move(-1);
+      },
+    }),
+  ).current;
   const title = t.monthYear(month + "-01");
   const today = systemClock.today();
   // 2026-11-01 is a Sunday.
@@ -152,7 +165,7 @@ function MonthGrid({ month, setMonth, chosen, pick, min, years, setYears }: { mo
     );
   const blocked = !!min && month <= monthOf(min);
   return (
-    <View>
+    <View {...swipe.panHandlers}>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 4, marginBottom: 2 }}>
         {heading}
         <View style={{ flexDirection: "row" }}>
