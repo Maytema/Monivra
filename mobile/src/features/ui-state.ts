@@ -39,4 +39,5 @@ export const useView = (): ViewState => useSyncExternalStore(subscribe, () => st
 // One part each: a screen that shows the period does not draw again when the expense/income tab changes, and so on.
 export const useViewPeriod = (): Period => useSyncExternalStore(subscribe, () => state.period);
 export const useViewCatType = (): ViewState["catType"] => useSyncExternalStore(subscribe, () => state.catType);
+export const useViewPeriodWhile = (on: boolean): Period | null => useSyncExternalStore(subscribe, () => (on ? state.period : null));
 export const useViewFilters = (): Filters => useSyncExternalStore(subscribe, () => state.filters);

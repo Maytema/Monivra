@@ -11,12 +11,20 @@
 // `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
 import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
 import { PagerContext } from "./pan-pager.tsx";
+import { pagerMotion } from "./gesture-lock.ts";
 
-export { usePagerMotion, WIDE_RETENTION } from "./pan-pager.tsx";
+export { usePagerMotion } from "./pan-pager.tsx";
+
+// Rows inside the pager keep their press while the finger moves a little (a long press), not while it travels: the
+// hand-made pager needed a huge offset (its pages moved by a transform the touch system did not see); the native
+// pager moves real views, and with the huge offset a finger lifted at the far side of a swipe was taken for a tap on
+// the row (a sheet opened during quick swipes, speed check, builds 100–101).
+export const WIDE_RETENTION = { top: 24, bottom: 24, left: 24, right: 24 } as const;
+
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 const SPAN = 50;
@@ -76,29 +84,55 @@ export function Pager<K extends string>({
   live.current = { step, onMove };
   const [row, setRow] = useState<Row<K>>(() => layRow(current, step));
   const [index, setIndex] = useState(row.origin);
+  // The page whose neighbours are drawn and which is told it is the current one. It follows `index` in a transition:
+  // the swipe itself commits only the period (the bar, the titles); drawing the new neighbour is work React may cut
+  // into pieces and interrupt, so the touches that come meanwhile (the next swipe, a tap) are taken at once.
+  // (Measured on the emulator, build 101: the commit of a swipe drew all three pages, 150–500 ms in one block.)
+  const [shown, setShown] = useState(row.origin);
+  const follow = (page: number) => startTransition(() => setShown(page));
+  // The page the pager is on, set at the moment it changes (not from a render, which may be behind).
   const at = useRef(index);
-  at.current = index;
+  // The pages chosen by the person's own swipes since the pager was last quiet: a period the screen draws late (one of
+  // them) is not a change from outside.
+  const passed = useRef(new Set<string>());
   const pager = useRef<Controls | null>(null);
 
   // The current page changed from outside (the arrows of the period bar, a tab pressed, another period chosen): a
   // neighbour is reached by a swipe of the pager, anything else lays the row out again around it.
+  // `at` (set at once when the pager chooses a page), not `index`: the period of a swipe is committed by its own store
+  // and may be drawn before `index` is; read against `index` the swipe looked like a change from outside and the pager
+  // was sent back to the page before — while the finger was already on the next swipe (the second of two quick
+  // swipes was lost, speed check build 101).
   useEffect(() => {
-    if (row.keys[index] === current) return;
-    const near = [index - 1, index + 1].find((i) => row.keys[i] === current);
+    if (row.keys[at.current] === current) {
+      // The screen has caught up with the pager.
+      passed.current.clear();
+      if (index !== at.current) setIndex(at.current);
+      return;
+    }
+    if (passed.current.has(current)) return;
+    const here = at.current;
+    const near = [here - 1, here + 1].find((i) => row.keys[i] === current);
     if (near !== undefined) {
+      at.current = near;
       setIndex(near);
+      follow(near);
       pager.current?.setPage(near);
       return;
     }
     const found = row.keys.indexOf(current);
     if (found >= 0) {
+      at.current = found;
       setIndex(found);
+      setShown(found);
       pager.current?.setPageWithoutAnimation(found);
       return;
     }
     const fresh = layRow(current, live.current.step);
     setRow(fresh);
+    at.current = fresh.origin;
     setIndex(fresh.origin);
+    setShown(fresh.origin);
   }, [current, row, index]);
 
   // position + offset of the native pager, and the two constants that turn them into x.
@@ -139,10 +173,12 @@ export function Pager<K extends string>({
     if (page === from) return;
     if (PERF_BUILD) chosenAt.current = now();
     at.current = page;
+    passed.current.add(String(row.keys[page]));
     unstable_batchedUpdates(() => {
       setIndex(page);
       live.current.onMove(page - from);
     }, undefined);
+    follow(page);
   };
   // Near the end of the row (not a real end), the row is laid out again around the current page once the pager is
   // quiet; the pages are drawn again once, which happens after SPAN − MARGIN swipes in one direction.
@@ -153,7 +189,9 @@ export function Pager<K extends string>({
     if (!nearStart && !nearEnd) return;
     const fresh = layRow(row.keys[i] as K, live.current.step);
     setRow(fresh);
+    at.current = fresh.origin;
     setIndex(fresh.origin);
+    setShown(fresh.origin);
   };
 
   const reach = warm ? 1 : 0;
@@ -174,11 +212,17 @@ export function Pager<K extends string>({
           onPageScroll={onScroll}
           onPageSelected={(e: { nativeEvent: { position: number } }) => selected(e.nativeEvent.position)}
           onPageScrollStateChanged={(e: { nativeEvent: { pageScrollState: string } }) => {
-            if (e.nativeEvent.pageScrollState === "idle") quiet();
+            const state = e.nativeEvent.pageScrollState;
+            if (state !== "idle" && !pagerMotion.moving) pagerMotion.since = Date.now();
+            pagerMotion.moving = state !== "idle";
+            if (state === "idle") {
+              pagerMotion.until = Date.now() + 150;
+              quiet();
+            }
           }}
         >
           {row.keys.map((key, i) => (
-            <Slot key={key}>{Math.abs(i - index) <= reach ? render(key, i === index) : null}</Slot>
+            <Slot key={key}>{Math.abs(i - shown) <= reach || i === index ? render(key, i === shown) : null}</Slot>
           ))}
         </AnimatedPagerView>
       </View>

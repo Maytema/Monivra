@@ -26,3 +26,9 @@ export const useVerticalScroll = (): boolean =>
     (l) => (listeners.add(l), () => void listeners.delete(l)),
     () => swiping,
   );
+
+// Whether a native pager is being swiped or is settling, and until when a press is still taken for the end of a swipe:
+// a press that ends then is not a tap (ui/pressable.tsx). A plain value, so nothing draws when it changes.
+// (A pager that went away mid-swipe never says "idle": a "moving" older than a second and a half is not believed.)
+export const pagerMotion = { moving: false, since: 0, until: 0 };
+export const pagerBusy = (): boolean => (pagerMotion.moving && Date.now() - pagerMotion.since < 1500) || Date.now() < pagerMotion.until;

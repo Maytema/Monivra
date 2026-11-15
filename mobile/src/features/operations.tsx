@@ -24,7 +24,7 @@ import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { RootHero } from "./root-hero.tsx";
-import { setView, useViewPeriod, useViewFilters } from "./ui-state.ts";
+import { setView, useViewFilters, useViewPeriodWhile } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
 import { PostedBanner } from "./posted-banner.tsx";
 import { listingOnTop } from "./reveal.ts";
@@ -43,18 +43,20 @@ export function OperationsScreen() {
   const run = useCommand();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const period = useViewPeriod();
   const filters = useViewFilters();
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
   const setFilters = (next: Filters) => setView({ filters: next });
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState(false);
+  // The period matters to this screen only while operations are being selected ("select all"): a swipe of the period
+  // does not draw the screen (its hero, its bars) again.
+  const period = useViewPeriodWhile(selection);
   const fab = useFabCollapse();
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   // The operations of the period are needed here only for "select all" of the selection; the pages list their own.
   // (Made on every swipe before, for nothing.)
-  const ops = useMemo(() => (selection ? operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
+  const ops = useMemo(() => (selection && period ? operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
 
   // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
   useFocusEffect(
@@ -156,7 +158,7 @@ export function OperationsScreen() {
             {active ? <FilteredBanner onChange={() => openFilters(filters, setFilters)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
           </>
         }
-        render={(shown, isCurrent) => (
+        render={(shown) => (
           <OperationsPage
             period={shown}
             query={query}
@@ -165,8 +167,7 @@ export function OperationsScreen() {
             selectedSet={selectedSet}
             onPress={pressRow}
             onLongPress={holdRow}
-            current={isCurrent}
-            onTop={isCurrent ? fab.setAtTop : undefined}
+            onTop={fab.setAtTop}
           />
         )}
       />
@@ -186,14 +187,13 @@ export function OperationsScreen() {
   );
 }
 
-// The list of one period: drawn for the current period and, beforehand, for its neighbours. The current page
-// draws a few screens of rows around the window; a neighbour only what the first screen shows (that is all a
-// swipe can uncover), and the rest when it becomes the current one.
-export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop, current = true }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void; current?: boolean }) {
-  countRender(current ? "operations page (current)" : "operations page (neighbour)");
+// The list of one period: drawn for the current period and, beforehand, for its neighbours, all alike (nothing on a
+// page depends on whether it is the current one, so a swipe does not draw the pages that are already there).
+export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
+  countRender("operations page");
   const began = PERF_BUILD ? now() : 0;
   useLayoutEffect(() => {
-    if (PERF_BUILD) perfLog(current ? "operations page built (current)" : "operations page built (neighbour)", now() - began);
+    if (PERF_BUILD) perfLog("operations page built", now() - began);
   });
   const data = useLedger();
   const p = usePalette();
@@ -275,9 +275,8 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         getItemType={typeOfItem}
         onScroll={scrolled}
         scrollEventThrottle={32}
-        // FlashList draws what is on the screen and reuses the rows that leave it: a neighbour page (the one a swipe
-        // uncovers) draws only its first screen, the current one a screen more on each side.
-        drawDistance={current ? 600 : 0}
+        // FlashList draws what is on the screen (and a little around it) and reuses the rows that leave it. The same
+        // for every page, current or not, so a swipe changes nothing on the pages that are already drawn.
         contentContainerStyle={content}
         // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away:
         // one head drawn over the list and moved by the platform, not a head per day following the scroll.
@@ -286,7 +285,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
-        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => perfLog(current ? "list ready (current)" : "list ready (neighbour)", elapsedTimeInMs) : undefined}
+        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => perfLog("list ready", elapsedTimeInMs) : undefined}
       />
     </View>
   );

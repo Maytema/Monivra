@@ -48,7 +48,7 @@ export function FilteredOperations() {
             {single ? <CategoryCard id={single.id} /> : null}
           </>
         }
-        render={(period, isCurrent) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={isCurrent ? fab.setAtTop : undefined} />}
+        render={(period) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={fab.setAtTop} />}
       />
       <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu()} />
     </View>

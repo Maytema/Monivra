@@ -8,6 +8,7 @@
 // Every screen imports Pressable from this file (scripts/check-boundaries.mjs refuses react-native's own).
 import { useRef } from "react";
 import { usePalette } from "./app-context.tsx";
+import { pagerBusy } from "./gesture-lock.ts";
 import { Animated, Easing, Pressable as NativePressable, type GestureResponderEvent, type PressableProps, type PressableStateCallbackType } from "react-native";
 
 const AnimatedPressable = Animated.createAnimatedComponent(NativePressable);
@@ -50,7 +51,7 @@ function Held({ feedback, onPressIn, onPress, ...props }: PressableProps & { fee
         since.current = Date.now();
         onPressIn?.(e);
       }}
-      onPress={onPress && !feedback ? (e: GestureResponderEvent) => (Date.now() - since.current > HELD_MS ? undefined : onPress(e)) : onPress}
+      onPress={onPress && !feedback ? (e: GestureResponderEvent) => (Date.now() - since.current > HELD_MS || pagerBusy() ? undefined : onPress(e)) : onPress}
     />
   );
 }
