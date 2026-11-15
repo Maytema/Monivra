@@ -10,7 +10,7 @@
 //
 // `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
-import { countRender } from "../platform/perf.ts";
+import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
 import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -125,9 +125,19 @@ export function Pager<K extends string>({
     return () => clearTimeout(timer);
   }, []);
 
+  // Speed-check build: the time from the page chosen to the commit of the new pages, and to the next frame.
+  const chosenAt = useRef(0);
+  useLayoutEffect(() => {
+    if (!PERF_BUILD || !chosenAt.current) return;
+    const since = chosenAt.current;
+    chosenAt.current = 0;
+    perfLog("swipe: pages built", now() - since);
+    requestAnimationFrame(() => perfLog("swipe: next frame", now() - since));
+  }, [index]);
   const selected = (page: number) => {
     const from = at.current;
     if (page === from) return;
+    if (PERF_BUILD) chosenAt.current = now();
     at.current = page;
     unstable_batchedUpdates(() => {
       setIndex(page);

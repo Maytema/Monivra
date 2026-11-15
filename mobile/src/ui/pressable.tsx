@@ -55,8 +55,14 @@ function Held({ feedback, onPressIn, onPress, ...props }: PressableProps & { fee
   );
 }
 
+// No press blocks the platform's own gestures (blockNativeResponder off): a row of a list held by a finger had told
+// its parents not to take the touch, so the native pager could not start a sideways swipe that began on a row, and
+// the finger lifted far away was then taken for a tap on the row (speed check, build 100: a sheet opened during a
+// quick back-and-forth swipe). Now the pager or the list takes the touch as soon as it moves, and the press is
+// cancelled.
 export function Pressable({ feedback = false, squish, style, ...props }: PressableProps & { feedback?: boolean; squish?: number }) {
-  if (squish) return <Squishy squish={squish} style={style} {...props} />;
+  const free = { blockNativeResponder: false, ...props } as PressableProps;
+  if (squish) return <Squishy squish={squish} style={style} {...free} />;
   const quiet = typeof style === "function" && !feedback ? (state: PressableStateCallbackType) => style({ ...state, pressed: false }) : style;
-  return <Held feedback={feedback} style={quiet} {...props} />;
+  return <Held feedback={feedback} style={quiet} {...free} />;
 }

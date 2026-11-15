@@ -1,8 +1,8 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender } from "../platform/perf.ts";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -52,7 +52,9 @@ export function OperationsScreen() {
   const [selection, setSelection] = useState(false);
   const fab = useFabCollapse();
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
-  const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
+  // The operations of the period are needed here only for "select all" of the selection; the pages list their own.
+  // (Made on every swipe before, for nothing.)
+  const ops = useMemo(() => (selection ? operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
 
   // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
   useFocusEffect(
@@ -189,6 +191,10 @@ export function OperationsScreen() {
 // swipe can uncover), and the rest when it becomes the current one.
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop, current = true }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void; current?: boolean }) {
   countRender(current ? "operations page (current)" : "operations page (neighbour)");
+  const began = PERF_BUILD ? now() : 0;
+  useLayoutEffect(() => {
+    if (PERF_BUILD) perfLog(current ? "operations page built (current)" : "operations page built (neighbour)", now() - began);
+  });
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -280,6 +286,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
+        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => perfLog(current ? "list ready (current)" : "list ready (neighbour)", elapsedTimeInMs) : undefined}
       />
     </View>
   );

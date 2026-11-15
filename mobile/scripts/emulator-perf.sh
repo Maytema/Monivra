@@ -151,7 +151,12 @@ finish 3
 log "after the chain: shown $(shown_tab) (expected Operations)"
 period_title() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1; python3 - <<'PY'
 import re, xml.etree.ElementTree as ET
-t = [n.get("text") for n in ET.parse("/tmp/ui.xml").iter("node") if re.match(r"^[A-Z][a-z]+ \d{4}$", n.get("text") or "")]
+# The title in the middle of the screen (the neighbours' titles are in the tree too, off to the sides).
+t = []
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if re.match(r"^[A-Z][a-z]+ \d{4}$", n.get("text") or ""):
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        if 300 < (a + c) // 2 < 780: t.append(n.get("text"))
 print(t[0] if t else "?")
 PY
 }
