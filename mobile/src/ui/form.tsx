@@ -50,13 +50,23 @@ export function FieldText({ label: title, value, onChange, placeholder, boxed = 
   const p = usePalette();
   const t = useT();
   const narrow = useNarrow();
-  const input = useRef<{ focus(): void } | null>(null);
+  const input = useRef<{ focus(): void; blur(): void; isFocused(): boolean } | null>(null);
   // The whole card is the touch target of the field, not only the thin line of the input.
   return (
-    <Pressable accessible={false} onPress={() => input.current?.focus()} style={box(p, narrow)}>
+    <Pressable accessible={false} onPress={() => {
+        const field = input.current;
+        if (!field) return;
+        // After the keyboard was closed with Back the field still counts as focused and focus() does nothing.
+        if (field.isFocused()) {
+          field.blur();
+          setTimeout(() => field.focus(), 30);
+        } else field.focus();
+      }}
+      style={box(p, narrow)}
+    >
       <Text style={[label, { color: p.ink, marginBottom: boxed ? 18 : 12 }]}>{t.t(title)}</Text>
       <TextInput
-        ref={(node: { focus(): void } | null) => {
+        ref={(node: { focus(): void; blur(): void; isFocused(): boolean } | null) => {
           input.current = node;
         }}
         accessibilityLabel={t.t(title)}
@@ -67,7 +77,7 @@ export function FieldText({ label: title, value, onChange, placeholder, boxed = 
         style={
           boxed
             ? { color: p.accentInk, fontSize: 17, height: 55, paddingHorizontal: 16, borderWidth: 1, borderColor: p.ink, borderRadius: 6 }
-            : { alignSelf: value ? "stretch" : "flex-start", minWidth: 28, color: p.accentInk, fontSize: 16, paddingVertical: 4, paddingHorizontal: 0, borderBottomWidth: 1, borderBottomColor: p.accentInk }
+            : { alignSelf: "stretch", color: p.accentInk, fontSize: 16, paddingVertical: 4, paddingHorizontal: 0, borderBottomWidth: 1, borderBottomColor: p.accentInk }
         }
       />
     </Pressable>
@@ -103,5 +113,33 @@ export function FieldToggle({ label: title, hint, value, onChange }: { label: st
       </View>
       <Toggle value={value} onChange={onChange} />
     </Pressable>
+  );
+}
+
+// Switches that belong together share one frame, a line between them (a pair "consider" / "show" for expenses, another
+// for incomes), so it is clear which ones go together.
+export function FieldToggleGroup({ items }: { items: readonly { key: string; label: string; hint?: string; value: boolean; onChange: (v: boolean) => void }[] }) {
+  const p = usePalette();
+  const t = useT();
+  const narrow = useNarrow();
+  return (
+    <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: RADIUS, backgroundColor: p.bg, overflow: "hidden" }}>
+      {items.map((item, i) => (
+        <Pressable
+          key={item.key}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: item.value }}
+          accessibilityLabel={t.t(item.label)}
+          onPress={() => item.onChange(!item.value)}
+          style={{ flexDirection: "row", alignItems: "center", gap: 16, paddingVertical: 16, paddingHorizontal: narrow ? 20 : 24, borderTopWidth: i ? 1 : 0, borderTopColor: p.line }}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={[label, { color: p.ink }]}>{t.t(item.label)}</Text>
+            {item.hint ? <Text style={{ color: p.muted, fontSize: 13, lineHeight: 16, marginTop: 6, letterSpacing: 0.2 }}>{t.t(item.hint)}</Text> : null}
+          </View>
+          <Toggle value={item.value} onChange={item.onChange} />
+        </Pressable>
+      ))}
+    </View>
   );
 }

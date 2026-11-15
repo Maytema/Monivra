@@ -213,7 +213,8 @@ function Amount({ session }: { session: EditorSession }) {
       <Text accessibilityLabel={session.calculatorOn ? "Calculator expression" : "Amount"} style={{ color: p.ink, fontSize: 35 }}>
         {session.expression()}
       </Text>
-      <Text style={{ color: p.ink, fontSize: 35 }}>{parties.currency}</Text>
+      {/* The unit comes back with the result: while a sum is being typed there are only digits and signs. */}
+      {/.[÷×−+]/.test(session.expression()) ? null : <Text style={{ color: p.ink, fontSize: 35 }}>{parties.currency}</Text>}
     </View>
   );
   return session.compact ? (
@@ -494,7 +495,9 @@ function Keypad({ session, onSave }: { session: EditorSession; onSave: (calculat
           <Icon name="backspace" size={26} color={p.ink} />
         </Key>
         <Key label="Additionally" onPress={modeTap} style={{ backgroundColor: session.calculatorOn ? mix(p.accent, p.bg, 0.18) : p.key }}>
-          <Icon name="moreCircle" size={28} color={session.calculatorOn ? p.accentInk : p.ink} />
+          <Icon name="calculator" size={28} color={session.calculatorOn ? p.accentInk : p.ink} />
+          {/* The light under the key: on while the calculator mode is on. */}
+          <View style={{ position: "absolute", bottom: 7, width: 22, height: 4, borderRadius: 2, backgroundColor: session.calculatorOn ? p.accent : "transparent" }} />
           {count ? (
             <View style={{ position: "absolute", top: 4, right: 6, minWidth: 18, height: 18, paddingHorizontal: 5, borderRadius: 9, backgroundColor: mix(p.accent, p.bg, 0.3), alignItems: "center", justifyContent: "center" }}>
               <Text style={{ color: p.accentInk, fontSize: 12, fontWeight: "600" }}>{count}</Text>

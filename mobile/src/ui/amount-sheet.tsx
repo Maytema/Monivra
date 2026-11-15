@@ -63,7 +63,8 @@ function AmountSheet({ title, value, currency, signed, onDone }: { title: string
       {txt(s, size)}
     </Key>
   );
-  const shown = expr.replace(/[\d.]+/g, (n) => `${n} ${currency || data.settings.currency}`).replace(/[÷×−+]/g, " $& ");
+  // A single number carries its unit; a sum shows only digits and signs (the unit returns with the result).
+  const shown = /.[÷×−+]/.test(expr) ? expr.replace(/[÷×−+]/g, " $& ") : expr.replace(/[\d.]+/g, (n) => `${n} ${currency || data.settings.currency}`);
   const d = digits;
   return (
     <View>

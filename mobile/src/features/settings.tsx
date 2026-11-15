@@ -2,7 +2,7 @@
 // formatting, styles and elements, notifications, security, privacy, backups and rates. One route shows
 // a page by its name; the pages are described here as a table, as in the first application.
 import { useEffect, useState, type ReactNode } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, useWindowDimensions, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { changeMainCurrency } from "../domain/accounts.ts";
@@ -109,15 +109,21 @@ const go = (page: string) => () => router.push({ pathname: "/settings-page", par
 function ColorTheme() {
   const { s, set } = useSetting();
   const p = usePalette();
+  const { width } = useWindowDimensions();
+  // Four to a row, sizes in whole pixels: a circle given as a share of its tile sat off the centre.
+  const gap = 12;
+  const tile = Math.floor((width - 32 - gap * 3) / 4);
+  const dot = Math.round(tile * 0.7);
+  const mark = Math.round(dot * 0.52);
   return (
-    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, padding: 16 }}>
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap, padding: 16 }}>
       {THEME_COLORS.map((c) => {
         const on = s.accent === c;
         return (
-          <Pressable key={c} accessibilityRole="button" accessibilityLabel={c} accessibilityState={{ selected: on }} onPress={() => set({ accent: c })} style={{ width: "22.6%", aspectRatio: 1, borderRadius: 22, backgroundColor: mix(c, p.bg, 0.14), alignItems: "center", justifyContent: "center" }}>
-            <View style={{ width: "78%", aspectRatio: 1, borderRadius: 999, backgroundColor: c, alignItems: "center", justifyContent: "center" }}>
+          <Pressable key={c} accessibilityRole="button" accessibilityLabel={c} accessibilityState={{ selected: on }} onPress={() => set({ accent: c })} style={{ width: tile, height: tile, borderRadius: 22, backgroundColor: mix(c, p.bg, 0.14), alignItems: "center", justifyContent: "center" }}>
+            <View style={{ width: dot, height: dot, borderRadius: dot / 2, backgroundColor: c, alignItems: "center", justifyContent: "center" }}>
               {on ? (
-                <View style={{ width: "52%", aspectRatio: 1, borderRadius: 999, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
+                <View style={{ width: mark, height: mark, borderRadius: mark / 2, backgroundColor: "#ffffff", alignItems: "center", justifyContent: "center" }}>
                   <Icon name="check" size={20} color={c} />
                 </View>
               ) : null}

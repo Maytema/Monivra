@@ -2,6 +2,7 @@
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
 import { countRender } from "../platform/perf.ts";
+import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -44,6 +45,13 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
+  // The tab asked for last. The bar is redrawn only after the new screen has been built (the first visit of a tab takes
+  // a moment), and in that moment `state` still names the old tab: a press on the tab just left was taken for "already
+  // here" and dropped, so going back needed two presses. The decision is made from what was asked for, not from the draw.
+  const asked = useRef(state.routes[state.index]?.key);
+  useEffect(() => {
+    asked.current = state.routes[state.index]?.key;
+  }, [state.index, state.routes]);
   // A screen hides the bar while it has its own actions there (the selection of operations).
   const current = state.routes[state.index];
   const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle as Parameters<typeof StyleSheet.flatten>[0]) : undefined;
@@ -66,8 +74,11 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
         const active = state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
+          if (asked.current === route.key) return;
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
-          if (!active && !event.defaultPrevented) navigateToTab(route.key);
+          if (event.defaultPrevented) return;
+          asked.current = route.key;
+          navigateToTab(route.key);
         };
         return (
           <Pressable

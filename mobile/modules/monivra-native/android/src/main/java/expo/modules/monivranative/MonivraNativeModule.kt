@@ -40,6 +40,9 @@ private const val REQUEST_PHOTO = 46071
 private val PHOTO_TYPES = setOf("image/jpeg", "image/png", "image/webp")
 
 class MonivraNativeModule : Module() {
+  private var focusWatcher: android.view.ViewTreeObserver.OnWindowFocusChangeListener? = null
+  private var cover: android.view.View? = null
+
   private var pendingPhoto: Promise? = null
   private var photoFile: File? = null
 
@@ -107,13 +110,46 @@ class MonivraNativeModule : Module() {
       "data:image/jpeg;base64," + Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
 
-    // While on, the system hides the application in the recent-apps preview and refuses screenshots
-    // (the first application's MonivraNativePlugin.setPrivacyScreen).
+    // While on, the recent-apps preview shows the screen blurred instead of a blank white card: the moment the window
+    // loses focus (before the system takes its snapshot) a blurred copy of it is laid over the screen, and it is taken
+    // away when focus returns. (FLAG_SECURE made the preview blank and refused screenshots; a blank card looks broken.)
     Function("setSecure") { on: Boolean ->
       val activity = appContext.currentActivity ?: return@Function false
       activity.runOnUiThread {
-        if (on) activity.window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        else activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        val decor = activity.window.decorView as? android.view.ViewGroup ?: return@runOnUiThread
+        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        focusWatcher?.let { decor.viewTreeObserver.removeOnWindowFocusChangeListener(it) }
+        focusWatcher = null
+        cover?.let { decor.removeView(it) }
+        cover = null
+        if (on) {
+          val watcher = android.view.ViewTreeObserver.OnWindowFocusChangeListener { focused ->
+            if (focused) {
+              cover?.let { decor.removeView(it) }
+              cover = null
+            } else if (cover == null && decor.width > 0 && decor.height > 0) {
+              try {
+                // Small copy, scaled up with filtering twice: a cheap blur that needs no extra library.
+                val w = maxOf(1, decor.width / 24)
+                val h = maxOf(1, decor.height / 24)
+                val small = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                val canvas = android.graphics.Canvas(small)
+                canvas.scale(w.toFloat() / decor.width, h.toFloat() / decor.height)
+                decor.draw(canvas)
+                val view = android.widget.ImageView(activity)
+                view.scaleType = android.widget.ImageView.ScaleType.FIT_XY
+                view.setImageBitmap(Bitmap.createScaledBitmap(small, w * 3, h * 3, true))
+                view.setColorFilter(Color.argb(70, 255, 255, 255), android.graphics.PorterDuff.Mode.SRC_OVER)
+                decor.addView(view, android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT))
+                cover = view
+              } catch (error: Throwable) {
+                // No cover is better than a crash: the preview then shows the screen as it is.
+              }
+            }
+          }
+          decor.viewTreeObserver.addOnWindowFocusChangeListener(watcher)
+          focusWatcher = watcher
+        }
       }
       true
     }

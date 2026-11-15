@@ -25,7 +25,7 @@ import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { currencyName } from "../ui/currency-names.ts";
 import { openCustomize } from "../ui/customize-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
-import { FieldButton, FieldText, FieldToggle } from "../ui/form.tsx";
+import { FieldButton, FieldText, FieldToggle, FieldToggleGroup } from "../ui/form.tsx";
 import { openChoiceSheet, type Choice } from "../ui/choice-sheet.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
@@ -261,7 +261,11 @@ export function AccountEditor() {
           />
         ) : null}
         <FieldToggle label="Include in overall balance" hint="Include the account value in the total at the top of the application" value={draft.include} onChange={(include) => set({ include })} />
-        {debt ? DEBT_SWITCHES.map(([key, label, hint]) => <FieldToggle key={key} label={label} hint={hint} value={!!draft[key]} onChange={(v) => set({ [key]: v })} />) : null}
+        {debt
+          ? [DEBT_SWITCHES.slice(0, 2), DEBT_SWITCHES.slice(2)].map((pair) => (
+              <FieldToggleGroup key={pair[0]![0]} items={pair.map(([key, label, hint]) => ({ key, label, hint, value: !!draft[key], onChange: (v: boolean) => set({ [key]: v }) }))} />
+            ))
+          : null}
         <View style={{ gap: 10, paddingTop: 6 }}>
           <Button label={editing ? "Save" : "Create"} onPress={save} />
           {existing ? (

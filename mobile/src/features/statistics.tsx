@@ -1,7 +1,7 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
@@ -55,7 +55,10 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const p = usePalette();
   const t = useT();
   const money = useMoney();
-  const { catType, filters } = useView();
+  const { catType: asked, filters } = useView();
+  // The tab shows the choice at once; the blocks below follow a moment later (and the neighbouring pages after the
+  // open one), so the switch is not held up by drawing the charts again.
+  const catType = useDeferredValue(asked);
   const [selected, setSelected] = useState<string | null>(null);
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
@@ -316,7 +319,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
       <View style={{ flex: 1 }}>
         {hasOperations ? (
           <>
-            <SumTabs tinted active={catType} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
+            <SumTabs tinted active={asked} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
             <ScrollBlocks current={current}>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
