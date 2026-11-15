@@ -1,5 +1,5 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
-import { memo, useCallback, useDeferredValue, useMemo } from "react";
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
@@ -33,31 +33,50 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
   const data = useLedger();
   const money = useMoney();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
-  const tiles = data.categories.filter((c) => c.type === catType && !c.parent && !c.archived);
-  // A debt account can stand among the categories, as an expense or as an income.
-  const debts = data.accounts.filter((a) => a.type === "Debt" && !a.archived && (catType === "expense" ? a.showExpense : a.showIncome));
-  const tone = (total: number) => (total === 0 ? "muted" : catType === "income" ? "pos" : "neg");
+  // Both kinds are kept drawn once the page has settled and only shown or hidden: switching Expenses / Incomes then
+  // changes a style and the highlighted tab instead of building a dozen tiles with their icons on the spot.
+  const [warm, setWarm] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setWarm(true), 1200);
+    return () => clearTimeout(timer);
+  }, []);
   const create = () => router.push({ pathname: "/category", params: { type: catType } });
-  const empty = !tiles.length && !debts.length;
+  const emptyOf = (kind: "expense" | "income") => !data.categories.some((c) => c.type === kind && !c.parent && !c.archived) && !data.accounts.some((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
   return (
       <Screen padded={false} bar={false}>
         <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />
-        {empty ? (
+        {emptyOf(catType) ? (
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
-        ) : (
-          <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
-            {tiles.map((c) => {
-              const total = categoryTotalIn(data, rows, c);
-              return <CategoryCell key={c.id} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} />;
-            })}
-            {debts.map((a) => {
-              const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: catType, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
-              const total = categoryTotalIn(data, rows, asCategory);
-              return <CategoryTile key={asCategory.id} icon={a.icon} color={a.color} name={a.name} figure={money(total, a.currency)} tone={tone(total)} onPress={() => openAccountSheet(a.id)} />;
-            })}
-          </View>
+        ) : null}
+        {(["expense", "income"] as const).map((kind) =>
+          (kind === catType || warm) && !emptyOf(kind) ? (
+            <View key={kind} style={kind === catType ? undefined : { display: "none" }}>
+              <TileGrid data={data} rows={rows} kind={kind} money={money} />
+            </View>
+          ) : null,
         )}
       </Screen>
+  );
+});
+
+type Money = ReturnType<typeof useMoney>;
+const TileGrid = memo(function TileGrid({ data, rows, kind, money }: { data: ReturnType<typeof useLedger>; rows: ReturnType<typeof reportRows>; kind: "expense" | "income"; money: Money }) {
+  const tiles = data.categories.filter((c) => c.type === kind && !c.parent && !c.archived);
+  // A debt account can stand among the categories, as an expense or as an income.
+  const debts = data.accounts.filter((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
+  const tone = (total: number) => (total === 0 ? "muted" : kind === "income" ? "pos" : "neg");
+  return (
+    <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
+      {tiles.map((c) => {
+        const total = categoryTotalIn(data, rows, c);
+        return <CategoryCell key={c.id} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={money(total, c.currency)} tone={tone(total)} />;
+      })}
+      {debts.map((a) => {
+        const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: kind, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
+        const total = categoryTotalIn(data, rows, asCategory);
+        return <CategoryTile key={asCategory.id} icon={a.icon} color={a.color} name={a.name} figure={money(total, a.currency)} tone={tone(total)} onPress={() => openAccountSheet(a.id)} />;
+      })}
+    </View>
   );
 });
 

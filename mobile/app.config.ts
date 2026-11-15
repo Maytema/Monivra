@@ -9,7 +9,7 @@ const config: ExpoConfig = {
   name: "Monivra",
   slug: "monivra",
   scheme: "monivra",
-  version: "0.2.0",
+  version: "0.2.1",
   orientation: "portrait",
   icon: "./assets/icon.png",
   userInterfaceStyle: "automatic",

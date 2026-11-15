@@ -1,6 +1,7 @@
 // Pieces that make the first application recognisable, built from the same measures as its CSS
 // (components.css, accounts.css): the header block ("hero"), the strip of tabs, section labels,
 // the tinted badge, the progress meter and the round action tiles of a sheet.
+import { RollingFigure } from "./rolling.tsx";
 import { countRender } from "../platform/perf.ts";
 import { createContext, memo, startTransition, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
@@ -48,9 +49,7 @@ export function Hero({
         <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(caption)}</Text>
         <Icon name={hidden ? "eye" : "eyeOpen"} size={16} color={p.ink} />
       </Pressable>
-      <Text numberOfLines={1} adjustsFontSizeToFit style={{ color: p.ink, fontSize: 27, lineHeight: 42, paddingHorizontal: 53, fontVariant: ["tabular-nums"] }}>
-        {figure}
-      </Text>
+      <RollingFigure text={figure} color={p.ink} />
       {actionIcon && onAction ? (
       <Pressable
         accessibilityRole="button"

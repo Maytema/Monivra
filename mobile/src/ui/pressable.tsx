@@ -33,7 +33,7 @@ function Squishy({ squish, style, onPressIn, onPressOut, children, ...props }: P
       }}
     >
       {typeof children === "function" ? children({ pressed: false }) : children}
-      <Animated.View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, borderRadius: 999, borderWidth: 1, borderColor: p.accent, opacity: ring }} />
+      <Animated.View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0, borderRadius: 10, borderWidth: 1, borderColor: p.accent, opacity: ring }} />
     </AnimatedPressable>
   );
 }
