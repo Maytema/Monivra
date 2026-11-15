@@ -1,0 +1,249 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                752ms      410ms      5       8   7 (87.50%)  400ms  400ms
+first screen: start with the basic set                   1014ms      148ms      9       5   4 (80.00%)  450ms  450ms
+read the file and open the restore page                   704ms      339ms      4      29  23 (79.31%)  150ms  150ms
+restore 3000 operations                                  1143ms     1085ms      2      31  28 (90.32%)  105ms  133ms
+open tab Operations (first time)                          577ms      110ms      8     166 121 (72.89%)   89ms  117ms
+scroll the operations down (6 flicks)                    1218ms      149ms     17     160 109 (68.12%)   97ms  150ms
+scroll the operations back up (6 flicks)                    0ms        0ms      0       0            -      -      -
+swipe to the previous period (3 times)                      0ms        0ms      0      39  22 (56.41%)   73ms   81ms
+swipe to the next period (3 times)                         57ms       57ms      1      41  23 (56.10%)   65ms   85ms
+open tab Statistics (first time)                           59ms       59ms      1       5   4 (80.00%)   93ms   93ms
+scroll the statistics (3 flicks down, 3 up)               245ms       90ms      3      58  45 (77.59%)  109ms  150ms
+statistics: previous period and back                      152ms       81ms      2      26  18 (69.23%)   73ms   89ms
+open tab Categories (first time)                            0ms        0ms      0       7   5 (71.43%)   48ms   48ms
+open tab Accounts                                           0ms        0ms      0       3  3 (100.00%)   42ms   42ms
+tabs again: Operations, Statistics, Categories, Acco        0ms        0ms      0      12   6 (50.00%)   46ms   48ms
+tab back and forth, 1.5s apart (Operations → Statist        0ms        0ms      0       6   4 (66.67%)   46ms   46ms
+tab back and forth, 0.8s apart (Operations → Statist        0ms        0ms      0       6   5 (83.33%)   61ms   61ms
+tab back and forth, 0.4s apart (Operations → Statist        0ms        0ms      0       6   5 (83.33%)   85ms   85ms
+tab chain quickly: Categories, Accounts, Statistics,      134ms       73ms      2      22  19 (86.36%)   89ms  113ms
+two quick period swipes (0.35s apart)                       0ms        0ms      0      22  11 (50.00%)   48ms   65ms
+swipe back and forth quickly (0.35s apart)                  0ms        0ms      0      41  24 (58.54%)   77ms   85ms
+statistics: Incomes                                         0ms        0ms      0       6   5 (83.33%)  101ms  101ms
+statistics: Expenses                                        0ms        0ms      0       5  5 (100.00%)   65ms   65ms
+open Budgets                                              124ms       65ms      2      34  21 (61.76%)  117ms  150ms
+open Scheduled payments                                   192ms       83ms      3      33  22 (66.67%)  105ms  133ms
+open the add menu                                         170ms      110ms      2       9   5 (55.56%)  150ms  150ms
+add menu: tap the tab Incomes, then Expenses               57ms       57ms      1      21  16 (76.19%)   85ms  109ms
+choose a category (the editor opens)                        0ms        0ms      0      11   9 (81.82%)   97ms   97ms
+type 1 2 5 on the keys                                      0ms        0ms      0       9   5 (55.56%)   73ms   73ms
+save the operation                                        598ms      140ms      7       0            -      -      -
+report preview, first time (3000 operations)              652ms       91ms     10      94  85 (90.43%)   89ms  150ms
+scroll the preview (8 flicks)                             477ms       71ms      8     235 193 (82.13%)   93ms  113ms
+report preview, second time                              1892ms      523ms     23      21  17 (80.95%)   93ms  150ms
+save the PIN                                              186ms       69ms      3      30  22 (73.33%)   85ms  117ms
+type a wrong PIN (1111)                                   272ms       94ms      4      85  50 (58.82%)   69ms   81ms
+type the right PIN (1234)                                  59ms       59ms      1      63  32 (50.79%)   69ms   89ms
+all moves                                               10734ms
+
+first screen: start with the basic set   | renders root hero 1
+first screen: start with the basic set   | renders pager 3
+first screen: start with the basic set   | renders tab bar 2
+first screen: start with the basic set   | engine toLocaleString x200 691.3ms
+first screen: start with the basic set   | engine plain format x200 0.4ms
+first screen: start with the basic set   | engine localeCompare x200 6.4ms
+first screen: start with the basic set   | engine toLocaleDateString x200 525.7ms
+first screen: start with the basic set   | tab press more (asked index, shown index)
+first screen: start with the basic set   | tab shown more 51.7ms
+first screen: start with the basic set   | renders tab bar 5
+first screen: start with the basic set   | tab shown more 34.6ms
+first screen: start with the basic set   | renders tab bar 1
+first screen: start with the basic set   | tab shown more 12.8ms
+first screen: start with the basic set   | renders tab bar 1
+read the file and open the restore page  | file read: 452162 characters 94.8ms
+read the file and open the restore page  | data file: read and checked 126.8ms
+read the file and open the restore page  | restore page: merge plan 206.1ms
+read the file and open the restore page  | restore page: replace plan 65.5ms
+read the file and open the restore page  | tab shown more 7729.1ms
+read the file and open the restore page  | renders tab bar 1
+restore 3000 operations                  | layer dialog shown 7.9ms
+restore 3000 operations                  | restore page: merge plan 70.9ms
+restore 3000 operations                  | restore page: replace plan 12.1ms
+restore 3000 operations                  | tab shown more 1090.7ms
+restore 3000 operations                  | renders root hero 1
+restore 3000 operations                  | renders pager 1
+restore 3000 operations                  | renders tab bar 1
+open tab Operations (first time)         | tab press operations (asked more, shown more)
+open tab Operations (first time)         | operations page built 11.0ms
+open tab Operations (first time)         | tab shown operations 68.1ms
+open tab Operations (first time)         | tab shown operations 82.3ms
+open tab Operations (first time)         | renders tab bar 5
+open tab Operations (first time)         | renders operations screen 2
+open tab Operations (first time)         | renders root hero 2
+open tab Operations (first time)         | renders pager 3
+open tab Operations (first time)         | renders period bar 3
+open tab Operations (first time)         | renders operations page 1
+open tab Operations (first time)         | renders fab 3
+open tab Operations (first time)         | renders day head 2
+open tab Operations (first time)         | renders operation row 5
+open tab Operations (first time)         | list ready 43.0ms
+open tab Operations (first time)         | operations page built 8.6ms
+open tab Operations (first time)         | operations page built 6.0ms
+open tab Operations (first time)         | list ready 27.0ms
+open tab Operations (first time)         | renders operation row 17
+open tab Operations (first time)         | renders tab bar 1
+open tab Operations (first time)         | renders pager 1
+open tab Operations (first time)         | renders period bar 1
+open tab Operations (first time)         | renders operations page 2
+open tab Operations (first time)         | renders day head 2
+scroll the operations down (6 flicks)    | renders operations screen 1
+scroll the operations down (6 flicks)    | renders root hero 1
+scroll the operations down (6 flicks)    | renders pager 1
+scroll the operations down (6 flicks)    | renders period bar 1
+scroll the operations down (6 flicks)    | renders day head 8
+scroll the operations down (6 flicks)    | renders fab 1
+scroll the operations down (6 flicks)    | renders operation row 16
+scroll the operations down (6 flicks)    | touch lag 28.8ms
+scroll the operations down (6 flicks)    | renders operation row 21
+scroll the operations down (6 flicks)    | renders day head 5
+scroll the operations down (6 flicks)    | touch lag 63.1ms
+scroll the operations down (6 flicks)    | renders operation row 22
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | touch lag 30.5ms
+scroll the operations down (6 flicks)    | renders operation row 20
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | touch lag 37.4ms
+scroll the operations down (6 flicks)    | renders day head 3
+scroll the operations down (6 flicks)    | renders operation row 6
+open tab Statistics (first time)         | tab press statistics (asked operations, shown operations)
+open tab Statistics (first time)         | tab shown statistics 80.8ms
+open tab Statistics (first time)         | renders tab bar 4
+open tab Statistics (first time)         | renders root hero 1
+open tab Statistics (first time)         | renders pager 3
+open tab Statistics (first time)         | renders period bar 3
+open tab Categories (first time)         | tab press categories (asked statistics, shown statistics)
+open tab Categories (first time)         | tab shown categories 64.5ms
+open tab Categories (first time)         | renders tab bar 4
+open tab Categories (first time)         | renders root hero 1
+open tab Categories (first time)         | renders pager 3
+open tab Categories (first time)         | renders period bar 3
+open tab Accounts                        | tab press index (asked categories, shown categories)
+open tab Accounts                        | tab shown index 35.8ms
+open tab Accounts                        | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | tab shown operations 35.7ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press statistics (asked operations, shown operations)
+tabs again: Operations, Statistics, Cate | tab shown statistics 54.2ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press categories (asked statistics, shown statistics)
+tabs again: Operations, Statistics, Cate | tab shown categories 31.5ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press index (asked categories, shown categories)
+tabs again: Operations, Statistics, Cate | tab shown index 42.8ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | tab shown operations 30.8ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tab back and forth, 1.5s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 1.5s apart (Operatio | tab shown statistics 32.3ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 4
+tab back and forth, 1.5s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 1.5s apart (Operatio | tab shown operations 30.2ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 4
+tab back and forth, 0.8s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.8s apart (Operatio | tab shown statistics 29.0ms
+tab back and forth, 0.8s apart (Operatio | renders tab bar 4
+tab back and forth, 0.8s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.8s apart (Operatio | tab shown operations 29.9ms
+tab back and forth, 0.8s apart (Operatio | renders tab bar 4
+tab back and forth, 0.4s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.4s apart (Operatio | tab shown statistics 30.3ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 4
+tab back and forth, 0.4s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.4s apart (Operatio | tab shown operations 30.1ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 4
+tab chain quickly: Categories, Accounts, | tab press categories (asked operations, shown operations)
+tab chain quickly: Categories, Accounts, | tab shown categories 31.5ms
+tab chain quickly: Categories, Accounts, | layer dialog shown 8.7ms
+tab chain quickly: Categories, Accounts, | renders tab bar 4
+tab chain quickly: Categories, Accounts, | tab press operations (asked categories, shown categories)
+tab chain quickly: Categories, Accounts, | tab shown operations 31.8ms
+tab chain quickly: Categories, Accounts, | renders tab bar 4
+swipe back and forth quickly (0.35s apar | touch lag 31.4ms
+swipe back and forth quickly (0.35s apar | tab press statistics (asked operations, shown operations)
+swipe back and forth quickly (0.35s apar | tab shown statistics 32.5ms
+swipe back and forth quickly (0.35s apar | renders tab bar 4
+statistics: Incomes                      | renders root hero 2
+statistics: Incomes                      | renders pager 2
+statistics: Incomes                      | renders period bar 2
+statistics: Expenses                     | renders root hero 2
+statistics: Expenses                     | renders pager 2
+statistics: Expenses                     | renders period bar 2
+statistics: Expenses                     | tab press more (asked statistics, shown statistics)
+statistics: Expenses                     | tab shown more 30.7ms
+statistics: Expenses                     | renders tab bar 4
+open Budgets                             | tab shown more 20.4ms
+open Budgets                             | renders tab bar 1
+open Budgets                             | renders period bar 2
+open Budgets                             | tab shown more 4238.7ms
+open Budgets                             | renders tab bar 1
+open Scheduled payments                  | touch lag 16.2ms
+open Scheduled payments                  | tab shown more 28.5ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab shown more 4212.5ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab press operations (asked more, shown more)
+open Scheduled payments                  | tab shown operations 31.3ms
+open Scheduled payments                  | renders tab bar 5
+open Scheduled payments                  | tab press operations (asked operations, shown operations)
+open Scheduled payments                  | tab press dropped: already asked
+open the add menu                        | layer sheet shown 3.9ms
+save the operation                       | tab press more (asked operations, shown operations)
+save the operation                       | tab shown more 44.8ms
+save the operation                       | renders tab bar 4
+save the operation                       | tab shown more 15.8ms
+save the operation                       | renders tab bar 1
+save the operation                       | tab shown more 24.7ms
+save the operation                       | operations page built 59.1ms
+save the operation                       | list ready 69.0ms
+save the operation                       | renders tab bar 1
+save the operation                       | renders period bar 9
+save the operation                       | renders pager 6
+save the operation                       | renders operations page 1
+save the operation                       | renders day head 2
+save the operation                       | renders operation row 12
+save the operation                       | renders period bar 1
+report preview, first time (3000 operati | report detail: 148 pages laid out 417.5ms
+report preview, first time (3000 operati | renders period bar 1
+report preview, first time (3000 operati | report preview: first 3 of 148 pages 502.6ms
+report preview, first time (3000 operati | layer full shown 13.5ms
+report preview, first time (3000 operati | renders period bar 1
+scroll the preview (8 flicks)            | touch lag 37.8ms
+scroll the preview (8 flicks)            | touch lag 27.5ms
+report preview, second time              | layer full shown 7.0ms
+report preview, second time              | tab shown more 5483.4ms
+report preview, second time              | operations page built 374.6ms
+report preview, second time              | operations page built 355.5ms
+report preview, second time              | operations page built 352.8ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | renders pager 6
+report preview, second time              | renders period bar 6
+report preview, second time              | renders operations page 3
+report preview, second time              | renders day head 3
+report preview, second time              | renders operation row 10
+report preview, second time              | list ready 450.0ms
+report preview, second time              | list ready 465.0ms
+report preview, second time              | tab shown more 6706.4ms
+report preview, second time              | renders operation row 12
+report preview, second time              | renders day head 1
+report preview, second time              | renders tab bar 1
+report preview, second time              | tab press more (asked more, shown more)
+report preview, second time              | tab press dropped: already asked
+report preview, second time              | tab shown more 19.1ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | tab shown more 33.1ms
+report preview, second time              | renders tab bar 1
+report preview, second time              | layer sheet shown 7.9ms
+save the PIN                             | operations page built 40.8ms
+save the PIN                             | operations page built 35.1ms
+save the PIN                             | operations page built 25.7ms
+save the PIN                             | renders root hero 4
+save the PIN                             | renders pager 4
+save the PIN                             | renders period bar 3
+save the PIN                             | renders operations screen 2
+save the PIN                             | renders operations page 3
+save the PIN                             | renders day head 4
+save the PIN                             | renders operation row 22
+save the PIN                             | renders fab 1
