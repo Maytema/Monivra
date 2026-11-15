@@ -10,7 +10,7 @@
 //
 // `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
-import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
+import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
 import { memo, startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -176,6 +176,9 @@ export function Pager<K extends string>({
   // and the two kept answering each other (10 s of the JavaScript thread, speed check build 102). Such a report is
   // refused and the pager is put back on its page.
   const touched = useRef(false);
+  // When a finger last touched this pager (touches reach JavaScript in order, before the page it chose): a page chosen
+  // within a moment of it is the person's.
+  const fingerAt = useRef(0);
   const asked = useRef(false);
   const hidden = useRef(false);
   const selected = (page: number) => {
@@ -184,7 +187,8 @@ export function Pager<K extends string>({
       asked.current = false;
       return;
     }
-    if (!touched.current && !asked.current) {
+    if (!touched.current && !asked.current && Date.now() - fingerAt.current > 1200) {
+      perfNote(`pager: refused page ${page} (on ${from})`);
       requestAnimationFrame(() => pager.current?.setPageWithoutAnimation(at.current));
       return;
     }
@@ -217,6 +221,10 @@ export function Pager<K extends string>({
     <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
       <View
         style={{ flex: 1 }}
+        onTouchStart={() => (fingerAt.current = Date.now())}
+        onTouchMove={() => (fingerAt.current = Date.now())}
+        onTouchEnd={() => (fingerAt.current = Date.now())}
+        onTouchCancel={() => (fingerAt.current = Date.now())}
         onLayout={(e: { nativeEvent: { layout: { width: number } } }) => {
           const w = e.nativeEvent.layout.width;
           // Shown again after being hidden (no size): the pager is put back on its page, at rest.
@@ -245,6 +253,7 @@ export function Pager<K extends string>({
           onPageSelected={(e: { nativeEvent: { position: number } }) => selected(e.nativeEvent.position)}
           onPageScrollStateChanged={(e: { nativeEvent: { pageScrollState: string } }) => {
             const state = e.nativeEvent.pageScrollState;
+            perfNote(`pager: ${state}`);
             if (state === "dragging") touched.current = true;
             if (state !== "idle" && !pagerMotion.moving) pagerMotion.since = Date.now();
             pagerMotion.moving = state !== "idle";
