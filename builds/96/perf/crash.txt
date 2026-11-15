@@ -1,0 +1,35 @@
+--------- beginning of crash
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: FATAL EXCEPTION: main
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: Process: app.monivra.finance.next, PID: 4105
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: java.lang.IllegalStateException: addViewAt: failed to insert view [57130] into parent [3020] at index 18
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at kt1.execute(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:1621)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at xo2.d(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:69)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at l70.invoke(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:167)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at com.facebook.react.internal.tracing.PerformanceTracer.a(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:11)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at xo2.b(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:140)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at xo2.e(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:10)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at k21.a(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:143)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at nl1.doFrame(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:1)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at ra.doFrame(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:53)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1337)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.Choreographer$CallbackRecord.run(Choreographer.java:1348)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.Choreographer.doCallbacks(Choreographer.java:952)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.Choreographer.doFrame(Choreographer.java:878)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.Choreographer$FrameDisplayEventReceiver.run(Choreographer.java:1322)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:958)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: Caused by: java.lang.IndexOutOfBoundsException: index=18 count=17
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.ViewGroup.addInArray(ViewGroup.java:5404)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.ViewGroup.addViewInner(ViewGroup.java:5297)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.ViewGroup.addView(ViewGroup.java:5104)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at android.view.ViewGroup.addView(ViewGroup.java:5044)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at com.facebook.react.views.view.ReactClippingViewManager.addView(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:20)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at com.facebook.react.views.view.ReactClippingViewManager.addView(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:25)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	at kt1.execute(r8-map-id-93586d3199911cee3398819806c2952e64d9e0915373898f0b5bf4f1f5635ac3:1597)
+11-15 17:55:32.715  4105  4105 E AndroidRuntime: 	... 21 more

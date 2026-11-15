@@ -1,0 +1,105 @@
+== cold start
+Total frames rendered: 7
+Janky frames: 6 (85.71%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 150ms
+90th percentile: 300ms
+95th percentile: 300ms
+99th percentile: 300ms
+Number Slow UI thread: 2
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== first screen: start with the basic set
+Total frames rendered: 5
+Janky frames: 4 (80.00%)
+Janky frames (legacy): 5 (100.00%)
+50th percentile: 150ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 4
+Number Frame deadline missed (legacy): 5
+== read the file and open the restore page
+Total frames rendered: 26
+Janky frames: 20 (76.92%)
+Janky frames (legacy): 25 (96.15%)
+50th percentile: 81ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 11
+Number Frame deadline missed: 20
+Number Frame deadline missed (legacy): 20
+== restore 3000 operations
+Total frames rendered: 30
+Janky frames: 27 (90.00%)
+Janky frames (legacy): 29 (96.67%)
+50th percentile: 81ms
+90th percentile: 121ms
+95th percentile: 125ms
+99th percentile: 150ms
+Number Slow UI thread: 14
+Number Frame deadline missed: 27
+Number Frame deadline missed (legacy): 26
+== open tab Operations (first time)
+Total frames rendered: 160
+Janky frames: 119 (74.38%)
+Janky frames (legacy): 160 (100.00%)
+50th percentile: 69ms
+90th percentile: 93ms
+95th percentile: 101ms
+99th percentile: 150ms
+Number Slow UI thread: 97
+Number Frame deadline missed: 119
+Number Frame deadline missed (legacy): 122
+== scroll the operations down (6 flicks)
+Total frames rendered: 135
+Janky frames: 99 (73.33%)
+Janky frames (legacy): 133 (98.52%)
+50th percentile: 65ms
+90th percentile: 109ms
+95th percentile: 133ms
+99th percentile: 200ms
+Number Slow UI thread: 81
+Number Frame deadline missed: 99
+Number Frame deadline missed (legacy): 99
+== scroll the operations back up (6 flicks)
+Total frames rendered: 140
+Janky frames: 112 (80.00%)
+Janky frames (legacy): 138 (98.57%)
+50th percentile: 69ms
+90th percentile: 97ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 83
+Number Frame deadline missed: 112
+Number Frame deadline missed (legacy): 109
+== swipe to the previous period (3 times)
+Total frames rendered: 67
+Janky frames: 51 (76.12%)
+Janky frames (legacy): 65 (97.01%)
+50th percentile: 65ms
+90th percentile: 89ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 38
+Number Frame deadline missed: 51
+Number Frame deadline missed (legacy): 50
+== swipe to the next period (3 times)
+== open tab Statistics (first time)
+== scroll the statistics (3 flicks down, 3 up)
+== statistics: previous period and back
+== open tab Categories (first time)
+== open tab Accounts
+== tabs again: Operations, Statistics, Categories, Accounts
+== open the add menu
+== choose a category (the editor opens)
+== type 1 2 5 on the keys
+== save the operation
+== report preview, first time (3000 operations)
+== scroll the preview (8 flicks)
+== report preview, second time
+== save the PIN
+== type a wrong PIN (1111)
+== type the right PIN (1234)
