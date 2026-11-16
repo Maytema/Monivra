@@ -200,8 +200,8 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const t = useT();
   const money = useMoney();
   const filters = useViewFilters();
-  const ops = useMemo(() => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst), [data, period, query, filters]);
-  const items = useMemo(() => {
+  const ops = useMemo(() => timed("page: operations of the period", () => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
+  const items = useMemo(() => timed("page: rows and days", () => {
     const out: Item[] = [];
     // One pass: the list is already newest first, so the days follow each other.
     const days = new Map<string, Operation[]>();
@@ -212,7 +212,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     }
     for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
     return out;
-  }, [ops]);
+  }), [ops]);
 
   const list = useRef<FlashListRef<Item>>(null);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
@@ -232,7 +232,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   );
   const [from, to] = periodBounds(period, data.settings);
   const summary = data.settings.opening && ops.length > 0 && !active;
-  const balances = useMemo(() => (summary ? balancesAround(data, filters.accounts, from, to) : null), [summary, data, filters.accounts, from, to]);
+  const balances = useMemo(() => (summary ? timed("page: opening and closing balances", () => balancesAround(data, filters.accounts, from, to)) : null), [summary, data, filters.accounts, from, to]);
   // The list is given the same pieces while nothing in them changed, so a scroll or the tick of the Add
   // button does not make it go through its rows again.
   const header = useMemo(
@@ -301,6 +301,14 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   );
 });
 
+// Speed-check build: the time of one part of drawing a page.
+function timed<T>(label: string, work: () => T): T {
+  if (!PERF_BUILD) return work();
+  const start = now();
+  const result = work();
+  perfLog(label, now() - start);
+  return result;
+}
 const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);
 const typeOfItem = (x: Item): string => x.kind;
 const STICKY = { useNativeDriver: true, hideRelatedCell: true } as const;
