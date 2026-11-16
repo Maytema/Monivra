@@ -14,6 +14,7 @@ import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/per
 import { memo, startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
+import { useNavigation } from "expo-router";
 import { PagerContext } from "./pan-pager.tsx";
 import { pagerMotion } from "./gesture-lock.ts";
 
@@ -152,20 +153,7 @@ export function Pager<K extends string>({
     position.setValue(at.current);
     offset.setValue(0);
   }, [row, position, offset]);
-  // The last place the native pager reported (page + fraction), kept on the JavaScript side too: the events of the
-  // native pager reach JavaScript coalesced and out of order ("idle" before "settling", speed check build 104), so when
-  // it is quiet the page it is really on is read from here and a lost "page selected" is caught up.
-  const reported = useRef(index);
-  const onScroll = useMemo(
-    () =>
-      Animated.event([{ nativeEvent: { position, offset } }], {
-        useNativeDriver: true,
-        listener: (e: { nativeEvent: { position: number; offset: number } }) => {
-          reported.current = e.nativeEvent.position + e.nativeEvent.offset;
-        },
-      }),
-    [position, offset],
-  );
+  const onScroll = useMemo(() => Animated.event([{ nativeEvent: { position, offset } }], { useNativeDriver: true }), [position, offset]);
 
   // The neighbours draw once the first page is on the screen and has settled.
   const [warm, setWarm] = useState(false);
@@ -188,6 +176,20 @@ export function Pager<K extends string>({
   // and chose another page — taken as a swipe, it changed the shared period, the statistics on the screen drew it,
   // and the two kept answering each other (10 s of the JavaScript thread, speed check build 102). Such a report is
   // refused and the pager is put back on its page.
+  // (Outside a navigator — none today — the pager counts as in front.)
+  let navigation: { isFocused(): boolean } | null = null;
+  try {
+    navigation = useNavigation();
+  } catch {
+    navigation = null;
+  }
+  const focused = () => {
+    try {
+      return navigation ? navigation.isFocused() : true;
+    } catch {
+      return true;
+    }
+  };
   const touched = useRef(false);
   // When a finger last touched this pager (touches reach JavaScript in order, before the page it chose): a page chosen
   // within a moment of it is the person's.
@@ -200,7 +202,8 @@ export function Pager<K extends string>({
       asked.current = false;
       return;
     }
-    if (!touched.current && !asked.current && Date.now() - fingerAt.current > 1200) {
+    // A pager on a screen that is not in front never takes a page (its tab was just left).
+    if (!focused() || (!touched.current && !asked.current && Date.now() - fingerAt.current > 1200)) {
       perfNote(`pager: refused page ${page} (on ${from})`);
       requestAnimationFrame(() => pager.current?.setPageWithoutAnimation(at.current));
       return;
@@ -273,16 +276,9 @@ export function Pager<K extends string>({
             pagerMotion.moving = state !== "idle";
             if (state === "idle") {
               pagerMotion.until = Date.now() + 150;
-              setTimeout(() => {
-                const real = Math.round(reported.current);
-                if (Math.abs(reported.current - real) < 0.02 && real !== at.current && real >= 0 && real < row.keys.length) {
-                  perfNote(`pager: caught up page ${real} (was ${at.current})`);
-                  selected(real);
-                }
-                touched.current = false;
-                asked.current = false;
-                quiet();
-              }, 120);
+              touched.current = false;
+              asked.current = false;
+              quiet();
             }
           }}
         >
