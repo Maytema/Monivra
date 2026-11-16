@@ -212,7 +212,11 @@ export function Pager<K extends string>({
     }
     asked.current = false;
     if (PERF_BUILD) chosenAt.current = now();
-    perfNote(`pager: page ${page} from ${from}`);
+    if (PERF_BUILD) {
+      chosen.current.set(page, now());
+      const ahead = page + Math.sign(page - from);
+      perfNote(`pager: page ${page} from ${from}; this page drawn: ${drawn(page) ? "yes" : "NO"}; next page ${ahead} drawn: ${drawn(ahead) ? "yes" : "NO"}; behind by ${page - drawnAround.current}`);
+    }
     at.current = page;
     passed.current.add(String(row.keys[page]));
     unstable_batchedUpdates(() => {
@@ -236,6 +240,17 @@ export function Pager<K extends string>({
   };
 
   const reach = warm ? 1 : 0;
+  // Speed-check build: which pages have their contents drawn (committed), and when each page was chosen, to say
+  // whether the page a swipe uncovers was drawn when the finger got there, and how long its contents took.
+  const drawnAround = useRef(shown);
+  const chosen = useRef(new Map<number, number>());
+  useLayoutEffect(() => {
+    if (!PERF_BUILD) return;
+    drawnAround.current = shown;
+    const t = chosen.current.get(shown);
+    if (t !== undefined) perfLog(`pager: contents around page ${shown} drawn (lag ${index - shown})`, now() - t);
+  }, [shown]);
+  const drawn = (page: number) => Math.abs(page - drawnAround.current) <= reach || page === index;
   return (
     <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
       <View

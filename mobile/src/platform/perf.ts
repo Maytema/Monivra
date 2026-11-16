@@ -21,8 +21,11 @@ export function perfNote(text: string): void {
 // "touch lag 180ms" means this touch waited 180 ms longer than the quickest one for the thread.
 let touchBase = Number.POSITIVE_INFINITY;
 let lastTouch = 0;
-export function noteTouch(timestamp: number): void {
+export function noteTouch(timestamp: number, touches = 1): void {
   if (!PERF_BUILD) return;
+  // A finger landing while JavaScript still counts another finger down: a touch whose end never reached it (a
+  // native view took the gesture without telling). The responder system then treats the new finger as a second one.
+  if (touches > 1) perfNote(`touch start with ${touches} touches active`);
   const at = now();
   lastTouch = at;
   const gap = at - timestamp;

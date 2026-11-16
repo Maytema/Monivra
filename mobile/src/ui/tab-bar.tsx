@@ -1,7 +1,7 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
-import { countRender, perfNote, sinceTouch } from "../platform/perf.ts";
+import { countRender, PERF_BUILD, perfNote, sinceTouch } from "../platform/perf.ts";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
@@ -65,8 +65,11 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   const current = state.routes[state.index];
   const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle as Parameters<typeof StyleSheet.flatten>[0]) : undefined;
   if (style?.display === "none") return null;
+  // Speed-check build: a finger on the bar is noted, so a press that never reached a tab shows as "bar touched" with no
+  // "tab press" after it.
   return (
     <View
+      onTouchStart={PERF_BUILD ? (e: { nativeEvent: { touches?: unknown[] } }) => perfNote(`bar touched (${e.nativeEvent.touches?.length ?? 1} touches)`) : undefined}
       style={{
         flexDirection: "row",
         alignItems: "center",

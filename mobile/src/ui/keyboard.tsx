@@ -29,7 +29,7 @@ export function KeyboardPad({ children }: { children: ReactNode }) {
     // The outer frame keeps the window's size (it is what is measured); the inner one is shortened by a margin, not
     // by padding: pages drawn with absolute positioning (the layers of ui/sheets.tsx) are placed against the box of
     // their parent, padding included, and would stay under the keyboard.
-    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }} onTouchStart={PERF_BUILD ? (e: { nativeEvent: { timestamp: number } }) => noteTouch(e.nativeEvent.timestamp) : undefined}>
+    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }} onTouchStart={PERF_BUILD ? (e: { nativeEvent: { timestamp: number; touches?: unknown[] } }) => noteTouch(e.nativeEvent.timestamp, e.nativeEvent.touches?.length ?? 1) : undefined}>
       <View style={{ flex: 1, marginBottom: pad }}>{children}</View>
     </View>
   );

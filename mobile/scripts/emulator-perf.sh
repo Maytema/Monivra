@@ -71,6 +71,7 @@ finish() {
 adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1
 adb shell settings put secure anr_show_background 0 >/dev/null 2>&1
 adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAIL: install"; cat "$OUT/install.txt"; exit 1; }
+adb logcat -G 16M >/dev/null 2>&1 || true
 adb logcat -c
 adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
 node "$HERE/perf-data.mjs" 3000 18 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
@@ -152,6 +153,18 @@ begin "tab chain quickly: Categories, Accounts, Statistics, Operations (0.5s apa
 for xy in "$cats" "$accs" "$stats" "$ops"; do adb shell input tap $xy; sleep 0.5; done
 finish 3
 log "after the chain: shown $(shown_tab) (expected Operations)"
+# A finger swipe (down, moves, up: like a hand, not one "swipe" command) inside a tab's pager, then at once a tap on
+# another tab: does the first tap after a swipe reach the bar? (The owner: "the first press is ignored, the second
+# works"; bar notes in perf.txt: "bar touched" without "tab press", "touch start with N touches".)
+finger_swipe() { adb shell input motionevent DOWN 950 1500; adb shell input motionevent MOVE 750 1500; adb shell input motionevent MOVE 500 1505; adb shell input motionevent MOVE 260 1505; adb shell input motionevent UP 260 1505; }
+for pair in "$cats:Categories:$accs:Accounts" "$accs:Accounts:$cats:Categories" "$ops:Operations:$accs:Accounts"; do
+  IFS=: read from fname to tname <<< "$pair"
+  adb shell input tap $from; sleep 2
+  begin "finger swipe in $fname, then one tap on $tname"
+  finger_swipe; sleep 0.6; adb shell input tap $to
+  finish 2
+  log "after a swipe in $fname, one tap on $tname: shown $(shown_tab) (expected $tname)"
+done
 period_title() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1; python3 - <<'PY'
 import re, xml.etree.ElementTree as ET
 # The title in the middle of the screen (the neighbours' titles are in the tree too, off to the sides).
@@ -237,6 +250,52 @@ begin "type the right PIN (1234)"
 adb shell input tap $k1; sleep 0.25; adb shell input tap $k2; sleep 0.25; adb shell input tap $k3; sleep 0.25; adb shell input tap $k4
 finish 4
 shot 07-unlocked 0
+
+# ---- Fast period swipes (white pages task, build 109 on). Each block: a video, then the frames are read for empty
+# pages (scripts/blank-frames.py, run after the build). The pager notes say per swipe whether the page the finger
+# reached, and the one after it, had their contents drawn. `input` itself needs about 0.3 s per swipe here, so the
+# "fastest" run is one swipe every ~0.3–0.4 s.
+record() { adb shell "screenrecord --time-limit $2 /sdcard/$1.mp4" >/dev/null 2>&1 & REC=$!; sleep 1; }
+stop_record() { wait $REC 2>/dev/null; sleep 1; adb pull "/sdcard/$1.mp4" "$OUT/$1.mp4" >/dev/null 2>&1 && log "video: $1.mp4" || log "video: $1 not recorded"; }
+pss() { adb shell dumpsys meminfo $PKG | grep -m1 "TOTAL PSS" | awk '{print $3}'; }
+back_swipe() { adb shell input swipe 250 1500 900 1500 ${1:-90}; }
+next_swipe() { adb shell input swipe 900 1500 250 1500 ${1:-90}; }
+fast_block() { # $1 tab, $2 name
+  tap "$1" 2
+  log "memory before $2: $(pss) kB"
+  record "20-$2-10-fast" 14
+  begin "$2: 10 fast swipes back (0.25s apart)"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+  stop_record "20-$2-10-fast"
+  begin "$2: 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+  log "memory after $2: $(pss) kB"
+}
+fast_block "Operations" operations
+record 21-operations-30-fastest 20
+begin "operations: 30 swipes back, no pause"; for i in $(seq 30); do back_swipe 60; done; finish 3
+stop_record 21-operations-30-fastest
+shot 21-after-30 0
+log "memory after 30: $(pss) kB"
+record 22-operations-direction 10
+begin "operations: direction changes (back, forward ×6, no pause)"; for i in $(seq 6); do back_swipe 60; next_swipe 60; done; finish 3
+stop_record 22-operations-direction
+begin "operations: revisit (30 swipes forward, no pause)"; for i in $(seq 30); do next_swipe 60; done; finish 3
+shot 22-after-revisit 0
+begin "operations: 5 fast swipes, then the tab Statistics at once"; for i in $(seq 5); do back_swipe 60; done; tap "Statistics" 0; finish 3
+shot 23-after-swipes-tab 0
+fast_block "Categories" categories
+shot 24-categories-after 0
+fast_block "Statistics" statistics
+shot 25-statistics-after 0
+log "memory at the end: $(pss) kB"
+# The colour square: a finger led slowly across it, left to right and top to bottom (perf.txt: "wheel: jump" for a
+# point that jumped while the finger moved a few px).
+tap "Accounts" 2; tap "Wallet" 2; tap "Edit" 2; tap "Icon" 2; tap "Choose color" 2
+shot 26-color-before 0
+adb shell input motionevent DOWN 400 873; for x in $(seq 410 12 690); do adb shell input motionevent MOVE $x 873; done; adb shell input motionevent UP 690 873
+adb shell input motionevent DOWN 540 720; for y in $(seq 732 12 1030); do adb shell input motionevent MOVE 540 $y; done; adb shell input motionevent UP 540 1030
+shot 26-color-after 1
+log "colour square: $(adb logcat -d -s ReactNativeJS:V | grep -c 'wheel: jump') jumps"
+for i in 1 2 3 4; do adb shell input keyevent 4; sleep 1; done
 
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1
