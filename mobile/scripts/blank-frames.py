@@ -23,7 +23,8 @@ TOP, BOTTOM = 0.196, 0.883
 def empty(path: Path) -> bool:
     im = Image.open(path).convert("L")
     w, h = im.size
-    area = im.crop((int(w * 0.04), int(h * TOP), int(w * 0.96), int(h * BOTTOM)))
+    # (The right edge is left out: the round Add button floats over the page there.)
+    area = im.crop((int(w * 0.04), int(h * TOP), int(w * 0.72), int(h * BOTTOM)))
     hist = area.histogram()
     total = sum(hist)
     peak = max(range(256), key=lambda i: hist[i])

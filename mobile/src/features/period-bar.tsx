@@ -1,7 +1,7 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
 import { countRender } from "../platform/perf.ts";
-import { useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, periodBounds, shiftPeriod } from "../domain/periods.ts";
@@ -12,9 +12,47 @@ import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
 import { Pager, usePagerMotion } from "../ui/pager.tsx";
 import { periodTitle } from "../ui/period-title.ts";
-import { getView, setView, useViewPeriod } from "./ui-state.ts";
+import { getView, setView, useViewPeriodWhile } from "./ui-state.ts";
+import { useNavigation } from "expo-router";
 
 export { periodTitle };
+
+// The shared period, followed only while this screen is in front. The tabs Operations, Categories and Statistics
+// share the period; a tab that is not shown is frozen, but React still draws its frozen part in the gaps between
+// the shown one's work: each swipe in Categories or Statistics drew the hidden Operations pages again (11–13 pages
+// committed during 10 swipes, speed check build 111), taking the JavaScript thread from the screen being swiped.
+// A hidden screen keeps the period it had and takes the current one when it is shown again (`caughtUp` then tells
+// the pager to go there at once, without sliding).
+function useScreenPeriod(): { period: Period; caughtUp: boolean } {
+  // (Outside a navigator — none today — the screen counts as in front.)
+  let navigation: { isFocused(): boolean; addListener(event: "focus" | "blur", fn: () => void): () => void } | null = null;
+  try {
+    navigation = useNavigation();
+  } catch {
+    navigation = null;
+  }
+  const [front, setFront] = useState(() => {
+    try {
+      return navigation ? navigation.isFocused() : true;
+    } catch {
+      return true;
+    }
+  });
+  useEffect(() => {
+    if (!navigation) return;
+    const off = [navigation.addListener("focus", () => setFront(true)), navigation.addListener("blur", () => setFront(false))];
+    return () => off.forEach((f) => f());
+  }, [navigation]);
+  const live = useViewPeriodWhile(front);
+  const kept = useRef<Period>(live ?? getView().period);
+  const wasFront = useRef(front);
+  const caughtUp = front && !wasFront.current && live !== kept.current;
+  useEffect(() => {
+    wasFront.current = front;
+  });
+  if (live) kept.current = live;
+  return { period: kept.current, caughtUp };
+}
 
 // `dayPicker`: the title opens the calendar and the period of the same kind around the chosen day is
 // shown (the budgets of the first application, period-picker.js dayPicker).
@@ -23,7 +61,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
-  const period = useViewPeriod();
+  const { period } = useScreenPeriod();
   const motion = usePagerMotion();
   const [room, setRoom] = useState(0);
   const fixed = !canShiftPeriod(period);
@@ -87,7 +125,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 // with the period bar (and whatever else stays in place) above them.
 export function PeriodPager({ header, render }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode }) {
   const data = useLedger();
-  const period = useViewPeriod();
+  const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
   const known = useRef(new Map<string, Period>());
   // A page is named by what it shows (its kind and its first and last day), not by its anchor day: the same month
@@ -103,6 +141,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
   return (
     <Pager
       current={keyOf(period)}
+      instant={caughtUp}
       step={(key, n) => {
         const shown = periodOf(key);
         return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;

@@ -116,6 +116,12 @@ shot 12d-icon-page 2
 back
 tap "Choose color"
 shot 12e-color-page 2
+# A finger led slowly across the colour square, left to right through its middle: the point must end under the
+# finger (right of the centre), not jump elsewhere on the way.
+adb shell input motionevent DOWN 400 873; for x in $(seq 410 15 690); do adb shell input motionevent MOVE $x 873; done
+shot 12e1-color-drag-held 0
+adb shell input motionevent UP 690 873
+shot 12e1-color-dragged 1
 tap "Color code"
 shot 12e2-color-hex-keyboard 2
 back

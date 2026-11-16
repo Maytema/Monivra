@@ -11,7 +11,7 @@
 // `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
 import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
-import { memo, startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
@@ -70,8 +70,11 @@ export function Pager<K extends string>({
   render,
   onMove,
   header,
+  instant = false,
 }: {
   current: K;
+  // The current page changed while the screen was hidden: go there at once, without sliding.
+  instant?: boolean;
   // The page next to a page (n = 1 after, −1 before), or null at an end.
   step: (key: K, n: 1 | -1) => K | null;
   render: (key: K, isCurrent: boolean) => ReactNode;
@@ -85,12 +88,22 @@ export function Pager<K extends string>({
   live.current = { step, onMove };
   const [row, setRow] = useState<Row<K>>(() => layRow(current, step));
   const [index, setIndex] = useState(row.origin);
-  // The page whose neighbours are drawn and which is told it is the current one. It follows `index` in a transition:
-  // the swipe itself commits only the period (the bar, the titles); drawing the new neighbour is work React may cut
-  // into pieces and interrupt, so the touches that come meanwhile (the next swipe, a tap) are taken at once.
-  // (Measured on the emulator, build 101: the commit of a swipe drew all three pages, 150–500 ms in one block.)
+  // The page whose neighbours are drawn and which is told it is the current one. It follows `index` in a task of its
+  // own right after the swipe's commit (which draws only the period and the page reached). Not a transition: during
+  // quick swipes each new swipe interrupted the transition and threw its work away, it was never committed before the
+  // swipes stopped, and the page the next swipe uncovered had nothing drawn — the white pages (speed check build 111:
+  // up to 9 pages behind, contents only 0.5–0.8 s after the last swipe). A plain task is not thrown away; if swipes
+  // came meanwhile it draws around the last page only.
   const [shown, setShown] = useState(row.origin);
-  const follow = (page: number) => startTransition(() => setShown(page));
+  const pendingShow = useRef(false);
+  const follow = (_page: number) => {
+    if (pendingShow.current) return;
+    pendingShow.current = true;
+    setTimeout(() => {
+      pendingShow.current = false;
+      setShown(at.current);
+    }, 0);
+  };
   // The page the pager is on, set at the moment it changes (not from a render, which may be behind).
   const at = useRef(index);
   // The pages chosen by the person's own swipes since the pager was last quiet: a period the screen draws late (one of
@@ -113,7 +126,7 @@ export function Pager<K extends string>({
     }
     if (passed.current.has(current)) return;
     const here = at.current;
-    const near = [here - 1, here + 1].find((i) => row.keys[i] === current);
+    const near = instant ? undefined : [here - 1, here + 1].find((i) => row.keys[i] === current);
     if (near !== undefined) {
       at.current = near;
       setIndex(near);
@@ -138,7 +151,7 @@ export function Pager<K extends string>({
     at.current = fresh.origin;
     setIndex(fresh.origin);
     setShown(fresh.origin);
-  }, [current, row, index]);
+  }, [current, row, index, instant]);
 
   // position + offset of the native pager, and the two constants that turn them into x.
   const position = useRef(new Animated.Value(index)).current;

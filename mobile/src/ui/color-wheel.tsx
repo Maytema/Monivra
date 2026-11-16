@@ -99,6 +99,9 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
   const thumb = (position: { left: number; top: number }, fill: string) => (
     <View pointerEvents="none" style={{ position: "absolute", left: position.left - 13, top: position.top - 13, width: 26, height: 26, borderRadius: 13, borderWidth: 3, borderColor: "#ffffff", backgroundColor: fill, elevation: 4, shadowColor: "#000000", shadowOpacity: 0.4, shadowRadius: 3, shadowOffset: { width: 0, height: 1 } }} />
   );
+  // The drawings take no touches: the finger always lands on this view, so locationX/Y are always counted from its
+  // corner. (They are counted from the element under the finger; with the drawings touchable that was now the view,
+  // now a wedge of the ring, now the square turned 45°, and the point jumped as the finger crossed them.)
   return (
     <View style={{ width: size, height: size, alignSelf: "center" }} {...pan.panHandlers}>
       <Ring size={size} />
@@ -112,7 +115,7 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
 // The ring of hues never changes: drawn once (180 wedges), not on every move of the finger.
 const Ring = memo(function Ring({ size }: { size: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
+    <Svg pointerEvents="none" width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
       {wedges.map((w, i) => (
         <Path key={i} d={w.d} fill={w.color} />
       ))}
@@ -123,7 +126,7 @@ const Ring = memo(function Ring({ size }: { size: number }) {
 // The square follows only the hue.
 const Square = memo(function Square({ size, hue }: { size: number; hue: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
+    <Svg pointerEvents="none" width={size} height={size} viewBox="0 0 100 100" style={{ position: "absolute" }}>
       <Defs>
         <LinearGradient id="wheel-hue" x1="0" y1="0" x2="1" y2="0">
           <Stop offset="0" stopColor="#ffffff" />
