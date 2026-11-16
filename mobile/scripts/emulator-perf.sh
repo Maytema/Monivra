@@ -100,6 +100,9 @@ shot 02-operations 0
 begin "scroll the operations down (6 flicks)"
 for i in 1 2 3 4 5 6; do adb shell input swipe 540 1800 540 600 120; sleep 0.7; done
 finish 3
+shot 02b-operations-scrolled 0
+# Half a row more, so a day head is being pushed away by the next one (the sticky head must stay opaque).
+adb shell input swipe 540 1400 540 1250 600; shot 02c-operations-sticky 1
 begin "scroll the operations back up (6 flicks)"
 for i in 1 2 3 4 5 6; do adb shell input swipe 540 600 540 1800 120; sleep 0.7; done
 finish 3

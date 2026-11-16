@@ -124,6 +124,7 @@ export function Pager<K extends string>({
     }
     const found = row.keys.indexOf(current);
     if (found >= 0) {
+      perfNote(`pager: jumped to page ${found}`);
       at.current = found;
       setIndex(found);
       setShown(found);
@@ -131,6 +132,7 @@ export function Pager<K extends string>({
       pager.current?.setPageWithoutAnimation(found);
       return;
     }
+    perfNote(`pager: laid out again around ${current}`);
     const fresh = layRow(current, live.current.step);
     setRow(fresh);
     at.current = fresh.origin;

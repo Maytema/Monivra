@@ -4,7 +4,7 @@ import { countRender } from "../platform/perf.ts";
 import { useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { canShiftPeriod, shiftPeriod } from "../domain/periods.ts";
+import { canShiftPeriod, periodBounds, shiftPeriod } from "../domain/periods.ts";
 import type { Period } from "../domain/periods.ts";
 import { useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
@@ -90,12 +90,15 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
   const period = useViewPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
   const known = useRef(new Map<string, Period>());
+  // A page is named by what it shows (its kind and its first and last day), not by its anchor day: the same month
+  // reached by swipes from either side has different anchors (a 31st moves to the 30th and stays there), and a name
+  // that differed made the pager take the period for a jump from outside and lay all its pages out again.
   const keyOf = (x: Period): string => {
-    const key = JSON.stringify(x);
-    known.current.set(key, x);
+    const key = `${x.mode}:${periodBounds(x, data.settings).join("~")}`;
+    if (!known.current.has(key) || x === period) known.current.set(key, x);
     return key;
   };
-  const periodOf = (key: string): Period => known.current.get(key) ?? (JSON.parse(key) as Period);
+  const periodOf = (key: string): Period => known.current.get(key) ?? period;
   const settings = data.settings;
   return (
     <Pager
