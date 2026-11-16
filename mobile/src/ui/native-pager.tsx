@@ -152,7 +152,20 @@ export function Pager<K extends string>({
     position.setValue(at.current);
     offset.setValue(0);
   }, [row, position, offset]);
-  const onScroll = useMemo(() => Animated.event([{ nativeEvent: { position, offset } }], { useNativeDriver: true }), [position, offset]);
+  // The last place the native pager reported (page + fraction), kept on the JavaScript side too: the events of the
+  // native pager reach JavaScript coalesced and out of order ("idle" before "settling", speed check build 104), so when
+  // it is quiet the page it is really on is read from here and a lost "page selected" is caught up.
+  const reported = useRef(index);
+  const onScroll = useMemo(
+    () =>
+      Animated.event([{ nativeEvent: { position, offset } }], {
+        useNativeDriver: true,
+        listener: (e: { nativeEvent: { position: number; offset: number } }) => {
+          reported.current = e.nativeEvent.position + e.nativeEvent.offset;
+        },
+      }),
+    [position, offset],
+  );
 
   // The neighbours draw once the first page is on the screen and has settled.
   const [warm, setWarm] = useState(false);
@@ -194,6 +207,7 @@ export function Pager<K extends string>({
     }
     asked.current = false;
     if (PERF_BUILD) chosenAt.current = now();
+    perfNote(`pager: page ${page} from ${from}`);
     at.current = page;
     passed.current.add(String(row.keys[page]));
     unstable_batchedUpdates(() => {
@@ -259,9 +273,16 @@ export function Pager<K extends string>({
             pagerMotion.moving = state !== "idle";
             if (state === "idle") {
               pagerMotion.until = Date.now() + 150;
-              touched.current = false;
-              asked.current = false;
-              quiet();
+              setTimeout(() => {
+                const real = Math.round(reported.current);
+                if (Math.abs(reported.current - real) < 0.02 && real !== at.current && real >= 0 && real < row.keys.length) {
+                  perfNote(`pager: caught up page ${real} (was ${at.current})`);
+                  selected(real);
+                }
+                touched.current = false;
+                asked.current = false;
+                quiet();
+              }, 120);
             }
           }}
         >

@@ -164,11 +164,13 @@ before=$(period_title)
 begin "two quick period swipes (0.35s apart)"
 adb shell input swipe 900 1500 250 1500 120; sleep 0.35; adb shell input swipe 900 1500 250 1500 120
 finish 3
+shot 13-two-quick-swipes 0
 log "two quick swipes: $before → $(period_title) (expected two months later)"
 before=$(period_title)
 begin "swipe back and forth quickly (0.35s apart)"
 adb shell input swipe 250 1500 900 1500 120; sleep 0.35; adb shell input swipe 900 1500 250 1500 120
 finish 3
+shot 14-back-and-forth 0
 log "back and forth: $before → $(period_title) (expected the same)"
 adb shell input tap $stats; sleep 3
 begin "statistics: Incomes"; tap "Incomes" 0; finish 3
