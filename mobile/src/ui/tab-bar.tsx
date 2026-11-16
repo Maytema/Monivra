@@ -3,7 +3,7 @@
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
 import { countRender, PERF_BUILD, perfNote, sinceTouch } from "../platform/perf.ts";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, type GestureResponderEvent } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
@@ -69,7 +69,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // "tab press" after it.
   return (
     <View
-      onTouchStart={PERF_BUILD ? (e: { nativeEvent: { touches?: unknown[] } }) => perfNote(`bar touched (${e.nativeEvent.touches?.length ?? 1} touches)`) : undefined}
+      onTouchStart={PERF_BUILD ? (e: GestureResponderEvent) => perfNote(`bar touched (${e.nativeEvent.touches.length} touches)`) : undefined}
       style={{
         flexDirection: "row",
         alignItems: "center",
