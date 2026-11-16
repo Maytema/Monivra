@@ -253,17 +253,7 @@ shot 24-categories-after 0
 fast_block "$stats" statistics
 shot 25-statistics-after 0
 log "memory at the end: $(pss) kB"
-# The colour square: a finger led slowly across it, left to right and top to bottom (perf.txt: "wheel: jump" for a
-# point that jumped while the finger moved a few px).
-adb shell input tap $accs; sleep 2; tap "Wallet" 2; tap "Edit" 2; tap "Icon" 2; tap "Choose color" 2
-shot 26-color-before 0
-adb shell input motionevent DOWN 400 873; for x in $(seq 410 12 690); do adb shell input motionevent MOVE $x 873; done; adb shell input motionevent UP 690 873
-adb shell input motionevent DOWN 540 720; for y in $(seq 732 12 1030); do adb shell input motionevent MOVE 540 $y; done; adb shell input motionevent UP 540 1030
-shot 26-color-after 1
-log "colour square: $(adb logcat -d -s ReactNativeJS:V | grep -c 'wheel: jump') jumps"
-for i in 1 2 3; do adb shell input keyevent 4; sleep 1; done
-# (Back to the application if the last back left it.)
-adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 2
+# (The colour square is checked by the smoke test, which reaches the colour page.)
 
 # A new expense with the keys, saved: the list must take it without drawing everything again.
 adb shell input tap $ops; sleep 2
