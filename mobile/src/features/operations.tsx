@@ -237,7 +237,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   // button does not make it go through its rows again.
   const header = useMemo(
     () => (
-      <View style={{ marginHorizontal: -16 }}>
+      <View>
         <View style={{ paddingHorizontal: 16 }}>
           <PostedBanner />
           {balances ? (
@@ -257,12 +257,22 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   );
   const renderItem = useCallback(
     ({ item }: { item: Item }) =>
-      item.kind === "day" ? <DayHead date={item.date} ops={item.ops} /> : <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />,
-    [selection, selectedSet, onPress, onLongPress],
+      // The side margins are on each item, not on the list: the sticky head is drawn over the list without the list's
+      // padding, and with it there its first letters were cut at the edge of the screen.
+      item.kind === "day" ? (
+        <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
+          <DayHead date={item.date} ops={item.ops} />
+        </View>
+      ) : (
+        <View style={{ paddingHorizontal: 16 }}>
+          <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
+        </View>
+      ),
+    [selection, selectedSet, onPress, onLongPress, p.bg],
   );
   // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
   const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
-  const content = useMemo(() => ({ paddingHorizontal: 16, paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
+  const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   return (
     <View style={{ flex: 1 }}>
       <FlashList
