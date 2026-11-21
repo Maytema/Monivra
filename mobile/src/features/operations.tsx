@@ -29,7 +29,7 @@ import { setView, useViewFilters, useViewPeriodWhile } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
 import { PostedBanner } from "./posted-banner.tsx";
 import { listingOnTop } from "./reveal.ts";
-import { openEditor } from "./editor/editor-sheet.tsx";
+import { openEditor, dateOfShownPeriod } from "./editor/editor-sheet.tsx";
 import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
@@ -182,7 +182,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu()} />
+        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
       )}
     </View>
   );
