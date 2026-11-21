@@ -59,11 +59,13 @@ nodes = list(ET.parse("/tmp/ui.xml").iter("node"))
 def box(n): return list(map(int, re.findall(r"\d+", n.get("bounds"))))
 # The period title: a text (or description) with a year in it, in the middle of the upper part of the screen.
 def label(n): return (n.get("text") or n.get("content-desc") or "")
-title = [label(n) for n in nodes if re.search(r"\b20\d\d\b", label(n)) and 300 < sum(box(n)[0::2]) // 2 < 780 and 150 < box(n)[1] < 650 and not re.search(r"KGS|USD", label(n))]
+title = [label(n) for n in nodes if re.search(r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*|Today|Yesterday|Tomorrow|\b20\d\d\b", label(n)) and 300 < sum(box(n)[0::2]) // 2 < 780 and 150 < box(n)[1] < 650 and not re.search(r"KGS|USD", label(n))]
 heads = [n.get("text") for n in nodes if re.match(r"^[A-Z][a-z]+\n[A-Z][a-z]+ \d{4}$", n.get("text") or "") and box(n)[1] > 400]
 t = title[0] if title else "?"
 h = heads[0].split("\n")[1] if heads else "-"
-ok = "no rows" if h == "-" else ("matches" if h in t or t.endswith(h.split(" ")[1]) and h.split(" ")[0][:3] in t else "MISMATCH")
+# The month of the first day head must be named in the title (a week across two months names both; "Today" and
+# "Yesterday" are this month).
+ok = "no rows" if h == "-" else ("matches" if h.split(" ")[0][:3] in t or (t in ("Today", "Yesterday", "Tomorrow")) else "MISMATCH")
 print(f"header/content after {sys.argv[1]}: title «{t}», first day head «{h}»: {ok}")
 PY
 }
@@ -95,7 +97,7 @@ import re, xml.etree.ElementTree as ET
 for n in ET.parse("/tmp/ui.xml").iter("node"):
     a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
     t = n.get("text") or n.get("content-desc") or ""
-    if re.search(r"\b20\d\d\b", t) and 300 < (a + c) // 2 < 780 and 150 < b < 650 and "KGS" not in t:
+    if re.search(r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*|Today|Yesterday|Tomorrow|\b20\d\d\b", t) and 300 < (a + c) // 2 < 780 and 150 < b < 650 and "KGS" not in t:
         print((a + c) // 2, (b + d) // 2); break
 PY
 )
