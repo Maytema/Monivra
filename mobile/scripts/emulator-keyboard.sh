@@ -23,8 +23,18 @@ if found:
     print((a + c) // 2, (b + d) // 2)
 PY
 }
+# A system window of the busy emulator ("Pixel Launcher isn't responding") can cover the application: it is answered
+# "Wait" before anything else is done (build 119 ran entirely under it).
+clear_system_window() {
+  dump
+  if grep -q "isn't responding" /tmp/ui.xml 2>/dev/null; then
+    local w; w=$(xy_of "Wait")
+    [ -n "$w" ] && adb shell input tap $w && sleep 1.5 && log "system window: isn't responding — Wait"
+  fi
+}
 tap() {
   local xy; xy=$(xy_of "$1" "${3:-first}")
+  if [ -z "$xy" ] && grep -q "isn't responding" /tmp/ui.xml 2>/dev/null; then clear_system_window; xy=$(xy_of "$1" "${3:-first}"); fi
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
   adb shell input tap $xy; sleep "${2:-1.5}"
 }
@@ -60,8 +70,10 @@ type_name() {
 }
 open_form() { tap "New account" 2 && tap "Regular" 2; }
 
+adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1
 adb shell pm clear $PKG >/dev/null 2>&1
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 15
+clear_system_window
 tap "Start with basic set" 4
 
 # K1 — the owner's case: New account, the name typed, Customize icon opened with the keyboard up.
