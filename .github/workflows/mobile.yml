@@ -131,7 +131,7 @@ jobs:
           disk-size: 6144M
           disable-animations: true
           emulator-options: -no-window -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
-          script: bash mobile/scripts/emulator-smoke.sh
+          script: bash mobile/scripts/emulator-smoke.sh; status=$?; bash mobile/scripts/emulator-keyboard.sh || true; exit $status
       - name: Keep the results
         if: always()
         uses: actions/upload-artifact@v4
@@ -260,7 +260,7 @@ jobs:
           dir="out/builds/${GITHUB_RUN_NUMBER}"
           mkdir -p "$dir"
           cp results/package-files/* "$dir"/ 2>/dev/null || true
-          if [ -d results/emulator-results ]; then mkdir -p "$dir/emulator" && cp results/emulator-results/* "$dir/emulator"/ 2>/dev/null || true; fi
+          if [ -d results/emulator-results ]; then mkdir -p "$dir/emulator" && cp -r results/emulator-results/* "$dir/emulator"/ 2>/dev/null || true; fi
           if [ -d results/perf-results ]; then mkdir -p "$dir/perf" && cp results/perf-results/* "$dir/perf"/ 2>/dev/null || true; fi
           for p in usual weak; do if [ -d "results/paging-results-$p" ]; then mkdir -p "$dir/paging-$p" && cp "results/paging-results-$p"/* "$dir/paging-$p"/ 2>/dev/null || true; fi; done
           for apk in results/monivra-rn-apk-arm64-v8a/*.apk; do
