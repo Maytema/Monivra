@@ -53,11 +53,12 @@ PY
 )
   [ -n "$xy" ] && adb shell input tap $(echo "$xy" | tail -1) && sleep 2 || log "NOT FOUND: tab $1"
 }
-# Focus the name field of the account form and type in it.
+# Focus the title field of the account form and type in it (its placeholder while empty, its label after).
 type_name() {
-  tap "Name" 1 || return 1
+  tap "Enter the title" 1 || tap "Title" 1 || return 1
   adb shell input text "$1"; sleep 1
 }
+open_form() { tap "New account" 2 && tap "Regular" 2; }
 
 adb shell pm clear $PKG >/dev/null 2>&1
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 15
@@ -65,7 +66,7 @@ tap "Start with basic set" 4
 
 # K1 — the owner's case: New account, the name typed, Customize icon opened with the keyboard up.
 tab "Accounts"
-tap "New account" 2
+open_form
 type_name "Kbtest"
 log "K1 typing in the form: keyboard $(kb)"
 shot k1-typing 0
@@ -79,7 +80,7 @@ shot k1-back-on-form 0
 
 # K2 — a selection sheet (the currency) from a focused field.
 type_name "x"
-tap "Currency" 0 || tap "KGS" 0
+tap "Account currency" 0
 log "K2 currency sheet opened: $(gone_after)"
 shot k2-currency-sheet 1
 adb shell input keyevent 4; sleep 1.5
@@ -88,7 +89,7 @@ log "K2 back on the form: keyboard $(kb); name kept: $(has Kbtestx)"
 # K3 — Android Back with the keyboard up: the keyboard goes, the form stays.
 type_name "y"
 adb shell input keyevent 4
-log "K3 Back pressed: $(gone_after); form still open: $(has "New account")"
+log "K3 Back pressed: $(gone_after); form still open: $(has "Account currency")"
 
 # K4 — a tap on an empty part of the form (not on a control).
 type_name "z"
@@ -98,9 +99,9 @@ shot k4-empty-tap 0
 
 # K5 — leaving the form with the keyboard up (back arrow of the page).
 type_name "w"
-tap "Navigate up" 0 || adb shell input keyevent 4
-sleep 0.2
-log "K5 left the form: $(gone_after)"
+# (The back arrow of the page: its description differs between versions; at the top left otherwise.)
+tap "Navigate up" 0 || adb shell input tap 72 200
+log "K5 left the form: $(gone_after); on Accounts: $(has "New account")"
 shot k5-left-form 1
 
 # K6 — the search of Operations (it focuses itself), then another tab.
@@ -116,7 +117,7 @@ tap "Close search" 1
 
 # K7 — repeated: open and close the icon sheet five times from a focused field (stuck keyboard? layout?).
 tab "Accounts"
-tap "New account" 2
+open_form
 for i in 1 2 3 4 5; do
   type_name "r"
   adb shell input tap $(xy_of "Icon" | tail -1); sleep 1
