@@ -72,8 +72,17 @@ open_form() { tap "New account" 2 && tap "Regular" 2; }
 
 adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1
 adb shell pm clear $PKG >/dev/null 2>&1
-adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 15
-clear_system_window
+adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
+adb logcat -c
+adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
+# Wait for the first screen (up to 60 s), answering system windows on the way.
+for i in $(seq 30); do
+  clear_system_window
+  grep -q "Start with basic set" /tmp/ui.xml 2>/dev/null && break
+  sleep 2
+done
+log "first screen after $((i * 2)) s or more: $(grep -q "Start with basic set" /tmp/ui.xml && echo shown || echo NOT SHOWN)"
+shot k0-start 0
 tap "Start with basic set" 4
 
 # K1 — the owner's case: New account, the name typed, Customize icon opened with the keyboard up.
@@ -139,4 +148,5 @@ done
 log "K7 form kept: $(has Kbtestrrrrr)"
 shot k7-after-repeats 0
 
+adb logcat -d -s ReactNativeJS:V ReactNative:V AndroidRuntime:E > "$OUT/log.txt" 2>&1
 log "done"
