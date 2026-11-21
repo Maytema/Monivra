@@ -131,7 +131,7 @@ function Prompt({ title, initial, label, onDone }: { title: string; initial: str
 }
 
 export const promptDialog = (title: string, initial: string, onDone: (value: string) => void, label = ""): number =>
-  sheets.open(<Prompt title={title} initial={initial} label={label} onDone={onDone} />, "dialog");
+  sheets.open(<Prompt title={title} initial={initial} label={label} onDone={onDone} />, "dialog", { keyboard: true });
 
 export interface Choice<T extends string> {
   value: T;

@@ -226,7 +226,7 @@ function BulkSheet({ ids, onDone }: { ids: string[]; onDone: () => void }) {
       <DialogTitle>{t.t("Bulk edit")}</DialogTitle>
       {row("categories", "Category", categoryName, () => openChoice("category", (id) => set({ category: id })), () => set({ category: null }))}
       {row("wallet", "Account", accountName, chooseAccount, () => set({ account: null }))}
-      {row("comment", "Comment", commentShown, () => sheets.open(<CommentSheet initial={changes.comment} onDone={(comment) => set({ comment })} />, "sheet"), () => set({ comment: null }))}
+      {row("comment", "Comment", commentShown, () => sheets.open(<CommentSheet initial={changes.comment} onDone={(comment) => set({ comment })} />, "sheet", { keyboard: true }), () => set({ comment: null }))}
       {row(
         "tag",
         "Tags",

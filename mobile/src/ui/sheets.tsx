@@ -7,7 +7,7 @@ import { Animated, BackHandler, Dimensions, PanResponder, ScrollView, StyleSheet
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
-import { useRevealFocusedField } from "./keyboard.tsx";
+import { dismissKeyboard, useRevealFocusedField } from "./keyboard.tsx";
 import { chrome } from "./theme.ts";
 import { now, perfLog } from "../platform/perf.ts";
 
@@ -33,6 +33,8 @@ export interface SheetOptions {
   bare?: boolean;
   scrolls?: boolean;
   swipeDown?: boolean;
+  // A layer opened to type in (it focuses its own field): the keyboard stays. Every other layer puts it away.
+  keyboard?: boolean;
 }
 
 let layers: readonly Layer[] = [];
@@ -46,6 +48,8 @@ const publish = (next: readonly Layer[]) => {
 export const sheets = {
   // Opens a layer over the current ones; returns its id.
   open(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
+    // The field under the new layer cannot be typed in any more (ui/keyboard.tsx).
+    if (!options.keyboard) dismissKeyboard();
     const id = ++counter;
     publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown, asked: now() }]);
     return id;

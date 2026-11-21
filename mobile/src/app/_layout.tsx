@@ -2,8 +2,8 @@
 // up to date while the application is open (at start, when it comes back, and every minute).
 import { useEffect } from "react";
 import { ActivityIndicator, AppState as SystemAppState, View } from "react-native";
-import { KeyboardPad } from "../ui/keyboard.tsx";
-import { Stack } from "expo-router";
+import { dismissKeyboard, KeyboardPad } from "../ui/keyboard.tsx";
+import { Stack, usePathname } from "expo-router";
 import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -78,6 +78,7 @@ function Ready() {
     <>
       <StatusBar style={p.dark ? "light" : "dark"} />
       <KeepCurrent />
+      <KeyboardFollowsPage />
       <LockGate>
       {/* The keyboard shortens the whole window, as adjustResize did in the first application: every
           page, sheet and dialog ends above it, and a scrolling page keeps its focused field in view. */}
@@ -151,4 +152,12 @@ export default function Layout() {
       <Root />
     </SafeAreaProvider>
   );
+}
+
+// A new page or another tab: the field that was being typed in is not on the screen any more, the keyboard goes
+// (ui/keyboard.tsx). A page that is opened to type in focuses its own field after this.
+function KeyboardFollowsPage() {
+  const path = usePathname();
+  useEffect(() => dismissKeyboard(), [path]);
+  return null;
 }
