@@ -1,7 +1,9 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
+import { PERF_BUILD } from "../platform/perf.ts";
 import { useCoachTarget } from "../ui/coach.tsx";
-import { memo, useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { View } from "react-native";
+import { usePageReady } from "../ui/pager.tsx";
 import { router } from "expo-router";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Period } from "../domain/periods.ts";
@@ -31,6 +33,11 @@ export function CategoriesScreen() {
 
 // The sums and the tiles of one period (drawn beforehand for the neighbouring periods too).
 const CategoriesPage = memo(function CategoriesPage({ period, catType }: { period: Period; catType: "expense" | "income" }) {
+  // Speed-check build: the page's content is on the screen once it is first committed (no virtualized parts).
+  const ready = usePageReady();
+  useLayoutEffect(() => {
+    if (PERF_BUILD) ready();
+  }, [ready]);
   const data = useLedger();
   const money = useMoney();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);

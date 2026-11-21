@@ -11,7 +11,7 @@
 // `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
 import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
@@ -54,6 +54,19 @@ function layRow<K>(current: K, step: (key: K, n: 1 | -1) => K | null): Row<K> {
   k = current;
   while (after.length < SPAN && (k = step(k as K, 1)) !== null) after.push(k);
   return { id: ++rows, keys: [...before, current, ...after], origin: before.length, closedStart, closedEnd: after.length < SPAN };
+}
+
+// Speed-check build: a page says when its first meaningful content is on the screen (the rows of a list, the tiles,
+// the chart), so the pager can write how long after a page was chosen the person saw it. Nothing in other builds.
+interface Readiness {
+  ready(): void;
+  gone(): void;
+}
+const PageReady = createContext<Readiness>({ ready: () => undefined, gone: () => undefined });
+export function usePageReady(): () => void {
+  const page = useContext(PageReady) as Readiness;
+  useEffect(() => () => page.gone(), [page]);
+  return page.ready;
 }
 
 const Slot = memo(function Slot({ children }: { children: ReactNode }) {
@@ -227,6 +240,9 @@ export function Pager<K extends string>({
     if (PERF_BUILD) chosenAt.current = now();
     if (PERF_BUILD) {
       chosen.current.set(page, now());
+      const key = String(row.keys[page]);
+      if (readyAt.current.has(key)) perfLog("page ready after it was chosen", 0);
+      else waiting.current = { key, at: now() };
       const ahead = page + Math.sign(page - from);
       perfNote(`pager: page ${page} from ${from}; this page drawn: ${drawn(page) ? "yes" : "NO"}; next page ${ahead} drawn: ${drawn(ahead) ? "yes" : "NO"}; behind by ${page - drawnAround.current}`);
     }
@@ -263,6 +279,36 @@ export function Pager<K extends string>({
     const t = chosen.current.get(shown);
     if (t !== undefined) perfLog(`pager: contents around page ${shown} drawn (lag ${index - shown})`, now() - t);
   }, [shown]);
+  // Readiness of pages (speed-check build): when each page's content was first on the screen, and the page chosen
+  // last, to write "ready N ms after it was chosen" (0 when it was ready before).
+  const readyAt = useRef(new Map<string, number>());
+  const waiting = useRef<{ key: string; at: number } | null>(null);
+  const mounts = useRef(0);
+  const readyOf = useRef(new Map<string, Readiness>());
+  const readyFor = (key: string): Readiness => {
+    let fn = readyOf.current.get(key);
+    if (!fn) {
+      fn = {
+        ready: () => {
+          if (readyAt.current.has(key)) return;
+          readyAt.current.set(key, now());
+          mounts.current++;
+          perfNote(`pager: page content shown (${mounts.current} so far)`);
+          const w = waiting.current;
+          if (w && w.key === key) {
+            perfLog("page ready after it was chosen", now() - w.at);
+            waiting.current = null;
+          }
+        },
+        gone: () => {
+          readyAt.current.delete(key);
+          perfNote("pager: page content removed");
+        },
+      };
+      readyOf.current.set(key, fn);
+    }
+    return fn;
+  };
   const drawn = (page: number) => Math.abs(page - drawnAround.current) <= reach || page === index;
   return (
     <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
@@ -313,7 +359,9 @@ export function Pager<K extends string>({
           }}
         >
           {row.keys.map((key, i) => (
-            <Slot key={key}>{Math.abs(i - shown) <= reach || i === index ? render(key, i === shown) : null}</Slot>
+            <Slot key={key}>
+              {Math.abs(i - shown) <= reach || i === index ? PERF_BUILD ? <PageReady.Provider value={readyFor(key)}>{render(key, i === shown)}</PageReady.Provider> : render(key, i === shown) : null}
+            </Slot>
           ))}
         </AnimatedPagerView>
       </View>

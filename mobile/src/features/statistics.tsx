@@ -1,8 +1,10 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { Fragment, memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { PERF_BUILD } from "../platform/perf.ts";
+import { Fragment, memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { usePageReady } from "../ui/pager.tsx";
 import { Pressable } from "../ui/pressable.tsx";
 import { useVerticalScroll } from "../ui/gesture-lock.ts";
 import { router } from "expo-router";
@@ -52,6 +54,11 @@ export function StatisticsScreen() {
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
 const StatisticsPage = memo(function StatisticsPage({ period, openFilters, current }: { period: Period; openFilters: () => void; current: boolean }) {
+  // Speed-check build: the page's content is on the screen once it is first committed (no virtualized parts).
+  const ready = usePageReady();
+  useLayoutEffect(() => {
+    if (PERF_BUILD) ready();
+  }, [ready]);
   const data = useLedger();
   const p = usePalette();
   const t = useT();

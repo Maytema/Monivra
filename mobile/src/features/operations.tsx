@@ -4,6 +4,7 @@
 import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
+import { usePageReady } from "../ui/pager.tsx";
 import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
@@ -195,11 +196,16 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   useLayoutEffect(() => {
     if (PERF_BUILD) perfLog("operations page built", now() - began);
   });
+  // (An empty period has no rows to load: its picture is the content.)
+  useLayoutEffect(() => {
+    if (PERF_BUILD && items.length === 0) ready();
+  });
   const data = useLedger();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
   const filters = useViewFilters();
+  const ready = usePageReady();
   const ops = useMemo(() => timed("page: operations of the period", () => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
   const items = useMemo(() => timed("page: rows and days", () => {
     const out: Item[] = [];
@@ -295,7 +301,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
-        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => perfLog("list ready", elapsedTimeInMs) : undefined}
+        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), ready()) : undefined}
       />
     </View>
   );
