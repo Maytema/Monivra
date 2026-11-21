@@ -123,7 +123,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 
 // The pages of a screen with a period: the period before, this one and the one after, drawn side by side,
 // with the period bar (and whatever else stays in place) above them.
-export function PeriodPager({ header, render }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode }) {
+export function PeriodPager({ header, render, around }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number }) {
   const data = useLedger();
   const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
@@ -142,6 +142,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
     <Pager
       current={keyOf(period)}
       instant={caughtUp}
+      around={around}
       step={(key, n) => {
         const shown = periodOf(key);
         return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;

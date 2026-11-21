@@ -84,10 +84,14 @@ export function Pager<K extends string>({
   onMove,
   header,
   instant = false,
+  around = 1,
 }: {
   current: K;
   // The current page changed while the screen was hidden: go there at once, without sliding.
   instant?: boolean;
+  // How many pages on each side have their contents drawn beforehand (1: the neighbours). A screen whose pages are
+  // slow to show their first rows can draw two, so that a quick second swipe also lands on a drawn page.
+  around?: number;
   // The page next to a page (n = 1 after, −1 before), or null at an end.
   step: (key: K, n: 1 | -1) => K | null;
   render: (key: K, isCurrent: boolean) => ReactNode;
@@ -268,7 +272,7 @@ export function Pager<K extends string>({
     setShown(fresh.origin);
   };
 
-  const reach = warm ? 1 : 0;
+  const reach = warm ? around : 0;
   // Speed-check build: which pages have their contents drawn (committed), and when each page was chosen, to say
   // whether the page a swipe uncovers was drawn when the finger got there, and how long its contents took.
   const drawnAround = useRef(shown);
