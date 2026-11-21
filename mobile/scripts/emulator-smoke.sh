@@ -48,8 +48,17 @@ FAILED=0
 adb install -r "$APK" > "$OUT/install.txt" 2>&1 && log "installed" || { log "FAIL: install"; cat "$OUT/install.txt"; exit 1; }
 adb logcat -c
 adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1 || true
+adb shell settings put global hide_error_dialogs 1 >/dev/null 2>&1
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
-shot 01-first-start 25
+# The first screen, waited for up to 60 s: the busy emulator often covers it with "Pixel Launcher isn't responding",
+# answered "Wait" (builds 115, 119, 121 failed from the first step under that window).
+for i in $(seq 20); do
+  sleep 3
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  grep -q "Start with basic set" /tmp/ui.xml && break
+  grep -q "isn't responding" /tmp/ui.xml && RETRY=1 tap "Wait" 1 >/dev/null 2>&1 && log "system window: isn't responding — Wait"
+done
+shot 01-first-start 1
 has "Start with basic set" 01-first-start
 tap "Start with basic set"
 shot 02-accounts 4

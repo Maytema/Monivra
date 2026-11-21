@@ -112,9 +112,14 @@ type_name "y"
 adb shell input keyevent 4
 log "K3 Back pressed: $(gone_after); form still open: $(has "Account currency")"
 
-# K4 — a tap on an empty part of the form (not on a control).
+# K4 — a tap on an empty part of the form (not on a control): the gap under the title field, above the keyboard.
 type_name "z"
-adb shell input tap 540 2000
+adb shell input tap 540 $(python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+ys = [list(map(int, re.findall(r"\d+", n.get("bounds")))) for n in ET.parse("/tmp/ui.xml").iter("node") if n.get("text") == "Icon" or n.get("content-desc") == "Icon"]
+print(ys[0][1] - 14 if ys else 700)
+PY
+)
 log "K4 tap on an empty area: $(gone_after)"
 shot k4-empty-tap 0
 
@@ -125,10 +130,12 @@ tap "Navigate up" 0 || adb shell input tap 72 200
 log "K5 left the form: $(gone_after); on Accounts: $(has "New account")"
 shot k5-left-form 1
 
-# K6 — the search of Operations (it focuses itself), then another tab.
+# K6 — the search of Operations (it focuses itself), then another tab (the bar is under the keyboard: Back first, as a
+# person must).
 tab "Operations"
 tap "Operation search" 1
 log "K6 search opened: keyboard $(kb)"
+adb shell input keyevent 4; sleep 1
 tab "Statistics"
 log "K6 tab changed during the search: $(gone_after)"
 shot k6-other-tab 0
