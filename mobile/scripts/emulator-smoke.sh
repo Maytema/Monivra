@@ -95,6 +95,20 @@ if tap "Operation search"; then
   shot 08c-search-closed 2
   has "125" 08c-search-closed
 fi
+# A new operation on a past month goes to that month (its last day), not to today: Operations swiped back one month,
+# an expense of 38 added there; it shows on that month, the current month keeps only the 125.
+adb shell input swipe 250 1500 900 1500 200; sleep 2.5
+tap "New operation"
+tap "Food"
+shot 08d-editor-on-past-month 3
+for k in 3 8; do tap "$k"; done
+tap "Save operation"
+shot 08e-past-month-after-save 3
+has "38" 08e-past-month-after-save
+adb shell input swipe 900 1500 250 1500 200; sleep 2.5
+shot 08f-current-month-again 1
+has "125" 08f-current-month-again
+grep -q "text=\"[^\"]*38 KGS" "$OUT/08f-current-month-again.xml" && { log "FAIL: the past-month 38 is on the current month"; FAILED=1; } || log "OK: the 38 is not on the current month"
 # A tour of the other screens (screenshots for a person; a missing label only logs NOT FOUND).
 back() { adb shell input keyevent 4; sleep 1.5; }
 tap "Accounts"

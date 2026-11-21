@@ -11,7 +11,7 @@ import { emptyFilters, operationsIn } from "../domain/periods.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Fab, ToneBadge, useFabCollapse } from "../ui/parts.tsx";
 import { openAddMenu } from "./add-menu.tsx";
-import { openEditor } from "./editor/editor-sheet.tsx";
+import { openEditor, dateOfShownPeriod } from "./editor/editor-sheet.tsx";
 import { OperationsPage } from "./operations.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { getView, setView, useViewPeriod, useViewFilters } from "./ui-state.ts";
@@ -50,7 +50,7 @@ export function FilteredOperations() {
         }
         render={(period) => <OperationsPage period={period} query="" active selection={false} selectedSet={noSelection} onPress={openOne} onLongPress={nothing} onTop={fab.setAtTop} />}
       />
-      <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu()} />
+      <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
     </View>
   );
 }

@@ -19,7 +19,8 @@ const LABELS: Record<Direction, string> = { income: "Incomes", expense: "Expense
 
 // `scheduled` starts a scheduled payment with the date, time, repeat and reminder already chosen.
 export type SchedulePreset = Pick<EditorDraft, "date" | "time" | "recur" | "reminder">;
-export const openAddMenu = (scheduled?: SchedulePreset): number => sheets.open(<AddMenu scheduled={scheduled} />, "sheet", { bare: true });
+// `date`: the date the new operation starts with (the period on the screen it was opened from); none — today.
+export const openAddMenu = (scheduled?: SchedulePreset, date?: string): number => sheets.open(<AddMenu scheduled={scheduled} date={date} />, "sheet", { bare: true });
 
 // What an item of a tab shows under its name: the balance of an account, the sum of a category.
 function figure(data: LedgerData, direction: Direction, id: string): number {
@@ -27,7 +28,7 @@ function figure(data: LedgerData, direction: Direction, id: string): number {
   return categoryTotals(data).get(id) ?? 0;
 }
 
-function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
+function AddMenu({ scheduled, date }: { scheduled: SchedulePreset | undefined; date?: string }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -38,7 +39,7 @@ function AddMenu({ scheduled }: { scheduled: SchedulePreset | undefined }) {
   const choose = (dir: Direction, id: string) => {
     close();
     const account = defaultAccountId(data, dir === "accounts" ? id : null) ?? undefined;
-    const extra = scheduled ? { scheduled: true, preset: scheduled } : {};
+    const extra = scheduled ? { scheduled: true, preset: scheduled } : { date };
     if (dir === "expense") openEditor({ type: "expense", category: id, from: account ?? null, ...extra });
     else if (dir === "income") openEditor({ type: "income", category: id, to: account ?? null, ...extra });
     else openEditor({ type: "transfer", from: id, to: account ?? null, ...extra });

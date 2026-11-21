@@ -14,6 +14,8 @@ import type { Fee, LedgerData } from "../../domain/types.ts";
 import { keypadDigits } from "../../domain/keypad.ts";
 import { DomainError } from "../../domain/errors.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../../ui/app-context.tsx";
+import { dateForNewOperation } from "../../domain/periods.ts";
+import { getView } from "../ui-state.ts";
 import { openCalendar } from "../../ui/calendar-sheet.tsx";
 import { openCurrencySheet } from "../../ui/currency-sheet.tsx";
 import { confirmDialog, confirmInfo, notice, promptDialog, showInfo, toast } from "../../ui/dialogs.tsx";
@@ -47,6 +49,8 @@ export interface EditorStart {
   to?: string | null;
   // A copy of an operation that was already filled in.
   copy?: Partial<EditorDraft>;
+  // The date a new one starts with (the period shown on the screen it was added from: `dateOfShownPeriod`).
+  date?: string;
   // What a scheduled payment has been given before the editor opens (date, time, repeat, reminder).
   preset?: Partial<EditorDraft>;
   // From an account's actions: the other side is asked first ("Take from", "Add to", "To account"),
@@ -59,6 +63,12 @@ const ledger = (): LedgerData => {
   if (state.status !== "ready") throw new Error("The data is not open");
   return state.data;
 };
+
+// The date for a new operation added on a screen that shows the shared period (Operations, Categories): a day of a
+// past period, today otherwise (domain/periods.ts dateForNewOperation).
+export function dateOfShownPeriod(): string {
+  return dateForNewOperation(getView().period, ledger().settings, appStore().env.clock.today());
+}
 
 export function openEditor(start: EditorStart): number | null {
   const data = ledger();
@@ -75,7 +85,7 @@ export function openEditor(start: EditorStart): number | null {
       from: type === "income" ? null : (start.from ?? fallback ?? null),
       to: type === "income" ? (start.to ?? fallback ?? null) : (start.to ?? null),
     };
-  const draft = newDraft(data, env.clock.today(), { ...(base as Partial<EditorDraft>), ...(found ? {} : start.preset) });
+  const draft = newDraft(data, env.clock.today(), { ...(base as Partial<EditorDraft>), ...(found || !start.date ? {} : { date: start.date }), ...(found ? {} : start.preset) });
   const session = new EditorSession(draft, scheduled, { data: ledger, say: toast });
   const open = () => sheets.open(<EditorSheet session={session} />, "sheet", { bare: true });
   if (start.ask === "transfer") return openTransferPicker(session, open);

@@ -15,7 +15,7 @@ import { EmptyState } from "../ui/empty-state.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
 import { setView, useViewCatType } from "./ui-state.ts";
-import { openEditor } from "./editor/editor-sheet.tsx";
+import { dateOfShownPeriod, openEditor } from "./editor/editor-sheet.tsx";
 import { openAccountSheet } from "./account-sheet.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
 
@@ -89,7 +89,7 @@ const TileGrid = memo(function TileGrid({ data, rows, kind, money }: { data: Ret
 
 // A tile with handlers of its own, so a redraw of the page leaves tiles whose sum did not change alone.
 const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone, first = false }: { first?: boolean; id: string; type: string; icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted" }) {
-  const open = useCallback(() => openEditor({ type: type === "income" ? "income" : "expense", category: id }), [id, type]);
+  const open = useCallback(() => openEditor({ type: type === "income" ? "income" : "expense", category: id, date: dateOfShownPeriod() }), [id, type]);
   const hold = useCallback(() => openCategorySheet(id), [id]);
   const coach = useCoachTarget("first-category");
   // The first tile can be lit by the introduction tour; it sits in a box of its own for that (the box has the tile's width).

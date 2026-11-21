@@ -13,10 +13,31 @@ import type { GestureResponderEvent } from "react-native";
 
 type Measure = { measureInWindow(done: (x: number, y: number, w: number, h: number) => void): void };
 
+// The keyboard follows a text field that is being typed in; when nothing can be typed any more where the person is,
+// it goes. Three moments take the text field away (task "keyboard audit", 2026-11-21):
+//   - a layer opens over it (ui/sheets.tsx: every sheet, dialog and page over the screen, except those opened to
+//     type in, which focus their own field);
+//   - the page or the tab changes (app/_layout.tsx);
+//   - a tap lands on nothing that takes it (KeyboardPad below), as in the scrolling forms with
+//     keyboardShouldPersistTaps="handled".
+// Before, the field under a layer kept its focus and the keyboard stayed up over everything, and the window, short
+// by the keyboard's height, squeezed the layer (the icon sheet opened over a form became a scrolled box).
+// dismissKeyboard() takes the focus from the field (Keyboard.dismiss blurs it; what was typed stays) and gives the
+// window its full height at once, so a layer opening at the same moment is laid out at its own height from its first
+// frame — not squeezed first and stretched when the keyboard has gone.
+const fullHeight = new Set<() => void>();
+export function dismissKeyboard(): void {
+  if (!Keyboard.isVisible()) return;
+  fullHeight.forEach((f) => f());
+  Keyboard.dismiss();
+}
+
 export function KeyboardPad({ children }: { children: ReactNode }) {
   const frame = useRef<Measure | null>(null);
   const [pad, setPad] = useState(0);
   useEffect(() => {
+    const full = () => setPad(0);
+    fullHeight.add(full);
     const shown = Keyboard.addListener("keyboardDidShow", (e: KeyboardEvent) => {
       frame.current?.measureInWindow((_x, y, _w, h) => setPad(Math.max(0, Math.round(y + h - e.endCoordinates.screenY))));
     });
@@ -24,13 +45,25 @@ export function KeyboardPad({ children }: { children: ReactNode }) {
     return () => {
       shown.remove();
       hidden.remove();
+      fullHeight.delete(full);
     };
   }, []);
   return (
     // The outer frame keeps the window's size (it is what is measured); the inner one is shortened by a margin, not
     // by padding: pages drawn with absolute positioning (the layers of ui/sheets.tsx) are placed against the box of
     // their parent, padding included, and would stay under the keyboard.
-    <View ref={(node: unknown) => void (frame.current = node as Measure | null)} collapsable={false} style={{ flex: 1 }} onTouchStart={PERF_BUILD ? (e: GestureResponderEvent) => noteTouch(e.nativeEvent.timestamp, e.nativeEvent.touches.length) : undefined}>
+    // While the keyboard is up, a tap that nothing below takes (no button, no field, no scrolling) ends here and puts
+    // the keyboard away. It does not keep the touch from the native views (blockNativeResponder: false), and when the
+    // keyboard is down this view takes no touches at all.
+    <View
+      ref={(node: unknown) => void (frame.current = node as Measure | null)}
+      collapsable={false}
+      style={{ flex: 1 }}
+      onTouchStart={PERF_BUILD ? (e: GestureResponderEvent) => noteTouch(e.nativeEvent.timestamp, e.nativeEvent.touches.length) : undefined}
+      onStartShouldSetResponder={() => pad > 0}
+      onResponderGrant={() => false}
+      onResponderRelease={dismissKeyboard}
+    >
       <View style={{ flex: 1, marginBottom: pad }}>{children}</View>
     </View>
   );

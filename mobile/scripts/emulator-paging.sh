@@ -57,7 +57,9 @@ check() {
 import re, sys, xml.etree.ElementTree as ET
 nodes = list(ET.parse("/tmp/ui.xml").iter("node"))
 def box(n): return list(map(int, re.findall(r"\d+", n.get("bounds"))))
-title = [n.get("text") for n in nodes if (n.get("text") or "") and 300 < sum(box(n)[0::2]) // 2 < 780 and 200 < box(n)[1] < 520 and n.get("text") != "Overall balance" and not re.search(r"KGS|USD", n.get("text"))]
+# The period title: a text (or description) with a year in it, in the middle of the upper part of the screen.
+def label(n): return (n.get("text") or n.get("content-desc") or "")
+title = [label(n) for n in nodes if re.search(r"\b20\d\d\b", label(n)) and 300 < sum(box(n)[0::2]) // 2 < 780 and 150 < box(n)[1] < 650 and not re.search(r"KGS|USD", label(n))]
 heads = [n.get("text") for n in nodes if re.match(r"^[A-Z][a-z]+\n[A-Z][a-z]+ \d{4}$", n.get("text") or "") and box(n)[1] > 400]
 t = title[0] if title else "?"
 h = heads[0].split("\n")[1] if heads else "-"
@@ -92,8 +94,8 @@ mode() {
 import re, xml.etree.ElementTree as ET
 for n in ET.parse("/tmp/ui.xml").iter("node"):
     a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
-    t = n.get("text") or ""
-    if t and 300 < (a + c) // 2 < 780 and 200 < b < 520 and t != "Overall balance" and "KGS" not in t:
+    t = n.get("text") or n.get("content-desc") or ""
+    if re.search(r"\b20\d\d\b", t) and 300 < (a + c) // 2 < 780 and 150 < b < 650 and "KGS" not in t:
         print((a + c) // 2, (b + d) // 2); break
 PY
 )
