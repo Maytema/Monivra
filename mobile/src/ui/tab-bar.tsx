@@ -51,7 +51,9 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // asked for AND what is shown: a tab is dropped only when it is both (a true repeat). A tab that is merely the pending
   // target is not dropped (re-asking it is harmless), and a stale `asked` never blocks going back: on a slow phone a
   // timer that rewrote `asked` after 1.5 s made the next press on the old tab "already asked" and lost it.
-  const asked = useRef(state.routes[state.index]?.key);
+  // Tabs are told apart by name, not by route key: the keys in the navigator's state can change (the perf log showed the
+  // asked tab's key missing from `state.routes` at the second of two quick presses), the names do not.
+  const asked = useRef(state.routes[state.index]?.name);
   const shown = useRef(state);
   shown.current = state;
   // The pill moves to the pressed tab at once, in a frame of its own; the screen is built after that frame. Before, the
@@ -59,12 +61,12 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // pressed again.
   const [pressed, setPressed] = useState<string | null>(null);
   useEffect(() => {
-    const key = state.routes[state.index]?.key;
+    const name = state.routes[state.index]?.name;
     // Take `asked` from the navigator only when no newer target is pending (nothing asked, or the asked tab was reached);
     // a slow navigation to B that commits after the person already asked for A must not overwrite A.
-    if (asked.current === undefined || asked.current === key) asked.current = key;
+    if (asked.current === undefined || asked.current === name) asked.current = name;
     // The pill is released only when the navigator reached the pressed tab.
-    setPressed((cur) => (cur === null || cur === key ? null : cur));
+    setPressed((cur) => (cur === null || cur === name ? null : cur));
     sinceTouch("tab shown " + (state.routes[state.index]?.name ?? "?"));
   }, [state.index, state.routes]);
   // A screen hides the bar while it has its own actions there (the selection of operations).
@@ -89,15 +91,15 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
       {state.routes.map((route, index) => {
         const tab = TABS.find((x) => x.name === route.name);
         if (!tab) return null;
-        const active = pressed ? pressed === route.key : state.index === index;
+        const active = pressed ? pressed === route.name : state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
-          perfNote(`tab press ${route.name} (asked ${state.routes.find((r) => r.key === asked.current)?.name}, shown ${state.routes[state.index]?.name})`);
-          if (asked.current === route.key && shown.current.routes[shown.current.index]?.key === route.key) return perfNote("tab press dropped: already asked");
+          perfNote(`tab press ${route.name} (asked ${asked.current}, shown ${state.routes[state.index]?.name})`);
+          if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return perfNote("tab press dropped: already asked");
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
           if (event.defaultPrevented) return;
-          asked.current = route.key;
-          setPressed(route.key);
+          asked.current = route.name;
+          setPressed(route.name);
           requestAnimationFrame(() => navigateToTab(route.key));
         };
         return (

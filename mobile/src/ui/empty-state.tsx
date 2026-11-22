@@ -1,8 +1,8 @@
 // Empty states (js/ui/empty-state.js and css/empty-state.css): a picture with a title, a hint and, where the
 // person can start, a button. One component for every list that can be empty. A picture plays only while its screen
-// is shown: it starts from the first frame at every visit, two frames after the screen was drawn (so the tab's own
-// first frame does not compete with it), and stops at rest when the screen is left. After the person has done
-// something in this launch (ui/quiet.ts) the pictures are drawn at rest.
+// is shown: it starts from the first frame at every visit, two frames and 150 ms after the screen was drawn (so the
+// tab's own first frame and a quick pass through the tabs do not compete with it), and stops at rest when the screen is
+// left. After the person has done something in this launch (ui/quiet.ts) the pictures are drawn at rest.
 import { useCallback, useRef, type ReactNode } from "react";
 import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
@@ -22,6 +22,8 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 // How long each picture plays (ms), taken from the first application's recordings (frame by frame, 2026-11-22): the
 // time from the picture's first frame to its last movement.
 const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 1400, statistics: 2100 };
+
+const START_WAIT_MS = 150;
 
 type Timeline = Animated.Value;
 type Ease = (n: number) => number;
@@ -351,15 +353,22 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
       time.setValue(0);
       let run: Animated.CompositeAnimation | undefined;
       let second = 0;
+      let wait: ReturnType<typeof setTimeout> | undefined;
+      // Two frames after the screen is drawn, then a short wait: a person who taps through the tabs leaves a tab before
+      // the wait is over, and no picture is started (and stopped again) for a tab that was only passed through (the
+      // empty-profile tab moves of CI, build 133: 9 s of JavaScript time in twelve quick taps, pictures on the JS driver).
       const first = requestAnimationFrame(() => {
         second = requestAnimationFrame(() => {
-          run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
-          run.start();
+          wait = setTimeout(() => {
+            run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
+            run.start();
+          }, START_WAIT_MS);
         });
       });
       return () => {
         cancelAnimationFrame(first);
         cancelAnimationFrame(second);
+        if (wait) clearTimeout(wait);
         run?.stop();
         time.setValue(total);
       };
