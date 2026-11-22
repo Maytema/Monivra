@@ -81,8 +81,7 @@ begin "cold start"
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 finish 25
 begin "first screen: start with the basic set"
-# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
-HOLD=1 tap "Start" 4; unset HOLD  # (a variable given to a function stays set after it)
+tap "Start"
 finish 1
 
 # The large ledger comes in as a data file, the way a person moves data from the first application.

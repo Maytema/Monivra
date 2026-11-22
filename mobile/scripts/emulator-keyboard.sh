@@ -83,8 +83,7 @@ for i in $(seq 30); do
 done
 log "first screen after $((i * 2)) s or more: $(grep -q 'text="Start"' /tmp/ui.xml && echo shown || echo NOT SHOWN)"
 shot k0-start 0
-# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
-HOLD=1 tap "Start" 4; unset HOLD  # (a variable given to a function stays set after it)
+tap "Start"
 
 # K1 — the owner's case: New account, the name typed, Customize icon opened with the keyboard up.
 tab "Accounts"

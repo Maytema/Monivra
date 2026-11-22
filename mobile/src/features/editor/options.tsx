@@ -43,8 +43,8 @@ function FieldTitle({ children }: { children: string }) {
 }
 
 // A value between two arrows: the arrows change it by one, tapping the value types it in on the number pad. An arrow
-// that cannot go further is dimmed. One outlined field with the arrows at its ends (the owner, 2026-11-22: as one
-// control, not three separate boxes as js/ui/primitives.js stepperHtml draws it).
+// that cannot go further is dimmed. One rounded outline; inside it the arrow cells (a fifth of the width each) and the
+// value cell (three fifths) are told apart by thin vertical lines (the owner's photo of the Reminder dialog, 2026-11-22).
 function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string; text: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
   const p = usePalette();
   const t = useT();
@@ -54,7 +54,7 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
       accessibilityLabel={t.t(description)}
       disabled={disabled}
       onPress={() => onStep(step)}
-      style={({ pressed }) => ({ width: 52, alignSelf: "stretch", alignItems: "center", justifyContent: "center", opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? p.soft : "transparent" })}
+      style={({ pressed }) => ({ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "center", opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? p.soft : "transparent", ...(name === "left" ? { borderRightWidth: 1 } : { borderLeftWidth: 1 }), borderColor: p.line })}
     >
       <Icon name={name} size={22} color={p.accentInk} />
     </Pressable>
@@ -64,7 +64,7 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
       <FieldTitle>{label}</FieldTitle>
       <View style={{ flexDirection: "row", alignItems: "center", height: 48, marginBottom: 4, borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg, overflow: "hidden" }}>
         {arrow("left", -1, atMin, "Decrease")}
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 1, minWidth: 0, alignSelf: "stretch", alignItems: "center", justifyContent: "center" }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 3, minWidth: 0, alignSelf: "stretch", alignItems: "center", justifyContent: "center" }}>
           <Text style={{ color: p.ink, fontSize: 17 }}>{text}</Text>
         </Pressable>
         {arrow("right", 1, atMax, "Increase")}
@@ -107,10 +107,12 @@ function Footer({ off, ok, offLabel = "Turn off" }: { off?: () => void; ok: () =
           <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t(offLabel)}</Text>
         </Pressable>
       ) : null}
-      <DialogActions>
+      {/* Under the full-width "Turn off" the two buttons stand in the middle, not at the right edge (the owner: the form
+          looked crooked because the buttons were not centred). */}
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 16, marginTop: 14 }}>
         <TextButton label="Cancel" onPress={close} />
         <PrimaryPill label="OK" onPress={ok} />
-      </DialogActions>
+      </View>
     </View>
   );
 }

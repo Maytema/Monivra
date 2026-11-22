@@ -268,6 +268,7 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
   };
   const toggle = (c: Category) =>
     edit((s) => {
+      if (all) s.clear();
       if (!c.parent) {
         const on = s.has(c.id);
         for (const x of [c, ...children(c.id)]) s.delete(x.id);
@@ -278,12 +279,6 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
         for (const x of children(c.parent)) if (x.id !== c.id) s.add(x.id);
       } else if (s.has(c.id)) s.delete(c.id);
       else s.add(c.id);
-    });
-  const toggleGroup = (list: Category[]) =>
-    edit((s) => {
-      const on = list.every((c) => s.has(c.id));
-      for (const c of list) for (const x of [c, ...children(c.id)]) s.delete(x.id);
-      if (!on) for (const c of list) s.add(c.id);
     });
   const row = (c: Category, depth = 0): ReactNode => {
     const kids = children(c.id);
@@ -306,16 +301,6 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
     );
   };
   const card = (children_: ReactNode) => <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 4, marginBottom: 12, backgroundColor: p.key }}>{children_}</View>;
-  const group = (title: string, list: Category[]) =>
-    card(
-      <>
-        <Pressable accessibilityRole="button" onPress={() => toggleGroup(list)} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 12 }}>
-          <Text style={{ flex: 1, color: p.ink, fontSize: 16, fontWeight: "600" }}>{t.t(title)}</Text>
-          <Box on={list.length > 0 && list.every((c) => chosen.has(c.id))} />
-        </Pressable>
-        {list.map((c) => row(c))}
-      </>,
-    );
   return (
     <View style={{ maxHeight: 640 }}>
       <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Select categories")}</Text>
@@ -330,12 +315,19 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
             }}
             style={{ flexDirection: "row", alignItems: "center", paddingVertical: 12 }}
           >
-            <Text style={{ flex: 1, color: p.ink, fontSize: 16, fontWeight: "600" }}>{t.t("All categories")}</Text>
+            <Text style={{ flex: 1, color: p.ink, fontSize: 16, fontWeight: "600" }}>{t.t("All expense categories")}</Text>
             <Box on={all} />
           </Pressable>,
         )}
-        {group("Expenses", active)}
-        {archived.length ? group("Expenses (archived)", archived) : null}
+        {/* Only expense categories: a budget never limits incomes. A tap on one picks it alone; the arrow opens its
+            subcategories, which can be picked one by one. */}
+        {card(<>{active.map((c) => row(c))}</>)}
+        {archived.length ? (
+          <>
+            <Text style={{ color: p.muted, fontSize: 13, marginLeft: 6, marginBottom: 6 }}>{t.t("Expenses (archived)")}</Text>
+            {card(<>{archived.map((c) => row(c))}</>)}
+          </>
+        ) : null}
       </ScrollView>
       <DialogActions>
         <TextButton label="Cancel" onPress={close} />
@@ -361,7 +353,7 @@ export function BudgetEditor() {
   const existing = data.budgets.find((b) => b.id === id);
   const [draft, setDraft] = useState<Draft>(() => (existing ? { ...existing } : { id: null, name: "", currency: data.settings.currency, amount: 0, period: "month", categories: null }));
   const set = (patch: Partial<Draft>) => setDraft((d) => ({ ...d, ...patch }));
-  const scope = draft.categories ? draft.categories.map((c) => categoryById(data, c)?.name ?? "").join(", ") : t.t("All categories");
+  const scope = draft.categories ? draft.categories.map((c) => categoryById(data, c)?.name ?? "").join(", ") : t.t("All expense categories");
   const save = () => {
     try {
       if (run((tx, env) => saveBudget(tx, draft, env))) {

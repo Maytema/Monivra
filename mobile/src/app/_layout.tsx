@@ -19,6 +19,7 @@ import { setSecureScreen } from "../platform/native.ts";
 import { Welcome } from "../features/welcome.tsx";
 import { LockGate } from "../features/lock.tsx";
 import { SheetHost } from "../ui/sheets.tsx";
+import { NotificationAsk } from "../features/notification-ask.tsx";
 import { CoachHost } from "../ui/coach.tsx";
 import { NoticeHost, ToastHost } from "../ui/dialogs.tsx";
 
@@ -111,6 +112,7 @@ function Ready() {
       </Stack>
       <SheetHost />
       <CoachHost />
+      <NotificationAsk />
       </KeyboardPad>
       <NoticeHost />
       </LockGate>

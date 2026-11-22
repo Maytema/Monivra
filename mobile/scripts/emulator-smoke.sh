@@ -60,8 +60,7 @@ for i in $(seq 20); do
 done
 shot 01-first-start 1
 has "Start" 01-first-start
-# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
-HOLD=1 tap "Start"; unset HOLD  # (a variable given to a function stays set after it)
+tap "Start"
 shot 02-accounts 4
 has "Cash" 02-accounts
 has "Overall balance" 02-accounts

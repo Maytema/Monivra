@@ -89,13 +89,26 @@ const STARTER_INCOMES: [string, string, string][] = [
   ["Other", "trend", "#9f37a9"],
 ];
 
+// Subcategories of the starter expenses (name, icon): what people most often split these by.
+const STARTER_SUBCATEGORIES: Record<string, [string, string][]> = {
+  Food: [["Groceries", "cart"], ["Restaurants", "restaurant"], ["Coffee", "coffee"]],
+  Transport: [["Fuel", "fuel"], ["Public transport", "bus"], ["Taxi", "car"]],
+  Home: [["Rent", "key"], ["Utilities", "bulb"], ["Internet", "wifi"]],
+  Health: [["Pharmacy", "pill"], ["Doctor", "stethoscope"]],
+  Clothes: [["Shoes", "shoe"]],
+  Entertainment: [["Movies", "film"], ["Games", "gamepad"], ["Music", "music"]],
+};
+
 // A few ordinary accounts and categories named in the interface language.
 export function createStarterData(language: string, translate: (s: string) => string, newId: () => string): LedgerData {
   const base = createEmptyData(language);
   const currency = base.settings.currency;
   base.accounts = STARTER_ACCOUNTS.map(([name, type, icon, color]) => blankAccount({ id: newId(), name: translate(name), type, icon, color, currency }));
+  const expenses = STARTER_EXPENSES.map(([name, icon, color]) => ({ key: name, color, category: blankCategory({ id: newId(), name: translate(name), type: "expense", icon, color, currency }) }));
+  const subcategories = expenses.flatMap(({ key, color, category }) => (STARTER_SUBCATEGORIES[key] ?? []).map(([name, icon]) => blankCategory({ id: newId(), name: translate(name), type: "expense", icon, color, currency, parent: category.id })));
   base.categories = [
-    ...STARTER_EXPENSES.map(([name, icon, color]) => blankCategory({ id: newId(), name: translate(name), type: "expense", icon, color, currency })),
+    ...expenses.map((e) => e.category),
+    ...subcategories,
     ...STARTER_INCOMES.map(([name, icon, color]) => blankCategory({ id: newId(), name: translate(name), type: "income", icon, color, currency })),
   ];
   return base;
