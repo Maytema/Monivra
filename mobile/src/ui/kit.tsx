@@ -80,7 +80,7 @@ export function Card({ children, style, onPress }: { children: ReactNode; style?
   );
 }
 
-export function Button({ label, onPress, onLongPress, kind = "primary", disabled = false }: { label: string; onPress: () => void; onLongPress?: () => void; kind?: "primary" | "outline" | "danger" | "text"; disabled?: boolean }) {
+export function Button({ label, onPress, onLongPress, onPressOut, kind = "primary", disabled = false }: { label: string; onPress: () => void; onLongPress?: () => void; onPressOut?: () => void; kind?: "primary" | "outline" | "danger" | "text"; disabled?: boolean }) {
   const p = usePalette();
   const t = useT();
   const bg = kind === "primary" ? p.accent : kind === "danger" ? p.negative : "transparent";
@@ -91,6 +91,7 @@ export function Button({ label, onPress, onLongPress, kind = "primary", disabled
       disabled={disabled}
       onPress={onPress}
       onLongPress={onLongPress}
+      onPressOut={onPressOut}
       style={({ pressed }) => [
         { backgroundColor: bg, borderRadius: radius.pill, paddingVertical: 17, paddingHorizontal: space.xl, alignItems: "center" },
         kind === "outline" && { borderWidth: 1, borderColor: p.accent },
