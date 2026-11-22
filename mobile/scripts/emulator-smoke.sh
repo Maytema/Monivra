@@ -211,7 +211,7 @@ shot 15f-budget-form 2
 tap "Monthly"
 shot 15g-budget-period 2
 back
-tap "All categories"
+tap "All expense categories"
 shot 15h-budget-categories 2
 back
 back
