@@ -1,0 +1,2326 @@
+--------- beginning of main
+11-22 00:40:06.544  3569  3569 I ReactNativeJS: [perf] mark cold start
+11-22 00:40:10.209  3634  3794 I ReactNativeJS: Running "main"
+11-22 00:40:10.691  3634  3794 I ReactNativeJS: [perf] stall 333.8ms
+11-22 00:40:10.969  3634  3794 I ReactNativeJS: [perf] stall 193.4ms
+11-22 00:40:11.091  3634  3794 I ReactNativeJS: [perf] stall 66.3ms
+11-22 00:40:32.577  5200  5200 I ReactNativeJS: [perf] mark first screen: start with the basic set
+11-22 00:40:35.304  3634  3794 I ReactNativeJS: [perf] stall 62.8ms
+11-22 00:40:35.394  3634  3794 I ReactNativeJS: [perf] stall 65.5ms
+11-22 00:40:35.578  3634  3794 I ReactNativeJS: [perf] stall 158.9ms
+11-22 00:40:36.266  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:40:36.266  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:40:36.266  3634  3794 I ReactNativeJS: [perf] renders tab bar 2
+11-22 00:40:40.575  3634  3794 I ReactNativeJS: [perf] engine toLocaleString x200 258.7ms
+11-22 00:40:40.577  3634  3794 I ReactNativeJS: [perf] engine plain format x200 1.8ms
+11-22 00:40:40.579  3634  3794 I ReactNativeJS: [perf] engine localeCompare x200 2.5ms
+11-22 00:40:41.027  3634  3794 I ReactNativeJS: [perf] engine toLocaleDateString x200 447.5ms
+11-22 00:40:43.066  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:40:50.895  5884  5884 I ReactNativeJS: [perf] mark read the file and open the restore page
+11-22 00:41:04.006  6047  6047 I ReactNativeJS: [perf] mark restore 3000 operations
+11-22 00:41:29.177  6174  6174 I ReactNativeJS: [perf] mark open tab Operations (first time)
+11-22 00:41:31.182  3634  3794 I ReactNativeJS: [perf] tab press operations (asked index, shown index)
+11-22 00:41:31.183  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:41:31.210  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:31.210  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:31.234  3634  3794 I ReactNativeJS: [perf] operations page built 24.3ms
+11-22 00:41:31.234  3634  3794 I ReactNativeJS: [perf] pager: page content shown (1 so far)
+11-22 00:41:31.235  3634  3794 I ReactNativeJS: [perf] tab shown operations 52.5ms
+11-22 00:41:31.243  3634  3794 I ReactNativeJS: [perf] tab shown operations 60.4ms
+11-22 00:41:31.777  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:31.777  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:31.780  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:31.780  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:31.791  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:31.791  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:31.793  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:31.793  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:31.801  3634  3794 I ReactNativeJS: [perf] operations page built 24.3ms
+11-22 00:41:31.806  3634  3794 I ReactNativeJS: [perf] pager: page content shown (2 so far)
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] operations page built 29.9ms
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] pager: page content shown (3 so far)
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] operations page built 18.5ms
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] pager: page content shown (4 so far)
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] operations page built 16.6ms
+11-22 00:41:31.810  3634  3794 I ReactNativeJS: [perf] pager: page content shown (5 so far)
+11-22 00:41:32.097  3634  3794 I ReactNativeJS: [perf] stall 60.6ms
+11-22 00:41:32.240  3634  3794 I ReactNativeJS: [perf] stall 67.4ms
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders tab bar 6
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders operations screen 2
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders root hero 2
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:41:32.243  3634  3794 I ReactNativeJS: [perf] renders fab 3
+11-22 00:41:32.408  3634  3794 I ReactNativeJS: [perf] stall 115.6ms
+11-22 00:41:32.794  3634  3794 I ReactNativeJS: [perf] stall 87.9ms
+11-22 00:41:33.096  3634  3794 I ReactNativeJS: [perf] stall 61.0ms
+11-22 00:41:33.176  3634  3794 I ReactNativeJS: [perf] stall 54.2ms
+11-22 00:41:33.546  3634  3794 I ReactNativeJS: [perf] stall 70.0ms
+11-22 00:41:37.382  6276  6276 I ReactNativeJS: [perf] mark scroll the operations down (6 flicks)
+11-22 00:41:47.512  6350  6350 I ReactNativeJS: [perf] mark scroll the operations back up (6 flicks)
+11-22 00:41:55.655  6402  6402 I ReactNativeJS: [perf] mark swipe to the previous period (3 times)
+11-22 00:41:55.716  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:41:55.918  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:41:55.918  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:41:55.918  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 50; this page drawn: yes; next page 48 drawn: yes; behind by -1
+11-22 00:41:55.926  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:55.926  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:55.929  3634  3794 I ReactNativeJS: [perf] operations page built 3.5ms
+11-22 00:41:55.929  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.9ms
+11-22 00:41:55.937  3634  3794 I ReactNativeJS: [perf] swipe: next frame 19.0ms
+11-22 00:41:55.948  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:55.948  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:55.963  3634  3794 I ReactNativeJS: [perf] operations page built 14.5ms
+11-22 00:41:55.963  3634  3794 I ReactNativeJS: [perf] pager: page content shown (6 so far)
+11-22 00:41:55.963  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 44.4ms
+11-22 00:41:55.963  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:41:56.599  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:41:56.599  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:41:56.599  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:41:58.472  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:41:58.651  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:41:58.651  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:41:58.651  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 49; this page drawn: yes; next page 47 drawn: yes; behind by -1
+11-22 00:41:58.669  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:58.678  3634  3794 I ReactNativeJS: [perf] page: rows and days 2.9ms
+11-22 00:41:58.706  3634  3794 I ReactNativeJS: [perf] operations page built 37.0ms
+11-22 00:41:58.706  3634  3794 I ReactNativeJS: [perf] swipe: pages built 55.1ms
+11-22 00:41:58.768  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:41:58.768  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:41:58.856  3634  3794 I ReactNativeJS: [perf] operations page built 88.4ms
+11-22 00:41:58.857  3634  3794 I ReactNativeJS: [perf] pager: page content shown (7 so far)
+11-22 00:41:58.860  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 209.4ms
+11-22 00:41:58.861  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:41:58.882  3634  3794 I ReactNativeJS: [perf] swipe: next frame 230.6ms
+11-22 00:41:58.882  3634  3794 I ReactNativeJS: [perf] stall 141.1ms
+11-22 00:41:59.666  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:41:59.666  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:41:59.666  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:42:01.217  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:01.434  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:01.434  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:01.434  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 48; this page drawn: yes; next page 46 drawn: yes; behind by -1
+11-22 00:42:01.439  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:01.439  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:01.462  3634  3794 I ReactNativeJS: [perf] operations page built 23.4ms
+11-22 00:42:01.463  3634  3794 I ReactNativeJS: [perf] swipe: pages built 28.5ms
+11-22 00:42:01.477  3634  3794 I ReactNativeJS: [perf] swipe: next frame 42.7ms
+11-22 00:42:01.507  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:01.508  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:01.613  3634  3794 I ReactNativeJS: [perf] operations page built 105.5ms
+11-22 00:42:01.613  3634  3794 I ReactNativeJS: [perf] pager: page content shown (8 so far)
+11-22 00:42:01.613  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 178.9ms
+11-22 00:42:01.614  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:01.678  3634  3794 I ReactNativeJS: [perf] stall 176.4ms
+11-22 00:42:01.709  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:01.709  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:01.709  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:42:05.973  6445  6445 I ReactNativeJS: [perf] mark swipe to the next period (3 times)
+11-22 00:42:06.056  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:06.227  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:06.227  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:06.227  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 47; this page drawn: yes; next page 49 drawn: yes; behind by 1
+11-22 00:42:06.236  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:06.236  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:06.238  3634  3794 I ReactNativeJS: [perf] operations page built 2.9ms
+11-22 00:42:06.239  3634  3794 I ReactNativeJS: [perf] swipe: pages built 11.5ms
+11-22 00:42:06.246  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:06.246  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:06.258  3634  3794 I ReactNativeJS: [perf] operations page built 12.2ms
+11-22 00:42:06.258  3634  3794 I ReactNativeJS: [perf] pager: page content shown (9 so far)
+11-22 00:42:06.258  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 31.2ms
+11-22 00:42:06.258  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:06.314  3634  3794 I ReactNativeJS: [perf] swipe: next frame 87.2ms
+11-22 00:42:06.782  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:06.782  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:06.782  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:42:08.803  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:08.975  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:08.975  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:08.975  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 48; this page drawn: yes; next page 50 drawn: yes; behind by 1
+11-22 00:42:08.981  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:08.981  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:08.985  3634  3794 I ReactNativeJS: [perf] operations page built 4.1ms
+11-22 00:42:08.985  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.0ms
+11-22 00:42:09.000  3634  3794 I ReactNativeJS: [perf] swipe: next frame 25.0ms
+11-22 00:42:09.030  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:09.030  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:09.119  3634  3794 I ReactNativeJS: [perf] operations page built 88.7ms
+11-22 00:42:09.119  3634  3794 I ReactNativeJS: [perf] pager: page content shown (10 so far)
+11-22 00:42:09.132  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 156.7ms
+11-22 00:42:09.132  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:09.168  3634  3794 I ReactNativeJS: [perf] stall 142.7ms
+11-22 00:42:09.832  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:09.832  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:09.832  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:42:11.518  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:11.711  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:11.711  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:11.711  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 49; this page drawn: yes; next page 51 drawn: yes; behind by 1
+11-22 00:42:11.721  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:11.721  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:11.725  3634  3794 I ReactNativeJS: [perf] operations page built 4.2ms
+11-22 00:42:11.725  3634  3794 I ReactNativeJS: [perf] swipe: pages built 14.2ms
+11-22 00:42:11.745  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:11.745  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:11.823  3634  3794 I ReactNativeJS: [perf] operations page built 78.0ms
+11-22 00:42:11.823  3634  3794 I ReactNativeJS: [perf] pager: page content shown (11 so far)
+11-22 00:42:11.823  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 112.0ms
+11-22 00:42:11.823  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:11.858  3634  3794 I ReactNativeJS: [perf] stall 101.9ms
+11-22 00:42:11.859  3634  3794 I ReactNativeJS: [perf] swipe: next frame 147.9ms
+11-22 00:42:11.890  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:11.891  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:11.891  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:42:12.125  3634  3794 I ReactNativeJS: [perf] stall 64.9ms
+11-22 00:42:16.268  6476  6476 I ReactNativeJS: [perf] mark open tab Statistics (first time)
+11-22 00:42:18.282  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:42:18.283  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:42:18.333  3634  3794 I ReactNativeJS: [perf] pager: page content shown (1 so far)
+11-22 00:42:18.333  3634  3794 I ReactNativeJS: [perf] tab shown statistics 50.8ms
+11-22 00:42:18.902  3634  3794 I ReactNativeJS: [perf] pager: page content shown (2 so far)
+11-22 00:42:18.903  3634  3794 I ReactNativeJS: [perf] pager: page content shown (3 so far)
+11-22 00:42:19.058  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:42:19.059  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:42:19.059  3634  3794 I ReactNativeJS: [perf] renders pager 5
+11-22 00:42:19.062  3634  3794 I ReactNativeJS: [perf] renders period bar 5
+11-22 00:42:19.187  3634  3794 I ReactNativeJS: [perf] stall 51.0ms
+11-22 00:42:19.550  3634  3794 I ReactNativeJS: [perf] stall 82.8ms
+11-22 00:42:19.823  3634  3794 I ReactNativeJS: [perf] stall 63.8ms
+11-22 00:42:20.104  3634  3794 I ReactNativeJS: [perf] stall 99.4ms
+11-22 00:42:20.227  3634  3794 I ReactNativeJS: [perf] stall 90.1ms
+11-22 00:42:20.358  3634  3794 I ReactNativeJS: [perf] stall 79.9ms
+11-22 00:42:24.462  6532  6532 I ReactNativeJS: [perf] mark scroll the statistics (3 flicks down, 3 up)
+11-22 00:42:32.320  6575  6575 I ReactNativeJS: [perf] mark statistics: previous period and back
+11-22 00:42:32.400  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:32.584  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:32.584  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:32.584  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 50; this page drawn: yes; next page 48 drawn: NO; behind by -1
+11-22 00:42:32.610  3634  3794 I ReactNativeJS: [perf] swipe: pages built 26.0ms
+11-22 00:42:32.633  3634  3794 I ReactNativeJS: [perf] pager: page content shown (4 so far)
+11-22 00:42:32.633  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 49.7ms
+11-22 00:42:32.634  3634  3794 I ReactNativeJS: [perf] swipe: next frame 50.0ms
+11-22 00:42:32.634  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:33.232  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:33.232  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:35.173  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:42:35.350  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:42:35.350  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:42:35.350  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 49; this page drawn: yes; next page 51 drawn: NO; behind by 1
+11-22 00:42:35.360  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.5ms
+11-22 00:42:35.368  3634  3794 I ReactNativeJS: [perf] swipe: next frame 18.1ms
+11-22 00:42:35.402  3634  3794 I ReactNativeJS: [perf] pager: page content shown (5 so far)
+11-22 00:42:35.402  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 51.7ms
+11-22 00:42:35.402  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:42:36.282  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:42:36.282  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:42:39.354  6613  6613 I ReactNativeJS: [perf] mark open tab Categories (first time)
+11-22 00:42:41.382  3634  3794 I ReactNativeJS: [perf] tab press categories (asked statistics, shown statistics)
+11-22 00:42:41.383  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:42:41.439  3634  3794 I ReactNativeJS: [perf] pager: page content shown (1 so far)
+11-22 00:42:41.440  3634  3794 I ReactNativeJS: [perf] tab shown categories 57.2ms
+11-22 00:42:41.959  3634  3794 I ReactNativeJS: [perf] pager: page content shown (2 so far)
+11-22 00:42:41.959  3634  3794 I ReactNativeJS: [perf] pager: page content shown (3 so far)
+11-22 00:42:42.382  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:42:42.382  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:42:42.382  3634  3794 I ReactNativeJS: [perf] renders pager 5
+11-22 00:42:42.382  3634  3794 I ReactNativeJS: [perf] renders period bar 5
+11-22 00:42:47.573  6653  6653 I ReactNativeJS: [perf] mark open tab Accounts
+11-22 00:42:49.666  3634  3794 I ReactNativeJS: [perf] tab press index (asked categories, shown categories)
+11-22 00:42:49.666  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:42:49.691  3634  3794 I ReactNativeJS: [perf] tab shown index 25.1ms
+11-22 00:42:50.516  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:42:50.516  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:42:50.516  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:42:53.686  6686  6686 I ReactNativeJS: [perf] mark tabs again: Operations, Statistics, Categories, Accounts
+11-22 00:42:55.782  3634  3794 I ReactNativeJS: [perf] tab press operations (asked index, shown index)
+11-22 00:42:55.783  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:42:55.810  3634  3794 I ReactNativeJS: [perf] tab shown operations 27.4ms
+11-22 00:42:55.824  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:42:55.824  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:42:55.830  3634  3794 I ReactNativeJS: [perf] operations page built 5.7ms
+11-22 00:42:56.615  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:42:56.616  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:42:56.616  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:42:56.616  3634  3794 I ReactNativeJS: [perf] renders operations page 1
+11-22 00:42:59.849  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:42:59.849  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:42:59.879  3634  3794 I ReactNativeJS: [perf] tab shown statistics 30.2ms
+11-22 00:43:00.682  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:00.682  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:00.682  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:03.916  3634  3794 I ReactNativeJS: [perf] tab press categories (asked statistics, shown statistics)
+11-22 00:43:03.916  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:03.943  3634  3794 I ReactNativeJS: [perf] tab shown categories 26.6ms
+11-22 00:43:04.749  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:04.749  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:04.749  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:07.949  3634  3794 I ReactNativeJS: [perf] tab press index (asked categories, shown categories)
+11-22 00:43:07.949  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:07.981  3634  3794 I ReactNativeJS: [perf] tab shown index 31.5ms
+11-22 00:43:08.815  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:08.816  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:43:08.816  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:43:21.966  3634  3794 I ReactNativeJS: [perf] tab press operations (asked index, shown index)
+11-22 00:43:21.966  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:21.993  3634  3794 I ReactNativeJS: [perf] tab shown operations 26.7ms
+11-22 00:43:22.040  3634  3794 I ReactNativeJS: [perf] renders tab bar 3
+11-22 00:43:22.040  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:43:22.040  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:43:23.049  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:43:24.970  6897  6897 I ReactNativeJS: [perf] mark tab back and forth, 1.5s apart (Operations → Statistics → Operations)
+11-22 00:43:25.016  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:43:25.016  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:25.044  3634  3794 I ReactNativeJS: [perf] tab shown statistics 28.0ms
+11-22 00:43:25.097  3634  3794 I ReactNativeJS: [perf] renders tab bar 3
+11-22 00:43:25.097  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:25.097  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:26.099  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:43:26.532  3634  3794 I ReactNativeJS: [perf] tab press operations (asked statistics, shown statistics)
+11-22 00:43:26.532  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:26.569  3634  3794 I ReactNativeJS: [perf] tab shown operations 36.1ms
+11-22 00:43:27.115  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:27.116  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:27.116  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:31.523  6936  6936 I ReactNativeJS: [perf] mark tab back and forth, 0.8s apart (Operations → Statistics → Operations)
+11-22 00:43:31.549  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:43:31.549  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:31.576  3634  3794 I ReactNativeJS: [perf] tab shown statistics 26.9ms
+11-22 00:43:32.199  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:32.199  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:32.199  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:32.366  3634  3794 I ReactNativeJS: [perf] tab press operations (asked statistics, shown statistics)
+11-22 00:43:32.366  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:32.393  3634  3794 I ReactNativeJS: [perf] tab shown operations 27.2ms
+11-22 00:43:33.216  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:33.216  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:33.216  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:37.374  6975  6975 I ReactNativeJS: [perf] mark tab back and forth, 0.4s apart (Operations → Statistics → Operations)
+11-22 00:43:37.399  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:43:37.399  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:37.426  3634  3794 I ReactNativeJS: [perf] tab shown statistics 26.7ms
+11-22 00:43:37.833  3634  3794 I ReactNativeJS: [perf] tab press operations (asked statistics, shown statistics)
+11-22 00:43:37.834  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:37.860  3634  3794 I ReactNativeJS: [perf] tab shown operations 26.4ms
+11-22 00:43:38.299  3634  3794 I ReactNativeJS: [perf] renders tab bar 8
+11-22 00:43:38.299  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:43:38.299  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:43:42.812  7013  7013 I ReactNativeJS: [perf] mark tab chain quickly: Categories, Accounts, Statistics, Operations (0.5s apart)
+11-22 00:43:42.849  3634  3794 I ReactNativeJS: [perf] tab press categories (asked operations, shown operations)
+11-22 00:43:42.849  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:42.876  3634  3794 I ReactNativeJS: [perf] tab shown categories 26.7ms
+11-22 00:43:43.349  3634  3794 I ReactNativeJS: [perf] tab press index (asked categories, shown categories)
+11-22 00:43:43.349  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:43.377  3634  3794 I ReactNativeJS: [perf] tab shown index 27.1ms
+11-22 00:43:43.384  3634  3794 I ReactNativeJS: [perf] renders tab bar 7
+11-22 00:43:43.384  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:43:43.384  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:43:43.866  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked index, shown index)
+11-22 00:43:43.867  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:43.894  3634  3794 I ReactNativeJS: [perf] tab shown statistics 27.7ms
+11-22 00:43:44.399  3634  3794 I ReactNativeJS: [perf] renders tab bar 5
+11-22 00:43:44.399  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:43:44.399  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:43:44.399  3634  3794 I ReactNativeJS: [perf] tab press operations (asked statistics, shown statistics)
+11-22 00:43:44.399  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:44.425  3634  3794 I ReactNativeJS: [perf] tab shown operations 26.2ms
+11-22 00:43:45.416  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:45.416  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:45.416  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:49.899  3634  3794 I ReactNativeJS: [perf] tab press categories (asked operations, shown operations)
+11-22 00:43:49.899  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:49.926  3634  3794 I ReactNativeJS: [perf] tab shown categories 27.0ms
+11-22 00:43:50.499  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:50.499  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:50.499  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:51.896  7068  7068 I ReactNativeJS: [perf] mark finger swipe in Categories, then one tap on Accounts
+11-22 00:43:51.988  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:43:52.189  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:43:52.189  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:43:52.189  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 50; this page drawn: yes; next page 52 drawn: NO; behind by 1
+11-22 00:43:52.212  3634  3794 I ReactNativeJS: [perf] swipe: pages built 22.7ms
+11-22 00:43:52.222  3634  3794 I ReactNativeJS: [perf] swipe: next frame 32.8ms
+11-22 00:43:52.236  3634  3794 I ReactNativeJS: [perf] pager: page content shown (4 so far)
+11-22 00:43:52.236  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 47.3ms
+11-22 00:43:52.237  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:43:52.553  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:52.553  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:43:52.832  3634  3794 I ReactNativeJS: [perf] tab press index (asked categories, shown categories)
+11-22 00:43:52.833  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:52.860  3634  3794 I ReactNativeJS: [perf] tab shown index 27.8ms
+11-22 00:43:53.566  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:43:53.566  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:43:53.566  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:43:56.849  3634  3794 I ReactNativeJS: [perf] tab press index (asked index, shown index)
+11-22 00:43:56.849  3634  3794 I ReactNativeJS: [perf] tab press dropped: already asked
+11-22 00:43:56.849  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:58.846  7111  7111 I ReactNativeJS: [perf] mark finger swipe in Accounts, then one tap on Categories
+11-22 00:43:58.931  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:43:59.024  3634  3794 I ReactNativeJS: [perf] stall 64.8ms
+11-22 00:43:59.141  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:43:59.145  3634  3794 I ReactNativeJS: [perf] pager: page 1 from 0; this page drawn: yes; next page 2 drawn: NO; behind by 1
+11-22 00:43:59.163  3634  3794 I ReactNativeJS: [perf] swipe: pages built 17.5ms
+11-22 00:43:59.180  3634  3794 I ReactNativeJS: [perf] pager: contents around page 1 drawn (lag 0) 34.6ms
+11-22 00:43:59.189  3634  3794 I ReactNativeJS: [perf] swipe: next frame 43.7ms
+11-22 00:43:59.666  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:43:59.666  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:43:59.784  3634  3794 I ReactNativeJS: [perf] tab press categories (asked index, shown index)
+11-22 00:43:59.784  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:43:59.814  3634  3794 I ReactNativeJS: [perf] tab shown categories 29.4ms
+11-22 00:44:00.682  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:44:00.682  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:44:00.682  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:44:03.816  3634  3794 I ReactNativeJS: [perf] tab press operations (asked categories, shown categories)
+11-22 00:44:03.816  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:44:03.841  3634  3794 I ReactNativeJS: [perf] tab shown operations 24.9ms
+11-22 00:44:03.850  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.1ms
+11-22 00:44:03.850  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:44:03.855  3634  3794 I ReactNativeJS: [perf] operations page built 4.4ms
+11-22 00:44:03.855  3634  3794 I ReactNativeJS: [perf] pager: jumped to page 51
+11-22 00:44:03.873  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:44:03.873  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:44:03.876  3634  3794 I ReactNativeJS: [perf] operations page built 3.5ms
+11-22 00:44:03.876  3634  3794 I ReactNativeJS: [perf] pager: page content shown (12 so far)
+11-22 00:44:03.877  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:44:04.749  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:44:04.749  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:44:04.749  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:44:04.749  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:44:05.821  7154  7154 I ReactNativeJS: [perf] mark finger swipe in Operations, then one tap on Accounts
+11-22 00:44:05.910  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:44:06.124  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:44:06.124  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:44:06.124  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 51; this page drawn: yes; next page 53 drawn: yes; behind by 1
+11-22 00:44:06.130  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:44:06.130  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:44:06.134  3634  3794 I ReactNativeJS: [perf] operations page built 3.7ms
+11-22 00:44:06.134  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.7ms
+11-22 00:44:06.153  3634  3794 I ReactNativeJS: [perf] swipe: next frame 28.5ms
+11-22 00:44:06.160  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:44:06.160  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:44:06.167  3634  3794 I ReactNativeJS: [perf] operations page built 7.4ms
+11-22 00:44:06.168  3634  3794 I ReactNativeJS: [perf] pager: page content shown (13 so far)
+11-22 00:44:06.168  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 43.3ms
+11-22 00:44:06.168  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:44:06.749  3634  3794 I ReactNativeJS: [perf] tab press index (asked operations, shown operations)
+11-22 00:44:06.749  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:44:06.773  3634  3794 I ReactNativeJS: [perf] tab shown index 24.0ms
+11-22 00:44:06.791  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:44:06.791  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:44:06.791  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:44:06.791  3634  3794 I ReactNativeJS: [perf] renders tab bar 3
+11-22 00:44:07.799  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:44:12.696  7211  7211 I ReactNativeJS: [perf] mark two quick period swipes (0.35s apart)
+11-22 00:44:12.766  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:44:12.866  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:44:13.266  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:44:13.366  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:44:20.484  7280  7280 I ReactNativeJS: [perf] mark swipe back and forth quickly (0.35s apart)
+11-22 00:44:20.556  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:44:20.664  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:44:20.664  3634  3794 I ReactNativeJS: [perf] pager: page 0 from 1; this page drawn: yes; next page -1 drawn: NO; behind by -1
+11-22 00:44:20.672  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.1ms
+11-22 00:44:20.687  3634  3794 I ReactNativeJS: [perf] pager: contents around page 0 drawn (lag 0) 22.4ms
+11-22 00:44:20.697  3634  3794 I ReactNativeJS: [perf] swipe: next frame 32.7ms
+11-22 00:44:20.824  3634  3794 I ReactNativeJS: [perf] stall 77.8ms
+11-22 00:44:21.044  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:44:21.045  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:44:21.169  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:44:21.255  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:44:21.255  3634  3794 I ReactNativeJS: [perf] pager: page 1 from 0; this page drawn: yes; next page 2 drawn: NO; behind by 1
+11-22 00:44:21.262  3634  3794 I ReactNativeJS: [perf] swipe: pages built 6.9ms
+11-22 00:44:21.267  3634  3794 I ReactNativeJS: [perf] swipe: next frame 12.4ms
+11-22 00:44:21.278  3634  3794 I ReactNativeJS: [perf] pager: contents around page 1 drawn (lag 0) 22.6ms
+11-22 00:44:22.032  3634  3794 I ReactNativeJS: [perf] renders root hero 1
+11-22 00:44:22.032  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:44:26.449  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked index, shown index)
+11-22 00:44:26.449  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:44:26.477  3634  3794 I ReactNativeJS: [perf] tab shown statistics 28.0ms
+11-22 00:44:26.488  3634  3794 I ReactNativeJS: [perf] pager: jumped to page 52
+11-22 00:44:26.501  3634  3794 I ReactNativeJS: [perf] pager: page content shown (6 so far)
+11-22 00:44:26.502  3634  3794 I ReactNativeJS: [perf] pager: page content shown (7 so far)
+11-22 00:44:26.502  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:44:26.502  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:44:27.116  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:44:27.116  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:44:27.116  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:44:29.455  7341  7341 I ReactNativeJS: [perf] mark statistics: Incomes
+11-22 00:44:34.470  7372  7372 I ReactNativeJS: [perf] mark statistics: Expenses
+11-22 00:44:41.449  3634  3794 I ReactNativeJS: [perf] tab press more (asked statistics, shown statistics)
+11-22 00:44:41.449  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:44:41.488  3634  3794 I ReactNativeJS: [perf] tab shown more 38.9ms
+11-22 00:44:42.365  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:44:42.365  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:44:42.365  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:44:42.953  7426  7426 I ReactNativeJS: [perf] mark open Budgets
+11-22 00:44:44.965  3634  3794 I ReactNativeJS: [perf] tab shown more 15.3ms
+11-22 00:44:45.125  3634  3794 I ReactNativeJS: [perf] stall 61.1ms
+11-22 00:44:45.376  3634  3794 I ReactNativeJS: [perf] stall 138.4ms
+11-22 00:44:45.466  3634  3794 I ReactNativeJS: [perf] stall 64.3ms
+11-22 00:44:45.466  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:44:45.466  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:44:49.153  3634  3794 I ReactNativeJS: [perf] tab shown more 4204.1ms
+11-22 00:44:49.532  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:44:50.358  7473  7473 I ReactNativeJS: [perf] mark open Scheduled payments
+11-22 00:44:52.380  3634  3794 I ReactNativeJS: [perf] tab shown more 13.5ms
+11-22 00:44:52.576  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:44:52.898  3634  3794 I ReactNativeJS: [perf] stall 77.0ms
+11-22 00:44:56.567  3634  3794 I ReactNativeJS: [perf] tab shown more 4200.8ms
+11-22 00:44:56.635  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:44:56.979  3634  3794 I ReactNativeJS: [perf] stall 61.1ms
+11-22 00:44:57.782  3634  3794 I ReactNativeJS: [perf] tab press operations (asked more, shown more)
+11-22 00:44:57.783  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:44:57.811  3634  3794 I ReactNativeJS: [perf] tab shown operations 28.0ms
+11-22 00:44:58.665  3634  3794 I ReactNativeJS: [perf] renders tab bar 5
+11-22 00:44:58.665  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:44:58.665  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:44:59.799  3634  3794 I ReactNativeJS: [perf] tab press operations (asked operations, shown operations)
+11-22 00:44:59.799  3634  3794 I ReactNativeJS: [perf] tab press dropped: already asked
+11-22 00:44:59.799  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:45:02.875  7585  7585 I ReactNativeJS: [perf] mark operations: 10 fast swipes back (0.25s apart)
+11-22 00:45:02.975  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:03.037  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:03.037  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:03.037  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 52; this page drawn: yes; next page 50 drawn: yes; behind by -1
+11-22 00:45:03.058  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:03.062  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:03.069  3634  3794 I ReactNativeJS: [perf] operations page built 11.9ms
+11-22 00:45:03.075  3634  3794 I ReactNativeJS: [perf] swipe: pages built 38.2ms
+11-22 00:45:03.166  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:03.166  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:03.210  3634  3794 I ReactNativeJS: [perf] operations page built 44.1ms
+11-22 00:45:03.210  3634  3794 I ReactNativeJS: [perf] pager: page content shown (14 so far)
+11-22 00:45:03.211  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 173.8ms
+11-22 00:45:03.211  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:03.291  3634  3794 I ReactNativeJS: [perf] swipe: next frame 253.8ms
+11-22 00:45:03.291  3634  3794 I ReactNativeJS: [perf] stall 187.0ms
+11-22 00:45:03.409  3634  3794 I ReactNativeJS: [perf] touch lag 35.4ms
+11-22 00:45:03.409  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:03.508  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:03.760  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:45:03.764  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:45:03.764  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:45:03.918  3634  3794 I ReactNativeJS: [perf] touch lag 31.9ms
+11-22 00:45:03.918  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:04.062  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:04.062  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:04.062  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 51; this page drawn: yes; next page 48 drawn: NO; behind by -2
+11-22 00:45:04.072  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:04.072  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:04.075  3634  3794 I ReactNativeJS: [perf] operations page built 3.0ms
+11-22 00:45:04.075  3634  3794 I ReactNativeJS: [perf] swipe: pages built 13.1ms
+11-22 00:45:04.139  3634  3794 I ReactNativeJS: [perf] stall 77.8ms
+11-22 00:45:04.139  3634  3794 I ReactNativeJS: [perf] swipe: next frame 77.0ms
+11-22 00:45:04.173  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:04.174  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:04.208  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:04.222  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:04.282  3634  3794 I ReactNativeJS: [perf] operations page built 109.8ms
+11-22 00:45:04.282  3634  3794 I ReactNativeJS: [perf] pager: page content shown (15 so far)
+11-22 00:45:04.283  3634  3794 I ReactNativeJS: [perf] operations page built 74.9ms
+11-22 00:45:04.283  3634  3794 I ReactNativeJS: [perf] pager: page content shown (16 so far)
+11-22 00:45:04.283  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 220.7ms
+11-22 00:45:04.283  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:04.283  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:04.307  3634  3794 I ReactNativeJS: [perf] stall 143.2ms
+11-22 00:45:04.345  3634  3794 I ReactNativeJS: [perf] touch lag 16.2ms
+11-22 00:45:04.416  3634  3794 I ReactNativeJS: [perf] stall 66.3ms
+11-22 00:45:04.416  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:04.498  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:04.808  3634  3794 I ReactNativeJS: [perf] stall 61.3ms
+11-22 00:45:04.808  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:45:04.808  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:45:04.808  3634  3794 I ReactNativeJS: [perf] renders operations page 3
+11-22 00:45:04.850  3634  3794 I ReactNativeJS: [perf] touch lag 48.4ms
+11-22 00:45:04.851  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:04.934  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:04.935  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:04.936  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 49; this page drawn: yes; next page 47 drawn: yes; behind by -1
+11-22 00:45:04.942  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:04.943  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:04.946  3634  3794 I ReactNativeJS: [perf] operations page built 4.3ms
+11-22 00:45:04.947  3634  3794 I ReactNativeJS: [perf] swipe: pages built 12.2ms
+11-22 00:45:04.988  3634  3794 I ReactNativeJS: [perf] swipe: next frame 52.3ms
+11-22 00:45:04.994  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:04.995  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:05.040  3634  3794 I ReactNativeJS: [perf] operations page built 45.2ms
+11-22 00:45:05.040  3634  3794 I ReactNativeJS: [perf] pager: page content shown (17 so far)
+11-22 00:45:05.043  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 107.8ms
+11-22 00:45:05.043  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:05.149  3634  3794 I ReactNativeJS: [perf] stall 136.5ms
+11-22 00:45:05.301  3634  3794 I ReactNativeJS: [perf] touch lag 30.3ms
+11-22 00:45:05.301  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:05.443  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:05.443  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:05.443  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 48; this page drawn: yes; next page 46 drawn: yes; behind by -1
+11-22 00:45:05.474  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:05.515  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:05.595  3634  3794 I ReactNativeJS: [perf] operations page built 121.2ms
+11-22 00:45:05.595  3634  3794 I ReactNativeJS: [perf] swipe: pages built 152.3ms
+11-22 00:45:05.681  3634  3794 I ReactNativeJS: [perf] stall 213.7ms
+11-22 00:45:05.682  3634  3794 I ReactNativeJS: [perf] swipe: next frame 238.6ms
+11-22 00:45:05.779  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.1ms
+11-22 00:45:05.800  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:05.858  3634  3794 I ReactNativeJS: [perf] operations page built 78.3ms
+11-22 00:45:05.861  3634  3794 I ReactNativeJS: [perf] pager: page content shown (18 so far)
+11-22 00:45:05.861  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 418.1ms
+11-22 00:45:05.861  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:05.971  3634  3794 I ReactNativeJS: [perf] stall 263.9ms
+11-22 00:45:05.974  3634  3794 I ReactNativeJS: [perf] touch lag 223.4ms
+11-22 00:45:05.974  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:05.974  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:05.974  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:05.974  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 47; this page drawn: yes; next page 45 drawn: yes; behind by -1
+11-22 00:45:05.992  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:05.992  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:05.995  3634  3794 I ReactNativeJS: [perf] operations page built 3.3ms
+11-22 00:45:05.995  3634  3794 I ReactNativeJS: [perf] swipe: pages built 20.9ms
+11-22 00:45:06.000  3634  3794 I ReactNativeJS: [perf] renders pager 5
+11-22 00:45:06.003  3634  3794 I ReactNativeJS: [perf] renders period bar 5
+11-22 00:45:06.003  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:45:06.015  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:06.015  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:06.020  3634  3794 I ReactNativeJS: [perf] operations page built 5.4ms
+11-22 00:45:06.020  3634  3794 I ReactNativeJS: [perf] pager: page content shown (19 so far)
+11-22 00:45:06.021  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 46.4ms
+11-22 00:45:06.021  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:06.040  3634  3794 I ReactNativeJS: [perf] swipe: next frame 66.3ms
+11-22 00:45:06.361  3634  3794 I ReactNativeJS: [perf] stall 64.6ms
+11-22 00:45:06.368  3634  3794 I ReactNativeJS: [perf] touch lag 62.3ms
+11-22 00:45:06.368  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:06.436  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:06.455  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:06.456  3634  3794 I ReactNativeJS: [perf] pager: page 45 from 46; this page drawn: yes; next page 44 drawn: yes; behind by -1
+11-22 00:45:06.461  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:06.461  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:06.501  3634  3794 I ReactNativeJS: [perf] operations page built 39.4ms
+11-22 00:45:06.505  3634  3794 I ReactNativeJS: [perf] swipe: pages built 49.5ms
+11-22 00:45:06.520  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:06.520  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:06.555  3634  3794 I ReactNativeJS: [perf] operations page built 34.7ms
+11-22 00:45:06.555  3634  3794 I ReactNativeJS: [perf] pager: page content shown (20 so far)
+11-22 00:45:06.555  3634  3794 I ReactNativeJS: [perf] pager: contents around page 45 drawn (lag 0) 100.2ms
+11-22 00:45:06.556  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:06.567  3634  3794 I ReactNativeJS: [perf] swipe: next frame 112.0ms
+11-22 00:45:06.686  3634  3794 I ReactNativeJS: [perf] stall 64.8ms
+11-22 00:45:06.816  3634  3794 I ReactNativeJS: [perf] stall 86.6ms
+11-22 00:45:06.882  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:45:06.882  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:45:06.882  3634  3794 I ReactNativeJS: [perf] renders operations page 3
+11-22 00:45:06.884  3634  3794 I ReactNativeJS: [perf] touch lag 32.9ms
+11-22 00:45:06.884  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:06.960  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:06.960  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:06.961  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 45; this page drawn: yes; next page 42 drawn: NO; behind by -2
+11-22 00:45:06.991  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:06.998  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:07.025  3634  3794 I ReactNativeJS: [perf] operations page built 34.7ms
+11-22 00:45:07.025  3634  3794 I ReactNativeJS: [perf] swipe: pages built 65.3ms
+11-22 00:45:07.037  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:07.037  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:07.039  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:07.039  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:07.044  3634  3794 I ReactNativeJS: [perf] operations page built 7.0ms
+11-22 00:45:07.044  3634  3794 I ReactNativeJS: [perf] pager: page content shown (21 so far)
+11-22 00:45:07.045  3634  3794 I ReactNativeJS: [perf] operations page built 5.4ms
+11-22 00:45:07.045  3634  3794 I ReactNativeJS: [perf] pager: page content shown (22 so far)
+11-22 00:45:07.045  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 84.7ms
+11-22 00:45:07.045  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:07.045  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:07.085  3634  3794 I ReactNativeJS: [perf] swipe: next frame 124.6ms
+11-22 00:45:07.355  3634  3794 I ReactNativeJS: [perf] touch lag 32.2ms
+11-22 00:45:07.355  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:07.484  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:07.484  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:07.484  3634  3794 I ReactNativeJS: [perf] pager: page 42 from 43; this page drawn: yes; next page 41 drawn: yes; behind by -1
+11-22 00:45:07.503  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:07.507  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:07.518  3634  3794 I ReactNativeJS: [perf] operations page built 14.7ms
+11-22 00:45:07.518  3634  3794 I ReactNativeJS: [perf] swipe: pages built 33.7ms
+11-22 00:45:07.546  3634  3794 I ReactNativeJS: [perf] stall 54.3ms
+11-22 00:45:07.547  3634  3794 I ReactNativeJS: [perf] swipe: next frame 62.4ms
+11-22 00:45:07.581  3634  3794 I ReactNativeJS: [perf] page: operations of the period 28.2ms
+11-22 00:45:07.582  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:07.622  3634  3794 I ReactNativeJS: [perf] operations page built 68.4ms
+11-22 00:45:07.645  3634  3794 I ReactNativeJS: [perf] pager: page content shown (23 so far)
+11-22 00:45:07.646  3634  3794 I ReactNativeJS: [perf] pager: contents around page 42 drawn (lag 0) 161.4ms
+11-22 00:45:07.646  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:07.773  3634  3794 I ReactNativeJS: [perf] stall 202.1ms
+11-22 00:45:07.902  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:45:07.902  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:45:07.902  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:45:17.000  7736  7736 I ReactNativeJS: [perf] mark operations: 10 fast swipes forward
+11-22 00:45:17.066  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:17.148  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:17.156  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:17.157  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 42; this page drawn: yes; next page 44 drawn: yes; behind by 1
+11-22 00:45:17.167  3634  3794 I ReactNativeJS: [perf] page: operations of the period 2.1ms
+11-22 00:45:17.172  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:17.178  3634  3794 I ReactNativeJS: [perf] operations page built 12.8ms
+11-22 00:45:17.178  3634  3794 I ReactNativeJS: [perf] swipe: pages built 21.4ms
+11-22 00:45:17.203  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:17.203  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:17.228  3634  3794 I ReactNativeJS: [perf] operations page built 25.8ms
+11-22 00:45:17.228  3634  3794 I ReactNativeJS: [perf] pager: page content shown (24 so far)
+11-22 00:45:17.229  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 72.2ms
+11-22 00:45:17.229  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:17.251  3634  3794 I ReactNativeJS: [perf] swipe: next frame 94.2ms
+11-22 00:45:17.481  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:17.572  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:17.777  3634  3794 I ReactNativeJS: [perf] stall 56.8ms
+11-22 00:45:17.915  3634  3794 I ReactNativeJS: [perf] touch lag 21.0ms
+11-22 00:45:17.915  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:18.014  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:18.019  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:18.020  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 43; this page drawn: yes; next page 45 drawn: yes; behind by 1
+11-22 00:45:18.026  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.027  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.031  3634  3794 I ReactNativeJS: [perf] operations page built 4.8ms
+11-22 00:45:18.033  3634  3794 I ReactNativeJS: [perf] swipe: pages built 13.1ms
+11-22 00:45:18.052  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.053  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.056  3634  3794 I ReactNativeJS: [perf] operations page built 3.9ms
+11-22 00:45:18.056  3634  3794 I ReactNativeJS: [perf] pager: page content shown (25 so far)
+11-22 00:45:18.056  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 37.0ms
+11-22 00:45:18.057  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:18.079  3634  3794 I ReactNativeJS: [perf] swipe: next frame 59.1ms
+11-22 00:45:18.079  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:45:18.079  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:45:18.079  3634  3794 I ReactNativeJS: [perf] renders operations page 4
+11-22 00:45:18.377  3634  3794 I ReactNativeJS: [perf] touch lag 27.4ms
+11-22 00:45:18.380  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:18.461  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:18.461  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:18.461  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 44; this page drawn: yes; next page 47 drawn: NO; behind by 2
+11-22 00:45:18.472  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.472  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.481  3634  3794 I ReactNativeJS: [perf] operations page built 9.1ms
+11-22 00:45:18.481  3634  3794 I ReactNativeJS: [perf] swipe: pages built 20.1ms
+11-22 00:45:18.488  3634  3794 I ReactNativeJS: [perf] swipe: next frame 26.9ms
+11-22 00:45:18.491  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.491  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.496  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.496  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.524  3634  3794 I ReactNativeJS: [perf] operations page built 33.3ms
+11-22 00:45:18.525  3634  3794 I ReactNativeJS: [perf] pager: page content shown (26 so far)
+11-22 00:45:18.525  3634  3794 I ReactNativeJS: [perf] operations page built 29.0ms
+11-22 00:45:18.527  3634  3794 I ReactNativeJS: [perf] pager: page content shown (27 so far)
+11-22 00:45:18.528  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 66.5ms
+11-22 00:45:18.528  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:18.528  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:18.572  3634  3794 I ReactNativeJS: [perf] stall 58.7ms
+11-22 00:45:18.774  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:18.896  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:18.897  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:18.897  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 46; this page drawn: yes; next page 48 drawn: yes; behind by 1
+11-22 00:45:18.908  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.908  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.911  3634  3794 I ReactNativeJS: [perf] operations page built 3.3ms
+11-22 00:45:18.911  3634  3794 I ReactNativeJS: [perf] swipe: pages built 14.7ms
+11-22 00:45:18.955  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:18.955  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:18.961  3634  3794 I ReactNativeJS: [perf] operations page built 6.6ms
+11-22 00:45:18.961  3634  3794 I ReactNativeJS: [perf] pager: page content shown (28 so far)
+11-22 00:45:18.962  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 65.0ms
+11-22 00:45:18.962  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:18.978  3634  3794 I ReactNativeJS: [perf] swipe: next frame 81.1ms
+11-22 00:45:19.098  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:45:19.098  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:45:19.098  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:45:19.143  3634  3794 I ReactNativeJS: [perf] stall 51.5ms
+11-22 00:45:19.230  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:19.344  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:19.344  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:19.344  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 47; this page drawn: yes; next page 49 drawn: yes; behind by 1
+11-22 00:45:19.349  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:19.349  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:19.352  3634  3794 I ReactNativeJS: [perf] operations page built 3.3ms
+11-22 00:45:19.353  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.9ms
+11-22 00:45:19.361  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:19.361  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:19.389  3634  3794 I ReactNativeJS: [perf] operations page built 27.6ms
+11-22 00:45:19.389  3634  3794 I ReactNativeJS: [perf] pager: page content shown (29 so far)
+11-22 00:45:19.389  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 45.3ms
+11-22 00:45:19.389  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:19.405  3634  3794 I ReactNativeJS: [perf] swipe: next frame 61.7ms
+11-22 00:45:19.742  3634  3794 I ReactNativeJS: [perf] touch lag 23.6ms
+11-22 00:45:19.753  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:19.811  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:20.109  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:45:20.109  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:45:20.109  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:45:20.145  3634  3794 I ReactNativeJS: [perf] touch lag 35.9ms
+11-22 00:45:20.145  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:20.240  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:20.241  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:20.241  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 48; this page drawn: yes; next page 50 drawn: yes; behind by 1
+11-22 00:45:20.249  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:20.255  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:20.260  3634  3794 I ReactNativeJS: [perf] operations page built 11.2ms
+11-22 00:45:20.260  3634  3794 I ReactNativeJS: [perf] swipe: pages built 19.5ms
+11-22 00:45:20.267  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:20.267  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:20.272  3634  3794 I ReactNativeJS: [perf] operations page built 5.1ms
+11-22 00:45:20.272  3634  3794 I ReactNativeJS: [perf] pager: page content shown (30 so far)
+11-22 00:45:20.272  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 31.6ms
+11-22 00:45:20.272  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:20.314  3634  3794 I ReactNativeJS: [perf] swipe: next frame 73.4ms
+11-22 00:45:20.553  3634  3794 I ReactNativeJS: [perf] touch lag 47.3ms
+11-22 00:45:20.553  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:20.604  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:20.604  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:20.604  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 49; this page drawn: yes; next page 51 drawn: yes; behind by 1
+11-22 00:45:20.621  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:20.621  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:20.626  3634  3794 I ReactNativeJS: [perf] operations page built 4.6ms
+11-22 00:45:20.626  3634  3794 I ReactNativeJS: [perf] swipe: pages built 22.2ms
+11-22 00:45:20.642  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:20.642  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:20.647  3634  3794 I ReactNativeJS: [perf] operations page built 5.1ms
+11-22 00:45:20.647  3634  3794 I ReactNativeJS: [perf] pager: page content shown (31 so far)
+11-22 00:45:20.647  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 43.6ms
+11-22 00:45:20.647  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:20.669  3634  3794 I ReactNativeJS: [perf] swipe: next frame 65.3ms
+11-22 00:45:20.928  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:21.056  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:21.056  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:21.056  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 50; this page drawn: yes; next page 53 drawn: NO; behind by 2
+11-22 00:45:21.063  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:21.064  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:21.067  3634  3794 I ReactNativeJS: [perf] operations page built 3.5ms
+11-22 00:45:21.067  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.9ms
+11-22 00:45:21.079  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:21.079  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:21.081  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:21.081  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] operations page built 30.5ms
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] pager: page content shown (32 so far)
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] operations page built 28.6ms
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] pager: page content shown (33 so far)
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 54.1ms
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:21.110  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:21.144  3634  3794 I ReactNativeJS: [perf] swipe: next frame 88.2ms
+11-22 00:45:21.145  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:21.145  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:21.145  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:45:25.384  7831  7831 I ReactNativeJS: [perf] mark operations: 30 swipes back, no pause
+11-22 00:45:25.458  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:25.497  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:25.605  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:25.703  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:25.703  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:25.703  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 52; this page drawn: yes; next page 50 drawn: yes; behind by -1
+11-22 00:45:25.707  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:25.707  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:25.720  3634  3794 I ReactNativeJS: [perf] operations page built 13.6ms
+11-22 00:45:25.721  3634  3794 I ReactNativeJS: [perf] swipe: pages built 18.7ms
+11-22 00:45:25.749  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.2ms
+11-22 00:45:25.749  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:25.780  3634  3794 I ReactNativeJS: [perf] operations page built 31.8ms
+11-22 00:45:25.786  3634  3794 I ReactNativeJS: [perf] pager: page content shown (34 so far)
+11-22 00:45:25.786  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 83.6ms
+11-22 00:45:25.786  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:25.912  3634  3794 I ReactNativeJS: [perf] swipe: next frame 209.6ms
+11-22 00:45:25.912  3634  3794 I ReactNativeJS: [perf] stall 184.8ms
+11-22 00:45:25.913  3634  3794 I ReactNativeJS: [perf] touch lag 143.3ms
+11-22 00:45:25.913  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:25.913  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:25.913  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:25.913  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 51; this page drawn: yes; next page 49 drawn: yes; behind by -1
+11-22 00:45:25.956  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:25.956  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:25.959  3634  3794 I ReactNativeJS: [perf] operations page built 3.1ms
+11-22 00:45:25.959  3634  3794 I ReactNativeJS: [perf] swipe: pages built 45.8ms
+11-22 00:45:26.003  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.003  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.012  3634  3794 I ReactNativeJS: [perf] operations page built 9.3ms
+11-22 00:45:26.012  3634  3794 I ReactNativeJS: [perf] pager: page content shown (35 so far)
+11-22 00:45:26.012  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 99.0ms
+11-22 00:45:26.012  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:26.049  3634  3794 I ReactNativeJS: [perf] swipe: next frame 135.7ms
+11-22 00:45:26.076  3634  3794 I ReactNativeJS: [perf] touch lag 80.2ms
+11-22 00:45:26.076  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:26.092  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:26.092  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:26.092  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 50; this page drawn: yes; next page 48 drawn: yes; behind by -1
+11-22 00:45:26.098  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.098  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.102  3634  3794 I ReactNativeJS: [perf] operations page built 4.4ms
+11-22 00:45:26.102  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.4ms
+11-22 00:45:26.142  3634  3794 I ReactNativeJS: [perf] swipe: next frame 50.4ms
+11-22 00:45:26.147  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.147  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.181  3634  3794 I ReactNativeJS: [perf] operations page built 34.1ms
+11-22 00:45:26.181  3634  3794 I ReactNativeJS: [perf] pager: page content shown (36 so far)
+11-22 00:45:26.181  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 89.0ms
+11-22 00:45:26.181  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:26.255  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:26.255  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:26.255  3634  3794 I ReactNativeJS: [perf] renders operations page 6
+11-22 00:45:26.256  3634  3794 I ReactNativeJS: [perf] touch lag 64.6ms
+11-22 00:45:26.256  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:26.284  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:26.375  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:26.455  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:26.455  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:26.455  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 49; this page drawn: yes; next page 47 drawn: yes; behind by -1
+11-22 00:45:26.474  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.475  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.478  3634  3794 I ReactNativeJS: [perf] operations page built 4.0ms
+11-22 00:45:26.479  3634  3794 I ReactNativeJS: [perf] swipe: pages built 23.3ms
+11-22 00:45:26.573  3634  3794 I ReactNativeJS: [perf] stall 105.8ms
+11-22 00:45:26.574  3634  3794 I ReactNativeJS: [perf] swipe: next frame 118.4ms
+11-22 00:45:26.657  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.657  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.663  3634  3794 I ReactNativeJS: [perf] operations page built 6.2ms
+11-22 00:45:26.663  3634  3794 I ReactNativeJS: [perf] pager: page content shown (37 so far)
+11-22 00:45:26.663  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 208.2ms
+11-22 00:45:26.664  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:26.686  3634  3794 I ReactNativeJS: [perf] stall 86.6ms
+11-22 00:45:26.687  3634  3794 I ReactNativeJS: [perf] touch lag 124.6ms
+11-22 00:45:26.687  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:26.687  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:26.688  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:26.688  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 48; this page drawn: yes; next page 46 drawn: yes; behind by -1
+11-22 00:45:26.727  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.734  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.752  3634  3794 I ReactNativeJS: [perf] operations page built 24.6ms
+11-22 00:45:26.752  3634  3794 I ReactNativeJS: [perf] swipe: pages built 64.7ms
+11-22 00:45:26.764  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:26.764  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:26.771  3634  3794 I ReactNativeJS: [perf] operations page built 7.2ms
+11-22 00:45:26.771  3634  3794 I ReactNativeJS: [perf] pager: page content shown (38 so far)
+11-22 00:45:26.771  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 83.8ms
+11-22 00:45:26.772  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:26.838  3634  3794 I ReactNativeJS: [perf] swipe: next frame 150.6ms
+11-22 00:45:26.841  3634  3794 I ReactNativeJS: [perf] stall 55.8ms
+11-22 00:45:26.844  3634  3794 I ReactNativeJS: [perf] touch lag 101.8ms
+11-22 00:45:26.844  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:26.857  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:26.977  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:27.065  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:27.065  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:27.065  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 47; this page drawn: yes; next page 45 drawn: yes; behind by -1
+11-22 00:45:27.093  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.093  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.132  3634  3794 I ReactNativeJS: [perf] operations page built 38.7ms
+11-22 00:45:27.132  3634  3794 I ReactNativeJS: [perf] swipe: pages built 67.2ms
+11-22 00:45:27.178  3634  3794 I ReactNativeJS: [perf] stall 104.6ms
+11-22 00:45:27.179  3634  3794 I ReactNativeJS: [perf] touch lag 31.4ms
+11-22 00:45:27.179  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:27.183  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.183  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.223  3634  3794 I ReactNativeJS: [perf] operations page built 40.3ms
+11-22 00:45:27.223  3634  3794 I ReactNativeJS: [perf] pager: page content shown (39 so far)
+11-22 00:45:27.223  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 158.4ms
+11-22 00:45:27.223  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:27.238  3634  3794 I ReactNativeJS: [perf] swipe: next frame 173.5ms
+11-22 00:45:27.259  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:27.259  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:27.259  3634  3794 I ReactNativeJS: [perf] pager: page 45 from 46; this page drawn: yes; next page 44 drawn: yes; behind by -1
+11-22 00:45:27.271  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.271  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.281  3634  3794 I ReactNativeJS: [perf] operations page built 10.1ms
+11-22 00:45:27.281  3634  3794 I ReactNativeJS: [perf] swipe: pages built 22.0ms
+11-22 00:45:27.337  3634  3794 I ReactNativeJS: [perf] renders pager 7
+11-22 00:45:27.337  3634  3794 I ReactNativeJS: [perf] renders period bar 7
+11-22 00:45:27.337  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:45:27.337  3634  3794 I ReactNativeJS: [perf] stall 60.3ms
+11-22 00:45:27.337  3634  3794 I ReactNativeJS: [perf] swipe: next frame 78.4ms
+11-22 00:45:27.345  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.345  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.354  3634  3794 I ReactNativeJS: [perf] operations page built 9.2ms
+11-22 00:45:27.357  3634  3794 I ReactNativeJS: [perf] pager: page content shown (40 so far)
+11-22 00:45:27.357  3634  3794 I ReactNativeJS: [perf] pager: contents around page 45 drawn (lag 0) 98.1ms
+11-22 00:45:27.357  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:27.444  3634  3794 I ReactNativeJS: [perf] stall 81.5ms
+11-22 00:45:27.445  3634  3794 I ReactNativeJS: [perf] touch lag 35.1ms
+11-22 00:45:27.452  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:27.562  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:27.659  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:27.773  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:27.773  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:27.773  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 45; this page drawn: yes; next page 43 drawn: yes; behind by -1
+11-22 00:45:27.782  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.782  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.806  3634  3794 I ReactNativeJS: [perf] operations page built 24.5ms
+11-22 00:45:27.808  3634  3794 I ReactNativeJS: [perf] swipe: pages built 35.1ms
+11-22 00:45:27.853  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:27.853  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:27.860  3634  3794 I ReactNativeJS: [perf] operations page built 28.6ms
+11-22 00:45:27.861  3634  3794 I ReactNativeJS: [perf] pager: page content shown (41 so far)
+11-22 00:45:27.888  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 115.6ms
+11-22 00:45:27.889  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:27.915  3634  3794 I ReactNativeJS: [perf] stall 117.6ms
+11-22 00:45:27.915  3634  3794 I ReactNativeJS: [perf] swipe: next frame 142.2ms
+11-22 00:45:28.003  3634  3794 I ReactNativeJS: [perf] touch lag 84.9ms
+11-22 00:45:28.004  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:28.004  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:28.004  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:28.004  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 44; this page drawn: yes; next page 42 drawn: yes; behind by -1
+11-22 00:45:28.029  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.030  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.109  3634  3794 I ReactNativeJS: [perf] operations page built 80.0ms
+11-22 00:45:28.110  3634  3794 I ReactNativeJS: [perf] swipe: pages built 105.8ms
+11-22 00:45:28.119  3634  3794 I ReactNativeJS: [perf] stall 116.2ms
+11-22 00:45:28.225  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.225  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.303  3634  3794 I ReactNativeJS: [perf] operations page built 78.5ms
+11-22 00:45:28.303  3634  3794 I ReactNativeJS: [perf] pager: page content shown (42 so far)
+11-22 00:45:28.304  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 299.9ms
+11-22 00:45:28.304  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:28.443  3634  3794 I ReactNativeJS: [perf] stall 298.5ms
+11-22 00:45:28.443  3634  3794 I ReactNativeJS: [perf] swipe: next frame 439.2ms
+11-22 00:45:28.443  3634  3794 I ReactNativeJS: [perf] touch lag 348.0ms
+11-22 00:45:28.443  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] touch lag 162.7ms
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:28.444  3634  3794 I ReactNativeJS: [perf] pager: page 42 from 43; this page drawn: yes; next page 41 drawn: yes; behind by -1
+11-22 00:45:28.449  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.449  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.453  3634  3794 I ReactNativeJS: [perf] operations page built 3.4ms
+11-22 00:45:28.453  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.2ms
+11-22 00:45:28.507  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:28.507  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:28.507  3634  3794 I ReactNativeJS: [perf] renders operations page 6
+11-22 00:45:28.508  3634  3794 I ReactNativeJS: [perf] swipe: next frame 63.3ms
+11-22 00:45:28.513  3634  3794 I ReactNativeJS: [perf] touch lag 21.6ms
+11-22 00:45:28.513  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:28.525  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.525  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.585  3634  3794 I ReactNativeJS: [perf] operations page built 60.6ms
+11-22 00:45:28.586  3634  3794 I ReactNativeJS: [perf] pager: page content shown (43 so far)
+11-22 00:45:28.586  3634  3794 I ReactNativeJS: [perf] pager: contents around page 42 drawn (lag 0) 141.9ms
+11-22 00:45:28.586  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:28.687  3634  3794 I ReactNativeJS: [perf] stall 148.9ms
+11-22 00:45:28.688  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:28.688  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:28.688  3634  3794 I ReactNativeJS: [perf] pager: page 41 from 42; this page drawn: yes; next page 40 drawn: yes; behind by -1
+11-22 00:45:28.701  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.701  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.710  3634  3794 I ReactNativeJS: [perf] operations page built 9.0ms
+11-22 00:45:28.710  3634  3794 I ReactNativeJS: [perf] swipe: pages built 22.6ms
+11-22 00:45:28.746  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:28.751  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:28.766  3634  3794 I ReactNativeJS: [perf] operations page built 20.0ms
+11-22 00:45:28.767  3634  3794 I ReactNativeJS: [perf] pager: page content shown (44 so far)
+11-22 00:45:28.767  3634  3794 I ReactNativeJS: [perf] pager: contents around page 41 drawn (lag 0) 79.1ms
+11-22 00:45:28.767  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.011  3634  3794 I ReactNativeJS: [perf] swipe: next frame 323.1ms
+11-22 00:45:29.011  3634  3794 I ReactNativeJS: [perf] stall 258.9ms
+11-22 00:45:29.011  3634  3794 I ReactNativeJS: [perf] touch lag 294.1ms
+11-22 00:45:29.012  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.059  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:29.060  3634  3794 I ReactNativeJS: [perf] pager: page 40 from 41; this page drawn: yes; next page 39 drawn: yes; behind by -1
+11-22 00:45:29.060  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:29.060  3634  3794 I ReactNativeJS: [perf] touch lag 102.9ms
+11-22 00:45:29.060  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.158  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.159  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.262  3634  3794 I ReactNativeJS: [perf] operations page built 104.5ms
+11-22 00:45:29.263  3634  3794 I ReactNativeJS: [perf] swipe: pages built 231.2ms
+11-22 00:45:29.267  3634  3794 I ReactNativeJS: [perf] stall 231.0ms
+11-22 00:45:29.268  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:29.268  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:29.268  3634  3794 I ReactNativeJS: [perf] pager: page 39 from 40; this page drawn: yes; next page 38 drawn: NO; behind by -2
+11-22 00:45:29.269  3634  3794 I ReactNativeJS: [perf] touch lag 69.4ms
+11-22 00:45:29.269  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.274  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.275  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.359  3634  3794 I ReactNativeJS: [perf] operations page built 84.7ms
+11-22 00:45:29.359  3634  3794 I ReactNativeJS: [perf] swipe: pages built 90.9ms
+11-22 00:45:29.405  3634  3794 I ReactNativeJS: [perf] stall 113.2ms
+11-22 00:45:29.406  3634  3794 I ReactNativeJS: [perf] swipe: next frame 373.8ms
+11-22 00:45:29.442  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:29.442  3634  3794 I ReactNativeJS: [perf] pager: page 38 from 39; this page drawn: NO; next page 37 drawn: NO; behind by -3
+11-22 00:45:29.455  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.498  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.509  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.509  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.568  3634  3794 I ReactNativeJS: [perf] operations page built 113.8ms
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] pager: page content shown (45 so far)
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] operations page built 60.2ms
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] pager: page content shown (46 so far)
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 126.9ms
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] swipe: pages built 127.1ms
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] pager: contents around page 39 drawn (lag -1) 300.9ms
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.569  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.601  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:29.601  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:29.601  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:45:29.601  3634  3794 I ReactNativeJS: [perf] stall 170.8ms
+11-22 00:45:29.601  3634  3794 I ReactNativeJS: [perf] swipe: next frame 333.2ms
+11-22 00:45:29.602  3634  3794 I ReactNativeJS: [perf] touch lag 209.4ms
+11-22 00:45:29.602  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.602  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:29.602  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:29.602  3634  3794 I ReactNativeJS: [perf] pager: page 37 from 38; this page drawn: yes; next page 36 drawn: NO; behind by -2
+11-22 00:45:29.603  3634  3794 I ReactNativeJS: [perf] touch lag 58.5ms
+11-22 00:45:29.603  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.607  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.607  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.611  3634  3794 I ReactNativeJS: [perf] operations page built 4.1ms
+11-22 00:45:29.612  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.2ms
+11-22 00:45:29.624  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.625  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.627  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.627  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.636  3634  3794 I ReactNativeJS: [perf] operations page built 12.0ms
+11-22 00:45:29.636  3634  3794 I ReactNativeJS: [perf] pager: page content shown (47 so far)
+11-22 00:45:29.637  3634  3794 I ReactNativeJS: [perf] operations page built 10.0ms
+11-22 00:45:29.637  3634  3794 I ReactNativeJS: [perf] pager: page content shown (48 so far)
+11-22 00:45:29.637  3634  3794 I ReactNativeJS: [perf] pager: contents around page 37 drawn (lag 0) 34.6ms
+11-22 00:45:29.637  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.637  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.658  3634  3794 I ReactNativeJS: [perf] swipe: next frame 216.1ms
+11-22 00:45:29.690  3634  3794 I ReactNativeJS: [perf] swipe: next frame 88.1ms
+11-22 00:45:29.694  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:29.694  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:29.694  3634  3794 I ReactNativeJS: [perf] pager: page 36 from 37; this page drawn: yes; next page 35 drawn: yes; behind by -1
+11-22 00:45:29.718  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.718  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.722  3634  3794 I ReactNativeJS: [perf] operations page built 4.0ms
+11-22 00:45:29.722  3634  3794 I ReactNativeJS: [perf] swipe: pages built 28.3ms
+11-22 00:45:29.770  3634  3794 I ReactNativeJS: [perf] stall 54.4ms
+11-22 00:45:29.771  3634  3794 I ReactNativeJS: [perf] swipe: next frame 76.8ms
+11-22 00:45:29.782  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:29.782  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:29.790  3634  3794 I ReactNativeJS: [perf] operations page built 8.0ms
+11-22 00:45:29.790  3634  3794 I ReactNativeJS: [perf] pager: page content shown (49 so far)
+11-22 00:45:29.790  3634  3794 I ReactNativeJS: [perf] pager: contents around page 36 drawn (lag 0) 96.2ms
+11-22 00:45:29.790  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:29.815  3634  3794 I ReactNativeJS: [perf] touch lag 39.4ms
+11-22 00:45:29.815  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:29.874  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.065  3634  3794 I ReactNativeJS: [perf] touch lag 104.8ms
+11-22 00:45:30.070  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.074  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.075  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:30.076  3634  3794 I ReactNativeJS: [perf] pager: page 35 from 36; this page drawn: yes; next page 34 drawn: yes; behind by -1
+11-22 00:45:30.105  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.105  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:30.113  3634  3794 I ReactNativeJS: [perf] operations page built 8.8ms
+11-22 00:45:30.114  3634  3794 I ReactNativeJS: [perf] swipe: pages built 38.2ms
+11-22 00:45:30.121  3634  3794 I ReactNativeJS: [perf] stall 67.2ms
+11-22 00:45:30.128  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.128  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:30.133  3634  3794 I ReactNativeJS: [perf] operations page built 5.9ms
+11-22 00:45:30.133  3634  3794 I ReactNativeJS: [perf] pager: page content shown (50 so far)
+11-22 00:45:30.134  3634  3794 I ReactNativeJS: [perf] pager: contents around page 35 drawn (lag 0) 58.1ms
+11-22 00:45:30.134  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:30.189  3634  3794 I ReactNativeJS: [perf] swipe: next frame 113.7ms
+11-22 00:45:30.196  3634  3794 I ReactNativeJS: [perf] touch lag 71.2ms
+11-22 00:45:30.196  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.278  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.331  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:30.332  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:30.332  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:45:30.380  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.495  3634  3794 I ReactNativeJS: [perf] stall 54.0ms
+11-22 00:45:30.507  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.508  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:30.508  3634  3794 I ReactNativeJS: [perf] pager: page 34 from 35; this page drawn: yes; next page 33 drawn: yes; behind by -1
+11-22 00:45:30.522  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.522  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:30.525  3634  3794 I ReactNativeJS: [perf] operations page built 2.9ms
+11-22 00:45:30.525  3634  3794 I ReactNativeJS: [perf] swipe: pages built 17.1ms
+11-22 00:45:30.535  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.547  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:30.620  3634  3794 I ReactNativeJS: [perf] operations page built 85.0ms
+11-22 00:45:30.620  3634  3794 I ReactNativeJS: [perf] pager: page content shown (51 so far)
+11-22 00:45:30.620  3634  3794 I ReactNativeJS: [perf] pager: contents around page 34 drawn (lag 0) 112.3ms
+11-22 00:45:30.620  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:30.691  3634  3794 I ReactNativeJS: [perf] swipe: next frame 182.7ms
+11-22 00:45:30.691  3634  3794 I ReactNativeJS: [perf] touch lag 158.7ms
+11-22 00:45:30.691  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.692  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.693  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:30.693  3634  3794 I ReactNativeJS: [perf] pager: page 33 from 34; this page drawn: yes; next page 32 drawn: yes; behind by -1
+11-22 00:45:30.699  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.699  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:30.706  3634  3794 I ReactNativeJS: [perf] operations page built 6.5ms
+11-22 00:45:30.706  3634  3794 I ReactNativeJS: [perf] swipe: pages built 13.3ms
+11-22 00:45:30.709  3634  3794 I ReactNativeJS: [perf] stall 152.1ms
+11-22 00:45:30.734  3634  3794 I ReactNativeJS: [perf] touch lag 43.0ms
+11-22 00:45:30.735  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.762  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:30.767  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.1ms
+11-22 00:45:30.786  3634  3794 I ReactNativeJS: [perf] operations page built 24.2ms
+11-22 00:45:30.792  3634  3794 I ReactNativeJS: [perf] pager: page content shown (52 so far)
+11-22 00:45:30.796  3634  3794 I ReactNativeJS: [perf] pager: contents around page 33 drawn (lag 0) 103.5ms
+11-22 00:45:30.796  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:30.869  3634  3794 I ReactNativeJS: [perf] swipe: next frame 176.8ms
+11-22 00:45:30.870  3634  3794 I ReactNativeJS: [perf] stall 111.5ms
+11-22 00:45:30.870  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.870  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:30.979  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:30.980  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:30.981  3634  3794 I ReactNativeJS: [perf] pager: page 32 from 33; this page drawn: yes; next page 31 drawn: yes; behind by -1
+11-22 00:45:31.003  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:31.003  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:31.007  3634  3794 I ReactNativeJS: [perf] operations page built 3.8ms
+11-22 00:45:31.007  3634  3794 I ReactNativeJS: [perf] swipe: pages built 26.7ms
+11-22 00:45:31.014  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:31.014  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:31.019  3634  3794 I ReactNativeJS: [perf] operations page built 5.4ms
+11-22 00:45:31.019  3634  3794 I ReactNativeJS: [perf] pager: page content shown (53 so far)
+11-22 00:45:31.019  3634  3794 I ReactNativeJS: [perf] pager: contents around page 32 drawn (lag 0) 39.0ms
+11-22 00:45:31.020  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:31.029  3634  3794 I ReactNativeJS: [perf] swipe: next frame 48.7ms
+11-22 00:45:31.047  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:31.142  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:31.200  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:31.292  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:31.292  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:31.293  3634  3794 I ReactNativeJS: [perf] pager: page 31 from 32; this page drawn: yes; next page 30 drawn: yes; behind by -1
+11-22 00:45:31.309  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:31.317  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:31.374  3634  3794 I ReactNativeJS: [perf] operations page built 64.3ms
+11-22 00:45:31.374  3634  3794 I ReactNativeJS: [perf] swipe: pages built 81.5ms
+11-22 00:45:31.384  3634  3794 I ReactNativeJS: [perf] stall 67.4ms
+11-22 00:45:31.385  3634  3794 I ReactNativeJS: [perf] renders pager 7
+11-22 00:45:31.386  3634  3794 I ReactNativeJS: [perf] renders period bar 7
+11-22 00:45:31.386  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:45:31.427  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:31.427  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:31.443  3634  3794 I ReactNativeJS: [perf] operations page built 16.4ms
+11-22 00:45:31.443  3634  3794 I ReactNativeJS: [perf] pager: page content shown (54 so far)
+11-22 00:45:31.443  3634  3794 I ReactNativeJS: [perf] pager: contents around page 31 drawn (lag 0) 150.7ms
+11-22 00:45:31.443  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:31.454  3634  3794 I ReactNativeJS: [perf] swipe: next frame 161.6ms
+11-22 00:45:32.349  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:45:32.349  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:45:32.349  3634  3794 I ReactNativeJS: [perf] renders operations page 1
+11-22 00:45:46.735  8094  8094 I ReactNativeJS: [perf] mark operations: direction changes (back, forward ×6, no pause)
+11-22 00:45:46.809  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:46.872  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:46.993  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:47.098  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:47.217  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:47.287  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:47.395  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:47.524  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:47.653  3634  3794 I ReactNativeJS: [perf] touch lag 20.8ms
+11-22 00:45:47.653  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:47.739  3634  3794 I ReactNativeJS: [perf] stall 61.4ms
+11-22 00:45:47.740  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:47.827  3634  3794 I ReactNativeJS: [perf] touch lag 19.4ms
+11-22 00:45:47.827  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:47.959  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.109  3634  3794 I ReactNativeJS: [perf] touch lag 37.7ms
+11-22 00:45:48.109  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:48.202  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.298  3634  3794 I ReactNativeJS: [perf] touch lag 17.8ms
+11-22 00:45:48.383  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:48.383  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.553  3634  3794 I ReactNativeJS: [perf] stall 70.4ms
+11-22 00:45:48.553  3634  3794 I ReactNativeJS: [perf] touch lag 94.7ms
+11-22 00:45:48.553  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:48.578  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.579  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:48.579  3634  3794 I ReactNativeJS: [perf] pager: page 32 from 31; this page drawn: yes; next page 33 drawn: yes; behind by 1
+11-22 00:45:48.583  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:48.584  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:48.587  3634  3794 I ReactNativeJS: [perf] operations page built 3.2ms
+11-22 00:45:48.587  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.3ms
+11-22 00:45:48.603  3634  3794 I ReactNativeJS: [perf] swipe: next frame 24.7ms
+11-22 00:45:48.610  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:48.610  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:48.614  3634  3794 I ReactNativeJS: [perf] operations page built 4.1ms
+11-22 00:45:48.617  3634  3794 I ReactNativeJS: [perf] pager: page content shown (55 so far)
+11-22 00:45:48.617  3634  3794 I ReactNativeJS: [perf] pager: contents around page 32 drawn (lag 0) 38.4ms
+11-22 00:45:48.617  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:48.712  3634  3794 I ReactNativeJS: [perf] touch lag 81.1ms
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] renders operations page 2
+11-22 00:45:48.713  3634  3794 I ReactNativeJS: [perf] stall 81.2ms
+11-22 00:45:48.804  3634  3794 I ReactNativeJS: [perf] stall 65.0ms
+11-22 00:45:48.828  3634  3794 I ReactNativeJS: [perf] touch lag 16.2ms
+11-22 00:45:48.874  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:48.904  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:48.904  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:48.904  3634  3794 I ReactNativeJS: [perf] pager: page 31 from 32; this page drawn: yes; next page 30 drawn: yes; behind by -1
+11-22 00:45:48.937  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:48.945  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:48.961  3634  3794 I ReactNativeJS: [perf] operations page built 24.1ms
+11-22 00:45:48.961  3634  3794 I ReactNativeJS: [perf] swipe: pages built 57.0ms
+11-22 00:45:48.977  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:48.977  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:48.988  3634  3794 I ReactNativeJS: [perf] operations page built 11.4ms
+11-22 00:45:48.989  3634  3794 I ReactNativeJS: [perf] pager: page content shown (56 so far)
+11-22 00:45:48.989  3634  3794 I ReactNativeJS: [perf] pager: contents around page 31 drawn (lag 0) 84.4ms
+11-22 00:45:48.989  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:49.001  3634  3794 I ReactNativeJS: [perf] swipe: next frame 96.7ms
+11-22 00:45:49.002  3634  3794 I ReactNativeJS: [perf] touch lag 18.2ms
+11-22 00:45:49.002  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:49.120  3634  3794 I ReactNativeJS: [perf] stall 125.4ms
+11-22 00:45:49.122  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:49.131  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:49.131  3634  3794 I ReactNativeJS: [perf] pager: page 32 from 31; this page drawn: yes; next page 33 drawn: yes; behind by 1
+11-22 00:45:49.136  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:49.136  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:49.139  3634  3794 I ReactNativeJS: [perf] operations page built 3.1ms
+11-22 00:45:49.139  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.1ms
+11-22 00:45:49.146  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:49.146  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:49.163  3634  3794 I ReactNativeJS: [perf] operations page built 17.3ms
+11-22 00:45:49.163  3634  3794 I ReactNativeJS: [perf] pager: page content shown (57 so far)
+11-22 00:45:49.164  3634  3794 I ReactNativeJS: [perf] pager: contents around page 32 drawn (lag 0) 33.0ms
+11-22 00:45:49.164  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:49.225  3634  3794 I ReactNativeJS: [perf] swipe: next frame 94.7ms
+11-22 00:45:49.230  3634  3794 I ReactNativeJS: [perf] stall 62.3ms
+11-22 00:45:49.649  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:45:49.649  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:45:49.649  3634  3794 I ReactNativeJS: [perf] renders operations page 4
+11-22 00:45:57.047  8215  8215 I ReactNativeJS: [perf] mark operations: revisit (30 swipes forward, no pause)
+11-22 00:45:57.127  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:57.158  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:57.159  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:57.159  3634  3794 I ReactNativeJS: [perf] pager: page 33 from 32; this page drawn: yes; next page 34 drawn: yes; behind by 1
+11-22 00:45:57.192  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.1ms
+11-22 00:45:57.194  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.228  3634  3794 I ReactNativeJS: [perf] operations page built 53.0ms
+11-22 00:45:57.228  3634  3794 I ReactNativeJS: [perf] swipe: pages built 69.9ms
+11-22 00:45:57.248  3634  3794 I ReactNativeJS: [perf] stall 66.6ms
+11-22 00:45:57.248  3634  3794 I ReactNativeJS: [perf] swipe: next frame 89.5ms
+11-22 00:45:57.254  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:57.254  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.280  3634  3794 I ReactNativeJS: [perf] operations page built 26.0ms
+11-22 00:45:57.280  3634  3794 I ReactNativeJS: [perf] pager: page content shown (58 so far)
+11-22 00:45:57.280  3634  3794 I ReactNativeJS: [perf] pager: contents around page 33 drawn (lag 0) 121.4ms
+11-22 00:45:57.280  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:57.302  3634  3794 I ReactNativeJS: [perf] touch lag 58.5ms
+11-22 00:45:57.302  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:57.389  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:57.499  3634  3794 I ReactNativeJS: [perf] touch lag 26.8ms
+11-22 00:45:57.499  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:57.552  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:57.564  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:57.564  3634  3794 I ReactNativeJS: [perf] pager: page 34 from 33; this page drawn: yes; next page 35 drawn: yes; behind by 1
+11-22 00:45:57.576  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:57.577  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.607  3634  3794 I ReactNativeJS: [perf] operations page built 30.7ms
+11-22 00:45:57.607  3634  3794 I ReactNativeJS: [perf] swipe: pages built 43.7ms
+11-22 00:45:57.621  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:57.621  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.627  3634  3794 I ReactNativeJS: [perf] operations page built 6.3ms
+11-22 00:45:57.630  3634  3794 I ReactNativeJS: [perf] pager: page content shown (59 so far)
+11-22 00:45:57.630  3634  3794 I ReactNativeJS: [perf] pager: contents around page 34 drawn (lag 0) 66.2ms
+11-22 00:45:57.630  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:57.665  3634  3794 I ReactNativeJS: [perf] swipe: next frame 101.1ms
+11-22 00:45:57.696  3634  3794 I ReactNativeJS: [perf] touch lag 50.2ms
+11-22 00:45:57.696  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:57.756  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:57.756  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:57.757  3634  3794 I ReactNativeJS: [perf] pager: page 35 from 34; this page drawn: yes; next page 36 drawn: yes; behind by 1
+11-22 00:45:57.761  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:57.761  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.765  3634  3794 I ReactNativeJS: [perf] operations page built 4.3ms
+11-22 00:45:57.765  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.1ms
+11-22 00:45:57.777  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:57.782  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:57.790  3634  3794 I ReactNativeJS: [perf] operations page built 13.6ms
+11-22 00:45:57.791  3634  3794 I ReactNativeJS: [perf] pager: page content shown (60 so far)
+11-22 00:45:57.792  3634  3794 I ReactNativeJS: [perf] pager: contents around page 35 drawn (lag 0) 35.2ms
+11-22 00:45:57.792  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:57.844  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:57.851  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:57.852  3634  3794 I ReactNativeJS: [perf] renders operations page 6
+11-22 00:45:57.852  3634  3794 I ReactNativeJS: [perf] swipe: next frame 95.2ms
+11-22 00:45:57.852  3634  3794 I ReactNativeJS: [perf] stall 70.8ms
+11-22 00:45:57.880  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.020  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.020  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:58.020  3634  3794 I ReactNativeJS: [perf] pager: page 36 from 35; this page drawn: yes; next page 37 drawn: yes; behind by 1
+11-22 00:45:58.081  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.1ms
+11-22 00:45:58.081  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.086  3634  3794 I ReactNativeJS: [perf] operations page built 4.9ms
+11-22 00:45:58.086  3634  3794 I ReactNativeJS: [perf] swipe: pages built 66.2ms
+11-22 00:45:58.091  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.095  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.095  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.121  3634  3794 I ReactNativeJS: [perf] operations page built 25.8ms
+11-22 00:45:58.123  3634  3794 I ReactNativeJS: [perf] pager: page content shown (61 so far)
+11-22 00:45:58.123  3634  3794 I ReactNativeJS: [perf] pager: contents around page 36 drawn (lag 0) 103.6ms
+11-22 00:45:58.128  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:58.207  3634  3794 I ReactNativeJS: [perf] swipe: next frame 187.4ms
+11-22 00:45:58.209  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.210  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:58.210  3634  3794 I ReactNativeJS: [perf] pager: page 37 from 36; this page drawn: yes; next page 38 drawn: yes; behind by 1
+11-22 00:45:58.225  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.257  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.280  3634  3794 I ReactNativeJS: [perf] operations page built 55.9ms
+11-22 00:45:58.283  3634  3794 I ReactNativeJS: [perf] swipe: pages built 72.9ms
+11-22 00:45:58.296  3634  3794 I ReactNativeJS: [perf] stall 174.8ms
+11-22 00:45:58.297  3634  3794 I ReactNativeJS: [perf] touch lag 18.9ms
+11-22 00:45:58.297  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.322  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.322  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.331  3634  3794 I ReactNativeJS: [perf] operations page built 9.2ms
+11-22 00:45:58.363  3634  3794 I ReactNativeJS: [perf] pager: page content shown (62 so far)
+11-22 00:45:58.363  3634  3794 I ReactNativeJS: [perf] pager: contents around page 37 drawn (lag 0) 153.2ms
+11-22 00:45:58.363  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:58.420  3634  3794 I ReactNativeJS: [perf] swipe: next frame 210.4ms
+11-22 00:45:58.421  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.421  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:58.421  3634  3794 I ReactNativeJS: [perf] pager: page 38 from 37; this page drawn: yes; next page 39 drawn: yes; behind by 1
+11-22 00:45:58.428  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.428  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.435  3634  3794 I ReactNativeJS: [perf] operations page built 6.7ms
+11-22 00:45:58.435  3634  3794 I ReactNativeJS: [perf] swipe: pages built 13.9ms
+11-22 00:45:58.528  3634  3794 I ReactNativeJS: [perf] stall 205.7ms
+11-22 00:45:58.528  3634  3794 I ReactNativeJS: [perf] swipe: next frame 107.5ms
+11-22 00:45:58.537  3634  3794 I ReactNativeJS: [perf] touch lag 99.5ms
+11-22 00:45:58.537  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.537  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.675  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:58.675  3634  3794 I ReactNativeJS: [perf] pager: page 39 from 38; this page drawn: yes; next page 40 drawn: NO; behind by 2
+11-22 00:45:58.682  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.682  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.682  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.682  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.752  3634  3794 I ReactNativeJS: [perf] operations page built 70.6ms
+11-22 00:45:58.753  3634  3794 I ReactNativeJS: [perf] operations page built 70.4ms
+11-22 00:45:58.762  3634  3794 I ReactNativeJS: [perf] pager: page content shown (63 so far)
+11-22 00:45:58.762  3634  3794 I ReactNativeJS: [perf] swipe: pages built 87.2ms
+11-22 00:45:58.762  3634  3794 I ReactNativeJS: [perf] pager: contents around page 38 drawn (lag 1) 341.4ms
+11-22 00:45:58.763  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:58.836  3634  3794 I ReactNativeJS: [perf] stall 283.0ms
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] touch lag 222.4ms
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] pager: page 40 from 39; this page drawn: yes; next page 41 drawn: NO; behind by 2
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] touch lag 41.9ms
+11-22 00:45:58.837  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:58.844  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.844  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.847  3634  3794 I ReactNativeJS: [perf] operations page built 3.8ms
+11-22 00:45:58.847  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.4ms
+11-22 00:45:58.852  3634  3794 I ReactNativeJS: [perf] swipe: next frame 176.9ms
+11-22 00:45:58.855  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.855  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.862  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:58.862  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] operations page built 14.3ms
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] pager: page content shown (64 so far)
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] operations page built 7.8ms
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] pager: page content shown (65 so far)
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] pager: contents around page 40 drawn (lag 0) 33.4ms
+11-22 00:45:58.870  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:58.871  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:58.896  3634  3794 I ReactNativeJS: [perf] renders pager 8
+11-22 00:45:58.896  3634  3794 I ReactNativeJS: [perf] renders period bar 8
+11-22 00:45:58.896  3634  3794 I ReactNativeJS: [perf] renders operations page 10
+11-22 00:45:58.897  3634  3794 I ReactNativeJS: [perf] swipe: next frame 59.5ms
+11-22 00:45:58.911  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:58.955  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:59.091  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:59.091  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:59.091  3634  3794 I ReactNativeJS: [perf] pager: page 41 from 40; this page drawn: yes; next page 42 drawn: yes; behind by 1
+11-22 00:45:59.127  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.127  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.201  3634  3794 I ReactNativeJS: [perf] operations page built 73.9ms
+11-22 00:45:59.201  3634  3794 I ReactNativeJS: [perf] swipe: pages built 110.2ms
+11-22 00:45:59.205  3634  3794 I ReactNativeJS: [perf] stall 109.4ms
+11-22 00:45:59.206  3634  3794 I ReactNativeJS: [perf] touch lag 57.4ms
+11-22 00:45:59.206  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:59.225  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.227  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.235  3634  3794 I ReactNativeJS: [perf] operations page built 9.9ms
+11-22 00:45:59.235  3634  3794 I ReactNativeJS: [perf] pager: page content shown (66 so far)
+11-22 00:45:59.235  3634  3794 I ReactNativeJS: [perf] pager: contents around page 41 drawn (lag 0) 144.5ms
+11-22 00:45:59.235  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:59.274  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:59.274  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:59.274  3634  3794 I ReactNativeJS: [perf] pager: page 42 from 41; this page drawn: yes; next page 43 drawn: yes; behind by 1
+11-22 00:45:59.328  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.1ms
+11-22 00:45:59.328  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.343  3634  3794 I ReactNativeJS: [perf] operations page built 15.6ms
+11-22 00:45:59.343  3634  3794 I ReactNativeJS: [perf] swipe: pages built 69.0ms
+11-22 00:45:59.371  3634  3794 I ReactNativeJS: [perf] swipe: next frame 280.3ms
+11-22 00:45:59.373  3634  3794 I ReactNativeJS: [perf] stall 142.4ms
+11-22 00:45:59.375  3634  3794 I ReactNativeJS: [perf] touch lag 59.5ms
+11-22 00:45:59.377  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:59.378  3634  3794 I ReactNativeJS: [perf] swipe: next frame 103.7ms
+11-22 00:45:59.398  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.409  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.426  3634  3794 I ReactNativeJS: [perf] operations page built 28.1ms
+11-22 00:45:59.455  3634  3794 I ReactNativeJS: [perf] pager: page content shown (67 so far)
+11-22 00:45:59.456  3634  3794 I ReactNativeJS: [perf] pager: contents around page 42 drawn (lag 0) 181.3ms
+11-22 00:45:59.458  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:59.474  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:59.474  3634  3794 I ReactNativeJS: [perf] stall 70.3ms
+11-22 00:45:59.627  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:59.717  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:59.717  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:59.717  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 42; this page drawn: yes; next page 44 drawn: yes; behind by 1
+11-22 00:45:59.738  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.750  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.755  3634  3794 I ReactNativeJS: [perf] operations page built 16.6ms
+11-22 00:45:59.755  3634  3794 I ReactNativeJS: [perf] swipe: pages built 38.6ms
+11-22 00:45:59.766  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.766  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.771  3634  3794 I ReactNativeJS: [perf] operations page built 5.4ms
+11-22 00:45:59.774  3634  3794 I ReactNativeJS: [perf] pager: page content shown (68 so far)
+11-22 00:45:59.774  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 57.2ms
+11-22 00:45:59.774  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:45:59.897  3634  3794 I ReactNativeJS: [perf] swipe: next frame 180.7ms
+11-22 00:45:59.897  3634  3794 I ReactNativeJS: [perf] stall 113.2ms
+11-22 00:45:59.901  3634  3794 I ReactNativeJS: [perf] touch lag 63.1ms
+11-22 00:45:59.901  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:45:59.902  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:45:59.902  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:45:59.902  3634  3794 I ReactNativeJS: [perf] renders operations page 6
+11-22 00:45:59.939  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:45:59.943  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:45:59.943  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 43; this page drawn: yes; next page 45 drawn: yes; behind by 1
+11-22 00:45:59.989  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:45:59.989  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:45:59.996  3634  3794 I ReactNativeJS: [perf] operations page built 7.8ms
+11-22 00:45:59.997  3634  3794 I ReactNativeJS: [perf] swipe: pages built 54.4ms
+11-22 00:46:00.054  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.054  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.061  3634  3794 I ReactNativeJS: [perf] operations page built 7.4ms
+11-22 00:46:00.063  3634  3794 I ReactNativeJS: [perf] pager: page content shown (69 so far)
+11-22 00:46:00.063  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 120.5ms
+11-22 00:46:00.063  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:00.220  3634  3794 I ReactNativeJS: [perf] stall 186.0ms
+11-22 00:46:00.223  3634  3794 I ReactNativeJS: [perf] swipe: next frame 279.9ms
+11-22 00:46:00.223  3634  3794 I ReactNativeJS: [perf] touch lag 188.9ms
+11-22 00:46:00.223  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:00.224  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:00.224  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:00.224  3634  3794 I ReactNativeJS: [perf] pager: page 45 from 44; this page drawn: yes; next page 46 drawn: yes; behind by 1
+11-22 00:46:00.282  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.282  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.289  3634  3794 I ReactNativeJS: [perf] operations page built 7.2ms
+11-22 00:46:00.289  3634  3794 I ReactNativeJS: [perf] swipe: pages built 65.4ms
+11-22 00:46:00.494  3634  3794 I ReactNativeJS: [perf] stall 248.5ms
+11-22 00:46:00.501  3634  3794 I ReactNativeJS: [perf] touch lag 269.1ms
+11-22 00:46:00.501  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:00.502  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:00.554  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:00.554  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 45; this page drawn: yes; next page 47 drawn: NO; behind by 2
+11-22 00:46:00.559  3634  3794 I ReactNativeJS: [perf] touch lag 90.9ms
+11-22 00:46:00.559  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:00.638  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.646  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.649  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.674  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.681  3634  3794 I ReactNativeJS: [perf] operations page built 42.7ms
+11-22 00:46:00.682  3634  3794 I ReactNativeJS: [perf] operations page built 32.9ms
+11-22 00:46:00.693  3634  3794 I ReactNativeJS: [perf] pager: page content shown (70 so far)
+11-22 00:46:00.693  3634  3794 I ReactNativeJS: [perf] swipe: pages built 140.0ms
+11-22 00:46:00.731  3634  3794 I ReactNativeJS: [perf] pager: contents around page 45 drawn (lag 1) 506.9ms
+11-22 00:46:00.732  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:00.797  3634  3794 I ReactNativeJS: [perf] stall 278.1ms
+11-22 00:46:00.797  3634  3794 I ReactNativeJS: [perf] swipe: next frame 573.3ms
+11-22 00:46:00.797  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:00.798  3634  3794 I ReactNativeJS: [perf] touch lag 164.3ms
+11-22 00:46:00.798  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:00.800  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:00.800  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:00.800  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 46; this page drawn: yes; next page 48 drawn: NO; behind by 2
+11-22 00:46:00.849  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.849  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.853  3634  3794 I ReactNativeJS: [perf] operations page built 3.4ms
+11-22 00:46:00.853  3634  3794 I ReactNativeJS: [perf] swipe: pages built 53.2ms
+11-22 00:46:00.856  3634  3794 I ReactNativeJS: [perf] swipe: next frame 302.9ms
+11-22 00:46:00.857  3634  3794 I ReactNativeJS: [perf] touch lag 66.8ms
+11-22 00:46:00.857  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:00.862  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:00.862  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.864  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.2ms
+11-22 00:46:00.864  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:00.950  3634  3794 I ReactNativeJS: [perf] operations page built 88.2ms
+11-22 00:46:00.950  3634  3794 I ReactNativeJS: [perf] pager: page content shown (71 so far)
+11-22 00:46:00.950  3634  3794 I ReactNativeJS: [perf] operations page built 86.3ms
+11-22 00:46:00.950  3634  3794 I ReactNativeJS: [perf] pager: page content shown (72 so far)
+11-22 00:46:00.950  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 150.8ms
+11-22 00:46:00.951  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:00.951  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:00.998  3634  3794 I ReactNativeJS: [perf] swipe: next frame 198.8ms
+11-22 00:46:01.064  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.065  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:01.065  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 47; this page drawn: yes; next page 49 drawn: yes; behind by 1
+11-22 00:46:01.065  3634  3794 I ReactNativeJS: [perf] touch lag 100.9ms
+11-22 00:46:01.108  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.153  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.153  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.156  3634  3794 I ReactNativeJS: [perf] operations page built 3.5ms
+11-22 00:46:01.157  3634  3794 I ReactNativeJS: [perf] swipe: pages built 92.2ms
+11-22 00:46:01.166  3634  3794 I ReactNativeJS: [perf] stall 283.6ms
+11-22 00:46:01.166  3634  3794 I ReactNativeJS: [perf] renders pager 7
+11-22 00:46:01.166  3634  3794 I ReactNativeJS: [perf] renders period bar 7
+11-22 00:46:01.166  3634  3794 I ReactNativeJS: [perf] renders operations page 9
+11-22 00:46:01.171  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.171  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:01.171  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 48; this page drawn: yes; next page 50 drawn: NO; behind by 2
+11-22 00:46:01.171  3634  3794 I ReactNativeJS: [perf] touch lag 76.9ms
+11-22 00:46:01.171  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.187  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.188  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.198  3634  3794 I ReactNativeJS: [perf] operations page built 11.4ms
+11-22 00:46:01.202  3634  3794 I ReactNativeJS: [perf] swipe: pages built 31.2ms
+11-22 00:46:01.214  3634  3794 I ReactNativeJS: [perf] swipe: next frame 149.6ms
+11-22 00:46:01.231  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.231  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 49; this page drawn: NO; next page 51 drawn: NO; behind by 3
+11-22 00:46:01.326  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.326  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.341  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.341  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.438  3634  3794 I ReactNativeJS: [perf] operations page built 112.0ms
+11-22 00:46:01.438  3634  3794 I ReactNativeJS: [perf] pager: page content shown (73 so far)
+11-22 00:46:01.438  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 207.4ms
+11-22 00:46:01.438  3634  3794 I ReactNativeJS: [perf] operations page built 97.6ms
+11-22 00:46:01.438  3634  3794 I ReactNativeJS: [perf] pager: page content shown (74 so far)
+11-22 00:46:01.439  3634  3794 I ReactNativeJS: [perf] swipe: pages built 207.7ms
+11-22 00:46:01.439  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 1) 267.7ms
+11-22 00:46:01.439  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.439  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.510  3634  3794 I ReactNativeJS: [perf] stall 271.4ms
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] swipe: next frame 339.7ms
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] touch lag 263.5ms
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] touch lag 94.9ms
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.511  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:01.512  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 50; this page drawn: yes; next page 52 drawn: NO; behind by 2
+11-22 00:46:01.562  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.562  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.565  3634  3794 I ReactNativeJS: [perf] operations page built 3.4ms
+11-22 00:46:01.565  3634  3794 I ReactNativeJS: [perf] swipe: pages built 53.8ms
+11-22 00:46:01.570  3634  3794 I ReactNativeJS: [perf] swipe: next frame 339.1ms
+11-22 00:46:01.572  3634  3794 I ReactNativeJS: [perf] touch lag 25.7ms
+11-22 00:46:01.572  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.577  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.577  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.610  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.610  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.665  3634  3794 I ReactNativeJS: [perf] operations page built 88.5ms
+11-22 00:46:01.666  3634  3794 I ReactNativeJS: [perf] pager: page content shown (75 so far)
+11-22 00:46:01.679  3634  3794 I ReactNativeJS: [perf] operations page built 69.5ms
+11-22 00:46:01.679  3634  3794 I ReactNativeJS: [perf] pager: page content shown (76 so far)
+11-22 00:46:01.679  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 167.8ms
+11-22 00:46:01.679  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.680  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.706  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.706  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:01.706  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 51; this page drawn: yes; next page 53 drawn: yes; behind by 1
+11-22 00:46:01.707  3634  3794 I ReactNativeJS: [perf] touch lag 21.3ms
+11-22 00:46:01.712  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.712  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.715  3634  3794 I ReactNativeJS: [perf] operations page built 2.7ms
+11-22 00:46:01.715  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.5ms
+11-22 00:46:01.724  3634  3794 I ReactNativeJS: [perf] swipe: next frame 212.8ms
+11-22 00:46:01.724  3634  3794 I ReactNativeJS: [perf] stall 127.2ms
+11-22 00:46:01.725  3634  3794 I ReactNativeJS: [perf] swipe: next frame 18.3ms
+11-22 00:46:01.729  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.741  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.741  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.746  3634  3794 I ReactNativeJS: [perf] operations page built 5.2ms
+11-22 00:46:01.746  3634  3794 I ReactNativeJS: [perf] pager: page content shown (77 so far)
+11-22 00:46:01.747  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 40.5ms
+11-22 00:46:01.747  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.780  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.795  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:01.860  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:01.860  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:01.860  3634  3794 I ReactNativeJS: [perf] pager: page 53 from 52; this page drawn: yes; next page 54 drawn: yes; behind by 1
+11-22 00:46:01.890  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.890  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.908  3634  3794 I ReactNativeJS: [perf] operations page built 18.3ms
+11-22 00:46:01.908  3634  3794 I ReactNativeJS: [perf] swipe: pages built 48.3ms
+11-22 00:46:01.916  3634  3794 I ReactNativeJS: [perf] renders pager 7
+11-22 00:46:01.923  3634  3794 I ReactNativeJS: [perf] renders period bar 7
+11-22 00:46:01.923  3634  3794 I ReactNativeJS: [perf] renders operations page 9
+11-22 00:46:01.923  3634  3794 I ReactNativeJS: [perf] swipe: next frame 62.6ms
+11-22 00:46:01.927  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:01.927  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:01.932  3634  3794 I ReactNativeJS: [perf] operations page built 5.0ms
+11-22 00:46:01.932  3634  3794 I ReactNativeJS: [perf] pager: page content shown (78 so far)
+11-22 00:46:01.932  3634  3794 I ReactNativeJS: [perf] pager: contents around page 53 drawn (lag 0) 71.6ms
+11-22 00:46:01.932  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:01.959  3634  3794 I ReactNativeJS: [perf] touch lag 21.8ms
+11-22 00:46:01.993  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:02.004  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:02.004  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:02.004  3634  3794 I ReactNativeJS: [perf] pager: page 54 from 53; this page drawn: yes; next page 55 drawn: yes; behind by 1
+11-22 00:46:02.027  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.027  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.034  3634  3794 I ReactNativeJS: [perf] operations page built 6.7ms
+11-22 00:46:02.034  3634  3794 I ReactNativeJS: [perf] swipe: pages built 29.8ms
+11-22 00:46:02.060  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.060  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.080  3634  3794 I ReactNativeJS: [perf] operations page built 20.6ms
+11-22 00:46:02.080  3634  3794 I ReactNativeJS: [perf] pager: page content shown (79 so far)
+11-22 00:46:02.080  3634  3794 I ReactNativeJS: [perf] pager: contents around page 54 drawn (lag 0) 76.5ms
+11-22 00:46:02.081  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:02.148  3634  3794 I ReactNativeJS: [perf] swipe: next frame 143.7ms
+11-22 00:46:02.148  3634  3794 I ReactNativeJS: [perf] touch lag 70.9ms
+11-22 00:46:02.148  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:02.148  3634  3794 I ReactNativeJS: [perf] stall 75.8ms
+11-22 00:46:02.171  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:02.238  3634  3794 I ReactNativeJS: [perf] touch lag 18.9ms
+11-22 00:46:02.238  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:02.307  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:02.307  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:02.307  3634  3794 I ReactNativeJS: [perf] pager: page 55 from 54; this page drawn: yes; next page 56 drawn: yes; behind by 1
+11-22 00:46:02.319  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.319  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.330  3634  3794 I ReactNativeJS: [perf] operations page built 11.2ms
+11-22 00:46:02.330  3634  3794 I ReactNativeJS: [perf] swipe: pages built 22.4ms
+11-22 00:46:02.336  3634  3794 I ReactNativeJS: [perf] swipe: next frame 28.9ms
+11-22 00:46:02.342  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.342  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.358  3634  3794 I ReactNativeJS: [perf] operations page built 16.9ms
+11-22 00:46:02.358  3634  3794 I ReactNativeJS: [perf] pager: page content shown (80 so far)
+11-22 00:46:02.391  3634  3794 I ReactNativeJS: [perf] pager: contents around page 55 drawn (lag 0) 84.1ms
+11-22 00:46:02.395  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:02.415  3634  3794 I ReactNativeJS: [perf] stall 53.7ms
+11-22 00:46:02.753  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:02.753  3634  3794 I ReactNativeJS: [perf] pager: page 56 from 55; this page drawn: yes; next page 57 drawn: yes; behind by 1
+11-22 00:46:02.757  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.758  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.789  3634  3794 I ReactNativeJS: [perf] operations page built 31.9ms
+11-22 00:46:02.790  3634  3794 I ReactNativeJS: [perf] swipe: pages built 37.1ms
+11-22 00:46:02.798  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:02.798  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:02.807  3634  3794 I ReactNativeJS: [perf] operations page built 8.3ms
+11-22 00:46:02.807  3634  3794 I ReactNativeJS: [perf] pager: page content shown (81 so far)
+11-22 00:46:02.807  3634  3794 I ReactNativeJS: [perf] pager: contents around page 56 drawn (lag 0) 53.9ms
+11-22 00:46:02.807  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:02.823  3634  3794 I ReactNativeJS: [perf] swipe: next frame 70.4ms
+11-22 00:46:02.932  3634  3794 I ReactNativeJS: [perf] renders pager 7
+11-22 00:46:02.932  3634  3794 I ReactNativeJS: [perf] renders period bar 7
+11-22 00:46:02.932  3634  3794 I ReactNativeJS: [perf] renders operations page 7
+11-22 00:46:05.519  8486  8486 I ReactNativeJS: [perf] mark operations: 5 fast swipes, then the tab Statistics at once
+11-22 00:46:05.612  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:05.619  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:05.620  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:05.621  3634  3794 I ReactNativeJS: [perf] pager: page 55 from 56; this page drawn: yes; next page 54 drawn: yes; behind by -1
+11-22 00:46:05.627  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:05.629  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:05.632  3634  3794 I ReactNativeJS: [perf] operations page built 5.0ms
+11-22 00:46:05.632  3634  3794 I ReactNativeJS: [perf] swipe: pages built 12.4ms
+11-22 00:46:05.653  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:05.653  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:05.664  3634  3794 I ReactNativeJS: [perf] operations page built 11.2ms
+11-22 00:46:05.664  3634  3794 I ReactNativeJS: [perf] pager: page content shown (82 so far)
+11-22 00:46:05.665  3634  3794 I ReactNativeJS: [perf] pager: contents around page 55 drawn (lag 0) 45.2ms
+11-22 00:46:05.665  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:05.720  3634  3794 I ReactNativeJS: [perf] swipe: next frame 100.8ms
+11-22 00:46:05.725  3634  3794 I ReactNativeJS: [perf] stall 79.5ms
+11-22 00:46:05.725  3634  3794 I ReactNativeJS: [perf] touch lag 68.1ms
+11-22 00:46:05.725  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:05.764  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:05.796  3634  3794 I ReactNativeJS: [perf] touch lag 20.5ms
+11-22 00:46:05.796  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:05.879  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:05.879  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:05.879  3634  3794 I ReactNativeJS: [perf] pager: page 54 from 55; this page drawn: yes; next page 53 drawn: yes; behind by -1
+11-22 00:46:05.885  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:05.885  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:05.889  3634  3794 I ReactNativeJS: [perf] operations page built 4.1ms
+11-22 00:46:05.889  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.2ms
+11-22 00:46:05.918  3634  3794 I ReactNativeJS: [perf] swipe: next frame 38.9ms
+11-22 00:46:05.924  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:05.924  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:05.979  3634  3794 I ReactNativeJS: [perf] operations page built 55.4ms
+11-22 00:46:05.985  3634  3794 I ReactNativeJS: [perf] pager: page content shown (83 so far)
+11-22 00:46:05.986  3634  3794 I ReactNativeJS: [perf] pager: contents around page 54 drawn (lag 0) 106.4ms
+11-22 00:46:05.986  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:06.034  3634  3794 I ReactNativeJS: [perf] stall 90.3ms
+11-22 00:46:06.034  3634  3794 I ReactNativeJS: [perf] touch lag 20.0ms
+11-22 00:46:06.034  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:06.035  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:06.035  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:06.035  3634  3794 I ReactNativeJS: [perf] renders operations page 4
+11-22 00:46:06.097  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:06.097  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:06.097  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 54; this page drawn: yes; next page 51 drawn: NO; behind by -2
+11-22 00:46:06.104  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:06.104  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:06.110  3634  3794 I ReactNativeJS: [perf] operations page built 5.9ms
+11-22 00:46:06.110  3634  3794 I ReactNativeJS: [perf] swipe: pages built 13.1ms
+11-22 00:46:06.181  3634  3794 I ReactNativeJS: [perf] stall 59.1ms
+11-22 00:46:06.181  3634  3794 I ReactNativeJS: [perf] swipe: next frame 83.5ms
+11-22 00:46:06.190  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:06.190  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:06.192  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:06.192  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:06.197  3634  3794 I ReactNativeJS: [perf] operations page built 7.6ms
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] pager: page content shown (84 so far)
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] operations page built 5.7ms
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] pager: page content shown (85 so far)
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 100.7ms
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:06.198  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:06.210  3634  3794 I ReactNativeJS: [perf] touch lag 31.1ms
+11-22 00:46:06.211  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:06.262  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:06.379  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked operations, shown operations)
+11-22 00:46:06.379  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:46:06.379  3634  3794 I ReactNativeJS: [perf] touch lag 21.7ms
+11-22 00:46:06.421  3634  3794 I ReactNativeJS: [perf] tab shown statistics 42.3ms
+11-22 00:46:06.535  3634  3794 I ReactNativeJS: [perf] stall 113.9ms
+11-22 00:46:06.616  3634  3794 I ReactNativeJS: [perf] pager: refused page 51 (on 52)
+11-22 00:46:06.999  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:06.999  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:06.999  3634  3794 I ReactNativeJS: [perf] renders operations page 3
+11-22 00:46:06.999  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:46:09.599  3634  3794 I ReactNativeJS: [perf] tab press categories (asked statistics, shown statistics)
+11-22 00:46:09.600  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:46:09.626  3634  3794 I ReactNativeJS: [perf] tab shown categories 26.5ms
+11-22 00:46:09.655  3634  3794 I ReactNativeJS: [perf] pager: jumped to page 52
+11-22 00:46:09.663  3634  3794 I ReactNativeJS: [perf] pager: page content shown (5 so far)
+11-22 00:46:09.663  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:10.049  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:46:10.049  3634  3794 I ReactNativeJS: [perf] renders pager 3
+11-22 00:46:10.049  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:46:12.662  8576  8576 I ReactNativeJS: [perf] mark categories: 10 fast swipes back (0.25s apart)
+11-22 00:46:12.727  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:12.830  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:12.831  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:12.832  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 52; this page drawn: yes; next page 50 drawn: NO; behind by -1
+11-22 00:46:12.875  3634  3794 I ReactNativeJS: [perf] swipe: pages built 43.7ms
+11-22 00:46:13.013  3634  3794 I ReactNativeJS: [perf] pager: page content shown (6 so far)
+11-22 00:46:13.013  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 181.9ms
+11-22 00:46:13.014  3634  3794 I ReactNativeJS: [perf] stall 111.5ms
+11-22 00:46:13.014  3634  3794 I ReactNativeJS: [perf] swipe: next frame 182.6ms
+11-22 00:46:13.014  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:13.134  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:13.135  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:13.312  3634  3794 I ReactNativeJS: [perf] touch lag 43.3ms
+11-22 00:46:13.316  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:13.443  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:13.443  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:13.443  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 51; this page drawn: yes; next page 49 drawn: NO; behind by -1
+11-22 00:46:13.461  3634  3794 I ReactNativeJS: [perf] swipe: pages built 18.3ms
+11-22 00:46:13.485  3634  3794 I ReactNativeJS: [perf] swipe: next frame 42.5ms
+11-22 00:46:13.568  3634  3794 I ReactNativeJS: [perf] pager: page content shown (7 so far)
+11-22 00:46:13.568  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 125.1ms
+11-22 00:46:13.569  3634  3794 I ReactNativeJS: [perf] stall 58.6ms
+11-22 00:46:13.569  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:13.776  3634  3794 I ReactNativeJS: [perf] touch lag 18.9ms
+11-22 00:46:13.776  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:13.879  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:14.064  3634  3794 I ReactNativeJS: [perf] stall 52.3ms
+11-22 00:46:14.140  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:14.140  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:14.239  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:14.369  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:14.370  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:14.370  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 50; this page drawn: yes; next page 48 drawn: NO; behind by -1
+11-22 00:46:14.465  3634  3794 I ReactNativeJS: [perf] swipe: pages built 94.9ms
+11-22 00:46:14.471  3634  3794 I ReactNativeJS: [perf] stall 76.6ms
+11-22 00:46:14.617  3634  3794 I ReactNativeJS: [perf] pager: page content shown (8 so far)
+11-22 00:46:14.664  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 294.5ms
+11-22 00:46:14.670  3634  3794 I ReactNativeJS: [perf] stall 174.4ms
+11-22 00:46:14.670  3634  3794 I ReactNativeJS: [perf] swipe: next frame 300.5ms
+11-22 00:46:14.683  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:14.789  3634  3794 I ReactNativeJS: [perf] touch lag 27.9ms
+11-22 00:46:14.790  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:14.903  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:14.904  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:14.911  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 49; this page drawn: yes; next page 47 drawn: NO; behind by -1
+11-22 00:46:14.995  3634  3794 I ReactNativeJS: [perf] swipe: pages built 91.3ms
+11-22 00:46:15.011  3634  3794 I ReactNativeJS: [perf] stall 83.0ms
+11-22 00:46:15.086  3634  3794 I ReactNativeJS: [perf] pager: page content shown (9 so far)
+11-22 00:46:15.086  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 182.5ms
+11-22 00:46:15.087  3634  3794 I ReactNativeJS: [perf] swipe: next frame 183.1ms
+11-22 00:46:15.087  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:15.185  3634  3794 I ReactNativeJS: [perf] stall 73.2ms
+11-22 00:46:15.186  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:15.186  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:15.245  3634  3794 I ReactNativeJS: [perf] touch lag 63.7ms
+11-22 00:46:15.245  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:15.314  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:15.314  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:15.314  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 48; this page drawn: yes; next page 46 drawn: NO; behind by -1
+11-22 00:46:15.368  3634  3794 I ReactNativeJS: [perf] swipe: pages built 54.4ms
+11-22 00:46:15.386  3634  3794 I ReactNativeJS: [perf] pager: page content shown (10 so far)
+11-22 00:46:15.386  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 72.1ms
+11-22 00:46:15.387  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:15.452  3634  3794 I ReactNativeJS: [perf] swipe: next frame 138.2ms
+11-22 00:46:15.456  3634  3794 I ReactNativeJS: [perf] stall 62.5ms
+11-22 00:46:15.560  3634  3794 I ReactNativeJS: [perf] stall 78.7ms
+11-22 00:46:15.695  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:15.818  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:15.819  3634  3794 I ReactNativeJS: [perf] pager: page 45 from 47; this page drawn: NO; next page 44 drawn: NO; behind by -2
+11-22 00:46:15.945  3634  3794 I ReactNativeJS: [perf] pager: page content shown (11 so far)
+11-22 00:46:15.947  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 128.5ms
+11-22 00:46:15.947  3634  3794 I ReactNativeJS: [perf] swipe: pages built 128.7ms
+11-22 00:46:15.954  3634  3794 I ReactNativeJS: [perf] stall 128.0ms
+11-22 00:46:16.172  3634  3794 I ReactNativeJS: [perf] pager: page content shown (12 so far)
+11-22 00:46:16.173  3634  3794 I ReactNativeJS: [perf] pager: contents around page 45 drawn (lag 0) 354.2ms
+11-22 00:46:16.173  3634  3794 I ReactNativeJS: [perf] stall 194.0ms
+11-22 00:46:16.174  3634  3794 I ReactNativeJS: [perf] swipe: next frame 355.8ms
+11-22 00:46:16.184  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:16.184  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:16.196  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:16.199  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:16.307  3634  3794 I ReactNativeJS: [perf] touch lag 27.4ms
+11-22 00:46:16.307  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:16.469  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:16.484  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:16.485  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 45; this page drawn: yes; next page 43 drawn: NO; behind by -1
+11-22 00:46:16.552  3634  3794 I ReactNativeJS: [perf] swipe: pages built 67.5ms
+11-22 00:46:16.556  3634  3794 I ReactNativeJS: [perf] stall 62.6ms
+11-22 00:46:16.615  3634  3794 I ReactNativeJS: [perf] pager: page content shown (13 so far)
+11-22 00:46:16.615  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 130.3ms
+11-22 00:46:16.621  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:16.643  3634  3794 I ReactNativeJS: [perf] swipe: next frame 158.4ms
+11-22 00:46:16.648  3634  3794 I ReactNativeJS: [perf] stall 65.8ms
+11-22 00:46:16.872  3634  3794 I ReactNativeJS: [perf] touch lag 45.9ms
+11-22 00:46:16.872  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:17.001  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:17.225  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:17.225  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:17.398  3634  3794 I ReactNativeJS: [perf] touch lag 38.0ms
+11-22 00:46:17.399  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:17.511  3634  3794 I ReactNativeJS: [perf] stall 54.0ms
+11-22 00:46:17.520  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:17.522  3634  3794 I ReactNativeJS: [perf] pager: page 42 from 44; this page drawn: NO; next page 41 drawn: NO; behind by -2
+11-22 00:46:17.635  3634  3794 I ReactNativeJS: [perf] pager: page content shown (14 so far)
+11-22 00:46:17.636  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 114.0ms
+11-22 00:46:17.636  3634  3794 I ReactNativeJS: [perf] swipe: pages built 114.3ms
+11-22 00:46:17.637  3634  3794 I ReactNativeJS: [perf] stall 100.4ms
+11-22 00:46:17.753  3634  3794 I ReactNativeJS: [perf] pager: page content shown (15 so far)
+11-22 00:46:17.753  3634  3794 I ReactNativeJS: [perf] pager: contents around page 42 drawn (lag 0) 231.4ms
+11-22 00:46:17.753  3634  3794 I ReactNativeJS: [perf] stall 91.4ms
+11-22 00:46:17.785  3634  3794 I ReactNativeJS: [perf] swipe: next frame 263.8ms
+11-22 00:46:17.797  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:17.832  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:18.216  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:18.216  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:26.947  8727  8727 I ReactNativeJS: [perf] mark categories: 10 fast swipes forward
+11-22 00:46:27.028  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:27.094  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:27.094  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:27.094  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 42; this page drawn: yes; next page 44 drawn: NO; behind by 1
+11-22 00:46:27.103  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.2ms
+11-22 00:46:27.184  3634  3794 I ReactNativeJS: [perf] pager: page content shown (16 so far)
+11-22 00:46:27.184  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 90.1ms
+11-22 00:46:27.186  3634  3794 I ReactNativeJS: [perf] swipe: next frame 91.6ms
+11-22 00:46:27.186  3634  3794 I ReactNativeJS: [perf] stall 67.2ms
+11-22 00:46:27.186  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:27.394  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:27.394  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:27.413  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:27.502  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:27.869  3634  3794 I ReactNativeJS: [perf] touch lag 39.9ms
+11-22 00:46:27.869  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:27.956  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:27.957  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:27.957  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 43; this page drawn: yes; next page 45 drawn: NO; behind by 1
+11-22 00:46:28.010  3634  3794 I ReactNativeJS: [perf] swipe: pages built 53.2ms
+11-22 00:46:28.046  3634  3794 I ReactNativeJS: [perf] pager: page content shown (17 so far)
+11-22 00:46:28.046  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 88.9ms
+11-22 00:46:28.046  3634  3794 I ReactNativeJS: [perf] swipe: next frame 89.2ms
+11-22 00:46:28.047  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:28.197  3634  3794 I ReactNativeJS: [perf] stall 67.4ms
+11-22 00:46:28.316  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:28.411  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:28.411  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:28.445  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:28.445  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 44; this page drawn: NO; next page 47 drawn: NO; behind by 2
+11-22 00:46:28.462  3634  3794 I ReactNativeJS: [perf] pager: page content shown (18 so far)
+11-22 00:46:28.462  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 16.7ms
+11-22 00:46:28.462  3634  3794 I ReactNativeJS: [perf] swipe: pages built 16.9ms
+11-22 00:46:28.490  3634  3794 I ReactNativeJS: [perf] pager: page content shown (19 so far)
+11-22 00:46:28.494  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 49.3ms
+11-22 00:46:28.495  3634  3794 I ReactNativeJS: [perf] swipe: next frame 49.8ms
+11-22 00:46:28.499  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:28.499  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:28.734  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:28.838  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:29.064  3634  3794 I ReactNativeJS: [perf] stall 75.8ms
+11-22 00:46:29.196  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:29.295  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:29.295  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 46; this page drawn: NO; next page 49 drawn: NO; behind by 2
+11-22 00:46:29.327  3634  3794 I ReactNativeJS: [perf] pager: page content shown (20 so far)
+11-22 00:46:29.327  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 32.0ms
+11-22 00:46:29.328  3634  3794 I ReactNativeJS: [perf] swipe: pages built 32.3ms
+11-22 00:46:29.347  3634  3794 I ReactNativeJS: [perf] swipe: next frame 51.8ms
+11-22 00:46:29.368  3634  3794 I ReactNativeJS: [perf] pager: page content shown (21 so far)
+11-22 00:46:29.368  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 72.8ms
+11-22 00:46:29.369  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:29.369  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:29.433  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:29.434  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:29.612  3634  3794 I ReactNativeJS: [perf] stall 54.8ms
+11-22 00:46:29.615  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:29.722  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:29.932  3634  3794 I ReactNativeJS: [perf] stall 56.7ms
+11-22 00:46:30.024  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:30.114  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:30.114  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:30.114  3634  3794 I ReactNativeJS: [perf] pager: page 49 from 48; this page drawn: yes; next page 50 drawn: NO; behind by 1
+11-22 00:46:30.124  3634  3794 I ReactNativeJS: [perf] swipe: pages built 10.1ms
+11-22 00:46:30.145  3634  3794 I ReactNativeJS: [perf] swipe: next frame 31.0ms
+11-22 00:46:30.177  3634  3794 I ReactNativeJS: [perf] pager: page content shown (22 so far)
+11-22 00:46:30.177  3634  3794 I ReactNativeJS: [perf] pager: contents around page 49 drawn (lag 0) 63.7ms
+11-22 00:46:30.178  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:30.463  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:30.464  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:30.464  3634  3794 I ReactNativeJS: [perf] touch lag 37.8ms
+11-22 00:46:30.464  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:30.525  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:30.525  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 49; this page drawn: NO; next page 52 drawn: NO; behind by 2
+11-22 00:46:30.544  3634  3794 I ReactNativeJS: [perf] pager: page content shown (23 so far)
+11-22 00:46:30.544  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 18.8ms
+11-22 00:46:30.544  3634  3794 I ReactNativeJS: [perf] swipe: pages built 18.9ms
+11-22 00:46:30.582  3634  3794 I ReactNativeJS: [perf] swipe: next frame 56.6ms
+11-22 00:46:30.611  3634  3794 I ReactNativeJS: [perf] pager: page content shown (24 so far)
+11-22 00:46:30.611  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 86.1ms
+11-22 00:46:30.612  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:30.612  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:30.909  3634  3794 I ReactNativeJS: [perf] touch lag 27.9ms
+11-22 00:46:30.914  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:30.997  3634  3794 I ReactNativeJS: [perf] stall 62.8ms
+11-22 00:46:31.003  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:31.488  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:31.488  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:31.488  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:31.489  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 51; this page drawn: yes; next page 53 drawn: NO; behind by 1
+11-22 00:46:31.498  3634  3794 I ReactNativeJS: [perf] swipe: pages built 9.8ms
+11-22 00:46:31.546  3634  3794 I ReactNativeJS: [perf] pager: page content shown (25 so far)
+11-22 00:46:31.546  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 58.3ms
+11-22 00:46:31.547  3634  3794 I ReactNativeJS: [perf] swipe: next frame 59.1ms
+11-22 00:46:31.547  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:32.499  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:32.499  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:34.518  3634  3794 I ReactNativeJS: [perf] tab press statistics (asked categories, shown categories)
+11-22 00:46:34.519  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:46:34.533  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:46:34.544  3634  3794 I ReactNativeJS: [perf] tab shown statistics 25.1ms
+11-22 00:46:35.549  3634  3794 I ReactNativeJS: [perf] renders tab bar 3
+11-22 00:46:35.549  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:35.549  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:37.585  8827  8827 I ReactNativeJS: [perf] mark statistics: 10 fast swipes back (0.25s apart)
+11-22 00:46:37.635  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:37.749  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:38.164  3634  3794 I ReactNativeJS: [perf] touch lag 44.8ms
+11-22 00:46:38.164  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:38.285  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:38.285  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:38.285  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 52; this page drawn: yes; next page 50 drawn: NO; behind by -1
+11-22 00:46:38.310  3634  3794 I ReactNativeJS: [perf] swipe: pages built 25.3ms
+11-22 00:46:38.330  3634  3794 I ReactNativeJS: [perf] pager: page content shown (8 so far)
+11-22 00:46:38.330  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 45.2ms
+11-22 00:46:38.331  3634  3794 I ReactNativeJS: [perf] swipe: next frame 45.5ms
+11-22 00:46:38.331  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:38.482  3634  3794 I ReactNativeJS: [perf] stall 58.5ms
+11-22 00:46:38.624  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:38.624  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:38.633  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:38.761  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:38.761  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:38.761  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 51; this page drawn: yes; next page 49 drawn: NO; behind by -1
+11-22 00:46:38.824  3634  3794 I ReactNativeJS: [perf] swipe: pages built 62.8ms
+11-22 00:46:38.825  3634  3794 I ReactNativeJS: [perf] stall 62.3ms
+11-22 00:46:38.893  3634  3794 I ReactNativeJS: [perf] pager: page content shown (9 so far)
+11-22 00:46:38.893  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 131.9ms
+11-22 00:46:38.894  3634  3794 I ReactNativeJS: [perf] swipe: next frame 132.4ms
+11-22 00:46:38.894  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:38.976  3634  3794 I ReactNativeJS: [perf] stall 57.0ms
+11-22 00:46:39.120  3634  3794 I ReactNativeJS: [perf] touch lag 38.6ms
+11-22 00:46:39.123  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:39.248  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:39.248  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 50; this page drawn: NO; next page 47 drawn: NO; behind by -2
+11-22 00:46:39.293  3634  3794 I ReactNativeJS: [perf] pager: page content shown (10 so far)
+11-22 00:46:39.294  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 45.9ms
+11-22 00:46:39.295  3634  3794 I ReactNativeJS: [perf] swipe: pages built 46.5ms
+11-22 00:46:39.304  3634  3794 I ReactNativeJS: [perf] swipe: next frame 56.1ms
+11-22 00:46:39.348  3634  3794 I ReactNativeJS: [perf] pager: page content shown (11 so far)
+11-22 00:46:39.348  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 100.2ms
+11-22 00:46:39.349  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:39.349  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:39.397  3634  3794 I ReactNativeJS: [perf] stall 68.1ms
+11-22 00:46:39.629  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:39.671  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:39.672  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:39.802  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:39.802  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:39.802  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 48; this page drawn: yes; next page 46 drawn: NO; behind by -1
+11-22 00:46:39.847  3634  3794 I ReactNativeJS: [perf] swipe: pages built 45.4ms
+11-22 00:46:39.891  3634  3794 I ReactNativeJS: [perf] pager: page content shown (12 so far)
+11-22 00:46:39.891  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 89.3ms
+11-22 00:46:39.892  3634  3794 I ReactNativeJS: [perf] swipe: next frame 89.7ms
+11-22 00:46:39.892  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:40.121  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:40.251  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:40.425  3634  3794 I ReactNativeJS: [perf] stall 66.5ms
+11-22 00:46:40.662  3634  3794 I ReactNativeJS: [perf] touch lag 32.7ms
+11-22 00:46:40.662  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:40.699  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:40.700  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:40.749  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:40.749  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:40.750  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 47; this page drawn: yes; next page 45 drawn: NO; behind by -1
+11-22 00:46:40.783  3634  3794 I ReactNativeJS: [perf] swipe: pages built 34.0ms
+11-22 00:46:40.817  3634  3794 I ReactNativeJS: [perf] pager: page content shown (13 so far)
+11-22 00:46:40.821  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 71.7ms
+11-22 00:46:40.822  3634  3794 I ReactNativeJS: [perf] swipe: next frame 72.2ms
+11-22 00:46:40.822  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:40.912  3634  3794 I ReactNativeJS: [perf] stall 64.7ms
+11-22 00:46:41.079  3634  3794 I ReactNativeJS: [perf] touch lag 22.9ms
+11-22 00:46:41.083  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:41.133  3634  3794 I ReactNativeJS: [perf] stall 63.7ms
+11-22 00:46:41.192  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:41.192  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 46; this page drawn: NO; next page 43 drawn: NO; behind by -2
+11-22 00:46:41.222  3634  3794 I ReactNativeJS: [perf] pager: page content shown (14 so far)
+11-22 00:46:41.222  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 30.7ms
+11-22 00:46:41.222  3634  3794 I ReactNativeJS: [perf] swipe: pages built 30.8ms
+11-22 00:46:41.242  3634  3794 I ReactNativeJS: [perf] swipe: next frame 50.4ms
+11-22 00:46:41.277  3634  3794 I ReactNativeJS: [perf] pager: page content shown (15 so far)
+11-22 00:46:41.278  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 85.9ms
+11-22 00:46:41.278  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:41.278  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:41.606  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:41.715  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:41.716  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:41.734  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:41.735  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:41.735  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 44; this page drawn: yes; next page 42 drawn: NO; behind by -1
+11-22 00:46:41.802  3634  3794 I ReactNativeJS: [perf] swipe: pages built 66.9ms
+11-22 00:46:41.857  3634  3794 I ReactNativeJS: [perf] pager: page content shown (16 so far)
+11-22 00:46:41.857  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 122.6ms
+11-22 00:46:41.858  3634  3794 I ReactNativeJS: [perf] swipe: next frame 123.1ms
+11-22 00:46:41.858  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:42.238  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:42.362  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:42.362  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:42.362  3634  3794 I ReactNativeJS: [perf] pager: page 42 from 43; this page drawn: yes; next page 41 drawn: NO; behind by -1
+11-22 00:46:42.406  3634  3794 I ReactNativeJS: [perf] swipe: pages built 44.7ms
+11-22 00:46:42.523  3634  3794 I ReactNativeJS: [perf] pager: page content shown (17 so far)
+11-22 00:46:42.523  3634  3794 I ReactNativeJS: [perf] pager: contents around page 42 drawn (lag 0) 161.4ms
+11-22 00:46:42.524  3634  3794 I ReactNativeJS: [perf] stall 88.9ms
+11-22 00:46:42.524  3634  3794 I ReactNativeJS: [perf] swipe: next frame 161.9ms
+11-22 00:46:42.524  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:42.775  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:42.775  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:51.913  8946  8946 I ReactNativeJS: [perf] mark statistics: 10 fast swipes forward
+11-22 00:46:51.988  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:52.040  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:52.040  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:52.040  3634  3794 I ReactNativeJS: [perf] pager: page 43 from 42; this page drawn: yes; next page 44 drawn: NO; behind by 1
+11-22 00:46:52.095  3634  3794 I ReactNativeJS: [perf] swipe: pages built 54.8ms
+11-22 00:46:52.187  3634  3794 I ReactNativeJS: [perf] pager: page content shown (18 so far)
+11-22 00:46:52.188  3634  3794 I ReactNativeJS: [perf] pager: contents around page 43 drawn (lag 0) 147.3ms
+11-22 00:46:52.188  3634  3794 I ReactNativeJS: [perf] stall 67.1ms
+11-22 00:46:52.188  3634  3794 I ReactNativeJS: [perf] swipe: next frame 147.7ms
+11-22 00:46:52.188  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:52.367  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:52.490  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:52.490  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:52.490  3634  3794 I ReactNativeJS: [perf] pager: page 44 from 43; this page drawn: yes; next page 45 drawn: NO; behind by 1
+11-22 00:46:52.518  3634  3794 I ReactNativeJS: [perf] swipe: pages built 27.7ms
+11-22 00:46:52.557  3634  3794 I ReactNativeJS: [perf] pager: page content shown (19 so far)
+11-22 00:46:52.558  3634  3794 I ReactNativeJS: [perf] pager: contents around page 44 drawn (lag 0) 67.5ms
+11-22 00:46:52.558  3634  3794 I ReactNativeJS: [perf] swipe: next frame 68.0ms
+11-22 00:46:52.558  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:52.832  3634  3794 I ReactNativeJS: [perf] touch lag 28.3ms
+11-22 00:46:52.832  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:52.920  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:52.936  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:52.936  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:53.222  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:53.333  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:53.333  3634  3794 I ReactNativeJS: [perf] pager: page 46 from 44; this page drawn: NO; next page 47 drawn: NO; behind by 2
+11-22 00:46:53.341  3634  3794 I ReactNativeJS: [perf] pager: page content shown (20 so far)
+11-22 00:46:53.341  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 8.4ms
+11-22 00:46:53.342  3634  3794 I ReactNativeJS: [perf] swipe: pages built 8.6ms
+11-22 00:46:53.371  3634  3794 I ReactNativeJS: [perf] swipe: next frame 38.3ms
+11-22 00:46:53.389  3634  3794 I ReactNativeJS: [perf] pager: page content shown (21 so far)
+11-22 00:46:53.390  3634  3794 I ReactNativeJS: [perf] pager: contents around page 46 drawn (lag 0) 56.5ms
+11-22 00:46:53.390  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:53.390  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:53.662  3634  3794 I ReactNativeJS: [perf] touch lag 22.6ms
+11-22 00:46:53.662  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:53.810  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:53.811  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:53.812  3634  3794 I ReactNativeJS: [perf] pager: page 47 from 46; this page drawn: yes; next page 48 drawn: NO; behind by 1
+11-22 00:46:53.828  3634  3794 I ReactNativeJS: [perf] swipe: pages built 16.8ms
+11-22 00:46:53.839  3634  3794 I ReactNativeJS: [perf] pager: page content shown (22 so far)
+11-22 00:46:53.839  3634  3794 I ReactNativeJS: [perf] pager: contents around page 47 drawn (lag 0) 27.5ms
+11-22 00:46:53.840  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:53.873  3634  3794 I ReactNativeJS: [perf] swipe: next frame 61.1ms
+11-22 00:46:53.955  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:46:53.955  3634  3794 I ReactNativeJS: [perf] renders period bar 4
+11-22 00:46:54.087  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:54.190  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:54.190  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:54.190  3634  3794 I ReactNativeJS: [perf] pager: page 48 from 47; this page drawn: yes; next page 49 drawn: NO; behind by 1
+11-22 00:46:54.218  3634  3794 I ReactNativeJS: [perf] swipe: pages built 27.3ms
+11-22 00:46:54.252  3634  3794 I ReactNativeJS: [perf] pager: page content shown (23 so far)
+11-22 00:46:54.252  3634  3794 I ReactNativeJS: [perf] pager: contents around page 48 drawn (lag 0) 61.9ms
+11-22 00:46:54.253  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:54.262  3634  3794 I ReactNativeJS: [perf] swipe: next frame 71.9ms
+11-22 00:46:54.505  3634  3794 I ReactNativeJS: [perf] stall 54.2ms
+11-22 00:46:54.522  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:54.611  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:54.929  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:54.982  3634  3794 I ReactNativeJS: [perf] stall 56.7ms
+11-22 00:46:55.002  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:46:55.002  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:46:55.035  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:55.035  3634  3794 I ReactNativeJS: [perf] pager: page 50 from 48; this page drawn: NO; next page 51 drawn: NO; behind by 2
+11-22 00:46:55.056  3634  3794 I ReactNativeJS: [perf] pager: page content shown (24 so far)
+11-22 00:46:55.056  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 20.8ms
+11-22 00:46:55.056  3634  3794 I ReactNativeJS: [perf] swipe: pages built 20.9ms
+11-22 00:46:55.069  3634  3794 I ReactNativeJS: [perf] pager: page content shown (25 so far)
+11-22 00:46:55.069  3634  3794 I ReactNativeJS: [perf] pager: contents around page 50 drawn (lag 0) 33.9ms
+11-22 00:46:55.069  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:55.069  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:55.092  3634  3794 I ReactNativeJS: [perf] swipe: next frame 56.7ms
+11-22 00:46:55.393  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:55.497  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:55.498  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:55.498  3634  3794 I ReactNativeJS: [perf] pager: page 51 from 50; this page drawn: yes; next page 52 drawn: NO; behind by 1
+11-22 00:46:55.524  3634  3794 I ReactNativeJS: [perf] swipe: pages built 25.9ms
+11-22 00:46:55.546  3634  3794 I ReactNativeJS: [perf] swipe: next frame 48.3ms
+11-22 00:46:55.563  3634  3794 I ReactNativeJS: [perf] pager: page content shown (26 so far)
+11-22 00:46:55.563  3634  3794 I ReactNativeJS: [perf] pager: contents around page 51 drawn (lag 0) 65.6ms
+11-22 00:46:55.564  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:55.871  3634  3794 I ReactNativeJS: [perf] touch lag 23.6ms
+11-22 00:46:55.871  3634  3794 I ReactNativeJS: [perf] pager: dragging
+11-22 00:46:55.973  3634  3794 I ReactNativeJS: [perf] pager: idle
+11-22 00:46:55.973  3634  3794 I ReactNativeJS: [perf] page ready after it was chosen 0.0ms
+11-22 00:46:55.973  3634  3794 I ReactNativeJS: [perf] pager: page 52 from 51; this page drawn: yes; next page 53 drawn: NO; behind by 1
+11-22 00:46:56.004  3634  3794 I ReactNativeJS: [perf] swipe: pages built 31.3ms
+11-22 00:46:56.013  3634  3794 I ReactNativeJS: [perf] pager: page content shown (27 so far)
+11-22 00:46:56.014  3634  3794 I ReactNativeJS: [perf] pager: contents around page 52 drawn (lag 0) 41.4ms
+11-22 00:46:56.015  3634  3794 I ReactNativeJS: [perf] pager: page content removed
+11-22 00:46:56.025  3634  3794 I ReactNativeJS: [perf] renders pager 6
+11-22 00:46:56.025  3634  3794 I ReactNativeJS: [perf] renders period bar 6
+11-22 00:46:56.026  3634  3794 I ReactNativeJS: [perf] swipe: next frame 52.7ms
+11-22 00:46:56.216  3634  3794 I ReactNativeJS: [perf] stall 52.8ms
+11-22 00:46:59.549  3634  3794 I ReactNativeJS: [perf] tab press operations (asked statistics, shown statistics)
+11-22 00:46:59.549  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:46:59.580  3634  3794 I ReactNativeJS: [perf] tab shown operations 30.9ms
+11-22 00:46:59.595  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:46:59.596  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:46:59.604  3634  3794 I ReactNativeJS: [perf] operations page built 8.4ms
+11-22 00:47:00.082  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:47:00.082  3634  3794 I ReactNativeJS: [perf] renders pager 2
+11-22 00:47:00.082  3634  3794 I ReactNativeJS: [perf] renders period bar 2
+11-22 00:47:00.082  3634  3794 I ReactNativeJS: [perf] renders operations page 1
+11-22 00:47:03.540  9053  9053 I ReactNativeJS: [perf] mark open the add menu
+11-22 00:47:03.569  3634  3794 I ReactNativeJS: [perf] layer sheet shown 2.6ms
+11-22 00:47:03.792  3634  3794 I ReactNativeJS: [perf] stall 80.5ms
+11-22 00:47:06.588  9072  9072 I ReactNativeJS: [perf] mark add menu: tap the tab Incomes, then Expenses
+11-22 00:47:13.809  9138  9138 I ReactNativeJS: [perf] mark choose a category (the editor opens)
+11-22 00:47:15.852  3634  3794 I ReactNativeJS: [perf] layer sheet shown 19.5ms
+11-22 00:47:16.071  3634  3794 I ReactNativeJS: [perf] stall 62.4ms
+11-22 00:47:26.821  9244  9244 I ReactNativeJS: [perf] mark type 1 2 5 on the keys
+11-22 00:47:29.709  9280  9280 I ReactNativeJS: [perf] mark save the operation
+11-22 00:47:29.749  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:47:29.749  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:47:29.749  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:47:29.749  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:47:29.750  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:47:29.761  3634  3794 I ReactNativeJS: [perf] operations page built 11.7ms
+11-22 00:47:29.761  3634  3794 I ReactNativeJS: [perf] operations page built 11.3ms
+11-22 00:47:29.761  3634  3794 I ReactNativeJS: [perf] operations page built 11.1ms
+11-22 00:47:29.761  3634  3794 I ReactNativeJS: [perf] operations page built 10.8ms
+11-22 00:47:29.761  3634  3794 I ReactNativeJS: [perf] operations page built 10.5ms
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders root hero 4
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders operations screen 1
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:47:30.582  3634  3794 I ReactNativeJS: [perf] renders fab 1
+11-22 00:47:36.899  3634  3794 I ReactNativeJS: [perf] tab press more (asked operations, shown operations)
+11-22 00:47:36.899  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:47:36.927  3634  3794 I ReactNativeJS: [perf] tab shown more 27.6ms
+11-22 00:47:37.699  3634  3794 I ReactNativeJS: [perf] renders tab bar 4
+11-22 00:47:37.699  3634  3794 I ReactNativeJS: [perf] renders pager 1
+11-22 00:47:37.699  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:47:40.396  3634  3794 I ReactNativeJS: [perf] tab shown more 13.5ms
+11-22 00:47:40.784  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:47:40.940  3634  3794 I ReactNativeJS: [perf] stall 92.2ms
+11-22 00:47:43.894  3634  3794 I ReactNativeJS: [perf] tab shown more 28.4ms
+11-22 00:47:44.849  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:47:44.849  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:47:48.916  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:47:49.854  9399  9399 I ReactNativeJS: [perf] mark report preview, first time (3000 operations)
+11-22 00:47:51.943  3634  3794 I ReactNativeJS: [perf] report detail: 1 pages laid out 60.2ms
+11-22 00:47:51.943  3634  3794 I ReactNativeJS: [perf] stall 52.7ms
+11-22 00:47:51.967  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:47:51.993  3634  3794 I ReactNativeJS: [perf] report preview: first 1 of 1 pages 49.7ms
+11-22 00:47:52.000  3634  3794 I ReactNativeJS: [perf] layer full shown 7.5ms
+11-22 00:47:52.328  3634  3794 I ReactNativeJS: [perf] stall 97.1ms
+11-22 00:47:52.443  3634  3794 I ReactNativeJS: [perf] stall 89.9ms
+11-22 00:47:52.985  3634  3794 I ReactNativeJS: [perf] renders period bar 1
+11-22 00:47:53.868  3634  3794 I ReactNativeJS: [perf] stall 59.1ms
+11-22 00:47:58.021  9480  9480 I ReactNativeJS: [perf] mark scroll the preview (8 flicks)
+11-22 00:48:08.270  3634  3794 I ReactNativeJS: [perf] stall 52.3ms
+11-22 00:48:09.194  9540  9540 I ReactNativeJS: [perf] mark report preview, second time
+11-22 00:48:11.220  3634  3794 I ReactNativeJS: [perf] layer full shown 3.6ms
+11-22 00:48:13.016  3634  3794 I ReactNativeJS: [perf] stall 63.4ms
+11-22 00:48:15.677  3634  3794 I ReactNativeJS: [perf] stall 66.2ms
+11-22 00:48:16.641  3634  3794 I ReactNativeJS: [perf] tab shown more 5425.0ms
+11-22 00:48:17.215  3634  3794 I ReactNativeJS: [perf] stall 54.2ms
+11-22 00:48:17.432  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:48:17.859  3634  3794 I ReactNativeJS: [perf] tab shown more 6642.9ms
+11-22 00:48:18.181  3634  3794 I ReactNativeJS: [perf] stall 75.1ms
+11-22 00:48:18.344  3634  3794 I ReactNativeJS: [perf] stall 55.7ms
+11-22 00:48:18.449  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:48:21.049  3634  3794 I ReactNativeJS: [perf] tab press more (asked more, shown more)
+11-22 00:48:21.049  3634  3794 I ReactNativeJS: [perf] tab press dropped: already asked
+11-22 00:48:21.049  3634  3794 I ReactNativeJS: [perf] bar touched (1 touches)
+11-22 00:48:24.563  3634  3794 I ReactNativeJS: [perf] tab shown more 14.0ms
+11-22 00:48:25.566  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:48:28.032  3634  3794 I ReactNativeJS: [perf] touch lag 16.4ms
+11-22 00:48:28.047  3634  3794 I ReactNativeJS: [perf] tab shown more 14.2ms
+11-22 00:48:28.359  3634  3794 I ReactNativeJS: [perf] stall 72.2ms
+11-22 00:48:28.632  3634  3794 I ReactNativeJS: [perf] renders tab bar 1
+11-22 00:48:31.507  3634  3794 I ReactNativeJS: [perf] layer sheet shown 7.6ms
+11-22 00:48:35.976  3634  3794 I ReactNativeJS: [perf] stall 84.7ms
+11-22 00:48:38.520  3634  3794 I ReactNativeJS: [perf] stall 59.8ms
+11-22 00:48:44.627  3634  3794 I ReactNativeJS: [perf] stall 51.3ms
+11-22 00:48:50.664  3634  3794 I ReactNativeJS: [perf] stall 50.5ms
+11-22 00:48:59.886  9917  9917 I ReactNativeJS: [perf] mark save the PIN
+11-22 00:49:00.621  3634  3794 I ReactNativeJS: [perf] stall 51.6ms
+11-22 00:49:02.777  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:49:02.777  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:49:02.777  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:49:02.777  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: operations of the period 0.0ms
+11-22 00:49:02.778  3634  3794 I ReactNativeJS: [perf] page: rows and days 0.0ms
+11-22 00:49:02.791  3634  3794 I ReactNativeJS: [perf] operations page built 14.0ms
+11-22 00:49:02.791  3634  3794 I ReactNativeJS: [perf] operations page built 13.5ms
+11-22 00:49:02.791  3634  3794 I ReactNativeJS: [perf] operations page built 13.2ms
+11-22 00:49:02.791  3634  3794 I ReactNativeJS: [perf] operations page built 12.9ms
+11-22 00:49:02.791  3634  3794 I ReactNativeJS: [perf] operations page built 12.6ms
+11-22 00:49:03.265  3634  3794 I ReactNativeJS: [perf] renders root hero 4
+11-22 00:49:03.265  3634  3794 I ReactNativeJS: [perf] renders pager 4
+11-22 00:49:03.266  3634  3794 I ReactNativeJS: [perf] renders period bar 3
+11-22 00:49:03.266  3634  3794 I ReactNativeJS: [perf] renders operations screen 1
+11-22 00:49:03.266  3634  3794 I ReactNativeJS: [perf] renders operations page 5
+11-22 00:49:03.266  3634  3794 I ReactNativeJS: [perf] renders fab 1
+11-22 00:49:19.594 10050 10050 I ReactNativeJS: [perf] mark type a wrong PIN (1111)
+11-22 00:49:25.187 10091 10091 I ReactNativeJS: [perf] mark type the right PIN (1234)
