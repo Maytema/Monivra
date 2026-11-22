@@ -113,7 +113,7 @@ node "$HERE/perf-data.mjs" 3000 18 > /tmp/perf-data.json && adb push /tmp/perf-d
 adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 20
 # A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
-HOLD=1 tap "Start" 4
+HOLD=1 tap "Start" 4; unset HOLD  # (a variable given to a function stays set after it)
 tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
 tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
 dump; python3 - <<'PY' > /tmp/xy

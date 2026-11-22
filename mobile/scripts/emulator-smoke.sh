@@ -61,7 +61,7 @@ done
 shot 01-first-start 1
 has "Start" 01-first-start
 # A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
-HOLD=1 tap "Start"
+HOLD=1 tap "Start"; unset HOLD  # (a variable given to a function stays set after it)
 shot 02-accounts 4
 has "Cash" 02-accounts
 has "Overall balance" 02-accounts
@@ -232,7 +232,7 @@ for k in 3 7; do tap "$k"; done
 tap "Save operation"
 shot 15c-schedule-saved 3
 # A long press starts the choice of several payments (the header shows how many, select all and delete); Back leaves it.
-HOLD=1 tap "Food"
+HOLD=1 tap "Food"; unset HOLD  # (a variable given to a function stays set after it)
 shot 15c2-schedule-selected 1
 has "Selected: 1" 15c2-schedule-selected
 back
