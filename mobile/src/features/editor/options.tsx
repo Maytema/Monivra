@@ -95,13 +95,13 @@ function Footer({ off, ok, offLabel = "Turn off" }: { off?: () => void; ok: () =
   return (
     <View>
       {off ? (
-        <Pressable onPress={off} accessibilityRole="button" style={{ marginTop: 16, alignSelf: "flex-end", minWidth: 100, alignItems: "center", paddingHorizontal: 22, paddingVertical: 10, borderRadius: 999, borderWidth: 1, borderColor: p.line }}>
-          <Text style={{ color: p.inkSoft, fontSize: 15 }}>{t.t(offLabel)}</Text>
+        <Pressable onPress={off} accessibilityRole="button" style={{ marginTop: 16, alignSelf: "flex-end", minWidth: 96, alignItems: "center", paddingHorizontal: 24, paddingVertical: 11, borderRadius: 999, borderWidth: 1, borderColor: p.accent }}>
+          <Text style={{ color: p.accent, fontSize: 15, fontWeight: "600" }}>{t.t(offLabel)}</Text>
         </Pressable>
       ) : null}
       <DialogActions>
         <TextButton label="Cancel" onPress={close} />
-        <PrimaryPill label="OK" onPress={ok} />
+        <PrimaryPill label="OK" onPress={ok} minWidth={96} />
       </DialogActions>
     </View>
   );

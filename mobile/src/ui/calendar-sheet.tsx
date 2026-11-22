@@ -22,11 +22,11 @@ export function TextButton({ label, onPress, disabled = false }: { label: string
   );
 }
 
-export function PrimaryPill({ label, onPress, disabled = false }: { label: string; onPress: () => void; disabled?: boolean }) {
+export function PrimaryPill({ label, onPress, disabled = false, minWidth }: { label: string; onPress: () => void; disabled?: boolean; minWidth?: number }) {
   const p = usePalette();
   const t = useT();
   return (
-    <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={{ paddingHorizontal: 24, paddingVertical: 12, borderRadius: 999, backgroundColor: p.accent, opacity: disabled ? 0.4 : 1 }}>
+    <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={{ minWidth, alignItems: "center", paddingHorizontal: 24, paddingVertical: 12, borderRadius: 999, backgroundColor: p.accent, opacity: disabled ? 0.4 : 1 }}>
       <Text style={{ color: p.onAccent, fontSize: 15, fontWeight: "600" }}>{t.t(label)}</Text>
     </Pressable>
   );

@@ -9,26 +9,28 @@ import { notificationsAllowed, notificationState } from "../platform/notificatio
 import { readAnswer, writeAnswer } from "../platform/notification-ask.ts";
 import { useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Button } from "../ui/kit.tsx";
+import { Pivot } from "../ui/svg-pivot.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
 const AFTER_START_MS = 25_000;
 const AGAIN_AFTER_MS = 3 * 24 * 3600 * 1000;
 const AnimatedG = Animated.createAnimatedComponent(G);
 
-// A bell with a face; it shakes twice (±12° on its top), rests a while, and again.
+// A bell with a face, hung by its top: it is jerked twice quickly, the swing dying down (about 14°, 10°, 5°, 2°) within
+// two thirds of a second, rests a while, and again.
 function Bell() {
   const turn = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    const shake = (to: number) => Animated.timing(turn, { toValue: to, duration: 130, easing: Easing.inOut(Easing.sin), useNativeDriver: false });
-    const loop = Animated.loop(Animated.sequence([Animated.delay(900), shake(1), shake(-1), shake(0.7), shake(-0.7), shake(0), Animated.delay(1700)]));
+    const shake = (to: number, ms: number) => Animated.timing(turn, { toValue: to, duration: ms, easing: Easing.inOut(Easing.sin), useNativeDriver: false });
+    const loop = Animated.loop(Animated.sequence([Animated.delay(1000), shake(1, 90), shake(-0.72, 120), shake(0.36, 110), shake(-0.15, 100), shake(0, 90), Animated.delay(2200)]));
     loop.start();
     return () => loop.stop();
   }, [turn]);
-  const angle = turn.interpolate({ inputRange: [-1, 1], outputRange: [-12, 12] });
+  const angle = turn.interpolate({ inputRange: [-1, 1], outputRange: [-14, 14] });
   const tongue = turn.interpolate({ inputRange: [-1, 1], outputRange: [6, -6] });
   return (
     <Svg width={140} height={140} viewBox="0 0 140 140">
-      <AnimatedG rotation={angle} originX={70} originY={14}>
+      <Pivot x={70} y={14} rotation={angle}>
         <Circle cx={70} cy={16} r={6} fill="#4a6cf7" />
         <Path d="M28 104C28 98 38 94 40 80C42 52 50 30 70 28C90 30 98 52 100 80C102 94 112 98 112 104Z" fill="#5b7cfa" />
         <Path d="M46 78C47 58 52 42 62 36" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={5} strokeLinecap="round" fill="none" />
@@ -39,7 +41,7 @@ function Bell() {
         <AnimatedG translateX={tongue}>
           <Path d="M60 111H80A10 10 0 0 1 60 111Z" fill="#ff2d92" />
         </AnimatedG>
-      </AnimatedG>
+      </Pivot>
     </Svg>
   );
 }

@@ -60,6 +60,9 @@ function TimeDialog({ value, onDone }: { value: string; onDone: (time: string) =
   const [typing, setTyping] = useState(false);
   const [hourText, setHourText] = useState("");
   const [minuteText, setMinuteText] = useState("");
+  // Where the dial is on the screen, taken when the finger lands: "locationX" is relative to whatever is under the
+  // finger, so it went wrong as soon as the finger left the dial; page coordinates minus this corner do not.
+  const corner = useRef({ x: 0, y: 0 });
   const live = useRef({ hour, minute, part });
   live.current = { hour, minute, part };
   const shownHour = twelve ? hour % 12 || 12 : hour;
@@ -157,8 +160,12 @@ function TimeDialog({ value, onDone }: { value: string; onDone: (time: string) =
           accessibilityLabel={t.t(part === "hour" ? "Hour" : "Minute")}
           onStartShouldSetResponder={() => true}
           onMoveShouldSetResponder={() => true}
-          onResponderGrant={(e) => pick(e.nativeEvent.locationX, e.nativeEvent.locationY)}
-          onResponderMove={(e) => pick(e.nativeEvent.locationX, e.nativeEvent.locationY)}
+          onResponderGrant={(e) => {
+            const { pageX, pageY, locationX, locationY } = e.nativeEvent;
+            corner.current = { x: pageX - locationX, y: pageY - locationY };
+            pick(locationX, locationY);
+          }}
+          onResponderMove={(e) => pick(e.nativeEvent.pageX - corner.current.x, e.nativeEvent.pageY - corner.current.y)}
           onResponderRelease={() => {
             if (live.current.part === "hour") setPart("minute");
           }}

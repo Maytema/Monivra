@@ -10,6 +10,7 @@ import { NOTE_FRAMES, RING_FRAMES } from "./budget-motion.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
+import { Pivot } from "./svg-pivot.tsx";
 
 export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
 
@@ -18,7 +19,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 // How long each picture plays (ms), taken from the first application's recordings (frame by frame, 2026-11-22): the
 // time from the picture's first frame to its last movement. The time since the first showing decides where it is.
-const PLAY_MS: Record<EmptyKind, number> = { operations: 4800, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 2050, statistics: 2000 };
+const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 2050, statistics: 2100 };
 // These two are screens that are opened and left (not tabs): their picture plays at every opening. The pictures of
 // the tabs play once while the application runs, so they do not play again at every swipe between tabs.
 const REPLAYS: ReadonlySet<EmptyKind> = new Set<EmptyKind>(["budgets", "scheduled"]);
@@ -47,18 +48,6 @@ function keyed(time: Timeline, keys: ReadonlyArray<Key>) {
     }
   });
   return time.interpolate({ inputRange: input, outputRange: output, extrapolate: "clamp" });
-}
-// A group turned or scaled about the point (x, y). Written as three nested groups (move there, turn, move back), so
-// that no "origin" property is needed: on an animated group the origin was not honoured and the picture turned about
-// the corner of the drawing instead and slid away from its place.
-function Pivot({ x, y, rotation, scale, children }: { x: number; y: number; rotation?: Animated.AnimatedInterpolation<number> | number; scale?: Animated.AnimatedInterpolation<number> | number; children: ReactNode }) {
-  return (
-    <G translateX={x} translateY={y}>
-      <AnimatedG rotation={rotation} scale={scale}>
-        <G translateX={-x} translateY={-y}>{children}</G>
-      </AnimatedG>
-    </G>
-  );
 }
 const between = (time: Timeline, start: number, end: number, from: number, to: number, easing?: Ease) =>
   keyed(time, [[start, from], [end, to, easing]]);
@@ -96,35 +85,38 @@ interface Colors {
   positive: string;
 }
 
-// ---- Operations (4.7 s) ------------------------------------------------------------------------------
+// ---- Operations (4.9 s) ------------------------------------------------------------------------------
 // A sheet of paper (its top corner rolled over, its bottom curled up), its lines drawn one after another, and a lens
-// with a cross that comes in, moves up and left turning its cross into a plus, goes down over the sheet, and comes
-// back turning the plus into a cross again (positions and angles measured on the recording, in its pixels).
+// that pops in, settles over the sheet, turns about 32° the way a hand holds it, goes up and left, waits, goes down
+// along the sheet's edge, waits, and comes back to rest. Its cross grows from a dot, and turns with the lens, so it
+// looks like a plus while the lens is turned and like an x at rest. Every number is read from the recording (30 fps):
+// [time ms, shift x, shift y, turn of the lens in degrees].
+const LENS: ReadonlyArray<ReadonlyArray<number>> = [[0,21,29,-2],[403,21,28,-2.6],[470,21,28,-2.6],[537,20,28,-2.6],[603,18,24,-2.5],[670,13,17,-1.9],[737,10,12,-1.2],[803,8,10,-0.7],[870,7,8,-0.4],[937,6,7,-0.1],[1003,5,6,-0.1],[1070,5,6,0.7],[1137,4,5,1.0],[1203,4,5,1.0],[1270,4,5,1.0],[1337,4,4,0.9],[1403,3,4,0.1],[1470,1,2,-2.3],[1537,-5,-3,-7.8],[1603,-13,-10,-14.4],[1670,-18,-13,-19.0],[1737,-21,-16,-22.3],[1803,-24,-18,-24.7],[1870,-26,-19,-26.6],[1937,-27,-20,-28.0],[2003,-28,-21,-29.2],[2070,-29,-22,-30.0],[2137,-29,-22,-30.5],[2203,-30,-23,-31.0],[2270,-30,-23,-31.5],[2337,-31,-23,-31.9],[2403,-31,-23,-32.1],[2470,-31,-23,-32.3],[2537,-31,-23,-32.4],[2603,-31,-23,-32.4],[2670,-31,-22,-32.2],[2737,-31,-16,-31.8],[2803,-31,-4,-31.6],[2870,-31,12,-32.0],[2937,-31,22,-33.3],[3003,-31,29,-34.7],[3070,-31,34,-37.2],[3137,-31,38,-38.7],[3203,-31,41,-39.4],[3270,-31,44,-39.8],[3337,-31,46,-40.0],[3403,-31,47,-40.4],[3470,-31,48,-40.2],[3537,-31,49,-40.5],[3603,-31,50,-40.5],[3670,-31,50,-40.4],[3737,-31,50,-40.5],[3803,-31,50,-40.2],[3870,-30,49,-37.9],[3937,-27,43,-30.5],[4003,-20,32,-19.1],[4070,-14,22,-12.1],[4137,-10,15,-8.5],[4203,-7,11,-6.0],[4270,-5,8,-4.5],[4337,-4,5,-3.3],[4403,-3,4,-2.4],[4470,-2,3,-1.5],[4537,-1,1,-0.9],[4603,-1,1,-0.5],[4670,0,0,-0.2],[4737,0,0,-0.0],[4803,0,0,-0.0],[4870,0,0,-0.0],[4970,0,0,0]];
 function Operations({ time, c }: { time: Timeline; c: Colors }) {
   const dark = c.muted;
   const faint = mix(c.muted, c.bg, 0.45);
   const lensColor = mix(c.muted, c.bg, 0.62);
-  const x = keyed(time, [[100, 25], [570, 19], [1100, 4, out], [1430, 2], [2170, -30, soft], [2630, -31], [3570, -31], [3830, -31], [4500, -1, out], [4700, 0]]);
-  const y = keyed(time, [[100, 34], [570, 27], [1100, 5, out], [1430, 3], [2170, -22, soft], [2630, -23], [3570, 49, out], [3830, 49], [4500, -1, out], [4700, 0]]);
-  const cross = keyed(time, [[100, 45], [1430, 45], [2170, 6, soft], [3830, 6], [4500, 45, out]]);
+  const lens = (index: number) => keyed(time, LENS.map((row) => [row[0]!, row[index]!] as Key));
   const lines: ReadonlyArray<readonly [number, number]> = [[225, 433], [275, 405], [329, 351], [380, 351]];
   return (
     <Svg width={170} height={170} viewBox="200 155 340 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <AnimatedG opacity={between(time, 0, 120, 0, 1)}>
+      <AnimatedG opacity={between(time, 0, 50, 0, 1)}>
         <Path d="M248 215A48 48 0 0 1 296 167H466M466 226V440M248 215V286M248 295V301M248 330V430" stroke={dark} strokeWidth={6} />
         <Path d="M463 226V167H497A31 31 0 0 1 528 198V218A8 8 0 0 1 520 226Z" fill={dark} stroke="none" />
         <Path d="M222 430H393C393 462 408 476 432 476C450 476 462 462 462 440H470C470 468 452 488 430 488H222A14 14 0 0 1 208 474V444A14 14 0 0 1 222 430Z" fill={dark} stroke="none" />
       </AnimatedG>
       {lines.map(([ly, to], i) => {
         const length = to - 290;
-        return <AnimatedPath key={ly} d={`M290 ${ly}H${to}`} stroke={faint} strokeWidth={6} strokeDasharray={[length, length]} strokeDashoffset={between(time, 100 + i * 60, 430 + i * 60, length, 0, out)} />;
+        return <AnimatedPath key={ly} d={`M290 ${ly}H${to}`} stroke={faint} strokeWidth={6} strokeDasharray={[length, length]} strokeDashoffset={between(time, 40 + i * 70, 400 + i * 70, length, 0, out)} />;
       })}
-      <AnimatedG opacity={between(time, 100, 160, 0, 1)} translateX={x} translateY={y}>
-        <Pivot x={459} y={314} scale={between(time, 100, 800, 0.3, 1, out)}>
+      <AnimatedG opacity={between(time, 0, 60, 0, 1)} translateX={lens(1)} translateY={lens(2)}>
+        <Pivot x={459} y={314} rotation={lens(3)} scale={keyed(time, [[0, 0.6], [170, 1, out], [400, 1.115], [740, 1.04], [1070, 1.005], [1300, 1]])}>
           <Circle cx={459} cy={314} r={62} fill={c.bg} stroke={lensColor} strokeWidth={6} />
           <Path d="M493 372L522 407" stroke={lensColor} strokeWidth={13} />
-          <Pivot x={459} y={314} rotation={cross}>
-            <Path d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
+          <Pivot x={459} y={314} scale={keyed(time, [[150, 0.02], [300, 0.3], [500, 0.75], [700, 0.93], [1070, 1]])}>
+            <Pivot x={459} y={314} rotation={45}>
+              <Path d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
+            </Pivot>
           </Pivot>
         </Pivot>
       </AnimatedG>
@@ -213,16 +205,18 @@ function Categories({ time, c }: { time: Timeline; c: Colors }) {
   );
 }
 
-// ---- Statistics (1.9 s) ------------------------------------------------------------------------------
-// An arrow drawn from the lower left along the bars' tops, and five bars growing from the ground up one after another
-// from left to right (each from its own moment, under the arrow), then a star over the last. Measured on the recording.
+// ---- Statistics (2.1 s) ------------------------------------------------------------------------------
+// Six bars grow from the ground one after another from left to right (each a little past its height, then back), the
+// arrow is drawn from the lower left along their tops all the time they grow, ending over the last one, and a star
+// pops up over the last bar. Moments and heights are read from the recording frame by frame (30 fps).
 const GROUND = 485;
 const COLUMNS: ReadonlyArray<{ x: number; height: number; color: string; start: number }> = [
-  { x: 146, height: 82, color: "#f7d14f", start: 630 },
-  { x: 204, height: 120, color: "#96cb64", start: 720 },
-  { x: 262, height: 159, color: "#48cf97", start: 880 },
-  { x: 320, height: 206, color: "#3390e9", start: 1050 },
-  { x: 378, height: 261, color: "#6b37fe", start: 1380 },
+  { x: 88, height: 49, color: "#f19e42", start: 130 },
+  { x: 146, height: 81, color: "#f7d14f", start: 350 },
+  { x: 205, height: 119, color: "#96cb64", start: 550 },
+  { x: 263, height: 159, color: "#48cf97", start: 750 },
+  { x: 322, height: 205, color: "#3390e9", start: 1000 },
+  { x: 380, height: 260, color: "#6b37fe", start: 1200 },
 ];
 const BAR = (x: number, h: number) => `M${x} ${GROUND}V${GROUND - h + 10}A10 10 0 0 1 ${x + 10} ${GROUND - h}H${x + 30}A10 10 0 0 1 ${x + 40} ${GROUND - h + 10}V${GROUND}Z`;
 const ARROW_FROM: Point = [84, 403];
@@ -234,24 +228,20 @@ function Statistics({ time, c }: { time: Timeline; c: Colors }) {
   return (
     <Svg width={185} height={178} viewBox="70 150 370 355" fill="none" strokeLinecap="round" strokeLinejoin="round">
       {COLUMNS.map(({ x, height, color, start }) => (
-        <AnimatedPath
-          key={x}
-          d={time.interpolate({ inputRange: [start, start + 260], outputRange: [BAR(x, 10), BAR(x, height)], extrapolate: "clamp" })}
-          fill={color}
-          stroke="none"
-          opacity={keyed(time, [[start - 1, 0], [start, 1]])}
-        />
+        <Pivot key={x} x={x} y={GROUND} scaleY={keyed(time, [[start - 1, 0.001], [start, 0.001], [start + 300, 1.1, out], [start + 520, 1, soft]])}>
+          <Path d={BAR(x, height)} fill={color} stroke="none" />
+        </Pivot>
       ))}
       <AnimatedPath
         d={`M${ARROW_FROM[0]} ${ARROW_FROM[1]}C${ARROW_C1[0]} ${ARROW_C1[1]} ${ARROW_C2[0]} ${ARROW_C2[1]} ${ARROW_TO[0]} ${ARROW_TO[1]}`}
         stroke="#98da6a"
         strokeWidth={12}
         strokeDasharray={[ARROW_LENGTH, ARROW_LENGTH]}
-        strokeDashoffset={between(time, 50, 1250, ARROW_LENGTH, 0, soft)}
+        strokeDashoffset={between(time, 0, 1450, ARROW_LENGTH, 0)}
       />
-      <AnimatedPath d="M343 208 371 196 363 225" stroke="#98da6a" strokeWidth={12} opacity={keyed(time, [[1180, 0], [1330, 1]])} />
-      <AnimatedG opacity={keyed(time, [[1720, 0], [1800, 1]])}>
-        <Pivot x={399} y={177} scale={between(time, 1720, 1970, 0.2, 1, pop)}>
+      <AnimatedPath d="M343 208 371 196 363 225" stroke="#98da6a" strokeWidth={12} opacity={keyed(time, [[1250, 0], [1450, 1]])} />
+      <AnimatedG opacity={keyed(time, [[1860, 0], [1900, 1]])}>
+        <Pivot x={399} y={177} scale={between(time, 1860, 2060, 0.5, 1, pop)}>
           <Path d={star(399, 177, 22, 10)} fill="#fcd34d" stroke="#fcd34d" strokeWidth={4} />
         </Pivot>
       </AnimatedG>
@@ -283,15 +273,19 @@ const noteMarks = NOTE_FRAMES.map((row) => {
     .join("");
 });
 const ringTimes = RING_FRAMES.map((row) => row[0]!);
-// The ring goes round the note: its right half passes behind the note, its left half in front of it (seen on the
-// recording). Each half is a half circle, drawn as the ring grows and moves.
-const halfRing = (side: 0 | 1) =>
+// The ring goes round the note: only its upper right quarter (from 12 o'clock to 3 o'clock) passes behind the note, the
+// rest of the circle is in front of it (the overlap measured in every frame of the recording). The quarter is drawn
+// first, under the note; the other three quarters last, over it.
+const ringArc = (behind: boolean) =>
   RING_FRAMES.map((row) => {
-    const r = Math.max(1, row[3]! - RING_STROKE / 2);
-    return `M${row[1]} ${(row[2]! - r).toFixed(1)}A${r.toFixed(1)} ${r.toFixed(1)} 0 0 ${side} ${row[1]} ${(row[2]! + r).toFixed(1)}`;
+    const r = Math.max(1, row[3]! - RING_STROKE / 2).toFixed(1);
+    const [cx, cy] = [row[1]!, row[2]!];
+    const top = `${cx} ${(cy - Number(r)).toFixed(1)}`;
+    const right = `${(cx + Number(r)).toFixed(1)} ${cy}`;
+    return behind ? `M${top}A${r} ${r} 0 0 1 ${right}` : `M${right}A${r} ${r} 0 1 1 ${top}`;
   });
-const ringBack = halfRing(1);
-const ringFront = halfRing(0);
+const ringBack = ringArc(true);
+const ringFront = ringArc(false);
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   const line = (index: number) => keyed(time, NOTE_FRAMES.map((row) => [row[0]!, row[index]!] as Key));
   const first = ringTimes[0]!;
