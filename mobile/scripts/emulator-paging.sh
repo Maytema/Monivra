@@ -34,7 +34,7 @@ PY
     if grep -q "isn't responding" /tmp/ui.xml 2>/dev/null && [ -z "${RETRY:-}" ]; then RETRY=1 tap "Wait" 1; RETRY=1 tap "$@"; return $?; fi
     log "NOT FOUND: $1"; return 1
   fi
-  adb shell input tap $xy; sleep "${2:-1.5}"
+  { [ -n "${HOLD:-}" ] && adb shell input swipe $xy $xy 1000 || adb shell input tap $xy; }; sleep "${2:-1.5}"
 }
 # The centre of a tab of the bottom bar (by its label, low on the screen only).
 tab_xy() {
@@ -112,7 +112,8 @@ adb logcat -c
 node "$HERE/perf-data.mjs" 3000 18 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
 adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 20
-tap "Start with basic set" 4
+# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
+HOLD=1 tap "Start" 4
 tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
 tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
 dump; python3 - <<'PY' > /tmp/xy

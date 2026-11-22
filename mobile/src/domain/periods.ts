@@ -19,14 +19,13 @@ export interface PeriodSettings {
 
 // First and last day of a period. A month starts on the chosen day of the month.
 // The date a new operation starts with on a screen that shows a period (the editor shows it and it can be changed).
-// The period holds today: today. A past period (a day chosen in the calendar, a month swiped back to): its day
-// nearest to today — the chosen day itself, the last day of a past month or week — since an operation added there
-// is one that happened then and was not written down. A future period: today, because a future date makes the
-// operation a scheduled payment, and swiping ahead must not do that unnoticed. All time: today.
+// The period holds today: today. Otherwise its day nearest to today — the chosen day itself; the last day of a past
+// month or week (an operation that happened then and was not written down); the first day of a future one (a
+// payment planned for then: the editor says it goes to the scheduled payments). All time: today.
 export function dateForNewOperation(p: Period, s: PeriodSettings, today: LocalDate): LocalDate {
   if (p.mode === "all") return today;
-  const [, to] = periodBounds(p, s);
-  return to < today ? to : today;
+  const [from, to] = periodBounds(p, s);
+  return to < today ? to : from > today ? from : today;
 }
 
 export function periodBounds(p: Period, s: PeriodSettings): [LocalDate, LocalDate] {

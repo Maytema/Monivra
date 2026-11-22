@@ -13,7 +13,9 @@ import { missedPayments, reminderForTime, settleMissed } from "../domain/schedul
 import type { Recurrence, Reminder, ScheduledPayment } from "../domain/types.ts";
 import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar, PrimaryPill, TextButton } from "../ui/calendar-sheet.tsx";
-import { DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
+import { confirmDialog, DialogActions, DialogTitle, optionDialog } from "../ui/dialogs.tsx";
+import { useSelection, useSelectionHeader } from "../ui/selection.tsx";
+import { deleteOperations } from "../domain/operations.ts";
 import { Button, Card, Icon, Label, Screen } from "../ui/kit.tsx";
 import { Fab, useFabCollapse } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
@@ -138,6 +140,7 @@ export function ScheduledScreen() {
   const run = useCommand();
   const env = appStore().env;
   const fab = useFabCollapse();
+  const selection = useSelection();
   const [descending, setDescending] = useState(false);
   const missed = missedPayments(data.scheduled, env);
   const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
@@ -154,17 +157,20 @@ export function ScheduledScreen() {
       descending ? "desc" : "asc",
       (v) => setDescending(v === "desc"),
     );
-  return (
-    <View style={{ flex: 1, backgroundColor: p.bg }}>
-      <Stack.Screen
-        options={{
+  const remove = (ids: string[]) =>
+    confirmDialog("Delete the selected scheduled payments?", () => run((tx) => (deleteOperations(tx, ids, true), true)) && selection.clear(), true, "Delete");
+  const header = useSelectionHeader(selection, sorted.map((o) => o.id), remove, {
           title: t.t("Scheduled payments"),
           headerRight: () => (
             <Pressable accessibilityRole="button" accessibilityLabel={t.t("Sort by date")} onPress={sort} style={{ width: 48, height: 48, alignItems: "center", justifyContent: "center" }}>
               <Icon name={descending ? "sortReverse" : "sort"} size={24} color={p.ink} />
             </Pressable>
           ),
-        }}
+        });
+  return (
+    <View style={{ flex: 1, backgroundColor: p.bg }}>
+      <Stack.Screen
+        options={header}
       />
       <Screen padded={false} onScroll={fab.onScroll}>
         {missed.map(({ item, count }) => (
@@ -193,8 +199,15 @@ export function ScheduledScreen() {
                   .filter((o) => o.date === date)
                   .map((o) => (
                     <Spot key={o.id} id={o.id} reach={8}>
-                      <OperationRow op={o} spot={false} onPress={() => openEditor({ id: o.id, scheduled: true })} />
-                      <Pressable accessibilityRole="button" onPress={() => openEditor({ id: o.id, scheduled: true })}>
+                      <OperationRow
+                        op={o}
+                        spot={false}
+                        selecting={selection.on}
+                        selected={selection.chosen.has(o.id)}
+                        onPress={() => (selection.on ? selection.toggle(o.id) : openEditor({ id: o.id, scheduled: true }))}
+                        onLongPress={() => selection.hold(o.id)}
+                      />
+                      <Pressable accessibilityRole="button" onPress={() => (selection.on ? selection.toggle(o.id) : openEditor({ id: o.id, scheduled: true }))} onLongPress={() => selection.hold(o.id)}>
                         <Details item={o} />
                       </Pressable>
                     </Spot>
@@ -206,7 +219,7 @@ export function ScheduledScreen() {
           <EmptyState kind="scheduled" title="Scheduled payments will be here" hint="Create your first scheduled payment" action="Create" onAction={openCreate} />
         )}
       </Screen>
-      {dates.length ? <Fab label="Add" collapsed={fab.collapsed} onPress={openCreate} /> : null}
+      {dates.length && !selection.on ? <Fab label="Add" collapsed={fab.collapsed} onPress={openCreate} /> : null}
     </View>
   );
 }

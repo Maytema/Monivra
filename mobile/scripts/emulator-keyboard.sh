@@ -36,7 +36,7 @@ tap() {
   local xy; xy=$(xy_of "$1" "${3:-first}")
   if [ -z "$xy" ] && grep -q "isn't responding" /tmp/ui.xml 2>/dev/null; then clear_system_window; xy=$(xy_of "$1" "${3:-first}"); fi
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
-  adb shell input tap $xy; sleep "${2:-1.5}"
+  { [ -n "${HOLD:-}" ] && adb shell input swipe $xy $xy 1000 || adb shell input tap $xy; }; sleep "${2:-1.5}"
 }
 has() { dump; grep -q "text=\"$1" /tmp/ui.xml && echo yes || echo no; }
 kb() { adb shell dumpsys input_method | grep -o "mInputShown=[a-z]*" | head -1 | cut -d= -f2; }
@@ -78,12 +78,13 @@ adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 # Wait for the first screen (up to 60 s), answering system windows on the way.
 for i in $(seq 30); do
   clear_system_window
-  grep -q "Start with basic set" /tmp/ui.xml 2>/dev/null && break
+  grep -q 'text="Start"' /tmp/ui.xml 2>/dev/null && break
   sleep 2
 done
-log "first screen after $((i * 2)) s or more: $(grep -q "Start with basic set" /tmp/ui.xml && echo shown || echo NOT SHOWN)"
+log "first screen after $((i * 2)) s or more: $(grep -q 'text="Start"' /tmp/ui.xml && echo shown || echo NOT SHOWN)"
 shot k0-start 0
-tap "Start with basic set" 4
+# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
+HOLD=1 tap "Start" 4
 
 # K1 — the owner's case: New account, the name typed, Customize icon opened with the keyboard up.
 tab "Accounts"

@@ -38,6 +38,7 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
   const hold = useRef(onHold);
   hold.current = onHold;
   const shown = live ?? [h, s, v];
+  const origin = useRef({ x: 0, y: 0 });
   const lastMove = useRef<{ x: number; y: number; s: number; v: number } | null>(null);
   const moves = useRef(0);
   const update = (x: number, y: number) => {
@@ -70,14 +71,19 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderTerminationRequest: () => false,
-      onPanResponderGrant: (e: { nativeEvent: { locationX: number; locationY: number } }) => {
+      onPanResponderGrant: (e: { nativeEvent: { locationX: number; locationY: number; pageX: number; pageY: number } }) => {
         const radius = state.current.size / 2;
-        const { locationX: x, locationY: y } = e.nativeEvent;
+        // Where the wheel's corner is on the screen, taken once at the touch (the finger is on the wheel itself then:
+        // nothing inside takes touches). Every move is then the finger's place on the screen minus it — not
+        // locationX, which is counted from whatever is under the finger: past a corner of the square the finger is
+        // over the ring, and the point jumped there.
+        const { locationX: x, locationY: y, pageX, pageY } = e.nativeEvent;
+        origin.current = { x: pageX - x, y: pageY - y };
         state.current.mode = Math.hypot(x - radius, y - radius) / radius >= RING_INNER ? "hue" : "square";
         hold.current?.(true);
         update(x, y);
       },
-      onPanResponderMove: (e: { nativeEvent: { locationX: number; locationY: number } }) => update(e.nativeEvent.locationX, e.nativeEvent.locationY),
+      onPanResponderMove: (e: { nativeEvent: { pageX: number; pageY: number } }) => update(e.nativeEvent.pageX - origin.current.x, e.nativeEvent.pageY - origin.current.y),
       onPanResponderRelease: () => {
         if (PERF_BUILD) perfNote(`wheel: finger lifted after ${moves.current} moves`);
         lastMove.current = null;
@@ -99,13 +105,14 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
   const thumb = (position: { left: number; top: number }, fill: string) => (
     <View pointerEvents="none" style={{ position: "absolute", left: position.left - 13, top: position.top - 13, width: 26, height: 26, borderRadius: 13, borderWidth: 3, borderColor: "#ffffff", backgroundColor: fill, elevation: 4, shadowColor: "#000000", shadowOpacity: 0.4, shadowRadius: 3, shadowOffset: { width: 0, height: 1 } }} />
   );
-  // The drawings take no touches: the finger always lands on this view, so locationX/Y are always counted from its
-  // corner. (They are counted from the element under the finger; with the drawings touchable that was now the view,
-  // now a wedge of the ring, now the square turned 45°, and the point jumped as the finger crossed them.)
+  // The drawings take no touches (a plain view with pointerEvents "none" around them: the property on the Svg itself
+  // did not keep its shapes from taking them), so the finger always lands on this view.
   return (
     <View style={{ width: size, height: size, alignSelf: "center" }} {...pan.panHandlers}>
-      <Ring size={size} />
-      <Square size={size} hue={Math.round(ch)} />
+      <View pointerEvents="none" style={{ position: "absolute", left: 0, top: 0, width: size, height: size }}>
+        <Ring size={size} />
+        <Square size={size} hue={Math.round(ch)} />
+      </View>
       {thumb(ringAt, hsvToHex(ch, 1, 1))}
       {thumb(squareAt, hsvToHex(ch, cs, cv))}
     </View>

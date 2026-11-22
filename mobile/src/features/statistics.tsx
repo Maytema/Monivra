@@ -65,9 +65,11 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const money = useMoney();
   const asked = useViewCatType();
   const filters = useViewFilters();
-  // The tab shows the choice at once; the blocks below follow a moment later (and the neighbouring pages after the
-  // open one), so the switch is not held up by drawing the charts again.
-  const catType = useDeferredValue(asked);
+  // The open page draws the chosen type in the same moment as the tab (the owner saw the tab switched while the page
+  // still showed the other type: the deferred drawing of the charts waited behind everything else on the phone); only
+  // the neighbouring pages follow a moment later.
+  const later = useDeferredValue(asked);
+  const catType = current ? asked : later;
   const [selected, setSelected] = useState<string | null>(null);
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();

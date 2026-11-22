@@ -13,7 +13,8 @@ export interface Choice<T extends string> {
   label: string;
   text: string;
   icon: string;
-  color: string;
+  // The colour of the icon; without it, the accent colour of the theme.
+  color?: string;
 }
 
 function ChoiceSheet<T extends string>({ title, choices, value, onPick }: { title: string; choices: readonly Choice<T>[]; value: T; onPick: (v: T) => void }) {
@@ -37,8 +38,8 @@ function ChoiceSheet<T extends string>({ title, choices, value, onPick }: { titl
             }}
             style={({ pressed }) => ({ flexDirection: "row", alignItems: "center", gap: 16, paddingVertical: 14, borderTopWidth: i ? 1 : 0, borderTopColor: p.line, backgroundColor: pressed ? p.soft : "transparent" })}
           >
-            <View style={{ width: 52, height: 52, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: mix(c.color, p.sheet, 0.14) }}>
-              <Icon name={c.icon} size={26} color={c.color} />
+            <View style={{ width: 56, height: 56, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: mix(c.color ?? p.accent, p.sheet, 0.14) }}>
+              <Icon name={c.icon} size={34} color={c.color ?? p.accentInk} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={{ color: p.ink, fontSize: 17, fontWeight: "600" }}>{t.t(c.label)}</Text>

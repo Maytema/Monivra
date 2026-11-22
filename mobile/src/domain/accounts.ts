@@ -38,6 +38,9 @@ export interface AccountDraft extends Omit<Account, "id"> {
   balance: Minor;
   createOperation: boolean;
   counterpart: string | null;
+  // A new debt only: the part of it already paid back. The amount typed is then the whole debt (kept as the total
+  // debt), and the account starts at what is left.
+  repaid?: Minor;
 }
 
 export function accountDraft(data: LedgerData, account?: Account): AccountDraft {
@@ -66,7 +69,16 @@ export function checkedAccountDraft(data: LedgerData, source: AccountDraft): Acc
   if (draft.type === "Savings" && draft.goal < 0) throw new DomainError("Goal cannot be negative");
   if (draft.type === "Regular" && draft.limit < 0) throw new DomainError("Credit limit cannot be negative");
   if (draft.type === "Debt") {
-    draft.balance = (draft.debt === "I owe" ? -1 : 1) * Math.abs(draft.balance);
+    const sign = draft.debt === "I owe" ? -1 : 1;
+    if (!draft.id && draft.repaid) {
+      const total = Math.abs(draft.balance);
+      if (!Number.isSafeInteger(draft.repaid) || draft.repaid < 0) throw new DomainError("Invalid amount");
+      if (draft.repaid > total) throw new DomainError("The repaid part cannot be more than the debt");
+      draft.totalDebt = total;
+      draft.balance = total - draft.repaid;
+    }
+    delete draft.repaid;
+    draft.balance = sign * Math.abs(draft.balance);
     if (draft.totalDebt === undefined) draft.totalDebt = Math.abs(draft.balance);
     if (!Number.isSafeInteger(draft.totalDebt) || draft.totalDebt < 0) throw new DomainError("Invalid total debt");
   }
@@ -214,7 +226,7 @@ export function storeAccount(tx: LedgerTx, source: AccountDraft, mode: CurrencyC
   if (withDebtOperation) checkDebtOperation(tx.data, draft, change);
 
   const startsWithAdjustment = !current && draft.type !== "Debt" && draft.balance !== 0;
-  const { balance: _b, createOperation: _c, counterpart, ...fields } = draft;
+  const { balance: _b, createOperation: _c, counterpart, repaid: _r, ...fields } = draft;
   const stored: Account = {
     ...fields,
     id: draft.id || env.newId(),

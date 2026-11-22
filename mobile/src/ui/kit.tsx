@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type Na
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
-import { ICONS } from "./icon-paths.ts";
+import { ICON_FILLS, ICONS } from "./icon-paths.ts";
 import { useRevealFocusedField } from "./keyboard.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 import { font, radius, space } from "./theme.ts";
@@ -16,6 +16,7 @@ export function Icon({ name, size = 22, color, filled = false }: { name: string;
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? (color ?? p.ink) : "none"} stroke={color ?? p.ink} strokeWidth={heavy ? 3.8 : 1.7} strokeLinecap="round" strokeLinejoin="round">
       <Path d={ICONS[name] ?? ICONS.wallet ?? ""} />
+      {ICON_FILLS[name] ? <Path d={ICON_FILLS[name]} fill={color ?? p.ink} /> : null}
     </Svg>
   );
 }
@@ -79,7 +80,7 @@ export function Card({ children, style, onPress }: { children: ReactNode; style?
   );
 }
 
-export function Button({ label, onPress, kind = "primary", disabled = false }: { label: string; onPress: () => void; kind?: "primary" | "outline" | "danger" | "text"; disabled?: boolean }) {
+export function Button({ label, onPress, onLongPress, kind = "primary", disabled = false }: { label: string; onPress: () => void; onLongPress?: () => void; kind?: "primary" | "outline" | "danger" | "text"; disabled?: boolean }) {
   const p = usePalette();
   const t = useT();
   const bg = kind === "primary" ? p.accent : kind === "danger" ? p.negative : "transparent";
@@ -89,6 +90,7 @@ export function Button({ label, onPress, kind = "primary", disabled = false }: {
       accessibilityRole="button"
       disabled={disabled}
       onPress={onPress}
+      onLongPress={onLongPress}
       style={({ pressed }) => [
         { backgroundColor: bg, borderRadius: radius.pill, paddingVertical: 17, paddingHorizontal: space.xl, alignItems: "center" },
         kind === "outline" && { borderWidth: 1, borderColor: p.accent },

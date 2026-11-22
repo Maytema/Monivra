@@ -27,8 +27,9 @@ test("a month starting on another day follows its own bounds", () => {
   assert.equal(dateForNewOperation({ mode: "month", anchor: "2026-10-21" }, { weekStart: 1, monthStart: 10 }, today), "2026-11-09");
 });
 
-test("a future period and all time give today", () => {
-  assert.equal(dateForNewOperation({ mode: "month", anchor: "2026-12-21" }, s, today), today);
-  assert.equal(dateForNewOperation({ mode: "day", anchor: "2026-11-25" }, s, today), today);
+test("a future period gives its first day (a scheduled payment); all time gives today", () => {
+  assert.equal(dateForNewOperation({ mode: "month", anchor: "2026-12-21" }, s, today), "2026-12-01");
+  assert.equal(dateForNewOperation({ mode: "day", anchor: "2026-11-25" }, s, today), "2026-11-25");
+  assert.equal(dateForNewOperation({ mode: "week", anchor: "2026-11-30" }, s, today), "2026-11-30");
   assert.equal(dateForNewOperation({ mode: "all", anchor: today }, s, today), today);
 });

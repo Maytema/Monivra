@@ -154,6 +154,17 @@ test("a new account with a balance starts with a correction; editing the balance
   assert.deepEqual(applyChange(data, tx.change).ops.length, tx.data.ops.length);
 });
 
+test("a new debt with a part already repaid keeps the whole as the total and starts at what is left", () => {
+  const env = testEnv();
+  const tx = new LedgerTx(fixture("sample"));
+  const draft = checkedAccountDraft(tx.data, { ...accountDraft(tx.data), name: "Loan", type: "Debt", debt: "I owe", balance: 100000, repaid: 30000 });
+  const a = storeAccount(tx, draft, "spent", env);
+  assert.equal(a.totalDebt, 100000);
+  assert.equal(accountBalance(tx.data, a.id), -70000);
+  assert.equal("repaid" in a, false);
+  assert.throws(() => checkedAccountDraft(tx.data, { ...accountDraft(tx.data), name: "Bad", type: "Debt", debt: "Owe me", balance: 1000, repaid: 2000 }));
+});
+
 test("Add now posts one occurrence today and moves the payment on; Skip posts nothing", () => {
   const env = testEnv("2026-11-11");
   const data = fixture("withSchedules");

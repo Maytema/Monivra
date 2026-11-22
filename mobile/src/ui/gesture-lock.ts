@@ -27,8 +27,13 @@ export const useVerticalScroll = (): boolean =>
     () => swiping,
   );
 
-// Whether a native pager is being swiped or is settling, and until when a press is still taken for the end of a swipe:
-// a press that ends then is not a tap (ui/pressable.tsx). A plain value, so nothing draws when it changes.
-// (A pager that went away mid-swipe never says "idle": a "moving" older than a second and a half is not believed.)
-export const pagerMotion = { moving: false, since: 0, until: 0 };
-export const pagerBusy = (): boolean => (pagerMotion.moving && Date.now() - pagerMotion.since < 1500) || Date.now() < pagerMotion.until;
+// Until when a press is still taken for the end of a swipe of a native pager (ui/pressable.tsx ignores it then). Every
+// state the pager reports moves it a little ahead (0.4 s while swiping or settling, 0.15 s after it stopped). Not a
+// "swiping" flag: the pager's states reach JavaScript out of order ("idle" before "settling"), and such a flag stayed
+// up for 1.5 s after a swipe — every tap in that time was dropped (the first tap on Expenses/Incomes after swiping a
+// period "did nothing", the second worked). A plain value, so nothing draws when it changes.
+export const pagerMotion = { until: 0 };
+export const pagerBusy = (): boolean => Date.now() < pagerMotion.until;
+export function pagerState(state: string): void {
+  pagerMotion.until = Math.max(pagerMotion.until, Date.now() + (state === "idle" ? 150 : 400));
+}

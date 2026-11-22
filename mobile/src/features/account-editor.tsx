@@ -81,8 +81,8 @@ function TypeChoices({ onPick }: { onPick: (type: AccountDraft["type"]) => void 
 
 const ACCOUNT_TYPES: readonly Choice<AccountDraft["type"]>[] = TYPES.map((x) => ({ value: x.type, label: x.type, text: x.text, icon: x.icon, color: x.color }));
 const DEBT_KINDS: readonly Choice<"Owe me" | "I owe">[] = [
-  { value: "Owe me", label: "Owe me", text: "Money others owe you. Track who borrowed from you and repayment progress.", icon: "debtOweMe", color: "#f2812f" },
-  { value: "I owe", label: "I owe", text: "Money you owe to others. Track your debts and repayment progress.", icon: "debtIOwe", color: "#f2812f" },
+  { value: "Owe me", label: "Owe me", text: "Money others owe you. Track who borrowed from you and repayment progress.", icon: "debtOweMe" },
+  { value: "I owe", label: "I owe", text: "Money you owe to others. Track your debts and repayment progress.", icon: "debtIOwe" },
 ];
 
 const DEBT_SWITCHES = [
@@ -239,9 +239,10 @@ export function AccountEditor() {
           onPress={() => openChoiceSheet("Select type", ACCOUNT_TYPES, draft.type, setType)}
           right={<IconValue icon={TYPES.find((x) => x.type === draft.type)?.icon ?? "wallet"} text={t.t(draft.type)} />}
         />
-        {debt ? <FieldButton label="Type of debt" onPress={() => openChoiceSheet("Select type", DEBT_KINDS, draft.debt ?? "Owe me", (v) => set({ debt: v }))} right={<IconValue icon="debt" text={t.t(draft.debt ?? "Owe me")} />} /> : null}
+        {debt ? <FieldButton label="Type of debt" onPress={() => openChoiceSheet("Select type", DEBT_KINDS, draft.debt ?? "Owe me", (v) => set({ debt: v }))} right={<IconValue icon={draft.debt === "I owe" ? "debtIOwe" : "debtOweMe"} text={t.t(draft.debt ?? "Owe me")} />} /> : null}
         <FieldButton label="Account currency" value={currencyName(draft.currency, t.locale)} onPress={() => openCurrencySheet(draft.currency, (currency) => set({ currency }))} />
         {amount(debt ? "Amount of debt" : "Current balance", debt ? Math.abs(draft.balance) : draft.balance, (balance) => set({ balance }), !debt, debt && editing ? "Current debt" : undefined)}
+        {debt && !editing ? amount("Already repaid", draft.repaid ?? 0, (v) => set({ repaid: Math.abs(v) })) : null}
         {debt && editing ? amount("Total debt", draft.totalDebt ?? Math.abs(draft.balance), (v) => set({ totalDebt: Math.abs(v) })) : null}
         {draft.type === "Regular" ? amount("Credit limit", draft.limit, (limit) => set({ limit })) : null}
         {draft.type === "Savings" ? amount("Goal", draft.goal, (goal) => set({ goal })) : null}

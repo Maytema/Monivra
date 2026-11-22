@@ -202,3 +202,10 @@ export const ICONS: Record<string, string> = {
   flag: "M5 22V3m0 1h13l-3 4 3 4H5",
   bookmark: "M6 2h12v20l-6-5-6 5z",
 };
+
+// Parts of some icons that are filled (drawn over the outline in the same colour): the two debt directions fill the
+// square the arrow points to — the money goes to them ("Owe me": the lower one) or to you ("I owe": the upper one).
+export const ICON_FILLS: Record<string, string> = {
+  debtOweMe: "M14 14h6v6h-6z",
+  debtIOwe: "M14 4h6v6h-6z",
+};

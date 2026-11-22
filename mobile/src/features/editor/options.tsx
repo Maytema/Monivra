@@ -42,23 +42,29 @@ function FieldTitle({ children }: { children: string }) {
   return <Text style={{ color: p.inkSoft, fontSize: 14, marginTop: 14, marginBottom: 6 }}>{t.t(children)}</Text>;
 }
 
-// A value between two arrows (js/ui/primitives.js stepperHtml): the arrows change it by one, tapping the value
-// types it in on the number pad. An arrow that cannot go further is dimmed.
+// A value between two arrows: the arrows change it by one, tapping the value types it in on the number pad. An arrow
+// that cannot go further is dimmed. One outlined field with the arrows at its ends (the owner, 2026-11-22: as one
+// control, not three separate boxes as js/ui/primitives.js stepperHtml draws it).
 function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string; text: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
   const p = usePalette();
   const t = useT();
-  const box = { height: 48, borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg, alignItems: "center" as const, justifyContent: "center" as const };
   const arrow = (name: "left" | "right", step: number, disabled: boolean, description: string) => (
-    <Pressable accessibilityRole="button" accessibilityLabel={t.t(description)} disabled={disabled} onPress={() => onStep(step)} style={{ ...box, width: 48, opacity: disabled ? 0.4 : 1 }}>
-      <Icon name={name} size={22} />
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={t.t(description)}
+      disabled={disabled}
+      onPress={() => onStep(step)}
+      style={({ pressed }) => ({ width: 52, alignSelf: "stretch", alignItems: "center", justifyContent: "center", opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? p.soft : "transparent" })}
+    >
+      <Icon name={name} size={22} color={p.accentInk} />
     </Pressable>
   );
   return (
     <View>
       <FieldTitle>{label}</FieldTitle>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", height: 48, marginBottom: 4, borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg, overflow: "hidden" }}>
         {arrow("left", -1, atMin, "Decrease")}
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ ...box, flex: 1, minWidth: 0 }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 1, minWidth: 0, alignSelf: "stretch", alignItems: "center", justifyContent: "center" }}>
           <Text style={{ color: p.ink, fontSize: 17 }}>{text}</Text>
         </Pressable>
         {arrow("right", 1, atMax, "Increase")}

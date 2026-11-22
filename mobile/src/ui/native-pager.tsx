@@ -16,7 +16,7 @@ import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-nativ
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
 import { PagerContext } from "./pan-pager.tsx";
-import { pagerMotion } from "./gesture-lock.ts";
+import { pagerState } from "./gesture-lock.ts";
 
 export { usePagerMotion } from "./pan-pager.tsx";
 
@@ -352,10 +352,8 @@ export function Pager<K extends string>({
             const state = e.nativeEvent.pageScrollState;
             perfNote(`pager: ${state}`);
             if (state === "dragging") touched.current = true;
-            if (state !== "idle" && !pagerMotion.moving) pagerMotion.since = Date.now();
-            pagerMotion.moving = state !== "idle";
+            pagerState(state);
             if (state === "idle") {
-              pagerMotion.until = Date.now() + 150;
               touched.current = false;
               asked.current = false;
               quiet();

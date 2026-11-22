@@ -38,7 +38,7 @@ PY
     fi
     log "NOT FOUND: $1"; return 1
   fi
-  adb shell input tap $xy; log "tapped: $1"; sleep "${2:-1.5}"
+  { [ -n "${HOLD:-}" ] && adb shell input swipe $xy $xy 1000 || adb shell input tap $xy; }; log "tapped: $1"; sleep "${2:-1.5}"
 }
 # Where an element is, without tapping it (the taps of a measured move must not be delayed by a dump).
 where() {
@@ -81,7 +81,8 @@ begin "cold start"
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 finish 25
 begin "first screen: start with the basic set"
-tap "Start with basic set" 4
+# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
+HOLD=1 tap "Start" 4
 finish 1
 
 # The large ledger comes in as a data file, the way a person moves data from the first application.

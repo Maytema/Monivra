@@ -10,6 +10,7 @@ import { defaultAccountId } from "../../domain/ledger.ts";
 import { applyFees } from "../../domain/money.ts";
 import { deleteOperations, earliestScheduleDate, isFarDate, putOperation, rememberTags } from "../../domain/operations.ts";
 import { processScheduled } from "../../domain/scheduled.ts";
+import { budgetsCrossedBy } from "../../domain/budget-check.ts";
 import type { Fee, LedgerData } from "../../domain/types.ts";
 import { keypadDigits } from "../../domain/keypad.ts";
 import { DomainError } from "../../domain/errors.ts";
@@ -113,14 +114,23 @@ function DateRow({ session }: { session: EditorSession }) {
   // Today, yesterday and tomorrow are named instead of the week day (OP 016: "Yesterday, October 29").
   const near = date === today ? "Today" : date === addDays(today, -1) ? "Yesterday" : date === addDays(today, 1) ? "Tomorrow" : null;
   const label = `${near ? t.t(near) : t.weekday(date)}, ${t.day(date, date.slice(0, 4) !== today.slice(0, 4))}`;
+  // An operation dated after today is saved among the scheduled payments: said under the date before saving.
+  const planned = !session.scheduled && session.draft.type !== "adjustment" && date > today;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", height: session.compact ? 48 : 52, marginBottom: session.compact ? 8 : 9 }}>
       <IconButton name="left" label="Previous day" disabled={!!earliest && date <= earliest} onPress={() => session.update({ date: addDays(date, -1) })} />
       <Pressable accessibilityRole="button" accessibilityLabel={t.t("Select date")} onPress={() => openCalendar(date, (value) => session.update({ date: value }), earliest)} style={{ flex: 1, alignSelf: "stretch", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 }}>
         <Icon name="calendar" size={16} color={p.ink} />
-        <Text style={{ color: p.ink, fontSize: 16, fontWeight: "500" }} numberOfLines={1}>
-          {label}
-        </Text>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ color: p.ink, fontSize: 16, fontWeight: "500" }} numberOfLines={1}>
+            {label}
+          </Text>
+          {planned ? (
+            <Text style={{ color: p.accentInk, fontSize: 12, lineHeight: 15 }} numberOfLines={1}>
+              {t.t("Will go to scheduled payments")}
+            </Text>
+          ) : null}
+        </View>
       </Pressable>
       <IconButton name="right" label="Next day" onPress={() => session.update({ date: addDays(date, 1) })} />
     </View>
@@ -611,6 +621,12 @@ function Actions({ session }: { session: EditorSession }) {
   );
 }
 
+// The ledger as it is at the moment of saving (not as it was when the sheet was drawn).
+function ledgerNow(): LedgerData {
+  const state = appStore().getState();
+  return "data" in state && state.data ? state.data : ({ budgets: [] } as unknown as LedgerData);
+}
+
 // ---- The sheet -----------------------------------------------------------------------------------
 function EditorSheet({ session }: { session: EditorSession }) {
   const t = useT();
@@ -619,6 +635,7 @@ function EditorSheet({ session }: { session: EditorSession }) {
   useSyncExternalStore(session.subscribe, session.getVersion);
   const confirmedDate = useRef<string | undefined>(undefined);
   const env = appStore().env;
+  const money = useMoney();
 
   const save = (calculated: boolean) => {
     try {
@@ -644,9 +661,17 @@ function EditorSheet({ session }: { session: EditorSession }) {
         } else if (operationShown(saved)) spotlight([saved.id]);
         else notice("Operation saved", { icon: "circleCheck", tone: "positive", onTap: () => showOperations([saved.id]) });
       };
-      if (confirmedDate.current !== op.date && isFarDate(op.date, env.clock.today())) {
-        confirmInfo("Check the date", t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), "Save");
-      } else store();
+      const checkDate = () => {
+        if (confirmedDate.current !== op.date && isFarDate(op.date, env.clock.today())) {
+          confirmInfo("Check the date", t.t("The date {date} is more than a year from today. Save anyway?", { date: t.day(op.date, true) }), () => ((confirmedDate.current = op.date), store()), "Save");
+        } else store();
+      };
+      // A budget that this expense takes over its limit: asked, not forbidden.
+      const crossed = budgetsCrossedBy(ledgerNow(), op, env, schedule || !!op.recur || session.scheduled);
+      if (crossed.length) {
+        const lines = crossed.map((c) => t.t("{name}: over by {amount}", { name: c.budget.name, amount: money(c.over, c.budget.currency) })).join("\n");
+        confirmInfo("Budget limit", `${t.t(crossed.length > 1 ? "This expense goes over the limits of these budgets:" : "This expense goes over the budget limit:")}\n${lines}\n\n${t.t("Save anyway?")}`, checkDate, "Save");
+      } else checkDate();
     } catch (error) {
       // Not saved: the reason is said and felt.
       if (error instanceof DomainError) toast(t.t(error.message, error.params));

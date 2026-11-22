@@ -19,6 +19,7 @@ import { FieldButton, FieldText } from "../ui/form.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { Meter, ToneBadge } from "../ui/parts.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
+import { ChosenMark, useSelection, useSelectionHeader } from "../ui/selection.tsx";
 import { space } from "../ui/theme.ts";
 import { periodTitle } from "../ui/period-title.ts";
 import { compactText, numberText } from "../ui/number-text.ts";
@@ -96,33 +97,6 @@ function BudgetBody({ state, pinned = false, exact = false }: { state: ReturnTyp
   );
 }
 
-function ActionsSheet({ b }: { b: Budget }) {
-  const p = usePalette();
-  const t = useT();
-  const close = useCloseLayer();
-  const run = useCommand();
-  const row = (icon: string, label: string, onPress: () => void, danger = false) => (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => {
-        close();
-        onPress();
-      }}
-      style={{ flexDirection: "row", alignItems: "center", gap: 16, paddingVertical: 14, paddingHorizontal: 6 }}
-    >
-      <Icon name={icon} size={24} color={danger ? p.negativeInk : p.ink} />
-      <Text style={{ color: danger ? p.negativeInk : p.ink, fontSize: 16 }}>{t.t(label)}</Text>
-    </Pressable>
-  );
-  return (
-    <View>
-      <Text style={{ color: p.ink, fontSize: 18, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{b.name}</Text>
-      {row("edit", "Edit", () => router.push({ pathname: "/budget", params: { id: b.id } }))}
-      {row("trash", "Delete", () => askDelete(run, b.id), true)}
-    </View>
-  );
-}
-
 function askDelete(run: ReturnType<typeof useCommand>, id: string, leave = false): void {
   confirmDialog(
     "Delete this budget?",
@@ -155,20 +129,23 @@ export function BudgetsScreen() {
   const money = useMoney();
   useMonthPeriod("month");
   const period = useViewPeriod();
+  const run = useCommand();
+  const selection = useSelection();
   const states = data.budgets.map((b) => budgetState(data, b, period.anchor));
   const main = data.settings.currency;
+  const remove = (ids: string[]) =>
+    confirmDialog("Delete the selected budgets?", () => run((tx) => (ids.forEach((id) => deleteBudget(tx, id)), true)) && (toast("Budget deleted"), selection.clear()), true, "Delete");
+  const header = useSelectionHeader(selection, data.budgets.map((b) => b.id), remove, {
+    title: t.t("Budgets"),
+    headerRight: () => (
+      <Pressable accessibilityRole="button" accessibilityLabel={t.t("Create a budget")} onPress={() => router.push("/budget")} style={{ width: 48, height: 48, alignItems: "center", justifyContent: "center" }}>
+        <Icon name="plus" size={24} color={p.ink} />
+      </Pressable>
+    ),
+  });
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
-      <Stack.Screen
-        options={{
-          title: t.t("Budgets"),
-          headerRight: () => (
-            <Pressable accessibilityRole="button" accessibilityLabel={t.t("Create a budget")} onPress={() => router.push("/budget")} style={{ width: 48, height: 48, alignItems: "center", justifyContent: "center" }}>
-              <Icon name="plus" size={24} color={p.ink} />
-            </Pressable>
-          ),
-        }}
-      />
+      <Stack.Screen options={header} />
       <PeriodBar dayPicker />
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 18 }}>
         {states.length ? (
@@ -193,11 +170,14 @@ export function BudgetsScreen() {
                     <Pressable
                       key={s.b.id}
                       accessibilityRole="button"
-                      onPress={() => router.push({ pathname: "/budget-details", params: { id: s.b.id } })}
-                      onLongPress={() => sheets.open(<ActionsSheet b={s.b} />, "sheet")}
-                      style={{ padding: 16, borderWidth: 1, borderColor: s.left < 0 ? p.negative : p.line, borderRadius: 16, backgroundColor: p.key }}
+                      accessibilityState={selection.on ? { selected: selection.chosen.has(s.b.id) } : undefined}
+                      onPress={() => (selection.on ? selection.toggle(s.b.id) : router.push({ pathname: "/budget-details", params: { id: s.b.id } }))}
+                      // A long press chooses budgets to delete several at once (the one-budget actions are on its page).
+                      onLongPress={() => selection.hold(s.b.id)}
+                      style={{ padding: 16, borderWidth: selection.chosen.has(s.b.id) ? 2 : 1, borderColor: selection.chosen.has(s.b.id) ? p.accent : s.left < 0 ? p.negative : p.line, borderRadius: 16, backgroundColor: p.key }}
                     >
                       <BudgetBody state={s} />
+                      {selection.on ? <ChosenMark chosen={selection.chosen.has(s.b.id)} /> : null}
                     </Pressable>
                   ))}
                 </View>

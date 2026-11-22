@@ -13,20 +13,28 @@ export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "
 
 const AnimatedG = Animated.createAnimatedComponent(G);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
+const AnimatedRect = Animated.createAnimatedComponent(Rect);
 // The length of every picture's animation (ms); the time since its first showing decides where it is.
-const PLAY_MS: Record<EmptyKind, number> = { operations: 5000, accounts: 2500, categories: 2000, budgets: 800, scheduled: 800, statistics: 2000 };
+const PLAY_MS: Record<EmptyKind, number> = { operations: 2500, accounts: 2500, categories: 2000, budgets: 2100, scheduled: 1200, statistics: 2000 };
 const firstShown: Partial<Record<EmptyKind, number>> = {};
 
 type Timeline = Animated.Value;
-// A value that follows the time (ms) through the given points, and holds the first and the last outside them.
-const along = (time: Timeline, points: ReadonlyArray<readonly [number, number]>) =>
-  time.interpolate({ inputRange: points.map(([at]) => at), outputRange: points.map(([, value]) => value), extrapolate: "clamp" });
+// A value that follows the time (ms) through the given points, and holds the first and the last outside them. With
+// `easing`, every stretch between two points is eased on its own (a move starts and stops softly).
+const along = (time: Timeline, points: ReadonlyArray<readonly [number, number]>, easing?: (n: number) => number) =>
+  time.interpolate({ inputRange: points.map(([at]) => at), outputRange: points.map(([, value]) => value), extrapolate: "clamp", easing });
 // From one value to another between two moments.
-const between = (time: Timeline, start: number, end: number, from: number, to: number) =>
-  along(time, [
-    [start, from],
-    [end, to],
-  ]);
+const between = (time: Timeline, start: number, end: number, from: number, to: number, easing?: (n: number) => number) =>
+  along(
+    time,
+    [
+      [start, from],
+      [end, to],
+    ],
+    easing,
+  );
+const soft = Easing.inOut(Easing.cubic);
+const out = Easing.out(Easing.cubic);
 
 // ---- Geometry for the pictures that follow a path --------------------------------------------------
 
@@ -35,36 +43,23 @@ const cubic = (a: Point, b: Point, c: Point, d: Point, s: number): Point => {
   const u = 1 - s;
   return [u * u * u * a[0] + 3 * u * u * s * b[0] + 3 * u * s * s * c[0] + s * s * s * d[0], u * u * u * a[1] + 3 * u * u * s * b[1] + 3 * u * s * s * c[1] + s * s * s * d[1]];
 };
-// Points of a chain of cubic curves, evenly spaced along its length, with the whole length.
-function walk(curves: ReadonlyArray<readonly [Point, Point, Point, Point]>, steps = 60): { points: Point[]; length: number } {
-  const raw: Point[] = [];
-  curves.forEach((c, i) => {
-    for (let k = i === 0 ? 0 : 1; k <= steps; k++) raw.push(cubic(c[0], c[1], c[2], c[3], k / steps));
-  });
-  const lengths = [0];
-  for (let i = 1; i < raw.length; i++) lengths.push((lengths[i - 1] ?? 0) + Math.hypot((raw[i]?.[0] ?? 0) - (raw[i - 1]?.[0] ?? 0), (raw[i]?.[1] ?? 0) - (raw[i - 1]?.[1] ?? 0)));
-  const length = lengths[lengths.length - 1] ?? 0;
-  const even: Point[] = [];
-  for (let k = 0; k <= 40; k++) {
-    const target = (length * k) / 40;
-    let i = 1;
-    while (i < lengths.length - 1 && (lengths[i] ?? 0) < target) i++;
-    const lo = lengths[i - 1] ?? 0;
-    const share = (target - lo) / Math.max((lengths[i] ?? 0) - lo, 1e-6);
-    const a = raw[i - 1] ?? [0, 0];
-    const b = raw[i] ?? a;
-    even.push([a[0] + (b[0] - a[0]) * share, a[1] + (b[1] - a[1]) * share]);
+// The length of a cubic curve (summed over short straight pieces).
+function lengthOf(a: Point, b: Point, c: Point, d: Point): number {
+  let length = 0;
+  let last = a;
+  for (let k = 1; k <= 80; k++) {
+    const next = cubic(a, b, c, d, k / 80);
+    length += Math.hypot(next[0] - last[0], next[1] - last[1]);
+    last = next;
   }
-  return { points: even, length };
+  return length;
 }
 
-const BALL_PATH = walk([
-  [[104, 18], [100, 28], [88, 34], [82, 46]],
-  [[82, 46], [72, 66], [48, 70], [58, 96]],
-]);
-const ARROW_CURVE = walk([[[12, 52], [40, 54], [70, 30], [106, 4]]]);
-// The arrow head: three short straight strokes after the curve.
-const ARROW_LENGTH = ARROW_CURVE.length + Math.hypot(13, 0.9) + Math.hypot(13, 0.9) + Math.hypot(4.9, 12);
+// The statistics arrow: a curve that keeps 5–10 units above the tops of the bars (checked for every bar), so it
+// follows their rise without crossing one, and a head along its last direction.
+const BARS: ReadonlyArray<readonly [number, number]> = [[8, 16], [26, 24], [44, 34], [62, 46], [80, 60], [98, 78]]; // left, height
+const ARROW: readonly [Point, Point, Point, Point] = [[4, 74], [30, 78], [70, 40], [110, 6]];
+const ARROW_LENGTH = lengthOf(...ARROW);
 
 // ---- The pictures --------------------------------------------------------------------------------
 
@@ -76,45 +71,35 @@ interface Colors {
   positive: string;
 }
 
-// Paper rolled at the top and the bottom with four lines, and a lens that finds nothing.
+// A sheet of paper with its top rolled at the right and its bottom curled, a few lines on it, and a lens that looks
+// at two places, comes back and finds nothing (2.5 s).
 function Operations({ time, c }: { time: Timeline; c: Colors }) {
   const faint = mix(c.muted, c.bg, 0.55);
-  // The lens drifts in, stops at the first line, the middle and the last, hovers, then rests over the corner.
-  const scan = (pick: 0 | 1 | 2) => {
-    const keys: ReadonlyArray<readonly [number, number, number, number]> = [
-      [0, 60, -120, 6],
-      [9, 40, -98, 3],
-      [21, -58, -84, -3],
-      [25, -64, -79, -2],
-      [29, -71, -85, -4],
-      [41, -136, 8, 2],
-      [45, -141, 15, 3],
-      [50, -131, 11, 1],
-      [62, -146, 76, -3],
-      [68, -139, 82, -1],
-      [86, 9, -6, 2],
-      [100, 0, 0, 0],
-    ];
-    return along(time, keys.map((k) => [900 + k[0] * 34, k[pick + 1] as number] as const));
-  };
-  const lensOpacity = along(time, [[900, 0], [900 + 9 * 34, 1]]);
-  const crossScale = between(time, 4400, 4800, 0.4, 1);
-  const crossOpacity = between(time, 4400, 4800, 0, 1);
+  // The lens rests over the lower right of the sheet; it moves to the first lines, then to the last, and back.
+  const keys: ReadonlyArray<readonly [number, number, number]> = [
+    [300, 40, -10],
+    [800, -112, -84],
+    [1050, -104, -80],
+    [1450, -92, 20],
+    [1650, -98, 24],
+    [2050, 0, 0],
+  ];
+  const lensX = along(time, keys.map(([at, x]) => [at, x] as const), soft);
+  const lensY = along(time, keys.map(([at, , y]) => [at, y] as const), soft);
   return (
     <Svg width={160} height={160} viewBox="-6 -6 342 342" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <AnimatedG opacity={between(time, 0, 500, 0, 1)}>
-        <Path d="M270 6H96A48 48 0 0 0 48 54V128M48 149V150M48 170V275M266 40V262C266 300 252 328 238 328H200" stroke={c.muted} strokeWidth={7} />
-        <Path d="M262 2.5h41a25.5 25.5 0 0 1 25.5 25.5V67H262zM7 270H188C188 305 204 331.5 240 331.5H37A30 30 0 0 1 7 301.5z" fill={c.muted} stroke="none" />
+      <AnimatedG opacity={between(time, 0, 300, 0, 1)}>
+        <Path d="M70 238V70A28 28 0 0 1 98 42H280M224 294H56A28 28 0 0 1 28 266V238H196V266A28 28 0 1 0 252 266V70A28 28 0 1 1 308 70V112H252" stroke={c.muted} strokeWidth={10} />
       </AnimatedG>
-      {([[65, 235, 0], [115, 208, 1], [168, 152, 2], [220, 152, 3]] as const).map(([y, to, i]) => {
-        const length = to - 89;
-        return <AnimatedPath key={i} d={`M89 ${y}H${to}`} stroke={faint} strokeWidth={7} strokeDasharray={[length, length]} strokeDashoffset={between(time, 300 + i * 250, 700 + i * 250, length, 0)} />;
+      {([[90, 214], [128, 222], [166, 170], [204, 160]] as const).map(([y, to], i) => {
+        const length = to - 104;
+        return <AnimatedPath key={y} d={`M104 ${y}H${to}`} stroke={faint} strokeWidth={10} strokeDasharray={[length, length]} strokeDashoffset={between(time, 200 + i * 150, 500 + i * 150, length, 0)} />;
       })}
-      <AnimatedG opacity={lensOpacity} translateX={scan(0)} translateY={scan(1)} rotation={scan(2)} originX={262} originY={157}>
-        <Circle cx={259} cy={152} r={62} fill={c.bg} stroke={faint} strokeWidth={7} />
-        <Path d="m303 197 24 28" stroke={faint} strokeWidth={12} />
-        <AnimatedG opacity={crossOpacity} scale={crossScale} originX={259} originY={152}>
-          <Path d="m237 130 44 44m0-44-44 44" stroke={c.accent} strokeWidth={7} />
+      <AnimatedG opacity={between(time, 300, 500, 0, 1)} translateX={lensX} translateY={lensY}>
+        <Circle cx={232} cy={178} r={50} fill={c.bg} stroke={faint} strokeWidth={10} />
+        <Path d="m269 215 26 28" stroke={faint} strokeWidth={16} />
+        <AnimatedG opacity={between(time, 2050, 2300, 0, 1)} scale={between(time, 2050, 2350, 0.4, 1, Easing.out(Easing.back(2)))} originX={232} originY={178}>
+          <Path d="m214 160 36 36m0-36-36 36" stroke={c.accent} strokeWidth={10} />
         </AnimatedG>
       </AnimatedG>
     </Svg>
@@ -156,61 +141,117 @@ function Accounts({ time, c }: { time: Timeline; c: Colors }) {
   );
 }
 
-// An open box: a ball flies into it along a dotted path.
+// An open box: three balls jump out of it one after another and pop in the air (2 s); the box stays.
+const BALLS: ReadonlyArray<{ to: Point; start: number }> = [
+  { to: [44, 22], start: 300 },
+  { to: [84, 12], start: 600 },
+  { to: [122, 24], start: 900 },
+];
 function Categories({ time, c }: { time: Timeline; c: Colors }) {
-  // The ball eases in and out along the path; it is seen from the start, and fades at the end.
-  const ease = Easing.inOut(Easing.ease);
-  const spots = BALL_PATH.points.map((point, i, all) => ({ at: 400 + ease(i / (all.length - 1)) * 1100, point }));
-  const ballX = along(time, spots.map((s) => [s.at, s.point[0]] as const));
-  const ballY = along(time, spots.map((s) => [s.at, s.point[1]] as const));
-  const dot = BALL_PATH.length * 0.03;
+  const colors = [c.accent, c.positive, "#f5b53a"];
   return (
     <Svg width={160} height={160} viewBox="0 0 160 160" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <AnimatedG opacity={between(time, 0, 400, 0, 1)}>
+      <AnimatedG opacity={between(time, 0, 300, 0, 1)}>
         <Path d="M80 64 134 86 80 108 26 86z" fill={mix(c.muted, c.bg, 0.45)} />
+      </AnimatedG>
+      {BALLS.map(({ to, start }, i) => {
+        const fly = start + 550; // where the ball is highest and pops
+        // Out of the box's opening (behind its front, which is drawn after), up to its place, easing as it rises.
+        const x = between(time, start, fly, 80, to[0]);
+        const y = between(time, start, fly, 96, to[1], out);
+        return (
+          <G key={i}>
+            <AnimatedG translateX={x} translateY={y} opacity={along(time, [[start - 1, 0], [start, 1], [fly, 1], [fly + 180, 0]])}>
+              <AnimatedG scale={along(time, [[fly - 60, 1], [fly + 180, 1.7]])}>
+                <Circle cx={0} cy={0} r={7} fill={colors[i]} />
+              </AnimatedG>
+            </AnimatedG>
+            {/* The pop: short strokes flying apart where the ball was. */}
+            <AnimatedG translateX={to[0]} translateY={to[1]} opacity={along(time, [[fly, 0], [fly + 60, 1], [fly + 300, 0]])}>
+              <AnimatedG scale={between(time, fly, fly + 300, 0.6, 1.3, out)}>
+                <Path d="M0-11V-16M11 0H16M0 11V16M-11 0H-16M8-8 11-11M8 8 11 11M-8 8-11 11M-8-8-11-11" stroke={colors[i]} strokeWidth={2.5} />
+              </AnimatedG>
+            </AnimatedG>
+          </G>
+        );
+      })}
+      <AnimatedG opacity={between(time, 0, 300, 0, 1)}>
         <Path d="M26 86 80 108V152L26 130z" fill={mix(c.muted, c.bg, 0.35)} />
         <Path d="M134 86 80 108V152L134 130z" fill={mix(c.muted, c.bg, 0.18)} />
         <Path d="M26 86 8 76 62 54 80 64M134 86 152 76 98 54 80 64" fill={mix(c.muted, c.bg, 0.12)} />
       </AnimatedG>
-      <AnimatedG opacity={along(time, [[400, 0], [625, 1], [1600, 1], [1900, 0]])}>
-        <Path d="M104 18C100 28 88 34 82 46 72 66 48 70 58 96" stroke={c.muted} strokeWidth={2} strokeDasharray={[dot, dot]} />
-      </AnimatedG>
-      <AnimatedG opacity={along(time, [[0, 1], [400 + 0.85 * 1100, 1], [1500, 0]])} translateX={ballX} translateY={ballY}>
-        <Circle cx={0} cy={0} r={6} fill={c.bg} stroke={c.muted} strokeWidth={2} />
-      </AnimatedG>
     </Svg>
   );
 }
 
-// Six bars rising along an arrow that is drawn from left to right.
+// Six bars growing from the bottom up, one after another from left to right, and an arrow drawn over their tops (2 s).
 function Statistics({ time, c }: { time: Timeline; c: Colors }) {
   const fills = ["#f5a623", "#c9c93a", "#8bd23f", "#19b8a6", "#3a8fe0", c.accent];
-  const bars: ReadonlyArray<readonly [number, number, number]> = [[10, 80, 20], [28, 68, 32], [46, 56, 44], [64, 44, 56], [82, 32, 68], [100, 20, 80]];
+  const [a, b, cc, d] = ARROW;
   return (
     <Svg width={160} height={160} viewBox="0 0 120 120" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {bars.map(([x, y, height], i) => (
-        <AnimatedG key={x} opacity={between(time, i * 200, i * 200 + 500, 0, 1)} scaleY={between(time, i * 200, i * 200 + 500, 0, 1)} originX={x + 6} originY={100}>
-          <Rect x={x} y={y} width={12} height={height} rx={4} fill={fills[i]} />
-        </AnimatedG>
-      ))}
+      {BARS.map(([x, height], i) => {
+        // The bar's height grows while its foot stays on the ground (its top moves up): no scaling around a point.
+        const grown = between(time, i * 220, i * 220 + 450, 0, height, out);
+        return <AnimatedRect key={x} x={x} y={Animated.subtract(100, grown)} width={12} height={grown} rx={4} fill={fills[i]} />;
+      })}
       <AnimatedPath
-        d="M12 52C40 54 70 30 106 4L93.0 4.9 106 4 101.1 16.0"
+        d={`M${a[0]} ${a[1]}C${b[0]} ${b[1]} ${cc[0]} ${cc[1]} ${d[0]} ${d[1]}`}
         stroke={c.positive}
         strokeWidth={4}
         strokeDasharray={[ARROW_LENGTH, ARROW_LENGTH]}
-        strokeDashoffset={between(time, 500, 1900, ARROW_LENGTH, 0)}
+        strokeDashoffset={between(time, 250, 1650, ARROW_LENGTH, 0)}
       />
+      <AnimatedPath d="M99.3 8.4 110 6 105.9 16.2" stroke={c.positive} strokeWidth={4} opacity={between(time, 1600, 1750, 0, 1)} />
     </Svg>
   );
 }
 
-// A plain icon that pops in (budgets, scheduled payments).
-function Pop({ time, name, color }: { time: Timeline; name: string; color: string }) {
-  const scale = along(time, [[0, 0.4], [350, 1.12], [700, 1]]);
-  const opacity = between(time, 0, 250, 0, 1);
+// A banknote, and a coin that appears beside it and goes once around it (behind it on the far side), back to its
+// place (2.1 s).
+const ORBIT = Array.from({ length: 41 }, (_, k) => {
+  const angle = Math.PI / 4 + (k / 40) * Math.PI * 2;
+  return { x: 80 + 64 * Math.cos(angle), y: 84 + 32 * Math.sin(angle), near: Math.sin(angle) >= 0, scale: 0.85 + 0.15 * Math.sin(angle) };
+});
+function Budgets({ time, c }: { time: Timeline; c: Colors }) {
+  const at = (k: number) => 550 + (k / 40) * 1500;
+  const coinX = along(time, ORBIT.map((o, k) => [at(k), o.x] as const));
+  const coinY = along(time, ORBIT.map((o, k) => [at(k), o.y] as const));
+  const coinScale = along(time, [[300, 0], ...ORBIT.map((o, k) => [at(k), o.scale] as const)]);
+  // Seen in front of the note on the near half of the way, behind it on the far half.
+  const near = along(time, ORBIT.flatMap((o, k) => [[at(k) - 0.01, o.near ? 1 : 0] as const, [at(k), o.near ? 1 : 0] as const]).slice(1));
+  const far = near.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
+  const coin = (opacity: typeof near) => (
+    <AnimatedG opacity={opacity} translateX={coinX} translateY={coinY}>
+      <AnimatedG scale={coinScale}>
+        <Circle cx={0} cy={0} r={15} fill="#f5b53a" stroke={c.ink} strokeWidth={3} />
+        <Circle cx={0} cy={0} r={8} stroke={c.ink} strokeWidth={2} />
+      </AnimatedG>
+    </AnimatedG>
+  );
   return (
-    <Animated.View style={{ opacity, transform: [{ scale }] }}>
-      <Icon name={name} size={96} color={color} />
+    <Svg width={160} height={160} viewBox="0 0 160 160" fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {coin(far)}
+      <AnimatedG opacity={between(time, 0, 200, 0, 1)} scale={between(time, 0, 350, 0.6, 1, Easing.out(Easing.back(2)))} originX={80} originY={80}>
+        <G rotation={-8} originX={80} originY={80}>
+          <Rect x={32} y={52} width={96} height={58} rx={8} fill="#8fd16f" stroke={c.ink} strokeWidth={4} />
+          <Rect x={40} y={60} width={80} height={42} rx={4} stroke={c.ink} strokeWidth={2} strokeDasharray="4 5" />
+          <Circle cx={80} cy={81} r={12} fill="#f4f1d4" stroke={c.ink} strokeWidth={3} />
+        </G>
+      </AnimatedG>
+      {coin(near)}
+    </Svg>
+  );
+}
+
+// A calendar in a light circle that wiggles once (1.2 s).
+function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
+  const rotate = time.interpolate({ inputRange: [250, 400, 550, 700, 850, 1000], outputRange: ["0deg", "-14deg", "11deg", "-7deg", "3deg", "0deg"], extrapolate: "clamp" });
+  return (
+    <Animated.View style={{ width: 128, height: 128, borderRadius: 64, backgroundColor: mix(c.accent, c.bg, 0.84), alignItems: "center", justifyContent: "center", opacity: between(time, 0, 200, 0, 1), transform: [{ scale: between(time, 0, 250, 0.7, 1, out) }] }}>
+      <Animated.View style={{ transform: [{ rotate }] }}>
+        <Icon name="calendar" size={64} color={c.accent} />
+      </Animated.View>
     </Animated.View>
   );
 }
@@ -238,8 +279,8 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
         {kind === "accounts" ? <Accounts time={time} c={c} /> : null}
         {kind === "categories" ? <Categories time={time} c={c} /> : null}
         {kind === "statistics" ? <Statistics time={time} c={c} /> : null}
-        {kind === "budgets" ? <Pop time={time} name="budget" color={p.accent} /> : null}
-        {kind === "scheduled" ? <Pop time={time} name="calendar" color={p.accent} /> : null}
+        {kind === "budgets" ? <Budgets time={time} c={c} /> : null}
+        {kind === "scheduled" ? <Scheduled time={time} c={c} /> : null}
       </View>
       <Text style={{ color: p.ink, fontSize: 20, fontWeight: "500", marginTop: 12, marginBottom: 8, textAlign: "center" }}>{t.t(title)}</Text>
       <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t(hint)}</Text>

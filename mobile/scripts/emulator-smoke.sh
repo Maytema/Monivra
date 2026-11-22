@@ -23,7 +23,7 @@ for n in ET.parse("/tmp/ui.xml").iter("node"):
 PY
 )
   if [ -z "$xy" ]; then log "NOT FOUND: $1"; return 1; fi
-  adb shell input tap $xy; log "tapped: $1"; sleep 1.5
+  { [ -n "${HOLD:-}" ] && adb shell input swipe $xy $xy 1000 || adb shell input tap $xy; }; log "tapped: $1"; sleep 1.5
 }
 # tap_part TEXT FX FY: taps a point inside the element (FX, FY: fractions of its width and height), e.g. the top
 # of the statistics ring.
@@ -55,12 +55,13 @@ adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 for i in $(seq 20); do
   sleep 3
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
-  grep -q "Start with basic set" /tmp/ui.xml && break
+  grep -q 'text="Start"' /tmp/ui.xml && break
   grep -q "isn't responding" /tmp/ui.xml && RETRY=1 tap "Wait" 1 >/dev/null 2>&1 && log "system window: isn't responding — Wait"
 done
 shot 01-first-start 1
-has "Start with basic set" 01-first-start
-tap "Start with basic set"
+has "Start" 01-first-start
+# A long press on "Start" begins with the basic set of accounts and categories (src/features/welcome.tsx).
+HOLD=1 tap "Start"
 shot 02-accounts 4
 has "Cash" 02-accounts
 has "Overall balance" 02-accounts
@@ -152,6 +153,12 @@ adb shell input motionevent DOWN 690 873; for x in $(seq 675 -15 400); do adb sh
 shot 12e1-color-drag-held 0
 adb shell input motionevent UP 400 873
 shot 12e1-color-dragged 1
+# Past a corner of the square onto the ring (the owner: the point jumped at the corners): from the middle to the right
+# corner and on over the ring, slowly; the point must stay in the corner.
+adb shell input motionevent DOWN 560 873; for x in $(seq 580 15 790); do adb shell input motionevent MOVE $x 873; done
+shot 12e2-color-past-corner-held 0
+adb shell input motionevent UP 790 873
+shot 12e2-color-past-corner 1
 tap "Color code"
 shot 12e2-color-hex-keyboard 2
 back
@@ -224,6 +231,12 @@ tap "Food"
 for k in 3 7; do tap "$k"; done
 tap "Save operation"
 shot 15c-schedule-saved 3
+# A long press starts the choice of several payments (the header shows how many, select all and delete); Back leaves it.
+HOLD=1 tap "Food"
+shot 15c2-schedule-selected 1
+has "Selected: 1" 15c2-schedule-selected
+back
+shot 15c3-schedule-selection-left 1
 tap "Food"
 shot 15d-schedule-opened 3
 adb shell input swipe 540 2000 540 1000 300
