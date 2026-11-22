@@ -330,7 +330,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
       <View style={{ flex: 1 }}>
         {hasOperations ? (
           <>
-            <SumTabs tinted active={asked} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
+            <SumTabs active={asked} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
             <ScrollBlocks current={current}>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>

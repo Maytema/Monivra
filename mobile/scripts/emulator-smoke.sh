@@ -9,6 +9,9 @@ PKG=app.monivra.finance.next
 APK=$(ls results-apk/*.apk | head -1)
 log() { echo "$*" | tee -a "$OUT/steps.txt"; }
 shot() { sleep "${2:-2}"; adb exec-out screencap -p > "$OUT/$1.png"; adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml "$OUT/$1.xml" >/dev/null 2>&1; }
+# Several screenshots in a row right after a screen opens (the picture of an empty screen is still moving): the frames
+# show whether the animation stays in its place (a circle, a calendar, a banknote) while it plays.
+burst() { for k in 1 2 3 4 5 6; do adb exec-out screencap -p > "$OUT/$1-$k.png"; done; }
 # Taps the centre of the first element whose text or description is exactly $1.
 tap() {
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
@@ -205,7 +208,7 @@ for page in "Settings" "Scheduled payments" "Budgets"; do
   back
 done
 # A budget: the form of a new one, its period and category choices.
-tap "Budgets"
+tap "Budgets"; burst 15m-budgets-moving
 tap "Create a budget"
 shot 15f-budget-form 2
 tap "Monthly"
@@ -218,7 +221,7 @@ back
 back
 # A scheduled payment: created through the dialog, then opened (the sheet has Delete, Duplicate, Skip, Add now
 # in two columns), and the page with a payment (the "Add" button, the details under the row).
-tap "Scheduled payments"
+tap "Scheduled payments"; burst 15m-scheduled-moving
 tap "Create"
 shot 15a-schedule-create 2
 # The Recur and Reminder windows (arrow, value, arrow; the outlined list button), each closed with Cancel.

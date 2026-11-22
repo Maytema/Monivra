@@ -11,7 +11,7 @@ import type { Budget, BudgetPeriod, Category } from "../domain/types.ts";
 import { showError, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { appStore } from "../ui/app-context.tsx";
 import { openAmountSheet } from "../ui/amount-sheet.tsx";
-import { TextButton } from "../ui/calendar-sheet.tsx";
+import { PrimaryPill, TextButton } from "../ui/calendar-sheet.tsx";
 import { currencyName } from "../ui/currency-names.ts";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { confirmDialog, DialogActions, optionDialog, toast } from "../ui/dialogs.tsx";
@@ -331,7 +331,7 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
       </ScrollView>
       <DialogActions>
         <TextButton label="Cancel" onPress={close} />
-        <Button
+        <PrimaryPill
           label="Confirm"
           onPress={() => {
             close();

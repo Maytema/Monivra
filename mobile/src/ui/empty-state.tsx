@@ -5,7 +5,8 @@
 // playing goes on from where it was, as in the first application.
 import { useEffect, useRef, type ReactNode } from "react";
 import { Animated, Easing, View, Text } from "react-native";
-import Svg, { Circle, G, Path, Rect } from "react-native-svg";
+import Svg, { Circle, Ellipse, G, Path, Rect } from "react-native-svg";
+import { NOTE_FRAMES, RING_FRAMES } from "./budget-motion.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
@@ -17,7 +18,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 // How long each picture plays (ms), taken from the first application's recordings (frame by frame, 2026-11-22): the
 // time from the picture's first frame to its last movement. The time since the first showing decides where it is.
-const PLAY_MS: Record<EmptyKind, number> = { operations: 4800, accounts: 3000, categories: 1400, budgets: 3000, scheduled: 2000, statistics: 2000 };
+const PLAY_MS: Record<EmptyKind, number> = { operations: 4800, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 2050, statistics: 2000 };
 // These two are screens that are opened and left (not tabs): their picture plays at every opening. The pictures of
 // the tabs play once while the application runs, so they do not play again at every swipe between tabs.
 const REPLAYS: ReadonlySet<EmptyKind> = new Set<EmptyKind>(["budgets", "scheduled"]);
@@ -46,6 +47,18 @@ function keyed(time: Timeline, keys: ReadonlyArray<Key>) {
     }
   });
   return time.interpolate({ inputRange: input, outputRange: output, extrapolate: "clamp" });
+}
+// A group turned or scaled about the point (x, y). Written as three nested groups (move there, turn, move back), so
+// that no "origin" property is needed: on an animated group the origin was not honoured and the picture turned about
+// the corner of the drawing instead and slid away from its place.
+function Pivot({ x, y, rotation, scale, children }: { x: number; y: number; rotation?: Animated.AnimatedInterpolation<number> | number; scale?: Animated.AnimatedInterpolation<number> | number; children: ReactNode }) {
+  return (
+    <G translateX={x} translateY={y}>
+      <AnimatedG rotation={rotation} scale={scale}>
+        <G translateX={-x} translateY={-y}>{children}</G>
+      </AnimatedG>
+    </G>
+  );
 }
 const between = (time: Timeline, start: number, end: number, from: number, to: number, easing?: Ease) =>
   keyed(time, [[start, from], [end, to, easing]]);
@@ -107,13 +120,13 @@ function Operations({ time, c }: { time: Timeline; c: Colors }) {
         return <AnimatedPath key={ly} d={`M290 ${ly}H${to}`} stroke={faint} strokeWidth={6} strokeDasharray={[length, length]} strokeDashoffset={between(time, 100 + i * 60, 430 + i * 60, length, 0, out)} />;
       })}
       <AnimatedG opacity={between(time, 100, 160, 0, 1)} translateX={x} translateY={y}>
-        <AnimatedG scale={between(time, 100, 800, 0.3, 1, out)} originX={459} originY={314}>
+        <Pivot x={459} y={314} scale={between(time, 100, 800, 0.3, 1, out)}>
           <Circle cx={459} cy={314} r={62} fill={c.bg} stroke={lensColor} strokeWidth={6} />
           <Path d="M493 372L522 407" stroke={lensColor} strokeWidth={13} />
-          <AnimatedG rotation={cross} originX={459} originY={314}>
+          <Pivot x={459} y={314} rotation={cross}>
             <Path d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
-          </AnimatedG>
-        </AnimatedG>
+          </Pivot>
+        </Pivot>
       </AnimatedG>
     </Svg>
   );
@@ -134,14 +147,14 @@ function Accounts({ time, c }: { time: Timeline; c: Colors }) {
   return (
     <Svg width={160} height={160} viewBox="0 0 160 160" fill="none" strokeLinecap="round" strokeLinejoin="round">
       <AnimatedG opacity={keyed(time, [[2400, 0], [2500, 1]])} translateY={between(time, 2400, 2900, 40, 0, out)}>
-        <G rotation={14} originX={100} originY={50}>
+        <Pivot x={100} y={50} rotation={14}>
           <Rect x={72} y={22} width={52} height={34} rx={4} {...note} />
           <Circle cx={98} cy={39} r={7} {...mark} />
-        </G>
-        <G rotation={-6} originX={80} originY={50}>
+        </Pivot>
+        <Pivot x={80} y={50} rotation={-6}>
           <Rect x={54} y={20} width={52} height={34} rx={4} {...note} />
           <Circle cx={80} cy={37} r={7} {...mark} />
-        </G>
+        </Pivot>
       </AnimatedG>
       <AnimatedG opacity={between(time, 0, 100, 0, 1)}>
         <Rect x={12} y={44} width={116} height={92} rx={18} fill="#ef7f66" stroke={c.ink} strokeWidth={4} />
@@ -153,9 +166,9 @@ function Accounts({ time, c }: { time: Timeline; c: Colors }) {
       {drop(750, 117)}
       {drop(1200, 108)}
       <AnimatedG opacity={keyed(time, [[1800, 0], [1850, 1]])} translateX={between(time, 1800, 2200, 40, 0, out)} translateY={between(time, 1800, 2200, -50, 0, Easing.in(Easing.quad))}>
-        <G rotation={-38} originX={140} originY={122}>
+        <Pivot x={140} y={122} rotation={-38}>
           <Rect x={127} y={118} width={26} height={8} rx={4} {...coin} />
-        </G>
+        </Pivot>
       </AnimatedG>
     </Svg>
   );
@@ -237,50 +250,79 @@ function Statistics({ time, c }: { time: Timeline; c: Colors }) {
         strokeDashoffset={between(time, 50, 1250, ARROW_LENGTH, 0, soft)}
       />
       <AnimatedPath d="M343 208 371 196 363 225" stroke="#98da6a" strokeWidth={12} opacity={keyed(time, [[1180, 0], [1330, 1]])} />
-      <AnimatedG opacity={keyed(time, [[1720, 0], [1800, 1]])} scale={between(time, 1720, 1970, 0.2, 1, pop)} originX={399} originY={177}>
-        <Path d={star(399, 177, 22, 10)} fill="#fcd34d" stroke="#fcd34d" strokeWidth={4} />
+      <AnimatedG opacity={keyed(time, [[1720, 0], [1800, 1]])}>
+        <Pivot x={399} y={177} scale={between(time, 1720, 1970, 0.2, 1, pop)}>
+          <Path d={star(399, 177, 22, 10)} fill="#fcd34d" stroke="#fcd34d" strokeWidth={4} />
+        </Pivot>
       </AnimatedG>
     </Svg>
   );
 }
 
-// ---- Budgets (2.4 s, then it settles) ----------------------------------------------------------------
-// A banknote slides in and sways; a yellow ring appears small at its upper right, grows while it goes along a straight
-// line over the note to the lower left, and leaves there. Measured on the recording (its pixels).
-const NOTE = "M45 200C110 188 150 150 190 112C225 80 265 62 300 55L350 150C310 168 275 190 240 228C205 262 160 290 112 300Z";
-// The ring: where (along x), how wide it is outside, and how thick, at the moments of the recording (ms from the note).
-const RING_X: ReadonlyArray<readonly [number, number]> = [[500, 626], [570, 592], [630, 560], [700, 528], [770, 500], [830, 477], [900, 460], [970, 446], [1030, 434], [1100, 422], [1170, 410], [1500, 354], [1900, 282], [2030, 251], [2100, 229], [2170, 192], [2230, 150], [2300, 106]];
+// ---- Budgets (3.2 s) ---------------------------------------------------------------------------------
+// A banknote that flows like a ribbon in the wind: its outline is a quadrilateral whose long sides are curves, and the
+// curves, the corners and the tilt change from frame to frame; a yellow ring appears small at the upper right, grows,
+// goes down and to the left over the note and shrinks away at the lower left; the note keeps moving a little after it
+// and settles. Every number is read from the recording, frame by frame (ui/budget-motion.ts, its pixels).
+const NOTE_STROKE = 23;
+const RING_STROKE = 25;
+const CORNER_DISC = 25;
+const arcCircle = (x: number, y: number, r: number) => `M${x - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`;
+const noteTimes = NOTE_FRAMES.map((row) => row[0]!);
+const noteOutline = NOTE_FRAMES.map((row) => `M${row[1]} ${row[2]}C${row[3]} ${row[4]} ${row[5]} ${row[6]} ${row[7]} ${row[8]}L${row[9]} ${row[10]}C${row[11]} ${row[12]} ${row[13]} ${row[14]} ${row[15]} ${row[16]}Z`);
+// The four round marks inside the corners (a little way from each corner toward the middle of the note).
+const noteMarks = NOTE_FRAMES.map((row) => {
+  const corners: Point[] = [[row[1]!, row[2]!], [row[7]!, row[8]!], [row[9]!, row[10]!], [row[15]!, row[16]!]];
+  const mx = corners.reduce((sum, c) => sum + c[0], 0) / 4;
+  const my = corners.reduce((sum, c) => sum + c[1], 0) / 4;
+  return corners
+    .map(([x, y]) => {
+      const length = Math.hypot(mx - x, my - y) || 1;
+      return arcCircle(Math.round(x + ((mx - x) / length) * CORNER_DISC), Math.round(y + ((my - y) / length) * CORNER_DISC), CORNER_DISC);
+    })
+    .join("");
+});
+const ringTimes = RING_FRAMES.map((row) => row[0]!);
+// The ring goes round the note: its right half passes behind the note, its left half in front of it (seen on the
+// recording). Each half is a half circle, drawn as the ring grows and moves.
+const halfRing = (side: 0 | 1) =>
+  RING_FRAMES.map((row) => {
+    const r = Math.max(1, row[3]! - RING_STROKE / 2);
+    return `M${row[1]} ${(row[2]! - r).toFixed(1)}A${r.toFixed(1)} ${r.toFixed(1)} 0 0 ${side} ${row[1]} ${(row[2]! + r).toFixed(1)}`;
+  });
+const ringBack = halfRing(1);
+const ringFront = halfRing(0);
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
-  const ringX = keyed(time, RING_X.map(([t, v]) => [t, v] as Key));
-  const ringY = ringX.interpolate({ inputRange: [100, 626], outputRange: [150 + (626 - 100) * 0.6, 150] });
-  const outside = keyed(time, [[500, 7], [570, 76], [630, 135], [700, 180], [770, 208], [830, 222], [900, 229], [1030, 235], [1230, 241], [1900, 236], [2030, 230], [2100, 222], [2170, 198], [2230, 147], [2300, 69], [2350, 0]]);
-  const thick = keyed(time, [[500, 4], [570, 19], [630, 23], [700, 30], [900, 30], [1100, 22], [1230, 17], [1430, 16], [2350, 16]]);
-  const radius = Animated.divide(Animated.subtract(outside, thick), 2);
-  const sway = keyed(time, [[30, 3.5], [370, -3.5, soft], [630, 4, soft], [1100, -3.5, soft], [1800, 3.5, soft], [2300, -3.5, soft], [2500, 3, soft], [2770, -3.5, soft], [2970, 0, soft]]);
+  const line = (index: number) => keyed(time, NOTE_FRAMES.map((row) => [row[0]!, row[index]!] as Key));
+  const first = ringTimes[0]!;
+  const last = ringTimes[ringTimes.length - 1]!;
+  const ringOpacity = keyed(time, [[first - 1, 0], [first, 1], [last, 1], [last + 1, 0]]);
+  const half = (strings: string[]) => time.interpolate({ inputRange: ringTimes, outputRange: strings, extrapolate: "clamp" });
   return (
-    <Svg width={276} height={202} viewBox="60 90 600 440" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      <AnimatedG translateX={between(time, 30, 170, 201, 160, out)} translateY={130} opacity={between(time, 0, 100, 0, 1)}>
-        <AnimatedG rotation={sway} originX={200} originY={178}>
-          <Path d={NOTE} stroke={c.positive} strokeWidth={34} />
-          <Circle cx={78} cy={210} r={26} fill={c.positive} stroke="none" />
-          <Circle cx={275} cy={78} r={26} fill={c.positive} stroke="none" />
-          <Circle cx={330} cy={138} r={26} fill={c.positive} stroke="none" />
-          <Circle cx={125} cy={285} r={26} fill={c.positive} stroke="none" />
-          <G rotation={20} originX={200} originY={176}>
-            <Path d="M174 176A26 37 0 1 0 226 176A26 37 0 1 0 174 176Z" fill={c.positive} stroke="none" />
-          </G>
+    <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
+      <AnimatedPath d={half(ringBack)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
+        {/* The note has a paper of the screen's colour, so the half of the ring behind it is hidden under it. */}
+        <AnimatedPath d={time.interpolate({ inputRange: noteTimes, outputRange: noteOutline, extrapolate: "clamp" })} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" />
+        <AnimatedPath d={time.interpolate({ inputRange: noteTimes, outputRange: noteMarks, extrapolate: "clamp" })} fill={c.positive} stroke="none" />
+        <AnimatedG translateX={line(17)} translateY={line(18)}>
+          <AnimatedG rotation={line(19)}>
+            <Ellipse cx={0} cy={0} rx={26} ry={35} fill={c.positive} />
+          </AnimatedG>
         </AnimatedG>
       </AnimatedG>
-      <AnimatedCircle cx={ringX} cy={ringY} r={radius} stroke="#fbbf24" strokeWidth={thick} opacity={keyed(time, [[499, 0], [500, 1], [2340, 1], [2350, 0]])} />
+      <AnimatedPath d={half(ringFront)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
     </Svg>
   );
 }
 
 // ---- Scheduled payments (1.9 s) ----------------------------------------------------------------------
-// A calendar in a light circle with a thin ring around it: it swings on its lower edge like a pendulum, each swing
-// smaller (about ±10°, 5°, 2.5°), and stands still. The colours come from the theme.
+// A calendar in a light circle with a thin ring around it: it rocks a little on its lower edge like a bell (the angle
+// of every frame of the recording: about ±10°, then 5°, 2.5°, and it stands still after 2 s). The circle does not
+// move. The colours come from the theme.
+const SWING: ReadonlyArray<Key> = [[0,-1.0],[167,-6.5],[234,-8.6],[301,-10.0],[367,-8.0],[434,-4.0],[501,0.1],[568,4.4],[634,8.2],[701,9.6],[768,6.7],[835,2.9],[901,-1.1],[968,-4.5],[1035,-4.1],[1102,-1.5],[1168,1.2],[1235,3.7],[1302,4.8],[1368,2.5],[1435,0.0],[1502,-1.8],[1569,-2.4],[1635,-1.1],[1702,1.2],[1769,2.6],[1836,2.7],[1902,1.8],[1969,0.6],[2040,0.0]];
 function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
-  const swing = keyed(time, [[0, -10], [200, -9.5, soft], [580, 9.7, soft], [900, -4.8, soft], [1170, 4.8, soft], [1430, -2.3, soft], [1700, 3, soft], [1900, 0, soft]]);
+  const swing = keyed(time, SWING);
   const pin = mix(c.accent, c.bg, 0.4);
   const day = mix(c.muted, c.bg, 0.6);
   const square = (cx: number, cy: number, fill = day) => <Rect key={`${cx}-${cy}`} x={cx} y={cy} width={18} height={18} rx={2} fill={fill} />;
@@ -288,7 +330,7 @@ function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
     <Svg width={190} height={190} viewBox="50 56 380 380">
       <Circle cx={240} cy={248} r={180} stroke={mix(c.accent, c.bg, 0.12)} strokeWidth={4} fill="none" />
       <Circle cx={240} cy={248} r={163} fill={mix(c.accent, c.bg, 0.16)} />
-      <AnimatedG rotation={swing} originX={241} originY={349}>
+      <Pivot x={241} y={349} rotation={swing}>
         <Rect x={178} y={143} width={30} height={62} rx={15} fill={pin} />
         <Rect x={278} y={143} width={30} height={62} rx={15} fill={pin} />
         <Path d="M150 349V187A10 10 0 0 1 160 177H323A10 10 0 0 1 333 187V339A10 10 0 0 1 323 349H160A10 10 0 0 1 150 339Z" fill={c.bg} />
@@ -297,7 +339,7 @@ function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
         {[166, 230, 262, 294].map((x) => square(x, 262))}
         {square(198, 262, c.positive)}
         {[166, 198, 230, 262].map((x) => square(x, 293))}
-      </AnimatedG>
+      </Pivot>
     </Svg>
   );
 }

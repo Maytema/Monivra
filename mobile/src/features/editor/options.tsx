@@ -39,7 +39,7 @@ export const optionsSet = (draft: EditorDraft): number => (draft.reminder ? 1 : 
 function FieldTitle({ children }: { children: string }) {
   const p = usePalette();
   const t = useT();
-  return <Text style={{ color: p.inkSoft, fontSize: 14, marginTop: 14, marginBottom: 6 }}>{t.t(children)}</Text>;
+  return <Text style={{ color: p.inkSoft, fontSize: 19, marginTop: 14, marginBottom: 8 }}>{t.t(children)}</Text>;
 }
 
 // A value between two arrows: the arrows change it by one, tapping the value types it in on the number pad. An arrow
@@ -54,18 +54,19 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
       accessibilityLabel={t.t(description)}
       disabled={disabled}
       onPress={() => onStep(step)}
-      style={({ pressed }) => ({ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "center", opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? p.soft : "transparent", ...(name === "left" ? { borderRightWidth: 1 } : { borderLeftWidth: 1 }), borderColor: p.line })}
+      style={({ pressed }) => ({ flex: 1, alignSelf: "stretch", alignItems: "center", justifyContent: "center", borderRadius: 16, opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? p.soft : "transparent" })}
     >
-      <Icon name={name} size={22} color={p.accentInk} />
+      <Icon name={name} size={22} color={p.ink} />
     </Pressable>
   );
   return (
     <View>
       <FieldTitle>{label}</FieldTitle>
-      <View style={{ flexDirection: "row", alignItems: "center", height: 48, marginBottom: 4, borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg, overflow: "hidden" }}>
+      {/* The rounded outline holds the arrows; the value stands in a box of its own (thin line, small corners) between them. */}
+      <View style={{ flexDirection: "row", alignItems: "stretch", height: 54, marginBottom: 4, borderWidth: 1, borderColor: p.muted, borderRadius: 18 }}>
         {arrow("left", -1, atMin, "Decrease")}
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 3, minWidth: 0, alignSelf: "stretch", alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ color: p.ink, fontSize: 17 }}>{text}</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 3, minWidth: 0, marginTop: -1, marginBottom: -1, borderWidth: 1, borderColor: p.muted, borderRadius: 4, alignItems: "center", justifyContent: "center" }}>
+          <Text style={{ color: p.ink, fontSize: 18 }}>{text}</Text>
         </Pressable>
         {arrow("right", 1, atMax, "Increase")}
       </View>
@@ -78,20 +79,11 @@ function Dropdown({ text, onPress }: { text: string; onPress: () => void }) {
   const p = usePalette();
   const t = useT();
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={{ height: 48, marginTop: 18, marginBottom: 4, paddingHorizontal: 16, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderWidth: 1, borderColor: p.line, borderRadius: 13, backgroundColor: p.bg }}>
-      <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(text)}</Text>
-      <Icon name="down" size={20} />
-    </Pressable>
-  );
-}
-
-function FieldButton({ label, text, onPress }: { label: string; text: string; onPress: () => void }) {
-  const p = usePalette();
-  const t = useT();
-  return (
-    <Pressable onPress={onPress} style={{ marginTop: 12, borderWidth: 1, borderColor: p.muted, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 9 }}>
-      <Text style={{ color: p.muted, fontSize: 12 }}>{t.t(label)}</Text>
-      <Text style={{ color: p.ink, fontSize: 16 }}>{text}</Text>
+    <Pressable accessibilityRole="button" onPress={onPress} style={{ height: 54, marginTop: 14, marginBottom: 4, borderWidth: 1, borderColor: p.muted, borderRadius: 18, alignItems: "center", justifyContent: "center" }}>
+      <Text style={{ color: p.ink, fontSize: 19 }}>{t.t(text)}</Text>
+      <View style={{ position: "absolute", right: 16 }}>
+        <Icon name="down" size={22} color={p.ink} />
+      </View>
     </Pressable>
   );
 }
@@ -103,16 +95,14 @@ function Footer({ off, ok, offLabel = "Turn off" }: { off?: () => void; ok: () =
   return (
     <View>
       {off ? (
-        <Pressable onPress={off} accessibilityRole="button" style={{ marginTop: 18, alignItems: "center", paddingVertical: 12, borderRadius: 999, borderWidth: 1, borderColor: p.accent }}>
-          <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t(offLabel)}</Text>
+        <Pressable onPress={off} accessibilityRole="button" style={{ marginTop: 16, alignSelf: "flex-end", minWidth: 100, alignItems: "center", paddingHorizontal: 22, paddingVertical: 10, borderRadius: 999, borderWidth: 1, borderColor: p.line }}>
+          <Text style={{ color: p.inkSoft, fontSize: 15 }}>{t.t(offLabel)}</Text>
         </Pressable>
       ) : null}
-      {/* Under the full-width "Turn off" the two buttons stand in the middle, not at the right edge (the owner: the form
-          looked crooked because the buttons were not centred). */}
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 16, marginTop: 14 }}>
+      <DialogActions>
         <TextButton label="Cancel" onPress={close} />
         <PrimaryPill label="OK" onPress={ok} />
-      </View>
+      </DialogActions>
     </View>
   );
 }
@@ -184,7 +174,7 @@ function RecurrenceDialog({ value, onDone }: { value: Recurrence | null; onDone:
   const weekday = (n: number) => t.weekday(n, "short");
   return (
     <View>
-      <DialogTitle>{t.t("Recur")}</DialogTitle>
+      <DialogTitle center>{t.t("Recur")}</DialogTitle>
       <Stepper
         label="Repeat every"
         text={String(r.every)}
@@ -246,6 +236,7 @@ export const openRecurrence = (value: Recurrence | null, onDone: (r: Recurrence 
 // ---- Reminder ------------------------------------------------------------------------------------
 function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null; paymentTime: string | undefined; onDone: (r: Reminder | null) => void }) {
   const t = useT();
+  const p = usePalette();
   const close = useCloseLayer();
   const [r, setR] = useState<Reminder>(value ?? { before: 0, unit: "Days", time: "09:00" });
   const info = (title: string, lines: string[]) =>
@@ -265,7 +256,7 @@ function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null
     );
   return (
     <View>
-      <DialogTitle>{t.t("Reminder")}</DialogTitle>
+      <DialogTitle center>{t.t("Reminder")}</DialogTitle>
       <Stepper
         label="Before"
         text={String(r.before)}
@@ -285,9 +276,15 @@ function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null
           )
         }
       />
-      <FieldButton label="At" text={timeLabel(r.time, t.locale)} onPress={() => openTime(r.time, (time) => setR({ ...r, time }))} />
-      <Pressable accessibilityRole="button" onPress={openReminderHelp} style={{ minHeight: 47, borderRadius: 28, borderWidth: 1, borderColor: "#8886", alignItems: "center", justifyContent: "center", marginVertical: 12, paddingHorizontal: 12 }}>
-        <Text style={{ fontSize: 15, textAlign: "center" }}>{t.t("Important information about setting a reminder")}</Text>
+      <FieldTitle>At</FieldTitle>
+      <Pressable accessibilityRole="button" onPress={() => openTime(r.time, (time) => setR({ ...r, time }))} style={{ height: 54, borderWidth: 1, borderColor: p.muted, borderRadius: 18, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ color: p.ink, fontSize: 19 }}>{timeLabel(r.time, t.locale)}</Text>
+        <View style={{ position: "absolute", right: 16 }}>
+          <Icon name="clock" size={24} color={p.ink} />
+        </View>
+      </Pressable>
+      <Pressable accessibilityRole="button" onPress={openReminderHelp} style={{ minHeight: 47, borderRadius: 28, borderWidth: 1, borderColor: "#8886", alignItems: "center", justifyContent: "center", marginTop: 18, paddingHorizontal: 12 }}>
+        <Text style={{ color: p.ink, fontSize: 16, textAlign: "center" }}>{t.t("Important information about setting a reminder")}</Text>
       </Pressable>
       <Footer
         off={() => {

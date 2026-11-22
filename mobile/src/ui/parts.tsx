@@ -166,7 +166,7 @@ export function ActionTile({ icon, label, tone, onPress }: { icon: string; label
 export function ActionGrid({ children, columns = 3 }: { children: ReactNode; columns?: number }) {
   return (
     <Columns.Provider value={columns}>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", paddingTop: 24, paddingHorizontal: 4, marginBottom: -8 }}>{children}</View>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", paddingTop: 24, paddingHorizontal: 4, marginBottom: -8 }}>{children}</View>
     </Columns.Provider>
   );
 }
