@@ -8,6 +8,7 @@ import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_BACK, RING_FRAMES, RING_FRONT } from "./budget-motion.ts";
+import { PAPER_LINES, PAPER_SHAPES } from "./operations-paper.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
@@ -88,33 +89,41 @@ interface Colors {
 
 // ---- Operations (4.9 s) ------------------------------------------------------------------------------
 // A sheet of paper (its top corner rolled over, its bottom curled up), its lines drawn one after another, and a lens
-// that pops in, settles over the sheet, turns about 32° the way a hand holds it, goes up and left, waits, goes down
+// that pops in, settles over the sheet, turns about 36° the way a hand holds it, goes up and left, waits, goes down
 // along the sheet's edge, waits, and comes back to rest. Its cross grows from a dot, and turns with the lens, so it
 // looks like a plus while the lens is turned and like an x at rest. Every number is read from the recording (30 fps):
-// [time ms, shift x, shift y, turn of the lens in degrees].
-const LENS: ReadonlyArray<ReadonlyArray<number>> = [[0,21,29,-2],[403,21,28,-2.6],[470,21,28,-2.6],[537,20,28,-2.6],[603,18,24,-2.5],[670,13,17,-1.9],[737,10,12,-1.2],[803,8,10,-0.7],[870,7,8,-0.4],[937,6,7,-0.1],[1003,5,6,-0.1],[1070,5,6,0.7],[1137,4,5,1.0],[1203,4,5,1.0],[1270,4,5,1.0],[1337,4,4,0.9],[1403,3,4,0.1],[1470,1,2,-2.3],[1537,-5,-3,-7.8],[1603,-13,-10,-14.4],[1670,-18,-13,-19.0],[1737,-21,-16,-22.3],[1803,-24,-18,-24.7],[1870,-26,-19,-26.6],[1937,-27,-20,-28.0],[2003,-28,-21,-29.2],[2070,-29,-22,-30.0],[2137,-29,-22,-30.5],[2203,-30,-23,-31.0],[2270,-30,-23,-31.5],[2337,-31,-23,-31.9],[2403,-31,-23,-32.1],[2470,-31,-23,-32.3],[2537,-31,-23,-32.4],[2603,-31,-23,-32.4],[2670,-31,-22,-32.2],[2737,-31,-16,-31.8],[2803,-31,-4,-31.6],[2870,-31,12,-32.0],[2937,-31,22,-33.3],[3003,-31,29,-34.7],[3070,-31,34,-37.2],[3137,-31,38,-38.7],[3203,-31,41,-39.4],[3270,-31,44,-39.8],[3337,-31,46,-40.0],[3403,-31,47,-40.4],[3470,-31,48,-40.2],[3537,-31,49,-40.5],[3603,-31,50,-40.5],[3670,-31,50,-40.4],[3737,-31,50,-40.5],[3803,-31,50,-40.2],[3870,-30,49,-37.9],[3937,-27,43,-30.5],[4003,-20,32,-19.1],[4070,-14,22,-12.1],[4137,-10,15,-8.5],[4203,-7,11,-6.0],[4270,-5,8,-4.5],[4337,-4,5,-3.3],[4403,-3,4,-2.4],[4470,-2,3,-1.5],[4537,-1,1,-0.9],[4603,-1,1,-0.5],[4670,0,0,-0.2],[4737,0,0,-0.0],[4803,0,0,-0.0],[4870,0,0,-0.0],[4970,0,0,0]];
+// [time ms from the first frame of the picture, shift x, shift y, turn of the lens in degrees]; the turn is that of the cross (it
+// is always inside the lens, the handle is hidden by the sheet for a while). Refitted in 0.3.10 from every frame.
+const LENS: ReadonlyArray<ReadonlyArray<number>> = [[0,38.8,45.3,0],[33,32.8,43,0],[67,29.4,39,0],[100,25,34.6,0],[167,22.5,30.3,0],[300,20.7,27,0],[533,19.8,25.6,0],[600,17.5,22.5,0],[667,12.6,16.1,0],[733,9.4,12,0],[867,6.4,8,0],[1133,4.2,5,0],[1367,3.6,4.4,0],[1433,2,3.1,-2],[1500,-2.2,-0.3,-5.8],[1600,-13.2,-8.8,-16.8],[1667,-18.3,-12.7,-21.8],[1733,-21.8,-15.2,-25.6],[1900,-26.9,-18.9,-30.6],[2133,-30.2,-21.3,-34.3],[2533,-31.9,-22.5,-35.9],[2633,-32,-21.9,-36],[2700,-31.9,-18.8,-36],[2733,-31.9,-15.5,-35.9],[2767,-31.9,-10.2,-36],[2867,-32,12.6,-36],[2900,-32,18.4,-36],[2967,-31.9,27,-35.8],[3067,-32,35.4,-35.9],[3200,-32,42.3,-35.9],[3367,-32,47.3,-35.9],[3600,-32,50.6,-36],[3800,-31.9,51.1,-35.7],[3867,-30.9,49.6,-34],[3900,-29.8,47.6,-32.2],[3933,-27.8,44.3,-29.1],[3967,-24.7,39.1,-24.9],[4033,-17.2,26.8,-17.4],[4067,-14.4,22.1,-14.3],[4133,-10.3,15.5,-10.5],[4233,-6.5,9.5,-6.7],[4400,-2.8,4,-2.7],[4567,-1,1.3,-0.9],[4867,-0,0,-0.2],[4967,-0,0,-0.1]];
+const LENS_SCALE: ReadonlyArray<Key> = [[0, 0.83],[33, 0.853],[100, 0.987],[167, 1.055],[300, 1.107],[500, 1.121],[600, 1.101],[733, 1.044],[1067, 1.006],[4967, 1.003]];
+const CROSS_SCALE: ReadonlyArray<Key> = [[0, 0],[67, 0],[100, 0.33],[233, 0.383],[400, 0.71],[767, 0.955],[1833, 1],[4967, 1]];
+const LINE_DRAW: ReadonlyArray<ReadonlyArray<Key>> = [[[0, 125.0], [33, 125.0], [67, 115.0], [100, 95.0], [133, 70.0], [167, 52.0], [200, 39.0], [233, 29.0], [300, 16.0], [367, 8.0], [433, 2.0], [467, 0.0], [1500, 0.0]], [[0, 99.5], [33, 99.5], [67, 89.5], [100, 69.5], [133, 44.5], [167, 26.5], [200, 13.5], [233, 3.5], [267, 0.0], [1500, 0.5]], [[100, 51.0], [133, 51.0], [167, 49.0], [200, 45.0], [267, 26.0], [333, 13.0], [433, 4.0], [533, 0.0], [1500, 0.0]], [[167, 51.5], [200, 51.5], [233, 49.5], [267, 45.5], [333, 26.5], [367, 19.5], [433, 10.5], [500, 4.5], [600, 0.5], [1500, 0.0]]];
 function Operations({ time, c }: { time: Timeline; c: Colors }) {
   const dark = c.muted;
   const faint = mix(c.muted, c.bg, 0.45);
   const lensColor = mix(c.muted, c.bg, 0.62);
   const lens = (index: number) => keyed(time, LENS.map((row) => [row[0]!, row[index]!] as Key));
-  const lines: ReadonlyArray<readonly [number, number]> = [[225, 433], [275, 405], [329, 351], [380, 351]];
   return (
     <Svg width={170} height={170} viewBox="200 155 340 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {/* The sheet is traced from the recording (scripts/trace-operations-paper.py): outline, curl and roll are one dark
+          shape, the paper inside is its hole; the even-odd rule leaves it open. */}
       <AnimatedG opacity={between(time, 0, 50, 0, 1)}>
-        <Path d="M248 215A48 48 0 0 1 296 167H466M466 226V440M248 215V286M248 295V301M248 330V430" stroke={dark} strokeWidth={6} />
-        <Path d="M463 226V167H497A31 31 0 0 1 528 198V218A8 8 0 0 1 520 226Z" fill={dark} stroke="none" />
-        <Path d="M222 430H393C393 462 408 476 432 476C450 476 462 462 462 440H470C470 468 452 488 430 488H222A14 14 0 0 1 208 474V444A14 14 0 0 1 222 430Z" fill={dark} stroke="none" />
+        {PAPER_SHAPES.map((d, i) => (
+          <Path key={i} d={d} fill={dark} fillRule="evenodd" stroke="none" />
+        ))}
       </AnimatedG>
-      {lines.map(([ly, to], i) => {
-        const length = to - 290;
-        return <AnimatedPath key={ly} d={`M290 ${ly}H${to}`} stroke={faint} strokeWidth={6} strokeDasharray={[length, length]} strokeDashoffset={between(time, 40 + i * 70, 400 + i * 70, length, 0, out)} />;
+      {PAPER_LINES.map(([ly, from, to], i) => {
+        const length = to - from;
+        const draw = LINE_DRAW[i]!;
+        // Measured on every frame of the recording: the first two lines are drawn together, the others follow; a line not yet
+        // started is not shown (a round cap would show as a dot).
+        return <AnimatedPath key={ly} d={`M${from} ${ly}H${to}`} stroke={faint} strokeWidth={7.5} strokeDasharray={[length, length]} strokeDashoffset={keyed(time, draw)} opacity={keyed(time, [[draw[0]![0] - 1, 0], [draw[0]![0], 1]])} />;
       })}
       <AnimatedG opacity={between(time, 0, 60, 0, 1)} translateX={lens(1)} translateY={lens(2)}>
-        <Pivot x={459} y={314} rotation={lens(3)} scale={keyed(time, [[0, 0.6], [170, 1, out], [400, 1.115], [740, 1.04], [1070, 1.005], [1300, 1]])}>
+        <Pivot x={459} y={314} rotation={lens(3)} scale={keyed(time, LENS_SCALE)}>
           <Circle cx={459} cy={314} r={62} fill={c.bg} stroke={lensColor} strokeWidth={6} />
           <Path d="M493 372L522 407" stroke={lensColor} strokeWidth={13} />
-          <Pivot x={459} y={314} scale={keyed(time, [[150, 0.02], [300, 0.3], [500, 0.75], [700, 0.93], [1070, 1]])}>
+          <Pivot x={459} y={314} scale={keyed(time, CROSS_SCALE)}>
             <Pivot x={459} y={314} rotation={45}>
               <Path d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
             </Pivot>
@@ -271,8 +280,9 @@ function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   return (
     <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
       <AnimatedPath d={blend(ringTimes, RING_BACK)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      {/* Opaque: the note is filled with the screen's colour, so the part of the ring behind it is hidden by the note itself. */}
       <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
-        <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill="none" stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
+        <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
         <AnimatedPath d={blend(NOTE_TIMES, NOTE_MARKS)} fill={c.positive} stroke="none" />
       </AnimatedG>
       <AnimatedPath d={blend(ringTimes, RING_FRONT)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />

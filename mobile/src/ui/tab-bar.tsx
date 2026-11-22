@@ -61,7 +61,18 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // pill moved only together with the new screen, so for the moment the screen took the press looked lost and was
   // pressed again.
   const [pressed, setPressed] = useState<string | null>(null);
+  // The press that is current: a navigation waiting for its frame is dropped when a newer press came meanwhile, and the
+  // route key is read from the latest state at that frame (a key captured when the bar was drawn can be stale).
+  const pressSeq = useRef(0);
+  // The key of every tab as last seen, to write down when a key changes under the same name (the churn that cost build 133
+  // the pill, see above).
+  const keys = useRef<Record<string, string>>({});
   useEffect(() => {
+    for (const r of state.routes) {
+      const was = keys.current[r.name];
+      if (was !== undefined && was !== r.key) perfNote(`tab key changed ${r.name}: ${was} -> ${r.key}`);
+      keys.current[r.name] = r.key;
+    }
     const name = state.routes[state.index]?.name;
     // Take `asked` from the navigator only when no newer target is pending (nothing asked, or the asked tab was reached);
     // a slow navigation to B that commits after the person already asked for A must not overwrite A.
@@ -103,7 +114,11 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
           if (event.defaultPrevented) return;
           asked.current = route.name;
           setPressed(route.name);
-          requestAnimationFrame(() => navigateToTab(route.key));
+          const seq = ++pressSeq.current;
+          requestAnimationFrame(() => {
+            if (seq !== pressSeq.current) return perfNote(`tab navigation skipped: ${route.name} was replaced by a newer press`);
+            navigateToTab(shown.current.routes.find((r) => r.name === route.name)?.key ?? route.key);
+          });
         };
         return (
           <Pressable
