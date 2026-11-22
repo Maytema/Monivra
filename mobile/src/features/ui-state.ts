@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import { systemClock } from "../domain/dates.ts";
 import { emptyFilters, type Filters, type Period } from "../domain/periods.ts";
+import { markActed } from "../ui/quiet.ts";
 
 interface ViewState {
   period: Period;
@@ -22,7 +23,9 @@ const subscribe = (fn: () => void) => {
 // that changes nothing (the budgets setting the month that is already shown) wakes nobody at all.
 const samePeriod = (a: Period, b: Period) => a.mode === b.mode && a.anchor === b.anchor && a.from === b.from && a.to === b.to;
 const sameFilters = (a: Filters, b: Filters) => JSON.stringify(a) === JSON.stringify(b);
-export function setView(change: Partial<ViewState>): void {
+// `byPerson` is false for a page that puts its own view in place (and takes it back): that is not the person doing
+// something, so the empty-state pictures keep playing (ui/quiet.ts).
+export function setView(change: Partial<ViewState>, byPerson = true): void {
   const next: ViewState = { ...state };
   let changed = false;
   if (change.period && !samePeriod(change.period, state.period)) (next.period = change.period), (changed = true);
@@ -30,6 +33,7 @@ export function setView(change: Partial<ViewState>): void {
   if (change.filters && !sameFilters(change.filters, state.filters)) (next.filters = change.filters), (changed = true);
   if (!changed) return;
   state = next;
+  if (byPerson) markActed();
   for (const fn of listeners) fn();
 }
 

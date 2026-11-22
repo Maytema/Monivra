@@ -31,9 +31,9 @@ export function FilteredOperations() {
   useLayoutEffect(() => {
     const saved = before.current;
     const filters = account ? { ...emptyFilters(), accounts: [account] } : category ? { ...emptyFilters(), categories: categoryFamily(data, category) } : { ...emptyFilters(), categories: (categories ?? "").split(",").filter(Boolean) };
-    setView({ filters, period: account ? { mode: "all", anchor: systemClock.today() } : saved.period });
+    setView({ filters, period: account ? { mode: "all", anchor: systemClock.today() } : saved.period }, false);
     setReady(true);
-    return () => setView({ filters: saved.filters, period: saved.period });
+    return () => setView({ filters: saved.filters, period: saved.period }, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const fab = useFabCollapse();

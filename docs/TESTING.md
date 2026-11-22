@@ -89,6 +89,10 @@ the first application imports whole and reads back the same").
   `engine …` = cost of platform calls). Add `perfLog(label, ms)` (`src/platform/perf.ts`) around a
   suspect and push; never guess. Typical causes: platform formatting in rows, a list that is not
   virtualized, a hook that reads the whole ledger, an animation on the JavaScript thread.
+- **Tabs feel slow or ignore taps**: `perf-summary.txt` ends with a table of the tab moves (presses, presses dropped as
+  true repeats, press-to-shown p50/p90, JavaScript pauses). The moves named `empty: ...` run on the empty profile (the
+  owner's case: every tab has an animated empty state) before the large ledger is restored; the later moves never see
+  empty states. Acceptance on the weak profile: no dropped press that was not a repeat, p90 under 200 ms.
 - **A crash at start**: `crash.txt` and `js-log.txt` of the run.
 - **Touches do nothing**: a responder that never released (see `ui/pager.tsx`
   `onPanResponderTerminationRequest`), or an invisible layer left open (`ui/sheets.tsx`).

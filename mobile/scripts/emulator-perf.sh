@@ -84,6 +84,64 @@ begin "first screen: start with the basic set"
 tap "Start"
 finish 1
 
+# The owner's case (0.3.7 phone, empty profile: every tab shows its empty state with an animation): quick taps on the
+# tabs right after the first screen, while the profile is still empty. The ledger restore below fills the lists and the
+# empty states are gone, so the moves further down never saw them. Tab taps go by coordinates taken once (no
+# "uiautomator dump" inside a measured move). perf-summary.py counts the "tab press" and "tab press dropped" lines and
+# the press-to-shown times of each move.
+# shown_tab: the tab the bar shows as open (its "selected" state), written to the steps.
+shown_tab() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  python3 - <<'PY'
+import xml.etree.ElementTree as ET
+names = ["Accounts", "Categories", "Operations", "Statistics", "More"]
+found = [n.get("content-desc") for n in ET.parse("/tmp/ui.xml").iter("node") if n.get("content-desc") in names and n.get("selected") == "true"]
+print(found[0] if found else "none")
+PY
+}
+# The centre of a tab of the bottom bar (by its label, in the lowest eighth of the screen: the same words appear
+# elsewhere on the screens, and a tap meant for a tab then went there — builds 100–110).
+tab_xy() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  python3 - "$1" <<'PY'
+import re, sys, xml.etree.ElementTree as ET
+best = None
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if n.get("content-desc") == sys.argv[1]:
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        if b > 2050 and (best is None or b > best[1]): best = (a, b, c, d)
+print(f"{(best[0] + best[2]) // 2} {(best[1] + best[3]) // 2}" if best else "540 1200")
+PY
+}
+ops=$(tab_xy "Operations"); stats=$(tab_xy "Statistics"); cats=$(tab_xy "Categories"); accs=$(tab_xy "Accounts"); more=$(tab_xy "More")
+log "empty profile, tab centres: accounts $accs, categories $cats, operations $ops, statistics $stats, more $more"
+begin "empty: Accounts → Statistics → Accounts (0.3 s)"
+adb shell input tap $stats; sleep 0.3; adb shell input tap $accs
+finish 3
+log "empty, after Accounts → Statistics → Accounts: shown $(shown_tab) (expected Accounts)"
+adb shell input tap $cats; sleep 2
+begin "empty: Categories → Operations → Categories (0.3 s)"
+adb shell input tap $ops; sleep 0.3; adb shell input tap $cats
+finish 3
+log "empty, after Categories → Operations → Categories: shown $(shown_tab) (expected Categories)"
+# 12 taps, a different tab each time, 0.25-0.5 s apart; the order and the pauses come from a fixed seed.
+mix=$(python3 - "$accs" "$cats" "$ops" "$stats" "$more" <<'PY'
+import random, sys
+random.seed(2311)
+tabs = [a.split() for a in sys.argv[1:]]
+last = 0  # the move starts on Accounts
+for _ in range(12):
+    last = random.choice([i for i in range(5) if i != last])
+    print(tabs[last][0], tabs[last][1], round(random.uniform(0.25, 0.5), 2), last)
+PY
+)
+adb shell input tap $accs; sleep 2
+begin "empty: 12 taps in random tab order, 0.25-0.5 s apart"
+while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"
+finish 3
+last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')
+log "empty, after 12 random taps: shown $(shown_tab) (expected index $last_tab of Accounts, Categories, Operations, Statistics, More)"
+
 # The large ledger comes in as a data file, the way a person moves data from the first application.
 tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
 begin "read the file and open the restore page"
@@ -131,30 +189,6 @@ finish 2
 
 # The owner's complaints, one move each (build 100 on): a tab pressed soon after another one, two quick period
 # swipes, the expense/income switch of the statistics, the pages that open slowly, a tab of a sheet chosen by a tap.
-# shown_tab: the tab the bar shows as open (its "selected" state), written to the steps.
-shown_tab() {
-  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
-  python3 - <<'PY'
-import xml.etree.ElementTree as ET
-names = ["Accounts", "Categories", "Operations", "Statistics", "More"]
-found = [n.get("content-desc") for n in ET.parse("/tmp/ui.xml").iter("node") if n.get("content-desc") in names and n.get("selected") == "true"]
-print(found[0] if found else "none")
-PY
-}
-# The centre of a tab of the bottom bar (by its label, in the lowest eighth of the screen: the same words appear
-# elsewhere on the screens, and a tap meant for a tab then went there — builds 100–110).
-tab_xy() {
-  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
-  python3 - "$1" <<'PY'
-import re, sys, xml.etree.ElementTree as ET
-best = None
-for n in ET.parse("/tmp/ui.xml").iter("node"):
-    if n.get("content-desc") == sys.argv[1]:
-        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
-        if b > 2050 and (best is None or b > best[1]): best = (a, b, c, d)
-print(f"{(best[0] + best[2]) // 2} {(best[1] + best[3]) // 2}" if best else "540 1200")
-PY
-}
 ops=$(tab_xy "Operations"); stats=$(tab_xy "Statistics"); cats=$(tab_xy "Categories"); accs=$(tab_xy "Accounts"); more=$(tab_xy "More")
 log "tab centres: accounts $accs, categories $cats, operations $ops, statistics $stats, more $more"
 adb shell input tap $ops; sleep 3

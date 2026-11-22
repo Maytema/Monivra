@@ -44,10 +44,20 @@ function FieldTitle({ children }: { children: string }) {
 // A value between two arrows: the arrows change it by one, tapping the value types it in on the number pad. An arrow
 // that cannot go further is dimmed. One rounded outline; inside it the arrow cells (a fifth of the width each) and the
 // value cell (three fifths) are told apart by thin vertical lines (the owner's photo of the Reminder dialog, 2026-11-22).
-function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string; text: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
+// `value` is the text the person set, empty while the field holds its default; `placeholder` is what the default looks
+// like (1, 0, ∞). The default is drawn as a placeholder in the ink colour (so it reads as a value) and in the muted
+// colour while the field is being typed into (so it reads as a hint): a default is not text the next key must be added
+// to ("05"), and nothing changes in the text when the field gets the focus, so nothing jumps (the ∞ used to go late).
+function Stepper({ label, value, placeholder, onStep, onType, atMin, atMax }: { label: string; value: string; placeholder: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
   const p = usePalette();
   const t = useT();
+  // The digits typed while the field has the focus (null when it has not): "1" then "0" must reach "10" although a lone "1"
+  // is the default again and `value` is empty then. It starts as `value`, so getting the focus changes nothing on screen.
   const [draft, setDraft] = useState<string | null>(null);
+  const focused = draft !== null;
+  // The caret is put after the digits once, when the field gets the focus; the selection is not kept controlled while
+  // the person types or moves it.
+  const [caret, setCaret] = useState<number | null>(null);
   const arrow = (name: "left" | "right", step: number, disabled: boolean, description: string) => (
     <Pressable
       accessibilityRole="button"
@@ -67,23 +77,26 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
         {arrow("left", -1, atMin, "Decrease")}
         <TextInput
           accessibilityLabel={t.t(label)}
-          value={draft ?? text}
-          // Tapping the value types into it on the system number keyboard: the cell is outlined, the caret blinks, and the
-          // caret stands after the digits there are (a ∞ or another word is cleared at once, so a number is typed anew).
-          onFocus={() => setDraft(/^\d+$/.test(text) ? text : "")}
+          value={draft ?? value}
+          placeholder={placeholder}
+          placeholderTextColor={focused ? p.muted : p.ink}
+          // Tapping the value types into it on the system number keyboard: the cell is outlined and the caret blinks.
+          onFocus={() => (setDraft(value), setCaret(value.length))}
           onChangeText={(v) => {
-            // The value is kept at every key, so the OK that follows needs no blur first.
-            const digits = v.replace(/\D/g, "").slice(0, 6);
+            // The value is kept at every key, so the OK that follows needs no blur first. Leading zeros are dropped.
+            setCaret(null);
+            const digits = v.replace(/\D/g, "").replace(/^0+(?=\d)/, "").slice(0, 6);
             setDraft(digits);
             onType(digits);
           }}
-          selection={draft === null ? undefined : { start: draft.length, end: draft.length }}
-          onBlur={() => setDraft(null)}
+          selection={caret === null ? undefined : { start: caret, end: caret }}
+          onSelectionChange={() => setCaret(null)}
+          onBlur={() => (setDraft(null), setCaret(null))}
           onSubmitEditing={() => Keyboard.dismiss()}
           keyboardType="numeric"
           selectionColor={p.accent}
           cursorColor={p.accent}
-          style={{ flex: 3, minWidth: 0, padding: 0, marginTop: -1, marginBottom: -1, borderWidth: draft === null ? 1 : 2, borderColor: draft === null ? p.muted : p.accent, borderRadius: 4, textAlign: "center", color: p.ink, fontSize: 18 }}
+          style={{ flex: 3, minWidth: 0, padding: 0, marginTop: -1, marginBottom: -1, borderWidth: focused ? 2 : 1, borderColor: focused ? p.accent : p.muted, borderRadius: 4, textAlign: "center", color: p.ink, fontSize: 18 }}
         />
         {arrow("right", 1, atMax, "Increase")}
       </View>
@@ -194,7 +207,8 @@ function RecurrenceDialog({ value, onDone }: { value: Recurrence | null; onDone:
       <DialogTitle center>{t.t("Recur")}</DialogTitle>
       <Stepper
         label="Repeat every"
-        text={String(r.every)}
+        value={r.every === 1 ? "" : String(r.every)}
+        placeholder="1"
         onStep={(k) => setR({ ...r, every: within(r.every + k, 1) })}
         onType={(v) => setR({ ...r, every: within(Number(v) || 1, 1) })}
         atMin={r.every <= 1}
@@ -228,7 +242,8 @@ function RecurrenceDialog({ value, onDone }: { value: Recurrence | null; onDone:
       ) : null}
       <Stepper
         label="Number of repetitions"
-        text={r.remaining === null ? "∞" : String(r.remaining)}
+        value={r.remaining === null ? "" : String(r.remaining)}
+        placeholder="∞"
         onStep={(k) => setR({ ...r, remaining: r.remaining === null ? (k > 0 ? 1 : null) : r.remaining + k || null })}
         onType={(v) => setR({ ...r, remaining: Number(v) >= 1 ? within(Number(v), 1) : null })}
         atMin={r.remaining === null}
@@ -276,7 +291,8 @@ function ReminderDialog({ value, paymentTime, onDone }: { value: Reminder | null
       <DialogTitle center>{t.t("Reminder")}</DialogTitle>
       <Stepper
         label="Before"
-        text={String(r.before)}
+        value={r.before === 0 ? "" : String(r.before)}
+        placeholder="0"
         onStep={(k) => setR({ ...r, before: within(r.before + k, 0) })}
         onType={(v) => setR({ ...r, before: within(Number(v) || 0, 0) })}
         atMin={r.before <= 0}

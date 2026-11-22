@@ -12,6 +12,7 @@ import type { LedgerData, Minor } from "../domain/types.ts";
 import { translator, type Translator } from "../i18n/index.ts";
 import { appStore } from "../platform/app-store.ts";
 import { haptic } from "../platform/haptics.ts";
+import { markActed } from "./quiet.ts";
 import { buildPalette, type Palette } from "./theme.ts";
 
 export { appStore };
@@ -114,6 +115,8 @@ export function useCommand(): <T>(command: (tx: LedgerTx, env: Env) => T) => T |
   return useCallback(
     <T,>(command: (tx: LedgerTx, env: Env) => T): T | undefined => {
       try {
+        // Any command is the person doing something: the empty-state pictures stop replaying (ui/quiet.ts).
+        markActed();
         return appStore().run(command);
       } catch (error) {
         showError(t, error);

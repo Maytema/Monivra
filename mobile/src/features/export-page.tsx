@@ -390,8 +390,8 @@ export function ExportPage() {
   const before = useRef(getView().period);
   useEffect(() => {
     const was = before.current;
-    setView({ period: { ...was, mode: "all" } });
-    return () => setView({ period: was });
+    setView({ period: { ...was, mode: "all" } }, false);
+    return () => setView({ period: was }, false);
   }, []);
   const draft: Draft = { mode, period, filters, sections, parts };
   const key = JSON.stringify(draft);

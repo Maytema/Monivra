@@ -49,3 +49,24 @@ print()
 for move in moves:
     for note in move["notes"]:
         print(f"{move['name'][:40]:40} | {note}")
+
+# Tab moves: how many presses the bar saw, how many it dropped as true repeats, and how long from the finger to the
+# drawn screen ("tab shown X 123.4ms", p50/p90 over the move). Only moves that had a press are listed. The empty-profile
+# moves ("empty: ...") are the owner's case: acceptance on the weak profile is no dropped press that was not a true
+# repeat and p90 press-to-shown under 200 ms.
+def percentile(values, q):
+    values = sorted(values)
+    return values[min(len(values) - 1, int(round(q * (len(values) - 1))))]
+
+
+print()
+print(f"{'tab moves':62} {'presses':>7} {'dropped':>7} {'shown':>5} {'p50':>7} {'p90':>7} {'JS busy':>8}")
+for move in moves:
+    presses = sum(1 for n in move["notes"] if n.startswith("tab press ") and not n.startswith("tab press dropped"))
+    dropped = sum(1 for n in move["notes"] if n.startswith("tab press dropped"))
+    shown = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"tab shown \w+ ([\d.]+)ms", n)] if m]
+    if not presses and not dropped:
+        continue
+    p50 = f"{percentile(shown, 0.5):.0f}ms" if shown else "-"
+    p90 = f"{percentile(shown, 0.9):.0f}ms" if shown else "-"
+    print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms")

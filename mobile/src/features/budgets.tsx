@@ -116,8 +116,8 @@ function useMonthPeriod(mode: "month" | BudgetPeriod): void {
   useEffect(() => {
     const before = getView().period;
     const anchor = ["all", "range"].includes(before.mode) ? appStore().env.clock.today() : before.anchor;
-    setView({ period: { mode, anchor } });
-    return () => setView({ period: before });
+    setView({ period: { mode, anchor } }, false);
+    return () => setView({ period: before }, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 }

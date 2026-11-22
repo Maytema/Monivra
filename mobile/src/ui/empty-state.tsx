@@ -1,16 +1,18 @@
 // Empty states (js/ui/empty-state.js and css/empty-state.css): a picture with a title, a hint and, where the
-// person can start, a button. One component for every list that can be empty. Each picture plays its animation
-// once, the first time it is shown (the pictures of budgets and scheduled payments, which are screens that are opened
-// and left, at every opening); after that it is drawn at rest. A picture that is shown again while it is still
-// playing goes on from where it was, as in the first application.
-import { useEffect, useRef, type ReactNode } from "react";
+// person can start, a button. One component for every list that can be empty. A picture plays only while its screen
+// is shown: it starts from the first frame at every visit, two frames after the screen was drawn (so the tab's own
+// first frame does not compete with it), and stops at rest when the screen is left. After the person has done
+// something in this launch (ui/quiet.ts) the pictures are drawn at rest.
+import { useCallback, useRef, type ReactNode } from "react";
+import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
-import Svg, { Circle, Ellipse, G, Path, Rect } from "react-native-svg";
-import { NOTE_FRAMES, RING_FRAMES } from "./budget-motion.ts";
+import Svg, { Circle, G, Path, Rect } from "react-native-svg";
+import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_FRAMES } from "./budget-motion.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
 import { Pivot } from "./svg-pivot.tsx";
+import { isQuiet } from "./quiet.ts";
 
 export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
 
@@ -18,12 +20,8 @@ const AnimatedG = Animated.createAnimatedComponent(G);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 // How long each picture plays (ms), taken from the first application's recordings (frame by frame, 2026-11-22): the
-// time from the picture's first frame to its last movement. The time since the first showing decides where it is.
-const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 2050, statistics: 2100 };
-// These two are screens that are opened and left (not tabs): their picture plays at every opening. The pictures of
-// the tabs play once while the application runs, so they do not play again at every swipe between tabs.
-const REPLAYS: ReadonlySet<EmptyKind> = new Set<EmptyKind>(["budgets", "scheduled"]);
-const firstShown: Partial<Record<EmptyKind, number>> = {};
+// time from the picture's first frame to its last movement.
+const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 1400, statistics: 2100 };
 
 type Timeline = Animated.Value;
 type Ease = (n: number) => number;
@@ -250,91 +248,90 @@ function Statistics({ time, c }: { time: Timeline; c: Colors }) {
 }
 
 // ---- Budgets (3.2 s) ---------------------------------------------------------------------------------
-// A banknote that flows like a ribbon in the wind: its outline is a quadrilateral whose long sides are curves, and the
-// curves, the corners and the tilt change from frame to frame; a yellow ring appears small at the upper right, grows,
-// goes down and to the left over the note and shrinks away at the lower left; the note keeps moving a little after it
-// and settles. Every number is read from the recording, frame by frame (ui/budget-motion.ts, its pixels).
-const NOTE_STROKE = 23;
+// A banknote that flows like a ribbon in the wind: its frame is a stroke along a closed line of two curved long edges and
+// two straight short ones, with four half discs on the inner side of the edges and an ellipse in the middle; all of it is
+// built from the frame's own edges in every frame (ui/budget-motion.ts, made by scripts/gen-budget-motion.py), so the
+// marks bend with the frame. A yellow ring appears small at the upper right, grows, goes down and to the left through the
+// note and shrinks away at the lower left; the note keeps moving a little after it and settles. The note is transparent
+// (only its outline and marks are painted), as in the recording.
 const RING_STROKE = 25;
-const CORNER_DISC = 25;
-const arcCircle = (x: number, y: number, r: number) => `M${x - r} ${y}a${r} ${r} 0 1 0 ${2 * r} 0a${r} ${r} 0 1 0 ${-2 * r} 0Z`;
-const noteTimes = NOTE_FRAMES.map((row) => row[0]!);
-const noteOutline = NOTE_FRAMES.map((row) => `M${row[1]} ${row[2]}C${row[3]} ${row[4]} ${row[5]} ${row[6]} ${row[7]} ${row[8]}L${row[9]} ${row[10]}C${row[11]} ${row[12]} ${row[13]} ${row[14]} ${row[15]} ${row[16]}Z`);
-// The four round marks inside the corners (a little way from each corner toward the middle of the note).
-const noteMarks = NOTE_FRAMES.map((row) => {
-  const corners: Point[] = [[row[1]!, row[2]!], [row[7]!, row[8]!], [row[9]!, row[10]!], [row[15]!, row[16]!]];
-  const mx = corners.reduce((sum, c) => sum + c[0], 0) / 4;
-  const my = corners.reduce((sum, c) => sum + c[1], 0) / 4;
-  return corners
-    .map(([x, y]) => {
-      const length = Math.hypot(mx - x, my - y) || 1;
-      return arcCircle(Math.round(x + ((mx - x) / length) * CORNER_DISC), Math.round(y + ((my - y) / length) * CORNER_DISC), CORNER_DISC);
-    })
-    .join("");
-});
 const ringTimes = RING_FRAMES.map((row) => row[0]!);
-// The ring goes round the note: only its upper right quarter (from 12 o'clock to 3 o'clock) passes behind the note, the
-// rest of the circle is in front of it (the overlap measured in every frame of the recording). The quarter is drawn
-// first, under the note; the other three quarters last, over it.
-const ringArc = (behind: boolean) =>
+// The ring goes through the note: measured at every crossing of the ring with an edge of the note in the recording, the
+// ring's upper right arc (from 268° through 3 o'clock to 7°, 0° being 3 o'clock and 90° down) lies behind the note's frame
+// and the rest of the circle in front of it. The back arc is drawn first, then the note, then the front arc; both arcs
+// overlap a little where they meet so that no hairline shows, and they have butt ends.
+const ringArc = (from: number, to: number) =>
   RING_FRAMES.map((row) => {
-    const r = Math.max(1, row[3]! - RING_STROKE / 2).toFixed(1);
-    const [cx, cy] = [row[1]!, row[2]!];
-    const top = `${cx} ${(cy - Number(r)).toFixed(1)}`;
-    const right = `${(cx + Number(r)).toFixed(1)} ${cy}`;
-    return behind ? `M${top}A${r} ${r} 0 0 1 ${right}` : `M${right}A${r} ${r} 0 1 1 ${top}`;
+    const r = Math.max(1, row[3]! - RING_STROKE / 2);
+    const at = (deg: number) => `${(row[1]! + r * Math.cos((deg * Math.PI) / 180)).toFixed(1)} ${(row[2]! + r * Math.sin((deg * Math.PI) / 180)).toFixed(1)}`;
+    return `M${at(from)}A${r.toFixed(1)} ${r.toFixed(1)} 0 ${to - from > 180 ? 1 : 0} 1 ${at(to)}`;
   });
-const ringBack = ringArc(true);
-const ringFront = ringArc(false);
+const ringBack = ringArc(268, 367);
+const ringFront = ringArc(5, 270);
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
-  const line = (index: number) => keyed(time, NOTE_FRAMES.map((row) => [row[0]!, row[index]!] as Key));
   const first = ringTimes[0]!;
   const last = ringTimes[ringTimes.length - 1]!;
   const ringOpacity = keyed(time, [[first - 1, 0], [first, 1], [last, 1], [last + 1, 0]]);
-  const half = (strings: string[]) => time.interpolate({ inputRange: ringTimes, outputRange: strings, extrapolate: "clamp" });
+  const blend = (inputRange: ReadonlyArray<number>, outputRange: ReadonlyArray<string>) => time.interpolate({ inputRange: [...inputRange], outputRange: [...outputRange], extrapolate: "clamp" });
   return (
     <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
-      <AnimatedPath d={half(ringBack)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, ringBack)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
       <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
-        {/* The note has a paper of the screen's colour, so the half of the ring behind it is hidden under it. */}
-        <AnimatedPath d={time.interpolate({ inputRange: noteTimes, outputRange: noteOutline, extrapolate: "clamp" })} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" />
-        <AnimatedPath d={time.interpolate({ inputRange: noteTimes, outputRange: noteMarks, extrapolate: "clamp" })} fill={c.positive} stroke="none" />
-        <AnimatedG translateX={line(17)} translateY={line(18)}>
-          <AnimatedG rotation={line(19)}>
-            <Ellipse cx={0} cy={0} rx={26} ry={35} fill={c.positive} />
-          </AnimatedG>
-        </AnimatedG>
+        <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill="none" stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
+        <AnimatedPath d={blend(NOTE_TIMES, NOTE_MARKS)} fill={c.positive} stroke="none" />
       </AnimatedG>
-      <AnimatedPath d={half(ringFront)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, ringFront)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
     </Svg>
   );
 }
 
-// ---- Scheduled payments (1.9 s) ----------------------------------------------------------------------
-// A calendar in a light circle with a thin ring around it: it rocks a little on its lower edge like a bell (the angle
-// of every frame of the recording: about ±10°, then 5°, 2.5°, and it stands still after 2 s). The circle does not
-// move. The colours come from the theme.
-const SWING: ReadonlyArray<Key> = [[0,-1.0],[167,-6.5],[234,-8.6],[301,-10.0],[367,-8.0],[434,-4.0],[501,0.1],[568,4.4],[634,8.2],[701,9.6],[768,6.7],[835,2.9],[901,-1.1],[968,-4.5],[1035,-4.1],[1102,-1.5],[1168,1.2],[1235,3.7],[1302,4.8],[1368,2.5],[1435,0.0],[1502,-1.8],[1569,-2.4],[1635,-1.1],[1702,1.2],[1769,2.6],[1836,2.7],[1902,1.8],[1969,0.6],[2040,0.0]];
+// ---- Scheduled payments (1.4 s) ----------------------------------------------------------------------
+// A calendar in a light circle with a thin ring around it, shaken like a phone in the hand (the owner, 2026-11-23: the
+// recording's slow rocking did not feel like shaking): two bursts, each dying down, about its own centre. Burst one
+// swings 12°, 11°, 9°, 7°, 5°, 3°, 1.5° at 70 ms per half swing, a pause, burst two at about 60 %; the calendar also
+// shifts a little sideways in phase. The circle does not move. The calendar is a view turned and moved on the native
+// driver (every frame of a fast shake counts, and the JavaScript thread may be busy building a tab); the colours come
+// from the theme.
+const SHAKE: ReadonlyArray<readonly [number, number]> = [
+  [0, 0], [70, 12], [140, -11], [210, 9], [280, -7], [350, 5], [420, -3], [490, 1.5], [560, 0],
+  [810, 0], [880, 7], [950, -6], [1020, 4.5], [1090, -3], [1160, 2], [1230, -1], [1300, 0], [1400, 0],
+];
+const SHAKE_SHIFT = 3; // px at the largest angle (12°)
 function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
-  const swing = keyed(time, SWING);
+  // Linear in time, shaped by a sine between the keys so that the calendar slows at the turning points like a body does.
+  const keys = SHAKE.flatMap(([at, deg], i) => (i ? Array.from({ length: 6 }, (_, k) => {
+    const prev = SHAKE[i - 1]!;
+    const f = (k + 1) / 6;
+    return [prev[0] + (at - prev[0]) * f, prev[1] + (deg - prev[1]) * soft(f)] as const;
+  }) : [[at, deg] as const]));
+  const input = keys.map((k) => k[0]);
+  const rotate = time.interpolate({ inputRange: input, outputRange: keys.map((k) => `${k[1]}deg`), extrapolate: "clamp" });
+  const shift = time.interpolate({ inputRange: input, outputRange: keys.map((k) => (k[1] / 12) * SHAKE_SHIFT), extrapolate: "clamp" });
   const pin = mix(c.accent, c.bg, 0.4);
   const day = mix(c.muted, c.bg, 0.6);
   const square = (cx: number, cy: number, fill = day) => <Rect key={`${cx}-${cy}`} x={cx} y={cy} width={18} height={18} rx={2} fill={fill} />;
+  // The point (241, 263) of the drawing (the middle of the calendar's body) in the view's own pixels (the drawing is
+  // 380 units wide shown 190 px wide, from (50, 56)).
+  const origin = `${(241 - 50) / 2}px ${(263 - 56) / 2}px`;
   return (
-    <Svg width={190} height={190} viewBox="50 56 380 380">
-      <Circle cx={240} cy={248} r={180} stroke={mix(c.accent, c.bg, 0.12)} strokeWidth={4} fill="none" />
-      <Circle cx={240} cy={248} r={163} fill={mix(c.accent, c.bg, 0.16)} />
-      <Pivot x={241} y={349} rotation={swing}>
-        <Rect x={178} y={143} width={30} height={62} rx={15} fill={pin} />
-        <Rect x={278} y={143} width={30} height={62} rx={15} fill={pin} />
-        <Path d="M150 349V187A10 10 0 0 1 160 177H323A10 10 0 0 1 333 187V339A10 10 0 0 1 323 349H160A10 10 0 0 1 150 339Z" fill={c.bg} />
-        <Path d="M150 212V187A10 10 0 0 1 160 177H323A10 10 0 0 1 333 187V212Z" fill={c.accent} />
-        {[198, 230, 262, 294].map((x) => square(x, 230))}
-        {[166, 230, 262, 294].map((x) => square(x, 262))}
-        {square(198, 262, c.positive)}
-        {[166, 198, 230, 262].map((x) => square(x, 293))}
-      </Pivot>
-    </Svg>
+    <View style={{ width: 190, height: 190 }}>
+      <Svg width={190} height={190} viewBox="50 56 380 380">
+        <Circle cx={240} cy={248} r={180} stroke={mix(c.accent, c.bg, 0.12)} strokeWidth={4} fill="none" />
+        <Circle cx={240} cy={248} r={163} fill={mix(c.accent, c.bg, 0.16)} />
+      </Svg>
+      <Animated.View style={{ position: "absolute", left: 0, top: 0, width: 190, height: 190, transform: [{ translateX: shift }, { rotate }], transformOrigin: origin }}>
+        <Svg width={190} height={190} viewBox="50 56 380 380">
+          <Rect x={178} y={143} width={30} height={62} rx={15} fill={pin} />
+          <Rect x={278} y={143} width={30} height={62} rx={15} fill={pin} />
+          <Path d="M150 349V187A10 10 0 0 1 160 177H323A10 10 0 0 1 333 187V339A10 10 0 0 1 323 349H160A10 10 0 0 1 150 339Z" fill={c.bg} />
+          <Path d="M150 212V187A10 10 0 0 1 160 177H323A10 10 0 0 1 333 187V212Z" fill={c.accent} />
+          {[198, 230, 262, 294].map((x) => square(x, 230))}
+          {[166, 230, 262, 294].map((x) => square(x, 262))}
+          {square(198, 262, c.positive)}
+          {[166, 198, 230, 262].map((x) => square(x, 293))}
+        </Svg>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -344,16 +341,30 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
   const p = usePalette();
   const t = useT();
   const total = PLAY_MS[kind];
-  const opened = useRef(Date.now()).current;
-  const since = REPLAYS.has(kind) ? opened : (firstShown[kind] ??= Date.now());
-  const start = Math.min(Date.now() - since, total);
-  const time = useRef(new Animated.Value(start)).current;
-  useEffect(() => {
-    if (start >= total) return;
-    const run = Animated.timing(time, { toValue: total, duration: total - start, easing: Easing.linear, useNativeDriver: false });
-    run.start();
-    return () => run.stop();
-  }, [time, start, total]);
+  const time = useRef(new Animated.Value(isQuiet() ? total : 0)).current;
+  // Played only while the screen is in focus. `freezeOnBlur` freezes React rendering, not an `Animated` loop, so an
+  // animation started on mount went on behind a tab that was left (and, JS-driven, kept the JavaScript thread busy while
+  // the next tab was being built).
+  useFocusEffect(
+    useCallback(() => {
+      if (isQuiet()) return void time.setValue(total);
+      time.setValue(0);
+      let run: Animated.CompositeAnimation | undefined;
+      let second = 0;
+      const first = requestAnimationFrame(() => {
+        second = requestAnimationFrame(() => {
+          run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
+          run.start();
+        });
+      });
+      return () => {
+        cancelAnimationFrame(first);
+        cancelAnimationFrame(second);
+        run?.stop();
+        time.setValue(total);
+      };
+    }, [time, total, kind]),
+  );
   const c: Colors = { ink: p.ink, muted: p.muted, bg: p.bg, accent: p.accent, positive: p.positive };
   return (
     <View style={{ alignItems: "center", paddingTop: 56, paddingHorizontal: 32, paddingBottom: 24 }}>
