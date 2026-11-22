@@ -8,7 +8,7 @@ import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_BACK, RING_FRAMES, RING_FRONT } from "./budget-motion.ts";
-import { PAPER_LINES, PAPER_SHAPES } from "./operations-paper.ts";
+import { PAPER_FILLS, PAPER_LINES, PAPER_STROKES } from "./operations-paper.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
@@ -105,11 +105,14 @@ function Operations({ time, c }: { time: Timeline; c: Colors }) {
   const lens = (index: number) => keyed(time, LENS.map((row) => [row[0]!, row[index]!] as Key));
   return (
     <Svg width={170} height={170} viewBox="200 155 340 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {/* The sheet is traced from the recording (scripts/trace-operations-paper.py): outline, curl and roll are one dark
-          shape, the paper inside is its hole; the even-odd rule leaves it open. */}
+      {/* The sheet (scripts/trace-operations-paper.py): the outline is straight strokes of constant width with round caps and
+          one quarter circle, each ending inside the fill it meets; the top curl and the bottom roll are the only filled shapes. */}
       <AnimatedG opacity={between(time, 0, 50, 0, 1)}>
-        {PAPER_SHAPES.map((d, i) => (
-          <Path key={i} d={d} fill={dark} fillRule="evenodd" stroke="none" />
+        {PAPER_FILLS.map((d, i) => (
+          <Path key={i} d={d} fill={dark} stroke="none" />
+        ))}
+        {PAPER_STROKES.map(([d, width], i) => (
+          <Path key={i} d={d} stroke={dark} strokeWidth={width} fill="none" />
         ))}
       </AnimatedG>
       {PAPER_LINES.map(([ly, from, to], i) => {
