@@ -2,7 +2,7 @@
 // operation-editor/{keypad,extras}.js): tax and commission, how a payment repeats, its reminder, the
 // time of a payment, tags. Each one edits a copy and gives it back when OK is pressed.
 import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Keyboard, Text, TextInput, View } from "react-native";
 import { Pressable } from "../../ui/pressable.tsx";
 import { feeOfKind, withFee } from "../../domain/money.ts";
 import { comesAfterPayment, reminderForTime } from "../../domain/scheduled.ts";
@@ -11,7 +11,6 @@ import { useLedger, usePalette, useT } from "../../ui/app-context.tsx";
 import { PrimaryPill, TextButton } from "../../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog, promptDialog, confirmDialog, toast } from "../../ui/dialogs.tsx";
 import { Icon } from "../../ui/kit.tsx";
-import { openNumberSheet } from "../../ui/number-sheet.tsx";
 import { useCommand } from "../../ui/app-context.tsx";
 import { openTime, timeLabel } from "../../ui/time-dialog.tsx";
 export { openTime };
@@ -48,6 +47,7 @@ function FieldTitle({ children }: { children: string }) {
 function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string; text: string; onStep: (k: number) => void; onType: (value: string) => void; atMin: boolean; atMax: boolean }) {
   const p = usePalette();
   const t = useT();
+  const [draft, setDraft] = useState<string | null>(null);
   const arrow = (name: "left" | "right", step: number, disabled: boolean, description: string) => (
     <Pressable
       accessibilityRole="button"
@@ -65,9 +65,26 @@ function Stepper({ label, text, onStep, onType, atMin, atMax }: { label: string;
       {/* The rounded outline holds the arrows; the value stands in a box of its own (thin line, small corners) between them. */}
       <View style={{ flexDirection: "row", alignItems: "stretch", height: 54, marginBottom: 4, borderWidth: 1, borderColor: p.muted, borderRadius: 18 }}>
         {arrow("left", -1, atMin, "Decrease")}
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} onPress={() => openNumberSheet(label, /^\d+$/.test(text) ? text : "", (typed) => void onType(typed))} style={{ flex: 3, minWidth: 0, marginTop: -1, marginBottom: -1, borderWidth: 1, borderColor: p.muted, borderRadius: 4, alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ color: p.ink, fontSize: 18 }}>{text}</Text>
-        </Pressable>
+        <TextInput
+          accessibilityLabel={t.t(label)}
+          value={draft ?? text}
+          // Tapping the value types into it on the system number keyboard: the cell is outlined, the caret blinks, and the
+          // caret stands after the digits there are (a ∞ or another word is cleared at once, so a number is typed anew).
+          onFocus={() => setDraft(/^\d+$/.test(text) ? text : "")}
+          onChangeText={(v) => {
+            // The value is kept at every key, so the OK that follows needs no blur first.
+            const digits = v.replace(/\D/g, "").slice(0, 6);
+            setDraft(digits);
+            onType(digits);
+          }}
+          selection={draft === null ? undefined : { start: draft.length, end: draft.length }}
+          onBlur={() => setDraft(null)}
+          onSubmitEditing={() => Keyboard.dismiss()}
+          keyboardType="numeric"
+          selectionColor={p.accent}
+          cursorColor={p.accent}
+          style={{ flex: 3, minWidth: 0, padding: 0, marginTop: -1, marginBottom: -1, borderWidth: draft === null ? 1 : 2, borderColor: draft === null ? p.muted : p.accent, borderRadius: 4, textAlign: "center", color: p.ink, fontSize: 18 }}
+        />
         {arrow("right", 1, atMax, "Increase")}
       </View>
     </View>

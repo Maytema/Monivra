@@ -81,8 +81,8 @@ function NumberSheet({ title, value, options, onDone }: { title: string; value: 
   };
   return (
     <View>
-      <Text style={{ color: p.muted, fontSize: 14, textAlign: "center" }}>{t.t(title)}</Text>
-      <Text accessibilityLiveRegion="polite" style={{ color: p.ink, fontSize: 32, textAlign: "center", paddingVertical: 16, minHeight: 72 }}>{text || " "}</Text>
+      {/* No title above the number (the owner, 2026-11-22: the sheet takes less room); the name stays for screen readers. */}
+      <Text accessibilityLabel={t.t(title)} accessibilityLiveRegion="polite" style={{ color: p.ink, fontSize: 32, textAlign: "center", paddingVertical: 16, minHeight: 72 }}>{text || " "}</Text>
       <DigitPad onKey={press} decimal={options.decimal} dotDisabled={text.includes(".")} onConfirm={() => onDone(text) !== false && close()} />
     </View>
   );
