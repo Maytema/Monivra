@@ -220,16 +220,18 @@ def unpose(c, angle, local):
 
 
 # ---- the frame's own parts ----------------------------------------------------------------------
-def inner_point(s, t):
+def inner_point(s, t, sink=0.0):
+    """The point of the stroke's inner side; `sink` moves it that far under the stroke."""
     d = unit(deriv(s, t))
-    return bez(*s, t) + HW * inward(d)
+    return bez(*s, t) + (HW - sink) * inward(d)
 
 
 def bulge(s, t, r):
     """Path of a half disc attached to the inner side of the stroke at parameter t of edge s: flat side along the
     stroke, round side into the note. Its two ends are points of the edge itself, so it follows the bending."""
     dt = r / np.linalg.norm(deriv(s, t))
-    a, b = inner_point(s, max(0.0, t - dt)), inner_point(s, min(1.0, t + dt))
+    # The flat side lies 2 px under the stroke, so no hairline of the page shows between a half disc and the stroke.
+    a, b = inner_point(s, max(0.0, t - dt), 2), inner_point(s, min(1.0, t + dt), 2)
     return f"M{a[0]:.1f} {a[1]:.1f}A{r:.1f} {r:.1f} 0 0 0 {b[0]:.1f} {b[1]:.1f}Z"
 
 
@@ -259,6 +261,101 @@ def outline_path(p):
     P0, C1, C2, P1, P2, C3, C4, P3 = np.asarray(p, float).reshape(8, 2)
     f = lambda v: f"{v[0]:.1f} {v[1]:.1f}"
     return f"M{f(P0)}C{f(C1)} {f(C2)} {f(P1)}L{f(P2)}C{f(C3)} {f(C4)} {f(P3)}Z"
+
+
+RING_STROKE = 25.0
+# The ring passes behind the note on its upper right (measured at the crossings of the recording: top edge about 285-290
+# degrees and bottom edge about 355-5 degrees are note on top; about 175 and 85-100 are ring on top; 0 = 3 o'clock, 90 =
+# down). The crossings move with the note, so the split of the ring into a back and a front arc is found per frame.
+BEHIND_FROM, BEHIND_TO = 225, 45
+
+
+def centre_polyline(p):
+    return np.vstack([bez(*s, np.linspace(0, 1, 80)) for s in edges(p)])
+
+
+def overlap_flags(row, line):
+    """For each whole degree, whether the ring's middle line there is close enough to the note's centre line for the two
+    strokes to touch (plus 2 px)."""
+    r = max(1.0, row[3] - RING_STROKE / 2)
+    ang = np.radians(np.arange(360))
+    pts = np.stack([row[1] + r * np.cos(ang), row[2] + r * np.sin(ang)], 1)
+    dist = np.min(np.linalg.norm(pts[:, None, :] - line[None, :, :], axis=2), axis=1)
+    return dist < (STROKE + RING_STROKE) / 2 + 2
+
+
+def intervals(flags):
+    """Runs of True on the circle as (start, end) in degrees, end >= start, possibly past 360."""
+    if flags.all() or not flags.any():
+        return [(0, 359)] if flags.all() else []
+    start = int(np.argmin(flags))  # a free angle: begin the walk there so no run is cut
+    runs, cur = [], None
+    for k in range(1, 361):
+        a = (start + k) % 360
+        if flags[a] and cur is None:
+            cur = k
+        if not flags[a] and cur is not None:
+            runs.append((start + cur, start + k - 1))
+            cur = None
+    return runs
+
+
+def ring_split(row, line):
+    """(back start, back end) in degrees (unwrapped, end > start) or None when no part of the ring is behind the note."""
+    runs = intervals(overlap_flags(row, line))
+    if not runs:
+        return None
+    mid = lambda r: ((r[0] + r[1]) / 2) % 360
+    behind = [r for r in runs if (lambda m: m >= BEHIND_FROM or m <= BEHIND_TO)(mid(r))]
+    if not behind:
+        return None
+    # order the runs clockwise from the start of the behind zone, so that "before" and "after" are plain
+    key = lambda r: (r[0] - BEHIND_FROM) % 360
+    runs = sorted(runs, key=key)
+    behind = sorted(behind, key=key)
+    first, last = behind[0], behind[-1]
+    i0, i1 = runs.index(first), runs.index(last)
+    base = BEHIND_FROM
+    u = lambda a: (a - base) % 360 + base  # unwrap an angle to [base, base + 360)
+    before = runs[i0 - 1] if len(runs) > 1 else None
+    after = runs[(i1 + 1) % len(runs)] if len(runs) > 1 else None
+    f0, l1 = u(first[0]), u(last[1])
+    if l1 < f0:
+        l1 += 360
+    g0 = (u(before[1]) + f0) / 2 if before is not None and u(before[1]) < f0 else f0 - 10
+    g1 = (l1 + u(after[0])) / 2 if after is not None and u(after[0]) > l1 else l1 + 10
+    return g0, g1, runs
+
+
+def smooth_splits(raw):
+    """Moving median over five frames of the split angles that exist; an angle that would land inside an overlap run of
+    its own frame goes back to its raw value."""
+    out = []
+    for i, item in enumerate(raw):
+        if item is None:
+            out.append(None)
+            continue
+        window = [raw[j] for j in range(max(0, i - 2), min(len(raw), i + 3)) if raw[j] is not None]
+        g0, g1 = float(np.median([w[0] for w in window])), float(np.median([w[1] for w in window]))
+        runs = item[2]
+        inside = lambda a: any(((a - r[0]) % 360) <= (r[1] - r[0]) for r in runs)
+        out.append((item[0] if inside(g0) else g0, item[1] if inside(g1) else g1, runs))
+    return out
+
+
+def ring_paths(row, split):
+    """The back and the front arc of one ring frame, each as two arcs of at most 180 degrees (same commands in every frame)."""
+    r = max(1.0, row[3] - RING_STROKE / 2)
+    at = lambda deg: f"{row[1] + r * np.cos(np.radians(deg)):.1f} {row[2] + r * np.sin(np.radians(deg)):.1f}"
+    two = lambda a, b: f"M{at(a)}A{r:.1f} {r:.1f} 0 0 1 {at((a + b) / 2)}A{r:.1f} {r:.1f} 0 0 1 {at(b)}"
+    if split is None:
+        return two(270, 270), two(270, 630)
+    g0, g1 = split[0], split[1]
+    back = two(g0, g1)
+    front_from, front_to = g1 - 2, g0 + 360 + 2
+    if front_to - front_from > 360:
+        front_to = front_from + 360
+    return back, two(front_from, front_to)
 
 
 def main():
@@ -357,8 +454,19 @@ def main():
     try:
         old = open(out_path, encoding="utf8").read()
         ring = re.search(r"(// RING:.*?\nexport const RING_FRAMES[^\n]*)", old, re.S).group(1)
+        ring_rows = json.loads(re.search(r"RING_FRAMES[^=]*= (\[\[.*?\]\]);", old).group(1))
     except (OSError, AttributeError):
         sys.exit("the existing output file with RING_FRAMES is needed (the ring is not measured here)")
+    # -- 5. where the ring goes behind the note, frame by frame
+    lines = {i: centre_polyline(smooth[i]) for i in range(OUT_FROM, OUT_TO + 1)}
+    raw = []
+    for row in ring_rows:
+        i = min(OUT_TO, max(OUT_FROM, int(round(row[0] * FPS / 1000)) + NOTE_START))
+        raw.append(ring_split(row, lines[i]))
+    splits = smooth_splits(raw)
+    paths = [ring_paths(row, sp) for row, sp in zip(ring_rows, splits)]
+    print(f"ring frames: {len(ring_rows)}, with a part behind the note: {sum(1 for sp in splits if sp)}")
+
     with open(out_path, "w", encoding="utf8") as f:
         f.write("// Generated by scripts/gen-budget-motion.py from the frame-by-frame measurement of the first application's recording of the\n")
         f.write("// Budgets empty state (30 fps, 720 px wide). Times are ms from the note's first frame; coordinates are the recording's pixels.\n")
@@ -370,6 +478,9 @@ def main():
         f.write(f"export const NOTE_OUTLINE: ReadonlyArray<string> = {json.dumps(outlines)};\n")
         f.write(f"export const NOTE_MARKS: ReadonlyArray<string> = {json.dumps(marks)};\n")
         f.write(ring + "\n")
+        f.write("// The ring split per frame (ring_split in the generator): the part behind the note and the part in front of it, each two\n// arcs of at most 180 degrees with the same commands in every frame, one entry per RING_FRAMES row.\n")
+        f.write(f"export const RING_BACK: ReadonlyArray<string> = {json.dumps([p[0] for p in paths])};\n")
+        f.write(f"export const RING_FRONT: ReadonlyArray<string> = {json.dumps([p[1] for p in paths])};\n")
     print(f"wrote {out_path}: {len(times)} frames")
 
 

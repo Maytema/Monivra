@@ -7,12 +7,13 @@ import { useCallback, useRef, type ReactNode } from "react";
 import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
-import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_FRAMES } from "./budget-motion.ts";
+import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_BACK, RING_FRAMES, RING_FRONT } from "./budget-motion.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
 import { Pivot } from "./svg-pivot.tsx";
-import { isQuiet } from "./quiet.ts";
+import { markPlayed, shouldPlay } from "./quiet.ts";
+import { onPictureStop } from "./picture-stop.ts";
 
 export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
 
@@ -259,17 +260,9 @@ function Statistics({ time, c }: { time: Timeline; c: Colors }) {
 const RING_STROKE = 25;
 const ringTimes = RING_FRAMES.map((row) => row[0]!);
 // The ring goes through the note: measured at every crossing of the ring with an edge of the note in the recording, the
-// ring's upper right arc (from 268° through 3 o'clock to 7°, 0° being 3 o'clock and 90° down) lies behind the note's frame
-// and the rest of the circle in front of it. The back arc is drawn first, then the note, then the front arc; both arcs
-// overlap a little where they meet so that no hairline shows, and they have butt ends.
-const ringArc = (from: number, to: number) =>
-  RING_FRAMES.map((row) => {
-    const r = Math.max(1, row[3]! - RING_STROKE / 2);
-    const at = (deg: number) => `${(row[1]! + r * Math.cos((deg * Math.PI) / 180)).toFixed(1)} ${(row[2]! + r * Math.sin((deg * Math.PI) / 180)).toFixed(1)}`;
-    return `M${at(from)}A${r.toFixed(1)} ${r.toFixed(1)} 0 ${to - from > 180 ? 1 : 0} 1 ${at(to)}`;
-  });
-const ringBack = ringArc(268, 367);
-const ringFront = ringArc(5, 270);
+// ring's upper right part lies behind the note's frame and the rest of the circle in front of it. The crossings move with
+// the note, so where the ring is split is found per frame (scripts/gen-budget-motion.py: RING_BACK, RING_FRONT) at a free
+// place between the strokes, never across one. The back arc is drawn first, then the note, then the front arc.
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   const first = ringTimes[0]!;
   const last = ringTimes[ringTimes.length - 1]!;
@@ -277,12 +270,12 @@ function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   const blend = (inputRange: ReadonlyArray<number>, outputRange: ReadonlyArray<string>) => time.interpolate({ inputRange: [...inputRange], outputRange: [...outputRange], extrapolate: "clamp" });
   return (
     <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
-      <AnimatedPath d={blend(ringTimes, ringBack)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, RING_BACK)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
       <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
         <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill="none" stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
         <AnimatedPath d={blend(NOTE_TIMES, NOTE_MARKS)} fill={c.positive} stroke="none" />
       </AnimatedG>
-      <AnimatedPath d={blend(ringTimes, ringFront)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, RING_FRONT)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
     </Svg>
   );
 }
@@ -343,13 +336,13 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
   const p = usePalette();
   const t = useT();
   const total = PLAY_MS[kind];
-  const time = useRef(new Animated.Value(isQuiet() ? total : 0)).current;
+  const time = useRef(new Animated.Value(shouldPlay(kind) ? 0 : total)).current;
   // Played only while the screen is in focus. `freezeOnBlur` freezes React rendering, not an `Animated` loop, so an
   // animation started on mount went on behind a tab that was left (and, JS-driven, kept the JavaScript thread busy while
   // the next tab was being built).
   useFocusEffect(
     useCallback(() => {
-      if (isQuiet()) return void time.setValue(total);
+      if (!shouldPlay(kind)) return void time.setValue(total);
       time.setValue(0);
       let run: Animated.CompositeAnimation | undefined;
       let second = 0;
@@ -360,17 +353,24 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
       const first = requestAnimationFrame(() => {
         second = requestAnimationFrame(() => {
           wait = setTimeout(() => {
+            markPlayed(kind);
             run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
             run.start();
           }, START_WAIT_MS);
         });
       });
-      return () => {
+      // Stops the picture and leaves it at rest; also called by a press on a tab (ui/picture-stop.ts).
+      const stop = () => {
         cancelAnimationFrame(first);
         cancelAnimationFrame(second);
         if (wait) clearTimeout(wait);
         run?.stop();
         time.setValue(total);
+      };
+      const forget = onPictureStop(stop);
+      return () => {
+        forget();
+        stop();
       };
     }, [time, total, kind]),
   );

@@ -10,6 +10,7 @@ import { usePalette, useT } from "./app-context.tsx";
 import { ICONS } from "./icon-paths.ts";
 import { chrome } from "./theme.ts";
 import { coachRef } from "./coach.tsx";
+import { stopPictures } from "./picture-stop.ts";
 import Svg, { Path, Rect } from "react-native-svg";
 
 export const TABS = [
@@ -96,6 +97,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
         const press = () => {
           perfNote(`tab press ${route.name} (asked ${asked.current}, shown ${state.routes[state.index]?.name})`);
           if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return perfNote("tab press dropped: already asked");
+          // The picture of the screen being left stops now, before the new tab is built.
+          stopPictures();
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
           if (event.defaultPrevented) return;
           asked.current = route.name;
