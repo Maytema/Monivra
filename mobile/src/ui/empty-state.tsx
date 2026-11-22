@@ -248,7 +248,7 @@ function Budgets({ time, c }: { time: Timeline; c: Colors }) {
 function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
   const rotate = time.interpolate({ inputRange: [250, 400, 550, 700, 850, 1000], outputRange: ["0deg", "-14deg", "11deg", "-7deg", "3deg", "0deg"], extrapolate: "clamp" });
   return (
-    <Animated.View style={{ width: 128, height: 128, borderRadius: 64, backgroundColor: mix(c.accent, c.bg, 0.84), alignItems: "center", justifyContent: "center", opacity: between(time, 0, 200, 0, 1), transform: [{ scale: between(time, 0, 250, 0.7, 1, out) }] }}>
+    <Animated.View style={{ width: 128, height: 128, borderRadius: 64, backgroundColor: mix(c.accent, c.bg, 0.16), alignItems: "center", justifyContent: "center", opacity: between(time, 0, 200, 0, 1), transform: [{ scale: between(time, 0, 250, 0.7, 1, out) }] }}>
       <Animated.View style={{ transform: [{ rotate }] }}>
         <Icon name="calendar" size={64} color={c.accent} />
       </Animated.View>
