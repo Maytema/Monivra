@@ -1,0 +1,2287 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                595ms      255ms      4      10 10 (100.00%)  250ms  250ms
+first screen: start with the basic set                    739ms      185ms      8       5   4 (80.00%)  300ms  300ms
+read the file and open the restore page                   729ms      292ms      6      32  23 (71.88%)  150ms  150ms
+restore 3000 operations                                   800ms      675ms      3      34  25 (73.53%)  113ms  125ms
+open tab Operations (first time)                          490ms      109ms      6      91  62 (68.13%)   81ms  150ms
+scroll the operations down (6 flicks)                     707ms       92ms     11     213 133 (62.44%)   81ms   97ms
+scroll the operations back up (6 flicks)                    0ms        0ms      0       0            -      -      -
+swipe to the previous period (3 times)                    561ms      211ms      5      72  44 (61.11%)   73ms  117ms
+swipe to the next period (3 times)                        675ms      396ms      5      69  48 (69.57%)   77ms  117ms
+open tab Statistics (first time)                           65ms       65ms      1       5   4 (80.00%)   77ms   77ms
+scroll the statistics (3 flicks down, 3 up)               125ms      125ms      1      64  52 (81.25%)   97ms  150ms
+statistics: previous period and back                      247ms      116ms      3      47  26 (55.32%)   81ms   89ms
+open tab Categories (first time)                            0ms        0ms      0       7   4 (57.14%)   34ms   34ms
+open tab Accounts                                           0ms        0ms      0       3   2 (66.67%)   31ms   31ms
+tabs again: Operations, Statistics, Categories, Acco        0ms        0ms      0      12   7 (58.33%)   46ms   48ms
+tab back and forth, 1.5s apart (Operations → Statist        0ms        0ms      0       6   4 (66.67%)   48ms   48ms
+tab back and forth, 0.8s apart (Operations → Statist        0ms        0ms      0       6   3 (50.00%)   48ms   48ms
+tab back and forth, 0.4s apart (Operations → Statist        0ms        0ms      0       6   5 (83.33%)   46ms   46ms
+tab chain quickly: Categories, Accounts, Statistics,        0ms        0ms      0      12   7 (58.33%)   61ms   65ms
+finger swipe in Categories, then one tap on Accounts      121ms       68ms      2      28  21 (75.00%)   85ms  101ms
+finger swipe in Accounts, then one tap on Categories      110ms       59ms      2      28  16 (57.14%)   81ms  101ms
+finger swipe in Operations, then one tap on Accounts       64ms       64ms      1      32  19 (59.38%)   61ms   77ms
+two quick period swipes (0.35s apart)                       0ms        0ms      0       0            -      -      -
+swipe back and forth quickly (0.35s apart)                164ms       55ms      3      41  29 (70.73%)   73ms  101ms
+statistics: Incomes                                         0ms        0ms      0       2  2 (100.00%)   48ms   48ms
+statistics: Expenses                                        0ms        0ms      0       2  2 (100.00%)   32ms   32ms
+open Budgets                                              376ms       72ms      6      66  46 (69.70%)   97ms  150ms
+open Scheduled payments                                   186ms       62ms      3      45  28 (62.22%)  117ms  150ms
+operations: 10 fast swipes back (0.25s apart)            3833ms      588ms     18     118  98 (83.05%)  109ms  150ms
+operations: 10 fast swipes forward                       1566ms      297ms     13     152 103 (67.76%)   81ms  105ms
+operations: 30 swipes back, no pause                     6464ms     1020ms     16     166 143 (86.14%)   93ms  121ms
+operations: direction changes (back, forward ×6, no      1172ms      328ms      9      69  58 (84.06%)   97ms  113ms
+operations: revisit (30 swipes forward, no pause)        4149ms      534ms     22     185 119 (64.32%)   81ms  101ms
+operations: 5 fast swipes, then the tab Statistics a     1190ms      428ms      6      48  33 (68.75%)   93ms  150ms
+categories: 10 fast swipes back (0.25s apart)            1636ms      322ms     12     125 100 (80.00%)  101ms  133ms
+categories: 10 fast swipes forward                        580ms      129ms      8     154 103 (66.88%)   81ms  109ms
+statistics: 10 fast swipes back (0.25s apart)            3511ms      670ms     17     115  97 (84.35%)  150ms  300ms
+statistics: 10 fast swipes forward                       1316ms      228ms     14     140 110 (78.57%)  101ms  150ms
+open the add menu                                         132ms      132ms      1       9  9 (100.00%)  200ms  200ms
+add menu: tap the tab Incomes, then Expenses              110ms       60ms      2      18  16 (88.89%)   85ms  109ms
+choose a category (the editor opens)                        0ms        0ms      0       9   7 (77.78%)  101ms  101ms
+type 1 2 5 on the keys                                    131ms       71ms      2      18  12 (66.67%)   93ms  125ms
+save the operation                                        264ms      138ms      3       9  9 (100.00%)   97ms   97ms
+report preview, first time (3000 operations)                0ms        0ms      0       0            -      -      -
+scroll the preview (8 flicks)                            1067ms      140ms     14     293 197 (67.24%)   81ms  101ms
+report preview, second time                                 0ms        0ms      0       0            -      -      -
+save the PIN                                                0ms        0ms      0       0            -      -      -
+type a wrong PIN (1111)                                     0ms        0ms      0       0            -      -      -
+type the right PIN (1234)                                   0ms        0ms      0       0            -      -      -
+all moves                                               33875ms
+
+first screen: start with the basic set   | renders root hero 1
+first screen: start with the basic set   | renders pager 3
+first screen: start with the basic set   | renders tab bar 2
+first screen: start with the basic set   | engine toLocaleString x200 580.2ms
+first screen: start with the basic set   | engine plain format x200 0.4ms
+first screen: start with the basic set   | engine localeCompare x200 1.7ms
+first screen: start with the basic set   | engine toLocaleDateString x200 249.5ms
+first screen: start with the basic set   | tab press more (asked index, shown index)
+first screen: start with the basic set   | bar touched (1 touches)
+first screen: start with the basic set   | tab shown more 80.8ms
+first screen: start with the basic set   | renders tab bar 5
+first screen: start with the basic set   | tab shown more 30.9ms
+first screen: start with the basic set   | renders tab bar 1
+first screen: start with the basic set   | tab shown more 28.2ms
+first screen: start with the basic set   | renders tab bar 1
+read the file and open the restore page  | file read: 452162 characters 57.7ms
+read the file and open the restore page  | data file: read and checked 150.6ms
+read the file and open the restore page  | restore page: merge plan 124.4ms
+read the file and open the restore page  | restore page: replace plan 54.6ms
+read the file and open the restore page  | tab shown more 6624.1ms
+read the file and open the restore page  | renders tab bar 1
+restore 3000 operations                  | layer dialog shown 4.9ms
+restore 3000 operations                  | restore page: merge plan 61.7ms
+restore 3000 operations                  | restore page: replace plan 17.6ms
+restore 3000 operations                  | tab shown more 680.8ms
+restore 3000 operations                  | renders root hero 1
+restore 3000 operations                  | renders pager 1
+restore 3000 operations                  | renders tab bar 1
+open tab Operations (first time)         | tab press operations (asked more, shown more)
+open tab Operations (first time)         | bar touched (1 touches)
+open tab Operations (first time)         | page: operations of the period 0.8ms
+open tab Operations (first time)         | page: rows and days 0.1ms
+open tab Operations (first time)         | page: opening and closing balances 6.9ms
+open tab Operations (first time)         | operations page built 26.6ms
+open tab Operations (first time)         | tab shown operations 59.2ms
+open tab Operations (first time)         | tab shown operations 74.5ms
+open tab Operations (first time)         | list ready 51.0ms
+open tab Operations (first time)         | pager: page content shown (1 so far)
+open tab Operations (first time)         | page: operations of the period 0.4ms
+open tab Operations (first time)         | page: rows and days 0.1ms
+open tab Operations (first time)         | page: opening and closing balances 0.7ms
+open tab Operations (first time)         | page: operations of the period 0.4ms
+open tab Operations (first time)         | page: rows and days 0.0ms
+open tab Operations (first time)         | page: opening and closing balances 0.7ms
+open tab Operations (first time)         | page: operations of the period 0.2ms
+open tab Operations (first time)         | page: rows and days 0.0ms
+open tab Operations (first time)         | page: operations of the period 0.2ms
+open tab Operations (first time)         | page: rows and days 0.0ms
+open tab Operations (first time)         | operations page built 15.5ms
+open tab Operations (first time)         | operations page built 13.3ms
+open tab Operations (first time)         | operations page built 11.2ms
+open tab Operations (first time)         | pager: page content shown (2 so far)
+open tab Operations (first time)         | operations page built 9.4ms
+open tab Operations (first time)         | pager: page content shown (3 so far)
+open tab Operations (first time)         | list ready 39.0ms
+open tab Operations (first time)         | pager: page content shown (4 so far)
+open tab Operations (first time)         | list ready 37.0ms
+open tab Operations (first time)         | pager: page content shown (5 so far)
+open tab Operations (first time)         | renders tab bar 6
+open tab Operations (first time)         | renders operations screen 2
+open tab Operations (first time)         | renders root hero 2
+open tab Operations (first time)         | renders pager 4
+open tab Operations (first time)         | renders period bar 4
+open tab Operations (first time)         | renders operations page 5
+open tab Operations (first time)         | renders fab 3
+open tab Operations (first time)         | renders day head 7
+open tab Operations (first time)         | renders operation row 31
+scroll the operations down (6 flicks)    | renders operations screen 1
+scroll the operations down (6 flicks)    | renders root hero 1
+scroll the operations down (6 flicks)    | renders pager 1
+scroll the operations down (6 flicks)    | renders period bar 1
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | renders fab 1
+scroll the operations down (6 flicks)    | renders operation row 11
+scroll the operations down (6 flicks)    | renders operation row 22
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | renders operation row 22
+scroll the operations down (6 flicks)    | touch lag 51.0ms
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | renders operation row 18
+scroll the operations down (6 flicks)    | renders operation row 20
+scroll the operations down (6 flicks)    | renders day head 6
+scroll the operations down (6 flicks)    | touch lag 61.2ms
+scroll the operations down (6 flicks)    | renders operation row 19
+scroll the operations down (6 flicks)    | renders day head 8
+scroll the operations down (6 flicks)    | renders operation row 2
+scroll the operations down (6 flicks)    | renders day head 1
+swipe to the previous period (3 times)   | pager: dragging
+swipe to the previous period (3 times)   | pager: idle
+swipe to the previous period (3 times)   | page ready after it was chosen 0.0ms
+swipe to the previous period (3 times)   | pager: page 49 from 50; this page drawn: yes; next page 48 drawn: yes; behind by -1
+swipe to the previous period (3 times)   | page: operations of the period 0.8ms
+swipe to the previous period (3 times)   | page: rows and days 0.1ms
+swipe to the previous period (3 times)   | operations page built 14.3ms
+swipe to the previous period (3 times)   | swipe: pages built 21.0ms
+swipe to the previous period (3 times)   | swipe: next frame 44.4ms
+swipe to the previous period (3 times)   | page: operations of the period 0.8ms
+swipe to the previous period (3 times)   | page: rows and days 0.1ms
+swipe to the previous period (3 times)   | page: opening and closing balances 1.0ms
+swipe to the previous period (3 times)   | operations page built 11.3ms
+swipe to the previous period (3 times)   | pager: contents around page 49 drawn (lag 0) 61.0ms
+swipe to the previous period (3 times)   | pager: page content removed
+swipe to the previous period (3 times)   | list ready 72.0ms
+swipe to the previous period (3 times)   | pager: page content shown (6 so far)
+swipe to the previous period (3 times)   | renders pager 2
+swipe to the previous period (3 times)   | renders period bar 2
+swipe to the previous period (3 times)   | renders operations page 2
+swipe to the previous period (3 times)   | renders day head 5
+swipe to the previous period (3 times)   | renders operation row 10
+swipe to the previous period (3 times)   | pager: dragging
+swipe to the previous period (3 times)   | pager: idle
+swipe to the previous period (3 times)   | page ready after it was chosen 0.0ms
+swipe to the previous period (3 times)   | pager: page 48 from 49; this page drawn: yes; next page 47 drawn: yes; behind by -1
+swipe to the previous period (3 times)   | page: operations of the period 0.7ms
+swipe to the previous period (3 times)   | page: rows and days 0.1ms
+swipe to the previous period (3 times)   | operations page built 60.7ms
+swipe to the previous period (3 times)   | swipe: pages built 73.2ms
+swipe to the previous period (3 times)   | page: operations of the period 0.7ms
+swipe to the previous period (3 times)   | page: rows and days 0.9ms
+swipe to the previous period (3 times)   | page: opening and closing balances 2.5ms
+swipe to the previous period (3 times)   | operations page built 11.4ms
+swipe to the previous period (3 times)   | pager: contents around page 48 drawn (lag 0) 97.7ms
+swipe to the previous period (3 times)   | pager: page content removed
+swipe to the previous period (3 times)   | swipe: next frame 314.7ms
+swipe to the previous period (3 times)   | renders pager 2
+swipe to the previous period (3 times)   | renders period bar 2
+swipe to the previous period (3 times)   | renders operations page 2
+swipe to the previous period (3 times)   | renders day head 5
+swipe to the previous period (3 times)   | renders operation row 5
+swipe to the previous period (3 times)   | list ready 207.0ms
+swipe to the previous period (3 times)   | pager: page content shown (7 so far)
+swipe to the previous period (3 times)   | renders operation row 6
+swipe to the previous period (3 times)   | pager: dragging
+swipe to the previous period (3 times)   | pager: idle
+swipe to the previous period (3 times)   | page ready after it was chosen 0.0ms
+swipe to the previous period (3 times)   | pager: page 47 from 48; this page drawn: yes; next page 46 drawn: yes; behind by -1
+swipe to the previous period (3 times)   | page: operations of the period 0.8ms
+swipe to the previous period (3 times)   | page: rows and days 0.1ms
+swipe to the previous period (3 times)   | operations page built 7.7ms
+swipe to the previous period (3 times)   | swipe: pages built 22.5ms
+swipe to the previous period (3 times)   | swipe: next frame 43.5ms
+swipe to the previous period (3 times)   | page: operations of the period 0.9ms
+swipe to the previous period (3 times)   | page: rows and days 0.1ms
+swipe to the previous period (3 times)   | page: opening and closing balances 21.9ms
+swipe to the previous period (3 times)   | operations page built 52.8ms
+swipe to the previous period (3 times)   | pager: contents around page 47 drawn (lag 0) 110.7ms
+swipe to the previous period (3 times)   | pager: page content removed
+swipe to the previous period (3 times)   | list ready 84.0ms
+swipe to the previous period (3 times)   | pager: page content shown (8 so far)
+swipe to the previous period (3 times)   | renders pager 2
+swipe to the previous period (3 times)   | renders period bar 2
+swipe to the previous period (3 times)   | renders operations page 2
+swipe to the previous period (3 times)   | renders day head 5
+swipe to the previous period (3 times)   | renders operation row 10
+swipe to the next period (3 times)       | pager: dragging
+swipe to the next period (3 times)       | pager: idle
+swipe to the next period (3 times)       | page ready after it was chosen 0.0ms
+swipe to the next period (3 times)       | pager: page 48 from 47; this page drawn: yes; next page 49 drawn: yes; behind by 1
+swipe to the next period (3 times)       | page: operations of the period 0.7ms
+swipe to the next period (3 times)       | page: rows and days 0.1ms
+swipe to the next period (3 times)       | operations page built 7.7ms
+swipe to the next period (3 times)       | swipe: pages built 21.0ms
+swipe to the next period (3 times)       | page: operations of the period 3.6ms
+swipe to the next period (3 times)       | page: rows and days 0.1ms
+swipe to the next period (3 times)       | page: opening and closing balances 1.1ms
+swipe to the next period (3 times)       | operations page built 54.7ms
+swipe to the next period (3 times)       | pager: contents around page 48 drawn (lag 0) 96.8ms
+swipe to the next period (3 times)       | pager: page content removed
+swipe to the next period (3 times)       | swipe: next frame 147.1ms
+swipe to the next period (3 times)       | list ready 62.0ms
+swipe to the next period (3 times)       | pager: page content shown (9 so far)
+swipe to the next period (3 times)       | renders pager 2
+swipe to the next period (3 times)       | renders period bar 2
+swipe to the next period (3 times)       | renders operations page 2
+swipe to the next period (3 times)       | renders day head 5
+swipe to the next period (3 times)       | renders operation row 12
+swipe to the next period (3 times)       | pager: dragging
+swipe to the next period (3 times)       | pager: idle
+swipe to the next period (3 times)       | page ready after it was chosen 0.0ms
+swipe to the next period (3 times)       | pager: page 49 from 48; this page drawn: yes; next page 50 drawn: yes; behind by 1
+swipe to the next period (3 times)       | page: operations of the period 0.6ms
+swipe to the next period (3 times)       | page: rows and days 0.1ms
+swipe to the next period (3 times)       | operations page built 144.5ms
+swipe to the next period (3 times)       | swipe: pages built 256.9ms
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page 1
+swipe to the next period (3 times)       | renders day head 2
+swipe to the next period (3 times)       | swipe: next frame 374.4ms
+swipe to the next period (3 times)       | page: operations of the period 0.6ms
+swipe to the next period (3 times)       | page: rows and days 0.0ms
+swipe to the next period (3 times)       | operations page built 15.3ms
+swipe to the next period (3 times)       | pager: page content shown (10 so far)
+swipe to the next period (3 times)       | pager: contents around page 49 drawn (lag 0) 411.9ms
+swipe to the next period (3 times)       | pager: page content removed
+swipe to the next period (3 times)       | renders pager 1
+swipe to the next period (3 times)       | renders period bar 1
+swipe to the next period (3 times)       | renders operations page 1
+swipe to the next period (3 times)       | pager: dragging
+swipe to the next period (3 times)       | pager: idle
+swipe to the next period (3 times)       | page ready after it was chosen 0.0ms
+swipe to the next period (3 times)       | pager: page 50 from 49; this page drawn: yes; next page 51 drawn: yes; behind by 1
+swipe to the next period (3 times)       | page: operations of the period 0.6ms
+swipe to the next period (3 times)       | page: rows and days 0.1ms
+swipe to the next period (3 times)       | operations page built 20.1ms
+swipe to the next period (3 times)       | swipe: pages built 44.6ms
+swipe to the next period (3 times)       | swipe: next frame 71.0ms
+swipe to the next period (3 times)       | page: operations of the period 0.4ms
+swipe to the next period (3 times)       | page: rows and days 0.0ms
+swipe to the next period (3 times)       | operations page built 13.1ms
+swipe to the next period (3 times)       | pager: page content shown (11 so far)
+swipe to the next period (3 times)       | pager: contents around page 50 drawn (lag 0) 103.2ms
+swipe to the next period (3 times)       | pager: page content removed
+swipe to the next period (3 times)       | renders pager 2
+swipe to the next period (3 times)       | renders period bar 2
+swipe to the next period (3 times)       | renders operations page 2
+swipe to the next period (3 times)       | renders day head 2
+open tab Statistics (first time)         | tab press statistics (asked operations, shown operations)
+open tab Statistics (first time)         | bar touched (1 touches)
+open tab Statistics (first time)         | pager: page content shown (1 so far)
+open tab Statistics (first time)         | tab shown statistics 80.2ms
+open tab Statistics (first time)         | pager: page content shown (2 so far)
+open tab Statistics (first time)         | pager: page content shown (3 so far)
+open tab Statistics (first time)         | renders tab bar 4
+open tab Statistics (first time)         | renders root hero 1
+open tab Statistics (first time)         | renders pager 5
+open tab Statistics (first time)         | renders period bar 5
+scroll the statistics (3 flicks down, 3  | touch lag 22.1ms
+statistics: previous period and back     | pager: dragging
+statistics: previous period and back     | pager: idle
+statistics: previous period and back     | page ready after it was chosen 0.0ms
+statistics: previous period and back     | pager: page 49 from 50; this page drawn: yes; next page 48 drawn: NO; behind by -1
+statistics: previous period and back     | swipe: pages built 137.0ms
+statistics: previous period and back     | pager: page content shown (4 so far)
+statistics: previous period and back     | pager: contents around page 49 drawn (lag 0) 217.0ms
+statistics: previous period and back     | swipe: next frame 218.1ms
+statistics: previous period and back     | pager: page content removed
+statistics: previous period and back     | renders pager 2
+statistics: previous period and back     | renders period bar 2
+statistics: previous period and back     | pager: dragging
+statistics: previous period and back     | pager: idle
+statistics: previous period and back     | page ready after it was chosen 0.0ms
+statistics: previous period and back     | pager: page 50 from 49; this page drawn: yes; next page 51 drawn: NO; behind by 1
+statistics: previous period and back     | swipe: pages built 48.8ms
+statistics: previous period and back     | pager: page content shown (5 so far)
+statistics: previous period and back     | pager: contents around page 50 drawn (lag 0) 156.0ms
+statistics: previous period and back     | swipe: next frame 194.1ms
+statistics: previous period and back     | pager: page content removed
+statistics: previous period and back     | renders pager 2
+statistics: previous period and back     | renders period bar 2
+open tab Categories (first time)         | tab press categories (asked statistics, shown statistics)
+open tab Categories (first time)         | bar touched (1 touches)
+open tab Categories (first time)         | pager: page content shown (1 so far)
+open tab Categories (first time)         | tab shown categories 65.7ms
+open tab Categories (first time)         | pager: page content shown (2 so far)
+open tab Categories (first time)         | pager: page content shown (3 so far)
+open tab Categories (first time)         | renders tab bar 4
+open tab Categories (first time)         | renders root hero 1
+open tab Categories (first time)         | renders pager 5
+open tab Categories (first time)         | renders period bar 5
+open tab Accounts                        | tab press index (asked categories, shown categories)
+open tab Accounts                        | bar touched (1 touches)
+open tab Accounts                        | tab shown index 35.0ms
+open tab Accounts                        | renders tab bar 4
+open tab Accounts                        | renders pager 1
+open tab Accounts                        | renders period bar 1
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | bar touched (1 touches)
+tabs again: Operations, Statistics, Cate | tab shown operations 41.1ms
+tabs again: Operations, Statistics, Cate | page: operations of the period 1.0ms
+tabs again: Operations, Statistics, Cate | page: rows and days 0.1ms
+tabs again: Operations, Statistics, Cate | operations page built 7.1ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | renders pager 1
+tabs again: Operations, Statistics, Cate | renders period bar 1
+tabs again: Operations, Statistics, Cate | renders operations page 1
+tabs again: Operations, Statistics, Cate | renders day head 2
+tabs again: Operations, Statistics, Cate | tab press statistics (asked operations, shown operations)
+tabs again: Operations, Statistics, Cate | bar touched (1 touches)
+tabs again: Operations, Statistics, Cate | tab shown statistics 30.8ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | renders pager 2
+tabs again: Operations, Statistics, Cate | renders period bar 2
+tabs again: Operations, Statistics, Cate | tab press categories (asked statistics, shown statistics)
+tabs again: Operations, Statistics, Cate | bar touched (1 touches)
+tabs again: Operations, Statistics, Cate | tab shown categories 31.2ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | renders pager 2
+tabs again: Operations, Statistics, Cate | renders period bar 2
+tabs again: Operations, Statistics, Cate | tab press index (asked categories, shown categories)
+tabs again: Operations, Statistics, Cate | bar touched (1 touches)
+tabs again: Operations, Statistics, Cate | tab shown index 31.8ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | renders pager 1
+tabs again: Operations, Statistics, Cate | renders period bar 1
+tabs again: Operations, Statistics, Cate | tab press operations (asked index, shown index)
+tabs again: Operations, Statistics, Cate | bar touched (1 touches)
+tabs again: Operations, Statistics, Cate | tab shown operations 52.8ms
+tabs again: Operations, Statistics, Cate | renders tab bar 4
+tabs again: Operations, Statistics, Cate | renders pager 1
+tabs again: Operations, Statistics, Cate | renders period bar 1
+tab back and forth, 1.5s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 1.5s apart (Operatio | bar touched (1 touches)
+tab back and forth, 1.5s apart (Operatio | tab shown statistics 32.3ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 4
+tab back and forth, 1.5s apart (Operatio | renders pager 2
+tab back and forth, 1.5s apart (Operatio | renders period bar 2
+tab back and forth, 1.5s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 1.5s apart (Operatio | bar touched (1 touches)
+tab back and forth, 1.5s apart (Operatio | tab shown operations 41.6ms
+tab back and forth, 1.5s apart (Operatio | renders tab bar 3
+tab back and forth, 1.5s apart (Operatio | renders pager 2
+tab back and forth, 1.5s apart (Operatio | renders period bar 2
+tab back and forth, 1.5s apart (Operatio | renders tab bar 1
+tab back and forth, 0.8s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.8s apart (Operatio | bar touched (1 touches)
+tab back and forth, 0.8s apart (Operatio | tab shown statistics 32.0ms
+tab back and forth, 0.8s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.8s apart (Operatio | bar touched (1 touches)
+tab back and forth, 0.8s apart (Operatio | tab shown operations 31.6ms
+tab back and forth, 0.8s apart (Operatio | renders tab bar 8
+tab back and forth, 0.8s apart (Operatio | renders pager 4
+tab back and forth, 0.8s apart (Operatio | renders period bar 4
+tab back and forth, 0.4s apart (Operatio | tab press statistics (asked operations, shown operations)
+tab back and forth, 0.4s apart (Operatio | bar touched (1 touches)
+tab back and forth, 0.4s apart (Operatio | tab shown statistics 46.8ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 3
+tab back and forth, 0.4s apart (Operatio | renders pager 2
+tab back and forth, 0.4s apart (Operatio | renders period bar 2
+tab back and forth, 0.4s apart (Operatio | tab press operations (asked statistics, shown statistics)
+tab back and forth, 0.4s apart (Operatio | bar touched (1 touches)
+tab back and forth, 0.4s apart (Operatio | tab shown operations 38.9ms
+tab back and forth, 0.4s apart (Operatio | renders tab bar 5
+tab back and forth, 0.4s apart (Operatio | renders pager 2
+tab back and forth, 0.4s apart (Operatio | renders period bar 2
+tab chain quickly: Categories, Accounts, | tab press categories (asked operations, shown operations)
+tab chain quickly: Categories, Accounts, | bar touched (1 touches)
+tab chain quickly: Categories, Accounts, | tab shown categories 43.7ms
+tab chain quickly: Categories, Accounts, | tab press index (asked categories, shown categories)
+tab chain quickly: Categories, Accounts, | bar touched (1 touches)
+tab chain quickly: Categories, Accounts, | tab shown index 34.3ms
+tab chain quickly: Categories, Accounts, | renders tab bar 8
+tab chain quickly: Categories, Accounts, | renders pager 3
+tab chain quickly: Categories, Accounts, | renders period bar 3
+tab chain quickly: Categories, Accounts, | tab press statistics (asked index, shown index)
+tab chain quickly: Categories, Accounts, | bar touched (1 touches)
+tab chain quickly: Categories, Accounts, | tab shown statistics 34.9ms
+tab chain quickly: Categories, Accounts, | tab press operations (asked statistics, shown statistics)
+tab chain quickly: Categories, Accounts, | bar touched (1 touches)
+tab chain quickly: Categories, Accounts, | tab shown operations 36.3ms
+tab chain quickly: Categories, Accounts, | renders tab bar 7
+tab chain quickly: Categories, Accounts, | renders pager 3
+tab chain quickly: Categories, Accounts, | renders period bar 3
+tab chain quickly: Categories, Accounts, | renders tab bar 1
+tab chain quickly: Categories, Accounts, | tab press categories (asked operations, shown operations)
+tab chain quickly: Categories, Accounts, | bar touched (1 touches)
+tab chain quickly: Categories, Accounts, | tab shown categories 31.9ms
+tab chain quickly: Categories, Accounts, | renders tab bar 4
+tab chain quickly: Categories, Accounts, | renders pager 2
+tab chain quickly: Categories, Accounts, | renders period bar 2
+finger swipe in Categories, then one tap | pager: dragging
+finger swipe in Categories, then one tap | pager: idle
+finger swipe in Categories, then one tap | page ready after it was chosen 0.0ms
+finger swipe in Categories, then one tap | pager: page 51 from 50; this page drawn: yes; next page 52 drawn: NO; behind by 1
+finger swipe in Categories, then one tap | swipe: pages built 15.8ms
+finger swipe in Categories, then one tap | pager: page content shown (4 so far)
+finger swipe in Categories, then one tap | pager: contents around page 51 drawn (lag 0) 63.6ms
+finger swipe in Categories, then one tap | swipe: next frame 64.5ms
+finger swipe in Categories, then one tap | pager: page content removed
+finger swipe in Categories, then one tap | renders pager 2
+finger swipe in Categories, then one tap | renders period bar 2
+finger swipe in Categories, then one tap | tab press index (asked categories, shown categories)
+finger swipe in Categories, then one tap | bar touched (1 touches)
+finger swipe in Categories, then one tap | tab shown index 29.0ms
+finger swipe in Categories, then one tap | renders tab bar 4
+finger swipe in Categories, then one tap | renders pager 1
+finger swipe in Categories, then one tap | renders period bar 1
+finger swipe in Categories, then one tap | tab press index (asked index, shown index)
+finger swipe in Categories, then one tap | tab press dropped: already asked
+finger swipe in Categories, then one tap | bar touched (1 touches)
+finger swipe in Accounts, then one tap o | pager: dragging
+finger swipe in Accounts, then one tap o | pager: idle
+finger swipe in Accounts, then one tap o | pager: page 1 from 0; this page drawn: yes; next page 2 drawn: NO; behind by 1
+finger swipe in Accounts, then one tap o | swipe: pages built 32.2ms
+finger swipe in Accounts, then one tap o | pager: contents around page 1 drawn (lag 0) 79.3ms
+finger swipe in Accounts, then one tap o | swipe: next frame 79.7ms
+finger swipe in Accounts, then one tap o | renders root hero 1
+finger swipe in Accounts, then one tap o | renders pager 2
+finger swipe in Accounts, then one tap o | tab press categories (asked index, shown index)
+finger swipe in Accounts, then one tap o | bar touched (1 touches)
+finger swipe in Accounts, then one tap o | tab shown categories 45.0ms
+finger swipe in Accounts, then one tap o | renders tab bar 4
+finger swipe in Accounts, then one tap o | renders pager 1
+finger swipe in Accounts, then one tap o | renders period bar 1
+finger swipe in Accounts, then one tap o | tab press operations (asked categories, shown categories)
+finger swipe in Accounts, then one tap o | bar touched (1 touches)
+finger swipe in Accounts, then one tap o | tab shown operations 30.6ms
+finger swipe in Accounts, then one tap o | page: operations of the period 0.4ms
+finger swipe in Accounts, then one tap o | page: rows and days 0.0ms
+finger swipe in Accounts, then one tap o | operations page built 8.3ms
+finger swipe in Accounts, then one tap o | pager: jumped to page 51
+finger swipe in Accounts, then one tap o | page: operations of the period 0.2ms
+finger swipe in Accounts, then one tap o | page: rows and days 0.0ms
+finger swipe in Accounts, then one tap o | operations page built 4.8ms
+finger swipe in Accounts, then one tap o | pager: page content shown (12 so far)
+finger swipe in Accounts, then one tap o | pager: page content removed
+finger swipe in Accounts, then one tap o | renders tab bar 4
+finger swipe in Accounts, then one tap o | renders pager 3
+finger swipe in Accounts, then one tap o | renders period bar 3
+finger swipe in Accounts, then one tap o | renders operations page 2
+finger swipe in Operations, then one tap | pager: dragging
+finger swipe in Operations, then one tap | pager: idle
+finger swipe in Operations, then one tap | page ready after it was chosen 0.0ms
+finger swipe in Operations, then one tap | pager: page 52 from 51; this page drawn: yes; next page 53 drawn: yes; behind by 1
+finger swipe in Operations, then one tap | page: operations of the period 0.5ms
+finger swipe in Operations, then one tap | page: rows and days 0.0ms
+finger swipe in Operations, then one tap | operations page built 50.9ms
+finger swipe in Operations, then one tap | swipe: pages built 62.4ms
+finger swipe in Operations, then one tap | page: operations of the period 0.5ms
+finger swipe in Operations, then one tap | page: rows and days 0.0ms
+finger swipe in Operations, then one tap | operations page built 9.2ms
+finger swipe in Operations, then one tap | pager: page content shown (13 so far)
+finger swipe in Operations, then one tap | pager: contents around page 52 drawn (lag 0) 99.4ms
+finger swipe in Operations, then one tap | pager: page content removed
+finger swipe in Operations, then one tap | swipe: next frame 135.4ms
+finger swipe in Operations, then one tap | renders pager 2
+finger swipe in Operations, then one tap | renders period bar 2
+finger swipe in Operations, then one tap | renders operations page 2
+finger swipe in Operations, then one tap | tab press index (asked operations, shown operations)
+finger swipe in Operations, then one tap | bar touched (1 touches)
+finger swipe in Operations, then one tap | tab shown index 29.6ms
+finger swipe in Operations, then one tap | renders tab bar 4
+finger swipe in Operations, then one tap | renders pager 1
+finger swipe in Operations, then one tap | renders period bar 1
+two quick period swipes (0.35s apart)    | pager: dragging
+two quick period swipes (0.35s apart)    | pager: idle
+two quick period swipes (0.35s apart)    | pager: dragging
+two quick period swipes (0.35s apart)    | pager: idle
+swipe back and forth quickly (0.35s apar | pager: dragging
+swipe back and forth quickly (0.35s apar | pager: idle
+swipe back and forth quickly (0.35s apar | pager: page 0 from 1; this page drawn: yes; next page -1 drawn: NO; behind by -1
+swipe back and forth quickly (0.35s apar | swipe: pages built 26.8ms
+swipe back and forth quickly (0.35s apar | pager: contents around page 0 drawn (lag 0) 39.5ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 60.3ms
+swipe back and forth quickly (0.35s apar | renders root hero 1
+swipe back and forth quickly (0.35s apar | renders pager 2
+swipe back and forth quickly (0.35s apar | touch lag 32.8ms
+swipe back and forth quickly (0.35s apar | pager: dragging
+swipe back and forth quickly (0.35s apar | pager: idle
+swipe back and forth quickly (0.35s apar | pager: page 1 from 0; this page drawn: yes; next page 2 drawn: NO; behind by 1
+swipe back and forth quickly (0.35s apar | swipe: pages built 13.4ms
+swipe back and forth quickly (0.35s apar | pager: contents around page 1 drawn (lag 0) 29.9ms
+swipe back and forth quickly (0.35s apar | swipe: next frame 52.3ms
+swipe back and forth quickly (0.35s apar | renders root hero 1
+swipe back and forth quickly (0.35s apar | renders pager 2
+swipe back and forth quickly (0.35s apar | tab press statistics (asked index, shown index)
+swipe back and forth quickly (0.35s apar | bar touched (1 touches)
+swipe back and forth quickly (0.35s apar | tab shown statistics 42.7ms
+swipe back and forth quickly (0.35s apar | pager: jumped to page 52
+swipe back and forth quickly (0.35s apar | pager: page content shown (6 so far)
+swipe back and forth quickly (0.35s apar | pager: page content shown (7 so far)
+swipe back and forth quickly (0.35s apar | pager: page content removed
+swipe back and forth quickly (0.35s apar | pager: page content removed
+swipe back and forth quickly (0.35s apar | renders tab bar 4
+swipe back and forth quickly (0.35s apar | renders pager 2
+swipe back and forth quickly (0.35s apar | renders period bar 2
+statistics: Incomes                      | renders root hero 2
+statistics: Incomes                      | renders pager 2
+statistics: Incomes                      | renders period bar 2
+statistics: Expenses                     | renders root hero 2
+statistics: Expenses                     | renders pager 2
+statistics: Expenses                     | renders period bar 2
+statistics: Expenses                     | tab press more (asked statistics, shown statistics)
+statistics: Expenses                     | bar touched (1 touches)
+statistics: Expenses                     | tab shown more 31.9ms
+statistics: Expenses                     | renders tab bar 4
+statistics: Expenses                     | renders pager 1
+statistics: Expenses                     | renders period bar 1
+open Budgets                             | tab shown more 15.5ms
+open Budgets                             | renders tab bar 1
+open Budgets                             | renders period bar 2
+open Budgets                             | renders period bar 1
+open Budgets                             | tab shown more 4236.8ms
+open Budgets                             | renders tab bar 1
+open Scheduled payments                  | tab shown more 13.6ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab shown more 4248.8ms
+open Scheduled payments                  | renders tab bar 1
+open Scheduled payments                  | tab press operations (asked more, shown more)
+open Scheduled payments                  | bar touched (1 touches)
+open Scheduled payments                  | tab shown operations 28.8ms
+open Scheduled payments                  | renders tab bar 5
+open Scheduled payments                  | renders pager 1
+open Scheduled payments                  | renders period bar 1
+open Scheduled payments                  | tab press operations (asked operations, shown operations)
+open Scheduled payments                  | tab press dropped: already asked
+open Scheduled payments                  | bar touched (1 touches)
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | touch lag 54.6ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 51 from 52; this page drawn: yes; next page 50 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.4ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.0ms
+operations: 10 fast swipes back (0.25s a | operations page built 48.2ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 85.8ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.7ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 1.2ms
+operations: 10 fast swipes back (0.25s a | operations page built 59.5ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 51 drawn (lag 0) 167.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | swipe: next frame 334.7ms
+operations: 10 fast swipes back (0.25s a | list ready 222.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (14 so far)
+operations: 10 fast swipes back (0.25s a | touch lag 49.4ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 50 from 51; this page drawn: yes; next page 49 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.6ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 6.3ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 15.0ms
+operations: 10 fast swipes back (0.25s a | swipe: next frame 29.7ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.7ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 1.0ms
+operations: 10 fast swipes back (0.25s a | operations page built 8.7ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 50 drawn (lag 0) 46.2ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | renders pager 4
+operations: 10 fast swipes back (0.25s a | renders period bar 4
+operations: 10 fast swipes back (0.25s a | renders operations page 4
+operations: 10 fast swipes back (0.25s a | renders day head 6
+operations: 10 fast swipes back (0.25s a | renders operation row 14
+operations: 10 fast swipes back (0.25s a | list ready 199.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (15 so far)
+operations: 10 fast swipes back (0.25s a | touch lag 112.0ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 49 from 50; this page drawn: yes; next page 48 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.7ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 6.1ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 10.7ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.7ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 1.0ms
+operations: 10 fast swipes back (0.25s a | operations page built 7.2ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 49 drawn (lag 0) 57.6ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | swipe: next frame 260.7ms
+operations: 10 fast swipes back (0.25s a | list ready 196.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (16 so far)
+operations: 10 fast swipes back (0.25s a | touch lag 222.6ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 47 from 49; this page drawn: yes; next page 46 drawn: NO; behind by -2
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.8ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 11.7ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 23.1ms
+operations: 10 fast swipes back (0.25s a | swipe: next frame 46.6ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.6ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.6ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.5ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.6ms
+operations: 10 fast swipes back (0.25s a | operations page built 12.3ms
+operations: 10 fast swipes back (0.25s a | operations page built 10.3ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 47 drawn (lag 0) 86.9ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | renders operation row 25
+operations: 10 fast swipes back (0.25s a | renders day head 12
+operations: 10 fast swipes back (0.25s a | renders pager 4
+operations: 10 fast swipes back (0.25s a | renders period bar 4
+operations: 10 fast swipes back (0.25s a | renders operations page 5
+operations: 10 fast swipes back (0.25s a | list ready 57.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (17 so far)
+operations: 10 fast swipes back (0.25s a | list ready 59.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (18 so far)
+operations: 10 fast swipes back (0.25s a | touch lag 145.4ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 46 from 47; this page drawn: yes; next page 45 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | page: operations of the period 1.0ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 73.2ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 150.0ms
+operations: 10 fast swipes back (0.25s a | swipe: next frame 240.6ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 1.0ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.2ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.8ms
+operations: 10 fast swipes back (0.25s a | operations page built 244.2ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 46 drawn (lag 0) 508.1ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | touch lag 439.3ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 45 from 46; this page drawn: yes; next page 44 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.8ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 91.7ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 119.4ms
+operations: 10 fast swipes back (0.25s a | renders operation row 16
+operations: 10 fast swipes back (0.25s a | renders day head 7
+operations: 10 fast swipes back (0.25s a | renders pager 3
+operations: 10 fast swipes back (0.25s a | renders period bar 3
+operations: 10 fast swipes back (0.25s a | renders operations page 3
+operations: 10 fast swipes back (0.25s a | list ready 378.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (19 so far)
+operations: 10 fast swipes back (0.25s a | touch lag 210.3ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 44 from 45; this page drawn: yes; next page 43 drawn: NO; behind by -2
+operations: 10 fast swipes back (0.25s a | page: operations of the period 5.3ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 150.8ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 222.9ms
+operations: 10 fast swipes back (0.25s a | swipe: next frame 530.1ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.5ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.5ms
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.5ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.5ms
+operations: 10 fast swipes back (0.25s a | operations page built 12.3ms
+operations: 10 fast swipes back (0.25s a | operations page built 26.6ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 44 drawn (lag 0) 400.2ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | swipe: next frame 545.6ms
+operations: 10 fast swipes back (0.25s a | touch lag 323.1ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | pager: page 43 from 44; this page drawn: yes; next page 42 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.8ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 22.7ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 33.1ms
+operations: 10 fast swipes back (0.25s a | list ready 286.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (20 so far)
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 94.2ms
+operations: 10 fast swipes back (0.25s a | list ready 297.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (21 so far)
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.5ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.4ms
+operations: 10 fast swipes back (0.25s a | operations page built 24.5ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 43 drawn (lag 0) 162.5ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | swipe: next frame 728.4ms
+operations: 10 fast swipes back (0.25s a | renders pager 4
+operations: 10 fast swipes back (0.25s a | renders period bar 4
+operations: 10 fast swipes back (0.25s a | renders operations page 5
+operations: 10 fast swipes back (0.25s a | renders day head 10
+operations: 10 fast swipes back (0.25s a | renders operation row 31
+operations: 10 fast swipes back (0.25s a | touch lag 609.0ms
+operations: 10 fast swipes back (0.25s a | pager: dragging
+operations: 10 fast swipes back (0.25s a | pager: idle
+operations: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+operations: 10 fast swipes back (0.25s a | pager: page 42 from 43; this page drawn: yes; next page 41 drawn: yes; behind by -1
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.8ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | operations page built 86.7ms
+operations: 10 fast swipes back (0.25s a | swipe: pages built 100.6ms
+operations: 10 fast swipes back (0.25s a | list ready 569.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (22 so far)
+operations: 10 fast swipes back (0.25s a | page: operations of the period 0.7ms
+operations: 10 fast swipes back (0.25s a | page: rows and days 0.1ms
+operations: 10 fast swipes back (0.25s a | page: opening and closing balances 0.6ms
+operations: 10 fast swipes back (0.25s a | operations page built 61.2ms
+operations: 10 fast swipes back (0.25s a | pager: contents around page 42 drawn (lag 0) 200.2ms
+operations: 10 fast swipes back (0.25s a | pager: page content removed
+operations: 10 fast swipes back (0.25s a | swipe: next frame 264.4ms
+operations: 10 fast swipes back (0.25s a | list ready 68.0ms
+operations: 10 fast swipes back (0.25s a | pager: page content shown (23 so far)
+operations: 10 fast swipes back (0.25s a | renders pager 2
+operations: 10 fast swipes back (0.25s a | renders period bar 2
+operations: 10 fast swipes back (0.25s a | renders operations page 2
+operations: 10 fast swipes back (0.25s a | renders day head 6
+operations: 10 fast swipes back (0.25s a | renders operation row 13
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 44 from 42; this page drawn: yes; next page 45 drawn: NO; behind by 2
+operations: 10 fast swipes forward       | page: operations of the period 0.9ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 13.0ms
+operations: 10 fast swipes forward       | swipe: pages built 23.3ms
+operations: 10 fast swipes forward       | page: operations of the period 13.0ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 1.4ms
+operations: 10 fast swipes forward       | page: operations of the period 0.8ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 0.9ms
+operations: 10 fast swipes forward       | operations page built 30.5ms
+operations: 10 fast swipes forward       | operations page built 45.4ms
+operations: 10 fast swipes forward       | pager: contents around page 44 drawn (lag 0) 95.0ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 321.2ms
+operations: 10 fast swipes forward       | list ready 175.0ms
+operations: 10 fast swipes forward       | pager: page content shown (24 so far)
+operations: 10 fast swipes forward       | list ready 253.0ms
+operations: 10 fast swipes forward       | pager: page content shown (25 so far)
+operations: 10 fast swipes forward       | touch lag 63.3ms
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | renders pager 2
+operations: 10 fast swipes forward       | renders period bar 2
+operations: 10 fast swipes forward       | renders operations page 3
+operations: 10 fast swipes forward       | renders day head 7
+operations: 10 fast swipes forward       | renders operation row 21
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 46 from 44; this page drawn: yes; next page 47 drawn: NO; behind by 2
+operations: 10 fast swipes forward       | page: operations of the period 2.0ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 10.1ms
+operations: 10 fast swipes forward       | swipe: pages built 29.4ms
+operations: 10 fast swipes forward       | page: operations of the period 1.0ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 1.1ms
+operations: 10 fast swipes forward       | page: operations of the period 0.7ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 1.3ms
+operations: 10 fast swipes forward       | operations page built 15.0ms
+operations: 10 fast swipes forward       | operations page built 12.0ms
+operations: 10 fast swipes forward       | pager: contents around page 46 drawn (lag 0) 55.8ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 270.7ms
+operations: 10 fast swipes forward       | list ready 139.0ms
+operations: 10 fast swipes forward       | pager: page content shown (26 so far)
+operations: 10 fast swipes forward       | list ready 197.0ms
+operations: 10 fast swipes forward       | pager: page content shown (27 so far)
+operations: 10 fast swipes forward       | touch lag 26.7ms
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | renders pager 2
+operations: 10 fast swipes forward       | renders period bar 2
+operations: 10 fast swipes forward       | renders operations page 3
+operations: 10 fast swipes forward       | renders day head 8
+operations: 10 fast swipes forward       | renders operation row 19
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 47 from 46; this page drawn: yes; next page 48 drawn: yes; behind by 1
+operations: 10 fast swipes forward       | page: operations of the period 1.0ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 9.0ms
+operations: 10 fast swipes forward       | swipe: pages built 39.4ms
+operations: 10 fast swipes forward       | page: operations of the period 0.7ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 1.1ms
+operations: 10 fast swipes forward       | operations page built 21.2ms
+operations: 10 fast swipes forward       | pager: contents around page 47 drawn (lag 0) 82.2ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 130.1ms
+operations: 10 fast swipes forward       | list ready 62.0ms
+operations: 10 fast swipes forward       | pager: page content shown (28 so far)
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 48 from 47; this page drawn: yes; next page 49 drawn: yes; behind by 1
+operations: 10 fast swipes forward       | page: operations of the period 0.8ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 6.8ms
+operations: 10 fast swipes forward       | swipe: pages built 16.1ms
+operations: 10 fast swipes forward       | page: operations of the period 0.7ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | page: opening and closing balances 1.1ms
+operations: 10 fast swipes forward       | operations page built 20.0ms
+operations: 10 fast swipes forward       | pager: contents around page 48 drawn (lag 0) 49.7ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 235.3ms
+operations: 10 fast swipes forward       | list ready 194.0ms
+operations: 10 fast swipes forward       | pager: page content shown (29 so far)
+operations: 10 fast swipes forward       | touch lag 245.9ms
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 49 from 48; this page drawn: yes; next page 50 drawn: yes; behind by 1
+operations: 10 fast swipes forward       | page: operations of the period 0.7ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 15.8ms
+operations: 10 fast swipes forward       | swipe: pages built 25.8ms
+operations: 10 fast swipes forward       | renders pager 5
+operations: 10 fast swipes forward       | renders period bar 5
+operations: 10 fast swipes forward       | renders operations page 5
+operations: 10 fast swipes forward       | renders day head 12
+operations: 10 fast swipes forward       | renders operation row 22
+operations: 10 fast swipes forward       | page: operations of the period 8.3ms
+operations: 10 fast swipes forward       | page: rows and days 0.0ms
+operations: 10 fast swipes forward       | operations page built 50.6ms
+operations: 10 fast swipes forward       | pager: page content shown (30 so far)
+operations: 10 fast swipes forward       | pager: contents around page 49 drawn (lag 0) 124.5ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 195.3ms
+operations: 10 fast swipes forward       | touch lag 22.1ms
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 50 from 49; this page drawn: yes; next page 51 drawn: yes; behind by 1
+operations: 10 fast swipes forward       | page: operations of the period 1.0ms
+operations: 10 fast swipes forward       | page: rows and days 0.1ms
+operations: 10 fast swipes forward       | operations page built 8.5ms
+operations: 10 fast swipes forward       | swipe: pages built 18.7ms
+operations: 10 fast swipes forward       | page: operations of the period 0.4ms
+operations: 10 fast swipes forward       | page: rows and days 0.0ms
+operations: 10 fast swipes forward       | operations page built 37.9ms
+operations: 10 fast swipes forward       | pager: page content shown (31 so far)
+operations: 10 fast swipes forward       | pager: contents around page 50 drawn (lag 0) 86.8ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | swipe: next frame 127.3ms
+operations: 10 fast swipes forward       | pager: dragging
+operations: 10 fast swipes forward       | pager: idle
+operations: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+operations: 10 fast swipes forward       | pager: page 52 from 50; this page drawn: yes; next page 53 drawn: NO; behind by 2
+operations: 10 fast swipes forward       | page: operations of the period 0.6ms
+operations: 10 fast swipes forward       | page: rows and days 0.0ms
+operations: 10 fast swipes forward       | operations page built 5.7ms
+operations: 10 fast swipes forward       | swipe: pages built 20.7ms
+operations: 10 fast swipes forward       | swipe: next frame 27.3ms
+operations: 10 fast swipes forward       | page: operations of the period 1.1ms
+operations: 10 fast swipes forward       | page: rows and days 0.0ms
+operations: 10 fast swipes forward       | page: operations of the period 0.6ms
+operations: 10 fast swipes forward       | page: rows and days 0.0ms
+operations: 10 fast swipes forward       | operations page built 17.5ms
+operations: 10 fast swipes forward       | pager: page content shown (32 so far)
+operations: 10 fast swipes forward       | operations page built 13.5ms
+operations: 10 fast swipes forward       | pager: page content shown (33 so far)
+operations: 10 fast swipes forward       | pager: contents around page 52 drawn (lag 0) 101.2ms
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | pager: page content removed
+operations: 10 fast swipes forward       | renders pager 5
+operations: 10 fast swipes forward       | renders period bar 5
+operations: 10 fast swipes forward       | renders operations page 6
+operations: 10 fast swipes forward       | renders day head 2
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 29.7ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | page ready after it was chosen 0.0ms
+operations: 30 swipes back, no pause     | pager: page 51 from 52; this page drawn: yes; next page 50 drawn: yes; behind by -1
+operations: 30 swipes back, no pause     | page: operations of the period 0.2ms
+operations: 30 swipes back, no pause     | page: rows and days 0.0ms
+operations: 30 swipes back, no pause     | operations page built 49.7ms
+operations: 30 swipes back, no pause     | swipe: pages built 80.1ms
+operations: 30 swipes back, no pause     | touch lag 17.1ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 1.1ms
+operations: 30 swipes back, no pause     | operations page built 61.3ms
+operations: 30 swipes back, no pause     | pager: contents around page 51 drawn (lag 0) 161.5ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | swipe: next frame 411.8ms
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | page ready after it was chosen 0.0ms
+operations: 30 swipes back, no pause     | pager: page 50 from 51; this page drawn: yes; next page 49 drawn: yes; behind by -1
+operations: 30 swipes back, no pause     | touch lag 69.0ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | page: operations of the period 0.6ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | operations page built 5.9ms
+operations: 30 swipes back, no pause     | swipe: pages built 15.8ms
+operations: 30 swipes back, no pause     | list ready 264.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (34 so far)
+operations: 30 swipes back, no pause     | swipe: next frame 370.2ms
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | page ready after it was chosen 0.0ms
+operations: 30 swipes back, no pause     | pager: page 49 from 50; this page drawn: yes; next page 48 drawn: NO; behind by -2
+operations: 30 swipes back, no pause     | touch lag 219.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.9ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.6ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | operations page built 24.0ms
+operations: 30 swipes back, no pause     | operations page built 21.5ms
+operations: 30 swipes back, no pause     | swipe: pages built 184.8ms
+operations: 30 swipes back, no pause     | pager: contents around page 50 drawn (lag -1) 555.7ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | renders pager 4
+operations: 30 swipes back, no pause     | renders period bar 4
+operations: 30 swipes back, no pause     | renders operations page 5
+operations: 30 swipes back, no pause     | renders day head 8
+operations: 30 swipes back, no pause     | renders operation row 14
+operations: 30 swipes back, no pause     | touch lag 243.5ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 48 from 49; this page drawn: yes; next page 47 drawn: NO; behind by -2
+operations: 30 swipes back, no pause     | touch lag 94.2ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 47 from 48; this page drawn: NO; next page 46 drawn: NO; behind by -3
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 1.0ms
+operations: 30 swipes back, no pause     | operations page built 8.3ms
+operations: 30 swipes back, no pause     | swipe: pages built 18.4ms
+operations: 30 swipes back, no pause     | pager: contents around page 49 drawn (lag -2) 372.6ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | swipe: next frame 617.6ms
+operations: 30 swipes back, no pause     | list ready 156.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (35 so far)
+operations: 30 swipes back, no pause     | touch lag 87.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | swipe: next frame 265.4ms
+operations: 30 swipes back, no pause     | list ready 183.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (36 so far)
+operations: 30 swipes back, no pause     | page ready after it was chosen 266.2ms
+operations: 30 swipes back, no pause     | page: operations of the period 3.2ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 1.2ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.9ms
+operations: 30 swipes back, no pause     | operations page built 134.4ms
+operations: 30 swipes back, no pause     | operations page built 129.0ms
+operations: 30 swipes back, no pause     | pager: contents around page 47 drawn (lag 0) 473.5ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | touch lag 1002.5ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 46 from 47; this page drawn: yes; next page 45 drawn: yes; behind by -1
+operations: 30 swipes back, no pause     | touch lag 788.0ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 608.3ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 45 from 46; this page drawn: yes; next page 44 drawn: NO; behind by -2
+operations: 30 swipes back, no pause     | touch lag 451.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 305.9ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 103.1ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | page: operations of the period 0.5ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | operations page built 53.2ms
+operations: 30 swipes back, no pause     | swipe: pages built 77.9ms
+operations: 30 swipes back, no pause     | renders pager 3
+operations: 30 swipes back, no pause     | renders period bar 3
+operations: 30 swipes back, no pause     | renders operations page 4
+operations: 30 swipes back, no pause     | renders day head 9
+operations: 30 swipes back, no pause     | renders operation row 30
+operations: 30 swipes back, no pause     | list ready 906.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (37 so far)
+operations: 30 swipes back, no pause     | page ready after it was chosen 161.0ms
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 44 from 45; this page drawn: NO; next page 43 drawn: NO; behind by -3
+operations: 30 swipes back, no pause     | touch lag 113.5ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 43 from 44; this page drawn: NO; next page 42 drawn: NO; behind by -4
+operations: 30 swipes back, no pause     | page: operations of the period 0.9ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.9ms
+operations: 30 swipes back, no pause     | operations page built 9.5ms
+operations: 30 swipes back, no pause     | swipe: pages built 36.0ms
+operations: 30 swipes back, no pause     | list ready 950.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (38 so far)
+operations: 30 swipes back, no pause     | swipe: next frame 440.1ms
+operations: 30 swipes back, no pause     | touch lag 154.3ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | renders pager 1
+operations: 30 swipes back, no pause     | renders period bar 1
+operations: 30 swipes back, no pause     | renders operations page 1
+operations: 30 swipes back, no pause     | renders day head 2
+operations: 30 swipes back, no pause     | renders operation row 4
+operations: 30 swipes back, no pause     | swipe: next frame 118.0ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.9ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.8ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 28.8ms
+operations: 30 swipes back, no pause     | page: operations of the period 3.4ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.9ms
+operations: 30 swipes back, no pause     | operations page built 175.8ms
+operations: 30 swipes back, no pause     | operations page built 66.6ms
+operations: 30 swipes back, no pause     | operations page built 33.9ms
+operations: 30 swipes back, no pause     | pager: contents around page 43 drawn (lag 0) 449.8ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | list ready 66.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (39 so far)
+operations: 30 swipes back, no pause     | page ready after it was chosen 1147.4ms
+operations: 30 swipes back, no pause     | touch lag 908.7ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 42 from 43; this page drawn: yes; next page 41 drawn: yes; behind by -1
+operations: 30 swipes back, no pause     | touch lag 732.1ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: page 41 from 42; this page drawn: yes; next page 40 drawn: NO; behind by -2
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 577.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 40 from 41; this page drawn: NO; next page 39 drawn: NO; behind by -3
+operations: 30 swipes back, no pause     | touch lag 319.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 39 from 40; this page drawn: NO; next page 38 drawn: NO; behind by -4
+operations: 30 swipes back, no pause     | touch lag 141.5ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 38 from 39; this page drawn: NO; next page 37 drawn: NO; behind by -5
+operations: 30 swipes back, no pause     | page: operations of the period 0.5ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.5ms
+operations: 30 swipes back, no pause     | operations page built 20.1ms
+operations: 30 swipes back, no pause     | swipe: pages built 26.3ms
+operations: 30 swipes back, no pause     | renders pager 2
+operations: 30 swipes back, no pause     | renders period bar 2
+operations: 30 swipes back, no pause     | renders operations page 4
+operations: 30 swipes back, no pause     | renders day head 6
+operations: 30 swipes back, no pause     | renders operation row 27
+operations: 30 swipes back, no pause     | list ready 608.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (40 so far)
+operations: 30 swipes back, no pause     | list ready 698.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (41 so far)
+operations: 30 swipes back, no pause     | list ready 692.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (42 so far)
+operations: 30 swipes back, no pause     | touch lag 595.9ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 37 from 38; this page drawn: NO; next page 36 drawn: NO; behind by -6
+operations: 30 swipes back, no pause     | touch lag 393.7ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 186.1ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | page: operations of the period 0.8ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.6ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.8ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.4ms
+operations: 30 swipes back, no pause     | page: operations of the period 1.2ms
+operations: 30 swipes back, no pause     | page: rows and days 0.2ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.6ms
+operations: 30 swipes back, no pause     | page: operations of the period 57.4ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.6ms
+operations: 30 swipes back, no pause     | operations page built 399.6ms
+operations: 30 swipes back, no pause     | operations page built 387.4ms
+operations: 30 swipes back, no pause     | operations page built 306.8ms
+operations: 30 swipes back, no pause     | operations page built 272.8ms
+operations: 30 swipes back, no pause     | swipe: pages built 458.4ms
+operations: 30 swipes back, no pause     | pager: contents around page 38 drawn (lag -1) 1106.4ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | swipe: next frame 1650.6ms
+operations: 30 swipes back, no pause     | list ready 482.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (43 so far)
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 36 from 37; this page drawn: yes; next page 35 drawn: NO; behind by -2
+operations: 30 swipes back, no pause     | touch lag 920.3ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 749.6ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 35 from 36; this page drawn: NO; next page 34 drawn: NO; behind by -3
+operations: 30 swipes back, no pause     | touch lag 452.0ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 34 from 35; this page drawn: NO; next page 33 drawn: NO; behind by -4
+operations: 30 swipes back, no pause     | touch lag 188.4ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 33 from 34; this page drawn: NO; next page 32 drawn: NO; behind by -5
+operations: 30 swipes back, no pause     | page: operations of the period 0.5ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.2ms
+operations: 30 swipes back, no pause     | operations page built 5.7ms
+operations: 30 swipes back, no pause     | swipe: pages built 9.1ms
+operations: 30 swipes back, no pause     | renders pager 2
+operations: 30 swipes back, no pause     | renders period bar 2
+operations: 30 swipes back, no pause     | renders operations page 5
+operations: 30 swipes back, no pause     | renders day head 8
+operations: 30 swipes back, no pause     | renders operation row 30
+operations: 30 swipes back, no pause     | swipe: next frame 1760.8ms
+operations: 30 swipes back, no pause     | list ready 921.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (44 so far)
+operations: 30 swipes back, no pause     | list ready 915.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (45 so far)
+operations: 30 swipes back, no pause     | list ready 734.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (46 so far)
+operations: 30 swipes back, no pause     | list ready 824.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (47 so far)
+operations: 30 swipes back, no pause     | swipe: next frame 757.5ms
+operations: 30 swipes back, no pause     | touch lag 842.8ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | touch lag 633.7ms
+operations: 30 swipes back, no pause     | pager: dragging
+operations: 30 swipes back, no pause     | pager: idle
+operations: 30 swipes back, no pause     | pager: page 32 from 33; this page drawn: NO; next page 31 drawn: NO; behind by -6
+operations: 30 swipes back, no pause     | page: operations of the period 0.5ms
+operations: 30 swipes back, no pause     | page: rows and days 0.0ms
+operations: 30 swipes back, no pause     | page: operations of the period 14.3ms
+operations: 30 swipes back, no pause     | page: rows and days 0.0ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.3ms
+operations: 30 swipes back, no pause     | page: operations of the period 1.2ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.2ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.6ms
+operations: 30 swipes back, no pause     | page: rows and days 0.1ms
+operations: 30 swipes back, no pause     | page: opening and closing balances 0.4ms
+operations: 30 swipes back, no pause     | operations page built 77.8ms
+operations: 30 swipes back, no pause     | pager: page content shown (48 so far)
+operations: 30 swipes back, no pause     | operations page built 56.4ms
+operations: 30 swipes back, no pause     | operations page built 23.1ms
+operations: 30 swipes back, no pause     | operations page built 20.9ms
+operations: 30 swipes back, no pause     | swipe: pages built 88.7ms
+operations: 30 swipes back, no pause     | pager: contents around page 33 drawn (lag -1) 901.0ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | renders pager 1
+operations: 30 swipes back, no pause     | renders period bar 1
+operations: 30 swipes back, no pause     | renders operations page 4
+operations: 30 swipes back, no pause     | renders day head 5
+operations: 30 swipes back, no pause     | renders operation row 13
+operations: 30 swipes back, no pause     | list ready 743.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (49 so far)
+operations: 30 swipes back, no pause     | swipe: next frame 163.6ms
+operations: 30 swipes back, no pause     | page: operations of the period 0.7ms
+operations: 30 swipes back, no pause     | page: rows and days 0.0ms
+operations: 30 swipes back, no pause     | operations page built 32.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (50 so far)
+operations: 30 swipes back, no pause     | pager: contents around page 32 drawn (lag 0) 253.1ms
+operations: 30 swipes back, no pause     | pager: page content removed
+operations: 30 swipes back, no pause     | list ready 108.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (51 so far)
+operations: 30 swipes back, no pause     | page ready after it was chosen 293.4ms
+operations: 30 swipes back, no pause     | list ready 90.0ms
+operations: 30 swipes back, no pause     | pager: page content shown (52 so far)
+operations: 30 swipes back, no pause     | renders pager 1
+operations: 30 swipes back, no pause     | renders period bar 1
+operations: 30 swipes back, no pause     | renders operations page 1
+operations: 30 swipes back, no pause     | renders day head 2
+operations: 30 swipes back, no pause     | renders operation row 17
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | touch lag 50.4ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | page ready after it was chosen 0.0ms
+operations: direction changes (back, for | pager: page 31 from 32; this page drawn: yes; next page 30 drawn: yes; behind by -1
+operations: direction changes (back, for | page: operations of the period 2.2ms
+operations: direction changes (back, for | page: rows and days 0.0ms
+operations: direction changes (back, for | operations page built 17.6ms
+operations: direction changes (back, for | swipe: pages built 71.6ms
+operations: direction changes (back, for | touch lag 35.9ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | page: operations of the period 0.6ms
+operations: direction changes (back, for | page: rows and days 0.0ms
+operations: direction changes (back, for | operations page built 9.1ms
+operations: direction changes (back, for | pager: page content shown (53 so far)
+operations: direction changes (back, for | pager: contents around page 31 drawn (lag 0) 91.2ms
+operations: direction changes (back, for | pager: page content removed
+operations: direction changes (back, for | swipe: next frame 107.4ms
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | touch lag 29.9ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | touch lag 32.3ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | renders pager 2
+operations: direction changes (back, for | renders period bar 2
+operations: direction changes (back, for | renders operations page 2
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | page ready after it was chosen 0.0ms
+operations: direction changes (back, for | pager: page 30 from 31; this page drawn: yes; next page 29 drawn: yes; behind by -1
+operations: direction changes (back, for | page: operations of the period 0.6ms
+operations: direction changes (back, for | page: rows and days 0.0ms
+operations: direction changes (back, for | operations page built 61.8ms
+operations: direction changes (back, for | swipe: pages built 156.0ms
+operations: direction changes (back, for | page: operations of the period 12.9ms
+operations: direction changes (back, for | page: rows and days 0.0ms
+operations: direction changes (back, for | operations page built 170.9ms
+operations: direction changes (back, for | pager: page content shown (54 so far)
+operations: direction changes (back, for | pager: contents around page 30 drawn (lag 0) 432.0ms
+operations: direction changes (back, for | pager: page content removed
+operations: direction changes (back, for | swipe: next frame 473.1ms
+operations: direction changes (back, for | touch lag 329.4ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | page ready after it was chosen 0.0ms
+operations: direction changes (back, for | pager: page 31 from 30; this page drawn: yes; next page 32 drawn: yes; behind by 1
+operations: direction changes (back, for | touch lag 67.2ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | page: operations of the period 0.3ms
+operations: direction changes (back, for | page: rows and days 0.0ms
+operations: direction changes (back, for | operations page built 9.1ms
+operations: direction changes (back, for | swipe: pages built 12.9ms
+operations: direction changes (back, for | swipe: next frame 62.0ms
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | page: operations of the period 0.7ms
+operations: direction changes (back, for | page: rows and days 0.1ms
+operations: direction changes (back, for | page: opening and closing balances 0.2ms
+operations: direction changes (back, for | operations page built 123.1ms
+operations: direction changes (back, for | pager: contents around page 31 drawn (lag 0) 202.8ms
+operations: direction changes (back, for | pager: page content removed
+operations: direction changes (back, for | touch lag 221.4ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | touch lag 68.6ms
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | list ready 327.0ms
+operations: direction changes (back, for | pager: page content shown (55 so far)
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | renders pager 4
+operations: direction changes (back, for | renders period bar 4
+operations: direction changes (back, for | renders operations page 4
+operations: direction changes (back, for | renders day head 2
+operations: direction changes (back, for | renders operation row 11
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: direction changes (back, for | pager: dragging
+operations: direction changes (back, for | pager: idle
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 32 from 31; this page drawn: yes; next page 33 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | page: operations of the period 3.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 9.1ms
+operations: revisit (30 swipes forward,  | swipe: pages built 17.1ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.3ms
+operations: revisit (30 swipes forward,  | operations page built 36.4ms
+operations: revisit (30 swipes forward,  | pager: contents around page 32 drawn (lag 0) 131.8ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 328.1ms
+operations: revisit (30 swipes forward,  | touch lag 297.0ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 152.8ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 33 from 32; this page drawn: yes; next page 34 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 8.6ms
+operations: revisit (30 swipes forward,  | swipe: pages built 74.7ms
+operations: revisit (30 swipes forward,  | list ready 192.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (56 so far)
+operations: revisit (30 swipes forward,  | touch lag 66.1ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 1.0ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.4ms
+operations: revisit (30 swipes forward,  | operations page built 26.5ms
+operations: revisit (30 swipes forward,  | pager: contents around page 33 drawn (lag 0) 201.7ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 319.1ms
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 34 from 33; this page drawn: yes; next page 35 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | touch lag 168.0ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 32.9ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 87.5ms
+operations: revisit (30 swipes forward,  | swipe: pages built 95.5ms
+operations: revisit (30 swipes forward,  | list ready 135.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (57 so far)
+operations: revisit (30 swipes forward,  | renders pager 5
+operations: revisit (30 swipes forward,  | renders period bar 5
+operations: revisit (30 swipes forward,  | renders operations page 5
+operations: revisit (30 swipes forward,  | renders day head 10
+operations: revisit (30 swipes forward,  | renders operation row 15
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 35 from 34; this page drawn: yes; next page 36 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 22.4ms
+operations: revisit (30 swipes forward,  | operations page built 113.8ms
+operations: revisit (30 swipes forward,  | operations page built 70.3ms
+operations: revisit (30 swipes forward,  | swipe: pages built 135.6ms
+operations: revisit (30 swipes forward,  | pager: contents around page 34 drawn (lag 1) 294.0ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 375.0ms
+operations: revisit (30 swipes forward,  | touch lag 239.9ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 95.2ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 36 from 35; this page drawn: yes; next page 37 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 79.5ms
+operations: revisit (30 swipes forward,  | swipe: pages built 85.3ms
+operations: revisit (30 swipes forward,  | swipe: next frame 313.4ms
+operations: revisit (30 swipes forward,  | list ready 110.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (58 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 93.3ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.4ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.5ms
+operations: revisit (30 swipes forward,  | operations page built 37.5ms
+operations: revisit (30 swipes forward,  | operations page built 19.8ms
+operations: revisit (30 swipes forward,  | pager: contents around page 36 drawn (lag 0) 138.9ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | touch lag 184.3ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 37 from 36; this page drawn: yes; next page 38 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | touch lag 47.8ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 19.9ms
+operations: revisit (30 swipes forward,  | swipe: pages built 38.2ms
+operations: revisit (30 swipes forward,  | swipe: next frame 301.7ms
+operations: revisit (30 swipes forward,  | list ready 136.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (59 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 45.9ms
+operations: revisit (30 swipes forward,  | list ready 128.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (60 so far)
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 38 from 37; this page drawn: yes; next page 39 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | page: operations of the period 4.6ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.6ms
+operations: revisit (30 swipes forward,  | operations page built 31.5ms
+operations: revisit (30 swipes forward,  | operations page built 19.4ms
+operations: revisit (30 swipes forward,  | swipe: pages built 40.4ms
+operations: revisit (30 swipes forward,  | pager: contents around page 37 drawn (lag 1) 154.7ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 294.2ms
+operations: revisit (30 swipes forward,  | touch lag 172.3ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | swipe: next frame 184.2ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.6ms
+operations: revisit (30 swipes forward,  | operations page built 8.0ms
+operations: revisit (30 swipes forward,  | pager: contents around page 38 drawn (lag 0) 207.0ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | list ready 150.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (61 so far)
+operations: revisit (30 swipes forward,  | list ready 30.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (62 so far)
+operations: revisit (30 swipes forward,  | renders pager 6
+operations: revisit (30 swipes forward,  | renders period bar 6
+operations: revisit (30 swipes forward,  | renders operations page 9
+operations: revisit (30 swipes forward,  | renders day head 20
+operations: revisit (30 swipes forward,  | renders operation row 57
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 39 from 38; this page drawn: yes; next page 40 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | page: operations of the period 1.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 14.8ms
+operations: revisit (30 swipes forward,  | swipe: pages built 69.3ms
+operations: revisit (30 swipes forward,  | touch lag 59.5ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 3.0ms
+operations: revisit (30 swipes forward,  | page: rows and days 1.7ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.7ms
+operations: revisit (30 swipes forward,  | operations page built 14.6ms
+operations: revisit (30 swipes forward,  | pager: contents around page 39 drawn (lag 0) 101.7ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 188.4ms
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 40 from 39; this page drawn: yes; next page 41 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | touch lag 34.6ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 3.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 43.1ms
+operations: revisit (30 swipes forward,  | swipe: pages built 75.8ms
+operations: revisit (30 swipes forward,  | list ready 79.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (63 so far)
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 41 from 40; this page drawn: yes; next page 42 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | page: operations of the period 1.1ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 40.2ms
+operations: revisit (30 swipes forward,  | swipe: pages built 83.6ms
+operations: revisit (30 swipes forward,  | swipe: next frame 183.7ms
+operations: revisit (30 swipes forward,  | touch lag 56.6ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | swipe: next frame 96.8ms
+operations: revisit (30 swipes forward,  | page: operations of the period 1.0ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.9ms
+operations: revisit (30 swipes forward,  | page: operations of the period 5.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.9ms
+operations: revisit (30 swipes forward,  | operations page built 86.8ms
+operations: revisit (30 swipes forward,  | operations page built 83.7ms
+operations: revisit (30 swipes forward,  | pager: contents around page 41 drawn (lag 0) 195.3ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 171.8ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: page 42 from 41; this page drawn: yes; next page 43 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page: operations of the period 2.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 96.8ms
+operations: revisit (30 swipes forward,  | swipe: pages built 155.4ms
+operations: revisit (30 swipes forward,  | list ready 145.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (64 so far)
+operations: revisit (30 swipes forward,  | list ready 202.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (65 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 171.2ms
+operations: revisit (30 swipes forward,  | touch lag 217.7ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 43 from 42; this page drawn: yes; next page 44 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | page: operations of the period 1.1ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 19.1ms
+operations: revisit (30 swipes forward,  | swipe: pages built 48.8ms
+operations: revisit (30 swipes forward,  | swipe: next frame 243.7ms
+operations: revisit (30 swipes forward,  | touch lag 21.8ms
+operations: revisit (30 swipes forward,  | swipe: next frame 61.5ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.6ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 0.9ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 1.0ms
+operations: revisit (30 swipes forward,  | operations page built 29.5ms
+operations: revisit (30 swipes forward,  | operations page built 20.8ms
+operations: revisit (30 swipes forward,  | pager: contents around page 43 drawn (lag 0) 96.0ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 44 from 43; this page drawn: yes; next page 45 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | touch lag 76.4ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 0.8ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 29.1ms
+operations: revisit (30 swipes forward,  | swipe: pages built 49.1ms
+operations: revisit (30 swipes forward,  | renders pager 9
+operations: revisit (30 swipes forward,  | renders period bar 9
+operations: revisit (30 swipes forward,  | renders operations page 11
+operations: revisit (30 swipes forward,  | renders day head 21
+operations: revisit (30 swipes forward,  | renders operation row 45
+operations: revisit (30 swipes forward,  | list ready 150.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (66 so far)
+operations: revisit (30 swipes forward,  | list ready 181.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (67 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 58.7ms
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page: operations of the period 0.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 3.8ms
+operations: revisit (30 swipes forward,  | operations page built 76.3ms
+operations: revisit (30 swipes forward,  | pager: contents around page 44 drawn (lag 0) 143.9ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 574.6ms
+operations: revisit (30 swipes forward,  | touch lag 466.1ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 45 from 44; this page drawn: yes; next page 46 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | touch lag 321.6ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 46 from 45; this page drawn: yes; next page 47 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | touch lag 82.8ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 0.5ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | operations page built 89.9ms
+operations: revisit (30 swipes forward,  | swipe: pages built 126.4ms
+operations: revisit (30 swipes forward,  | list ready 493.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (68 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 152.5ms
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 66.5ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | swipe: next frame 154.0ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.7ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 1.1ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.9ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 30.8ms
+operations: revisit (30 swipes forward,  | operations page built 134.6ms
+operations: revisit (30 swipes forward,  | operations page built 98.1ms
+operations: revisit (30 swipes forward,  | pager: contents around page 46 drawn (lag 0) 369.9ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page 47 from 46; this page drawn: yes; next page 48 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 235.9ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: page 48 from 47; this page drawn: yes; next page 49 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 86.5ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 49 from 48; this page drawn: NO; next page 50 drawn: NO; behind by 3
+operations: revisit (30 swipes forward,  | page: operations of the period 0.4ms
+operations: revisit (30 swipes forward,  | page: rows and days 53.6ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 5.6ms
+operations: revisit (30 swipes forward,  | operations page built 138.1ms
+operations: revisit (30 swipes forward,  | swipe: pages built 142.8ms
+operations: revisit (30 swipes forward,  | renders pager 4
+operations: revisit (30 swipes forward,  | renders period bar 4
+operations: revisit (30 swipes forward,  | renders operations page 5
+operations: revisit (30 swipes forward,  | renders operation row 30
+operations: revisit (30 swipes forward,  | renders day head 10
+operations: revisit (30 swipes forward,  | list ready 177.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (69 so far)
+operations: revisit (30 swipes forward,  | list ready 252.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (70 so far)
+operations: revisit (30 swipes forward,  | touch lag 176.4ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 50 from 49; this page drawn: NO; next page 51 drawn: NO; behind by 4
+operations: revisit (30 swipes forward,  | page: operations of the period 0.6ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.1ms
+operations: revisit (30 swipes forward,  | page: opening and closing balances 1.2ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.3ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 119.6ms
+operations: revisit (30 swipes forward,  | operations page built 116.1ms
+operations: revisit (30 swipes forward,  | pager: page content shown (71 so far)
+operations: revisit (30 swipes forward,  | swipe: pages built 154.0ms
+operations: revisit (30 swipes forward,  | pager: contents around page 49 drawn (lag 1) 429.1ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 826.1ms
+operations: revisit (30 swipes forward,  | list ready 153.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (72 so far)
+operations: revisit (30 swipes forward,  | touch lag 558.3ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | touch lag 368.2ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 51 from 50; this page drawn: yes; next page 52 drawn: NO; behind by 2
+operations: revisit (30 swipes forward,  | touch lag 194.3ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | pager: page 52 from 51; this page drawn: NO; next page 53 drawn: NO; behind by 3
+operations: revisit (30 swipes forward,  | touch lag 63.2ms
+operations: revisit (30 swipes forward,  | pager: dragging
+operations: revisit (30 swipes forward,  | page: operations of the period 0.5ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 24.7ms
+operations: revisit (30 swipes forward,  | pager: page content shown (73 so far)
+operations: revisit (30 swipes forward,  | page ready after it was chosen 33.9ms
+operations: revisit (30 swipes forward,  | swipe: pages built 34.1ms
+operations: revisit (30 swipes forward,  | swipe: next frame 647.1ms
+operations: revisit (30 swipes forward,  | renders pager 2
+operations: revisit (30 swipes forward,  | renders period bar 2
+operations: revisit (30 swipes forward,  | renders operations page 3
+operations: revisit (30 swipes forward,  | renders operation row 20
+operations: revisit (30 swipes forward,  | renders day head 5
+operations: revisit (30 swipes forward,  | pager: idle
+operations: revisit (30 swipes forward,  | list ready 532.0ms
+operations: revisit (30 swipes forward,  | pager: page content shown (74 so far)
+operations: revisit (30 swipes forward,  | swipe: next frame 90.2ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.6ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.5ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 20.4ms
+operations: revisit (30 swipes forward,  | pager: page content shown (75 so far)
+operations: revisit (30 swipes forward,  | operations page built 17.8ms
+operations: revisit (30 swipes forward,  | pager: page content shown (76 so far)
+operations: revisit (30 swipes forward,  | pager: contents around page 52 drawn (lag 0) 116.6ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | page ready after it was chosen 0.0ms
+operations: revisit (30 swipes forward,  | pager: page 53 from 52; this page drawn: yes; next page 54 drawn: yes; behind by 1
+operations: revisit (30 swipes forward,  | page: operations of the period 0.4ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 4.7ms
+operations: revisit (30 swipes forward,  | swipe: pages built 20.6ms
+operations: revisit (30 swipes forward,  | page: operations of the period 0.5ms
+operations: revisit (30 swipes forward,  | page: rows and days 0.0ms
+operations: revisit (30 swipes forward,  | operations page built 19.2ms
+operations: revisit (30 swipes forward,  | pager: page content shown (77 so far)
+operations: revisit (30 swipes forward,  | pager: contents around page 53 drawn (lag 0) 47.2ms
+operations: revisit (30 swipes forward,  | pager: page content removed
+operations: revisit (30 swipes forward,  | swipe: next frame 62.0ms
+operations: revisit (30 swipes forward,  | renders pager 3
+operations: revisit (30 swipes forward,  | renders period bar 3
+operations: revisit (30 swipes forward,  | renders operations page 4
+operations: revisit (30 swipes forward,  | renders operation row 7
+operations: 5 fast swipes, then the tab  | pager: dragging
+operations: 5 fast swipes, then the tab  | pager: idle
+operations: 5 fast swipes, then the tab  | page ready after it was chosen 0.0ms
+operations: 5 fast swipes, then the tab  | pager: page 52 from 53; this page drawn: yes; next page 51 drawn: yes; behind by -1
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.5ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.0ms
+operations: 5 fast swipes, then the tab  | operations page built 20.0ms
+operations: 5 fast swipes, then the tab  | swipe: pages built 86.7ms
+operations: 5 fast swipes, then the tab  | touch lag 82.3ms
+operations: 5 fast swipes, then the tab  | pager: dragging
+operations: 5 fast swipes, then the tab  | swipe: next frame 140.4ms
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.7ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | page: opening and closing balances 71.8ms
+operations: 5 fast swipes, then the tab  | operations page built 154.3ms
+operations: 5 fast swipes, then the tab  | pager: contents around page 52 drawn (lag 0) 305.4ms
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | pager: idle
+operations: 5 fast swipes, then the tab  | touch lag 297.5ms
+operations: 5 fast swipes, then the tab  | pager: dragging
+operations: 5 fast swipes, then the tab  | pager: idle
+operations: 5 fast swipes, then the tab  | page ready after it was chosen 0.0ms
+operations: 5 fast swipes, then the tab  | pager: page 51 from 52; this page drawn: yes; next page 50 drawn: yes; behind by -1
+operations: 5 fast swipes, then the tab  | touch lag 86.1ms
+operations: 5 fast swipes, then the tab  | pager: dragging
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.5ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.0ms
+operations: 5 fast swipes, then the tab  | operations page built 6.9ms
+operations: 5 fast swipes, then the tab  | swipe: pages built 21.8ms
+operations: 5 fast swipes, then the tab  | list ready 261.0ms
+operations: 5 fast swipes, then the tab  | pager: page content shown (78 so far)
+operations: 5 fast swipes, then the tab  | pager: idle
+operations: 5 fast swipes, then the tab  | page ready after it was chosen 0.0ms
+operations: 5 fast swipes, then the tab  | pager: page 50 from 51; this page drawn: yes; next page 49 drawn: NO; behind by -2
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.6ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | operations page built 29.1ms
+operations: 5 fast swipes, then the tab  | swipe: pages built 37.9ms
+operations: 5 fast swipes, then the tab  | swipe: next frame 137.9ms
+operations: 5 fast swipes, then the tab  | renders pager 4
+operations: 5 fast swipes, then the tab  | renders period bar 4
+operations: 5 fast swipes, then the tab  | renders operations page 4
+operations: 5 fast swipes, then the tab  | renders day head 4
+operations: 5 fast swipes, then the tab  | renders operation row 12
+operations: 5 fast swipes, then the tab  | swipe: next frame 63.7ms
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.7ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | page: opening and closing balances 1.0ms
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.4ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | page: opening and closing balances 26.8ms
+operations: 5 fast swipes, then the tab  | operations page built 58.7ms
+operations: 5 fast swipes, then the tab  | operations page built 44.9ms
+operations: 5 fast swipes, then the tab  | pager: contents around page 50 drawn (lag 0) 137.7ms
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | touch lag 228.2ms
+operations: 5 fast swipes, then the tab  | pager: dragging
+operations: 5 fast swipes, then the tab  | pager: idle
+operations: 5 fast swipes, then the tab  | pager: page 49 from 50; this page drawn: yes; next page 48 drawn: yes; behind by -1
+operations: 5 fast swipes, then the tab  | tab press statistics (asked operations, shown operations)
+operations: 5 fast swipes, then the tab  | bar touched (1 touches)
+operations: 5 fast swipes, then the tab  | touch lag 84.1ms
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.7ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | operations page built 44.1ms
+operations: 5 fast swipes, then the tab  | swipe: pages built 77.5ms
+operations: 5 fast swipes, then the tab  | list ready 194.0ms
+operations: 5 fast swipes, then the tab  | pager: page content shown (79 so far)
+operations: 5 fast swipes, then the tab  | list ready 165.0ms
+operations: 5 fast swipes, then the tab  | pager: page content shown (80 so far)
+operations: 5 fast swipes, then the tab  | page ready after it was chosen 87.6ms
+operations: 5 fast swipes, then the tab  | page: operations of the period 0.7ms
+operations: 5 fast swipes, then the tab  | page: rows and days 0.1ms
+operations: 5 fast swipes, then the tab  | page: opening and closing balances 1.0ms
+operations: 5 fast swipes, then the tab  | operations page built 9.0ms
+operations: 5 fast swipes, then the tab  | pager: contents around page 49 drawn (lag 0) 103.7ms
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | tab shown statistics 137.4ms
+operations: 5 fast swipes, then the tab  | pager: jumped to page 49
+operations: 5 fast swipes, then the tab  | pager: page content shown (8 so far)
+operations: 5 fast swipes, then the tab  | pager: page content shown (9 so far)
+operations: 5 fast swipes, then the tab  | pager: page content shown (10 so far)
+operations: 5 fast swipes, then the tab  | pager: contents around page 49 drawn (lag 0) 216018.1ms
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | swipe: next frame 353.0ms
+operations: 5 fast swipes, then the tab  | pager: refused page 48 (on 49)
+operations: 5 fast swipes, then the tab  | list ready 252.0ms
+operations: 5 fast swipes, then the tab  | pager: page content shown (81 so far)
+operations: 5 fast swipes, then the tab  | renders pager 6
+operations: 5 fast swipes, then the tab  | renders period bar 6
+operations: 5 fast swipes, then the tab  | renders operations page 4
+operations: 5 fast swipes, then the tab  | renders day head 9
+operations: 5 fast swipes, then the tab  | renders operation row 29
+operations: 5 fast swipes, then the tab  | renders tab bar 4
+operations: 5 fast swipes, then the tab  | tab press categories (asked statistics, shown statistics)
+operations: 5 fast swipes, then the tab  | bar touched (1 touches)
+operations: 5 fast swipes, then the tab  | tab shown categories 33.8ms
+operations: 5 fast swipes, then the tab  | pager: jumped to page 49
+operations: 5 fast swipes, then the tab  | pager: page content shown (5 so far)
+operations: 5 fast swipes, then the tab  | pager: page content shown (6 so far)
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | pager: page content removed
+operations: 5 fast swipes, then the tab  | renders tab bar 4
+operations: 5 fast swipes, then the tab  | renders pager 3
+operations: 5 fast swipes, then the tab  | renders period bar 3
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+categories: 10 fast swipes back (0.25s a | pager: page 48 from 49; this page drawn: yes; next page 47 drawn: NO; behind by -1
+categories: 10 fast swipes back (0.25s a | swipe: pages built 225.5ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (7 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 48 drawn (lag 0) 560.1ms
+categories: 10 fast swipes back (0.25s a | swipe: next frame 561.3ms
+categories: 10 fast swipes back (0.25s a | touch lag 258.9ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+categories: 10 fast swipes back (0.25s a | pager: page 47 from 48; this page drawn: yes; next page 46 drawn: NO; behind by -1
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | swipe: pages built 119.6ms
+categories: 10 fast swipes back (0.25s a | renders pager 3
+categories: 10 fast swipes back (0.25s a | renders period bar 3
+categories: 10 fast swipes back (0.25s a | pager: page content shown (8 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 47 drawn (lag 0) 206.9ms
+categories: 10 fast swipes back (0.25s a | swipe: next frame 207.5ms
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | touch lag 43.9ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | touch lag 17.8ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | renders pager 1
+categories: 10 fast swipes back (0.25s a | renders period bar 1
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | pager: page 45 from 47; this page drawn: NO; next page 44 drawn: NO; behind by -2
+categories: 10 fast swipes back (0.25s a | pager: page content shown (9 so far)
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 341.6ms
+categories: 10 fast swipes back (0.25s a | swipe: pages built 341.9ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (10 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 45 drawn (lag 0) 457.5ms
+categories: 10 fast swipes back (0.25s a | swipe: next frame 458.6ms
+categories: 10 fast swipes back (0.25s a | touch lag 96.3ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | renders pager 2
+categories: 10 fast swipes back (0.25s a | renders period bar 2
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | pager: page 43 from 45; this page drawn: NO; next page 42 drawn: NO; behind by -2
+categories: 10 fast swipes back (0.25s a | pager: page content shown (11 so far)
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 53.4ms
+categories: 10 fast swipes back (0.25s a | swipe: pages built 54.5ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (12 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 43 drawn (lag 0) 100.0ms
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | swipe: next frame 135.1ms
+categories: 10 fast swipes back (0.25s a | touch lag 44.4ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | touch lag 19.8ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | renders pager 2
+categories: 10 fast swipes back (0.25s a | renders period bar 2
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | pager: page 41 from 43; this page drawn: NO; next page 40 drawn: NO; behind by -2
+categories: 10 fast swipes back (0.25s a | pager: page content shown (13 so far)
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 130.6ms
+categories: 10 fast swipes back (0.25s a | swipe: pages built 130.8ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (14 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 41 drawn (lag 0) 147.3ms
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | swipe: next frame 183.0ms
+categories: 10 fast swipes back (0.25s a | touch lag 34.5ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+categories: 10 fast swipes back (0.25s a | pager: page 40 from 41; this page drawn: yes; next page 39 drawn: NO; behind by -1
+categories: 10 fast swipes back (0.25s a | swipe: pages built 33.2ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (15 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 40 drawn (lag 0) 226.8ms
+categories: 10 fast swipes back (0.25s a | swipe: next frame 236.0ms
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | touch lag 19.0ms
+categories: 10 fast swipes back (0.25s a | pager: dragging
+categories: 10 fast swipes back (0.25s a | renders pager 4
+categories: 10 fast swipes back (0.25s a | renders period bar 4
+categories: 10 fast swipes back (0.25s a | pager: idle
+categories: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+categories: 10 fast swipes back (0.25s a | pager: page 39 from 40; this page drawn: yes; next page 38 drawn: NO; behind by -1
+categories: 10 fast swipes back (0.25s a | swipe: pages built 87.5ms
+categories: 10 fast swipes back (0.25s a | pager: page content shown (16 so far)
+categories: 10 fast swipes back (0.25s a | pager: contents around page 39 drawn (lag 0) 146.7ms
+categories: 10 fast swipes back (0.25s a | swipe: next frame 147.4ms
+categories: 10 fast swipes back (0.25s a | pager: page content removed
+categories: 10 fast swipes back (0.25s a | renders pager 2
+categories: 10 fast swipes back (0.25s a | renders period bar 2
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | touch lag 35.6ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+categories: 10 fast swipes forward       | pager: page 40 from 39; this page drawn: yes; next page 41 drawn: NO; behind by 1
+categories: 10 fast swipes forward       | swipe: pages built 23.4ms
+categories: 10 fast swipes forward       | pager: page content shown (17 so far)
+categories: 10 fast swipes forward       | pager: contents around page 40 drawn (lag 0) 52.4ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | swipe: next frame 100.5ms
+categories: 10 fast swipes forward       | renders pager 2
+categories: 10 fast swipes forward       | renders period bar 2
+categories: 10 fast swipes forward       | touch lag 24.0ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | pager: page 42 from 40; this page drawn: NO; next page 43 drawn: NO; behind by 2
+categories: 10 fast swipes forward       | pager: page content shown (18 so far)
+categories: 10 fast swipes forward       | page ready after it was chosen 89.4ms
+categories: 10 fast swipes forward       | swipe: pages built 89.7ms
+categories: 10 fast swipes forward       | pager: page content shown (19 so far)
+categories: 10 fast swipes forward       | pager: contents around page 42 drawn (lag 0) 126.0ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | swipe: next frame 179.8ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | renders pager 2
+categories: 10 fast swipes forward       | renders period bar 2
+categories: 10 fast swipes forward       | touch lag 27.3ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | pager: page 44 from 42; this page drawn: NO; next page 45 drawn: NO; behind by 2
+categories: 10 fast swipes forward       | pager: page content shown (20 so far)
+categories: 10 fast swipes forward       | page ready after it was chosen 118.3ms
+categories: 10 fast swipes forward       | swipe: pages built 118.7ms
+categories: 10 fast swipes forward       | pager: page content shown (21 so far)
+categories: 10 fast swipes forward       | pager: contents around page 44 drawn (lag 0) 175.9ms
+categories: 10 fast swipes forward       | swipe: next frame 176.5ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | touch lag 41.4ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | renders pager 2
+categories: 10 fast swipes forward       | renders period bar 2
+categories: 10 fast swipes forward       | touch lag 48.4ms
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+categories: 10 fast swipes forward       | pager: page 45 from 44; this page drawn: yes; next page 46 drawn: NO; behind by 1
+categories: 10 fast swipes forward       | swipe: pages built 16.3ms
+categories: 10 fast swipes forward       | pager: page content shown (22 so far)
+categories: 10 fast swipes forward       | pager: contents around page 45 drawn (lag 0) 95.0ms
+categories: 10 fast swipes forward       | swipe: next frame 99.5ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+categories: 10 fast swipes forward       | pager: page 46 from 45; this page drawn: yes; next page 47 drawn: NO; behind by 1
+categories: 10 fast swipes forward       | swipe: pages built 44.2ms
+categories: 10 fast swipes forward       | pager: page content shown (23 so far)
+categories: 10 fast swipes forward       | pager: contents around page 46 drawn (lag 0) 78.1ms
+categories: 10 fast swipes forward       | swipe: next frame 79.1ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | renders pager 4
+categories: 10 fast swipes forward       | renders period bar 4
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+categories: 10 fast swipes forward       | pager: page 47 from 46; this page drawn: yes; next page 48 drawn: NO; behind by 1
+categories: 10 fast swipes forward       | swipe: pages built 18.1ms
+categories: 10 fast swipes forward       | pager: page content shown (24 so far)
+categories: 10 fast swipes forward       | pager: contents around page 47 drawn (lag 0) 55.3ms
+categories: 10 fast swipes forward       | swipe: next frame 57.4ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | pager: dragging
+categories: 10 fast swipes forward       | pager: idle
+categories: 10 fast swipes forward       | pager: page 49 from 47; this page drawn: NO; next page 50 drawn: NO; behind by 2
+categories: 10 fast swipes forward       | pager: page content shown (25 so far)
+categories: 10 fast swipes forward       | page ready after it was chosen 31.7ms
+categories: 10 fast swipes forward       | swipe: pages built 32.0ms
+categories: 10 fast swipes forward       | pager: page content shown (26 so far)
+categories: 10 fast swipes forward       | pager: contents around page 49 drawn (lag 0) 111.5ms
+categories: 10 fast swipes forward       | swipe: next frame 112.3ms
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | pager: page content removed
+categories: 10 fast swipes forward       | renders pager 4
+categories: 10 fast swipes forward       | renders period bar 4
+categories: 10 fast swipes forward       | tab press statistics (asked categories, shown categories)
+categories: 10 fast swipes forward       | bar touched (1 touches)
+categories: 10 fast swipes forward       | tab shown statistics 54.1ms
+categories: 10 fast swipes forward       | renders tab bar 4
+categories: 10 fast swipes forward       | renders pager 2
+categories: 10 fast swipes forward       | renders period bar 2
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page 48 from 49; this page drawn: yes; next page 47 drawn: NO; behind by -1
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 37.9ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 66.5ms
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (11 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 48 drawn (lag 0) 242.8ms
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | touch lag 63.9ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | renders pager 2
+statistics: 10 fast swipes back (0.25s a | renders period bar 2
+statistics: 10 fast swipes back (0.25s a | touch lag 36.2ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | pager: page 46 from 48; this page drawn: NO; next page 45 drawn: NO; behind by -2
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (12 so far)
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 366.9ms
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 367.2ms
+statistics: 10 fast swipes back (0.25s a | touch lag 84.8ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (13 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 46 drawn (lag 0) 650.9ms
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 657.8ms
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | renders pager 2
+statistics: 10 fast swipes back (0.25s a | renders period bar 2
+statistics: 10 fast swipes back (0.25s a | touch lag 33.4ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page 45 from 46; this page drawn: yes; next page 44 drawn: NO; behind by -1
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 48.9ms
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (14 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 45 drawn (lag 0) 479.1ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 479.9ms
+statistics: 10 fast swipes back (0.25s a | touch lag 69.9ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page 44 from 45; this page drawn: yes; next page 43 drawn: NO; behind by -1
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 207.5ms
+statistics: 10 fast swipes back (0.25s a | renders pager 3
+statistics: 10 fast swipes back (0.25s a | renders period bar 3
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (15 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 44 drawn (lag 0) 807.7ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 820.0ms
+statistics: 10 fast swipes back (0.25s a | touch lag 466.3ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | pager: page 42 from 44; this page drawn: NO; next page 41 drawn: NO; behind by -2
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (16 so far)
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 605.2ms
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 627.3ms
+statistics: 10 fast swipes back (0.25s a | touch lag 681.0ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | pager: page 41 from 42; this page drawn: NO; next page 40 drawn: NO; behind by -3
+statistics: 10 fast swipes back (0.25s a | touch lag 164.2ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (17 so far)
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 37.4ms
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 37.6ms
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | renders pager 3
+statistics: 10 fast swipes back (0.25s a | renders period bar 3
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 785.6ms
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (18 so far)
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (19 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 41 drawn (lag 0) 184.8ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 191.1ms
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page 40 from 41; this page drawn: yes; next page 39 drawn: NO; behind by -1
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 63.8ms
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (20 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 40 drawn (lag 0) 241.1ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 243.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | touch lag 104.6ms
+statistics: 10 fast swipes back (0.25s a | pager: dragging
+statistics: 10 fast swipes back (0.25s a | pager: idle
+statistics: 10 fast swipes back (0.25s a | renders pager 3
+statistics: 10 fast swipes back (0.25s a | renders period bar 3
+statistics: 10 fast swipes back (0.25s a | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page 39 from 40; this page drawn: yes; next page 38 drawn: NO; behind by -1
+statistics: 10 fast swipes back (0.25s a | swipe: pages built 41.6ms
+statistics: 10 fast swipes back (0.25s a | pager: page content shown (21 so far)
+statistics: 10 fast swipes back (0.25s a | pager: contents around page 39 drawn (lag 0) 232.4ms
+statistics: 10 fast swipes back (0.25s a | swipe: next frame 233.0ms
+statistics: 10 fast swipes back (0.25s a | pager: page content removed
+statistics: 10 fast swipes back (0.25s a | renders pager 2
+statistics: 10 fast swipes back (0.25s a | renders period bar 2
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes forward       | pager: page 40 from 39; this page drawn: yes; next page 41 drawn: NO; behind by 1
+statistics: 10 fast swipes forward       | swipe: pages built 31.3ms
+statistics: 10 fast swipes forward       | pager: page content shown (22 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 40 drawn (lag 0) 118.6ms
+statistics: 10 fast swipes forward       | swipe: next frame 126.2ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | touch lag 37.3ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | renders pager 2
+statistics: 10 fast swipes forward       | renders period bar 2
+statistics: 10 fast swipes forward       | touch lag 46.1ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes forward       | pager: page 41 from 40; this page drawn: yes; next page 42 drawn: NO; behind by 1
+statistics: 10 fast swipes forward       | swipe: pages built 54.3ms
+statistics: 10 fast swipes forward       | pager: page content shown (23 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 41 drawn (lag 0) 157.2ms
+statistics: 10 fast swipes forward       | swipe: next frame 164.5ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | touch lag 30.3ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | pager: page 43 from 41; this page drawn: NO; next page 44 drawn: NO; behind by 2
+statistics: 10 fast swipes forward       | pager: page content shown (24 so far)
+statistics: 10 fast swipes forward       | page ready after it was chosen 220.1ms
+statistics: 10 fast swipes forward       | swipe: pages built 220.5ms
+statistics: 10 fast swipes forward       | pager: page content shown (25 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 43 drawn (lag 0) 347.7ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | swipe: next frame 352.7ms
+statistics: 10 fast swipes forward       | touch lag 68.5ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | renders pager 4
+statistics: 10 fast swipes forward       | renders period bar 4
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | pager: page 45 from 43; this page drawn: NO; next page 46 drawn: NO; behind by 2
+statistics: 10 fast swipes forward       | pager: page content shown (26 so far)
+statistics: 10 fast swipes forward       | page ready after it was chosen 126.9ms
+statistics: 10 fast swipes forward       | swipe: pages built 127.3ms
+statistics: 10 fast swipes forward       | pager: page content shown (27 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 45 drawn (lag 0) 210.7ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | swipe: next frame 218.0ms
+statistics: 10 fast swipes forward       | touch lag 39.4ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | renders pager 2
+statistics: 10 fast swipes forward       | renders period bar 2
+statistics: 10 fast swipes forward       | touch lag 24.6ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | pager: page 47 from 45; this page drawn: NO; next page 48 drawn: NO; behind by 2
+statistics: 10 fast swipes forward       | pager: page content shown (28 so far)
+statistics: 10 fast swipes forward       | page ready after it was chosen 45.3ms
+statistics: 10 fast swipes forward       | swipe: pages built 45.6ms
+statistics: 10 fast swipes forward       | pager: page content shown (29 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 47 drawn (lag 0) 98.1ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | swipe: next frame 161.3ms
+statistics: 10 fast swipes forward       | touch lag 20.9ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes forward       | pager: page 48 from 47; this page drawn: yes; next page 49 drawn: NO; behind by 1
+statistics: 10 fast swipes forward       | swipe: pages built 82.4ms
+statistics: 10 fast swipes forward       | pager: page content shown (30 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 48 drawn (lag 0) 216.9ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | swipe: next frame 236.4ms
+statistics: 10 fast swipes forward       | renders pager 4
+statistics: 10 fast swipes forward       | renders period bar 4
+statistics: 10 fast swipes forward       | touch lag 16.5ms
+statistics: 10 fast swipes forward       | pager: dragging
+statistics: 10 fast swipes forward       | pager: idle
+statistics: 10 fast swipes forward       | page ready after it was chosen 0.0ms
+statistics: 10 fast swipes forward       | pager: page 49 from 48; this page drawn: yes; next page 50 drawn: NO; behind by 1
+statistics: 10 fast swipes forward       | swipe: pages built 28.2ms
+statistics: 10 fast swipes forward       | pager: page content shown (31 so far)
+statistics: 10 fast swipes forward       | pager: contents around page 49 drawn (lag 0) 160.9ms
+statistics: 10 fast swipes forward       | swipe: next frame 161.7ms
+statistics: 10 fast swipes forward       | pager: page content removed
+statistics: 10 fast swipes forward       | renders pager 2
+statistics: 10 fast swipes forward       | renders period bar 2
+statistics: 10 fast swipes forward       | tab press operations (asked statistics, shown statistics)
+statistics: 10 fast swipes forward       | bar touched (1 touches)
+statistics: 10 fast swipes forward       | tab shown operations 39.8ms
+statistics: 10 fast swipes forward       | page: operations of the period 0.5ms
+statistics: 10 fast swipes forward       | page: rows and days 0.1ms
+statistics: 10 fast swipes forward       | operations page built 23.1ms
+statistics: 10 fast swipes forward       | renders tab bar 3
+statistics: 10 fast swipes forward       | renders pager 2
+statistics: 10 fast swipes forward       | renders period bar 2
+statistics: 10 fast swipes forward       | renders operations page 1
+statistics: 10 fast swipes forward       | renders day head 2
+statistics: 10 fast swipes forward       | renders tab bar 1
+open the add menu                        | layer sheet shown 4.1ms
+choose a category (the editor opens)     | layer sheet shown 22.3ms
+type 1 2 5 on the keys                   | layer sheet shown 8.2ms
+save the operation                       | layer sheet shown 10.3ms
+save the operation                       | page: operations of the period 0.5ms
+save the operation                       | page: rows and days 0.1ms
+save the operation                       | page: opening and closing balances 0.6ms
+save the operation                       | page: operations of the period 0.5ms
+save the operation                       | page: rows and days 0.1ms
+save the operation                       | page: opening and closing balances 0.7ms
+save the operation                       | page: operations of the period 0.4ms
+save the operation                       | page: rows and days 0.1ms
+save the operation                       | page: opening and closing balances 0.7ms
+save the operation                       | page: operations of the period 0.4ms
+save the operation                       | page: rows and days 0.1ms
+save the operation                       | page: opening and closing balances 0.7ms
+save the operation                       | page: operations of the period 0.2ms
+save the operation                       | page: rows and days 0.0ms
+save the operation                       | operations page built 79.8ms
+save the operation                       | operations page built 72.6ms
+save the operation                       | operations page built 54.8ms
+save the operation                       | operations page built 50.3ms
+save the operation                       | operations page built 46.7ms
+save the operation                       | renders root hero 4
+save the operation                       | renders pager 4
+save the operation                       | renders period bar 3
+save the operation                       | renders operations screen 2
+save the operation                       | renders operations page 5
+save the operation                       | renders day head 10
+save the operation                       | renders operation row 1
+save the operation                       | renders fab 1
+save the operation                       | operations page built 31.1ms
+save the operation                       | operations page built 27.9ms
+save the operation                       | operations page built 26.4ms
+save the operation                       | operations page built 24.4ms
+save the operation                       | operations page built 23.3ms
+save the operation                       | renders operations page 5
+scroll the preview (8 flicks)            | renders day head 6
+scroll the preview (8 flicks)            | renders operation row 14
+scroll the preview (8 flicks)            | touch lag 20.0ms
+scroll the preview (8 flicks)            | renders operation row 16
+scroll the preview (8 flicks)            | renders day head 6
+scroll the preview (8 flicks)            | renders operation row 17
+scroll the preview (8 flicks)            | renders day head 5
+scroll the preview (8 flicks)            | touch lag 18.1ms
+scroll the preview (8 flicks)            | renders operation row 17
+scroll the preview (8 flicks)            | renders day head 5
+scroll the preview (8 flicks)            | touch lag 24.9ms
+scroll the preview (8 flicks)            | renders day head 7
+scroll the preview (8 flicks)            | renders operation row 14
+scroll the preview (8 flicks)            | renders operation row 16
+scroll the preview (8 flicks)            | renders day head 8
+scroll the preview (8 flicks)            | renders operation row 17
+scroll the preview (8 flicks)            | renders day head 7
+scroll the preview (8 flicks)            | renders operation row 15
+scroll the preview (8 flicks)            | renders day head 6
+scroll the preview (8 flicks)            | renders operation row 4
+scroll the preview (8 flicks)            | renders day head 3
+scroll the preview (8 flicks)            | tab shown index 3219.2ms
+scroll the preview (8 flicks)            | renders tab bar 2
+scroll the preview (8 flicks)            | renders pager 1
+scroll the preview (8 flicks)            | renders period bar 1
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
+report preview, second time              | pager: page content removed
