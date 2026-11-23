@@ -11,6 +11,7 @@ import { setAppVersion } from "../application/store.ts";
 import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { probeEngine, watchStalls } from "../platform/perf.ts";
+import { PerfSwitch } from "../platform/perf-switch.tsx";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { askAboutMissed } from "../features/due-payments.tsx";
@@ -152,6 +153,7 @@ export default function Layout() {
   return (
     <SafeAreaProvider>
       <Root />
+      <PerfSwitch />
     </SafeAreaProvider>
   );
 }

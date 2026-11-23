@@ -331,6 +331,15 @@ fast_block() { # $1 tab centre, $2 name
   if [ "$(shown_tab)" = none ]; then log "FAIL: after the swipes in $2 no tab is shown (a page was opened)"; shot "24x-left-tabs-$2" 0; back; adb shell input tap $1; sleep 2; fi
 }
 fast_block "$ops" operations
+# Where the cost of a swipe is (0.3.18): the same 10 swipes with the icons drawn as empty boxes, then with every row a bare text
+# line (a tap on the speed-check build's PerfSwitch box moves to the next setting; the third tap puts everything back).
+adb shell input tap 20 335; sleep 1
+begin "operations (icons off): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+begin "operations (icons off): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+adb shell input tap 20 335; sleep 1
+begin "operations (plain rows): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+begin "operations (plain rows): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+adb shell input tap 20 335; sleep 1
 record 21-operations-30-fastest 20
 begin "operations: 30 swipes back, no pause"; for i in $(seq 30); do back_swipe 60; done; finish 3
 stop_record 21-operations-30-fastest

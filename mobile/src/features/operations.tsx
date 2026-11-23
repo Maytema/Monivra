@@ -1,7 +1,7 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
+import { countRender, now, perfFlags, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { usePageReady } from "../ui/pager.tsx";
@@ -273,6 +273,10 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
       item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
           <DayHead date={item.date} ops={item.ops} />
+        </View>
+      ) : PERF_BUILD && perfFlags.plainRows ? (
+        <View style={{ paddingHorizontal: 16, minHeight: 70 }}>
+          <Text numberOfLines={1}>{item.op.id}</Text>
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
