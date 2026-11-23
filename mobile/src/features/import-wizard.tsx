@@ -38,7 +38,7 @@ import type { Translator } from "../i18n/index.ts";
 import { appStore, showError, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { confirmDialog, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
 import { FullPage, MiniTable } from "../ui/full-page.tsx";
-import { Button, Icon } from "../ui/kit.tsx";
+import { Button, Icon, RadioMark } from "../ui/kit.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
 const ENCODINGS: { value: Encoding; label: string }[] = [
@@ -147,9 +147,7 @@ function PickSheet({ title, options, value, onPick }: { title: string; options: 
             <Text style={{ color: p.ink, fontSize: 16 }}>{text}</Text>
             {hint ? <Text numberOfLines={1} style={{ color: p.muted, fontSize: 13 }}>{hint}</Text> : null}
           </View>
-          <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: v === value ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>
-            {v === value ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}
-          </View>
+          <RadioMark on={v === value} />
         </Pressable>
       ))}
       <View style={{ marginTop: 10 }}>

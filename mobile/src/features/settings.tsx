@@ -17,7 +17,7 @@ import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { confirmDialog, DialogActions, DialogTitle, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
 import { THEME_COLORS } from "../ui/icon-groups.ts";
 import { mix } from "../ui/theme.ts";
-import { Icon } from "../ui/kit.tsx";
+import { Icon, RadioMark } from "../ui/kit.tsx";
 import { openMonthStart } from "../ui/period-dialog.tsx";
 import { Footnote, SettingRow, SwitchRow } from "../ui/rows.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
@@ -65,7 +65,7 @@ function CurrencyFormat() {
       {NUMBER_FORMATS.map((id) => (
         <Pressable key={id} accessibilityRole="radio" accessibilityState={{ selected: draft.numberFormat === id }} onPress={() => setDraft({ ...draft, numberFormat: id })} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 12 }}>
           <Text style={{ flex: 1, color: p.ink, fontSize: 16 }}>{`${formatNumber(123456789, id, true, 2)} ${s.currency}`}</Text>
-          <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: draft.numberFormat === id ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{draft.numberFormat === id ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+          <RadioMark on={draft.numberFormat === id} />
         </Pressable>
       ))}
       {toggles.map(([label, key]) => (
@@ -143,7 +143,7 @@ function Language() {
       {LANGUAGES.map((l) => (
         <Pressable key={l.code} accessibilityRole="radio" accessibilityState={{ selected: s.language === l.code }} onPress={() => set({ language: l.code })} style={{ flexDirection: "row", alignItems: "center", minHeight: 56, paddingHorizontal: 18 }}>
           <Text style={{ flex: 1, color: p.ink, fontSize: 16 }}>{l.name}</Text>
-          <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: s.language === l.code ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{s.language === l.code ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+          <RadioMark on={s.language === l.code} />
         </Pressable>
       ))}
     </>

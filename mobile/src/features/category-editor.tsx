@@ -15,7 +15,7 @@ import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { openCustomize } from "../ui/customize-sheet.tsx";
 import { confirmDialog, confirmInfo, DialogActions, DialogTitle, promptDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText } from "../ui/form.tsx";
-import { Button, Icon } from "../ui/kit.tsx";
+import { Button, Icon, RadioMark } from "../ui/kit.tsx";
 import { ToneBadge } from "../ui/parts.tsx";
 import { currencyName } from "../ui/currency-names.ts";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
@@ -66,7 +66,7 @@ function TypeSheet({ value, parent, onPick }: { value: Category["type"]; parent:
         <Icon name={icon} size={26} color={color} />
       </View>
       <Text style={{ flex: 1, color: p.ink, fontSize: 17 }}>{t.t(label)}</Text>
-      <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: value === type ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{value === type ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+      <RadioMark on={value === type} />
     </Pressable>
   );
   return (

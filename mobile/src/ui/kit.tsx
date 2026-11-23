@@ -127,6 +127,16 @@ export function Money({ text, value, size = font.body }: { text: string; value: 
   return <Text style={{ color: value > 0 ? p.positiveInk : value < 0 ? p.negativeInk : p.muted, fontSize: size, fontWeight: "600" }}>{text}</Text>;
 }
 
+// The mark of a radio row: a ring, with a dot inside while it is chosen.
+export function RadioMark({ on }: { on: boolean }) {
+  const p = usePalette();
+  return (
+    <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: on ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>
+      {on ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}
+    </View>
+  );
+}
+
 export function Field({ label, value, onChange, placeholder, multiline = false, keyboard = "default" }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; multiline?: boolean; keyboard?: "default" | "decimal-pad" | "numeric" }) {
   const p = usePalette();
   const t = useT();

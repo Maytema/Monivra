@@ -10,7 +10,7 @@ import type { Fee, IntervalUnit, Recurrence, Reminder } from "../../domain/types
 import { useLedger, usePalette, useT } from "../../ui/app-context.tsx";
 import { PrimaryPill, TextButton } from "../../ui/calendar-sheet.tsx";
 import { DialogActions, DialogTitle, optionDialog, promptDialog, confirmDialog, toast } from "../../ui/dialogs.tsx";
-import { Icon } from "../../ui/kit.tsx";
+import { Icon, RadioMark } from "../../ui/kit.tsx";
 import { useCommand } from "../../ui/app-context.tsx";
 import { openTime, timeLabel } from "../../ui/time-dialog.tsx";
 export { openTime };
@@ -164,7 +164,7 @@ function FeeDialog({ kind, fees, onDone }: { kind: Fee["kind"]; fees: readonly F
   );
   const choice = (label: string, on: boolean, set: () => void) => (
     <Pressable onPress={set} style={{ flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 10 }}>
-      <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: on ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>{on ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}</View>
+      <RadioMark on={on} />
       <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(label)}</Text>
     </Pressable>
   );

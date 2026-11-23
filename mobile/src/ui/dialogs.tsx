@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { setMessagePresenter, usePalette, useT } from "./app-context.tsx";
 import { PrimaryPill, TextButton } from "./calendar-sheet.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
-import { Icon } from "./kit.tsx";
+import { Icon, RadioMark } from "./kit.tsx";
 import { chrome, mix } from "./theme.ts";
 
 export function DialogTitle({ children, center = false }: { children: ReactNode; center?: boolean }) {
@@ -157,9 +157,7 @@ function Options<T extends string>({ title, options, value, onPick }: { title: s
           }}
           style={{ flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 12 }}
         >
-          <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: o.value === value ? p.accent : p.muted, alignItems: "center", justifyContent: "center" }}>
-            {o.value === value ? <View style={{ width: 11, height: 11, borderRadius: 6, backgroundColor: p.accent }} /> : null}
-          </View>
+          <RadioMark on={o.value === value} />
           <View style={{ flex: 1 }}>
             <Text style={{ color: p.ink, fontSize: 16 }}>{t.t(o.label)}</Text>
             {o.hint ? <Text style={{ color: p.muted, fontSize: 13 }}>{t.t(o.hint)}</Text> : null}
