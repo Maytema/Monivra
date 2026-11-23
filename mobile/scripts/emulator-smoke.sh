@@ -240,6 +240,10 @@ tap "Budgets"
 shot 15m2-budgets-empty 2
 if grep -Eq 'content-desc="[A-Za-z]+ [0-9]{4}"' "$OUT/15m2-budgets-empty.xml"; then log "FAIL: the empty Budgets screen shows a period bar"; FAILED=1; else log "OK: no period bar on the empty Budgets screen"; fi
 tap "Create a budget"
+if tap "Enter the title"; then
+  adb shell input text "Food"; sleep 1
+  adb shell input keyevent KEYCODE_BACK; sleep 1   # closes the keyboard
+fi
 if tap "Budget"; then
   for k in 5 0 0; do tap "$k"; done
   tap "Save"
