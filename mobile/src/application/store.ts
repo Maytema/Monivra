@@ -30,6 +30,7 @@ export type AppState =
   | { status: "welcome"; data: LedgerData }
   | { status: "ready"; data: LedgerData; revision: number; posted: string[] };
 
+export type { Step };
 export interface Store {
   getState(): AppState;
   subscribe(listener: () => void): () => void;

@@ -8,7 +8,8 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { FileProblem, readDataFile } from "../domain/datafile.ts";
 import { contentsOf, DELETIONS, planRestore, type ConflictWay, type Contents, type DeletionWay, type RestoreSummary, type ScheduledWay } from "../domain/restore.ts";
 import type { LedgerData } from "../domain/types.ts";
-import type { BackupInfo } from "../application/store.ts";
+import type { BackupInfo, Step } from "../application/store.ts";
+import { withProgress } from "../ui/progress.tsx";
 import { pickFile, saveTextFile, shareTextFile } from "../platform/files.ts";
 import { removePin } from "../platform/lock.ts";
 import { now, perfLog } from "../platform/perf.ts";
@@ -291,6 +292,24 @@ function timed<T>(label: string, work: () => T): T {
   return result;
 }
 
+// A restore is running: one at a time, whatever the buttons do.
+let restoring = false;
+
+// What the restore is writing, in words (the progress window).
+function stepText(t: Translator, step: Step): string {
+  const part: Record<Step["what"], string> = {
+    clearing: "Clearing the old data…",
+    accounts: "Writing accounts: {done} of {total}",
+    categories: "Writing categories: {done} of {total}",
+    operations: "Writing operations: {done} of {total}",
+    scheduled: "Writing scheduled payments: {done} of {total}",
+    budgets: "Writing budgets: {done} of {total}",
+    settings: "Writing settings…",
+    checking: "Checking what was written…",
+  };
+  return t.t(part[step.what], { done: step.done, total: step.total });
+}
+
 function RestorePage({ source, id }: { source: string; id?: string }) {
   const p = usePalette();
   const t = useT();
@@ -334,19 +353,35 @@ function RestorePage({ source, id }: { source: string; id?: string }) {
   const way = SCHEDULED_WAYS.find((w) => w.value === scheduled)!;
   const conflictWay = CONFLICT_WAYS.find((w) => w.value === conflicts)!;
   const anyDiffer = Object.values(merge.summary.merge ?? {}).some((r) => (r as { changed?: number }).changed);
+  // A restore is long on a big file: the buttons are locked at once (a second press cannot start a second restore), the work goes
+  // chunk by chunk with a progress window (shown after 300 ms) that can cancel it, and a window says what was done.
+  const [busy, setBusy] = useState(false);
+  const go = async (mode: "merge" | "replace") => {
+    if (restoring) return;
+    restoring = true;
+    setBusy(true);
+    try {
+      const done = await withProgress("Restoring data", t.t("Preparing…"), (say, signal) =>
+        appStore().restoreAsync(origin.data, { mode, scheduled, conflicts, safety: true }, { signal, progress: (step) => say(stepText(t, step)) }),
+      );
+      if (done === undefined) return void toast(t.t("Restore cancelled. Nothing was changed."));
+      chosenFile = null;
+      router.dismissAll();
+      showInfo(
+        t.t(mode === "replace" ? "The data was replaced: {accounts} accounts, {ops} operations, {scheduled} scheduled payments." : "The data was merged: the file holds {accounts} accounts, {ops} operations, {scheduled} scheduled payments.", { accounts: c.accounts, ops: c.ops, scheduled: c.scheduled }),
+        "Backup restored",
+      );
+    } catch (error) {
+      showError(t, error);
+    } finally {
+      restoring = false;
+      setBusy(false);
+    }
+  };
   const restore = (mode: "merge" | "replace") =>
     confirmDialog(
       `${t.t(mode === "replace" ? "Replace current data with this backup?" : "Merge this backup into the current data?")} ${t.t("A backup of the current data is made first.")}`,
-      () => {
-        try {
-          appStore().restore(origin.data, { mode, scheduled, conflicts, safety: true });
-          chosenFile = null;
-          router.dismissAll();
-          toast(t.t("Backup restored"));
-        } catch (error) {
-          showError(t, error);
-        }
-      },
+      () => void go(mode),
       false,
       "Confirm",
     );
@@ -357,8 +392,8 @@ function RestorePage({ source, id }: { source: string; id?: string }) {
       title={origin.title}
       footer={
         <>
-          <Button label="Merge data" onPress={() => restore("merge")} disabled={!!merge.problem} />
-          <Button label="Replace data" kind="outline" onPress={() => restore("replace")} disabled={!!replace.problem} />
+          <Button label="Merge data" onPress={() => restore("merge")} disabled={!!merge.problem || busy} />
+          <Button label="Replace data" kind="outline" onPress={() => restore("replace")} disabled={!!replace.problem || busy} />
         </>
       }
     >

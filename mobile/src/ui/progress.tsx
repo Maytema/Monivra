@@ -38,7 +38,7 @@ function ProgressDialog({ title, progress }: { title: string; progress: Progress
 
 // Runs the work; the dialog appears only if it takes longer than SHOW_AFTER_MS (a dialog that flashes for a blink looks
 // like a fault) and, once shown, stays at least KEEP_MS so it is readable. The result is undefined when it was cancelled.
-const SHOW_AFTER_MS = 600;
+const SHOW_AFTER_MS = 300;
 const KEEP_MS = 500;
 export async function withProgress<T>(title: string, firstText: string, work: (say: (text: string) => void, signal: AbortSignal) => Promise<T>): Promise<T | undefined> {
   const progress: Progress = { text: firstText, stop: new AbortController(), done: false, listeners: new Set() };
