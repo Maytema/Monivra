@@ -127,21 +127,6 @@ export function Money({ text, value, size = font.body }: { text: string; value: 
   return <Text style={{ color: value > 0 ? p.positiveInk : value < 0 ? p.negativeInk : p.muted, fontSize: size, fontWeight: "600" }}>{text}</Text>;
 }
 
-// Choices side by side (expense / income / transfer…).
-export function Segmented<T extends string>({ value, options, onChange }: { value: T; options: readonly { value: T; label: string }[]; onChange: (v: T) => void }) {
-  const p = usePalette();
-  const t = useT();
-  return (
-    <View style={{ flexDirection: "row", backgroundColor: p.nav, borderRadius: radius.pill, padding: 4 }}>
-      {options.map((o) => (
-        <Pressable key={o.value} onPress={() => onChange(o.value)} style={{ flex: 1, paddingVertical: 9, borderRadius: radius.pill, backgroundColor: o.value === value ? p.accent : "transparent", alignItems: "center" }}>
-          <Text style={{ color: o.value === value ? p.onAccent : p.ink, fontWeight: "600" }}>{t.t(o.label)}</Text>
-        </Pressable>
-      ))}
-    </View>
-  );
-}
-
 export function Field({ label, value, onChange, placeholder, multiline = false, keyboard = "default" }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; multiline?: boolean; keyboard?: "default" | "decimal-pad" | "numeric" }) {
   const p = usePalette();
   const t = useT();
