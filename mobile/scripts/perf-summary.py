@@ -92,3 +92,17 @@ for move in moves:
         continue
     f = lambda xs: ", ".join(f"{x:.0f}" for x in xs) + "ms" if xs else "-"
     print(f"{move['name'][:62]:62} {f(shown):>12} {f(gone['old']):>17} {f(gone['new']):>17}")
+
+# Pictures: what each empty-state picture costs on its own: the JavaScript thread's busy time over the visit while it plays
+# against the same tab at rest, and the press-to-shown time of the tab with the picture.
+print()
+print(f"{'pictures (one tab each)':62} {'JS busy':>8} {'frames':>7} {'janky':>12} {'p90':>6} {'shown':>7}")
+for move in moves:
+    if not move["name"].startswith("picture "):
+        continue
+    f = frames.get(move["name"], {})
+    shown = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"tab shown \w+ ([\d.]+)ms", n)] if m]
+    print(
+        f"{move['name'][:62]:62} {sum(move['stalls']):7.0f}ms {f.get('Total frames rendered', '-'):>7} {f.get('Janky frames', '-'):>12} "
+        f"{f.get('90th percentile', '-'):>6} {(f'{shown[0]:.0f}ms' if shown else '-'):>7}"
+    )

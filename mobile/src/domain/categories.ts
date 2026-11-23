@@ -132,3 +132,11 @@ export function saveBudget(tx: LedgerTx, draft: Omit<Budget, "id"> & { id: strin
 export function deleteBudget(tx: LedgerTx, id: string): void {
   tx.remove("budgets", id);
 }
+
+// The Categories screen has nothing to show for a kind: no live top-level category of it and no debt account standing
+// among its tiles. When it is so for both kinds, the Expenses / Incomes switch is not shown.
+export function categoriesEmptyOf(data: LedgerData, kind: "expense" | "income"): boolean {
+  const debts = data.accounts.some((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
+  return !data.categories.some((c) => c.type === kind && !c.parent && !c.archived) && !debts;
+}
+export const categoriesNone = (data: LedgerData): boolean => categoriesEmptyOf(data, "expense") && categoriesEmptyOf(data, "income");

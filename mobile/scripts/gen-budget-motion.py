@@ -806,7 +806,7 @@ def ring_runs(poly, cx, cy, r, step=0.5):
     return runs, sd, inside
 
 
-def ring_split_own(poly, cx, cy, r, step=0.5):
+def ring_split_own(poly, cx, cy, r, step=0.5, thick=0.0):
     """From the note's own outline only. Returns (behind, front) as lists of (start, end) angles in degrees (0 = 3 o'clock, 90 =
     down, ends unwrapped so that end > start): a run of the circle on the note whose middle lies in 270..360 (the upper right) is
     behind the note, every other run is in front of it."""
@@ -818,6 +818,23 @@ def ring_split_own(poly, cx, cy, r, step=0.5):
             a1 += 360
         mid = ((a0 + a1) / 2) % 360
         (behind if 270 <= mid < 360 else front).append((a0, a1))
+    # A front run is drawn over the note with flat ends cut across the ring, while the note's edge crosses the ring at a slant: the
+    # ring's own half width (and the note's half stroke) reaches past the place where its centre leaves the note, and a run that
+    # stops there leaves a yellow wedge on the green and a green notch next to it (frames 44-52). Each end is therefore extended
+    # by that reach, never further than half the free gap to the next run of the circle (behind or front): where the ring is not
+    # over the note the extension is the same yellow as the whole circle under the note and cannot be seen.
+    reach = np.degrees((thick / 2 + HW) / max(r, 1.0))
+    every = sorted([(a, b, True) for a, b in front] + [(a, b, False) for a, b in behind])
+    grown = []
+    for k, (a, b, is_front) in enumerate(every):
+        if not is_front:
+            continue
+        nxt = every[(k + 1) % len(every)]
+        prv = every[k - 1]
+        gap_after = (nxt[0] - b) % 360 if len(every) > 1 else 360.0
+        gap_before = (a - prv[1]) % 360 if len(every) > 1 else 360.0
+        grown.append((a - min(reach, gap_before / 2), b + min(reach, gap_after / 2)))
+    front = grown
     return behind, front
 
 
@@ -1098,7 +1115,7 @@ def main():
     for k, row in enumerate(ring_rows):
         i = row_frame(row)
         r = max(1.0, row[3] - row[4] / 2)
-        behind, front = ring_split_own(poly_polygon(*line[i]) + 0.5, row[1], row[2], r)
+        behind, front = ring_split_own(poly_polygon(*line[i]) + 0.5, row[1], row[2], r, thick=row[4])
         if len(front) > 2:
             print(f"ring row t={row[0]:.0f} (frame {i}): {len(front)} runs in front of the note, the two longest drawn")
         paths.append(ring_paths(row, row[4], behind, front))

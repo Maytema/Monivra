@@ -3,11 +3,12 @@
 // is shown: it starts from the first frame at every visit, two frames and 150 ms after the screen was drawn (so the
 // tab's own first frame and a quick pass through the tabs do not compete with it), and stops at rest when the screen is
 // left. After the person has done something in this launch (ui/quiet.ts) the pictures are drawn at rest.
-import { useCallback, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_BACK, RING_FRAMES, RING_FRONT } from "./budget-motion.ts";
+import { numberTrack, pathTrack } from "./path-track.ts";
 import { PAPER_FILLS, PAPER_LINES, PAPER_STROKES } from "./operations-paper.ts";
 import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
@@ -28,6 +29,8 @@ const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, c
 // After the first frame is on the screen the run starts at once (one frame, then this wait: a person who taps through tabs
 // quickly leaves a tab before it is over, and no picture is started for a tab that was only passed through).
 const START_WAIT_MS = 50;
+// The reset to the first frame after a screen was left waits this long (a frozen tab is not drawn meanwhile).
+const RESET_WAIT_MS = 400;
 
 type Timeline = Animated.Value;
 type Ease = (n: number) => number;
@@ -280,21 +283,54 @@ const ringTimes = RING_FRAMES.map((row) => row[0]!);
 // The ring goes through the note. The back layer is the whole circle under the note, whose opaque fill and stroke hide it
 // wherever it runs behind the note; the front layer holds only the runs of the circle that lie in front of the note (found per
 // frame from the note's own outline, scripts/gen-budget-motion.py: RING_BACK, RING_FRONT) and is drawn over it.
+// The paths are not Animated interpolations (they re-read every number of four long strings on every tick): each is a track
+// over numbers parsed once (path-track.ts), and a listener of the clock writes the shown frame to the four shapes with
+// setNativeProps, only while a ring or the note is on the screen. The opacities stay Animated (two numbers).
+const NOTE_TRACK = pathTrack(NOTE_TIMES, NOTE_OUTLINE);
+const MARKS_TRACK = pathTrack(NOTE_TIMES, NOTE_MARKS);
+const BACK_TRACK = pathTrack(ringTimes, RING_BACK);
+const FRONT_TRACK = pathTrack(ringTimes, RING_FRONT);
+const RING_WIDTH = numberTrack(ringTimes, RING_FRAMES.map((row) => row[4]!));
+type Shape = { setNativeProps(props: object): void };
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   const first = ringTimes[0]!;
   const last = ringTimes[ringTimes.length - 1]!;
   const ringOpacity = keyed(time, [[first - 1, 0], [first, 1], [last, 1], [last + 1, 0]]);
-  const blend = (inputRange: ReadonlyArray<number>, outputRange: ReadonlyArray<string>) => time.interpolate({ inputRange: [...inputRange], outputRange: [...outputRange], extrapolate: "clamp" });
-  const ringWidth = time.interpolate({ inputRange: [...ringTimes], outputRange: RING_FRAMES.map((row) => row[4]!), extrapolate: "clamp" });
+  const back = useRef<Shape | null>(null);
+  const note = useRef<Shape | null>(null);
+  const marks = useRef<Shape | null>(null);
+  const front = useRef<Shape | null>(null);
+  const now = (time as unknown as { __getValue(): number }).__getValue();
+  useEffect(() => {
+    const draw = (t: number) => {
+      // The ring is invisible before its first frame and after its last one; the note holds its last shape afterwards.
+      if (t >= first - 1 && t <= last + 1) {
+        const width = RING_WIDTH(t);
+        back.current?.setNativeProps({ d: BACK_TRACK(t), strokeWidth: width });
+        front.current?.setNativeProps({ d: FRONT_TRACK(t), strokeWidth: width });
+      }
+      if (t >= NOTE_TIMES[0]! - 1) {
+        note.current?.setNativeProps({ d: NOTE_TRACK(t) });
+        marks.current?.setNativeProps({ d: MARKS_TRACK(t) });
+      }
+    };
+    const id = time.addListener(({ value }) => draw(value));
+    draw((time as unknown as { __getValue(): number }).__getValue()); // it may have moved since the render (a reset or a restart)
+    return () => time.removeListener(id);
+  }, [time, first, last]);
   return (
     <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
-      <AnimatedPath d={blend(ringTimes, RING_BACK)} stroke="#fbbf24" strokeWidth={ringWidth} opacity={ringOpacity} />
+      <AnimatedG opacity={ringOpacity}>
+        <Path ref={back as never} d={BACK_TRACK(now)} stroke="#fbbf24" strokeWidth={RING_WIDTH(now)} />
+      </AnimatedG>
       {/* Opaque: the note is filled with the screen's colour, so the part of the ring behind it is hidden by the note itself. */}
       <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
-        <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
-        <AnimatedPath d={blend(NOTE_TIMES, NOTE_MARKS)} fill={c.positive} stroke="none" />
+        <Path ref={note as never} d={NOTE_TRACK(now)} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
+        <Path ref={marks as never} d={MARKS_TRACK(now)} fill={c.positive} stroke="none" />
       </AnimatedG>
-      <AnimatedPath d={blend(ringTimes, RING_FRONT)} stroke="#fbbf24" strokeWidth={ringWidth} opacity={ringOpacity} />
+      <AnimatedG opacity={ringOpacity}>
+        <Path ref={front as never} d={FRONT_TRACK(now)} stroke="#fbbf24" strokeWidth={RING_WIDTH(now)} />
+      </AnimatedG>
     </Svg>
   );
 }
@@ -362,6 +398,7 @@ interface Clock {
   run?: Animated.CompositeAnimation;
   first?: number;
   wait?: ReturnType<typeof setTimeout>;
+  reset?: ReturnType<typeof setTimeout>;
 }
 const clocks = new Map<EmptyKind, Clock>();
 const restFrame = (kind: EmptyKind): number => (shouldPlay(kind) ? 0 : PLAY_MS[kind]);
@@ -373,7 +410,7 @@ function clockOf(kind: EmptyKind): Clock {
     clocks.set(kind, made);
     onPictureStop((finish) => haltClock(kind, made, finish));
     onActed(() => {
-      if (!made.users) made.time.setValue(restFrame(kind));
+      if (!made.users && !made.reset) made.time.setValue(restFrame(kind));
     });
   }
   return clock;
@@ -401,6 +438,12 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
   useFocusEffect(
     useCallback(() => {
       clock.users += 1;
+      // Back before the deferred reset ran: do it now, so the picture starts from its first frame.
+      if (clock.reset) {
+        clearTimeout(clock.reset);
+        clock.reset = undefined;
+        time.setValue(restFrame(kind));
+      }
       if (clock.users === 1) {
         if (!shouldPlay(kind)) time.setValue(total);
         else {
@@ -420,8 +463,13 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
         clock.users -= 1;
         if (clock.users === 0) {
           haltClock(kind, clock, false);
-          // Left: back to the first frame for the next visit (or the last one when it will not play).
-          time.setValue(restFrame(kind));
+          // Left: back to the first frame for the next visit (or the last one when it will not play). Not in the same
+          // breath as the tab change: setting the value rewrites every shape of the picture, and that was part of what
+          // the next tab waited for (0.3.14: 170-210 ms to show a tab, against 55-105 ms before).
+          clock.reset = setTimeout(() => {
+            clock.reset = undefined;
+            if (!clock.users) time.setValue(restFrame(kind));
+          }, RESET_WAIT_MS);
         }
       };
     }, [clock, time, total, kind]),

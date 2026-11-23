@@ -119,6 +119,19 @@ PY
 }
 ops=$(tab_xy "Operations"); stats=$(tab_xy "Statistics"); cats=$(tab_xy "Categories"); accs=$(tab_xy "Accounts"); more=$(tab_xy "More")
 log "empty profile, tab centres: accounts $accs, categories $cats, operations $ops, statistics $stats, more $more"
+# The cost of each picture on its own (0.3.15): for every tab with a picture, a visit from another tab, 3.5 s on it with the
+# picture playing (JS busy over those seconds, the frames the system drew, the press-to-shown time of the tab), then the same tab
+# again after the picture was left running to its end ("settled": the picture at rest is the baseline the playing one is
+# compared with). The tabs replay on every visit until the owner acts, so nothing here changes what the later moves see.
+picture_cost() { # $1 kind, $2 tab centre, $3 another tab's centre
+  adb shell input tap $3; sleep 1.5
+  begin "picture $1: visit, playing (3.5 s)"; adb shell input tap $2; finish 3.5
+  begin "picture $1: same tab, at rest (3 s, after the run)"; finish 3
+}
+picture_cost operations "$ops" "$accs"
+picture_cost accounts "$accs" "$ops"
+picture_cost statistics "$stats" "$ops"
+picture_cost categories "$cats" "$ops"
 begin "empty: Accounts → Statistics → Accounts (0.3 s)"
 adb shell input tap $stats; sleep 0.3; adb shell input tap $accs
 finish 3

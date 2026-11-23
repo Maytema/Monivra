@@ -12,6 +12,7 @@ import { Icon, Screen } from "../ui/kit.tsx";
 import { CategoryTile, SegmentTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { setView, useViewPeriod, useViewCatType } from "./ui-state.ts";
+import { categoriesNone } from "../domain/categories.ts";
 
 export function CategoriesManage() {
   const data = useLedger();
@@ -35,14 +36,17 @@ export function CategoriesManage() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={{ title: t.t("Change categories") }} />
-      <SegmentTabs
-        tabs={[
-          { id: "expense" as const, label: "Expenses" },
-          { id: "income" as const, label: "Incomes" },
-        ]}
-        active={catType}
-        onChange={(type) => setView({ catType: type })}
-      />
+      {/* The switch is drawn only while there is something to switch (the Categories tab follows the same rule). */}
+      {categoriesNone(data) ? null : (
+        <SegmentTabs
+          tabs={[
+            { id: "expense" as const, label: "Expenses" },
+            { id: "income" as const, label: "Incomes" },
+          ]}
+          active={catType}
+          onChange={(type) => setView({ catType: type })}
+        />
+      )}
       <Screen padded={false} scrollEnabled={!held}>
         <Pressable accessibilityRole="button" onPress={() => open()} style={({ pressed }) => ({ marginHorizontal: 11, marginTop: 14, marginBottom: 16, minHeight: 60, flexDirection: "row", alignItems: "center", gap: 16, paddingHorizontal: 8, borderRadius: 12, borderWidth: 1, borderColor: p.line, backgroundColor: pressed ? p.soft : p.key })}>
           <View style={{ width: 44, height: 44, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: p.nav }}>

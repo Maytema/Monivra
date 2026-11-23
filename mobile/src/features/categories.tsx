@@ -5,6 +5,7 @@ import { memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMem
 import { View } from "react-native";
 import { usePageReady } from "../ui/pager.tsx";
 import { router } from "expo-router";
+import { categoriesEmptyOf, categoriesNone } from "../domain/categories.ts";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Period } from "../domain/periods.ts";
 import type { Category } from "../domain/types.ts";
@@ -49,9 +50,9 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
     return () => clearTimeout(timer);
   }, []);
   const create = () => router.push({ pathname: "/category", params: { type: catType } });
-  const emptyOf = (kind: "expense" | "income") => !data.categories.some((c) => c.type === kind && !c.parent && !c.archived) && !data.accounts.some((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
-  // No categories at all (the first launch): the Expenses / Incomes switch has nothing to switch, so it is not shown.
-  const none = emptyOf("expense") && emptyOf("income");
+  const emptyOf = (kind: "expense" | "income") => categoriesEmptyOf(data, kind);
+  // No categories at all (the first launch, or all of them deleted): the Expenses / Incomes switch has nothing to switch, so it is not shown.
+  const none = categoriesNone(data);
   return (
       <Screen padded={false} bar={false} pinned={none ? undefined : <SumTabs active={catType} expense={money(totalByType(rows, "expense"), data.settings.currency)} income={money(totalByType(rows, "income"), data.settings.currency)} onChange={(v) => setView({ catType: v })} />}>
         {emptyOf(catType) ? (
