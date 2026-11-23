@@ -6,7 +6,7 @@ import { layoutDetail, layoutDetailSteps, layoutSummary, type Command } from "./
 import { detailModel, summaryModel, type DetailPart, type ReportWords, type Sections } from "./model.ts";
 import { buildPdf, pdfSteps } from "./pdf.ts";
 
-export interface ReportConfig {
+interface ReportConfig {
   mode: "summary" | "detail";
   filters: Filters;
   period: Period;
@@ -14,7 +14,7 @@ export interface ReportConfig {
   parts: Partial<Record<DetailPart, boolean>>;
 }
 
-export interface ReportJob {
+interface ReportJob {
   name: string;
   pages: Command[][];
   bytes: Uint8Array;

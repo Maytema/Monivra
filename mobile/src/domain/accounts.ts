@@ -86,7 +86,7 @@ export function checkedAccountDraft(data: LedgerData, source: AccountDraft): Acc
 }
 
 // Does anything refer to the account?
-export function accountHasRecords(data: LedgerData, a: Account): boolean {
+function accountHasRecords(data: LedgerData, a: Account): boolean {
   const used = (o: Operation) => o.from === a.id || o.to === a.id;
   return !!(a.opening || a.goal || a.limit || data.ops.some(used) || data.scheduled.some(used));
 }

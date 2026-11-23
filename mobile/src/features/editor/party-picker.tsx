@@ -16,7 +16,7 @@ import type { EditorSession } from "./session.ts";
 
 type Tab = "category" | "account";
 
-export const Tile = memo(function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
+const Tile = memo(function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
   const p = usePalette();
   return (
     <Pressable
@@ -44,7 +44,7 @@ const ACCOUNT_GROUPS: readonly [string, (a: Account) => boolean][] = [
   ["Savings", (a) => a.type === "Savings"],
   ["Debts", (a) => a.type === "Debt"],
 ];
-export function AccountCards({ accounts, chosen, onPick }: { accounts: readonly Account[]; chosen?: string | null; onPick: (id: string) => void }) {
+function AccountCards({ accounts, chosen, onPick }: { accounts: readonly Account[]; chosen?: string | null; onPick: (id: string) => void }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();

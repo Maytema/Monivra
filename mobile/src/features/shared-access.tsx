@@ -8,7 +8,7 @@ import { useCommand, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
-export const SHARED_HINT = "shared-access";
+const SHARED_HINT = "shared-access";
 
 function SharedAccess() {
   const p = usePalette();

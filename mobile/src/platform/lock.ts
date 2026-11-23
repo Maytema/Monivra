@@ -21,7 +21,7 @@ export async function readPinRecord(): Promise<PinRecord | null> {
   }
 }
 
-export async function writePinRecord(record: PinRecord | null): Promise<void> {
+async function writePinRecord(record: PinRecord | null): Promise<void> {
   known = null;
   if (record) await SecureStore.setItemAsync(KEY, JSON.stringify(record));
   else await SecureStore.deleteItemAsync(KEY);
@@ -69,7 +69,7 @@ export async function biometricAvailable(): Promise<boolean> {
 
 // "ok", "cancelled" (the person chose the PIN, or the screen went away), "lockout" (too many wrong attempts,
 // the system blocks the sensor for a while) or "failed" (the sensor could not be used).
-export type BiometricResult = "ok" | "cancelled" | "lockout" | "failed";
+type BiometricResult = "ok" | "cancelled" | "lockout" | "failed";
 export async function biometricUnlock(prompt: string, cancel: string): Promise<BiometricResult> {
   try {
     const result = await LocalAuthentication.authenticateAsync({ promptMessage: prompt, cancelLabel: cancel, disableDeviceFallback: true });
@@ -81,7 +81,7 @@ export async function biometricUnlock(prompt: string, cancel: string): Promise<B
   }
 }
 
-export function randomSalt(): Uint8Array {
+function randomSalt(): Uint8Array {
   const salt = new Uint8Array(16);
   globalThis.crypto.getRandomValues(salt);
   return salt;

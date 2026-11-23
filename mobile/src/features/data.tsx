@@ -415,7 +415,7 @@ function RestorePage({ source, id }: { source: string; id?: string }) {
 
 // ---- Data file ------------------------------------------------------------------------------------
 
-export const dataFileName = (): string => `monivra-backup-${appStore().env.clock.today()}.json`;
+const dataFileName = (): string => `monivra-backup-${appStore().env.clock.today()}.json`;
 
 function fileProblemText(t: Translator, error: unknown): string {
   if (error instanceof FileProblem && error.problem) return `${t.t(error.problem.what)} ${error.problem.number || ""}: ${t.t(error.problem.reason)}`;
@@ -423,7 +423,7 @@ function fileProblemText(t: Translator, error: unknown): string {
 }
 
 // Lets the person choose a data file and opens the page that shows what restoring it would change.
-export async function chooseDataFile(t: Translator): Promise<void> {
+async function chooseDataFile(t: Translator): Promise<void> {
   const file = await pickFile();
   if (!file) return;
   try {
@@ -438,7 +438,7 @@ export async function chooseDataFile(t: Translator): Promise<void> {
   }
 }
 
-export async function saveDataFile(t: Translator, how: "share" | "save"): Promise<void> {
+async function saveDataFile(t: Translator, how: "share" | "save"): Promise<void> {
   try {
     const text = appStore().exportDataFile();
     if (how === "share") await shareTextFile(dataFileName(), text);

@@ -56,9 +56,3 @@ export const systemClock: Clock = {
   nowIso: () => new Date().toISOString(),
 };
 
-// A clock that always says the same moment (tests, previews).
-export const fixedClock = (day: LocalDate, time: LocalTime = "12:00"): Clock => ({
-  today: () => day,
-  time: () => time,
-  nowIso: () => `${day}T${time}:00.000Z`,
-});

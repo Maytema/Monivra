@@ -45,7 +45,7 @@ export function chartBins(rows: readonly { date: string; reportType: "income" | 
 // ---- The ring of the donut ---------------------------------------------------------------------------
 
 // A slice as a part of the circle: from `start` to `end`, in turns (0 at twelve o'clock, clockwise, 1 a full circle).
-export interface Arc {
+interface Arc {
   id: string;
   start: number;
   end: number;

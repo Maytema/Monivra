@@ -214,7 +214,7 @@ const ORDER: Record<string, { hint: string; parts: ("y" | "m" | "d")[]; sep: str
   day: { hint: "DD/MM/YYYY", parts: ["d", "m", "y"], sep: "/" },
   iso: { hint: "YYYY-MM-DD", parts: ["y", "m", "d"], sep: "-" },
 };
-export function typedDate(text: string, format: string): string | null {
+function typedDate(text: string, format: string): string | null {
   const order = ORDER[format] ?? ORDER.month!;
   const pieces = text.trim().split(/[^0-9]+/).filter(Boolean);
   if (pieces.length !== 3) return null;
@@ -229,7 +229,7 @@ export function typedDate(text: string, format: string): string | null {
 // Typing only digits: the field puts the separators in itself. A month whose first digit is above 1 and a day whose first
 // digit is above 3 can only be one digit long, so they are completed (with a leading zero) at once: 8152001 → 08/15/2001.
 // `growing` is false while the text is being deleted, so the separator the person just erased does not come back.
-export function maskDate(text: string, format: string, growing = true): string {
+function maskDate(text: string, format: string, growing = true): string {
   const order = ORDER[format] ?? ORDER.month!;
   const digits = text.replace(/[^0-9]/g, "").slice(0, 8);
   let rest = digits;

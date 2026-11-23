@@ -1,7 +1,8 @@
 // Shared test helpers: an in-memory SQLite database (node:sqlite), fixtures, a fixed environment.
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { fixedClock } from "../../src/domain/dates.ts";
+import type { Clock } from "../../src/domain/dates.ts";
+import type { LocalDate, LocalTime } from "../../src/domain/types.ts";
 import type { Env } from "../../src/domain/env.ts";
 import { readDataFile } from "../../src/domain/datafile.ts";
 import type { LedgerData } from "../../src/domain/types.ts";
@@ -22,6 +23,14 @@ const fixturesDir = new URL("../fixtures/", import.meta.url);
 export const fixtureText = (name: string): string => readFileSync(new URL(`${name}.json`, fixturesDir), "utf8");
 export const fixture = (name: "sample" | "report" | "withSchedules" | "withReminders"): LedgerData => readDataFile(fixtureText(name), "en").data;
 export const oldObservations = () => JSON.parse(fixtureText("old-observations")) as Record<string, any>;
+
+
+// A clock that always says the same moment (tests).
+export const fixedClock = (day: LocalDate, time: LocalTime = "12:00"): Clock => ({
+  today: () => day,
+  time: () => time,
+  nowIso: () => `${day}T${time}:00.000Z`,
+});
 
 export function testEnv(day = "2026-11-11", time = "12:00"): Env {
   let n = 0;

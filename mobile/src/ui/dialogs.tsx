@@ -208,7 +208,7 @@ export function ToastHost() {
 // What just happened (js/ui/primitives.js `notice`): a pill with an icon at the bottom edge for what went as
 // expected ("quiet"), a card with a second line for what ended up somewhere else than one might think
 // ("important"). With `onTap` it ends in an arrow, stays longer, and a tap leads on to what it is about.
-export interface NoticeOptions {
+interface NoticeOptions {
   icon: string;
   tone?: "positive" | "negative" | "accent";
   level?: "quiet" | "important";

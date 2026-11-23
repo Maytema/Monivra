@@ -9,7 +9,7 @@ import { haptic } from "../platform/haptics.ts";
 import { Icon } from "./kit.tsx";
 import { Pressable } from "./pressable.tsx";
 
-export interface Selection {
+interface Selection {
   on: boolean;
   chosen: ReadonlySet<string>;
   // A long press on an item: starts the choice with it (or adds it).

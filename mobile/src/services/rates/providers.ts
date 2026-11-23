@@ -3,7 +3,7 @@
 // one object in this file and one entry in RATE_PROVIDERS; nothing else changes. A source that
 // disappears simply fails, and the next one in the list is used.
 
-export interface HttpResponse {
+interface HttpResponse {
   ok: boolean;
   status: number;
   text(): Promise<string>;
@@ -26,7 +26,7 @@ export interface RateProvider {
   fetchQuote(fetcher: Fetcher, signal: AbortSignal): Promise<RateQuote>;
 }
 
-export class ProviderError extends Error {}
+class ProviderError extends Error {}
 
 const positive = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n) && n > 0;
 
@@ -37,7 +37,7 @@ async function getText(fetcher: Fetcher, url: string, signal: AbortSignal): Prom
 }
 
 // Rates given as "units of X per one unit of the base" turned into KGS per unit; needs KGS quoted.
-export function fromBaseQuotes(perBase: Record<string, unknown>, base: string): Record<string, number> {
+function fromBaseQuotes(perBase: Record<string, unknown>, base: string): Record<string, number> {
   const kgs = perBase.KGS;
   if (!positive(kgs)) throw new ProviderError("the source has no KGS rate");
   const out: Record<string, number> = { [base]: kgs };

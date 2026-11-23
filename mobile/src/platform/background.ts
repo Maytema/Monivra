@@ -8,7 +8,7 @@ import * as TaskManager from "expo-task-manager";
 import { appStore } from "./app-store.ts";
 import { rebuildReminders } from "./notifications.ts";
 
-export const POST_DUE_TASK = "monivra-post-due";
+const POST_DUE_TASK = "monivra-post-due";
 
 TaskManager.defineTask(POST_DUE_TASK, async () => {
   try {

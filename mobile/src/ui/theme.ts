@@ -22,8 +22,8 @@ export const mix = (first: string, second: string, share: number): string => {
   const b = channels(second);
   return toHex(channels(first).map((v, i) => v * share + (b[i] ?? 0) * (1 - share)));
 };
-export const textOn = (background: string): string => (contrast(background, "#ffffff") >= 4.5 ? "#ffffff" : "#1d1b20");
-export function readableOver(color: string, background: string, min = 4.5): string {
+const textOn = (background: string): string => (contrast(background, "#ffffff") >= 4.5 ? "#ffffff" : "#1d1b20");
+function readableOver(color: string, background: string, min = 4.5): string {
   const target = luminance(background) > 0.5 ? 0 : 255;
   const from = channels(color);
   for (let step = 0; step <= 20; step++) {

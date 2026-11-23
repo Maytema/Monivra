@@ -31,7 +31,7 @@ export interface Meta {
 
 const two = (n: number) => String(n).padStart(2, "0");
 // "Nov 4, 2026" / "4 нояб. 2026": the date of a table.
-export function compactDate(w: ReportWords, data: LedgerData, s: string): string {
+function compactDate(w: ReportWords, data: LedgerData, s: string): string {
   if (data.settings.dateFormat === "iso") return s;
   return w.t.locale.startsWith("ru") ? `${w.t.dayMonth(s)} ${s.slice(0, 4)}` : `${w.t.dayMonth(s)}, ${s.slice(0, 4)}`;
 }
@@ -39,7 +39,7 @@ const longDate = (w: ReportWords, data: LedgerData, s: string) => (data.settings
 
 export const money = (data: LedgerData, n: Minor, currency: string | undefined): string => formatAmount(n, currency ?? data.settings.currency, data.settings);
 
-export function scopeOperations(data: LedgerData, filters: Filters, period: Period): Operation[] {
+function scopeOperations(data: LedgerData, filters: Filters, period: Period): Operation[] {
   const [from, to] = periodBounds(period, data.settings);
   return data.ops.filter((o) => o.date >= from && o.date <= to && operationMatchesFilters(data, o, filters)).sort(newestFirst);
 }
@@ -54,7 +54,7 @@ const perCurrency = (map: Map<string, number>): Amounts =>
 
 const names = (items: string[], limit = 6) => (items.length > limit ? `${items.slice(0, limit).join(", ")} +${items.length - limit}` : items.join(", "));
 
-export function filterLines(w: ReportWords, data: LedgerData, filters: Filters): [string, string][] {
+function filterLines(w: ReportWords, data: LedgerData, filters: Filters): [string, string][] {
   const { t } = w;
   const lines: [string, string][] = [];
   if (filters.accounts) lines.push([t.t("Accounts"), names(filters.accounts.map((id) => accountById(data, id)?.name ?? "").filter(Boolean))]);

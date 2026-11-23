@@ -19,7 +19,7 @@ type Direction = (typeof DIRECTIONS)[number];
 const LABELS: Record<Direction, string> = { income: "Incomes", expense: "Expenses", accounts: "Accounts" };
 
 // `scheduled` starts a scheduled payment with the date, time, repeat and reminder already chosen.
-export type SchedulePreset = Pick<EditorDraft, "date" | "time" | "recur" | "reminder">;
+type SchedulePreset = Pick<EditorDraft, "date" | "time" | "recur" | "reminder">;
 // `date`: the date the new operation starts with (the period on the screen it was opened from); none — today.
 // Opening the add sheet is the person acting: the empty-state pictures stop replaying (ui/quiet.ts).
 export const openAddMenu = (scheduled?: SchedulePreset, date?: string): number => {

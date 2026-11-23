@@ -7,7 +7,6 @@ import { getView, subscribe, type ViewState } from "./view-core.ts";
 export { getView, setView } from "./view-core.ts";
 
 const state = () => getView();
-export const useView = (): ViewState => useSyncExternalStore(subscribe, state);
 // One part each: a screen that shows the period does not draw again when the expense/income tab changes, and so on.
 export const useViewPeriod = (): Period => useSyncExternalStore(subscribe, () => state().period);
 export const useViewCatType = (): ViewState["catType"] => useSyncExternalStore(subscribe, () => state().catType);

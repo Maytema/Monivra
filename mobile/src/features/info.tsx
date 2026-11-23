@@ -7,7 +7,6 @@ import { AboutArt } from "./about-art.tsx";
 import { Pressable } from "../ui/pressable.tsx";
 import Svg, { Circle, G, Path } from "react-native-svg";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { APP_VERSION } from "../application/store.ts";
 import { useCommand, usePalette, useT } from "../ui/app-context.tsx";
 import { showInfo } from "../ui/dialogs.tsx";
 import { mix } from "../ui/theme.ts";
@@ -359,4 +358,3 @@ export function InfoPage() {
   );
 }
 
-export const appVersionLine = (closedBeta: string): string => `Monivra · ${APP_VERSION} (${closedBeta})`;

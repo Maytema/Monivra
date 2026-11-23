@@ -9,13 +9,13 @@ import type { Env } from "./env.ts";
 import { putOperation } from "./operations.ts";
 import type { Budget, LedgerData, Minor, Operation, ScheduledPayment } from "./types.ts";
 
-export interface CrossedBudget {
+interface CrossedBudget {
   budget: Budget;
   // How far over its amount it would be, in the budget's currency.
   over: Minor;
 }
 
-export function budgetsCrossed(before: LedgerData, after: LedgerData, date: string): CrossedBudget[] {
+function budgetsCrossed(before: LedgerData, after: LedgerData, date: string): CrossedBudget[] {
   const crossed: CrossedBudget[] = [];
   for (const b of after.budgets) {
     const was = budgetState(before, b, date).used;

@@ -51,7 +51,7 @@ export interface Parties {
   currency: string;
 }
 
-export interface EditorDeps {
+interface EditorDeps {
   data(): LedgerData;
   // A short message ("Calculator is on").
   say(text: string): void;
@@ -423,12 +423,5 @@ const structuredCloneOf = <T>(value: T): T => JSON.parse(JSON.stringify(value)) 
 // What the editor has to ask for before it opens (js/screens/operation-editor/start.js): the
 // accounts or the category that a new operation still lacks.
 export type Missing = "transfer-from" | "transfer-to" | "account" | "category" | null;
-export function whatIsMissing(draft: EditorDraft): Missing {
-  if (draft.type === "transfer" && !draft.from) return "transfer-from";
-  if (draft.type === "transfer" && !draft.to) return "transfer-to";
-  if (!draft.from && !draft.to) return "account";
-  if (!draft.category && draft.type !== "adjustment" && draft.type !== "transfer") return "category";
-  return null;
-}
 
 export { defaultAccountId };

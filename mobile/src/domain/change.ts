@@ -23,7 +23,7 @@ export interface Change {
   rates?: Rates;
 }
 
-export const emptyChange = (): Change => ({ put: {}, remove: {}, order: {} });
+const emptyChange = (): Change => ({ put: {}, remove: {}, order: {} });
 
 export const isEmptyChange = (c: Change): boolean =>
   LIST_KEYS.every((k) => !c.put[k]?.length && !c.remove[k]?.length) &&

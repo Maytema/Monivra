@@ -1,4 +1,3 @@
-import { useSyncExternalStore } from "react";
 // While an item is lifted for reordering, sideways swipes of the screen must not take the touch.
 let held = false;
 export const gestureLock = {
@@ -10,29 +9,12 @@ export const gestureLock = {
   },
 };
 
-// While a page is being swiped sideways, the lists inside it do not scroll: the list had started to move at the first
-// few pixels of a slightly slanted swipe and then jerked up and down under it, and the swipe was lost.
-let swiping = false;
-const listeners = new Set<() => void>();
-export const swipeLock = {
-  set(value: boolean): void {
-    if (swiping === value) return;
-    swiping = value;
-    for (const l of listeners) l();
-  },
-};
-export const useVerticalScroll = (): boolean =>
-  !useSyncExternalStore(
-    (l) => (listeners.add(l), () => void listeners.delete(l)),
-    () => swiping,
-  );
-
 // Until when a press is still taken for the end of a swipe of a native pager (ui/pressable.tsx ignores it then). Every
 // state the pager reports moves it a little ahead (0.4 s while swiping or settling, 0.15 s after it stopped). Not a
 // "swiping" flag: the pager's states reach JavaScript out of order ("idle" before "settling"), and such a flag stayed
 // up for 1.5 s after a swipe — every tap in that time was dropped (the first tap on Expenses/Incomes after swiping a
 // period "did nothing", the second worked). A plain value, so nothing draws when it changes.
-export const pagerMotion = { until: 0 };
+const pagerMotion = { until: 0 };
 export const pagerBusy = (): boolean => Date.now() < pagerMotion.until;
 export function pagerState(state: string): void {
   pagerMotion.until = Math.max(pagerMotion.until, Date.now() + (state === "idle" ? 150 : 400));

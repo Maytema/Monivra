@@ -43,7 +43,7 @@ export function categoryTotals(data: Pick<LedgerData, "ops" | "categories">): Ma
 // ---- Balances -----------------------------------------------------------------------------------
 
 // What one operation does to one account.
-export const effectOn = (o: Operation, id: string): Minor =>
+const effectOn = (o: Operation, id: string): Minor =>
   (o.to === id ? (o.receive ?? o.amount) : 0) - (o.from === id ? o.amount : 0);
 
 const balanceMaps = new WeakMap<readonly Operation[], Map<string, Minor>>();
@@ -142,7 +142,7 @@ export function progressForBalance(a: Account, balance: Minor): Progress | null 
   };
 }
 
-export interface CardState {
+interface CardState {
   limit: Minor;
   own: Minor;
   creditUsed: Minor;

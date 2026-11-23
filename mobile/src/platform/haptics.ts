@@ -5,7 +5,7 @@
 import { Vibration } from "react-native";
 import { nativeHaptic } from "./native.ts";
 
-export type Haptic = "tick" | "success" | "warning" | "error";
+type Haptic = "tick" | "success" | "warning" | "error";
 
 // Used when the application's own module is absent (an older build): plain vibrations of about the same length.
 const PLAIN: Record<Haptic, number | number[]> = { tick: 15, success: 25, warning: 25, error: [0, 30, 70, 30] };

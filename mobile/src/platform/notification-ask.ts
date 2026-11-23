@@ -4,7 +4,7 @@ import * as SecureStore from "expo-secure-store";
 
 const KEY = "monivra.notification-ask";
 
-export interface Answer {
+interface Answer {
   at: number;
   // "allowed": the system allowed it; "later": the person pushed it off; "refused": the system did not allow it.
   answer: "allowed" | "later" | "refused";

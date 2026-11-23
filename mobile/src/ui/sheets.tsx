@@ -33,7 +33,7 @@ interface Layer {
   then?: () => void;
 }
 
-export interface SheetOptions {
+interface SheetOptions {
   bare?: boolean;
   scrolls?: boolean;
   swipeDown?: boolean;

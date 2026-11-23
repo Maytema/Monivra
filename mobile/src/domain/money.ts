@@ -4,7 +4,7 @@
 import { DomainError } from "./errors.ts";
 import type { Fee, Minor, Rates } from "./types.ts";
 
-export const MAX_AMOUNT: Minor = 9e12;
+const MAX_AMOUNT: Minor = 9e12;
 
 // How many KGS one unit is worth; an unknown currency counts as 1, as before.
 const rateOf = (rates: Rates, code: string | undefined): number =>
@@ -68,7 +68,7 @@ const feeSize = (fee: Fee, base: number): number =>
 // Removes floating point noise before rounding to whole minor units.
 const roundMinor = (n: number): number => Math.sign(n) * Math.round(Math.round(Math.abs(n) * 1e6) / 1e6);
 
-export interface FeeStep {
+interface FeeStep {
   fee: Fee;
   delta: Minor;
 }
@@ -144,7 +144,7 @@ export function formatNumber(n: Minor, format: string, group: boolean, least: nu
   return (negative ? "−" : "") + whole + (fraction ? decimalSign + fraction : "");
 }
 
-export interface MoneyFormat {
+interface MoneyFormat {
   numberFormat: string;
   groupDigits: boolean;
   decimal: boolean;

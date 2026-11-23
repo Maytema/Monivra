@@ -1,9 +1,7 @@
 // Reusable pieces of every screen, built only from the theme tokens.
-import { useVerticalScroll } from "./gesture-lock.ts";
 import type { ReactNode } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View, type ColorValue, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type ViewStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { ICON_FILLS, ICONS } from "./icon-paths.ts";
 import { useRevealFocusedField } from "./keyboard.tsx";
@@ -25,15 +23,6 @@ export function Icon({ name, size = 22, color, filled = false }: { name: string;
   return svg;
 }
 
-// A round coloured badge with an icon (accounts, categories).
-export function Badge({ icon, color, size = 40 }: { icon: string; color: string; size?: number }) {
-  return (
-    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: color, alignItems: "center", justifyContent: "center" }}>
-      <Icon name={icon} size={size * 0.55} color="#ffffff" />
-    </View>
-  );
-}
-
 // A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab
 // bar carries the inset itself, so a page adds none.
 // `bar`: the scroll bar; the pages that swipe and the More menu have none (components.css: .swipe-page > .content
@@ -43,12 +32,11 @@ export function Screen({ children, scroll = true, padded = true, scrollEnabled =
   const style = { flex: 1, backgroundColor: p.bg };
   const content = { padding: padded ? space.l : 0, gap: space.m };
   const reveal = useRevealFocusedField();
-  const free = useVerticalScroll();
   // `pinned` stays above the scrolling part (the switch Expenses / Incomes does not scroll away with the tiles).
   return scroll ? (
     <>
     {pinned}
-    <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled && free} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
+    <ScrollView ref={reveal.ref} style={style} scrollEnabled={scrollEnabled} onScroll={(e) => (reveal.onScroll(e), onScroll?.(e))} scrollEventThrottle={32} contentContainerStyle={content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={bar}>
       {children}
     </ScrollView>
     </>
@@ -160,23 +148,6 @@ export function Field({ label, value, onChange, placeholder, multiline = false, 
   );
 }
 
-// A field that opens a choice (account, category, date…).
-export function ChoiceField({ label, value, onPress, left }: { label: string; value: string; onPress: () => void; left?: ReactNode }) {
-  const p = usePalette();
-  const t = useT();
-  return (
-    <Pressable onPress={onPress} style={({ pressed }) => [{ borderWidth: 1, borderColor: p.line, borderRadius: radius.m, padding: space.m, flexDirection: "row", alignItems: "center", gap: space.m }, pressed && { backgroundColor: p.soft }]}>
-      {left}
-      <View style={{ flex: 1 }}>
-        <Label>{t.t(label)}</Label>
-        <Text style={{ color: p.ink, fontSize: font.body }} numberOfLines={1}>
-          {value}
-        </Text>
-      </View>
-      <Icon name="right" size={18} color={p.muted} />
-    </Pressable>
-  );
-}
 
 export function Toggle({ label, value, onChange, hint }: { label: string; value: boolean; onChange: (v: boolean) => void; hint?: string }) {
   const p = usePalette();
@@ -200,22 +171,6 @@ export function Empty({ text }: { text: string }) {
   return <Text style={{ color: p.muted, textAlign: "center", paddingVertical: space.xl }}>{t.t(text)}</Text>;
 }
 
-// A list of choices in a bottom panel (pickers).
-export function SheetList<T>({ items, keyOf, render, onPick }: { items: readonly T[]; keyOf: (x: T) => string; render: (x: T) => ReactNode; onPick: (x: T) => void }) {
-  return (
-    <View>
-      {items.map((x) => (
-        <Pressable key={keyOf(x)} onPress={() => onPick(x)}>
-          {render(x)}
-        </Pressable>
-      ))}
-    </View>
-  );
-}
-
-export function useBottomInset(): number {
-  return useSafeAreaInsets().bottom;
-}
 
 const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: space.m, paddingVertical: 10, paddingHorizontal: space.s, borderRadius: radius.m },

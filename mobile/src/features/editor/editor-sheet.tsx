@@ -39,7 +39,7 @@ import { EditorSession, newDraft, type EditorDraft, type Party } from "./session
 const DOUBLE_TAP_MS = 340;
 const MENU_DELAY_MS = 350;
 
-export interface EditorStart {
+interface EditorStart {
   // An opened operation (or scheduled payment).
   id?: string;
   scheduled?: boolean;

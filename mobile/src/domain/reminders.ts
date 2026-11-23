@@ -6,7 +6,7 @@ import { advanced } from "./scheduled.ts";
 import type { LedgerData, LocalDate, LocalTime, ScheduledPayment } from "./types.ts";
 
 // The day a payment's reminder falls on: `before` days, weeks, months or years ahead of it.
-export function reminderDay(item: ScheduledPayment): LocalDate | null {
+function reminderDay(item: ScheduledPayment): LocalDate | null {
   if (!item.reminder) return null;
   const { before, unit } = item.reminder;
   if (unit === "Days") return addDays(item.date, -before);

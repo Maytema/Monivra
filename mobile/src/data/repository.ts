@@ -229,7 +229,7 @@ export function persistChange(db: SqlDriver, change: Change, next: LedgerData, n
   inTransaction(db, () => drain(persistSteps(db, change, next, now)));
 }
 
-export class ImportMismatch extends Error {}
+class ImportMismatch extends Error {}
 
 // A restore is written as steps: a generator that yields between chunks of rows, so that the same code runs in one go
 // (replaceLedger, inside one transaction) and, on the phone, chunk by chunk with the screen drawn in between and the person able

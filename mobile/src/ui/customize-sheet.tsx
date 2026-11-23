@@ -14,7 +14,7 @@ import { Icon } from "./kit.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
 import { mix } from "./theme.ts";
 
-export interface Look {
+interface Look {
   icon: string;
   color: string;
 }

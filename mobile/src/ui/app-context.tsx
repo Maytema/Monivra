@@ -32,7 +32,7 @@ export function useLedger(): LedgerData {
 // One part of the ledger: the component draws again only when that part changes (an unchanged part keeps
 // its identity), not on every change of the ledger. The part has to be a plain value or an object of the
 // ledger itself, never a new object.
-export function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
+function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
   const s = appStore();
   return useSyncExternalStore(s.subscribe, () => {
     const state = s.getState();
@@ -133,7 +133,7 @@ let present: (text: string, title?: string) => void = (text, title) => (title ? 
 export const setMessagePresenter = (show: (text: string, title?: string) => void): void => {
   present = show;
 };
-export const showMessage = (text: string, title?: string): void => present(text, title);
+const showMessage = (text: string, title?: string): void => present(text, title);
 
 // A refusal is also felt: the action did not happen.
 export function showError(t: Translator, error: unknown): void {

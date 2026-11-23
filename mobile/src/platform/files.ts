@@ -4,14 +4,6 @@ import { Directory, File, Paths } from "expo-file-system";
 import { now, perfLog } from "./perf.ts";
 import * as Sharing from "expo-sharing";
 
-// The text of a file the person picks, or null when they cancel.
-export async function pickTextFile(): Promise<string | null> {
-  const result = await DocumentPicker.getDocumentAsync({ type: ["application/json", "text/plain", "*/*"], copyToCacheDirectory: true, multiple: false });
-  if (result.canceled) return null;
-  const asset = result.assets[0];
-  if (!asset) return null;
-  return new File(asset.uri).text();
-}
 
 // The name and text of a file the person picks, or null when they cancel.
 export async function pickFile(): Promise<{ name: string; text: string } | null> {

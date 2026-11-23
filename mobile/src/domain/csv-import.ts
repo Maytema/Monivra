@@ -11,13 +11,13 @@ import { DomainError } from "./errors.ts";
 import { isPlanned, scheduledForm, validateOp, type Lookup } from "./operations.ts";
 import type { Account, Category, LedgerData, Minor, Operation } from "./types.ts";
 
-export const MAX_ROWS = 100000;
-export const MAX_CELL = 20000;
+const MAX_ROWS = 100000;
+const MAX_CELL = 20000;
 const SEPARATOR = " / ";
 // Colours given to what an import makes (js/core/constants.js PALETTE).
 const PALETTE = ["#9d00b5", "#7051df", "#4857c7", "#31afd0", "#3a484e", "#f36c08", "#e1c735", "#b13d81", "#22ad89", "#bd5b31", "#00aac7", "#e03366", "#93a334", "#666666", "#abc3ca", "#306b44"];
 
-export type FieldKey = "date" | "amount" | "type" | "currency" | "from" | "to" | "account" | "category" | "comment" | "tags" | "to_amount" | "to_currency";
+type FieldKey = "date" | "amount" | "type" | "currency" | "from" | "to" | "account" | "category" | "comment" | "tags" | "to_amount" | "to_currency";
 // The fields an operation can get from a column: [key, required, label].
 export const FIELDS: readonly [FieldKey, boolean, string][] = [
   ["date", true, "Date"],
@@ -55,11 +55,11 @@ const TYPES: Record<Operation["type"], string[]> = {
 };
 
 // A reason as English text (a key of the translation table) with its values.
-export interface Reason {
+interface Reason {
   text: string;
   params?: Record<string, string | number>;
 }
-export class CsvProblem extends DomainError {}
+class CsvProblem extends DomainError {}
 
 // ---- Reading the table ----
 
@@ -174,10 +174,9 @@ export function guessColumns(headers: readonly string[]): Mapping {
   return mapping;
 }
 
-export type DateOrder = "ymd" | "dmy" | "mdy";
+type DateOrder = "ymd" | "dmy" | "mdy";
 export const DATE_ORDERS: readonly DateOrder[] = ["ymd", "dmy", "mdy"];
 export const DATE_EXAMPLES: Record<DateOrder, string> = { ymd: "2026-03-04", dmy: "04.03.2026", mdy: "03/04/2026" };
-export const DECIMALS = [".", ","] as const;
 export interface Formats {
   dateOrder: DateOrder;
   decimal: "." | ",";
@@ -215,7 +214,7 @@ export function guessFormats(table: Table, mapping: Mapping): Formats {
 
 // ---- Reading the values of a row ----
 
-export function parseDateText(text: string, order: DateOrder): string | null {
+function parseDateText(text: string, order: DateOrder): string | null {
   const parts = (text.trim().split(/[ T]/)[0] ?? "").split(/[./-]/);
   if (parts.length !== 3 || !parts.every((x) => /^\d{1,4}$/.test(x))) return null;
   const [a, b, c] = parts as [string, string, string];
@@ -227,7 +226,7 @@ export function parseDateText(text: string, order: DateOrder): string | null {
 
 // An amount as written in the file into minor units, or a reason it cannot be read. A number is never
 // read as another one: what does not fit gives a reason instead.
-export function parseAmountText(text: string, decimal: "." | ","): { minor: Minor; negative: boolean; reason?: undefined } | { reason: string; minor?: undefined; negative?: undefined } {
+function parseAmountText(text: string, decimal: "." | ","): { minor: Minor; negative: boolean; reason?: undefined } | { reason: string; minor?: undefined; negative?: undefined } {
   let s = text.trim();
   let negative = false;
   if (/^\(.*\)$/.test(s)) [negative, s] = [true, s.slice(1, -1)];
@@ -367,7 +366,7 @@ export function readRecords(table: Table, mapping: Mapping, formats: Formats): C
 // Case does not matter, accents do (localeCompare with sensitivity "accent" in the first application).
 const same = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
 export const categoryPath = (c: Category, all: readonly Category[]): string => (c.parent ? `${all.find((x) => x.id === c.parent)?.name}${SEPARATOR}${c.name}` : c.name);
-export const categoryKey = (type: string, name: string): string => `${type}\u0000${name}`;
+const categoryKey = (type: string, name: string): string => `${type}\u0000${name}`;
 
 export interface References {
   accounts: { name: string; currencies: Set<string>; rows: number }[];

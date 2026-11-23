@@ -6,8 +6,8 @@ export type Minor = number;
 export type LocalDate = string;
 export type LocalTime = string;
 
-export type AccountType = "Regular" | "Savings" | "Debt";
-export type DebtDirection = "Owe me" | "I owe";
+type AccountType = "Regular" | "Savings" | "Debt";
+type DebtDirection = "Owe me" | "I owe";
 
 export interface Account {
   id: string;
@@ -31,7 +31,7 @@ export interface Account {
   showIncome: boolean;
 }
 
-export type CategoryType = "income" | "expense";
+type CategoryType = "income" | "expense";
 
 export interface Category {
   id: string;
@@ -44,7 +44,7 @@ export interface Category {
   archived: boolean;
 }
 
-export type OperationType = "income" | "expense" | "transfer" | "adjustment";
+type OperationType = "income" | "expense" | "transfer" | "adjustment";
 
 // A tax or a commission: a percent of the amount, or a fixed value in major units (as in format v1).
 export interface Fee {
@@ -55,7 +55,7 @@ export interface Fee {
 }
 
 // Which scheduled payment and which of its occurrences an operation settles.
-export interface ScheduleLink {
+interface ScheduleLink {
   id: string;
   date: LocalDate;
   postedAt?: string;

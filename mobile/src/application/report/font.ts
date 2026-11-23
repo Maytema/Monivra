@@ -19,7 +19,7 @@ export interface ReportFont {
 }
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-export function fromBase64(text: string): Uint8Array {
+function fromBase64(text: string): Uint8Array {
   const clean = text.replace(/[^A-Za-z0-9+/]/g, "");
   const out = new Uint8Array(Math.floor((clean.length * 3) / 4));
   let bits = 0,

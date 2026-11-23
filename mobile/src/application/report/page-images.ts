@@ -3,7 +3,7 @@
 // progress dialog; the rest go on in the background, also after the preview is closed, so scrolling never
 // waits and opening the preview again is at once. `render` is the phone's renderer: pages [from, from+count)
 // as picture addresses.
-export type RenderPages = (from: number, count: number) => Promise<string[]>;
+type RenderPages = (from: number, count: number) => Promise<string[]>;
 
 // How many pages each call to the renderer makes in the background: small, so a stop is quick.
 const BATCH = 2;

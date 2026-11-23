@@ -1,5 +1,5 @@
 // Short written instructions: a list of guides, each made of questions with their answers (js/screens/guides.js).
-export interface Guide { id: string; title: string; about: string; sections: readonly (readonly [string, string])[] }
+interface Guide { id: string; title: string; about: string; sections: readonly (readonly [string, string])[] }
 export const GUIDES: readonly Guide[] = [
   {
     "id": "operations",

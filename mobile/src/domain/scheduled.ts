@@ -24,7 +24,7 @@ export function reminderForTime(reminder: Reminder | null, oldTime: LocalTime | 
 }
 
 // The next occurrence of a rule, or null when it is finished.
-export function nextDate(item: ScheduledPayment): LocalDate | null {
+function nextDate(item: ScheduledPayment): LocalDate | null {
   const r = item.recur;
   if (!r || !(r.every > 0)) return null;
   if (r.remaining !== null && r.remaining <= 1) return null;
@@ -57,10 +57,10 @@ export function advanced(item: ScheduledPayment): ScheduledPayment | null {
 }
 
 // Due: its day came and, when it has a time, that time too.
-export const isDue = (item: ScheduledPayment, day: LocalDate, time: LocalTime): boolean =>
+const isDue = (item: ScheduledPayment, day: LocalDate, time: LocalTime): boolean =>
   item.date < day || (item.date === day && (!item.time || item.time <= time));
 
-export const occurrenceId = (paymentId: string, date: LocalDate): string => `${paymentId}~${date}`;
+const occurrenceId = (paymentId: string, date: LocalDate): string => `${paymentId}~${date}`;
 
 const isPosted = (tx: LedgerTx, item: ScheduledPayment, occurrence: LocalDate): boolean =>
   tx.data.ops.some((o) => o.fromSchedule?.id === item.id && o.fromSchedule.date === occurrence);
@@ -108,7 +108,7 @@ function catchUp(tx: LedgerTx, start: ScheduledPayment, day: LocalDate, post: bo
 const CATCH_UP_LIMIT = 31;
 const CATCH_UP_DAYS = 365;
 
-export interface DueEntry {
+interface DueEntry {
   item: ScheduledPayment;
   count: number;
   since: LocalDate;

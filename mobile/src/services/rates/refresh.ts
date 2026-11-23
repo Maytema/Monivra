@@ -14,14 +14,14 @@ export interface RateUpdateState {
   errors: { provider: string; message: string }[];
 }
 
-export interface RateChange {
+interface RateChange {
   code: string;
   from: number;
   to: number;
   provider: string;
 }
 
-export interface MergeResult {
+interface MergeResult {
   rates: Rates;
   changed: RateChange[];
   skipped: { code: string; reason: "kept by hand" | "suspicious jump" }[];
@@ -61,7 +61,7 @@ export function mergeQuotes(current: Rates, quotes: readonly RateQuote[], keptBy
   return { rates, changed, skipped, sources };
 }
 
-export interface RefreshOptions {
+interface RefreshOptions {
   providers: readonly RateProvider[];
   fetcher: Fetcher;
   current: Rates;

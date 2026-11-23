@@ -20,7 +20,7 @@ interface Touch {
   nativeEvent: { pageX: number; pageY: number };
 }
 
-export interface SortableProps<T> {
+interface SortableProps<T> {
   items: readonly T[];
   keyOf: (item: T) => string;
   // `ignoreTap()` is true for a moment after a drag: the press that ends it must not open anything.

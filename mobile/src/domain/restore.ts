@@ -80,7 +80,7 @@ function separateCategories(current: LedgerData, source: LedgerData): number {
   return moved.size;
 }
 
-export interface ListReport {
+interface ListReport {
   added: number;
   changed: number;
   same: number;
@@ -129,7 +129,7 @@ export interface RestoreSummary {
   after: Contents | null;
 }
 
-export interface RestorePlan {
+interface RestorePlan {
   next: LedgerData;
   summary: RestoreSummary;
   problem: DataProblem | null;

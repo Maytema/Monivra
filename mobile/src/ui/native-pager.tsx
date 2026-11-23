@@ -8,17 +8,17 @@
 // swipes). Only the current page and its two neighbours draw their contents; a page keeps its place (its key) in
 // the row, so a swipe does not build the pages again — it only draws the one new neighbour.
 //
-// `x` keeps the meaning the period bar and the tabs read (pan-pager.tsx): the offset of the pages in px, the page in
+// `x` keeps the meaning the period bar and the tabs read (pager-motion.ts): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
 import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
 import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
-import { PagerContext } from "./pan-pager.tsx";
+import { PagerContext } from "./pager-motion.ts";
 import { pagerState } from "./gesture-lock.ts";
 
-export { usePagerMotion } from "./pan-pager.tsx";
+export { usePagerMotion } from "./pager-motion.ts";
 
 // Rows inside the pager keep their press while the finger moves a little (a long press), not while it travels: the
 // hand-made pager needed a huge offset (its pages moved by a transform the touch system did not see); the native

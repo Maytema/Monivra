@@ -217,7 +217,7 @@ function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big
   );
 }
 
-export function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
+function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
   const t = useT();
   const shake = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -238,7 +238,7 @@ export function PinDots({ length, value, failed = false, big = false }: { length
   );
 }
 
-export function PinPad({ length, value, onChange, disabled = false, failed = false, left, big = false, hideDots = false }: { big?: boolean; hideDots?: boolean; length: number; value: string; onChange: (v: string) => void; disabled?: boolean; failed?: boolean; left?: ReactNode }) {
+function PinPad({ length, value, onChange, disabled = false, failed = false, left, big = false, hideDots = false }: { big?: boolean; hideDots?: boolean; length: number; value: string; onChange: (v: string) => void; disabled?: boolean; failed?: boolean; left?: ReactNode }) {
   const p = usePalette();
   const t = useT();
   const press = (k: string) => onChange(k === "⌫" ? value.slice(0, -1) : value.length < length ? value + k : value);

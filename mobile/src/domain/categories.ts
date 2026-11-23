@@ -43,7 +43,7 @@ function mergeCategory(tx: LedgerTx, id: string, target: string): void {
 }
 
 // Nests a category under another one, or merges it into another one.
-export function moveCategory(tx: LedgerTx, id: string, target: string, nest: boolean): { categories: string[] } {
+function moveCategory(tx: LedgerTx, id: string, target: string, nest: boolean): { categories: string[] } {
   const a = categoryById(tx.data, id),
     b = categoryById(tx.data, target);
   if (!a || !b || a.id === b.id || a.type !== b.type || (nest && b.parent) || (!nest && b.parent && a.parent !== b.parent))

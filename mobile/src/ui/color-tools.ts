@@ -59,7 +59,7 @@ function oklchToRgb(L: number, C: number, h: number): [number, number, number] |
   return rgb.every((v) => v >= -1e-4 && v <= 1 + 1e-4) ? rgb : null;
 }
 
-export function oklchToHex(L: number, C: number, h: number): string {
+function oklchToHex(L: number, C: number, h: number): string {
   let low = 0;
   let high = C;
   let rgb = oklchToRgb(L, C, h);

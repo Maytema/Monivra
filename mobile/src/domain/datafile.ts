@@ -7,7 +7,7 @@ import { defaultRates } from "./currencies.ts";
 import { isValidDate, isValidTime } from "./dates.ts";
 import type { Account, LedgerData, Operation, ScheduledPayment, Settings } from "./types.ts";
 
-export const SUPPORTED_LANGUAGES = ["en", "ru"];
+const SUPPORTED_LANGUAGES = ["en", "ru"];
 export const MAX_FILE_BYTES = 20 * 1024 * 1024;
 const MAX_NODES = 4_000_000;
 const MAX_DEPTH = 12;
@@ -15,7 +15,7 @@ const MAX_INTERVAL = 365;
 const FORBIDDEN_KEYS = new Set(["__proto__", "constructor", "prototype"]);
 const KNOWN_KEYS = ["schema", "accounts", "categories", "ops", "tags", "scheduled", "budgets", "backups", "settings", "rates"] as const;
 
-export function defaultSettings(language: string): Settings {
+function defaultSettings(language: string): Settings {
   const lang = SUPPORTED_LANGUAGES.includes(language) ? language : "en";
   return {
     accent: "#a000b8",
@@ -301,7 +301,7 @@ export class FileProblem extends Error {
   }
 }
 
-export interface DataFileMeta {
+interface DataFileMeta {
   app?: string;
   build?: string;
   exportedAt?: string;

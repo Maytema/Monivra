@@ -12,7 +12,7 @@ const MARGIN = 40;
 const TOP = 74;
 const BOTTOM = PAGE.height - 56;
 const WIDTH = PAGE.width - MARGIN * 2;
-export const FONT_FAMILY = "MonivraReport";
+const FONT_FAMILY = "MonivraReport";
 
 const INK = "#252127";
 const MUTED = "#6a636e";
@@ -37,7 +37,7 @@ export type Command =
   | { t: "dot"; x: number; y: number; r: number; color: string }
   | { t: "arc"; x: number; y: number; r: number; inner: number; from: number; to: number; color: string };
 
-export interface Ctx {
+interface Ctx {
   data: LedgerData;
   t: Translator;
 }

@@ -43,14 +43,6 @@ function IconValue({ icon, text }: { icon: string; text: string }) {
   );
 }
 
-export function HeaderAdd({ onPress }: { onPress: () => void }) {
-  const p = usePalette();
-  return (
-    <Pressable onPress={onPress} hitSlop={12} style={{ paddingHorizontal: space.l }}>
-      <Icon name="plus" color={p.accentInk} />
-    </Pressable>
-  );
-}
 
 const TYPES = [
   { type: "Regular", text: "Cash, card or a bank account. For everyday income and expenses.", icon: "card", color: "#3f7ff0" },

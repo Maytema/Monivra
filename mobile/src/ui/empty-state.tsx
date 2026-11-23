@@ -19,7 +19,7 @@ import { Pivot } from "./svg-pivot.tsx";
 import { markPlayed, onActed, shouldPlay } from "./quiet.ts";
 import { onPictureStop } from "./picture-stop.ts";
 
-export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
+type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
 
 const AnimatedG = Animated.createAnimatedComponent(G);
 const AnimatedPath = Animated.createAnimatedComponent(Path);

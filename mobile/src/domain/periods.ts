@@ -3,7 +3,7 @@ import { addDays, parseDate, toIsoDate } from "./dates.ts";
 import { transferRoles } from "./ledger.ts";
 import type { LedgerData, LocalDate, Operation } from "./types.ts";
 
-export type PeriodMode = "day" | "week" | "month" | "year" | "range" | "all";
+type PeriodMode = "day" | "week" | "month" | "year" | "range" | "all";
 
 export interface Period {
   mode: PeriodMode;
@@ -12,7 +12,7 @@ export interface Period {
   to?: LocalDate;
 }
 
-export interface PeriodSettings {
+interface PeriodSettings {
   weekStart: number;
   monthStart: number;
 }

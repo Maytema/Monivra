@@ -13,7 +13,7 @@ export interface SqlDriver {
   all<T = Record<string, SqlValue>>(sql: string, params?: readonly SqlValue[]): T[];
 }
 
-export interface Migration {
+interface Migration {
   version: number;
   sql: string;
 }
