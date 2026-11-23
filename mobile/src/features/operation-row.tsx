@@ -1,7 +1,7 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { countRender } from "../platform/perf.ts";
+import { countRender, selfTime } from "../platform/perf.ts";
 import { memo } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -50,6 +50,7 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
 // or its selection changes — not on every scroll, selection of another row or saved operation.
 export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
   countRender("operation row");
+  const done = selfTime("row body");
   const data = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
@@ -129,7 +130,9 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   );
   // The row is lit when it is what was just saved or looked for; a page that lights more than the row (the
   // scheduled payments, with the details under it) does it itself.
-  return spot ? <Spot id={op.id}>{row}</Spot> : row;
+  const out = spot ? <Spot id={op.id}>{row}</Spot> : row;
+  done();
+  return out;
 });
 
 // Net result of one day (income minus expenses) in the main currency.
@@ -145,6 +148,7 @@ function dayTotal(data: Pick<LedgerData, "accounts" | "rates" | "settings">, ops
 // The date of a group with its day total, and a line under it.
 export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
   countRender("day head");
+  const done = selfTime("day head body");
   const data = useLedgerParts("accounts", "rates", "settings");
   const p = usePalette();
   const t = useT();
@@ -152,7 +156,7 @@ export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops:
   const weekday = t.weekday(date, "long");
   const monthYear = t.monthYear(date);
   const total = dayTotal(data, ops);
-  return (
+  const head = (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 7, paddingTop: 23, paddingBottom: 15, borderBottomWidth: 1, borderBottomColor: p.line, backgroundColor: p.bg }}>
       <Text style={{ color: p.ink, fontSize: 28 }}>{Number(date.slice(-2))}</Text>
       <Text style={{ flexShrink: 1, color: p.ink, fontSize: 15, lineHeight: 21 }}>{`${weekday.charAt(0).toUpperCase()}${weekday.slice(1)}\n${monthYear}`}</Text>
@@ -161,6 +165,8 @@ export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops:
       </View>
     </View>
   );
+  done();
+  return head;
 });
 
 // The strip under the period bar while filters are on.

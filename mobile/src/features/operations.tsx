@@ -1,8 +1,7 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
-import { Profiled } from "../platform/profiled.tsx";
+import { countRender, now, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { usePageReady } from "../ui/pager.tsx";
@@ -197,6 +196,7 @@ export function OperationsScreen() {
 // page depends on whether it is the current one, so a swipe does not draw the pages that are already there).
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
   countRender("operations page");
+  const done = selfTime("page body");
   const began = PERF_BUILD ? now() : 0;
   useLayoutEffect(() => {
     if (PERF_BUILD) perfLog("operations page built", now() - began);
@@ -272,11 +272,11 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
       // padding, and with it there its first letters were cut at the edge of the screen.
       item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
-          <Profiled id="day head"><DayHead date={item.date} ops={item.ops} /></Profiled>
+          <DayHead date={item.date} ops={item.ops} />
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
-          <Profiled id="row"><OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} /></Profiled>
+          <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
         </View>
       ),
     [selection, selectedSet, onPress, onLongPress, p.bg],
@@ -284,8 +284,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
   const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
-  return (
-    <Profiled id="ops page">
+  const page = (
     <View style={{ flex: 1 }}>
       <FlashList
         ref={list}
@@ -310,8 +309,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), ready()) : undefined}
       />
     </View>
-    </Profiled>
   );
+  done();
+  return page;
 });
 
 // Speed-check build: the time of one part of drawing a page.

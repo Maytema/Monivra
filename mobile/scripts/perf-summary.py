@@ -107,15 +107,18 @@ for move in moves:
         f"{f.get('90th percentile', '-'):>6} {(f'{shown[0]:.0f}ms' if shown else '-'):>7}"
     )
 
-# What React spent drawing (React.Profiler of the speed-check build): per move and part, the commits, the total and the
-# longest, in ms ("ops page" holds its rows, a row its icons: the ids nest, so the totals overlap).
+# What the components' own bodies took (selfTime of the speed-check build; children not included; React.Profiler does not run in a
+# release build): per move and part, the draws and the total ms. The rest of a stall is the library's drawing (react-native-svg,
+# FlashList) and the native commit.
 print()
-print(f"{'React drawing (Profiler)':62} {'part':>9} {'commits':>7} {'total':>8} {'longest':>8}")
+print(f"{'Component bodies (own time)':62} {'part':>14} {'draws':>6} {'total':>8}")
 for move in moves:
     parts = {}
     for n in move["notes"]:
-        m = re.match(r"profile (.+?) (mount|update|nested-update) ([\d.]+)ms", n)
+        m = re.match(r"render time (.+?) (\d+) draws ([\d.]+)ms", n)
         if m:
-            parts.setdefault(m.group(1), []).append(float(m.group(3)))
-    for part, values in sorted(parts.items()):
-        print(f"{move['name'][:62]:62} {part:>9} {len(values):7d} {sum(values):7.0f}ms {max(values):7.0f}ms")
+            row = parts.setdefault(m.group(1), [0, 0.0])
+            row[0] += int(m.group(2))
+            row[1] += float(m.group(3))
+    for part, (draws, ms) in sorted(parts.items()):
+        print(f"{move['name'][:62]:62} {part:>14} {draws:6d} {ms:7.0f}ms")

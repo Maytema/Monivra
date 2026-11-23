@@ -100,6 +100,26 @@ export function probeEngine(): void {
 // part that keeps drawing while nothing happens shows up by name.
 const renders = new Map<string, number>();
 let flushing = false;
+// Speed-check build: the time a component's own function body takes (hooks, formatting, building its elements; not its
+// children, which draw after it): `const done = selfTime("row"); ... done();` just before the return. Written each second as
+// "render time <name> <n> draws <ms> ms" (React.Profiler does not run in a release build).
+const spent = new Map<string, { n: number; ms: number }>();
+export function selfTime(name: string): () => void {
+  if (!PERF_BUILD) return () => undefined;
+  const start = now();
+  return () => {
+    const row = spent.get(name) ?? { n: 0, ms: 0 };
+    row.n += 1;
+    row.ms += now() - start;
+    spent.set(name, row);
+  };
+}
+if (PERF_BUILD)
+  setInterval(() => {
+    for (const [key, row] of spent) console.log(`[perf] render time ${key} ${row.n} draws ${row.ms.toFixed(1)}ms`);
+    spent.clear();
+  }, 1000);
+
 export function countRender(name: string): void {
   if (!PERF_BUILD) return;
   renders.set(name, (renders.get(name) ?? 0) + 1);
