@@ -1,6 +1,6 @@
 // Speed-check build: a small touch box at the top left that moves to the next setting of perfFlags (see perf.ts). Nothing in other builds.
-import { Pressable } from "react-native";
-import { nextPerfSetting, PERF_BUILD } from "./perf.ts";
+import { Pressable } from "./pressable.tsx";
+import { nextPerfSetting, PERF_BUILD } from "../platform/perf.ts";
 
 export function PerfSwitch() {
   if (!PERF_BUILD) return null;
