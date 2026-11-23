@@ -42,16 +42,25 @@ function Squishy({ squish, style, onPressIn, onPressOut, children, ...props }: P
 // A touch held longer than a long press (a person who pressed, thought better of it and waited) is not a tap: letting
 // go does nothing. A press with its own long-press action never taps after it either (React Native's rule).
 const HELD_MS = 450;
+// A touch that ended far from where it began is a swipe, not a tap, whatever React Native reports: the emulator's `input swipe`
+// (and a flick while the JavaScript thread is stalled) can reach a tile as a touch down and a touch up with no move between,
+// and the tile then opened its page (build 140: the Statistics tile "Scheduled transfers" pushed /scheduled during a swipe run).
+const TRAVEL = 16;
 function Held({ feedback, onPressIn, onPress, ...props }: PressableProps & { feedback: boolean }) {
   const since = useRef(0);
+  const from = useRef({ x: 0, y: 0 });
   return (
     <NativePressable
       {...props}
       onPressIn={(e: GestureResponderEvent) => {
         since.current = Date.now();
+        from.current = { x: e.nativeEvent.pageX, y: e.nativeEvent.pageY };
         onPressIn?.(e);
       }}
-      onPress={onPress && !feedback ? (e: GestureResponderEvent) => (Date.now() - since.current > HELD_MS || pagerBusy() ? undefined : onPress(e)) : onPress}
+      onPress={onPress && !feedback ? (e: GestureResponderEvent) => {
+        const moved = Math.hypot(e.nativeEvent.pageX - from.current.x, e.nativeEvent.pageY - from.current.y) > TRAVEL;
+        return Date.now() - since.current > HELD_MS || pagerBusy() || moved ? undefined : onPress(e);
+      } : onPress}
     />
   );
 }

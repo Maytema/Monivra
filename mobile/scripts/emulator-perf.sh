@@ -308,6 +308,9 @@ fast_block() { # $1 tab centre, $2 name
   stop_record "20-$2-10-fast"
   begin "$2: 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
   log "memory after $2: $(pss) kB"
+  # A swipe must never open a page: the tab bar has to be on the screen after each block (build 140: a swipe over the
+  # Statistics tile "Scheduled transfers" opened the Scheduled page and every later step ran on it).
+  if [ "$(shown_tab)" = none ]; then log "FAIL: after the swipes in $2 no tab is shown (a page was opened)"; shot "24x-left-tabs-$2" 0; back; adb shell input tap $1; sleep 2; fi
 }
 fast_block "$ops" operations
 record 21-operations-30-fastest 20
@@ -331,6 +334,7 @@ log "memory at the end: $(pss) kB"
 
 # A new expense with the keys, saved: the list must take it without drawing everything again.
 adb shell input tap $ops; sleep 2
+log "before the add menu: shown $(shown_tab) (expected Operations)"
 xy=$(where "New operation")
 begin "open the add menu"; adb shell input tap $xy; finish 3
 begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2; tap "Expenses" 0; finish 2
