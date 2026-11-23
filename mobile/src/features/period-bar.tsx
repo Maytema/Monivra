@@ -76,7 +76,8 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   const motion = usePagerMotion();
   const [room, setRoom] = useState(0);
   const fixed = !canShiftPeriod(period);
-  const shift = (n: 1 | -1) => setView({ period: shiftPeriod(period, n, data.settings) });
+  // Paging (arrows, swipes) is not the person acting: the empty-state pictures keep replaying (ui/quiet.ts). Picking in the dialog is.
+  const shift = (n: 1 | -1) => setView({ period: shiftPeriod(period, n, data.settings) }, false);
   const arrow = (n: 1 | -1, icon: string, label: string) => (
     <Pressable accessibilityRole="button" accessibilityLabel={t.t(label)} disabled={fixed} onPress={() => shift(n)} style={{ width: 42, height: 42, alignItems: "center", justifyContent: "center", opacity: fixed ? 0.4 : 1 }}>
       <Icon name={icon} size={22} color={p.ink} />
@@ -163,7 +164,7 @@ export function PeriodPager({ header, render, around }: { header?: ReactNode; re
       onMove={(steps) => {
         let next = getView().period;
         for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);
-        setView({ period: next });
+        setView({ period: next }, false);
       }}
     />
   );

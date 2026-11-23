@@ -41,15 +41,17 @@ from scipy.signal import savgol_filter
 FPS = 30.0
 FIRST, LAST = 19, 111          # frames fitted
 NOTE_START = 16                # the frame at which the note's clock starts (t = 0)
-OUT_FROM, OUT_TO = 20, 108     # frames written out (every one: the note moves fast)
+OUT_FROM, OUT_TO = 20, 111     # frames written out (every one: the note moves fast; the note rests from about frame 108)
 REST = 110                     # a frame at rest, used to measure the bulges and the ellipse
 STROKE = 23.0
 HW = STROKE / 2
 TOP = 300                      # the note lives below this row of the recording
-BULGE_RADIUS = 25.0            # measured on the rest frame: 23-27 for the four bulges
-# Where the bulge sits on each edge (long edge A, short edge P1-P2, long edge B, short edge P3-P0) as a fraction of the
-# edge's length, measured on the rest frame; the shape is symmetric by a half turn, so the pairs agree.
-BULGE_F = (0.93, 0.79, 0.93, 0.79)
+# The four bulges, one per edge (long edge A, short edge P1-P2, long edge B, short edge P3-P0): where each sits as a fraction of its
+# edge's length, its radius and how far its circle's centre lies inside the stroke's inner side (negative: outside it, a shallower
+# arc), measured on the rest frame (frame 110, fits of f, r, h to the green outside the stroke). They start every frame's search.
+BULGE_F = (0.97, 0.88, 0.96, 0.88)
+BULGE_R = (26.0, 29.0, 26.0, 29.0)
+BULGE_H = (-5.0, 1.5, -3.0, 4.5)
 ELLIPSE = (26.4, 36.4)         # half axes measured on the rest frame (minor, major)
 K = 0.5523
 
@@ -411,112 +413,432 @@ def boundary_error(q, filled, weight):
     return float(d.mean()), float(np.percentile(d, 95))
 
 
-RING_STROKE = 25.0
-SPIKE = 2.5                    # times the median acceleration of the outline numbers: above it a frame is replaced
-MIN_HIDDEN = 8                 # degrees: a shorter hidden stretch is not a split
+# ---- 0.3.14: dense tracking of the note ------------------------------------------------------------------
+# The note is tracked as two long edges of N_EDGE points each (same arc-length fractions in every frame) and two straight short
+# edges. Every frame starts from its own two-cubic fit and each point is moved along the edge's normal to where the
+# recording's stroke is: the outer boundary of the green stroke (a stroke is 23 wide in every frame, measured: median 23.0-23.2)
+# and, where the inner boundary is clean (no bulge, no ring), the inner one too. Points the ring or a bulge hides are filled
+# from their neighbours along the edge and in time; then every coordinate is smoothed over time (Savitzky-Golay, 5 frames).
 
+N_EDGE = 41     # points per long edge (40 segments)
+STROKE_W = 23.0
+HWD = STROKE_W / 2
 
-def ring_labels(row, q, yellow):
-    """For each whole degree of the ring's middle circle: 0 = outside the note, 1 = inside the note's reach and hidden by it
-    (the recording shows no ring paint there: the ring is behind the note), 2 = visible with its middle on the note (ring in front).
-    Inside: the ring's band touches the note's silhouette (its filled outline and half the stroke)."""
-    r = max(1.0, row[3] - RING_STROKE / 2)
-    ang = np.radians(np.arange(360))
-    centre = np.stack([row[1] + r * np.cos(ang), row[2] + r * np.sin(ang)], 1)
-    poly = silhouette_parts(q).astype(np.float32)
-    reach = HW + RING_STROKE / 2
-    depth = np.array([cv2.pointPolygonTest(poly.reshape(-1, 1, 2), (float(x), float(y)), True) for x, y in centre])
-    inside = depth > -reach
-    # The ring's middle is on the note itself (its outline or its inside) only from -HW outwards; between that and the reach
-    # only the edge of the ring's band touches the note, and a ring behind the note shows what the recording shows there.
-    on_note = depth > -HW
-    labels = np.zeros(360, int)
-    for k in range(360):
-        if not inside[k]:
+def resample(pts, n):
+    seg = np.linalg.norm(np.diff(pts, axis=0), axis=1)
+    d = np.concatenate([[0], np.cumsum(seg)])
+    u = np.linspace(0, d[-1], n)
+    return np.stack([np.interp(u, d, pts[:, 0]), np.interp(u, d, pts[:, 1])], 1)
+
+def tangents(pts):
+    t = np.gradient(pts, axis=0)
+    return t / np.maximum(np.linalg.norm(t, axis=1, keepdims=True), 1e-9)
+
+def outward_of(t):
+    # g.inward(t) = (-ty, tx) points into the note for the clockwise outline; outward is its negative (edge B runs the same way round)
+    return np.stack([t[:, 1], -t[:, 0]], 1)
+
+def alpha_image(im):
+    return np.clip((255 - im[..., 2].astype(np.float32)) / 239, 0, 1)
+
+def yellow_image(im):
+    hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    y = ((hsv[..., 0] > 12) & (hsv[..., 0] < 34) & (hsv[..., 1] > 120) & (hsv[..., 2] > 180)).astype(np.uint8)
+    return y
+
+def profiles(img, pts, nrm, half=24.0, step=0.5):
+    s = np.arange(-half, half + 1e-6, step)
+    P = pts[:, None, :] + s[None, :, None] * nrm[:, None, :]
+    v = cv2.remap(img, P[..., 0].astype(np.float32).reshape(-1, 1).copy(), P[..., 1].astype(np.float32).reshape(-1, 1).copy(), cv2.INTER_LINEAR)
+    return s, v.reshape(len(pts), len(s))
+
+def measure(alpha, yel_d, pts, nrm):
+    """Per point: offset of the stroke's centre along the outward normal (nan when unknown)."""
+    s, V = profiles(alpha, pts, nrm)
+    _, Y = profiles(yel_d, pts, nrm)
+    out = np.full(len(pts), np.nan)
+    step = s[1] - s[0]
+    for k in range(len(pts)):
+        v, y = V[k], Y[k]
+        plateau = np.percentile(v[(s > -9) & (s < 9)], 90) if np.any(v[(s > -9) & (s < 9)] > 0.2) else 0
+        if plateau < 0.4:
             continue
-        seen = 0
-        for off in range(-6, 7):
-            x, y = row[1] + (r + off) * np.cos(ang[k]), row[2] + (r + off) * np.sin(ang[k])
-            xi, yi = int(round(x)), int(round(y))
-            if 0 <= yi < yellow.shape[0] and 0 <= xi < yellow.shape[1] and yellow[yi, xi]:
-                seen += 1
-        if seen > 6:
-            labels[k] = 2 if on_note[k] else 0       # visible with its middle off the note: nothing to put in front
-        else:
-            labels[k] = 1
-    # A hidden stretch of a few degrees is the ring crossing the note's edge, not the ring going behind it: the arcs' ends
-    # overlap by a couple of degrees, so a split that short would leave a notch in the ring.
-    n = len(labels)
-    k = 0
-    while k < n:
-        if labels[k] == 1 and labels[k - 1] != 1:
-            end = k
-            while labels[(end + 1) % n] == 1 and end - k < n:
-                end += 1
-            if end - k + 1 < MIN_HIDDEN:
-                for j in range(k, end + 1):
-                    labels[j % n] = 2
-            k = end + 1
-        else:
-            k += 1
-    return labels
-
-
-def ring_split(labels):
-    """The back arc as (start, end, range of the start, range of the end, clean) in unwrapped degrees, or None when no
-    angle is hidden. The back arc is the smallest arc holding every hidden angle; each end sits in the middle of the free
-    run (label 0) next to it, never on the note. `clean` is False when an end has no free run next to it, or when an
-    angle that is visible inside the note lies within the arc."""
-    hidden = np.flatnonzero(labels == 1)
-    if len(hidden) == 0:
-        return None
-    gaps = np.diff(np.concatenate([hidden, [hidden[0] + 360]]))
-    k = int(np.argmax(gaps))                       # the longest stretch without a hidden angle is left out of the arc
-    first = int(hidden[(k + 1) % len(hidden)])
-    last = int(hidden[k])
-    if last < first:
-        last += 360
-    free = lambda start, step: next((n for n in range(360) if labels[(start + step * (n + 1)) % 360] != 0), 359)
-    n_lo, n_hi = free(first, -1), free(last, +1)
-    g0 = first - (n_lo + 1) / 2 if n_lo else first - 0.5
-    g1 = last + (n_hi + 1) / 2 if n_hi else last + 0.5
-    r0 = (first - n_lo, first - 1) if n_lo else (g0, g0)
-    r1 = (last + 1, last + n_hi) if n_hi else (g1, g1)
-    visible_inside = any(labels[a % 360] == 2 for a in range(first, last + 1))
-    return g0, g1, r0, r1, bool(n_lo and n_hi and not visible_inside), bool(n_lo), bool(n_hi)
-
-
-def smooth_splits(raw):
-    """Moving median over five frames of the split angles; a smoothed angle is used only while it stays inside its own
-    frame's free run, else the middle of the run is kept."""
-    out = []
-    for i, item in enumerate(raw):
-        if item is None:
-            out.append(None)
+        lvl = 0.5 * plateau
+        sel = np.where((s >= -7) & (s <= 17) & (v >= lvl))[0]
+        if len(sel) == 0:
             continue
-        window = [raw[j] for j in range(max(0, i - 2), min(len(raw), i + 3)) if raw[j] is not None]
-        near = lambda a, base: base + ((a - base + 180) % 360) - 180      # the neighbour's angle next to this frame's
-        g0 = float(np.median([near(w[0], item[0]) for w in window]))
-        g1 = float(np.median([near(w[1], item[1]) for w in window]))
-        g1 += 360 if g1 < g0 else 0
-        out.append((g0 if item[2][0] <= g0 <= item[2][1] else item[0], g1 if item[3][0] <= g1 <= item[3][1] else item[1], item[5], item[6]))
+        jo = sel.max()
+        if jo + 1 >= len(s) or v[jo + 1] >= lvl or v[min(len(s) - 1, jo + 10)] > 0.25 * plateau:
+            continue
+        so = s[jo] + (v[jo] - lvl) / (v[jo] - v[jo + 1]) * step
+        # inner crossing
+        si = None
+        for j in range(jo, 0, -1):
+            if v[j] >= lvl and v[j - 1] < lvl and s[j] < so - 14:
+                si = s[j] - (v[j] - lvl) / (v[j] - v[j - 1]) * step
+                break
+        near = (s >= so - 11) & (s <= so + 11)
+        ycov_out = np.any(y[near])
+        co = so - HWD
+        if si is not None and so - si < 30:
+            ci = si + HWD
+            if abs((so - si) - STROKE_W) <= 1.5:
+                out[k] = (co + ci) / 2
+                continue
+            near_i = (s >= si - 11) & (s <= si + 11)
+            if not np.any(y[near_i]) and np.all(v[(s > si + 2) & (s < si + 18)] > 0.5 * plateau):
+                out[k] = ci
+                continue
+        if not ycov_out:
+            out[k] = co
     return out
 
 
-def ring_paths(row, split):
-    """The back and the front arc of one ring frame, each as two arcs of at most 180 degrees (same commands in every frame)."""
-    r = max(1.0, row[3] - RING_STROKE / 2)
+
+
+
+def line_intersection(p, d, q, e):
+    """Where the line p + s d meets q + u e (None when they are parallel)."""
+    m = np.array([[d[0], -e[0]], [d[1], -e[1]]])
+    if abs(np.linalg.det(m)) < 1e-6:
+        return None
+    s_, _ = np.linalg.solve(m, q - p)
+    return p + s_ * d
+
+
+def initial_edges(q):
+    es = q_edges(q)
+    return resample(dense(es[0], 80), N_EDGE), resample(dense(es[2], 80), N_EDGE)
+
+
+def short_line(alpha, yel, X, Y):
+    """A short edge (straight, from X to Y) moved onto the recording's stroke: its endpoints shifted along its normal by the
+    measured offset at both ends (a line fitted to the offsets of nine points between them); X and Y when too little is measured."""
+    u = (Y - X) / max(np.linalg.norm(Y - X), 1e-9)
+    n = np.array([u[1], -u[0]])                     # outward: the short edges run on the same turn as the long ones
+    fr = np.linspace(0.2, 0.8, 9)
+    pts = X[None, :] + fr[:, None] * (Y - X)[None, :]
+    d = measure(alpha, yel, pts, np.repeat(n[None, :], len(fr), 0))
+    ok = ~np.isnan(d)
+    if ok.sum() < 4:
+        return X, Y, False
+    b_, a_ = np.polyfit(fr[ok], d[ok], 1)
+    return X + a_ * n, Y + (a_ + b_) * n, True
+
+
+def end_direction(E, at_end):
+    seg = E[-6:] if at_end else E[:6]
+    c = seg.mean(0)
+    _, _, vt = np.linalg.svd(seg - c)
+    d = vt[0]
+    return c, d / np.linalg.norm(d)
+
+
+def track_frame(im, A, B, iters=4):
+    """One frame's two long edges moved onto the recording's stroke (and the corners onto the short edges' lines); also which
+    points were measured (not filled)."""
+    alpha = alpha_image(im)
+    yel = cv2.dilate(yellow_image(im), np.ones((3, 3), np.uint8)).astype(np.float32)
+    valid = {}
+    edge = {"A": A, "B": B}
+
+    def long_edges():
+        for name in ("A", "B"):
+            E = edge[name]
+            t = tangents(E)
+            n = outward_of(t)
+            d = measure(alpha, yel, E, n)
+            ok = ~np.isnan(d)
+            valid[name] = ok
+            if ok.sum() >= 4:
+                dd = np.interp(np.arange(len(E)), np.flatnonzero(ok), d[ok])
+                edge[name] = resample(E + 0.9 * dd[:, None] * n, N_EDGE)
+
+    def corners():
+        A, B = edge["A"], edge["B"]
+        # S1 runs from A's end to B's start, S2 from B's end to A's start
+        for ends in (("A", True, "B", False), ("B", True, "A", False)):
+            e1, end1, e2, end2 = ends
+            X, Y, found = short_line(alpha, yel, edge[e1][-1], edge[e2][0])
+            for name, at_end, P in ((e1, True, X), (e2, False, Y)):
+                corner_ok[(name, at_end)] = found
+                E = edge[name]
+                c, d = end_direction(E, at_end)
+                u = (Y - X) / max(np.linalg.norm(Y - X), 1e-9)
+                hit = line_intersection(c, d, X, u)
+                if hit is None or np.linalg.norm(hit - (E[-1] if at_end else E[0])) > 25:
+                    hit = P
+                E = E.copy()
+                E[-1 if at_end else 0] = hit
+                edge[name] = resample(E, N_EDGE)
+
+    corner_ok = {}
+    long_edges()
+    for _ in range(iters - 1):
+        corners()
+        long_edges()
+    corners()
+    # a corner is "measured" only when its short edge was
+    for (name, at_end), found in corner_ok.items():
+        valid[name][-1 if at_end else 0] = found
+    return edge["A"], edge["B"], valid["A"], valid["B"]
+
+
+
+def bulge_polygon(edge, f, r, h=0.0, n=40):
+    """The bulge as a polygon (for measuring: the same construction as `poly_bulge`)."""
+    half = float(np.sqrt(max(r * r - h * h, 1.0)))
+    _, _, length = poly_at(edge, f)
+    pa, da, _ = poly_at(edge, max(0.0, f - half / length))
+    pb, db, _ = poly_at(edge, min(1.0, f + half / length))
+    a, b = pa + HW * inward(da), pb + HW * inward(db)
+    mid, chord = (a + b) / 2, float(np.linalg.norm(b - a))
+    nrm = inward((b - a) / max(chord, 1e-9))
+    # the circle through a and b with radius r (as an SVG arc takes it; the chord is shorter than 2 sqrt(r^2 - h^2) when the bulge
+    # is cut by the end of its edge): its centre lies sqrt(r^2 - (chord/2)^2) from the chord's middle, on h's side
+    hh = float(np.sign(h) if h else 1.0) * float(np.sqrt(max(r * r - (chord / 2) ** 2, 0.0)))
+    c = mid + nrm * hh
+    a0, a1, apex = np.arctan2(*(a - c)[::-1]), np.arctan2(*(b - c)[::-1]), np.arctan2(*nrm[::-1])
+    d1 = (apex - a0 + np.pi) % (2 * np.pi) - np.pi
+    d2 = (a1 - apex + np.pi) % (2 * np.pi) - np.pi
+    th = np.concatenate([a0 + d1 * np.linspace(0, 1, n // 2), apex + d2 * np.linspace(0, 1, n // 2)])
+    return np.vstack([pa, a, c + r * np.stack([np.cos(th), np.sin(th)], 1), b, pb])
+
+
+def track_marks(im, A, B, last):
+    """The ellipse (centre, turn) and the four bulges (position on the edge, radius) of one frame as the recording shows them
+    (None where the ring or the note's gaps hide them); `last` is the previous frame's values, which the search starts from."""
+    green = (masks_of(im)[0] > 0).astype(np.uint8)
+    yel = cv2.dilate(yellow_image(im), np.ones((9, 9), np.uint8))
+    H, W = green.shape
+    poly = np.round(np.vstack([A, B])).astype(np.int32)
+    band = np.zeros((H, W), np.uint8)
+    cv2.polylines(band, [np.vstack([poly, poly[:1]])], False, 1, int(STROKE))
+    inner = (green & (1 - band)).astype(np.uint8)
+    es = poly_marks_edges(A, B)
+    # ellipse: the largest piece well inside the note
+    window = np.zeros((H, W), np.uint8)
+    cv2.fillPoly(window, [poly], 1)
+    window = cv2.erode(window, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * int(HW) + 9,) * 2))
+    blob = cv2.connectedComponentsWithStats((inner & window).astype(np.uint8))
+    ellipse = None
+    if blob[0] > 1:
+        k = int(np.argmax(blob[2][1:, 4])) + 1
+        area = blob[2][k, 4]
+        mask = (blob[1] == k).astype(np.uint8)
+        if 0.85 * np.pi * ELLIPSE[0] * ELLIPSE[1] < area < 1.15 * np.pi * ELLIPSE[0] * ELLIPSE[1] and not (mask & yel).any():
+            cnt, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            (ex, ey), axes, deg = cv2.fitEllipse(cnt[0])
+            if axes[0] > axes[1]:
+                deg += 90
+            ellipse = (ex, ey, np.radians(deg))
+    bulges = []
+    for e in range(4):
+        f0, r0 = last["bulges"][e]
+        best = None
+        for f in np.arange(max(0.6, f0 - 0.1), min(0.995, f0 + 0.06), 0.01):
+            for r in np.arange(max(14.0, r0 - 6), r0 + 6.1, 1.0):
+                shape = bulge_polygon(es[e], f, r, BULGE_H[e])
+                c = shape.mean(0)
+                x0, y0 = int(c[0]) - 60, int(c[1]) - 60
+                if x0 < 0 or y0 < 0 or x0 + 120 > W or y0 + 120 > H:
+                    continue
+                m = np.zeros((120, 120), np.uint8)
+                cv2.fillPoly(m, [np.round(shape - [x0, y0]).astype(np.int32)], 1)
+                m &= 1 - band[y0:y0 + 120, x0:x0 + 120]
+                ref = inner[y0:y0 + 120, x0:x0 + 120]
+                near = np.zeros((120, 120), np.uint8)
+                cv2.circle(near, (60, 60), int(r + 14), 1, -1)
+                a_, b_ = (m & near) > 0, (ref & near) > 0
+                iou = (a_ & b_).sum() / max(1, (a_ | b_).sum())
+                if best is None or iou > best[0]:
+                    best = (iou, f, r, bool(yel[y0:y0 + 120, x0:x0 + 120][near > 0].any()))
+        bulges.append(None if best is None or best[0] < 0.7 or best[3] else (best[1], best[2]))
+    return ellipse, bulges
+
+
+def masks_of(im):
+    hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    green = ((hsv[..., 0] > 60) & (hsv[..., 0] < 95) & (hsv[..., 1] > 120) & (hsv[..., 2] > 100)).astype(np.uint8)
+    green[:TOP] = 0
+    return green, None
+
+
+
+def fill_in_time(X, ok, max_gap=14):
+    """X: frames x points x 2, ok: frames x points. A point that was not measured in a frame takes its place from the frames
+    where it was (linear in time) when the gap is at most max_gap frames; longer gaps keep the along-the-edge fill."""
+    X = X.copy()
+    F, n = ok.shape
+    for k in range(n):
+        good = np.flatnonzero(ok[:, k])
+        if len(good) < 2:
+            continue
+        bad = np.flatnonzero(~ok[:, k])
+        for f in bad:
+            lo = good[good < f]
+            hi = good[good > f]
+            if len(lo) and len(hi) and hi[0] - lo[-1] <= max_gap + 1:
+                w = (f - lo[-1]) / (hi[0] - lo[-1])
+                X[f, k] = (1 - w) * X[lo[-1], k] + w * X[hi[0], k]
+    return X
+
+
+def poly_at(pts, f):
+    """Point, unit direction and length of a polyline at the fraction f of its length."""
+    seg = np.linalg.norm(np.diff(pts, axis=0), axis=1)
+    d = np.concatenate([[0], np.cumsum(seg)])
+    x = f * d[-1]
+    p = np.array([np.interp(x, d, pts[:, 0]), np.interp(x, d, pts[:, 1])])
+    k = min(max(int(np.searchsorted(d, x)), 1), len(pts) - 1)
+    return p, unit(pts[k] - pts[k - 1]), d[-1]
+
+
+def poly_bulge(pts, f, r, h=0.0):
+    """The bulge on a polyline edge: a circle of radius r whose centre lies h inside the stroke's inner side (h = 0: a half disc),
+    cut by that inner side. Its chord ends are points of the edge, so it follows the bending; a band runs from the chord out to the
+    stroke's centre line so that no sliver is left on a curved edge. The arc flag is fixed by the sign of h (a circle with its
+    centre inside gives more than half a disc), the same in every frame."""
+    half = float(np.sqrt(max(r * r - h * h, 1.0)))
+    _, _, length = poly_at(pts, f)
+    pa, da, _ = poly_at(pts, max(0.0, f - half / length))
+    pb, db, _ = poly_at(pts, min(1.0, f + half / length))
+    a, b = pa + HW * inward(da), pb + HW * inward(db)
+    large = 1 if h > 0 else 0
+    return f"M{pa[0]:.1f} {pa[1]:.1f}L{a[0]:.1f} {a[1]:.1f}A{r:.1f} {r:.1f} 0 {large} 0 {b[0]:.1f} {b[1]:.1f}L{pb[0]:.1f} {pb[1]:.1f}Z"
+
+
+def poly_marks_edges(A, B):
+    """The four edges as polylines in the order of `q_edges` (long A, short, long B, short)."""
+    return [A, np.array([A[-1], B[0]]), B, np.array([B[-1], A[0]])]
+
+
+def poly_outline(A, B):
+    f = lambda v: f"{v[0]:.1f} {v[1]:.1f}"
+    return "M" + f(A[0]) + "".join("L" + f(v) for v in A[1:]) + "L" + f(B[0]) + "".join("L" + f(v) for v in B[1:]) + "Z"
+
+
+def poly_polygon(A, B):
+    return np.vstack([A, B])
+
+
+def poly_middle(A, B):
+    pa, da, _ = poly_at(A, 0.5)
+    pb, db, _ = poly_at(B, 0.5)
+    d = da - db
+    return (pa + pb) / 2, float(np.arctan2(d[1], d[0]))
+
+
+# ---- the ring: thickness from the recording, split from the note's own outline ---------------------------------
+def ring_measure(im, row, poly, thick_guess=40.0):
+    """The ring of one frame, measured on the recording: (centre x, centre y, outer radius, thickness, rays used), or None when
+    too few rays are clear of the note. Rays from the given centre, every 2 degrees, that do not meet the note (its stroke and a
+    margin); on each the inner and the outer edge of the ring are the half-level crossings of its yellowness (blue channel against
+    the ring's own plateau, only where the red channel is high: the note's green has a low red). A circle with a common centre
+    and two radii is then fitted to the edge points, which also corrects the given centre and radius."""
+    blue, red = im[..., 0].astype(np.float32), im[..., 2]
+    sure = (red > 230) & (blue < 120) & (im[..., 1] > 150)
+    if sure.sum() < 200:
+        return None
+    plateau = float(np.median(blue[sure]))
+    alpha = np.clip((255 - blue) / (255 - plateau), 0, 1) * (red > 200)
+    cx, cy, R = row[1], row[2], row[3]
+    ang = np.radians(np.arange(0, 360, 2.0))
+    s = np.arange(max(0.0, R - 60), R + 14, 0.5)
+    pts = np.stack([cx + np.outer(np.cos(ang), s), cy + np.outer(np.sin(ang), s)], -1)
+    v = cv2.remap(alpha, pts[..., 0].astype(np.float32), pts[..., 1].astype(np.float32), cv2.INTER_LINEAR)
+    poly32 = poly.astype(np.float32).reshape(-1, 1, 2)
+    inner_pts, outer_pts = [], []
+    for k in range(len(ang)):
+        band = pts[k][(s > R - 1.1 * thick_guess - 3) & (s < R + 8)]   # the ring's own band, with a margin
+        if any(cv2.pointPolygonTest(poly32, (float(x), float(y)), True) > -(HW + 6) for x, y in band[::3]):
+            continue
+        row_v = v[k]
+        up = [j for j in range(len(s) - 1) if row_v[j] < 0.5 <= row_v[j + 1]]
+        down = [j for j in range(len(s) - 1) if row_v[j] >= 0.5 > row_v[j + 1]]
+        if not up or not down:
+            continue
+        j0, j1 = up[0], down[-1]
+        s_in = s[j0] + (0.5 - row_v[j0]) / (row_v[j0 + 1] - row_v[j0]) * 0.5
+        s_out = s[j1] + (row_v[j1] - 0.5) / (row_v[j1] - row_v[j1 + 1]) * 0.5
+        if s_out - s_in < 3:
+            continue
+        inner_pts.append((cx + s_in * np.cos(ang[k]), cy + s_in * np.sin(ang[k])))
+        outer_pts.append((cx + s_out * np.cos(ang[k]), cy + s_out * np.sin(ang[k])))
+    if len(outer_pts) < 12:
+        return None
+    ip, op = np.array(inner_pts), np.array(outer_pts)
+
+    def residual(x):
+        return np.concatenate([np.hypot(op[:, 0] - x[0], op[:, 1] - x[1]) - x[2], np.hypot(ip[:, 0] - x[0], ip[:, 1] - x[1]) - x[3]])
+
+    fit_ = least_squares(residual, [cx, cy, R, R - 20], loss="soft_l1", f_scale=1.0)
+    x = fit_.x
+    return float(x[0]), float(x[1]), float(x[2]), float(x[2] - x[3]), len(outer_pts)
+
+
+def inside_note(poly, cx, cy, r, step=0.5):
+    """Signed distance (positive inside, in px) of the ring's middle circle to the note's centre line, every `step` degrees."""
+    ang = np.radians(np.arange(0, 360, step))
+    poly32 = poly.astype(np.float32).reshape(-1, 1, 2)
+    return np.array([cv2.pointPolygonTest(poly32, (float(cx + r * np.cos(a)), float(cy + r * np.sin(a))), True) for a in ang])
+
+
+def ring_runs(poly, cx, cy, r, step=0.5):
+    """The circular runs of the ring's middle circle that lie on the note (in its filled outline or within half the stroke of its
+    centre line), as lists of sample indices, and the signed distances (positive inside) of every sample."""
+    sd = inside_note(poly, cx, cy, r, step)
+    n = len(sd)
+    inside = sd > -HW
+    if not inside.any() or inside.all():
+        return [], sd, inside
+    start = int(np.flatnonzero(~inside)[0])
+    runs, cur = [], []
+    for k in range(n):
+        j = (start + k) % n
+        if inside[j]:
+            cur.append(j)
+        elif cur:
+            runs.append(cur)
+            cur = []
+    if cur:
+        runs.append(cur)
+    return runs, sd, inside
+
+
+def ring_split_own(poly, cx, cy, r, step=0.5):
+    """From the note's own outline only. Returns (behind, front) as lists of (start, end) angles in degrees (0 = 3 o'clock, 90 =
+    down, ends unwrapped so that end > start): a run of the circle on the note whose middle lies in 270..360 (the upper right) is
+    behind the note, every other run is in front of it."""
+    runs, sd, _ = ring_runs(poly, cx, cy, r, step)
+    behind, front = [], []
+    for run in runs:
+        a0, a1 = run[0] * step, run[-1] * step
+        if a1 < a0:
+            a1 += 360
+        mid = ((a0 + a1) / 2) % 360
+        (behind if 270 <= mid < 360 else front).append((a0, a1))
+    return behind, front
+
+
+def ring_paths(row, thick, behind, front):
+    """The ring as two layers with the same commands in every frame. The back layer is the whole circle (two arcs of 180 degrees):
+    it lies under the opaque note, which hides it wherever it runs behind the note, so no end of an arc is ever visible next to
+    the note. The front layer holds only the runs that are in front of the note (four arcs of at most 180 degrees: up to two runs of
+    two arcs; zero length when unused), drawn over the note."""
+    r = max(1.0, row[3] - row[4] / 2)
     at = lambda deg: f"{row[1] + r * np.cos(np.radians(deg)):.1f} {row[2] + r * np.sin(np.radians(deg)):.1f}"
-    two = lambda a, b: f"M{at(a)}A{r:.1f} {r:.1f} 0 0 1 {at((a + b) / 2)}A{r:.1f} {r:.1f} 0 0 1 {at(b)}"
-    if split is None:
-        return two(270, 270), two(270, 630)
-    g0, g1, lo_free, hi_free = split
-    # The front arc overlaps the back arc by two degrees where the ends sit in a free run (no seam); an end that sits on the
-    # note itself meets the other arc exactly, so that no ring is painted over the note's hidden part.
-    front_from, front_to = g1 - (2 if hi_free else 0), g0 + 360 + (2 if lo_free else 0)
-    if front_to - front_from > 360:
-        front_to = front_from + 360
-    return two(g0, g1), two(front_from, front_to)
+
+    def arcs(a, b, count):
+        d = f"M{at(a)}"
+        for k in range(1, count + 1):
+            d += f"A{r:.1f} {r:.1f} 0 0 1 {at(a + (b - a) * k / count)}"
+        return d
+
+    runs = sorted(front, key=lambda ab: -(ab[1] - ab[0]))[:2]
+    runs += [(runs[0][0], runs[0][0]) if runs else (270.0, 270.0)] * (2 - len(runs))
+    d = "".join(arcs(a, b, 2) for a, b in runs)
+    return arcs(270, 630, 2), d
 
 
 def main():
@@ -622,92 +944,102 @@ def main():
                     refined.append(i)
     print(f"frames refitted against the visible boundary both ways: {sorted(set(refined))}")
 
-    # -- 4. repair the bad frames (visible-boundary error over 2.5 px), smooth in time. The note travels and turns a lot
-    # while it bends, so a frame is split into its pose (middle and turn) and its shape (the twelve points in the note's
-    # own axes); both are interpolated and smoothed on their own, which keeps the shape of a repaired frame instead of
-    # blending two shapes at different angles.
-    bad = [i for i in frames if e2[i] > 2.5]
-    print(f"repaired frames (visible-boundary error over 2.5 px): {bad}")
-    good = [i for i in frames if i not in bad]
-    poses = {i: pose2(q2[i]) for i in frames}
-    angles = np.unwrap([poses[i][1] for i in frames])
-    table = np.array([np.concatenate([poses[i][0], [angles[k]], poses[i][2].ravel(), poses[i][3]]) for k, i in enumerate(frames)])
-    for k in range(table.shape[1]):
-        table[:, k] = np.interp(frames, good, [table[frames.index(i), k] for i in good])
-    unsmoothed = {i: unpose2(table[k][:2], table[k][2], table[k][3:27].reshape(12, 2), np.clip(table[k][27:29], 0.3, 3.0)) for k, i in enumerate(frames)}
-    table = savgol_filter(table, 5, 2, axis=0)
-    smooth = {i: unpose2(table[k][:2], table[k][2], table[k][3:27].reshape(12, 2), np.clip(table[k][27:29], 0.3, 3.0)) for k, i in enumerate(frames)}
+    # -- 4. dense tracking: every frame's two long edges moved onto the recording's stroke (see the notes above `track_frame`)
+    imgs = {i: cv2.imread(path(i)) for i in frames}
+    dense_cache = (cache + ".dense.npz") if cache else None       # the tracking takes a minute: kept next to the fits
+    if dense_cache and os.path.exists(dense_cache):
+        z = np.load(dense_cache)
+        XA, XB, OA, OB = z["XA"], z["XB"], z["OA"].astype(bool), z["OB"].astype(bool)
+    else:
+        tracked = {}
+        for i in frames:
+            A0, B0 = initial_edges(q2[i])
+            tracked[i] = track_frame(imgs[i], A0, B0)
+        XA = np.array([tracked[i][0] for i in frames])
+        XB = np.array([tracked[i][1] for i in frames])
+        OA = np.array([tracked[i][2] for i in frames])
+        OB = np.array([tracked[i][3] for i in frames])
+        if dense_cache:
+            np.savez(dense_cache, XA=XA, XB=XB, OA=OA, OB=OB)
+    print(f"points measured (not filled): edge A {OA.mean():.0%}, edge B {OB.mean():.0%}")
+    XA, XB = fill_in_time(XA, OA), fill_in_time(XB, OB)
+    # A measurement that jumps away from the same point's neighbours in time (the median of five frames) by more than 2.5 px is a
+    # mistake of the measurement (a ring edge taken for the stroke): it is dropped and filled again from the other frames.
+    from scipy.ndimage import median_filter
+    for X, O in ((XA, OA), (XB, OB)):
+        away = np.linalg.norm(X - median_filter(X, size=(5, 1, 1), mode="nearest"), axis=2) > 2.5
+        O &= ~away
+        print(f"measurements dropped as jumps: {int(away.sum())}")
+    XA, XB = fill_in_time(XA, OA), fill_in_time(XB, OB)
+    # Smoothing: along each edge (a Gaussian of SPATIAL points, the two ends held) and then in time (Savitzky-Golay, TEMPORAL frames,
+    # order 2): the measurement is good to about a third of a pixel per point and frame, which as an acceleration is a lot more than
+    # the note's own.
+    from scipy.ndimage import gaussian_filter1d
+    SPATIAL, TEMPORAL = float(os.environ.get("BM_SPATIAL", "1.5")), int(os.environ.get("BM_TEMPORAL", "7"))
 
-    # -- 5. acceptance: on the visible boundary of the reference silhouette, our rendered outer boundary
-    print("frame  fit-rms  mean-dist  p95-dist   (px of the recording, visible boundary only, smoothed lines)")
-    worst, fallback = [], []
-    for i in range(OUT_FROM, OUT_TO + 1):
-        m = boundary_error(smooth[i], data[i][3], data[i][1])
-        if m is not None and (m[0] > 1.5 or m[1] > 3):
-            # Smoothing moved this frame off the visible boundary (the note turns fast there): the frame's own fit is used when
-            # it is closer (its error is the fit's, the price is a little jitter between neighbours).
-            alt = boundary_error(unsmoothed[i], data[i][3], data[i][1])
-            if alt is not None and alt[0] + alt[1] / 2 < m[0] + m[1] / 2:
-                smooth[i], m = unsmoothed[i], alt
-                fallback.append(i)
-        if m is None:
-            print(f"{i:5d}  {e2[i]:7.2f}  (no visible boundary)")
-            continue
-        worst.append((i, *m))
-        print(f"{i:5d}  {e2[i]:7.2f}  {m[0]:9.2f}  {m[1]:8.2f}{'  ***' if m[0] > 1.5 or m[1] > 3 else ''}")
-    print(f"frames that use their own fit instead of the smoothed one: {fallback}")
-    print(f"frames over the limits (mean 1.5, p95 3): {[w[0] for w in worst if w[1] > 1.5 or w[2] > 3]}")
+    def smooth_edge(X):
+        out = gaussian_filter1d(X, SPATIAL, axis=1, mode="nearest") if SPATIAL > 0 else X.copy()
+        w = np.clip(np.arange(X.shape[1]) / 3.0, 0, 1) * np.clip((X.shape[1] - 1 - np.arange(X.shape[1])) / 3.0, 0, 1)   # ends stay put
+        return X + (out - X) * w[None, :, None]
 
-    # -- 5b. jerks: the recording is smooth (the note's centre accelerates by about 0.4 px per frame squared everywhere), so a
-    # frame whose 28 outline numbers accelerate by more than SPIKE times the median is a fit artefact. It is replaced by the
-    # mean of its neighbours (pose and shape separately, as in step 4), when that keeps the visible-boundary limits.
-    numbers = lambda q: np.array([float(v) for v in re.findall(r"-?\d+\.?\d*", outline_path(q))])
-    def acceleration():
-        X = np.array([numbers(smooth[i]) for i in range(OUT_FROM, OUT_TO + 1)])
-        return np.linalg.norm(X[:-2] - 2 * X[1:-1] + X[2:], axis=1), np.linalg.norm(X[1:] - X[:-1], axis=1)
-    def report(title):
-        acc, speed = acceleration()
-        med = float(np.median(acc))
-        top = sorted(range(len(acc)), key=lambda k: -acc[k])[:8]
-        print(f"{title}: median acceleration {med:.1f}; largest (frame: acceleration, ratio, speed in/out): " + "; ".join(f"{OUT_FROM + k + 1}: {acc[k]:.0f}, {acc[k] / med:.1f}x, {speed[k]:.0f}/{speed[k + 1]:.0f}" for k in top))
-        return acc, med
-    acc, med = report("outline acceleration before the repair")
-    replaced = []
-    for _ in range(3):
-        acc, med = acceleration()[0], float(np.median(acceleration()[0]))
-        spikes = [OUT_FROM + k + 1 for k in range(len(acc)) if acc[k] > SPIKE * med]
-        if not spikes:
-            break
-        for i in sorted(spikes, key=lambda f: -acc[f - OUT_FROM - 1]):
-            a, b = pose2(smooth[i - 1]), pose2(smooth[i + 1])
-            ang = a[1] + ((b[1] - a[1] + np.pi) % (2 * np.pi) - np.pi) / 2
-            mid = (a[0] + b[0]) / 2, ang, (a[2] + b[2]) / 2, (a[3] + b[3]) / 2
-            own = pose2(smooth[i])
-            dang = (own[1] - ang + np.pi) % (2 * np.pi) - np.pi
-            best = None
-            for w in (1.0, 0.85, 0.7, 0.55, 0.4, 0.25):   # share of the way from the frame's own pose to the neighbours' mean
-                cand = unpose2(own[0] + w * (mid[0] - own[0]), own[1] - w * dang, own[2] + w * (mid[2] - own[2]), own[3] + w * (mid[3] - own[3]))
-                m = boundary_error(cand, data[i][3], data[i][1])
-                if m is not None and m[0] <= 1.5 and m[1] <= 3:
-                    best = (w, cand)
-                    break
-            if best:
-                smooth[i] = best[1]
-                replaced.append(i)
-                print(f"  frame {i}: pulled {best[0]:.2f} of the way to its neighbours")
-            else:
-                print(f"  frame {i}: no pull keeps the boundary limits, left as fitted")
-    print(f"frames replaced by the mean of their neighbours: {sorted(set(replaced))}")
-    acc, med = report("outline acceleration after the repair")
-    still = [OUT_FROM + k + 1 for k in range(len(acc)) if acc[k] > SPIKE * med]
-    print(f"frames still above {SPIKE}x the median: {still}")
+    XA, XB = smooth_edge(XA), smooth_edge(XB)
+    XA = savgol_filter(XA, TEMPORAL, 2, axis=0)
+    XB = savgol_filter(XB, TEMPORAL, 2, axis=0)
+    # (coordinates so far are pixel indices, a pixel's centre being its index; the drawing's coordinates put the pixel's corner at
+    # its index, so everything written out is moved by half a pixel)
+    line = {i: (XA[k], XB[k]) for k, i in enumerate(frames)}
+
+    # -- 4b. the marks (ellipse and bulges) frame by frame, from the tracked outline: where the ring hides them, the frames
+    # around fill in; then smoothed over time (Savitzky-Golay, 5 frames)
+    state = {"bulges": list(zip(BULGE_F, BULGE_R))}
+    ell_raw, bul_raw = {}, {}
+    marks_cache = (cache + f".marks.{SPATIAL}.{TEMPORAL}.json") if cache else None
+    if marks_cache and os.path.exists(marks_cache):
+        saved_marks = json.load(open(marks_cache))
+        ell_raw = {int(i): (tuple(v[0]) if v[0] else None) for i, v in saved_marks.items()}
+        bul_raw = {int(i): [tuple(b_) if b_ else None for b_ in v[1]] for i, v in saved_marks.items()}
+    else:
+        for i in [REST] + [j for j in frames if j != REST]:
+            ell, bul = track_marks(imgs[i], *line[i], state)
+            ell_raw[i], bul_raw[i] = ell, bul
+            state = {"bulges": [b_ if b_ is not None else state["bulges"][e] for e, b_ in enumerate(bul)]}
+        if marks_cache:
+            json.dump({str(i): [list(ell_raw[i]) if ell_raw[i] else None, [list(b_) if b_ else None for b_ in bul_raw[i]]] for i in frames}, open(marks_cache, "w"))
+    print(f"marks measured: ellipse in {sum(v is not None for v in ell_raw.values())} of {len(frames)} frames, bulges "
+          + ", ".join(f"{sum(bul_raw[i][e] is not None for i in frames)}" for e in range(4)))
+
+    def series(values, width):
+        """Frames x width array from a dict of tuples/None: gaps filled linearly in time, then smoothed."""
+        ok = [i for i in frames if values[i] is not None]
+        arr = np.array([np.interp(frames, ok, [values[j][c] for j in ok]) for c in range(width)]).T
+        return savgol_filter(arr, 5, 2, axis=0) if len(frames) > 5 else arr
+
+    ell_phi = {i: (ell_raw[i] if ell_raw[i] is None else (ell_raw[i][0], ell_raw[i][1], ell_raw[i][2])) for i in frames}
+    ok_e = [i for i in frames if ell_phi[i] is not None]
+    phis = np.unwrap([ell_phi[i][2] * 2 for i in ok_e]) / 2            # an ellipse repeats after half a turn
+    for i, ph in zip(ok_e, phis):
+        ell_phi[i] = (ell_phi[i][0], ell_phi[i][1], ph)
+    ell_series = series(ell_phi, 3)
+    bul_series = [series({i: bul_raw[i][e] for i in frames}, 2) for e in range(4)]
+    marks_of = {i: (ell_series[k], [bul_series[e][k] for e in range(4)]) for k, i in enumerate(frames)}
+
+    # -- 5. acceleration of every outline point over the written frames: the largest against its own median
+    out_frames = list(range(OUT_FROM, OUT_TO + 1))
+    P = np.array([np.vstack(line[i]) for i in out_frames])
+    acc = np.linalg.norm(P[:-2] - 2 * P[1:-1] + P[2:], axis=2)          # frames x points
+    med = np.median(acc, axis=0)
+    ratio = acc.max(axis=0) / np.maximum(med, 0.05)
+    worst_points = np.argsort(-ratio)[:6]
+    print("acceleration, largest per point against its median (point index: ratio, frame of the maximum, median px/frame^2):")
+    print("; ".join(f"{k}: {ratio[k]:.1f}x at frame {out_frames[1 + int(np.argmax(acc[:, k]))]}, median {med[k]:.2f}" for k in worst_points))
+    print(f"outline points over 3x their median: {int((ratio > 3).sum())} of {len(ratio)}; worst frame by the sum: {out_frames[1 + int(np.argmax(acc.sum(axis=1)))]}")
 
     # -- 6. the parts of the frame, measured at rest
-    rest = smooth[REST]
-    c0, angle0 = middle(rest)
+    rest_A, rest_B = line[REST]
+    c0, angle0 = poly_middle(rest_A, rest_B)
     green, _ = masks(path(REST))
     window = np.zeros(green.shape, np.uint8)
-    cv2.fillPoly(window, [np.round(silhouette_parts(rest)).astype(np.int32)], 1)
+    cv2.fillPoly(window, [np.round(poly_polygon(rest_A, rest_B)).astype(np.int32)], 1)
     window = cv2.erode(window, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * int(HW) + 1,) * 2))
     middle_blob = cv2.connectedComponentsWithStats((green & window).astype(np.uint8))
     sizes = middle_blob[2][1:, 4]
@@ -718,57 +1050,76 @@ def main():
     if axes[0] > axes[1]:  # OpenCV may name the long axis first
         axes, deg = (axes[1], axes[0]), deg + 90
     phi_at_rest = np.radians(deg)
-    # the ellipse's place in the note's own frame (along / across its middle line)
     rel = centre_at_rest - c0
     along, across = rel @ np.array([np.cos(angle0), np.sin(angle0)]), rel @ np.array([-np.sin(angle0), np.cos(angle0)])
     turn = phi_at_rest - angle0
     print(f"ellipse at rest: centre ({ex:.1f}, {ey:.1f}), axes {axes[0] / 2:.1f} x {axes[1] / 2:.1f} (used {ELLIPSE}), offset along {along:.1f} across {across:.1f}")
 
     outlines, marks, times = [], [], []
-    for i in range(OUT_FROM, OUT_TO + 1):
-        q = smooth[i]
-        es = q_edges(q)
-        c, angle = middle(q)
-        centre = c + along * np.array([np.cos(angle), np.sin(angle)]) + across * np.array([-np.sin(angle), np.cos(angle)])
-        marks.append("".join(bulge(es[e], BULGE_F[e], BULGE_RADIUS) for e in range(4)) + ellipse_path(centre, angle + turn))
-        outlines.append(outline_path(q))
+    for i in out_frames:
+        A, B = line[i][0] + 0.5, line[i][1] + 0.5
+        es = poly_marks_edges(A, B)
+        (ex_, ey_, phi_), bul = marks_of[i]
+        marks.append("".join(poly_bulge(es[e], float(bul[e][0]), float(bul[e][1]), BULGE_H[e]) for e in range(4)) + ellipse_path(np.array([ex_ + 0.5, ey_ + 0.5]), float(phi_)))
+        outlines.append(poly_outline(A, B))
         times.append(int(round((i - NOTE_START) * 1000 / FPS)))
 
     try:
         old = open(out_path, encoding="utf8").read()
-        ring = re.search(r"(// RING:.*?\nexport const RING_FRAMES[^\n]*)", old, re.S).group(1)
         ring_rows = json.loads(re.search(r"RING_FRAMES[^=]*= (\[\[.*?\]\]);", old).group(1))
     except (OSError, AttributeError):
-        sys.exit("the existing output file with RING_FRAMES is needed (the ring is not measured here)")
-    # -- 7. where the ring goes behind the note, frame by frame, from what the recording itself shows
-    raw = []
-    for row in ring_rows:
-        i = min(OUT_TO, max(OUT_FROM, int(round(NOTE_START + row[0] * FPS / 1000))))
-        _, yellow = masks(path(i))
-        labels = ring_labels(row, smooth[i], yellow)
-        split = ring_split(labels)
-        if split is not None and not split[4]:
-            runs = [(int(k), len(list(grp))) for k, grp in itertools.groupby(labels)]
-            print(f"ring row t={row[0]:.0f} (frame {i}): no clean split (an end touches the note, or the ring is visible inside the back arc); runs of labels from 0 deg: {runs}")
-        raw.append(split)
-    splits = smooth_splits(raw)
-    paths = [ring_paths(row, sp) for row, sp in zip(ring_rows, splits)]
-    print(f"ring frames: {len(ring_rows)}, with a part behind the note: {sum(1 for sp in splits if sp)}")
+        sys.exit("the existing output file with RING_FRAMES is needed (the ring's centre and radius are not measured here)")
+    ring_rows = [row[:4] for row in ring_rows]
+    row_frame = lambda row: min(LAST, max(FIRST, int(round(NOTE_START + row[0] * FPS / 1000))))
+
+    # -- 7. the ring on every row: centre, outer radius and thickness measured on the recording (rays clear of the note), the
+    # corrections to the given centre and radius and the thickness smoothed over time (Savitzky-Golay, 7 rows); a row with too few
+    # clear rays takes the neighbours' corrections and thickness
+    meas = [None] * len(ring_rows)
+    guess = np.full(len(ring_rows), 40.0)
+    for round_ in range(2):          # the first round with a wide band finds the rows that are clear; the second uses their thickness
+        for k, row in enumerate(ring_rows):
+            i = row_frame(row)
+            meas[k] = ring_measure(imgs[i], row, poly_polygon(*line[i]), float(guess[k]))
+        have = [k for k, m in enumerate(meas) if m is not None]
+        guess = np.interp(range(len(ring_rows)), have, [meas[k][3] for k in have])
+    good = [k for k, m in enumerate(meas) if m is not None]
+    quantity = lambda f: np.interp(range(len(ring_rows)), good, [f(meas[k], ring_rows[k]) for k in good])
+    cx_m, cy_m, R_m, thick_raw = (quantity(lambda m, r, c=c: m[c]) for c in range(4))
+    cx_s, cy_s, R_s, thick = (savgol_filter(v_, 7, 2) for v_ in (cx_m, cy_m, R_m, thick_raw))
+    print("ring per row: t, frame, clear rays, centre x, y (pixel indices), outer radius, measured and smoothed thickness")
+    for k, row in enumerate(ring_rows):
+        print(f"  t={row[0]:5.0f} frame {row_frame(row):3d}  rays {(meas[k][4] if meas[k] else 0):3d}  ({cx_s[k]:.1f}, {cy_s[k]:.1f})  R {R_s[k]:.1f} (was {row[3]:.1f})  thickness {('%.1f' % meas[k][3]) if meas[k] else '  - '} -> {thick[k]:.1f}")
+    # (the +0.5: pixel indices to the drawing's coordinates, as for the note)
+    ring_rows = [[row[0], round(float(cx_s[k]) + 0.5, 1), round(float(cy_s[k]) + 0.5, 1), round(float(R_s[k]), 1), round(float(thick[k]), 1)] for k, row in enumerate(ring_rows)]
+
+    # -- 8. the ring's split, from the note's own outline only (never from the recording's visibility)
+    paths, kinds = [], []
+    for k, row in enumerate(ring_rows):
+        i = row_frame(row)
+        r = max(1.0, row[3] - row[4] / 2)
+        behind, front = ring_split_own(poly_polygon(*line[i]) + 0.5, row[1], row[2], r)
+        if len(front) > 2:
+            print(f"ring row t={row[0]:.0f} (frame {i}): {len(front)} runs in front of the note, the two longest drawn")
+        paths.append(ring_paths(row, row[4], behind, front))
+        kinds.append((len(behind), len(front)))
+    print(f"ring frames: {len(ring_rows)}; with a run behind the note: {sum(1 for b_, f_ in kinds if b_)}; with a run in front: {sum(1 for b_, f_ in kinds if f_)}")
 
     with open(out_path, "w", encoding="utf8") as f:
         f.write("// Generated by scripts/gen-budget-motion.py from the frame-by-frame measurement of the first application's recording of the\n")
         f.write("// Budgets empty state (30 fps, 720 px wide). Times are ms from the note's first frame; coordinates are the recording's pixels.\n")
-        f.write("// The note: a stroke of NOTE_STROKE along a closed centre line (two long edges of two cubics each, and two straight short\n")
-        f.write("// edges), and what sits on its frame (four half-disc bulges attached to the inner side of the edges, the ellipse), all built\n")
-        f.write("// from the frame's own edges. Every string of one list has the same command structure, so two of them blend by number.\n")
+        f.write("// The note: a stroke of NOTE_STROKE along a closed centre line (two long edges of 41 tracked points each, and two straight\n")
+        f.write("// short edges), and what sits on its frame (four half-disc bulges attached to the inner side of the edges, the ellipse), all\n")
+        f.write("// built from the frame's own edges. Every string of one list has the same command structure, so two of them blend by number.\n")
         f.write(f"export const NOTE_STROKE = {STROKE:g};\n")
         f.write(f"export const NOTE_TIMES: ReadonlyArray<number> = {json.dumps(times)};\n")
         f.write(f"export const NOTE_OUTLINE: ReadonlyArray<string> = {json.dumps(outlines)};\n")
         f.write(f"export const NOTE_MARKS: ReadonlyArray<string> = {json.dumps(marks)};\n")
-        f.write(ring + "\n")
-        f.write("// The ring split per frame (ring_split in the generator): the part behind the note (hidden by it in the recording) and the\n// part in front of it, each two arcs of at most 180 degrees with the same commands in every frame, one entry per RING_FRAMES row.\n")
-        f.write(f"export const RING_BACK: ReadonlyArray<string> = {json.dumps([p[0] for p in paths])};\n")
-        f.write(f"export const RING_FRONT: ReadonlyArray<string> = {json.dumps([p[1] for p in paths])};\n")
+        f.write("// RING: [t, centre x, centre y, outer radius, thickness]\n")
+        f.write(f"export const RING_FRAMES: ReadonlyArray<ReadonlyArray<number>> = {json.dumps(ring_rows)};\n")
+        f.write("// The ring split per frame (ring_split_own in the generator, from the note's own outline): the part behind the note and the part in\n// front of it, drawn on the centre radius (outer radius minus half the thickness): the back one two arcs, the front one four arcs of at\n// most 180 degrees with the same commands in every frame, one entry per RING_FRAMES row.\n")
+        f.write(f"export const RING_BACK: ReadonlyArray<string> = {json.dumps([p_[0] for p_ in paths])};\n")
+        f.write(f"export const RING_FRONT: ReadonlyArray<string> = {json.dumps([p_[1] for p_ in paths])};\n")
     print(f"wrote {out_path}: {len(times)} frames")
 
 

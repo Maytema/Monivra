@@ -56,7 +56,7 @@ export const sheets = {
     if (!options.keyboard) dismissKeyboard();
     // The empty-state pictures on the JS driver would run under the layer and compete with it; they stop at rest (the tab
     // does not blur when a sheet or a dialog opens).
-    stopPictures();
+    stopPictures(true);
     const id = ++counter;
     publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown, asked: now() }]);
     return id;

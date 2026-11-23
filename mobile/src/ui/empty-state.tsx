@@ -3,7 +3,7 @@
 // is shown: it starts from the first frame at every visit, two frames and 150 ms after the screen was drawn (so the
 // tab's own first frame and a quick pass through the tabs do not compete with it), and stops at rest when the screen is
 // left. After the person has done something in this launch (ui/quiet.ts) the pictures are drawn at rest.
-import { useCallback, useRef, type ReactNode } from "react";
+import { useCallback, type ReactNode } from "react";
 import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
@@ -13,7 +13,7 @@ import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
 import { Pivot } from "./svg-pivot.tsx";
-import { hasPlayed, markPlayed, shouldPlay } from "./quiet.ts";
+import { markPlayed, onActed, shouldPlay } from "./quiet.ts";
 import { onPictureStop } from "./picture-stop.ts";
 
 export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
@@ -25,7 +25,9 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 // time from the picture's first frame to its last movement.
 const PLAY_MS: Record<EmptyKind, number> = { operations: 4950, accounts: 3000, categories: 1400, budgets: 3200, scheduled: 1400, statistics: 2100 };
 
-const START_WAIT_MS = 150;
+// After the first frame is on the screen the run starts at once (one frame, then this wait: a person who taps through tabs
+// quickly leaves a tab before it is over, and no picture is started for a tab that was only passed through).
+const START_WAIT_MS = 50;
 
 type Timeline = Animated.Value;
 type Ease = (n: number) => number;
@@ -271,26 +273,28 @@ function Statistics({ time, c }: { time: Timeline; c: Colors }) {
 // marks bend with the frame. A yellow ring appears small at the upper right, grows, goes down and to the left through the
 // note and shrinks away at the lower left; the note keeps moving a little after it and settles. The note is transparent
 // (only its outline and marks are painted), as in the recording.
-const RING_STROKE = 25;
 const ringTimes = RING_FRAMES.map((row) => row[0]!);
-// The ring goes through the note: measured at every crossing of the ring with an edge of the note in the recording, the
-// ring's upper right part lies behind the note's frame and the rest of the circle in front of it. The crossings move with
-// the note, so where the ring is split is found per frame (scripts/gen-budget-motion.py: RING_BACK, RING_FRONT) at a free
-// place between the strokes, never across one. The back arc is drawn first, then the note, then the front arc.
+// The ring's thickness changes (about 6 px at its first frame, over 30 at its widest, 22 at its narrowest, a thin ring again
+// at the end): RING_FRAMES holds it as the fifth number of every row, and the ring is a path on the middle radius drawn with
+// that stroke width, so the first and the last frame are real rings with a hole.
+// The ring goes through the note. The back layer is the whole circle under the note, whose opaque fill and stroke hide it
+// wherever it runs behind the note; the front layer holds only the runs of the circle that lie in front of the note (found per
+// frame from the note's own outline, scripts/gen-budget-motion.py: RING_BACK, RING_FRONT) and is drawn over it.
 function Budgets({ time, c }: { time: Timeline; c: Colors }) {
   const first = ringTimes[0]!;
   const last = ringTimes[ringTimes.length - 1]!;
   const ringOpacity = keyed(time, [[first - 1, 0], [first, 1], [last, 1], [last + 1, 0]]);
   const blend = (inputRange: ReadonlyArray<number>, outputRange: ReadonlyArray<string>) => time.interpolate({ inputRange: [...inputRange], outputRange: [...outputRange], extrapolate: "clamp" });
+  const ringWidth = time.interpolate({ inputRange: [...ringTimes], outputRange: RING_FRAMES.map((row) => row[4]!), extrapolate: "clamp" });
   return (
     <Svg width={310} height={200} viewBox="40 320 620 400" fill="none" strokeLinecap="butt" strokeLinejoin="round">
-      <AnimatedPath d={blend(ringTimes, RING_BACK)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, RING_BACK)} stroke="#fbbf24" strokeWidth={ringWidth} opacity={ringOpacity} />
       {/* Opaque: the note is filled with the screen's colour, so the part of the ring behind it is hidden by the note itself. */}
       <AnimatedG opacity={between(time, 0, 170, 0, 1)}>
         <AnimatedPath d={blend(NOTE_TIMES, NOTE_OUTLINE)} fill={c.bg} stroke={c.positive} strokeWidth={NOTE_STROKE} strokeLinecap="round" strokeLinejoin="round" />
         <AnimatedPath d={blend(NOTE_TIMES, NOTE_MARKS)} fill={c.positive} stroke="none" />
       </AnimatedG>
-      <AnimatedPath d={blend(ringTimes, RING_FRONT)} stroke="#fbbf24" strokeWidth={RING_STROKE} opacity={ringOpacity} />
+      <AnimatedPath d={blend(ringTimes, RING_FRONT)} stroke="#fbbf24" strokeWidth={ringWidth} opacity={ringOpacity} />
     </Svg>
   );
 }
@@ -347,50 +351,80 @@ function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
 
 // ---- The block -------------------------------------------------------------------------------------
 
+// One clock per kind, shared by every instance of the kind: a period page that is built next to the shown one (the pager
+// builds the neighbours) joins the running picture at its phase and does not start a run of its own, and a page that slides
+// into view shows the same frame as the one that was there. The value stands at the FIRST frame whenever the next visit will
+// play, so the first frame a tab draws is the start of the picture, never the finished one; it goes back there when the
+// screen is left. A kind that will not play (quiet) stands at the last frame.
+interface Clock {
+  time: Animated.Value;
+  users: number;
+  run?: Animated.CompositeAnimation;
+  first?: number;
+  wait?: ReturnType<typeof setTimeout>;
+}
+const clocks = new Map<EmptyKind, Clock>();
+const restFrame = (kind: EmptyKind): number => (shouldPlay(kind) ? 0 : PLAY_MS[kind]);
+function clockOf(kind: EmptyKind): Clock {
+  let clock = clocks.get(kind);
+  if (!clock) {
+    const made: Clock = { time: new Animated.Value(restFrame(kind)), users: 0 };
+    clock = made;
+    clocks.set(kind, made);
+    onPictureStop((finish) => haltClock(kind, made, finish));
+    onActed(() => {
+      if (!made.users) made.time.setValue(restFrame(kind));
+    });
+  }
+  return clock;
+}
+// Stops a run that is going (or about to start): `finish` puts the picture at rest, otherwise it stays where it is.
+function haltClock(kind: EmptyKind, clock: Clock, finish: boolean): void {
+  if (clock.first !== undefined) cancelAnimationFrame(clock.first);
+  if (clock.wait) clearTimeout(clock.wait);
+  clock.first = undefined;
+  clock.wait = undefined;
+  clock.run?.stop();
+  clock.run = undefined;
+  if (finish && clock.users) clock.time.setValue(PLAY_MS[kind]);
+}
+
 export function EmptyState({ kind, title, hint, action, onAction }: { kind: EmptyKind; title: string; hint: string; action?: string; onAction?: () => void }): ReactNode {
   const p = usePalette();
   const t = useT();
+  const clock = clockOf(kind);
+  const time = clock.time;
   const total = PLAY_MS[kind];
-  // A picture seen before is at rest until its run starts (no blank frame between the visit and the replay); one never played
-  // starts from its first frame.
-  const time = useRef(new Animated.Value(hasPlayed(kind) || !shouldPlay(kind) ? total : 0)).current;
   // Played only while the screen is in focus. `freezeOnBlur` freezes React rendering, not an `Animated` loop, so an
   // animation started on mount went on behind a tab that was left (and, JS-driven, kept the JavaScript thread busy while
   // the next tab was being built).
   useFocusEffect(
     useCallback(() => {
-      if (!shouldPlay(kind)) return void time.setValue(total);
-      let run: Animated.CompositeAnimation | undefined;
-      let second = 0;
-      let wait: ReturnType<typeof setTimeout> | undefined;
-      // Two frames after the screen is drawn, then a short wait: a person who taps through the tabs leaves a tab before
-      // the wait is over, and no picture is started (and stopped again) for a tab that was only passed through (the
-      // empty-profile tab moves of CI, build 133: 9 s of JavaScript time in twelve quick taps, pictures on the JS driver).
-      const first = requestAnimationFrame(() => {
-        second = requestAnimationFrame(() => {
-          wait = setTimeout(() => {
-            markPlayed(kind);
-            // Jump to the first frame and start in the same tick: until now the picture stayed as it was (at rest).
-            time.setValue(0);
-            run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
-            run.start();
-          }, START_WAIT_MS);
-        });
-      });
-      // Stops the picture and leaves it at rest; also called by a press on a tab (ui/picture-stop.ts).
-      const stop = () => {
-        cancelAnimationFrame(first);
-        cancelAnimationFrame(second);
-        if (wait) clearTimeout(wait);
-        run?.stop();
-        time.setValue(total);
-      };
-      const forget = onPictureStop(stop);
+      clock.users += 1;
+      if (clock.users === 1) {
+        if (!shouldPlay(kind)) time.setValue(total);
+        else {
+          clock.first = requestAnimationFrame(() => {
+            clock.first = undefined;
+            clock.wait = setTimeout(() => {
+              clock.wait = undefined;
+              markPlayed(kind);
+              // The value stands at the first frame already; the run starts from it.
+              clock.run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
+              clock.run.start();
+            }, START_WAIT_MS);
+          });
+        }
+      }
       return () => {
-        forget();
-        stop();
+        clock.users -= 1;
+        if (clock.users === 0) {
+          haltClock(kind, clock, false);
+          // Left: back to the first frame for the next visit (or the last one when it will not play).
+          time.setValue(restFrame(kind));
+        }
       };
-    }, [time, total, kind]),
+    }, [clock, time, total, kind]),
   );
   const c: Colors = { ink: p.ink, muted: p.muted, bg: p.bg, accent: p.accent, positive: p.positive };
   return (

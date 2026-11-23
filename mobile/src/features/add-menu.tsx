@@ -9,6 +9,7 @@ import type { LedgerData } from "../domain/types.ts";
 import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { PagedTabs } from "../ui/paged-tabs.tsx";
 import { ToneBadge } from "../ui/parts.tsx";
+import { markActed } from "../ui/quiet.ts";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 import { openEditor } from "./editor/editor-sheet.tsx";
 import type { EditorDraft } from "./editor/session.ts";
@@ -20,7 +21,11 @@ const LABELS: Record<Direction, string> = { income: "Incomes", expense: "Expense
 // `scheduled` starts a scheduled payment with the date, time, repeat and reminder already chosen.
 export type SchedulePreset = Pick<EditorDraft, "date" | "time" | "recur" | "reminder">;
 // `date`: the date the new operation starts with (the period on the screen it was opened from); none — today.
-export const openAddMenu = (scheduled?: SchedulePreset, date?: string): number => sheets.open(<AddMenu scheduled={scheduled} date={date} />, "sheet", { bare: true });
+// Opening the add sheet is the person acting: the empty-state pictures stop replaying (ui/quiet.ts).
+export const openAddMenu = (scheduled?: SchedulePreset, date?: string): number => {
+  markActed();
+  return sheets.open(<AddMenu scheduled={scheduled} date={date} />, "sheet", { bare: true });
+};
 
 // What an item of a tab shows under its name: the balance of an account, the sum of a category.
 function figure(data: LedgerData, direction: Direction, id: string): number {

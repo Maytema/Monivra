@@ -7,8 +7,16 @@
 let quiet = false;
 const played = new Set<string>();
 const QUIET_KINDS: ReadonlySet<string> = new Set(["operations", "accounts", "categories", "statistics"]);
+const actedListeners = new Set<() => void>();
+// The pictures that are not on the screen change to their rest frame when the person acts (they would otherwise show their
+// first frame for a moment at the next visit).
+export const onActed = (fn: () => void): (() => void) => {
+  actedListeners.add(fn);
+  return () => void actedListeners.delete(fn);
+};
 export const markActed = (): void => {
   quiet = true;
+  for (const fn of [...actedListeners]) fn();
 };
 export const isQuiet = (): boolean => quiet;
 // Whether the picture of `kind` should play at this visit.
