@@ -10,6 +10,7 @@ import { contentsOf, DELETIONS, planRestore, type ConflictWay, type Contents, ty
 import type { LedgerData } from "../domain/types.ts";
 import type { BackupInfo, Step } from "../application/store.ts";
 import { withProgress } from "../ui/progress.tsx";
+import { stepText } from "./steps.ts";
 import { pickFile, saveTextFile, shareTextFile } from "../platform/files.ts";
 import { removePin } from "../platform/lock.ts";
 import { now, perfLog } from "../platform/perf.ts";
@@ -294,21 +295,6 @@ function timed<T>(label: string, work: () => T): T {
 
 // A restore is running: one at a time, whatever the buttons do.
 let restoring = false;
-
-// What the restore is writing, in words (the progress window).
-function stepText(t: Translator, step: Step): string {
-  const part: Record<Step["what"], string> = {
-    clearing: "Clearing the old data…",
-    accounts: "Writing accounts: {done} of {total}",
-    categories: "Writing categories: {done} of {total}",
-    operations: "Writing operations: {done} of {total}",
-    scheduled: "Writing scheduled payments: {done} of {total}",
-    budgets: "Writing budgets: {done} of {total}",
-    settings: "Writing settings…",
-    checking: "Checking what was written…",
-  };
-  return t.t(part[step.what], { done: step.done, total: step.total });
-}
 
 function RestorePage({ source, id }: { source: string; id?: string }) {
   const p = usePalette();

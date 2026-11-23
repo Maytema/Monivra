@@ -38,6 +38,8 @@ import type { Translator } from "../i18n/index.ts";
 import { appStore, showError, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { confirmDialog, optionDialog, showInfo, toast } from "../ui/dialogs.tsx";
 import { FullPage, MiniTable } from "../ui/full-page.tsx";
+import { withProgress } from "../ui/progress.tsx";
+import { stepText } from "./steps.ts";
 import { Button, Icon, RadioMark } from "../ui/kit.tsx";
 import { sheets, useCloseLayer } from "../ui/sheets.tsx";
 
@@ -422,6 +424,9 @@ function problemFileText(t: Translator, w: Wizard): string {
   return "﻿" + rows.map((r) => r.map(quote).join(",")).join("\r\n");
 }
 
+// An import is running: one at a time, whatever the button does.
+let importing = false;
+
 function PreviewPage({ w }: { w: Wizard }) {
   const t = useT();
   const money = useMoney();
@@ -445,26 +450,34 @@ function PreviewPage({ w }: { w: Wizard }) {
   });
   const newAccounts = plan.created.accounts.map((a) => `${a.name} · ${a.currency}`);
   const newCategories = plan.created.categories.map((c) => categoryPath(c, allCategories));
+  // The import is long on a big file: the button is locked at once, the rows are written chunk by chunk with a progress window
+  // (shown after 300 ms) that can cancel it (rolled back whole), and the page after it says what was added.
+  const [busy, setBusy] = useState(false);
+  const go = async () => {
+    if (importing) return;
+    importing = true;
+    setBusy(true);
+    try {
+      const store = appStore();
+      const added = await withProgress("Importing operations", t.t("Preparing…"), async (say, signal) => {
+        store.createBackup("safety");
+        return store.runAsync((tx, env) => applyImport(tx, plan, env), { signal, progress: (step) => say(stepText(t, step)) });
+      });
+      if (added === undefined) return void toast(t.t("Import cancelled. Nothing was added."));
+      // The pages of the wizard go, so going back never offers the same plan again.
+      for (const id of w.layers) sheets.close(id);
+      sheets.open(<DonePage added={added} plan={plan} />, "full");
+    } catch (error) {
+      showError(t, error);
+    } finally {
+      importing = false;
+      setBusy(false);
+    }
+  };
   const run = () =>
-    confirmDialog(
-      t.t("Add {n} operations to your data? A backup of the current data is made first.", { n: plan.ops.length }),
-      () => {
-        try {
-          const store = appStore();
-          store.createBackup("safety");
-          const added = store.run((tx, env) => applyImport(tx, plan, env));
-          // The pages of the wizard go, so going back never offers the same plan again.
-          for (const id of w.layers) sheets.close(id);
-          sheets.open(<DonePage added={added} plan={plan} />, "full");
-        } catch (error) {
-          showError(t, error);
-        }
-      },
-      false,
-      "Import",
-    );
+    confirmDialog(t.t("Add {n} operations to your data? A backup of the current data is made first.", { n: plan.ops.length }), () => void go(), false, "Import");
   return (
-    <FullPage title="Import preview" footer={<Button label={t.t("Import {n} operations", { n: plan.ops.length })} onPress={run} disabled={!plan.ops.length} />}>
+    <FullPage title="Import preview" footer={<Button label={t.t("Import {n} operations", { n: plan.ops.length })} onPress={run} disabled={!plan.ops.length || busy} />}>
       <Facts
         rows={[
           ["Rows in the file", plan.total],

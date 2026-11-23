@@ -106,3 +106,24 @@ test("a big ledger (3000 operations) is written in many chunks", async () => {
   assert.deepEqual(compareLedgers(big, loadLedger(db)!).filter((x) => !x.startsWith("settings")), []);
   assert.ok(pauses >= 12, `${pauses} pauses`);
 });
+
+test("an import written in chunks: cancel rolls the whole change back, a finished one equals the one-go run", async () => {
+  const { store, env, db, data } = start();
+  const account = data().accounts[0]!.id;
+  const category = data().categories.find((c) => c.type === "expense" && !c.parent)!.id;
+  const many = (tx: Parameters<Parameters<typeof store.run>[0]>[0]) => {
+    for (let i = 0; i < 700; i++) putOperation(tx, { id: "", type: "expense", from: account, category, amount: 100 + i, date: "2026-11-05", comment: "", tags: [] }, env);
+    return 700;
+  };
+  const before = data();
+  const stop = new AbortController();
+  await assert.rejects(store.runAsync(many, { signal: stop.signal, chunk: 100, progress: (s) => s.done >= 300 && stop.abort() }), (e) => e instanceof Cancelled);
+  assert.equal(data().ops.length, before.ops.length);
+  assert.deepEqual(compareLedgers(before, loadLedger(db)!), []);
+  assert.equal(store.busy(), false);
+  let pauses = 0;
+  assert.equal(await store.runAsync(many, { chunk: 100, pause: async () => void pauses++ }), 700);
+  assert.equal(data().ops.length, before.ops.length + 700);
+  assert.deepEqual(compareLedgers(data(), loadLedger(db)!), []);
+  assert.ok(pauses >= 6);
+});

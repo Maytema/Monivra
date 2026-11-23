@@ -178,29 +178,55 @@ function writeRates(db: SqlDriver, rates: LedgerData["rates"]): void {
   for (const [code, value] of Object.entries(rates)) db.run("INSERT INTO rate (code, kgs_per_unit) VALUES (?, ?)", [code, value]);
 }
 
-// Writes a change in one transaction. `next` is the data after the change (it gives list order).
+// Writes a change in one transaction. `next` is the data after the change (it gives list order). As steps (see replaceSteps): it
+// yields after every 250 rows, so a big change (an import) can be written a chunk at a time.
+function* persistSteps(db: SqlDriver, change: Change, next: LedgerData, now: string, chunk = CHUNK): Generator<Step, void> {
+  let written = 0;
+  const total =
+    LIST_KEYS.reduce((n, key) => n + (change.remove[key]?.length ?? 0), 0) + (change.put.accounts?.length ?? 0) + (change.put.categories?.length ?? 0) + (change.put.ops?.length ?? 0) + (change.put.scheduled?.length ?? 0) + (change.put.budgets?.length ?? 0);
+  function* count(what: Step["what"]): Generator<Step> {
+    written += 1;
+    if (written % chunk === 0 && written < total) yield { what, done: written, total };
+  }
+  for (const key of LIST_KEYS)
+    for (const id of change.remove[key] ?? []) {
+      db.run(`DELETE FROM ${TABLE_OF[key]} WHERE id = ?`, [id]);
+      db.run("INSERT OR REPLACE INTO tombstone (table_name, row_id, deleted_at) VALUES (?, ?, ?)", [TABLE_OF[key], id, now]);
+      yield* count("clearing");
+    }
+  const position = <T extends { id: string }>(list: readonly T[]) => new Map(list.map((x, i) => [x.id, i]));
+  const accountPos = position(next.accounts);
+  const accounts = change.order.accounts ? next.accounts : (change.put.accounts ?? []);
+  for (const a of accounts) {
+    db.run(ACCOUNT_SQL, accountRow(a, accountPos.get(a.id) ?? 0, now));
+    yield* count("accounts");
+  }
+  const categoryPos = position(next.categories);
+  const categories = change.order.categories ? next.categories : (change.put.categories ?? []);
+  for (const c of categories) {
+    db.run(CATEGORY_SQL, categoryRow(c, categoryPos.get(c.id) ?? 0, now));
+    yield* count("categories");
+  }
+  for (const o of change.put.ops ?? []) {
+    db.run(OP_SQL, opRow(o, now));
+    yield* count("operations");
+  }
+  for (const s of change.put.scheduled ?? []) {
+    db.run(SCHEDULED_SQL, scheduledRow(s, now));
+    yield* count("scheduled");
+  }
+  const budgetPos = position(next.budgets);
+  for (const b of change.put.budgets ?? []) {
+    db.run(BUDGET_SQL, budgetRow(b, budgetPos.get(b.id) ?? 0, now));
+    yield* count("budgets");
+  }
+  if (change.tags) writeTags(db, change.tags);
+  if (change.settings) writeSettings(db, change.settings);
+  if (change.rates) writeRates(db, change.rates);
+}
+
 export function persistChange(db: SqlDriver, change: Change, next: LedgerData, now: string): void {
-  inTransaction(db, () => {
-    for (const key of LIST_KEYS)
-      for (const id of change.remove[key] ?? []) {
-        db.run(`DELETE FROM ${TABLE_OF[key]} WHERE id = ?`, [id]);
-        db.run("INSERT OR REPLACE INTO tombstone (table_name, row_id, deleted_at) VALUES (?, ?, ?)", [TABLE_OF[key], id, now]);
-      }
-    const position = <T extends { id: string }>(list: readonly T[]) => new Map(list.map((x, i) => [x.id, i]));
-    const accountPos = position(next.accounts);
-    const accounts = change.order.accounts ? next.accounts : (change.put.accounts ?? []);
-    for (const a of accounts) db.run(ACCOUNT_SQL, accountRow(a, accountPos.get(a.id) ?? 0, now));
-    const categoryPos = position(next.categories);
-    const categories = change.order.categories ? next.categories : (change.put.categories ?? []);
-    for (const c of categories) db.run(CATEGORY_SQL, categoryRow(c, categoryPos.get(c.id) ?? 0, now));
-    for (const o of change.put.ops ?? []) db.run(OP_SQL, opRow(o, now));
-    for (const s of change.put.scheduled ?? []) db.run(SCHEDULED_SQL, scheduledRow(s, now));
-    const budgetPos = position(next.budgets);
-    for (const b of change.put.budgets ?? []) db.run(BUDGET_SQL, budgetRow(b, budgetPos.get(b.id) ?? 0, now));
-    if (change.tags) writeTags(db, change.tags);
-    if (change.settings) writeSettings(db, change.settings);
-    if (change.rates) writeRates(db, change.rates);
-  });
+  inTransaction(db, () => drain(persistSteps(db, change, next, now)));
 }
 
 export class ImportMismatch extends Error {}
@@ -268,25 +294,10 @@ export function replaceLedger(db: SqlDriver, data: LedgerData, now: string): { a
   });
 }
 
-export class Cancelled extends Error {
-  constructor() {
-    super("cancelled");
-  }
-}
-const yieldToScreen = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
-
-// The same, a chunk at a time: between chunks the screen is drawn and touches are handled (`pause`), `progress` is told what is being
-// written, and `signal` stops it: the transaction is rolled back and nothing has changed. The caller must keep every other write to
-// the database away while it runs (the store does).
-export async function replaceLedgerAsync(
-  db: SqlDriver,
-  data: LedgerData,
-  now: string,
-  { signal, progress, pause = yieldToScreen, chunk = CHUNK }: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number } = {},
-): Promise<Stored> {
+// Runs steps in one transaction, a chunk at a time (shared by the restore and by an import).
+async function runSteps<T>(db: SqlDriver, steps: Generator<Step, T>, { signal, progress, pause = yieldToScreen }: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void> }): Promise<T> {
   db.exec("BEGIN IMMEDIATE");
   try {
-    const steps = replaceSteps(db, data, now, chunk);
     for (;;) {
       if (signal?.aborted) throw new Cancelled();
       const next = steps.next();
@@ -305,6 +316,30 @@ export async function replaceLedgerAsync(
     }
     throw error;
   }
+}
+
+// The same for a change (an import of many operations): rolled back whole on cancel.
+export function persistChangeAsync(db: SqlDriver, change: Change, next: LedgerData, now: string, control: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number } = {}): Promise<void> {
+  return runSteps(db, persistSteps(db, change, next, now, control.chunk), control);
+}
+
+export class Cancelled extends Error {
+  constructor() {
+    super("cancelled");
+  }
+}
+const yieldToScreen = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
+
+// The same, a chunk at a time: between chunks the screen is drawn and touches are handled (`pause`), `progress` is told what is being
+// written, and `signal` stops it: the transaction is rolled back and nothing has changed. The caller must keep every other write to
+// the database away while it runs (the store does).
+export function replaceLedgerAsync(
+  db: SqlDriver,
+  data: LedgerData,
+  now: string,
+  control: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number } = {},
+): Promise<Stored> {
+  return runSteps(db, replaceSteps(db, data, now, control.chunk), control);
 }
 
 const canonical = (x: unknown): string =>

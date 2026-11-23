@@ -11,7 +11,7 @@ import { postDue, settleMissed } from "../domain/scheduled.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { addBackup, deleteAllBackups, listBackups, readBackup, type BackupInfo, type BackupReason } from "../data/backups.ts";
 export type { BackupInfo } from "../data/backups.ts";
-import { loadLedger, persistChange, replaceLedger, replaceLedgerAsync, Cancelled, type Step } from "../data/repository.ts";
+import { loadLedger, persistChange, persistChangeAsync, replaceLedger, replaceLedgerAsync, Cancelled, type Step } from "../data/repository.ts";
 import { DatabaseTooNew, inTransaction, migrate, type SqlDriver } from "../data/schema.ts";
 import { RATE_PROVIDERS, type Fetcher } from "../services/rates/providers.ts";
 import { refreshRates, shouldRefresh, type RateUpdateState } from "../services/rates/refresh.ts";
@@ -56,6 +56,8 @@ export interface Store {
     options: { mode: RestoreMode; scheduled: ScheduledWay; conflicts: ConflictWay; safety?: boolean },
     control?: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number },
   ): Promise<RestoreSummary>;
+  // A command whose change is written a chunk at a time (an import of many rows); cancel rolls the whole change back.
+  runAsync<T>(command: (tx: LedgerTx, env: Env) => T, control?: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number }): Promise<T>;
   busy(): boolean;
   deleteData(way: DeletionWay, options?: { backup?: boolean }): void;
   // Recovery when the stored data cannot be opened: the newest saved backup that is whole, bringing data
@@ -139,6 +141,25 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
       persistChange(db, tx.change, next, env.clock.nowIso());
       ready(next, state.status === "ready" ? state.posted : []);
       return result;
+    },
+
+    async runAsync(command, control = {}) {
+      if (locked) throw new DomainError("Another operation is still running");
+      locked = true;
+      try {
+        const before = current();
+        const tx = new LedgerTx(before);
+        const result = command(tx, env);
+        if (isEmptyChange(tx.change)) return result;
+        const next = applyChange(before, tx.change);
+        const wait = control.pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 0)));
+        await wait();
+        await persistChangeAsync(db, tx.change, next, env.clock.nowIso(), { ...control, pause: wait });
+        ready(next, state.status === "ready" ? state.posted : []);
+        return result;
+      } finally {
+        locked = false;
+      }
     },
 
     // Posts what came due (at start, when the app comes back, every minute while open).
