@@ -121,7 +121,7 @@ function useMonthPeriod(mode: "month" | BudgetPeriod): void {
     // The period is given back when the page starts to go (before its closing animation), not when it is gone: the tabs
     // beneath are in front for the whole animation and showed the budgets' month until the page was removed, then jumped
     // back. (setView ignores a period equal to the current one, so nothing is redrawn when it did not change.)
-    const off = navigation.addListener("beforeRemove", () => setView({ period: before }, false));
+    const off = (navigation as unknown as { addListener(e: string, f: () => void): () => void }).addListener("beforeRemove", () => setView({ period: before }, false));
     return () => {
       off();
       setView({ period: before }, false);

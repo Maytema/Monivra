@@ -91,9 +91,10 @@ const subscribe = (l: () => void) => {
 };
 const snapshot = () => layers;
 
-const LayerContext = createContext<(then?: () => void) => void>(() => undefined);
+// `then` is typed loosely: the function is also passed straight to onPress, which hands it the press event (ignored below).
+const LayerContext = createContext<(then?: unknown) => void>(() => undefined);
 // Closes the layer the component is shown in (`then`: what to do once it is gone).
-export const useCloseLayer = (): ((then?: () => void) => void) => useContext(LayerContext);
+export const useCloseLayer = (): ((then?: unknown) => void) => useContext(LayerContext);
 
 export function SheetHost() {
   const all = useSyncExternalStore(subscribe, snapshot);
@@ -116,7 +117,7 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const p = usePalette();
   const insets = useSafeAreaInsets();
   const progress = useRef(new Animated.Value(0)).current;
-  const close = (then?: () => void) => sheets.close(layer.id, typeof then === "function" ? then : undefined);
+  const close = (then?: unknown) => sheets.close(layer.id, typeof then === "function" ? (then as () => void) : undefined);
   const reveal = useRevealFocusedField();
 
   useEffect(() => {
