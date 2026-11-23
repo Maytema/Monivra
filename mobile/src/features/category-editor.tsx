@@ -71,7 +71,7 @@ function TypeSheet({ value, parent, onPick }: { value: Category["type"]; parent:
   );
   return (
     <View>
-      <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Select type")}</Text>
+      <DialogTitle center tight>{t.t("Select type")}</DialogTitle>
       {choice("expense", "Expenses", "arrowExpense", "#e5322d")}
       {choice("income", "Incomes", "arrowIncome", "#22b35e")}
     </View>

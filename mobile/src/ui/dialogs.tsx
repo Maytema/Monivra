@@ -11,9 +11,10 @@ import { sheets, useCloseLayer } from "./sheets.tsx";
 import { Icon, RadioMark } from "./kit.tsx";
 import { chrome, mix } from "./theme.ts";
 
-export function DialogTitle({ children, center = false }: { children: ReactNode; center?: boolean }) {
+// `tight`: the title of a list sheet (8 above and below instead of 14 under).
+export function DialogTitle({ children, center = false, tight = false }: { children: ReactNode; center?: boolean; tight?: boolean }) {
   const p = usePalette();
-  return <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", marginBottom: 14, textAlign: center ? "center" : "left" }}>{children}</Text>;
+  return <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", ...(tight ? { marginVertical: 8 } : { marginBottom: 14 }), textAlign: center ? "center" : "left" }}>{children}</Text>;
 }
 
 export function DialogActions({ children }: { children: ReactNode }) {

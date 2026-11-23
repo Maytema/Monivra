@@ -383,7 +383,7 @@ function TagsSheet({ chosen: start, onDone }: { chosen: string[]; onDone: (tags:
     });
   return (
     <View>
-      <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginBottom: 14 }}>{t.t("Select tags")}</Text>
+      <DialogTitle center>{t.t("Select tags")}</DialogTitle>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         {data.tags.map((tag) => {
           const on = chosen.includes(tag);

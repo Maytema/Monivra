@@ -21,3 +21,8 @@ test("Segmented is gone and the sheet title style lives in DialogTitle only", ()
   const all = sources(src).map((f) => [f, readFileSync(f, "utf8")] as const);
   assert.deepEqual(all.filter(([, s]) => /\bSegmented\b/.test(s)).map(([f]) => f), []);
 });
+
+test("sheet titles of 22 px / 500 weight go through DialogTitle", () => {
+  const raw = sources(src).filter((f) => /fontSize: 22, fontWeight: "500"/.test(readFileSync(f, "utf8")) && !f.endsWith("/ui/dialogs.tsx") && !f.endsWith("empty-state.tsx"));
+  assert.deepEqual(raw.map((f) => f.slice(src.length)), []);
+});

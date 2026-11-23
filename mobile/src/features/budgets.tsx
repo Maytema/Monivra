@@ -14,7 +14,7 @@ import { openAmountSheet } from "../ui/amount-sheet.tsx";
 import { PrimaryPill, TextButton } from "../ui/calendar-sheet.tsx";
 import { currencyName } from "../ui/currency-names.ts";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
-import { confirmDialog, DialogActions, optionDialog, toast } from "../ui/dialogs.tsx";
+import { confirmDialog, DialogActions, DialogTitle, optionDialog, toast } from "../ui/dialogs.tsx";
 import { FieldButton, FieldText } from "../ui/form.tsx";
 import { Button, Icon } from "../ui/kit.tsx";
 import { Meter, ToneBadge } from "../ui/parts.tsx";
@@ -312,7 +312,7 @@ function CategorySelect({ selected, onDone }: { selected: string[] | null; onDon
   const card = (children_: ReactNode) => <View style={{ borderWidth: 1, borderColor: p.line, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 4, marginBottom: 12, backgroundColor: p.key }}>{children_}</View>;
   return (
     <View style={{ maxHeight: 640 }}>
-      <Text style={{ color: p.ink, fontSize: 22, fontWeight: "500", textAlign: "center", marginVertical: 8 }}>{t.t("Select categories")}</Text>
+      <DialogTitle center tight>{t.t("Select categories")}</DialogTitle>
       <ScrollView>
         {card(
           <Pressable
