@@ -337,8 +337,11 @@ adb shell input tap $ops; sleep 2
 log "before the add menu: shown $(shown_tab) (expected Operations)"
 xy=$(where "New operation")
 begin "open the add menu"; adb shell input tap $xy; finish 3
-begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2; tap "Expenses" 0; finish 2
-begin "choose a category (the editor opens)"; tap "Food" 0 || tap "Internet" 0; finish 3
+begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2 last; tap "Expenses" 0 last; finish 2
+shot 05a-add-menu 0
+# The last match: a row of the list under the sheet can carry the same word ("Food"); the sheet is later in the tree.
+begin "choose a category (the editor opens)"; tap "Food" 0 last || tap "Internet" 0 last; finish 3
+shot 05b-editor-opened 0
 k1=$(where "1"); k2=$(where "2"); k5=$(where "5"); save=$(where "Save operation")
 begin "type 1 2 5 on the keys"
 adb shell input tap $k1; sleep 0.4; adb shell input tap $k2; sleep 0.4; adb shell input tap $k5
