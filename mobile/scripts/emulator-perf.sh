@@ -334,6 +334,16 @@ log "memory at the end: $(pss) kB"
 
 # A new expense with the keys, saved: the list must take it without drawing everything again.
 adb shell input tap $ops; sleep 2
+# The swipe blocks leave the period wherever the swipes ended (builds 141-143: August, September, December 2026). The new
+# expense has to go to a month that has operations and is not in the future, so the period is brought to the current month.
+this_month=$(date +"%B %Y")
+for step in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do
+  now_title=$(period_title)
+  [ "$now_title" = "$this_month" ] && break
+  case "$now_title" in "?") break;; esac
+  if [ "$(date -d "1 $now_title" +%s)" -lt "$(date -d "1 $this_month" +%s)" ]; then tap "Next period" 0.6 || break; else tap "Previous period" 0.6 || break; fi
+done
+log "period for the new expense: $(period_title) (wanted $this_month)"
 log "before the add menu: shown $(shown_tab) (expected Operations)"
 xy=$(where "New operation")
 begin "open the add menu"; adb shell input tap $xy; finish 3
