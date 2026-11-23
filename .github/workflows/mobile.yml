@@ -49,7 +49,8 @@ jobs:
             npm install --no-audit --no-fund
             npx expo install expo-router expo-sqlite expo-document-picker expo-file-system expo-sharing expo-crypto \
               expo-localization expo-status-bar expo-splash-screen expo-constants expo-linking react-native-svg \
-              react-native-safe-area-context react-native-screens expo-notifications expo-task-manager expo-background-task expo-secure-store expo-local-authentication expo-build-properties react react-dom react-native
+              react-native-safe-area-context react-native-screens expo-notifications expo-task-manager expo-background-task expo-secure-store expo-local-authentication expo-build-properties react react-dom react-native \
+              react-native-reanimated react-native-worklets
           fi
       - name: Dependency versions match the Expo SDK
         run: npx expo install --check

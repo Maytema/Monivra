@@ -125,7 +125,7 @@ log "empty profile, tab centres: accounts $accs, categories $cats, operations $o
 # compared with). The tabs replay on every visit until the owner acts, so nothing here changes what the later moves see.
 picture_cost() { # $1 kind, $2 tab centre, $3 another tab's centre
   adb shell input tap $3; sleep 1.5
-  begin "picture $1: visit, playing (3.5 s)"; adb shell input tap $2; finish 3.5
+  begin "picture $1: visit, playing (3.5 s)"; adb shell input tap $2; sleep 1.2; adb exec-out screencap -p > "$OUT/picture-$1-mid.png"; finish 2.5
   begin "picture $1: same tab, at rest (3 s, after the run)"; finish 3
 }
 picture_cost operations "$ops" "$accs"

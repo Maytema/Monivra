@@ -6,8 +6,10 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { useFocusEffect } from "expo-router";
 import { Animated, Easing, View, Text } from "react-native";
+import Reanimated, { cancelAnimation, Easing as ReEasing, Extrapolation, interpolate, makeMutable, useAnimatedProps, withTiming, type SharedValue } from "react-native-reanimated";
 import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 import { NOTE_MARKS, NOTE_OUTLINE, NOTE_STROKE, NOTE_TIMES, RING_BACK, RING_FRAMES, RING_FRONT } from "./budget-motion.ts";
+import { expand, type Ease, type Key } from "./keys.ts";
 import { numberTrack, pathTrack } from "./path-track.ts";
 import { PAPER_FILLS, PAPER_LINES, PAPER_STROKES } from "./operations-paper.ts";
 import { usePalette, useT } from "./app-context.tsx";
@@ -33,27 +35,8 @@ const START_WAIT_MS = 50;
 const RESET_WAIT_MS = 400;
 
 type Timeline = Animated.Value;
-type Ease = (n: number) => number;
-// A value that follows the time (ms) through the keys [time, value, easing?]; the easing, when given, shapes the
-// stretch that ends at that key. Before the first key and after the last the value holds.
-type Key = readonly [number, number, Ease?];
 function keyed(time: Timeline, keys: ReadonlyArray<Key>) {
-  const input: number[] = [];
-  const output: number[] = [];
-  keys.forEach((key, i) => {
-    if (i === 0) {
-      input.push(key[0]);
-      output.push(key[1]);
-      return;
-    }
-    const prev = keys[i - 1]!;
-    const steps = key[2] ? 10 : 1;
-    for (let k = 1; k <= steps; k++) {
-      const f = k / steps;
-      input.push(prev[0] + (key[0] - prev[0]) * f);
-      output.push(prev[1] + (key[1] - prev[1]) * (key[2] ? key[2](f) : f));
-    }
-  });
+  const { input, output } = expand(keys);
   return time.interpolate({ inputRange: input, outputRange: output, extrapolate: "clamp" });
 }
 const between = (time: Timeline, start: number, end: number, from: number, to: number, easing?: Ease) =>
@@ -103,43 +86,120 @@ const LENS: ReadonlyArray<ReadonlyArray<number>> = [[0,38.8,45.3,0],[33,32.8,43,
 const LENS_SCALE: ReadonlyArray<Key> = [[0, 0.83],[33, 0.853],[100, 0.987],[167, 1.055],[300, 1.107],[500, 1.121],[600, 1.101],[733, 1.044],[1067, 1.006],[4967, 1.003]];
 const CROSS_SCALE: ReadonlyArray<Key> = [[0, 0],[67, 0],[100, 0.33],[233, 0.383],[400, 0.71],[767, 0.955],[1833, 1],[4967, 1]];
 const LINE_DRAW: ReadonlyArray<ReadonlyArray<Key>> = [[[0, 125.0], [33, 125.0], [67, 115.0], [100, 95.0], [133, 70.0], [167, 52.0], [200, 39.0], [233, 29.0], [300, 16.0], [367, 8.0], [433, 2.0], [467, 0.0], [1500, 0.0]], [[0, 99.5], [33, 99.5], [67, 89.5], [100, 69.5], [133, 44.5], [167, 26.5], [200, 13.5], [233, 3.5], [267, 0.0], [1500, 0.5]], [[100, 51.0], [133, 51.0], [167, 49.0], [200, 45.0], [267, 26.0], [333, 13.0], [433, 4.0], [533, 0.0], [1500, 0.0]], [[167, 51.5], [200, 51.5], [233, 49.5], [267, 45.5], [333, 26.5], [367, 19.5], [433, 10.5], [500, 4.5], [600, 0.5], [1500, 0.0]]];
-function Operations({ time, c }: { time: Timeline; c: Colors }) {
+// Operations and Statistics run on the UI thread (Reanimated): the clock is a shared value, every moving part reads it in a
+// worklet and writes its own props there, so the JavaScript thread does nothing while the picture plays (0.3.15, emulator:
+// 2.7 s and 2.0 s of JavaScript busy over 3.5 s with the Animated driver). Only props the native shapes take as they are
+// (opacity, d, stroke width, dash offset, centre and radius) are animated: a turn or a scale is worked out in the worklet and
+// written as the shape's own geometry, never as a transform prop (a transform prop goes through a JavaScript step on the shape).
+type Clock2 = SharedValue<number>;
+type Spec = ReturnType<typeof expand>;
+const specOf = (keys: ReadonlyArray<Key>): Spec => expand(keys);
+const at = (t: number, s: Spec): number => {
+  "worklet";
+  return interpolate(t, s.input, s.output, Extrapolation.CLAMP);
+};
+const RG = Reanimated.createAnimatedComponent(G);
+const RPath = Reanimated.createAnimatedComponent(Path);
+const RCircle = Reanimated.createAnimatedComponent(Circle);
+
+function Fade({ time, spec, children }: { time: Clock2; spec: Spec; children: ReactNode }) {
+  const props = useAnimatedProps(() => ({ opacity: at(time.value, spec) }));
+  return <RG animatedProps={props}>{children}</RG>;
+}
+
+const OPS_FADE_PAPER = specOf([[0, 0], [50, 1]]);
+const OPS_FADE_LENS = specOf([[0, 0], [60, 1]]);
+const OPS_LINES = PAPER_LINES.map((_, i) => {
+  const draw = LINE_DRAW[i]!;
+  return { draw: specOf(draw), appear: specOf([[draw[0]![0] - 1, 0], [draw[0]![0], 1]]) };
+});
+const LENS_X = specOf(LENS.map((row) => [row[0]!, row[1]!] as Key));
+const LENS_Y = specOf(LENS.map((row) => [row[0]!, row[2]!] as Key));
+const LENS_TURN = specOf(LENS.map((row) => [row[0]!, row[3]!] as Key));
+const LENS_ZOOM = specOf(LENS_SCALE);
+const CROSS_ZOOM = specOf(CROSS_SCALE);
+const LENS_CX = 459;
+const LENS_CY = 314;
+
+function OpsLine({ time, d, length, color, index }: { time: Clock2; d: string; length: number; color: string; index: number }) {
+  const line = OPS_LINES[index]!;
+  const props = useAnimatedProps(() => ({ strokeDashoffset: at(time.value, line.draw), opacity: at(time.value, line.appear) }));
+  return <RPath animatedProps={props} d={d} stroke={color} strokeWidth={7.5} strokeDasharray={[length, length]} />;
+}
+
+// The lens: its circle, handle and cross, each turned and scaled about (459, 314) and moved, the cross first scaled on its own
+// and turned 45° inside the lens (the order of the nested groups of the Animated version).
+function OpsLens({ time, c }: { time: Clock2; c: Colors }) {
+  const lensColor = mix(c.muted, c.bg, 0.62);
+  const circle = useAnimatedProps(() => {
+    const t = time.value;
+    const s = at(t, LENS_ZOOM);
+    return { cx: LENS_CX + at(t, LENS_X), cy: LENS_CY + at(t, LENS_Y), r: 62 * s, strokeWidth: 6 * s };
+  });
+  const handle = useAnimatedProps(() => {
+    const t = time.value;
+    const s = at(t, LENS_ZOOM);
+    const a = (at(t, LENS_TURN) * Math.PI) / 180;
+    const cos = Math.cos(a) * s;
+    const sin = Math.sin(a) * s;
+    const tx = LENS_CX + at(t, LENS_X);
+    const ty = LENS_CY + at(t, LENS_Y);
+    const x1 = tx + cos * (493 - LENS_CX) - sin * (372 - LENS_CY);
+    const y1 = ty + sin * (493 - LENS_CX) + cos * (372 - LENS_CY);
+    const x2 = tx + cos * (522 - LENS_CX) - sin * (407 - LENS_CY);
+    const y2 = ty + sin * (522 - LENS_CX) + cos * (407 - LENS_CY);
+    return { d: `M${x1.toFixed(2)} ${y1.toFixed(2)}L${x2.toFixed(2)} ${y2.toFixed(2)}`, strokeWidth: 13 * s };
+  });
+  const cross = useAnimatedProps(() => {
+    const t = time.value;
+    const s = at(t, LENS_ZOOM);
+    const k = at(t, CROSS_ZOOM);
+    const a = (at(t, LENS_TURN) * Math.PI) / 180;
+    const cos = Math.cos(a) * s;
+    const sin = Math.sin(a) * s;
+    const tx = LENS_CX + at(t, LENS_X);
+    const ty = LENS_CY + at(t, LENS_Y);
+    // The plus (±30) turned 45° inside, scaled by k: its four ends are (±r, ±r) · k with r = 30 / √2... written as the turned points.
+    const h = (30 * Math.SQRT1_2) * k;
+    const pts: number[][] = [[-h, -h], [h, h], [h, -h], [-h, h]];
+    let d = "";
+    for (let i = 0; i < 4; i++) {
+      const dx = pts[i]![0]!;
+      const dy = pts[i]![1]!;
+      d += `${i % 2 ? "L" : "M"}${(tx + cos * dx - sin * dy).toFixed(2)} ${(ty + sin * dx + cos * dy).toFixed(2)}`;
+    }
+    return { d, strokeWidth: 6 * k * s };
+  });
+  return (
+    <Fade time={time} spec={OPS_FADE_LENS}>
+      <RCircle animatedProps={circle} cx={LENS_CX} cy={LENS_CY} r={62} fill={c.bg} stroke={lensColor} strokeWidth={6} />
+      <RPath animatedProps={handle} d="M493 372L522 407" stroke={lensColor} strokeWidth={13} />
+      <RPath animatedProps={cross} d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
+    </Fade>
+  );
+}
+
+function Operations({ time, c }: { time: Clock2; c: Colors }) {
   const dark = c.muted;
   const faint = mix(c.muted, c.bg, 0.45);
-  const lensColor = mix(c.muted, c.bg, 0.62);
-  const lens = (index: number) => keyed(time, LENS.map((row) => [row[0]!, row[index]!] as Key));
-  // The lens swings past the sheet's right edge (its handle reaches x 556.6 at 300 ms, measured over every row of LENS), so the
-  // view is widened to the right by 21 units and, to keep the sheet where it was, by 21 to the left; 0.5 px per unit as before.
   return (
     <Svg width={191} height={170} viewBox="179 155 382 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
       {/* The sheet (scripts/trace-operations-paper.py): the outline is straight strokes of constant width with round caps and
           one quarter circle, each ending inside the fill it meets; the top curl and the bottom roll are the only filled shapes. */}
-      <AnimatedG opacity={between(time, 0, 50, 0, 1)}>
+      <Fade time={time} spec={OPS_FADE_PAPER}>
         {PAPER_FILLS.map((d, i) => (
           <Path key={i} d={d} fill={dark} stroke="none" />
         ))}
         {PAPER_STROKES.map(([d, width], i) => (
           <Path key={i} d={d} stroke={dark} strokeWidth={width} fill="none" />
         ))}
-      </AnimatedG>
-      {PAPER_LINES.map(([ly, from, to], i) => {
-        const length = to - from;
-        const draw = LINE_DRAW[i]!;
-        // Measured on every frame of the recording: the first two lines are drawn together, the others follow; a line not yet
-        // started is not shown (a round cap would show as a dot).
-        return <AnimatedPath key={ly} d={`M${from} ${ly}H${to}`} stroke={faint} strokeWidth={7.5} strokeDasharray={[length, length]} strokeDashoffset={keyed(time, draw)} opacity={keyed(time, [[draw[0]![0] - 1, 0], [draw[0]![0], 1]])} />;
-      })}
-      <AnimatedG opacity={between(time, 0, 60, 0, 1)} translateX={lens(1)} translateY={lens(2)}>
-        <Pivot x={459} y={314} rotation={lens(3)} scale={keyed(time, LENS_SCALE)}>
-          <Circle cx={459} cy={314} r={62} fill={c.bg} stroke={lensColor} strokeWidth={6} />
-          <Path d="M493 372L522 407" stroke={lensColor} strokeWidth={13} />
-          <Pivot x={459} y={314} scale={keyed(time, CROSS_SCALE)}>
-            <Pivot x={459} y={314} rotation={45}>
-              <Path d="M429 314H489M459 284V344" stroke={c.accent} strokeWidth={6} />
-            </Pivot>
-          </Pivot>
-        </Pivot>
-      </AnimatedG>
+      </Fade>
+      {/* Measured on every frame of the recording: the first two lines are drawn together, the others follow; a line not yet
+          started is not shown (a round cap would show as a dot). */}
+      {PAPER_LINES.map(([ly, from, to], i) => (
+        <OpsLine key={ly} time={time} d={`M${from} ${ly}H${to}`} length={to - from} color={faint} index={i} />
+      ))}
+      <OpsLens time={time} c={c} />
     </Svg>
   );
 }
@@ -244,27 +304,69 @@ const ARROW_C1: Point = [190, 375];
 const ARROW_C2: Point = [290, 300];
 const ARROW_TO: Point = [360, 207];
 const ARROW_LENGTH = lengthOf(ARROW_FROM, ARROW_C1, ARROW_C2, ARROW_TO);
-function Statistics({ time, c }: { time: Timeline; c: Colors }) {
+const BAR_GROW = COLUMNS.map(({ start }) => specOf([[start - 1, 0.001], [start, 0.001], [start + 300, 1.1, out], [start + 520, 1, soft]]));
+const ARROW_DRAW = specOf([[0, ARROW_LENGTH], [1450, 0]]);
+const ARROW_HEAD = specOf([[1250, 0], [1450, 1]]);
+const STAR_FADE = specOf([[1860, 0], [1900, 1]]);
+const STAR_GROW = specOf([[1860, 0.5], [2060, 1, pop]]);
+
+// A bar grows from the ground: its path scaled in y about the ground line (the corner arcs get the same scale, as under a scale
+// transform), written as the path itself.
+function Bar({ time, x, height, color, index }: { time: Clock2; x: number; height: number; color: string; index: number }) {
+  const grow = BAR_GROW[index]!;
+  const props = useAnimatedProps(() => {
+    const k = at(time.value, grow);
+    const top = GROUND - k * height;
+    const shoulder = GROUND - k * (height - 10);
+    return { d: `M${x} ${GROUND}V${shoulder.toFixed(2)}A10 ${(10 * k).toFixed(3)} 0 0 1 ${x + 10} ${top.toFixed(2)}H${x + 30}A10 ${(10 * k).toFixed(3)} 0 0 1 ${x + 40} ${shoulder.toFixed(2)}V${GROUND}Z` };
+  });
+  return <RPath animatedProps={props} d={BAR(x, height)} fill={color} stroke="none" />;
+}
+
+function Arrow({ time }: { time: Clock2 }) {
+  const line = useAnimatedProps(() => ({ strokeDashoffset: at(time.value, ARROW_DRAW) }));
+  const head = useAnimatedProps(() => ({ opacity: at(time.value, ARROW_HEAD) }));
   return (
-    <Svg width={185} height={178} viewBox="70 150 370 355" fill="none" strokeLinecap="round" strokeLinejoin="round">
-      {COLUMNS.map(({ x, height, color, start }) => (
-        <Pivot key={x} x={x} y={GROUND} scaleY={keyed(time, [[start - 1, 0.001], [start, 0.001], [start + 300, 1.1, out], [start + 520, 1, soft]])}>
-          <Path d={BAR(x, height)} fill={color} stroke="none" />
-        </Pivot>
-      ))}
-      <AnimatedPath
+    <>
+      <RPath
+        animatedProps={line}
         d={`M${ARROW_FROM[0]} ${ARROW_FROM[1]}C${ARROW_C1[0]} ${ARROW_C1[1]} ${ARROW_C2[0]} ${ARROW_C2[1]} ${ARROW_TO[0]} ${ARROW_TO[1]}`}
         stroke="#98da6a"
         strokeWidth={12}
         strokeDasharray={[ARROW_LENGTH, ARROW_LENGTH]}
-        strokeDashoffset={between(time, 0, 1450, ARROW_LENGTH, 0)}
       />
-      <AnimatedPath d="M343 208 371 196 363 225" stroke="#98da6a" strokeWidth={12} opacity={keyed(time, [[1250, 0], [1450, 1]])} />
-      <AnimatedG opacity={keyed(time, [[1860, 0], [1900, 1]])}>
-        <Pivot x={399} y={177} scale={between(time, 1860, 2060, 0.5, 1, pop)}>
-          <Path d={star(399, 177, 22, 10)} fill="#fcd34d" stroke="#fcd34d" strokeWidth={4} />
-        </Pivot>
-      </AnimatedG>
+      <RPath animatedProps={head} d="M343 208 371 196 363 225" stroke="#98da6a" strokeWidth={12} />
+    </>
+  );
+}
+
+// The star pops in: its path and stroke scaled about its centre.
+function PopStar({ time }: { time: Clock2 }) {
+  const props = useAnimatedProps(() => {
+    const k = at(time.value, STAR_GROW);
+    let d = "";
+    for (let i = 0; i < 10; i++) {
+      const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+      const r = (i % 2 ? 10 : 22) * k;
+      d += `${i ? "L" : "M"}${(399 + r * Math.cos(angle)).toFixed(2)} ${(177 + r * Math.sin(angle)).toFixed(2)}`;
+    }
+    return { d: d + "Z", strokeWidth: 4 * k };
+  });
+  return (
+    <Fade time={time} spec={STAR_FADE}>
+      <RPath animatedProps={props} d={star(399, 177, 22, 10)} fill="#fcd34d" stroke="#fcd34d" strokeWidth={4} />
+    </Fade>
+  );
+}
+
+function Statistics({ time }: { time: Clock2; c: Colors }) {
+  return (
+    <Svg width={185} height={178} viewBox="70 150 370 355" fill="none" strokeLinecap="round" strokeLinejoin="round">
+      {COLUMNS.map(({ x, height, color }, i) => (
+        <Bar key={x} time={time} x={x} height={height} color={color} index={i} />
+      ))}
+      <Arrow time={time} />
+      <PopStar time={time} />
     </Svg>
   );
 }
@@ -392,8 +494,12 @@ function Scheduled({ time, c }: { time: Timeline; c: Colors }) {
 // into view shows the same frame as the one that was there. The value stands at the FIRST frame whenever the next visit will
 // play, so the first frame a tab draws is the start of the picture, never the finished one; it goes back there when the
 // screen is left. A kind that will not play (quiet) stands at the last frame.
+// Operations and Statistics keep their time in a shared value that the UI thread reads (see their pictures); the other kinds
+// keep it in an Animated.Value on the JavaScript thread (Scheduled on the native driver).
+const DRIVEN: ReadonlySet<EmptyKind> = new Set<EmptyKind>(["operations", "statistics"]);
 interface Clock {
   time: Animated.Value;
+  shared?: SharedValue<number>;
   users: number;
   run?: Animated.CompositeAnimation;
   first?: number;
@@ -402,15 +508,19 @@ interface Clock {
 }
 const clocks = new Map<EmptyKind, Clock>();
 const restFrame = (kind: EmptyKind): number => (shouldPlay(kind) ? 0 : PLAY_MS[kind]);
+const put = (clock: Clock, value: number): void => {
+  if (clock.shared) clock.shared.set(value);
+  else clock.time.setValue(value);
+};
 function clockOf(kind: EmptyKind): Clock {
   let clock = clocks.get(kind);
   if (!clock) {
-    const made: Clock = { time: new Animated.Value(restFrame(kind)), users: 0 };
+    const made: Clock = { time: new Animated.Value(restFrame(kind)), shared: DRIVEN.has(kind) ? makeMutable(restFrame(kind)) : undefined, users: 0 };
     clock = made;
     clocks.set(kind, made);
     onPictureStop((finish) => haltClock(kind, made, finish));
     onActed(() => {
-      if (!made.users && !made.reset) made.time.setValue(restFrame(kind));
+      if (!made.users && !made.reset) put(made, restFrame(kind));
     });
   }
   return clock;
@@ -423,7 +533,8 @@ function haltClock(kind: EmptyKind, clock: Clock, finish: boolean): void {
   clock.wait = undefined;
   clock.run?.stop();
   clock.run = undefined;
-  if (finish && clock.users) clock.time.setValue(PLAY_MS[kind]);
+  if (clock.shared) cancelAnimation(clock.shared);
+  if (finish && clock.users) put(clock, PLAY_MS[kind]);
 }
 
 export function EmptyState({ kind, title, hint, action, onAction }: { kind: EmptyKind; title: string; hint: string; action?: string; onAction?: () => void }): ReactNode {
@@ -442,10 +553,10 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
       if (clock.reset) {
         clearTimeout(clock.reset);
         clock.reset = undefined;
-        time.setValue(restFrame(kind));
+        put(clock, restFrame(kind));
       }
       if (clock.users === 1) {
-        if (!shouldPlay(kind)) time.setValue(total);
+        if (!shouldPlay(kind)) put(clock, total);
         else {
           clock.first = requestAnimationFrame(() => {
             clock.first = undefined;
@@ -453,8 +564,11 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
               clock.wait = undefined;
               markPlayed(kind);
               // The value stands at the first frame already; the run starts from it.
-              clock.run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
-              clock.run.start();
+              if (clock.shared) clock.shared.set(withTiming(total, { duration: total, easing: ReEasing.linear }));
+              else {
+                clock.run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
+                clock.run.start();
+              }
             }, START_WAIT_MS);
           });
         }
@@ -468,7 +582,7 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
           // the next tab waited for (0.3.14: 170-210 ms to show a tab, against 55-105 ms before).
           clock.reset = setTimeout(() => {
             clock.reset = undefined;
-            if (!clock.users) time.setValue(restFrame(kind));
+            if (!clock.users) put(clock, restFrame(kind));
           }, RESET_WAIT_MS);
         }
       };
@@ -478,10 +592,10 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
   return (
     <View style={{ alignItems: "center", paddingTop: 56, paddingHorizontal: 32, paddingBottom: 24 }}>
       <View style={{ alignItems: "center" }} importantForAccessibility="no-hide-descendants">
-        {kind === "operations" ? <Operations time={time} c={c} /> : null}
+        {kind === "operations" && clock.shared ? <Operations time={clock.shared} c={c} /> : null}
         {kind === "accounts" ? <Accounts time={time} c={c} /> : null}
         {kind === "categories" ? <Categories time={time} c={c} /> : null}
-        {kind === "statistics" ? <Statistics time={time} c={c} /> : null}
+        {kind === "statistics" && clock.shared ? <Statistics time={clock.shared} c={c} /> : null}
         {kind === "budgets" ? <Budgets time={time} c={c} /> : null}
         {kind === "scheduled" ? <Scheduled time={time} c={c} /> : null}
       </View>
