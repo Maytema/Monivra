@@ -47,10 +47,8 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         android: {
-          // R8 shrinks and obfuscates the code and the resources of the release build.
-          enableMinifyInReleaseBuilds: true,
-          enableShrinkResourcesInReleaseBuilds: true,
-          // What is reached by reflection or from native code, which R8 cannot see: WorkManager's Room database (the app
+          // (R8 and resource shrinking were tried in 0.3.17: about 1 MB less, 36.5 to 35.5 MB; not kept, the risk is higher
+          // than the gain.) What is reached by reflection or from native code, which a shrunk build could not see: WorkManager's Room database (the app
           // stopped at start without it: WorkDatabase_Impl.<init>), Reanimated and worklets (native code calls their Java
           // classes by name), expo-sqlite, expo-notifications, expo-task-manager and expo-background-task (modules found by
           // name and tasks started by WorkManager), the JNI helpers and Hermes.
