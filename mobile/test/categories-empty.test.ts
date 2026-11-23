@@ -41,3 +41,15 @@ test("starter set: deleting every category (with subcategories) leaves none", ()
   assert.equal(categoriesNone(loadLedger(db)!), true);
   console.log("debt accounts:", JSON.stringify(data().accounts.filter((a) => a.type === "Debt").map((a) => [a.showExpense, a.showIncome, a.archived])));
 });
+
+test("a debt account does not bring the switch back: no categories, a Debt account with showIncome", () => {
+  const { store, data } = ready("empty");
+  store.run((tx) => tx.put("categories", blankCategory({ id: "c1", name: "Food" })));
+  store.run((tx) => tx.put("accounts", { id: "d1", name: "Loan", type: "Debt", currency: "KGS", opening: 0, include: true, archived: false, favorite: false, description: "", icon: "tag", color: "#a5a3c8", showExpense: false, showIncome: true } as never));
+  store.run((tx) => deleteCategory(tx, "c1"));
+  assert.equal(data().accounts.length, 1);
+  assert.equal(categoriesNone(data()), true);
+  // The page still has its tile for the income kind and the empty picture for the expense kind; neither breaks.
+  assert.equal(categoriesEmptyOf(data(), "income"), false);
+  assert.equal(categoriesEmptyOf(data(), "expense"), true);
+});
