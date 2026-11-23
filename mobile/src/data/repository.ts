@@ -205,29 +205,106 @@ export function persistChange(db: SqlDriver, change: Change, next: LedgerData, n
 
 export class ImportMismatch extends Error {}
 
+// A restore is written as steps: a generator that yields between chunks of rows, so that the same code runs in one go
+// (replaceLedger, inside one transaction) and, on the phone, chunk by chunk with the screen drawn in between and the person able
+// to cancel (replaceLedgerAsync). `what` says what is being written, `done` of `total` rows of it.
+export interface Step {
+  what: "clearing" | "accounts" | "categories" | "operations" | "scheduled" | "budgets" | "settings" | "checking";
+  done: number;
+  total: number;
+}
+export interface Stored {
+  accounts: number;
+  ops: number;
+  scheduled: number;
+  back: LedgerData;
+}
+const CHUNK = 250;
+
+function drain<T>(steps: Generator<unknown, T>): T {
+  for (;;) {
+    const next = steps.next();
+    if (next.done) return next.value;
+  }
+}
+
+function* replaceSteps(db: SqlDriver, data: LedgerData, now: string, chunk = CHUNK): Generator<Step, Stored> {
+  yield { what: "clearing", done: 0, total: 1 };
+  for (const table of ["operation", "scheduled_payment", "budget", "category", "account", "tag", "setting", "rate", "tombstone"]) db.run(`DELETE FROM ${table}`);
+  function* rows<T>(what: Step["what"], list: readonly T[], write: (item: T, i: number) => void): Generator<Step> {
+    for (let i = 0; i < list.length; i++) {
+      write(list[i]!, i);
+      if ((i + 1) % chunk === 0 && i + 1 < list.length) yield { what, done: i + 1, total: list.length };
+    }
+    yield { what, done: list.length, total: list.length };
+  }
+  yield* rows("accounts", data.accounts, (a, i) => db.run(ACCOUNT_SQL, accountRow(a, i, now)));
+  yield* rows("categories", data.categories, (c, i) => db.run(CATEGORY_SQL, categoryRow(c, i, now)));
+  yield* rows("operations", data.ops, (o) => db.run(OP_SQL, opRow(o, now)));
+  yield* rows("scheduled", data.scheduled, (s) => db.run(SCHEDULED_SQL, scheduledRow(s, now)));
+  yield* rows("budgets", data.budgets, (b, i) => db.run(BUDGET_SQL, budgetRow(b, i, now)));
+  writeTags(db, data.tags);
+  writeSettings(db, data.settings);
+  writeRates(db, data.rates);
+  yield { what: "settings", done: 1, total: 1 };
+  yield { what: "checking", done: 0, total: 1 };
+  const back = loadLedger(db);
+  if (!back) throw new ImportMismatch("nothing was stored");
+  yield { what: "checking", done: 1, total: 2 };
+  const problems = yield* compareSteps(data, back);
+  const sqlBalances = new Map(db.all<{ account_id: string; balance: number }>("SELECT account_id, balance FROM account_balance").map((r) => [r.account_id, r.balance]));
+  for (const a of data.accounts) if (sqlBalances.get(a.id) !== accountBalance(data, a.id)) problems.push(`balance of ${a.id} differs in the database`);
+  if (problems.length) throw new ImportMismatch(problems.slice(0, 5).join("; "));
+  return { accounts: back.accounts.length, ops: back.ops.length, scheduled: back.scheduled.length, back };
+}
+
 // Replaces everything with `data` (a data file being brought in) and checks, before the transaction
 // ends, that what reads back is the same ledger: the same records and the same balance of every
 // account. Any difference rolls everything back.
 export function replaceLedger(db: SqlDriver, data: LedgerData, now: string): { accounts: number; ops: number; scheduled: number } {
   return inTransaction(db, () => {
-    for (const table of ["operation", "scheduled_payment", "budget", "category", "account", "tag", "setting", "rate", "tombstone"]) db.run(`DELETE FROM ${table}`);
-    data.accounts.forEach((a, i) => db.run(ACCOUNT_SQL, accountRow(a, i, now)));
-    data.categories.forEach((c, i) => db.run(CATEGORY_SQL, categoryRow(c, i, now)));
-    for (const o of data.ops) db.run(OP_SQL, opRow(o, now));
-    for (const s of data.scheduled) db.run(SCHEDULED_SQL, scheduledRow(s, now));
-    data.budgets.forEach((b, i) => db.run(BUDGET_SQL, budgetRow(b, i, now)));
-    writeTags(db, data.tags);
-    writeSettings(db, data.settings);
-    writeRates(db, data.rates);
-    const back = loadLedger(db);
-    if (!back) throw new ImportMismatch("nothing was stored");
-    const problems = compareLedgers(data, back);
-    const sqlBalances = new Map(db.all<{ account_id: string; balance: number }>("SELECT account_id, balance FROM account_balance").map((r) => [r.account_id, r.balance]));
-    for (const a of data.accounts)
-      if (sqlBalances.get(a.id) !== accountBalance(data, a.id)) problems.push(`balance of ${a.id} differs in the database`);
-    if (problems.length) throw new ImportMismatch(problems.slice(0, 5).join("; "));
-    return { accounts: back.accounts.length, ops: back.ops.length, scheduled: back.scheduled.length };
+    const { accounts, ops, scheduled } = drain(replaceSteps(db, data, now));
+    return { accounts, ops, scheduled };
   });
+}
+
+export class Cancelled extends Error {
+  constructor() {
+    super("cancelled");
+  }
+}
+const yieldToScreen = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
+
+// The same, a chunk at a time: between chunks the screen is drawn and touches are handled (`pause`), `progress` is told what is being
+// written, and `signal` stops it: the transaction is rolled back and nothing has changed. The caller must keep every other write to
+// the database away while it runs (the store does).
+export async function replaceLedgerAsync(
+  db: SqlDriver,
+  data: LedgerData,
+  now: string,
+  { signal, progress, pause = yieldToScreen, chunk = CHUNK }: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number } = {},
+): Promise<Stored> {
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    const steps = replaceSteps(db, data, now, chunk);
+    for (;;) {
+      if (signal?.aborted) throw new Cancelled();
+      const next = steps.next();
+      if (next.done) {
+        db.exec("COMMIT");
+        return next.value;
+      }
+      progress?.(next.value);
+      await pause();
+    }
+  } catch (error) {
+    try {
+      db.exec("ROLLBACK");
+    } catch {
+      // the transaction was already gone (a failed COMMIT ends it)
+    }
+    throw error;
+  }
 }
 
 const canonical = (x: unknown): string =>
@@ -237,16 +314,29 @@ const canonical = (x: unknown): string =>
       : value,
   );
 
-// Differences between two ledgers, record by record (null and missing fields count as the same).
-export function compareLedgers(a: LedgerData, b: LedgerData): string[] {
+// Differences between two ledgers, record by record (null and missing fields count as the same). As steps: it yields after every
+// list and every 50 records, so a long comparison can be paused between them.
+function* compareSteps(a: LedgerData, b: LedgerData): Generator<Step, string[]> {
   const problems: string[] = [];
   for (const key of LIST_KEYS) {
     const left = a[key] as { id: string }[],
       right = new Map((b[key] as { id: string }[]).map((x) => [x.id, x]));
     if (left.length !== right.size) problems.push(`${key}: ${left.length} ≠ ${right.size}`);
-    for (const x of left) if (canonical(x) !== canonical(right.get(x.id))) problems.push(`${key} ${x.id} differs`);
+    for (let i = 0; i < left.length; i++) {
+      const x = left[i]!;
+      if (canonical(x) !== canonical(right.get(x.id))) problems.push(`${key} ${x.id} differs`);
+      if ((i + 1) % 250 === 0) yield { what: "checking", done: 1, total: 2 };
+    }
   }
   if (canonical(a.tags) !== canonical(b.tags)) problems.push("tags differ");
-  for (const a2 of a.accounts) if (accountBalance(a, a2.id) !== accountBalance(b, a2.id)) problems.push(`balance of ${a2.id} differs`);
+  yield { what: "checking", done: 1, total: 2 };
+  for (let i = 0; i < a.accounts.length; i++) {
+    const a2 = a.accounts[i]!;
+    if (accountBalance(a, a2.id) !== accountBalance(b, a2.id)) problems.push(`balance of ${a2.id} differs`);
+    if ((i + 1) % 10 === 0) yield { what: "checking", done: 1, total: 2 };
+  }
   return problems;
+}
+export function compareLedgers(a: LedgerData, b: LedgerData): string[] {
+  return drain(compareSteps(a, b));
 }

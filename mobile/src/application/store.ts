@@ -11,7 +11,7 @@ import { postDue, settleMissed } from "../domain/scheduled.ts";
 import type { LedgerData } from "../domain/types.ts";
 import { addBackup, deleteAllBackups, listBackups, readBackup, type BackupInfo, type BackupReason } from "../data/backups.ts";
 export type { BackupInfo } from "../data/backups.ts";
-import { loadLedger, persistChange, replaceLedger } from "../data/repository.ts";
+import { loadLedger, persistChange, replaceLedger, replaceLedgerAsync, Cancelled, type Step } from "../data/repository.ts";
 import { DatabaseTooNew, inTransaction, migrate, type SqlDriver } from "../data/schema.ts";
 import { RATE_PROVIDERS, type Fetcher } from "../services/rates/providers.ts";
 import { refreshRates, shouldRefresh, type RateUpdateState } from "../services/rates/refresh.ts";
@@ -48,6 +48,14 @@ export interface Store {
   createBackup(reason?: BackupReason): BackupInfo;
   dailyBackup(): BackupInfo | null;
   restore(incoming: LedgerData, options: { mode: RestoreMode; scheduled: ScheduledWay; conflicts: ConflictWay; safety?: boolean }): RestoreSummary;
+  // The same, a chunk at a time: the screen is drawn and touches are handled between chunks, `progress` says what is being written,
+  // `signal` cancels (rolled back, nothing changes; the Cancelled error). While it runs every other command is refused (`busy`).
+  restoreAsync(
+    incoming: LedgerData,
+    options: { mode: RestoreMode; scheduled: ScheduledWay; conflicts: ConflictWay; safety?: boolean },
+    control?: { signal?: AbortSignal; progress?: (step: Step) => void; pause?: () => Promise<void>; chunk?: number },
+  ): Promise<RestoreSummary>;
+  busy(): boolean;
   deleteData(way: DeletionWay, options?: { backup?: boolean }): void;
   // Recovery when the stored data cannot be opened: the newest saved backup that is whole, bringing data
   // back (in place, or in a fresh database when the old one cannot be written), starting empty.
@@ -89,8 +97,11 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
     ready(loadLedger(db) ?? next);
   };
 
+  // Set while a restore writes chunk by chunk: nothing else may write to the database (it would join the transaction).
+  let locked = false;
   const store: Store = {
     env,
+    busy: () => locked,
     getState: () => state,
     subscribe(listener) {
       listeners.add(listener);
@@ -118,6 +129,7 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
     },
 
     run(command) {
+      if (locked) throw new DomainError("Another operation is still running");
       const before = current();
       const tx = new LedgerTx(before);
       const result = command(tx, env);
@@ -130,7 +142,7 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
 
     // Posts what came due (at start, when the app comes back, every minute while open).
     postDueNow() {
-      if (state.status !== "ready") return [];
+      if (state.status !== "ready" || locked) return [];
       const { posted } = store.run((tx) => postDue(tx, env));
       if (posted.length && state.status === "ready") set({ ...state, posted: [...state.posted, ...posted] });
       return posted;
@@ -168,7 +180,7 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
 
     // The daily backup, when "Save locally" is on and none was made today.
     dailyBackup() {
-      if (state.status !== "ready" || !state.data.settings.autoBackup) return null;
+      if (state.status !== "ready" || locked || !state.data.settings.autoBackup) return null;
       const day = env.clock.today();
       if (listBackups(db).some((b) => b.day === day)) return null;
       return store.createBackup("auto");
@@ -189,6 +201,35 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
       }
       store.postDueNow();
       return plan.summary;
+    },
+
+    async restoreAsync(incoming, { mode, scheduled, conflicts, safety = true }, { signal, progress, pause, chunk } = {}) {
+      if (locked) throw new DomainError("Another operation is still running");
+      locked = true;
+      let summary: RestoreSummary;
+      try {
+        const before = current();
+        const plan = planRestore(before, incoming, { mode, scheduled, conflicts });
+        summary = plan.summary;
+        if (plan.problem) throw new DomainError("This file has a record that does not pass the checks, so it cannot be restored.");
+        const wait = pause ?? (() => new Promise<void>((resolve) => setTimeout(resolve, 0)));
+        await wait();
+        if (signal?.aborted) throw new Cancelled();
+        if (safety) store.createBackup("safety");
+        await wait();
+        const stored = await replaceLedgerAsync(db, keepDeviceSettings(plan.next, before), env.clock.nowIso(), { signal, progress, pause: wait, chunk });
+        ready(stored.back);
+      } finally {
+        locked = false;
+      }
+      const state0 = current();
+      if (scheduled === "skip") {
+        const day = env.clock.today();
+        const due = state0.scheduled.filter((x) => x.date <= day).map((x) => x.id);
+        if (due.length) store.run((tx) => due.forEach((id) => settleMissed(tx, id, false, env)));
+      }
+      store.postDueNow();
+      return summary;
     },
 
     deleteData(way, { backup = false } = {}) {
