@@ -346,6 +346,8 @@ k1=$(where "1"); k2=$(where "2"); k5=$(where "5"); save=$(where "Save operation"
 begin "type 1 2 5 on the keys"
 adb shell input tap $k1; sleep 0.4; adb shell input tap $k2; sleep 0.4; adb shell input tap $k5
 finish 2
+shot 05c-keys-typed 0
+log "keys at $k1 $k2 $k5, save at $save"
 begin "save the operation"; adb shell input tap $save; finish 5
 shot 05-after-save 0
 
