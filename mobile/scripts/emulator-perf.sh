@@ -339,7 +339,15 @@ begin "operations (icons off): 10 fast swipes forward"; for i in $(seq 10); do n
 adb shell input tap 20 335; sleep 1
 begin "operations (plain rows): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
 begin "operations (plain rows): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+# Warm off: no page drawn beforehand (neighbours of the pager, the other tabs of a sheet, the other kind of Categories).
 adb shell input tap 20 335; sleep 1
+begin "operations (warm off): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+begin "operations (warm off): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
+adb shell input tap $ops; sleep 2
+adb shell input tap 20 335; sleep 1
+begin "tab mix (all on): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
+adb shell input tap $ops; sleep 2
 record 21-operations-30-fastest 20
 begin "operations: 30 swipes back, no pause"; for i in $(seq 30); do back_swipe 60; done; finish 3
 stop_record 21-operations-30-fastest

@@ -51,14 +51,15 @@ let watching = false;
 let probing = false;
 // Speed-check build: switches that attribute the cost of a part by leaving it out. `noIcons` draws every icon as an empty box,
 // `plainRows` draws a row as a bare text line. scripts/emulator-perf.sh taps the small box PerfSwitch draws at the top left; each
-// tap moves to the next setting: all on, icons off, plain rows, all on again.
-export const perfFlags = { noIcons: false, plainRows: false };
+// tap moves to the next setting: all on, icons off, plain rows, warm off (no page drawn beforehand: neighbours, other tabs, both kinds), all on again.
+export const perfFlags = { noIcons: false, plainRows: false, noWarm: false };
 let setting = 0;
 export function nextPerfSetting(): string {
-  setting = (setting + 1) % 3;
+  setting = (setting + 1) % 4;
   perfFlags.noIcons = setting === 1;
   perfFlags.plainRows = setting === 2;
-  const name = ["all on", "icons off", "plain rows"][setting]!;
+  perfFlags.noWarm = setting === 3;
+  const name = ["all on", "icons off", "plain rows", "warm off"][setting]!;
   console.log(`[perf] setting ${name}`);
   return name;
 }

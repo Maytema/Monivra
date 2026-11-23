@@ -10,7 +10,7 @@
 //
 // `x` keeps the meaning the period bar and the tabs read (pager-motion.ts): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
-import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
+import { countRender, now, perfFlags, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
 import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -272,7 +272,7 @@ export function Pager<K extends string>({
     setShown(fresh.origin);
   };
 
-  const reach = warm ? around : 0;
+  const reach = warm && !(PERF_BUILD && perfFlags.noWarm) ? around : 0;
   // Speed-check build: which pages have their contents drawn (committed), and when each page was chosen, to say
   // whether the page a swipe uncovers was drawn when the finger got there, and how long its contents took.
   const drawnAround = useRef(shown);

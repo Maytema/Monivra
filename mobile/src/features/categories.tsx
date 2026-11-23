@@ -1,5 +1,5 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
-import { PERF_BUILD } from "../platform/perf.ts";
+import { perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { useCoachTarget } from "../ui/coach.tsx";
 import { memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { View } from "react-native";
@@ -59,7 +59,7 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
         ) : null}
         {(["expense", "income"] as const).map((kind) =>
-          (kind === catType || warm) && !emptyOf(kind) ? (
+          (kind === catType || (warm && !(PERF_BUILD && perfFlags.noWarm))) && !emptyOf(kind) ? (
             <View key={kind} style={kind === catType ? undefined : { display: "none" }}>
               <TileGrid data={data} rows={rows} kind={kind} money={money} />
             </View>

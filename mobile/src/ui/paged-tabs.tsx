@@ -4,6 +4,7 @@
 // logic for all of them (the accounts tab and the period pages use `Pager`, which also keeps neighbours).
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View, type LayoutChangeEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
+import { perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { Pressable } from "./pressable.tsx";
 import { usePalette, useT } from "./app-context.tsx";
 
@@ -109,7 +110,7 @@ export function PagedTabs<T extends string>({ tabs, active, onChange, render, he
         >
           {tabs.map((tab, i) => (
             <View key={tab.id} style={{ width }}>
-              {i === index || ready ? render(tab.id) : null}
+              {i === index || (ready && !(PERF_BUILD && perfFlags.noWarm)) ? render(tab.id) : null}
             </View>
           ))}
         </Animated.ScrollView>
