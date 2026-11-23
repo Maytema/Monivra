@@ -106,3 +106,16 @@ for move in moves:
         f"{move['name'][:62]:62} {sum(move['stalls']):7.0f}ms {f.get('Total frames rendered', '-'):>7} {f.get('Janky frames', '-'):>12} "
         f"{f.get('90th percentile', '-'):>6} {(f'{shown[0]:.0f}ms' if shown else '-'):>7}"
     )
+
+# What React spent drawing (React.Profiler of the speed-check build): per move and part, the commits, the total and the
+# longest, in ms ("ops page" holds its rows, a row its icons: the ids nest, so the totals overlap).
+print()
+print(f"{'React drawing (Profiler)':62} {'part':>9} {'commits':>7} {'total':>8} {'longest':>8}")
+for move in moves:
+    parts = {}
+    for n in move["notes"]:
+        m = re.match(r"profile (.+?) (mount|update|nested-update) ([\d.]+)ms", n)
+        if m:
+            parts.setdefault(m.group(1), []).append(float(m.group(3)))
+    for part, values in sorted(parts.items()):
+        print(f"{move['name'][:62]:62} {part:>9} {len(values):7d} {sum(values):7.0f}ms {max(values):7.0f}ms")

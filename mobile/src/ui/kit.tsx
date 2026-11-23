@@ -8,16 +8,19 @@ import Svg, { Path } from "react-native-svg";
 import { ICON_FILLS, ICONS } from "./icon-paths.ts";
 import { useRevealFocusedField } from "./keyboard.tsx";
 import { usePalette, useT } from "./app-context.tsx";
+import { Profiled } from "../platform/profiled.tsx";
 import { font, radius, space } from "./theme.ts";
 
 export function Icon({ name, size = 22, color, filled = false }: { name: string; size?: number; color?: ColorValue; filled?: boolean }) {
   const p = usePalette();
   const heavy = name === "more" || name === "apps";
   return (
+    <Profiled id="icon">
     <Svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? (color ?? p.ink) : "none"} stroke={color ?? p.ink} strokeWidth={heavy ? 3.8 : 1.7} strokeLinecap="round" strokeLinejoin="round">
       <Path d={ICONS[name] ?? ICONS.wallet ?? ""} />
       {ICON_FILLS[name] ? <Path d={ICON_FILLS[name]} fill={color ?? p.ink} /> : null}
     </Svg>
+    </Profiled>
   );
 }
 

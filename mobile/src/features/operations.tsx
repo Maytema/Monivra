@@ -2,6 +2,7 @@
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
 import { countRender, now, perfLog, PERF_BUILD } from "../platform/perf.ts";
+import { Profiled } from "../platform/profiled.tsx";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { usePageReady } from "../ui/pager.tsx";
@@ -271,11 +272,11 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
       // padding, and with it there its first letters were cut at the edge of the screen.
       item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
-          <DayHead date={item.date} ops={item.ops} />
+          <Profiled id="day head"><DayHead date={item.date} ops={item.ops} /></Profiled>
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
-          <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
+          <Profiled id="row"><OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} /></Profiled>
         </View>
       ),
     [selection, selectedSet, onPress, onLongPress, p.bg],
@@ -284,6 +285,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   return (
+    <Profiled id="ops page">
     <View style={{ flex: 1 }}>
       <FlashList
         ref={list}
@@ -308,6 +310,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), ready()) : undefined}
       />
     </View>
+    </Profiled>
   );
 });
 
