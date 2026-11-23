@@ -45,6 +45,7 @@ OUT_FROM, OUT_TO = 20, 111     # frames written out (every one: the note moves f
 REST = 110                     # a frame at rest, used to measure the bulges and the ellipse
 STROKE = 23.0
 HW = STROKE / 2
+BEHIND_SPAN = float(os.environ.get("BM_BEHIND", "90"))   # runs on the note whose middle lies this many degrees from 270 on (clockwise) are behind it
 TOP = 300                      # the note lives below this row of the recording
 # The four bulges, one per edge (long edge A, short edge P1-P2, long edge B, short edge P3-P0): where each sits as a fraction of its
 # edge's length, its radius and how far its circle's centre lies inside the stroke's inner side (negative: outside it, a shallower
@@ -817,7 +818,7 @@ def ring_split_own(poly, cx, cy, r, step=0.5, thick=0.0):
         if a1 < a0:
             a1 += 360
         mid = ((a0 + a1) / 2) % 360
-        (behind if 270 <= mid < 360 else front).append((a0, a1))
+        (behind if (mid - 270) % 360 < BEHIND_SPAN else front).append((a0, a1))
     # A front run is drawn over the note with flat ends cut across the ring, while the note's edge crosses the ring at a slant: the
     # ring's own half width (and the note's half stroke) reaches past the place where its centre leaves the note, and a run that
     # stops there leaves a yellow wedge on the green and a green notch next to it (frames 44-52). Each end is therefore extended
@@ -1000,8 +1001,21 @@ def main():
         return X + (out - X) * w[None, :, None]
 
     XA, XB = smooth_edge(XA), smooth_edge(XB)
-    XA = savgol_filter(XA, TEMPORAL, 2, axis=0)
-    XB = savgol_filter(XB, TEMPORAL, 2, axis=0)
+    # At the first frames the note starts to move from standing and a polynomial over a window that reaches only one way smooths its
+    # start away (frame 20 was off by 1-2 px as a whole): there the window is cut to what fits on both sides, down to the frame itself.
+    def smooth_time(X):
+        out = savgol_filter(X, TEMPORAL, 2, axis=0)
+        half = TEMPORAL // 2
+        for k in range(min(half, len(X))):
+            w = 2 * k + 1                       # k frames on each side
+            if w >= 3:
+                out[k] = savgol_filter(X[: 2 * k + 1], w, min(2, w - 1), axis=0)[k] if w > 2 else X[k]
+            else:
+                out[k] = X[k]
+        return out
+
+    XA = smooth_time(XA) if os.environ.get("BM_EDGE", "1") == "1" else savgol_filter(XA, TEMPORAL, 2, axis=0)
+    XB = smooth_time(XB) if os.environ.get("BM_EDGE", "1") == "1" else savgol_filter(XB, TEMPORAL, 2, axis=0)
     # (coordinates so far are pixel indices, a pixel's centre being its index; the drawing's coordinates put the pixel's corner at
     # its index, so everything written out is moved by half a pixel)
     line = {i: (XA[k], XB[k]) for k, i in enumerate(frames)}
@@ -1118,6 +1132,8 @@ def main():
         behind, front = ring_split_own(poly_polygon(*line[i]) + 0.5, row[1], row[2], r, thick=row[4])
         if len(front) > 2:
             print(f"ring row t={row[0]:.0f} (frame {i}): {len(front)} runs in front of the note, the two longest drawn")
+        if os.environ.get("BM_DEBUG") and 40 <= i <= 48:
+            print(f"split frame {i}: behind {[(round(a), round(b)) for a, b in behind]} front {[(round(a), round(b)) for a, b in front]}")
         paths.append(ring_paths(row, row[4], behind, front))
         kinds.append((len(behind), len(front)))
     print(f"ring frames: {len(ring_rows)}; with a run behind the note: {sum(1 for b_, f_ in kinds if b_)}; with a run in front: {sum(1 for b_, f_ in kinds if f_)}")
