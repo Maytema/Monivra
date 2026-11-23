@@ -198,6 +198,16 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   countRender("operations page");
   const done = selfTime("page body");
   const began = PERF_BUILD ? now() : 0;
+  // Speed-check build: a page drawn again, and which input changed (a new page counts as a mount).
+  const seen = useRef<Record<string, unknown> | null>(null);
+  if (PERF_BUILD) {
+    const now_ = { period, query, active, selection, selectedSet, onPress, onLongPress, onTop };
+    if (seen.current === null) perfLog("operations page mount", 0);
+    else
+      for (const k of Object.keys(now_) as (keyof typeof now_)[])
+        if (seen.current[k] !== now_[k]) perfLog(`operations page prop changed: ${k}`, 0);
+    seen.current = now_;
+  }
   useLayoutEffect(() => {
     if (PERF_BUILD) perfLog("operations page built", now() - began);
   });
