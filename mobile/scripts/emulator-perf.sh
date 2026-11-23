@@ -43,13 +43,17 @@ PY
 # Where an element is, without tapping it (the taps of a measured move must not be delayed by a dump).
 where() {
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  # The last match: a word of the screen under a sheet ("1" among the day numbers) comes earlier in the tree than the sheet's own.
   python3 - "$1" <<'PY'
 import re, sys, xml.etree.ElementTree as ET
 want = sys.argv[1]
+hit = None
 for n in ET.parse("/tmp/ui.xml").iter("node"):
     if n.get("text") == want or n.get("content-desc") == want:
-        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
-        print((a + c) // 2, (b + d) // 2); break
+        hit = n
+if hit is not None:
+    a, b, c, d = map(int, re.findall(r"\d+", hit.get("bounds")))
+    print((a + c) // 2, (b + d) // 2)
 PY
 }
 back() { adb shell input keyevent 4; sleep 1.2; }
@@ -261,9 +265,10 @@ import re, xml.etree.ElementTree as ET
 # The title in the middle of the screen (the neighbours' titles are in the tree too, off to the sides).
 t = []
 for n in ET.parse("/tmp/ui.xml").iter("node"):
-    if re.match(r"^[A-Z][a-z]+ \d{4}$", n.get("text") or ""):
+    name = n.get("text") or n.get("content-desc") or ""   # the period bar gives the title as a description
+    if re.match(r"^[A-Z][a-z]+ \d{4}$", name):
         a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
-        if 300 < (a + c) // 2 < 780: t.append(n.get("text"))
+        if 300 < (a + c) // 2 < 780: t.append(name)
 print(t[0] if t else "?")
 PY
 }
