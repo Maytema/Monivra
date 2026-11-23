@@ -13,7 +13,7 @@ import { usePalette, useT } from "./app-context.tsx";
 import { Button } from "./kit.tsx";
 import { mix } from "./theme.ts";
 import { Pivot } from "./svg-pivot.tsx";
-import { markPlayed, shouldPlay } from "./quiet.ts";
+import { hasPlayed, markPlayed, shouldPlay } from "./quiet.ts";
 import { onPictureStop } from "./picture-stop.ts";
 
 export type EmptyKind = "operations" | "accounts" | "categories" | "budgets" | "scheduled" | "statistics";
@@ -103,8 +103,10 @@ function Operations({ time, c }: { time: Timeline; c: Colors }) {
   const faint = mix(c.muted, c.bg, 0.45);
   const lensColor = mix(c.muted, c.bg, 0.62);
   const lens = (index: number) => keyed(time, LENS.map((row) => [row[0]!, row[index]!] as Key));
+  // The lens swings past the sheet's right edge (its handle reaches x 556.6 at 300 ms, measured over every row of LENS), so the
+  // view is widened to the right by 21 units and, to keep the sheet where it was, by 21 to the left; 0.5 px per unit as before.
   return (
-    <Svg width={170} height={170} viewBox="200 155 340 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
+    <Svg width={191} height={170} viewBox="179 155 382 340" fill="none" strokeLinecap="round" strokeLinejoin="round">
       {/* The sheet (scripts/trace-operations-paper.py): the outline is straight strokes of constant width with round caps and
           one quarter circle, each ending inside the fill it meets; the top curl and the bottom roll are the only filled shapes. */}
       <AnimatedG opacity={between(time, 0, 50, 0, 1)}>
@@ -349,14 +351,15 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
   const p = usePalette();
   const t = useT();
   const total = PLAY_MS[kind];
-  const time = useRef(new Animated.Value(shouldPlay(kind) ? 0 : total)).current;
+  // A picture seen before is at rest until its run starts (no blank frame between the visit and the replay); one never played
+  // starts from its first frame.
+  const time = useRef(new Animated.Value(hasPlayed(kind) || !shouldPlay(kind) ? total : 0)).current;
   // Played only while the screen is in focus. `freezeOnBlur` freezes React rendering, not an `Animated` loop, so an
   // animation started on mount went on behind a tab that was left (and, JS-driven, kept the JavaScript thread busy while
   // the next tab was being built).
   useFocusEffect(
     useCallback(() => {
       if (!shouldPlay(kind)) return void time.setValue(total);
-      time.setValue(0);
       let run: Animated.CompositeAnimation | undefined;
       let second = 0;
       let wait: ReturnType<typeof setTimeout> | undefined;
@@ -367,6 +370,8 @@ export function EmptyState({ kind, title, hint, action, onAction }: { kind: Empt
         second = requestAnimationFrame(() => {
           wait = setTimeout(() => {
             markPlayed(kind);
+            // Jump to the first frame and start in the same tick: until now the picture stayed as it was (at rest).
+            time.setValue(0);
             run = Animated.timing(time, { toValue: total, duration: total, easing: Easing.linear, useNativeDriver: kind === "scheduled" });
             run.start();
           }, START_WAIT_MS);

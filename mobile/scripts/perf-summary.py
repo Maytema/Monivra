@@ -70,3 +70,25 @@ for move in moves:
     p50 = f"{percentile(shown, 0.5):.0f}ms" if shown else "-"
     p90 = f"{percentile(shown, 0.9):.0f}ms" if shown else "-"
     print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms")
+
+# Layers: the time from the ask to a sheet drawn ("layer sheet shown", the add sheet right after entering an empty
+# Operations tab, with the picture running and with it at rest), and the period dialog's tile tap to dialog gone, the
+# old order (pick, then close) against the new one (close, then pick).
+print()
+print(f"{'layers':62} {'sheet shown':>12} {'dialog gone, old':>17} {'dialog gone, new':>17}")
+for move in moves:
+    shown = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"layer sheet shown ([\d.]+)ms", n)] if m]
+    gone = {"old": [], "new": []}
+    mode = None
+    for n in move["notes"]:
+        if n.startswith("period dialog: old order"):
+            mode = "old"
+        elif n.startswith("period dialog: new order"):
+            mode = "new"
+        m = re.match(r"period dialog: tile tap to dialog gone ([\d.]+)ms", n)
+        if m and mode:
+            gone[mode].append(float(m.group(1)))
+    if not shown and not gone["old"] and not gone["new"]:
+        continue
+    f = lambda xs: ", ".join(f"{x:.0f}" for x in xs) + "ms" if xs else "-"
+    print(f"{move['name'][:62]:62} {f(shown):>12} {f(gone['old']):>17} {f(gone['new']):>17}")

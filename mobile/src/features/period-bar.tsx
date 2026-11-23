@@ -31,24 +31,35 @@ function useScreenPeriod(): { period: Period; caughtUp: boolean } {
   } catch {
     navigation = null;
   }
-  const [front, setFront] = useState(() => {
-    try {
-      return navigation ? navigation.isFocused() : true;
-    } catch {
-      return true;
-    }
-  });
+  // Whether the screen is in front is read while rendering, not taken from the focus event: a tab shown again is drawn
+  // for the first time after it unfreezes, and the event comes a frame later, so its first frame had the old period and
+  // the date then jumped. The events only make the screen draw again (when it is left, and when it is shown).
+  const [, redraw] = useState(0);
+  // Set by the blur event itself (an event runs even while the screen is frozen, a render does not), cleared once the screen has
+  // been drawn in front again.
+  const left = useRef(false);
   useEffect(() => {
     if (!navigation) return;
-    const off = [navigation.addListener("focus", () => setFront(true)), navigation.addListener("blur", () => setFront(false))];
+    const off = [
+      navigation.addListener("focus", () => redraw((n) => n + 1)),
+      navigation.addListener("blur", () => {
+        left.current = true;
+        redraw((n) => n + 1);
+      }),
+    ];
     return () => off.forEach((f) => f());
   }, [navigation]);
+  let front = true;
+  try {
+    front = navigation ? navigation.isFocused() : true;
+  } catch {
+    front = true;
+  }
   const live = useViewPeriodWhile(front);
   const kept = useRef<Period>(live ?? getView().period);
-  const wasFront = useRef(front);
-  const caughtUp = front && !wasFront.current && live !== kept.current;
+  const caughtUp = front && left.current && live !== kept.current;
   useEffect(() => {
-    wasFront.current = front;
+    if (front) left.current = false;
   });
   if (live) kept.current = live;
   return { period: kept.current, caughtUp };

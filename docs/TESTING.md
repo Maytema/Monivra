@@ -97,6 +97,19 @@ the first application imports whole and reads back the same").
 - **Touches do nothing**: a responder that never released (see `ui/pager.tsx`
   `onPanResponderTerminationRequest`), or an invisible layer left open (`ui/sheets.tsx`).
 
+## Animated empty states run on the JavaScript thread
+
+Five of the six empty-state pictures (`ui/empty-state.tsx`: operations, accounts, categories, statistics, budgets) are
+`Animated` values with `useNativeDriver: false` that drive SVG props, so every frame costs JavaScript time; only the
+scheduled picture uses the native driver. They compete with heavy tabs and with sheets for the same thread.
+Measured: the empty-profile tab moves in CI build 137 (the `empty: ...` rows of `perf-summary.txt`) and the 12-tap run, where
+JavaScript was busy about 4.3 s (4310 ms in 0.3.11, 4267 ms in 0.3.9). Mitigations in place: a picture plays once per kind
+until the owner acts (`ui/quiet.ts`), stops when a sheet opens or a tab is pressed (`stopPictures` in `ui/sheets.tsx`), and
+rests at its end state. The perf run has two moves, `empty: add sheet 0.7 s after entering Operations, picture running` and
+`..., picture at rest`, whose `layer sheet shown` times show what the picture costs a sheet.
+Future fix: draw the pictures with native-driver `Animated.View` layers (transforms and opacity only) or Reanimated
+worklets, so the JavaScript thread is not needed per frame.
+
 ## Regressions
 
 Reproduce with a test (logic) or a tour step (screen) first, fix the cause, keep the test.

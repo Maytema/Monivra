@@ -6,6 +6,8 @@ import { AppState } from "react-native";
 export const now = (): number => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
 
 export const PERF_BUILD = process.env.EXPO_PUBLIC_PERF === "1";
+// When a tile of the period dialog was tapped (speed-check build): the layer that goes away next writes the time since.
+export const perfMark = { tap: 0 };
 
 export function perfLog(label: string, ms: number): void {
   console.log(`[perf] ${label} ${ms.toFixed(1)}ms`);

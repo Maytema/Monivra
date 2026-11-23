@@ -9,7 +9,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { dismissKeyboard, useRevealFocusedField } from "./keyboard.tsx";
 import { chrome } from "./theme.ts";
-import { now, perfLog } from "../platform/perf.ts";
+import { now, perfLog, perfMark } from "../platform/perf.ts";
+import { stopPictures } from "./picture-stop.ts";
 
 // A "full" layer is a page over the whole screen (the icon list, the colour page).
 type Kind = "sheet" | "dialog" | "full";
@@ -27,6 +28,9 @@ interface Layer {
   swipeDown: boolean;
   // When it was asked for (the emulator test reads how long a layer takes to appear).
   asked: number;
+  // Asked to close: when (the emulator test reads how long a layer takes to go) and what to do once it is gone.
+  closeAsked?: number;
+  then?: () => void;
 }
 
 export interface SheetOptions {
@@ -50,13 +54,18 @@ export const sheets = {
   open(content: ReactNode, kind: Kind = "sheet", options: SheetOptions = {}): number {
     // The field under the new layer cannot be typed in any more (ui/keyboard.tsx).
     if (!options.keyboard) dismissKeyboard();
+    // The empty-state pictures on the JS driver would run under the layer and compete with it; they stop at rest (the tab
+    // does not blur when a sheet or a dialog opens).
+    stopPictures();
     const id = ++counter;
     publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown, asked: now() }]);
     return id;
   },
   // Starts closing a layer (the animation removes it).
-  close(id: number): void {
-    publish(layers.map((l) => (l.id === id ? { ...l, closing: true } : l)));
+  // `then` runs when the layer is gone (its closing animation is over): a change the layer's choice makes to the screen
+  // below waits for it, so that the screen is not redrawn (on the JavaScript thread) while the layer is fading.
+  close(id: number, then?: () => void): void {
+    publish(layers.map((l) => (l.id === id && !l.closing ? { ...l, closing: true, closeAsked: now(), then } : l)));
   },
   closeTop(): boolean {
     const top = [...layers].reverse().find((l) => !l.closing);
@@ -82,9 +91,9 @@ const subscribe = (l: () => void) => {
 };
 const snapshot = () => layers;
 
-const LayerContext = createContext<() => void>(() => undefined);
-// Closes the layer the component is shown in.
-export const useCloseLayer = (): (() => void) => useContext(LayerContext);
+const LayerContext = createContext<(then?: () => void) => void>(() => undefined);
+// Closes the layer the component is shown in (`then`: what to do once it is gone).
+export const useCloseLayer = (): ((then?: () => void) => void) => useContext(LayerContext);
 
 export function SheetHost() {
   const all = useSyncExternalStore(subscribe, snapshot);
@@ -107,13 +116,21 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const p = usePalette();
   const insets = useSafeAreaInsets();
   const progress = useRef(new Animated.Value(0)).current;
-  const close = () => sheets.close(layer.id);
+  const close = (then?: () => void) => sheets.close(layer.id, typeof then === "function" ? then : undefined);
   const reveal = useRevealFocusedField();
 
   useEffect(() => {
     if (!layer.closing) perfLog(`layer ${layer.kind} shown`, now() - layer.asked);
     Animated.timing(progress, { toValue: layer.closing ? 0 : 1, duration: layer.closing ? 160 : 220, useNativeDriver: true }).start(({ finished }) => {
-      if (layer.closing && finished) publish(layers.filter((l) => l.id !== layer.id));
+      if (layer.closing && finished) {
+        if (layer.closeAsked !== undefined) perfLog(`layer ${layer.kind} gone`, now() - layer.closeAsked);
+        if (perfMark.tap) {
+          perfLog("period dialog: tile tap to dialog gone", now() - perfMark.tap);
+          perfMark.tap = 0;
+        }
+        publish(layers.filter((l) => l.id !== layer.id));
+        layer.then?.();
+      }
     });
   }, [layer.closing, layer.id, progress]);
 

@@ -412,6 +412,7 @@ def boundary_error(q, filled, weight):
 
 
 RING_STROKE = 25.0
+SPIKE = 2.5                    # times the median acceleration of the outline numbers: above it a frame is replaced
 MIN_HIDDEN = 8                 # degrees: a shorter hidden stretch is not a split
 
 
@@ -656,6 +657,50 @@ def main():
         print(f"{i:5d}  {e2[i]:7.2f}  {m[0]:9.2f}  {m[1]:8.2f}{'  ***' if m[0] > 1.5 or m[1] > 3 else ''}")
     print(f"frames that use their own fit instead of the smoothed one: {fallback}")
     print(f"frames over the limits (mean 1.5, p95 3): {[w[0] for w in worst if w[1] > 1.5 or w[2] > 3]}")
+
+    # -- 5b. jerks: the recording is smooth (the note's centre accelerates by about 0.4 px per frame squared everywhere), so a
+    # frame whose 28 outline numbers accelerate by more than SPIKE times the median is a fit artefact. It is replaced by the
+    # mean of its neighbours (pose and shape separately, as in step 4), when that keeps the visible-boundary limits.
+    numbers = lambda q: np.array([float(v) for v in re.findall(r"-?\d+\.?\d*", outline_path(q))])
+    def acceleration():
+        X = np.array([numbers(smooth[i]) for i in range(OUT_FROM, OUT_TO + 1)])
+        return np.linalg.norm(X[:-2] - 2 * X[1:-1] + X[2:], axis=1), np.linalg.norm(X[1:] - X[:-1], axis=1)
+    def report(title):
+        acc, speed = acceleration()
+        med = float(np.median(acc))
+        top = sorted(range(len(acc)), key=lambda k: -acc[k])[:8]
+        print(f"{title}: median acceleration {med:.1f}; largest (frame: acceleration, ratio, speed in/out): " + "; ".join(f"{OUT_FROM + k + 1}: {acc[k]:.0f}, {acc[k] / med:.1f}x, {speed[k]:.0f}/{speed[k + 1]:.0f}" for k in top))
+        return acc, med
+    acc, med = report("outline acceleration before the repair")
+    replaced = []
+    for _ in range(3):
+        acc, med = acceleration()[0], float(np.median(acceleration()[0]))
+        spikes = [OUT_FROM + k + 1 for k in range(len(acc)) if acc[k] > SPIKE * med]
+        if not spikes:
+            break
+        for i in sorted(spikes, key=lambda f: -acc[f - OUT_FROM - 1]):
+            a, b = pose2(smooth[i - 1]), pose2(smooth[i + 1])
+            ang = a[1] + ((b[1] - a[1] + np.pi) % (2 * np.pi) - np.pi) / 2
+            mid = (a[0] + b[0]) / 2, ang, (a[2] + b[2]) / 2, (a[3] + b[3]) / 2
+            own = pose2(smooth[i])
+            dang = (own[1] - ang + np.pi) % (2 * np.pi) - np.pi
+            best = None
+            for w in (1.0, 0.85, 0.7, 0.55, 0.4, 0.25):   # share of the way from the frame's own pose to the neighbours' mean
+                cand = unpose2(own[0] + w * (mid[0] - own[0]), own[1] - w * dang, own[2] + w * (mid[2] - own[2]), own[3] + w * (mid[3] - own[3]))
+                m = boundary_error(cand, data[i][3], data[i][1])
+                if m is not None and m[0] <= 1.5 and m[1] <= 3:
+                    best = (w, cand)
+                    break
+            if best:
+                smooth[i] = best[1]
+                replaced.append(i)
+                print(f"  frame {i}: pulled {best[0]:.2f} of the way to its neighbours")
+            else:
+                print(f"  frame {i}: no pull keeps the boundary limits, left as fitted")
+    print(f"frames replaced by the mean of their neighbours: {sorted(set(replaced))}")
+    acc, med = report("outline acceleration after the repair")
+    still = [OUT_FROM + k + 1 for k in range(len(acc)) if acc[k] > SPIKE * med]
+    print(f"frames still above {SPIKE}x the median: {still}")
 
     # -- 6. the parts of the frame, measured at rest
     rest = smooth[REST]

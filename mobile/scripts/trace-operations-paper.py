@@ -408,10 +408,38 @@ def trace(rest, out_path):
         if name == "roll":
             below = yy >= (icpt + slope * (xx + 0.5) / SCALE) * SCALE - 0.5       # the part under the fitted top edge
             m[~below] = 0
-            m[:int(bowl_cut * SCALE), 440 * SCALE:] = 0        # above this the right edge is the stroke, below it the bowl is the roll's
+            m[:int((bowl_cut - 30) * SCALE), 440 * SCALE:] = 0        # above this the right edge is the stroke, below it the bowl is the roll's
         contours, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         c = max(contours, key=cv2.contourArea)[:, 0, :].astype(float)
         c = np.stack([gaussian_filter1d(c[:, 0], 1 * SCALE, mode="wrap"), gaussian_filter1d(c[:, 1], 1 * SCALE, mode="wrap")], 1)
+        if name == "roll":
+            # The bottom edge is one smooth curve: the recording's edge has two small steps where the drawing's pieces meet
+            # (x about 287 and 430). The contour's lowest stretch, between the rounded corners, is smoothed along its length.
+            bot = (c[:, 1] > c[:, 1].max() - 10 * SCALE) & (c[:, 0] > 235 * SCALE) & (c[:, 0] < 445 * SCALE)
+            idx = np.nonzero(bot)[0]
+            if len(idx) > 20 and np.all(np.diff(idx) == 1):
+                part = c[idx]
+                pad = 12 * SCALE
+                ext = np.vstack([np.repeat(part[:1], pad, 0), part, np.repeat(part[-1:], pad, 0)])
+                sm = gaussian_filter1d(ext[:, 1], 9 * SCALE, mode="nearest")[pad:-pad]
+                fade = np.minimum(1.0, np.minimum(np.arange(len(idx)), np.arange(len(idx))[::-1]) / (8.0 * SCALE))
+                c[idx, 1] = part[:, 1] + fade * (sm - part[:, 1])
+                print(f"roll bottom edge smoothed over {len(idx) / SCALE:.0f} px, largest move {np.abs(sm - part[:, 1]).max() / SCALE:.2f} px")
+        if name == "roll":
+            # Where the right stroke ends and the bowl begins, the fill's inner edge turned in a corner: a longer smoothing along
+            # that stretch of the contour makes the inner edge one curve from the stroke into the bowl.
+            win = (c[:, 0] > 436 * SCALE) & (c[:, 0] < xr * SCALE) & (c[:, 1] > (bowl_cut - 36) * SCALE) & (c[:, 1] < (bowl_cut + 40) * SCALE)
+            idx = np.nonzero(win)[0]
+            runs = np.split(idx, np.nonzero(np.diff(idx) != 1)[0] + 1) if len(idx) else []
+            idx = max(runs, key=len) if runs else idx
+            if len(idx) > 20 and np.all(np.diff(idx) == 1):
+                pad = 14 * SCALE
+                part = c[idx]
+                ext = np.vstack([np.repeat(part[:1], pad, 0), part, np.repeat(part[-1:], pad, 0)])
+                sm = np.stack([gaussian_filter1d(ext[:, k], 7 * SCALE, mode="nearest")[pad:-pad] for k in (0, 1)], 1)
+                fade = np.minimum(1.0, np.minimum(np.arange(len(idx)), np.arange(len(idx))[::-1]) / (10.0 * SCALE))[:, None]
+                c[idx] = part + fade * (sm - part)
+                print(f"roll inner edge at the right stroke smoothed over {len(idx) / SCALE:.0f} px, largest move {np.abs(sm - part).max() / SCALE:.2f} px")
         seg = np.linalg.norm(np.diff(np.vstack([c, c[:1]]), axis=0), axis=1)
         d = np.concatenate([[0], np.cumsum(seg)])
         samples = np.linspace(0, d[-1], int(d[-1] / SCALE), endpoint=False)

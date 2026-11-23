@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Stack, router, useLocalSearchParams, useNavigation } from "expo-router";
 import { budgetOperations, budgetState, deleteBudget, saveBudget } from "../domain/categories.ts";
 import { categoryById } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
@@ -113,11 +113,19 @@ function askDelete(run: ReturnType<typeof useCommand>, id: string, leave = false
 
 // A budget is looked at one month at a time; the page opens on a month and gives back the period it found.
 function useMonthPeriod(mode: "month" | BudgetPeriod): void {
+  const navigation = useNavigation();
   useEffect(() => {
     const before = getView().period;
     const anchor = ["all", "range"].includes(before.mode) ? appStore().env.clock.today() : before.anchor;
     setView({ period: { mode, anchor } }, false);
-    return () => setView({ period: before }, false);
+    // The period is given back when the page starts to go (before its closing animation), not when it is gone: the tabs
+    // beneath are in front for the whole animation and showed the budgets' month until the page was removed, then jumped
+    // back. (setView ignores a period equal to the current one, so nothing is redrawn when it did not change.)
+    const off = navigation.addListener("beforeRemove", () => setView({ period: before }, false));
+    return () => {
+      off();
+      setView({ period: before }, false);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 }
@@ -146,7 +154,8 @@ export function BudgetsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <Stack.Screen options={header} />
-      <PeriodBar dayPicker />
+      {/* With no budgets there is nothing to page through: no period bar over the empty screen. */}
+      {data.budgets.length ? <PeriodBar dayPicker /> : null}
       <ScrollView contentContainerStyle={{ padding: space.l, gap: 18 }}>
         {states.length ? (
           PERIODS.map((kind) => ({ kind, list: states.filter((s) => s.b.period === kind) }))

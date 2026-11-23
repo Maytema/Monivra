@@ -219,6 +219,41 @@ shot 15h-budget-categories 2
 back
 back
 back
+# The period title of Budgets: an empty Budgets screen has no period bar (nothing to page through); once a budget exists the
+# title opens the calendar. (The owner reported a title that did nothing on the empty screen, arrows worked.)
+# tap_title taps the element whose description is a month and a year ("November 2026").
+tap_title() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  local xy
+  xy=$(python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if re.fullmatch(r"[A-Za-z]+ [0-9]{4}", n.get("content-desc") or ""):
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        print((a + c) // 2, (b + d) // 2); break
+PY
+)
+  if [ -z "$xy" ]; then log "NOT FOUND: period title"; return 1; fi
+  adb shell input tap $xy; log "tapped: period title"; sleep 1.5
+}
+tap "Budgets"
+shot 15m2-budgets-empty 2
+if grep -Eq 'content-desc="[A-Za-z]+ [0-9]{4}"' "$OUT/15m2-budgets-empty.xml"; then log "FAIL: the empty Budgets screen shows a period bar"; FAILED=1; else log "OK: no period bar on the empty Budgets screen"; fi
+tap "Create a budget"
+if tap "Budget"; then
+  for k in 5 0 0; do tap "$k"; done
+  tap "Save"
+  tap "Create"
+fi
+shot 15m3-budgets-with-one 3
+if tap_title; then
+  shot 15m4-budgets-period-calendar 2
+  has "Today" 15m4-budgets-period-calendar
+  tap "Cancel" || back
+else
+  log "FAIL: no period title on Budgets with a budget"; FAILED=1
+fi
+back
 # A scheduled payment: created through the dialog, then opened (the sheet has Delete, Duplicate, Skip, Add now
 # in two columns), and the page with a payment (the "Add" button, the details under the row).
 tap "Scheduled payments"; burst 15m-scheduled-moving

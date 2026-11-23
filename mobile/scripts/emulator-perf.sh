@@ -142,6 +142,46 @@ finish 3
 last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')
 log "empty, after 12 random taps: shown $(shown_tab) (expected index $last_tab of Accounts, Categories, Operations, Statistics, More)"
 
+# Layers over an empty Operations tab (0.3.12): the add sheet opened right after entering the tab, while its picture runs,
+# and again with the picture at rest (the person has acted: the period changed, the tab was seen). Written as "layer sheet
+# shown" per move; perf-summary.py lists them. Then the period dialog: four picks of a tile, the old order (pick, then
+# close) and the new one (close, then pick) in turns; "period dialog: tile tap to dialog gone" per pick.
+adb shell input tap $accs; sleep 2
+begin "empty: add sheet 0.7 s after entering Operations, picture running"
+adb shell input tap $ops; sleep 0.7
+tap "Add" 0 || true
+finish 2
+back
+adb shell input tap $accs; sleep 1
+adb shell input tap $ops; sleep 2
+tap "Next period" 1 || true      # the person acts: pictures of seen tab screens stay at rest from now on
+adb shell input tap $accs; sleep 1
+adb shell input tap $ops; sleep 2
+adb shell input tap $accs; sleep 1
+begin "empty: add sheet 0.7 s after entering Operations, picture at rest"
+adb shell input tap $ops; sleep 0.7
+tap "Add" 0 || true
+finish 2
+back
+for round in 1 2 3 4; do
+  begin "empty: period dialog, tile pick $round"
+  title_xy=$(python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+import subprocess
+subprocess.run("adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1", shell=True)
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    if re.fullmatch(r"[A-Za-z]+ [0-9]{4}", n.get("content-desc") or ""):
+        a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+        if 300 < (a + c) // 2 < 780:
+            print((a + c) // 2, (b + d) // 2); break
+PY
+)
+  [ -n "$title_xy" ] && adb shell input tap $title_xy; sleep 1.5
+  if tap "Month" 0; then :; else tap "Today" 0 || true; fi
+  finish 2
+done
+shot 12z-after-period-dialog 0
+
 # The large ledger comes in as a data file, the way a person moves data from the first application.
 tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
 begin "read the file and open the restore page"
