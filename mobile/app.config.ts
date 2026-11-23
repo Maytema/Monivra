@@ -47,10 +47,27 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         android: {
+          // R8 shrinks and obfuscates the code and the resources of the release build.
+          enableMinifyInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
+          // What is reached by reflection or from native code, which R8 cannot see: WorkManager's Room database (the app
+          // stopped at start without it: WorkDatabase_Impl.<init>), Reanimated and worklets (native code calls their Java
+          // classes by name), expo-sqlite, expo-notifications, expo-task-manager and expo-background-task (modules found by
+          // name and tasks started by WorkManager), the JNI helpers and Hermes.
           extraProguardRules: [
             "-keep class * extends androidx.room.RoomDatabase { <init>(); }",
             "-keep class androidx.work.impl.WorkDatabase_Impl { *; }",
             "-keep class androidx.work.** { *; }",
+            "-keep class com.swmansion.reanimated.** { *; }",
+            "-keep class com.swmansion.worklets.** { *; }",
+            "-keep class com.facebook.jni.** { *; }",
+            "-keep class com.facebook.hermes.** { *; }",
+            "-keep class expo.modules.sqlite.** { *; }",
+            "-keep class expo.modules.notifications.** { *; }",
+            "-keep class expo.modules.taskManager.** { *; }",
+            "-keep class expo.modules.backgroundtask.** { *; }",
+            "-keep class expo.modules.interfaces.taskManager.** { *; }",
+            "-dontwarn com.swmansion.**",
           ].join("\n"),
         },
       },
