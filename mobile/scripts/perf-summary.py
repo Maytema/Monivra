@@ -79,16 +79,32 @@ def percentile(values, q):
 
 
 print()
-print(f"{'tab moves':62} {'presses':>7} {'dropped':>7} {'shown':>5} {'p50':>7} {'p90':>7} {'JS busy':>8}")
+print(f"{'tab moves':62} {'presses':>7} {'dropped':>7} {'pill p50':>8} {'pill p90':>8} {'shown':>5} {'p50':>7} {'p90':>7} {'JS busy':>8} {'longest':>8}")
 for move in moves:
     presses = sum(1 for n in move["notes"] if n.startswith("tab press ") and not n.startswith("tab press dropped"))
     dropped = sum(1 for n in move["notes"] if n.startswith("tab press dropped"))
     shown = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"tab shown \w+ ([\d.]+)ms", n)] if m]
+    pill = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"pill shown \w+ ([\d.]+)ms", n)] if m]
     if not presses and not dropped:
         continue
     p50 = f"{percentile(shown, 0.5):.0f}ms" if shown else "-"
     p90 = f"{percentile(shown, 0.9):.0f}ms" if shown else "-"
-    print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms")
+    q50 = f"{percentile(pill, 0.5):.0f}ms" if pill else "-"
+    q90 = f"{percentile(pill, 0.9):.0f}ms" if pill else "-"
+    print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {q50:>8} {q90:>8} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms {max(move['stalls'], default=0):7.0f}ms")
+
+# The eye that hides the balance: per move the time from the finger to the figures drawn masked or shown, the parts of the command
+# (change applied, written to the database, state set and listeners told), the JS busy time and the longest pause.
+print()
+print(f"{'eye moves':62} {'taps':>4} {'text p50':>8} {'text max':>8} {'apply':>6} {'write':>6} {'notify':>6} {'JS busy':>8} {'longest':>8}")
+for move in moves:
+    text = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"eye: figures \w+ ([\d.]+)ms", n)] if m]
+    if not text:
+        continue
+    def part(label):
+        v = [float(m.group(1)) for n in move["notes"] for m in [re.match(re.escape(label) + r" ([\d.]+)ms", n)] if m]
+        return f"{percentile(v, 0.5):.1f}" if v else "-"
+    print(f"{move['name'][:62]:62} {len(text):4d} {percentile(text, 0.5):7.0f}ms {max(text):7.0f}ms {part('command: change applied'):>6} {part('command: written to the database'):>6} {part('command: state set, listeners told'):>6} {sum(move['stalls']):7.0f}ms {max(move['stalls'], default=0):7.0f}ms")
 
 # Layers: the time from the ask to a sheet drawn ("layer sheet shown", the add sheet right after entering an empty
 # Operations tab, with the picture running and with it at rest), and the period dialog's tile tap to dialog gone, the

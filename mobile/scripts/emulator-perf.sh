@@ -156,8 +156,28 @@ adb shell input tap $accs; sleep 2
 begin "empty: 12 taps in random tab order, 0.25-0.5 s apart"
 while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"
 finish 3
+# The same twelve taps every 0.2 s (the other app the owner filmed answered taps that fast), and the eye of the balance six times.
+mix200=$(echo "$mix" | awk '{print $1, $2, 0.2, $4}')
+tabs200() { # $1 name
+  adb shell input tap $accs; sleep 2
+  begin "$1: 12 taps every 0.2 s"
+  while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix200"
+  finish 3
+  log "$1, after 12 taps every 0.2 s: shown $(shown_tab) (expected index $(echo "$mix200" | tail -1 | awk '{print $4}'))"
+}
+eye6() { # $1 tab centre, $2 name
+  adb shell input tap $1; sleep 2
+  local xy; xy=$(where "Toggle balance visibility")
+  [ -z "$xy" ] && { log "NOT FOUND: the eye on $2"; return; }
+  begin "eye ($2): 6 taps 0.4 s apart"
+  for i in $(seq 6); do adb shell input tap $xy; sleep 0.4; done
+  finish 2
+}
 last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')
 log "empty, after 12 random taps: shown $(shown_tab) (expected index $last_tab of Accounts, Categories, Operations, Statistics, More)"
+tabs200 "empty"
+eye6 $accs "empty, Accounts"
+eye6 $ops "empty, Operations"
 
 # Layers over an empty Operations tab (0.3.12): the add sheet opened right after entering the tab, while its picture runs,
 # and again with the picture at rest (the person has acted: the period changed, the tab was seen). Written as "layer sheet
@@ -244,6 +264,9 @@ begin "tabs again: Operations, Statistics, Categories, Accounts"
 for name in Operations Statistics Categories Accounts; do xy=$(where "$name"); adb shell input tap $xy; sleep 2; done
 finish 2
 
+tabs200 "data"
+eye6 $accs "data, Accounts"
+eye6 $ops "data, Operations"
 # The owner's complaints, one move each (build 100 on): a tab pressed soon after another one, two quick period
 # swipes, the expense/income switch of the statistics, the pages that open slowly, a tab of a sheet chosen by a tap.
 ops=$(tab_xy "Operations"); stats=$(tab_xy "Statistics"); cats=$(tab_xy "Categories"); accs=$(tab_xy "Accounts"); more=$(tab_xy "More")

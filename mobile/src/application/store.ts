@@ -23,6 +23,12 @@ export function setAppVersion(version: string): void {
   APP_VERSION = version;
 }
 
+// Speed-check build only (set from app/_layout.tsx): how long a command takes in its parts.
+let timing: ((label: string, ms: number) => void) | null = null;
+export function watchStore(report: (label: string, ms: number) => void): void {
+  timing = report;
+}
+
 export type AppState =
   | { status: "loading" }
   // The stored data could not be opened (`tooNew`: written by a newer version of the application).
@@ -137,9 +143,18 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
       const tx = new LedgerTx(before);
       const result = command(tx, env);
       if (isEmptyChange(tx.change)) return result;
+      const t0 = timing ? performance.now() : 0;
       const next = applyChange(before, tx.change);
+      const t1 = timing ? performance.now() : 0;
       persistChange(db, tx.change, next, env.clock.nowIso());
+      const t2 = timing ? performance.now() : 0;
       ready(next, state.status === "ready" ? state.posted : []);
+      if (timing) {
+        const t3 = performance.now();
+        timing("command: change applied", t1 - t0);
+        timing("command: written to the database", t2 - t1);
+        timing("command: state set, listeners told", t3 - t2);
+      }
       return result;
     },
 

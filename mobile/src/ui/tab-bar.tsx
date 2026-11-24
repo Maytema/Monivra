@@ -2,7 +2,7 @@
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
 import { countRender, PERF_BUILD, perfNote, sinceTouch } from "../platform/perf.ts";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, type GestureResponderEvent } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -81,6 +81,10 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
     setPressed((cur) => (cur === null || cur === name ? null : cur));
     sinceTouch("tab shown " + (state.routes[state.index]?.name ?? "?"));
   }, [state.index, state.routes]);
+  // Speed-check build: the time from the finger to the pill drawn on the pressed tab.
+  useLayoutEffect(() => {
+    if (PERF_BUILD && pressed) sinceTouch("pill shown " + pressed);
+  }, [pressed]);
   // A screen hides the bar while it has its own actions there (the selection of operations).
   const current = state.routes[state.index];
   const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle as Parameters<typeof StyleSheet.flatten>[0]) : undefined;

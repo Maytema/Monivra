@@ -7,10 +7,10 @@ import { Stack, usePathname } from "expo-router";
 import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import { setAppVersion } from "../application/store.ts";
+import { setAppVersion, watchStore } from "../application/store.ts";
 import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
-import { probeEngine, watchStalls } from "../platform/perf.ts";
+import { perfLog, PERF_BUILD, probeEngine, watchStalls } from "../platform/perf.ts";
 import { PerfSwitch } from "../ui/perf-switch.tsx";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
@@ -150,6 +150,9 @@ function Root() {
 export default function Layout() {
   // Only in the build made for the speed check: every long pause of the JavaScript thread is written down.
   useEffect(watchStalls, []);
+  useEffect(() => {
+    if (PERF_BUILD) watchStore(perfLog);
+  }, []);
   return (
     <SafeAreaProvider>
       <Root />
