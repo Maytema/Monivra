@@ -379,9 +379,9 @@ view_count() {
 }
 log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button no-activity)
 set_mode() { # $1 index 0-4
-  local taps=$(( ($1 - mode + 9) % 9 )) k
+  local taps=$(( ($1 - mode + 10) % 10 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
   mode=$1; sleep 1
 }
@@ -399,6 +399,18 @@ balanced() { # $1 run number, $2.. order (letters A-E)
 balanced 1 A B C D E F G H I
 balanced 2 I H G F E D C B A
 balanced 3 C F I B E H A D G
+# Tabs without React Activity (setting J), against the same moves with it (above): tab taps every 0.2 s, the cold and second visits and the eye.
+set_mode 9
+tabs200 "data, no activity"
+for tabname in operations statistics categories more accounts; do
+  case $tabname in operations) xy=$ops;; statistics) xy=$stats;; categories) xy=$cats;; more) xy=$more;; accounts) xy=$accs;; esac
+  begin "second visit, no activity: $tabname (data)"; adb shell input tap $xy; finish 3
+done
+eye6 "$accs" "data, Accounts, no activity"
+eye6 "$ops" "data, Operations, no activity"
+eye6 "$stats" "data, Statistics, no activity"
+eye6 "$cats" "data, Categories, no activity"
+set_mode 0
 # The Hermes sampling profiler over the same ten swipes (the second box of PerfSwitch starts and stops it; the trace comes out through the
 # log as "[perf-profile]" lines and perf-profile.py folds it). Twice: the first is the cold one of the pair, the second the warm.
 set_mode 0
