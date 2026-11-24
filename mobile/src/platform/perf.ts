@@ -2,6 +2,7 @@
 // on the phone's engine instead of guessed. A line costs almost nothing; the watch and the probe below run
 // only in the build made for the speed check (EXPO_PUBLIC_PERF=1, the emulator leg of CI), never on a phone.
 import { AppState } from "react-native";
+import { File, Paths } from "expo-file-system";
 
 export const now = (): number => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
 
@@ -53,18 +54,55 @@ let probing = false;
 // `plainRows` draws a row as a bare text line. scripts/emulator-perf.sh taps the small box PerfSwitch draws at the top left; each
 // tap moves to the next setting: all on, icons off, plain rows, warm off (no page drawn beforehand: neighbours, other tabs, both kinds), old period object (a page is
 // given a new Period object after each swipe, as before 0.3.19), all on again.
-export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false };
+export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false, noDayHeads: false, noPeriodBar: false, noFab: false };
 let setting = 0;
 export function nextPerfSetting(): string {
-  setting = (setting + 1) % 6;
+  setting = (setting + 1) % 9;
   perfFlags.noIcons = setting === 1;
   perfFlags.plainRows = setting === 2;
   perfFlags.noWarm = setting === 3;
   perfFlags.oldPeriod = setting === 4;
   perfFlags.noList = setting === 5;
-  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list"][setting]!;
+  perfFlags.noDayHeads = setting === 6;
+  perfFlags.noPeriodBar = setting === 7;
+  perfFlags.noFab = setting === 8;
+  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list", "no day heads", "no period bar", "no add button"][setting]!;
   console.log(`[perf] setting ${name}`);
   return name;
+}
+
+// Speed-check build: the Hermes sampling profiler, started and stopped by the second PerfSwitch box. The trace (Chrome's sampled format)
+// is written to a file and sent through the log in pieces ("[perf-profile] <number> <part>/<parts> <text>"), which scripts/perf-profile.py
+// puts together and folds by function. The names are readable because the speed-check build is not minified (metro.config.js).
+type HermesProfiler = { enableSamplingProfiler?: () => void; disableSamplingProfiler?: () => void; dumpSampledTraceToFile?: (path: string) => void };
+let profiling = false;
+let profiles = 0;
+export async function toggleProfile(): Promise<void> {
+  if (!PERF_BUILD) return;
+  const hermes = (globalThis as { HermesInternal?: HermesProfiler }).HermesInternal;
+  if (!profiling) {
+    if (!hermes?.enableSamplingProfiler || !hermes.dumpSampledTraceToFile || !hermes.disableSamplingProfiler) {
+      console.log("[perf] profiler: not available in this engine");
+      return;
+    }
+    hermes.enableSamplingProfiler();
+    profiling = true;
+    console.log("[perf] profiler: started");
+    return;
+  }
+  profiling = false;
+  try {
+    hermes?.disableSamplingProfiler?.();
+    const file = new File(Paths.cache, `hermes-${++profiles}.cpuprofile`);
+    hermes?.dumpSampledTraceToFile?.(file.uri.replace(/^file:\/\//, ""));
+    const text = await file.text();
+    const piece = 3000;
+    const parts = Math.ceil(Math.min(text.length, 16_000_000) / piece);
+    console.log(`[perf] profiler: stopped, ${text.length} characters in ${parts} parts`);
+    for (let i = 0; i < parts; i++) console.log(`[perf-profile] ${profiles} ${i + 1}/${parts} ${text.slice(i * piece, (i + 1) * piece)}`);
+  } catch (error) {
+    console.log(`[perf] profiler: failed ${String(error)}`);
+  }
 }
 
 export function watchStalls(): void {

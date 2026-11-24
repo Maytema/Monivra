@@ -159,7 +159,7 @@ export function OperationsScreen() {
         around={2}
         header={
           <>
-            <PeriodBar />
+            {PERF_BUILD && perfFlags.noPeriodBar ? null : <PeriodBar />}
             {active ? <FilteredBanner onChange={() => openFilters(filters, setFilters)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
           </>
         }
@@ -186,7 +186,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
+        PERF_BUILD && perfFlags.noFab ? null : <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
       )}
     </View>
   );
@@ -279,7 +279,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     ({ item }: { item: Item }) =>
       // The side margins are on each item, not on the list: the sticky head is drawn over the list without the list's
       // padding, and with it there its first letters were cut at the edge of the screen.
-      item.kind === "day" ? (
+      item.kind === "day" && PERF_BUILD && perfFlags.noDayHeads ? (
+        <View style={{ height: 70 }} />
+      ) : item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
           <DayHead date={item.date} ops={item.ops} />
         </View>

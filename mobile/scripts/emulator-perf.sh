@@ -368,10 +368,10 @@ fast_block() { # $1 tab centre, $2 name
   if [ "$(shown_tab)" = none ]; then log "FAIL: after the swipes in $2 no tab is shown (a page was opened)"; shot "24x-left-tabs-$2" 0; back; adb shell input tap $1; sleep 2; fi
 }
 fast_block "$ops" operations
-# Where the cost of a swipe is (0.3.19): the same 10 swipes back in six settings of the speed-check build's PerfSwitch box (a tap moves to
-# the next one, the fifth tap back to the first): A all on, B icons off, C plain rows, D warm off, E the old period object, F no list (the first 14 rows in a plain view). The first
-# block above is the cold one (the first swipes of the session). Every setting is measured three times, in the orders ABCDEF, FEDCBA and
-# CEAFBD, so that the order of the settings does not decide; between two runs the pages are brought back to the starting period.
+# Where the cost of a swipe is (0.3.19): the same 10 swipes back in nine settings of the speed-check build's PerfSwitch box (a tap moves to
+# the next one, the fifth tap back to the first): A all on, B icons off, C plain rows, D warm off, E the old period object, F no list (the first 14 rows in a plain view), G no day heads, H no period bar, I no add button. The first
+# block above is the cold one (the first swipes of the session). Every setting is measured three times, in the orders ABCDEFGHI, IHGFEDCBA and
+# CFIBEHADG, so that the order of the settings does not decide; between two runs the pages are brought back to the starting period.
 # The native views of the screen: all, and those of react-native-svg (the platform's own tree, from dumpsys).
 view_count() {
   local dump; dump=$(adb shell dumpsys activity top 2>/dev/null)
@@ -379,9 +379,9 @@ view_count() {
 }
 log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period no-list)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button)
 set_mode() { # $1 index 0-4
-  local taps=$(( ($1 - mode + 6) % 6 )) k
+  local taps=$(( ($1 - mode + 9) % 9 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
   mode=$1; sleep 1
 }
@@ -396,9 +396,18 @@ balanced() { # $1 run number, $2.. order (letters A-E)
     begin "return after ${mode_names[$idx]} run $run: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
   done
 }
-balanced 1 A B C D E F
-balanced 2 F E D C B A
-balanced 3 C E A F B D
+balanced 1 A B C D E F G H I
+balanced 2 I H G F E D C B A
+balanced 3 C F I B E H A D G
+# The Hermes sampling profiler over the same ten swipes (the second box of PerfSwitch starts and stops it; the trace comes out through the
+# log as "[perf-profile]" lines and perf-profile.py folds it). Twice: the first is the cold one of the pair, the second the warm.
+set_mode 0
+for pass in 1 2; do
+  adb shell input tap 20 490; sleep 1
+  begin "profile $pass: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+  adb shell input tap 20 490; sleep 8
+  for i in $(seq 10); do next_swipe; sleep 0.25; done; sleep 2
+done
 set_mode 0
 set_mode 3
 begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
@@ -502,6 +511,8 @@ adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1
 grep "\[perf\]" "$OUT/js-log.txt" > "$OUT/perf.txt"
 python3 "$HERE/perf-summary.py" "$OUT/perf.txt" "$OUT/gfx.txt" > "$OUT/perf-summary.txt"
+python3 "$HERE/perf-profile.py" "$OUT/js-log.txt" "$OUT" >> "$OUT/perf-summary.txt" 2>&1 || true
+grep -v "\[perf-profile\]" "$OUT/js-log.txt" > "$OUT/js-log.tmp" && mv "$OUT/js-log.tmp" "$OUT/js-log.txt"
 cat "$OUT/perf-summary.txt"
 if grep -q "FATAL\|AndroidRuntime" "$OUT/crash.txt"; then log "FAIL: crash (see crash.txt)"; exit 1; fi
 log "result: measured"
