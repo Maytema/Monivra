@@ -8,10 +8,10 @@ import { Pressable } from "../ui/pressable.tsx";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
-import { useLedgerParts, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useLedgerParts, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
-import { MoneyText, ToneBadge } from "../ui/parts.tsx";
+import { MoneyAmount, MoneyLine, ToneBadge } from "../ui/parts.tsx";
 import { Spot } from "../ui/spotlight.tsx";
 import { alpha } from "../ui/theme.ts";
 
@@ -54,7 +54,6 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
   const data = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
-  const money = useMoney();
   const compact = useWindowDimensions().width <= 360;
   const account = accountById(data, op.from || op.to);
   const category = categoryById(data, op.category);
@@ -118,12 +117,12 @@ export const OperationRow = memo(function OperationRow({ op, selecting = false, 
         ) : null}
       </View>
       <View style={{ alignItems: "flex-end", flexShrink: 0, maxWidth: "45%" }}>
-        {op.recalculated ? <Text style={[small, { color: p.muted }]}>{t.t("was {amount}", { amount: money(op.recalculated.amount, op.recalculated.currency) })}</Text> : null}
-        {adjustment && adjustment.pseudo !== undefined ? <Text style={[small, { color }]}>{money(adjustment.pseudo, data.settings.currency)}</Text> : null}
-        {inCategory ? <Text style={[small, { color }]}>{money(inCategory.amount, inCategory.currency)}</Text> : null}
-        <Text style={{ color, fontSize: compact ? 14 : 17, fontVariant: ["tabular-nums"] }}>
-          {(op.type === "adjustment" ? (op.to ? "+" : "−") : "") + money(adjustment ? adjustment.account : op.amount, account?.currency)}
-        </Text>
+        {op.recalculated ? <MoneyLine style={[small, { color: p.muted }]}>{(money) => t.t("was {amount}", { amount: money(op.recalculated!.amount, op.recalculated!.currency) })}</MoneyLine> : null}
+        {adjustment && adjustment.pseudo !== undefined ? <MoneyLine style={[small, { color }]}>{(money) => money(adjustment.pseudo!, data.settings.currency)}</MoneyLine> : null}
+        {inCategory ? <MoneyLine style={[small, { color }]}>{(money) => money(inCategory.amount, inCategory.currency)}</MoneyLine> : null}
+        <MoneyLine style={{ color, fontSize: compact ? 14 : 17, fontVariant: ["tabular-nums"] }}>
+          {(money) => (op.type === "adjustment" ? (op.to ? "+" : "−") : "") + money(adjustment ? adjustment.account : op.amount, account?.currency)}
+        </MoneyLine>
         {off ? <Text style={[small, { color: p.muted }]}>{rateText(t, off[0][1], off[1][1], off[1][0] / off[0][0])}</Text> : null}
       </View>
     </Pressable>
@@ -152,7 +151,6 @@ export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops:
   const data = useLedgerParts("accounts", "rates", "settings");
   const p = usePalette();
   const t = useT();
-  const money = useMoney();
   const weekday = t.weekday(date, "long");
   const monthYear = t.monthYear(date);
   const total = dayTotal(data, ops);
@@ -161,7 +159,7 @@ export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops:
       <Text style={{ color: p.ink, fontSize: 28 }}>{Number(date.slice(-2))}</Text>
       <Text style={{ flexShrink: 1, color: p.ink, fontSize: 15, lineHeight: 21 }}>{`${weekday.charAt(0).toUpperCase()}${weekday.slice(1)}\n${monthYear}`}</Text>
       <View style={{ marginLeft: "auto" }}>
-        <MoneyText text={money(total)} value={total} size={17} />
+        <MoneyAmount value={total} size={17} />
       </View>
     </View>
   );

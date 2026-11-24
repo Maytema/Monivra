@@ -29,6 +29,14 @@ export function useLedger(): LedgerData {
   return state.data;
 }
 
+// The settings of two states of the ledger that differ only in the masking of the figures (the eye).
+function sameSettingsButMask(a: LedgerData["settings"], b: LedgerData["settings"]): boolean {
+  const x = a as unknown as Record<string, unknown>;
+  const y = b as unknown as Record<string, unknown>;
+  for (const key of new Set([...Object.keys(x), ...Object.keys(y)])) if (key !== "hidden" && x[key] !== y[key]) return false;
+  return true;
+}
+
 // The ledger for what is worked out from it (the rows of a period, the report, the tiles): the same object while the only change is the
 // masking of the figures (the eye), which changes none of them. Without it every page that is drawn (a period pager keeps five)
 // worked its rows out again and gave its list new data at each tap on the eye (speed check build 160: 5 pages × the 3000
@@ -42,10 +50,7 @@ export function useLedgerView(): LedgerData {
 }
 function onlyMaskChanged(a: LedgerData, b: LedgerData): boolean {
   for (const key of Object.keys(b) as (keyof LedgerData)[]) if (key !== "settings" && a[key] !== b[key]) return false;
-  const x = a.settings as unknown as Record<string, unknown>;
-  const y = b.settings as unknown as Record<string, unknown>;
-  for (const key of new Set([...Object.keys(x), ...Object.keys(y)])) if (key !== "hidden" && x[key] !== y[key]) return false;
-  return true;
+  return sameSettingsButMask(a.settings, b.settings);
 }
 
 // One part of the ledger: the component draws again only when that part changes (an unchanged part keeps
@@ -72,7 +77,8 @@ export function useLedgerParts<K extends keyof LedgerData>(...keys: K[]): Pick<L
     if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
     const data = state.data;
     const last = partsCache.get(name) as Pick<LedgerData, K> | undefined;
-    if (last && keys.every((k) => last[k] === data[k])) return last;
+    // The settings count as unchanged when only the masking changed: what is drawn masked asks the masking itself (useMoney).
+    if (last && keys.every((k) => last[k] === data[k] || (k === "settings" && sameSettingsButMask(last[k] as LedgerData["settings"], data[k] as LedgerData["settings"])))) return last;
     const next = {} as Pick<LedgerData, K>;
     for (const k of keys) next[k] = data[k];
     partsCache.set(name, next);
@@ -88,7 +94,12 @@ export function useLedgerParts<K extends keyof LedgerData>(...keys: K[]): Pick<L
 type Money = (n: Minor, currency?: string, balance?: boolean) => string;
 const PaletteContext = createContext<Palette | null>(null);
 const TranslatorContext = createContext<Translator | null>(null);
-const MoneyContext = createContext<Money | null>(null);
+// What the format of an amount is made of, without the masking.
+interface MoneyFormat {
+  currency: string;
+  format: (n: Minor, code: string) => string;
+}
+const MoneyContext = createContext<MoneyFormat | null>(null);
 
 const translators = new Map<string, Translator>();
 const translatorFor = (language: string, dateFormat: string): Translator => {
@@ -105,11 +116,14 @@ export function LedgerLook({ children }: { children: ReactNode }) {
   const palette = useMemo(() => buildPalette(s.accent, dark), [s.accent, dark]);
   const t = translatorFor(s.language, s.dateFormat);
   // Only what the format reads, so another setting (the note of the last rate update, say) changes nothing here.
-  const { currency, hidden, hiddenValues, numberFormat, groupDigits, decimal, hideCents, currencyFirst } = s;
-  const money = useMemo<Money>(() => {
+  // The masking is not here: it changes on a tap of the eye and would draw every consumer of this context again (rows, icons,
+  // heads of all the tabs, ~150 ms); useMoney asks the masking from the store itself, and what is drawn from `money` alone
+  // (the amounts in the rows) is drawn again by its own small component (MoneyLine), not by the row.
+  const { currency, numberFormat, groupDigits, decimal, hideCents, currencyFirst } = s;
+  const money = useMemo<MoneyFormat>(() => {
     const format = { numberFormat, groupDigits, decimal, hideCents, currencyFirst };
-    return (n, code = currency, balance = false) => (hidden && (hiddenValues !== "Balances only" || balance) ? `•••• ${code}` : formatAmount(n, code, format));
-  }, [currency, hidden, hiddenValues, numberFormat, groupDigits, decimal, hideCents, currencyFirst]);
+    return { currency, format: (n, code) => formatAmount(n, code, format) };
+  }, [currency, numberFormat, groupDigits, decimal, hideCents, currencyFirst]);
   return (
     <PaletteContext.Provider value={palette}>
       <TranslatorContext.Provider value={t}>
@@ -126,7 +140,24 @@ function fromLook<T>(value: T | null): T {
 export const useT = (): Translator => fromLook(useContext(TranslatorContext));
 export const usePalette = (): Palette => fromLook(useContext(PaletteContext));
 // Formats money with the person's settings; `balance` amounts are masked when values are hidden.
-export const useMoney = (): Money => fromLook(useContext(MoneyContext));
+// The masking is read from the store (a short string that changes only when the eye does), so a component that formats money draws
+// again on the eye, and one that does not format money does not.
+const maskOf = (): string => {
+  const state = appStore().getState();
+  if (state.status !== "ready" && state.status !== "welcome") return "";
+  const { hidden, hiddenValues } = state.data.settings;
+  return hidden ? (hiddenValues === "Balances only" ? "balances" : "all") : "";
+};
+export function useMoney(): Money {
+  const { currency, format } = fromLook(useContext(MoneyContext));
+  const mask = useSyncExternalStore(appStore().subscribe, maskOf);
+  return useMemo<Money>(
+    () =>
+      (n, code = currency, balance = false) =>
+        mask && (mask !== "balances" || balance) ? `•••• ${code}` : format(n, code),
+    [currency, format, mask],
+  );
+}
 
 // Runs a command; a refusal is shown as a message and the result is undefined.
 export function useCommand(): <T>(command: (tx: LedgerTx, env: Env) => T) => T | undefined {

@@ -8,7 +8,7 @@ import { createContext, memo, startTransition, useCallback, useContext, useEffec
 import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePalette, useT } from "./app-context.tsx";
+import { useMoney, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 import { usePagerMotion, WIDE_RETENTION } from "./pager.tsx";
 import { alpha, chrome, mix } from "./theme.ts";
@@ -169,6 +169,19 @@ export function ActionGrid({ children, columns = 3 }: { children: ReactNode; col
       <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", paddingTop: 24, paddingHorizontal: 4, marginBottom: -8 }}>{children}</View>
     </Columns.Provider>
   );
+}
+
+// One line of text made from amounts, drawn again by itself when the eye hides or shows the figures: the row that holds it
+// does not know about the masking (the 5 pages of Operations with their rows were drawn again at every tap on the eye).
+export function MoneyLine({ children, style }: { children: (money: ReturnType<typeof useMoney>) => string; style?: StyleProp<TextStyle> }) {
+  const money = useMoney();
+  return <Text style={style}>{children(money)}</Text>;
+}
+
+// An amount in the default currency, coloured by its sign, drawn again by itself on the eye.
+export function MoneyAmount({ value, size = 18, style }: { value: number; size?: number; style?: StyleProp<TextStyle> }) {
+  const money = useMoney();
+  return <MoneyText text={money(value)} value={value} size={size} style={style} />;
 }
 
 export function MoneyText({ text, value, size = 18, style }: { text: string; value: number; size?: number; style?: StyleProp<TextStyle> }) {
