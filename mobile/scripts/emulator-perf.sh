@@ -498,6 +498,20 @@ begin "report preview, second time"; tap "Preview" 0; sleep 3; finish 1
 shot 10-preview-again 0
 back; back; back
 
+# After the report (which is about the 3000 ledger) and before the lock (a locked application hides the tabs): nothing else runs on the larger ledger.
+# The ledger of 10000 operations (the same accounts and categories, 36 months) replaces the 3000 one the same way.
+node "$HERE/perf-data.mjs" 10000 36 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
+adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
+tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
+begin "read the file and open the restore page (10000)"
+tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
+finish 1
+begin "restore 10000 operations"
+tap "Replace data" 1.5 last; tap "Confirm" 1
+finish 60
+adb shell input tap $accs; sleep 3
+series_block 10000
+
 # The lock: a PIN is set, the screen locked, the PIN typed (time from the last digit to the open screen).
 tap "More"; tap "Settings"; tap "Security"
 tap "PIN code"
@@ -516,19 +530,6 @@ adb shell input tap $k1; sleep 0.25; adb shell input tap $k2; sleep 0.25; adb sh
 finish 4
 shot 07-unlocked 0
 
-# Last, so that nothing above runs on the larger ledger.
-# The ledger of 10000 operations (the same accounts and categories, 36 months) replaces the 3000 one the same way.
-node "$HERE/perf-data.mjs" 10000 36 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
-adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
-tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
-begin "read the file and open the restore page (10000)"
-tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
-finish 1
-begin "restore 10000 operations"
-tap "Replace data" 1.5 last; tap "Confirm" 1
-finish 60
-adb shell input tap $accs; sleep 3
-series_block 10000
 
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1

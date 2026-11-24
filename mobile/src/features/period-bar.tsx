@@ -14,6 +14,7 @@ import { Pager, usePagerMotion } from "../ui/pager.tsx";
 import { periodTitle } from "../ui/period-title.ts";
 import { getView, setView, useViewPeriodWhile } from "./ui-state.ts";
 import { useNavigation } from "expo-router";
+import { MaskScope } from "../ui/mask-scope.tsx";
 
 export { periodTitle };
 
@@ -174,7 +175,7 @@ export function PeriodPager({ header, render, around }: { header?: ReactNode; re
         return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
       }}
       header={header}
-      render={(key, isCurrent) => render(pageOf(key), isCurrent)}
+      render={(key, isCurrent) => <MaskScope active={isCurrent}>{render(pageOf(key), isCurrent)}</MaskScope>}
       onMove={(steps) => {
         let next = getView().period;
         for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);

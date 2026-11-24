@@ -13,6 +13,7 @@ import { translator, type Translator } from "../i18n/index.ts";
 import { appStore } from "../platform/app-store.ts";
 import { haptic } from "../platform/haptics.ts";
 import { markActed } from "./quiet.ts";
+import { useMaskSubscriber } from "./mask-scope.tsx";
 import { buildPalette, type Palette } from "./theme.ts";
 
 export { appStore };
@@ -159,18 +160,16 @@ const maskOf = (): string => {
   const { hidden, hiddenValues } = state.data.settings;
   return hidden ? (hiddenValues === "Balances only" ? "balances" : "all") : "";
 };
-const MASK_CHANNEL: Channel[] = ["mask"];
-const subscribeMask = (l: () => void) => appStore().subscribe(l, MASK_CHANNEL);
 // Whether the figures are hidden (the eye): heard on the mask channel alone.
 export function useHidden(): boolean {
-  return useSyncExternalStore(subscribeMask, () => {
+  return useSyncExternalStore(useMaskSubscriber(), () => {
     const state = appStore().getState();
     return (state.status === "ready" || state.status === "welcome") && !!state.data.settings.hidden;
   });
 }
 export function useMoney(): Money {
   const { currency, format } = fromLook(useContext(MoneyContext));
-  const mask = useSyncExternalStore(subscribeMask, maskOf);
+  const mask = useSyncExternalStore(useMaskSubscriber(), maskOf);
   return useMemo<Money>(
     () =>
       (n, code = currency, balance = false) =>
