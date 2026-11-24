@@ -179,3 +179,23 @@ for move in moves:
             row[1] += float(m.group(3))
     for part, (draws, ms) in sorted(parts.items()):
         print(f"{move['name'][:62]:62} {part:>14} {draws:6d} {ms:7.0f}ms")
+
+# Profile x series: the 12 taps every 0.2 s and the eye of each tab, with React Activity ("activity") and without it ("none"), by the volume of the
+# ledger, as the median over the runs taken in the order A B B A twice. The names are "series <ops> <mode> <run>" (taps) and
+# "eye (series <ops> <mode> <run> <Tab>)" (the eye).
+print()
+print(f"{'profile x series (median of runs)':48} {'runs':>4} {'JS busy':>8} {'range':>13} {'listeners called':>17}")
+groups = {}
+for move in moves:
+    m = re.match(r"series (\d+) (\w+) (\d+): 12 taps", move["name"]) or re.match(r"eye \(series (\d+) (\w+) (\d+) (\w+)\)", move["name"])
+    if not m:
+        continue
+    what = "12 taps" if "12 taps" in move["name"] and not move["name"].startswith("eye") else "eye " + m.group(4)
+    key = (int(m.group(1)), m.group(2), what)
+    called = [int(c.group(1)) for n in move["notes"] for c in [re.match(r"store: listeners called (\d+)", n)] if c]
+    groups.setdefault(key, []).append((sum(move["stalls"]), median_called if (median_called := (percentile(called, 0.5) if called else None)) is not None else None))
+for (ops, mode, what), items in sorted(groups.items()):
+    busy = sorted(b for b, _ in items)
+    calls = [c for _, c in items if c is not None]
+    med = busy[len(busy) // 2] if len(busy) % 2 else (busy[len(busy) // 2 - 1] + busy[len(busy) // 2]) / 2
+    print(f"{f'{ops} ops, {mode}, {what}':48} {len(busy):4d} {med:7.0f}ms {busy[0]:5.0f}-{busy[-1]:.0f}ms {(str(percentile(calls, 0.5)) if calls else '-'):>17}")

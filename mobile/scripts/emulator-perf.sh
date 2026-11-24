@@ -399,28 +399,25 @@ balanced() { # $1 run number, $2.. order (letters A-E)
 balanced 1 A B C D E F G H I
 balanced 2 I H G F E D C B A
 balanced 3 C F I B E H A D G
-# Tabs without React Activity (setting J), against the same moves with it (above): tab taps every 0.2 s, the cold and second visits and the eye.
-set_mode 9
-tabs200 "data, no activity"
-for tabname in operations statistics categories more accounts; do
-  case $tabname in operations) xy=$ops;; statistics) xy=$stats;; categories) xy=$cats;; more) xy=$more;; accounts) xy=$accs;; esac
-  begin "second visit, no activity: $tabname (data)"; adb shell input tap $xy; finish 3
-done
-eye6 "$accs" "data, Accounts, no activity"
-eye6 "$ops" "data, Operations, no activity"
-eye6 "$stats" "data, Statistics, no activity"
-eye6 "$cats" "data, Categories, no activity"
-set_mode 0
-# The Hermes sampling profiler over the same ten swipes (the second box of PerfSwitch starts and stops it; the trace comes out through the
-# log as "[perf-profile]" lines and perf-profile.py folds it). Twice: the first is the cold one of the pair, the second the warm.
-set_mode 0
-for pass in 1 2; do
-  adb shell input tap 20 490; sleep 1
-  begin "profile $pass: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-  adb shell input tap 20 490; sleep 8
-  for i in $(seq 10); do next_swipe; sleep 0.25; done; sleep 2
-done
-set_mode 0
+# Series by the volume of the ledger, with React Activity ("activity", setting A) and without it ("none", setting J): the 12 taps every 0.2 s and
+# the eye on each tab, in the order A B B A twice, in one build (perf-summary.py: "profile x series"). The 0-operation series are the
+# "empty" moves above; here the 3000 ledger is in, then the 10000 one is restored over it.
+series() { # $1 operations, $2 mode name (activity|none), $3 run
+  case $2 in activity) set_mode 0;; none) set_mode 9;; esac
+  tabs200 "series $1 $2 $3"
+  eye6 "$accs" "series $1 $2 $3 Accounts"
+  eye6 "$ops" "series $1 $2 $3 Operations"
+  eye6 "$stats" "series $1 $2 $3 Statistics"
+  eye6 "$cats" "series $1 $2 $3 Categories"
+}
+series_block() { # $1 operations
+  local run=0 order
+  for order in "activity none none activity" "activity none none activity"; do
+    for m in $order; do run=$((run + 1)); series "$1" "$m" "$run"; done
+  done
+  set_mode 0
+}
+series_block 3000
 set_mode 3
 begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
 adb shell input tap $ops; sleep 2
@@ -519,10 +516,25 @@ adb shell input tap $k1; sleep 0.25; adb shell input tap $k2; sleep 0.25; adb sh
 finish 4
 shot 07-unlocked 0
 
+# Last, so that nothing above runs on the larger ledger.
+# The ledger of 10000 operations (the same accounts and categories, 36 months) replaces the 3000 one the same way.
+node "$HERE/perf-data.mjs" 10000 36 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
+adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
+tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
+begin "read the file and open the restore page (10000)"
+tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
+finish 1
+begin "restore 10000 operations"
+tap "Replace data" 1.5 last; tap "Confirm" 1
+finish 60
+adb shell input tap $accs; sleep 3
+series_block 10000
+
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1
 grep "\[perf\]" "$OUT/js-log.txt" > "$OUT/perf.txt"
 python3 "$HERE/perf-summary.py" "$OUT/perf.txt" "$OUT/gfx.txt" > "$OUT/perf-summary.txt"
+
 python3 "$HERE/perf-profile.py" "$OUT/js-log.txt" "$OUT" >> "$OUT/perf-summary.txt" 2>&1 || true
 grep -v "\[perf-profile\]" "$OUT/js-log.txt" > "$OUT/js-log.tmp" && mv "$OUT/js-log.tmp" "$OUT/js-log.txt"
 cat "$OUT/perf-summary.txt"
