@@ -6,7 +6,7 @@ import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, periodBounds, shiftPeriod } from "../domain/periods.ts";
 import type { Period } from "../domain/periods.ts";
-import { useLedger, usePalette, useT } from "../ui/app-context.tsx";
+import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
@@ -69,7 +69,7 @@ function useScreenPeriod(): { period: Period; caughtUp: boolean } {
 // shown (the budgets of the first application, period-picker.js dayPicker).
 export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   countRender("period bar");
-  const data = useLedger();
+  const data = useLedgerView();
   const p = usePalette();
   const t = useT();
   const { period } = useScreenPeriod();
@@ -136,7 +136,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 // The pages of a screen with a period: the period before, this one and the one after, drawn side by side,
 // with the period bar (and whatever else stays in place) above them.
 export function PeriodPager({ header, render, around }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number }) {
-  const data = useLedger();
+  const data = useLedgerView();
   const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
   const known = useRef(new Map<string, Period>());

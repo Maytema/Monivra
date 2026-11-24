@@ -9,7 +9,7 @@ import { categoriesEmptyOf, categoriesNone } from "../domain/categories.ts";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
 import { emptyFilters, operationsIn, type Period } from "../domain/periods.ts";
 import type { Category } from "../domain/types.ts";
-import { useLedger, useMoney } from "../ui/app-context.tsx";
+import { useLedger, useLedgerView, useMoney } from "../ui/app-context.tsx";
 import { Screen } from "../ui/kit.tsx";
 import { CategoryTile, SumTabs } from "../ui/parts.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
@@ -39,7 +39,7 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
   useLayoutEffect(() => {
     if (PERF_BUILD) ready();
   }, [ready]);
-  const data = useLedger();
+  const data = useLedgerView();
   const money = useMoney();
   const rows = useMemo(() => reportRows(data, operationsIn(data, period, emptyFilters())), [data, period]);
   // Both kinds are kept drawn once the page has settled and only shown or hidden: switching Expenses / Incomes then

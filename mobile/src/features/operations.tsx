@@ -15,7 +15,7 @@ import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } f
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
-import { appStore, useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { Fab, MoneyText, useFabCollapse } from "../ui/parts.tsx";
@@ -38,7 +38,7 @@ type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: 
 
 export function OperationsScreen() {
   countRender("operations screen");
-  const data = useLedger();
+  const data = useLedgerView();
   const p = usePalette();
   const t = useT();
   const run = useCommand();
@@ -215,7 +215,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   useLayoutEffect(() => {
     if (PERF_BUILD && (items.length === 0 || perfFlags.noList)) ready();
   });
-  const data = useLedger();
+  const data = useLedgerView();
   const p = usePalette();
   const t = useT();
   const money = useMoney();

@@ -9,7 +9,7 @@ import { moveInOrder } from "../domain/accounts.ts";
 import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { Account } from "../domain/types.ts";
-import { useCommand, useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useCommand, useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
@@ -25,7 +25,7 @@ import { RootHero } from "./root-hero.tsx";
 type AccountTab = "Accounts" | "Debts" | "Total";
 
 function useAccountParts() {
-  const data = useLedger();
+  const data = useLedgerView();
   const money = useMoney();
   const balanceOf = (a: Account) => accountBalance(data, a.id);
   const inMain = (n: number, from: string) => convert(n, from, data.settings.currency, data.rates);

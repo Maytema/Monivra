@@ -80,6 +80,11 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
     // The pill is released only when the navigator reached the pressed tab.
     setPressed((cur) => (cur === null || cur === name ? null : cur));
     sinceTouch("tab shown " + (state.routes[state.index]?.name ?? "?"));
+    // Speed-check build: the second frame after the commit (the screen's own native work is in it, which "tab shown" cannot see).
+    if (PERF_BUILD) {
+      const shownName = state.routes[state.index]?.name ?? "?";
+      requestAnimationFrame(() => requestAnimationFrame(() => sinceTouch("tab frame " + shownName)));
+    }
   }, [state.index, state.routes]);
   // Speed-check build: the time from the finger to the pill drawn on the pressed tab.
   useLayoutEffect(() => {

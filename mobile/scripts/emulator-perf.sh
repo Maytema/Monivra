@@ -165,7 +165,7 @@ tabs200() { # $1 name
   finish 3
   log "$1, after 12 taps every 0.2 s: shown $(shown_tab) (expected index $(echo "$mix200" | tail -1 | awk '{print $4}'))"
 }
-eye6() { # $1 tab centre, $2 name
+eye6() { # $1 tab centre ("x y"), $2 name
   adb shell input tap $1; sleep 2
   local xy; xy=$(where "Toggle balance visibility")
   [ -z "$xy" ] && { log "NOT FOUND: the eye on $2"; return; }
@@ -176,8 +176,8 @@ eye6() { # $1 tab centre, $2 name
 last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')
 log "empty, after 12 random taps: shown $(shown_tab) (expected index $last_tab of Accounts, Categories, Operations, Statistics, More)"
 tabs200 "empty"
-eye6 $accs "empty, Accounts"
-eye6 $ops "empty, Operations"
+eye6 "$accs" "empty, Accounts"
+eye6 "$ops" "empty, Operations"
 
 # Layers over an empty Operations tab (0.3.12): the add sheet opened right after entering the tab, while its picture runs,
 # and again with the picture at rest (the person has acted: the period changed, the tab was seen). Written as "layer sheet
@@ -230,6 +230,18 @@ tap "Replace data" 1.5 last; tap "Confirm" 1
 finish 20
 shot 01-after-restore 1
 
+# The first visit of every tab after a start with the large ledger (the owner's phone: Operations and Statistics took ~470 ms the
+# first time, a repeat 100-170 ms), then the same visits again. Taps by coordinates, a pause long enough for the screen to settle.
+adb shell am force-stop $PKG; sleep 2
+begin "cold start with data"
+adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
+finish 14
+for pass in "cold first visit" "second visit"; do
+  for tabname in operations statistics categories more accounts; do
+    case $tabname in operations) xy=$ops;; statistics) xy=$stats;; categories) xy=$cats;; more) xy=$more;; accounts) xy=$accs;; esac
+    begin "$pass: $tabname (data)"; adb shell input tap $xy; finish 3
+  done
+done
 # ---- The moves -------------------------------------------------------------------------------------
 begin "open tab Operations (first time)"; tap "Operations" 0; finish 6
 shot 02-operations 0
@@ -265,8 +277,10 @@ for name in Operations Statistics Categories Accounts; do xy=$(where "$name"); a
 finish 2
 
 tabs200 "data"
-eye6 $accs "data, Accounts"
-eye6 $ops "data, Operations"
+eye6 "$accs" "data, Accounts"
+eye6 "$ops" "data, Operations"
+eye6 "$stats" "data, Statistics"
+eye6 "$cats" "data, Categories"
 # The owner's complaints, one move each (build 100 on): a tab pressed soon after another one, two quick period
 # swipes, the expense/income switch of the statistics, the pages that open slowly, a tab of a sheet chosen by a tap.
 ops=$(tab_xy "Operations"); stats=$(tab_xy "Statistics"); cats=$(tab_xy "Categories"); accs=$(tab_xy "Accounts"); more=$(tab_xy "More")

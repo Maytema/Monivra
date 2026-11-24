@@ -1,7 +1,7 @@
 // The bridge between the store and React: one store for the application, hooks to read it, and
 // `useCommand` that runs a command and tells the person, in their language, why it was refused.
 import "../platform/crypto.ts";
-import { createContext, useCallback, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
 import { Alert, useColorScheme } from "react-native";
 import type { AppState } from "../application/store.ts";
 import type { LedgerTx } from "../domain/change.ts";
@@ -27,6 +27,25 @@ export function useLedger(): LedgerData {
   const state = useAppState();
   if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
   return state.data;
+}
+
+// The ledger for what is worked out from it (the rows of a period, the report, the tiles): the same object while the only change is the
+// masking of the figures (the eye), which changes none of them. Without it every page that is drawn (a period pager keeps five)
+// worked its rows out again and gave its list new data at each tap on the eye (speed check build 160: 5 pages × the 3000
+// operations filtered, sorted, grouped, the lists laid out again: ~170 ms of the JavaScript thread per tap, 65 ms on an empty one).
+// What is drawn masked reads the masking from the money format (useMoney), not from here: do not read `settings.hidden` from this.
+export function useLedgerView(): LedgerData {
+  const data = useLedger();
+  const kept = useRef(data);
+  if (kept.current !== data && !onlyMaskChanged(kept.current, data)) kept.current = data;
+  return kept.current;
+}
+function onlyMaskChanged(a: LedgerData, b: LedgerData): boolean {
+  for (const key of Object.keys(b) as (keyof LedgerData)[]) if (key !== "settings" && a[key] !== b[key]) return false;
+  const x = a.settings as unknown as Record<string, unknown>;
+  const y = b.settings as unknown as Record<string, unknown>;
+  for (const key of new Set([...Object.keys(x), ...Object.keys(y)])) if (key !== "hidden" && x[key] !== y[key]) return false;
+  return true;
 }
 
 // One part of the ledger: the component draws again only when that part changes (an unchanged part keeps

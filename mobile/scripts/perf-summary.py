@@ -79,11 +79,12 @@ def percentile(values, q):
 
 
 print()
-print(f"{'tab moves':62} {'presses':>7} {'dropped':>7} {'pill p50':>8} {'pill p90':>8} {'shown':>5} {'p50':>7} {'p90':>7} {'JS busy':>8} {'longest':>8}")
+print(f"{'tab moves':62} {'presses':>7} {'dropped':>7} {'pill p50':>8} {'pill p90':>8} {'frame p50':>9} {'frame p90':>9} {'shown':>5} {'p50':>7} {'p90':>7} {'JS busy':>8} {'longest':>8}")
 for move in moves:
     presses = sum(1 for n in move["notes"] if n.startswith("tab press ") and not n.startswith("tab press dropped"))
     dropped = sum(1 for n in move["notes"] if n.startswith("tab press dropped"))
     shown = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"tab shown \w+ ([\d.]+)ms", n)] if m]
+    frame = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"tab frame \w+ ([\d.]+)ms", n)] if m]
     pill = [float(m.group(1)) for n in move["notes"] for m in [re.match(r"pill shown \w+ ([\d.]+)ms", n)] if m]
     if not presses and not dropped:
         continue
@@ -91,7 +92,9 @@ for move in moves:
     p90 = f"{percentile(shown, 0.9):.0f}ms" if shown else "-"
     q50 = f"{percentile(pill, 0.5):.0f}ms" if pill else "-"
     q90 = f"{percentile(pill, 0.9):.0f}ms" if pill else "-"
-    print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {q50:>8} {q90:>8} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms {max(move['stalls'], default=0):7.0f}ms")
+    f50 = f"{percentile(frame, 0.5):.0f}ms" if frame else "-"
+    f90 = f"{percentile(frame, 0.9):.0f}ms" if frame else "-"
+    print(f"{move['name'][:62]:62} {presses:7d} {dropped:7d} {q50:>8} {q90:>8} {f50:>9} {f90:>9} {len(shown):5d} {p50:>7} {p90:>7} {sum(move['stalls']):7.0f}ms {max(move['stalls'], default=0):7.0f}ms")
 
 # The eye that hides the balance: per move the time from the finger to the figures drawn masked or shown, the parts of the command
 # (change applied, written to the database, state set and listeners told), the JS busy time and the longest pause.

@@ -13,7 +13,7 @@ import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
 import { operationsIn, periodBounds, type Period } from "../domain/periods.ts";
-import { useLedger, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
 import { SumTabs, ToneBadge } from "../ui/parts.tsx";
@@ -58,7 +58,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   useLayoutEffect(() => {
     if (PERF_BUILD) ready();
   }, [ready]);
-  const data = useLedger();
+  const data = useLedgerView();
   const p = usePalette();
   const t = useT();
   const money = useMoney();
