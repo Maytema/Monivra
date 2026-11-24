@@ -1,0 +1,23 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+operations-month: normal ×5 back, run 1                     0ms        0ms      0       -            -      -      -
+operations-month: stress ×30 back, no pause                 0ms        0ms      0       -            -      -      -
+operations-month: stress ×30 forward, no pause              0ms        0ms      0       -            -      -      -
+operations-month: quick ×10 into empty future months        0ms        0ms      0       -            -      -      -
+operations-month: back from the future                      0ms        0ms      0       -            -      -      -
+operations-month: 5 quick swipes, tab Statistics, ta        0ms        0ms      0       -            -      -      -
+operations-week: normal ×5 back, run 1                      0ms        0ms      0       -            -      -      -
+operations-day: normal ×5 back, run 1                       0ms        0ms      0       -            -      -      -
+categories-month: normal ×5 back, run 1                     0ms        0ms      0       -            -      -      -
+statistics-month: normal ×5 back, run 1                     0ms        0ms      0       -            -      -      -
+all moves                                                   0ms
+
+
+tab moves                                                      presses dropped pill p50 pill p90 frame p50 frame p90 shown     p50     p90  JS busy  longest
+
+eye moves                                                      taps text p50 text max  apply  write notify  JS busy  longest
+
+layers                                                          sheet shown  dialog gone, old  dialog gone, new
+
+pictures (one tab each)                                         JS busy  frames        janky    p90   shown
+
+Component bodies (own time)                                              part  draws    total

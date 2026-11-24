@@ -1,0 +1,106 @@
+installed
+tapped: Start
+empty profile, tab centres: accounts 108 2263, categories 324 2263, operations 540 2263, statistics 756 2263, more 972 2263
+empty, after Accounts → Statistics → Accounts: shown Accounts (expected Accounts)
+empty, after Categories → Operations → Categories: shown Categories (expected Categories)
+empty, after 12 random taps: shown Operations (expected index 2 of Accounts, Categories, Operations, Statistics, More)
+empty, after 12 taps every 0.2 s: shown Operations (expected index 2)
+tapped: Add
+tapped: Next period
+tapped: Add
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: More
+tapped: Data
+tapped: Data file
+tapped: Restore from file
+tapped: perf-data.json
+tapped: Replace data
+tapped: Confirm
+tapped: Operations
+tapped: Statistics
+tapped: Categories
+tapped: Accounts
+data, after 12 taps every 0.2 s: shown Operations (expected index 2)
+tab centres: accounts 108 2263, categories 324 2263, operations 540 2263, statistics 756 2263, more 972 2263
+after back and forth (1.5s): shown Operations (expected Operations)
+after back and forth (0.8s): shown Operations (expected Operations)
+after back and forth (0.4s): shown Operations (expected Operations)
+after the chain: shown Operations (expected Operations)
+after a swipe in Categories, one tap on Accounts: shown Accounts (expected Accounts)
+after a swipe in Accounts, one tap on Categories: shown Categories (expected Categories)
+after a swipe in Operations, one tap on Accounts: shown Accounts (expected Accounts)
+two quick swipes: ? → ? (expected two months later)
+back and forth: ? → ? (expected the same)
+tapped: Incomes
+tapped: Expenses
+tapped: More
+tapped: Budgets
+tapped: Scheduled payments
+memory before operations: 276367 kB
+video: 20-operations-10-fast.mp4
+memory after operations: 267554 kB
+native views at rest after the cold block: all 332 svg 18
+native views at rest after all-on run 1: all 832 svg 104
+native views at rest after icons-off run 1: all 547 svg 9
+native views at rest after plain-rows run 1: all 372 svg 14
+native views at rest after warm-off run 1: all 373 svg 38
+native views at rest after old-period run 1: all 832 svg 104
+native views at rest after no-list run 1: all 826 svg 108
+native views at rest after no-list run 2: all 826 svg 108
+native views at rest after old-period run 2: all 832 svg 104
+native views at rest after warm-off run 2: all 373 svg 38
+native views at rest after plain-rows run 2: all 372 svg 14
+native views at rest after icons-off run 2: all 547 svg 9
+native views at rest after all-on run 2: all 832 svg 104
+native views at rest after plain-rows run 3: all 372 svg 14
+native views at rest after old-period run 3: all 832 svg 104
+native views at rest after all-on run 3: all 832 svg 104
+native views at rest after no-list run 3: all 826 svg 108
+native views at rest after icons-off run 3: all 547 svg 9
+native views at rest after warm-off run 3: all 373 svg 38
+video: 21-operations-30-fastest.mp4
+memory after 30: 275126 kB
+video: 22-operations-direction.mp4
+memory before categories: 268258 kB
+video: 20-categories-10-fast.mp4
+memory after categories: 266394 kB
+memory before statistics: 266899 kB
+video: 20-statistics-10-fast.mp4
+memory after statistics: 310968 kB
+memory at the end: 287104 kB
+tapped: Previous period
+tapped: Previous period
+tapped: Previous period
+tapped: Previous period
+period for the new expense: November 2026 (wanted November 2026)
+before the add menu: shown Operations (expected Operations)
+tapped: Incomes
+tapped: Expenses
+tapped: Food
+keys at 325 2047 539 2047 539 1869, save at 968 2181
+tapped: More
+tapped: Data
+tapped: Export data
+tapped: Detailed transactions
+tapped: Preview
+preview open after 1s
+tapped: Preview
+tapped: More
+tapped: Settings
+tapped: Security
+tapped: PIN code
+tapped: 1
+tapped: 2
+tapped: 3
+tapped: 4
+tapped: Save
+tapped: 1
+tapped: 2
+tapped: 3
+tapped: 4
+tapped: Save
+tapped: Lock now
+result: measured
