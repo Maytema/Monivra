@@ -423,6 +423,12 @@ shot 24-categories-after 0
 fast_block "$stats" statistics
 shot 25-statistics-after 0
 log "memory at the end: $(pss) kB"
+# The floor of what the platform costs here: views of one kind mounted a fixed number at a time (features/perf-bench.tsx).
+begin "bench: views of one kind"
+adb shell am start -a android.intent.action.VIEW -d "monivra://perfbench" $PKG >/dev/null 2>&1
+finish 75
+shot 26-bench 0
+back
 # (The colour square is checked by the smoke test, which reaches the colour page.)
 
 # A new expense with the keys, saved: the list must take it without drawing everything again.

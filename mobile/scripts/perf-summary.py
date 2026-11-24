@@ -47,6 +47,25 @@ for move in moves:
 print(f"{'all moves':52} {total:8.0f}ms")
 print()
 
+# The bench (features/perf-bench.tsx): per scenario the time to the end of the commit and to the second frame, the first run (cold)
+# and the median of the other two.
+bench = {}
+for move in moves:
+    for n in move["notes"]:
+        m = re.match(r"bench (.+) run (\d): (commit|frame) ([\d.]+)ms", n)
+        if m:
+            bench.setdefault(m.group(1), {}).setdefault(m.group(3), {})[int(m.group(2))] = float(m.group(4))
+if bench:
+    print(f"{'bench':36} {'commit cold':>11} {'commit warm':>11} {'frame cold':>11} {'frame warm':>11}")
+    for name, v in bench.items():
+        def pair(kind):
+            r = v.get(kind, {})
+            warm = [r[k] for k in (2, 3) if k in r]
+            return (f"{r[1]:.0f}ms" if 1 in r else "-", f"{sum(warm) / len(warm):.0f}ms" if warm else "-")
+        c, f = pair("commit"), pair("frame")
+        print(f"{name:36} {c[0]:>11} {c[1]:>11} {f[0]:>11} {f[1]:>11}")
+    print()
+
 # The balanced swipe runs ("swipes <setting> run N: ..."): per setting the median and the range of the JS busy time and of the
 # longest pause over the runs, how often a page was mounted and drawn again (notes of the page), and the cold block for comparison.
 runs = {}
