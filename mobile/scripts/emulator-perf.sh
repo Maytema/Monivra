@@ -331,21 +331,34 @@ fast_block() { # $1 tab centre, $2 name
   if [ "$(shown_tab)" = none ]; then log "FAIL: after the swipes in $2 no tab is shown (a page was opened)"; shot "24x-left-tabs-$2" 0; back; adb shell input tap $1; sleep 2; fi
 }
 fast_block "$ops" operations
-# Where the cost of a swipe is (0.3.18): the same 10 swipes with the icons drawn as empty boxes, then with every row a bare text
-# line (a tap on the speed-check build's PerfSwitch box moves to the next setting; the third tap puts everything back).
-adb shell input tap 20 335; sleep 1
-begin "operations (icons off): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-begin "operations (icons off): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
-adb shell input tap 20 335; sleep 1
-begin "operations (plain rows): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-begin "operations (plain rows): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
-# Warm off: no page drawn beforehand (neighbours of the pager, the other tabs of a sheet, the other kind of Categories).
-adb shell input tap 20 335; sleep 1
-begin "operations (warm off): 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-begin "operations (warm off): 10 fast swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 3
+# Where the cost of a swipe is (0.3.19): the same 10 swipes back in five settings of the speed-check build's PerfSwitch box (a tap moves to
+# the next one, the fifth tap back to the first): A all on, B icons off, C plain rows, D warm off, E the old period object. The first
+# block above is the cold one (the first swipes of the session). Every setting is measured three times, in the orders ABCDE, EDCBA and
+# BDAEC, so that the order of the settings does not decide; between two runs the pages are brought back to the starting period.
+mode=0
+mode_names=(all-on icons-off plain-rows warm-off old-period)
+set_mode() { # $1 index 0-4
+  local taps=$(( ($1 - mode + 5) % 5 )) k
+  for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
+  mode=$1; sleep 1
+}
+balanced() { # $1 run number, $2.. order (letters A-E)
+  local run=$1 letter idx; shift
+  for letter in "$@"; do
+    idx=$(( $(printf '%d' "'$letter") - 65 ))
+    set_mode $idx
+    begin "swipes ${mode_names[$idx]} run $run: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+    for i in $(seq 10); do next_swipe; sleep 0.25; done; sleep 2
+  done
+}
+balanced 1 A B C D E
+balanced 2 E D C B A
+balanced 3 B D A E C
+set_mode 0
+set_mode 3
 begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
 adb shell input tap $ops; sleep 2
-adb shell input tap 20 335; sleep 1
+set_mode 0
 begin "tab mix (all on): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
 adb shell input tap $ops; sleep 2
 record 21-operations-30-fastest 20

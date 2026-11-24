@@ -1,6 +1,6 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
-import { countRender } from "../platform/perf.ts";
+import { countRender, perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -149,6 +149,20 @@ export function PeriodPager({ header, render, around }: { header?: ReactNode; re
     return key;
   };
   const periodOf = (key: string): Period => known.current.get(key) ?? period;
+  // A page is given the same Period object for as long as its key stays: the swipe made the period of the page it
+  // landed on again (the real current period replaces the one the neighbour was drawn with, same days, a new object),
+  // every page memoised on the period drew again — rows, days, the list laid out once more (speed check build 157:
+  // 9 draws of the page reached in 10 swipes). The days of a page are what its key names, so the first object stays.
+  const shownAs = useRef(new Map<string, Period>());
+  const pageOf = (key: string): Period => {
+    const next = periodOf(key);
+    if (PERF_BUILD && perfFlags.oldPeriod) return next;
+    const before = shownAs.current.get(key);
+    if (before) return before;
+    if (shownAs.current.size > 300) shownAs.current.clear();
+    shownAs.current.set(key, next);
+    return next;
+  };
   const settings = data.settings;
   return (
     <Pager
@@ -160,7 +174,7 @@ export function PeriodPager({ header, render, around }: { header?: ReactNode; re
         return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
       }}
       header={header}
-      render={(key, isCurrent) => render(periodOf(key), isCurrent)}
+      render={(key, isCurrent) => render(pageOf(key), isCurrent)}
       onMove={(steps) => {
         let next = getView().period;
         for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);

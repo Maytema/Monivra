@@ -46,6 +46,25 @@ for move in moves:
     )
 print(f"{'all moves':52} {total:8.0f}ms")
 print()
+
+# The balanced swipe runs ("swipes <setting> run N: ..."): per setting the median and the range of the JS busy time and of the
+# longest pause over the runs, how often a page was mounted and drawn again (notes of the page), and the cold block for comparison.
+runs = {}
+for move in moves:
+    m = re.match(r"swipes (\S+) run (\d+):", move["name"])
+    if m:
+        notes = move["notes"]
+        runs.setdefault(m.group(1), []).append((sum(move["stalls"]), max(move["stalls"], default=0), sum(n.startswith("operations page mount") for n in notes),
+                                                 sum(n.startswith("operations page prop changed") for n in notes), sum(n.startswith("operations page built") for n in notes)))
+if runs:
+    def med(values):
+        values = sorted(values)
+        return values[len(values) // 2]
+    print(f"{'10 swipes back, balanced order':32} {'runs':>4} {'JS busy median':>15} {'range':>14} {'pause median':>13} {'range':>12} {'mounts':>6} {'prop':>5} {'built':>5}")
+    for name, rs in runs.items():
+        busy, pause = [r[0] for r in rs], [r[1] for r in rs]
+        print(f"{name:32} {len(rs):4d} {med(busy):13.0f}ms {min(busy):6.0f}-{max(busy):<6.0f}ms {med(pause):11.0f}ms {min(pause):5.0f}-{max(pause):<5.0f}ms {med([r[2] for r in rs]):6d} {med([r[3] for r in rs]):5d} {med([r[4] for r in rs]):5d}")
+    print()
 for move in moves:
     for note in move["notes"]:
         print(f"{move['name'][:40]:40} | {note}")
