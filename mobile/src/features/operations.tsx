@@ -213,7 +213,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   });
   // (An empty period has no rows to load: its picture is the content.)
   useLayoutEffect(() => {
-    if (PERF_BUILD && items.length === 0) ready();
+    if (PERF_BUILD && (items.length === 0 || perfFlags.noList)) ready();
   });
   const data = useLedger();
   const p = usePalette();
@@ -300,6 +300,15 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   const page = (
     <View style={{ flex: 1 }}>
+      {PERF_BUILD && perfFlags.noList ? (
+        // Speed-check build: the same rows without a list (the first 14, one after another): what the list itself costs.
+        <View>
+          {header}
+          {items.slice(0, 14).map((item) => (
+            <View key={keyOfItem(item)}>{renderItem({ item })}</View>
+          ))}
+        </View>
+      ) : (
       <FlashList
         ref={list}
         // No scroll bar on a swiped page (components.css .swipe-page > .content).
@@ -322,6 +331,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         renderItem={renderItem}
         onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), ready()) : undefined}
       />
+      )}
     </View>
   );
   done();

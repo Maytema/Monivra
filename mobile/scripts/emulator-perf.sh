@@ -331,14 +331,20 @@ fast_block() { # $1 tab centre, $2 name
   if [ "$(shown_tab)" = none ]; then log "FAIL: after the swipes in $2 no tab is shown (a page was opened)"; shot "24x-left-tabs-$2" 0; back; adb shell input tap $1; sleep 2; fi
 }
 fast_block "$ops" operations
-# Where the cost of a swipe is (0.3.19): the same 10 swipes back in five settings of the speed-check build's PerfSwitch box (a tap moves to
-# the next one, the fifth tap back to the first): A all on, B icons off, C plain rows, D warm off, E the old period object. The first
-# block above is the cold one (the first swipes of the session). Every setting is measured three times, in the orders ABCDE, EDCBA and
-# BDAEC, so that the order of the settings does not decide; between two runs the pages are brought back to the starting period.
+# Where the cost of a swipe is (0.3.19): the same 10 swipes back in six settings of the speed-check build's PerfSwitch box (a tap moves to
+# the next one, the fifth tap back to the first): A all on, B icons off, C plain rows, D warm off, E the old period object, F no list (the first 14 rows in a plain view). The first
+# block above is the cold one (the first swipes of the session). Every setting is measured three times, in the orders ABCDEF, FEDCBA and
+# CEAFBD, so that the order of the settings does not decide; between two runs the pages are brought back to the starting period.
+# The native views of the screen: all, and those of react-native-svg (the platform's own tree, from dumpsys).
+view_count() {
+  local dump; dump=$(adb shell dumpsys activity top 2>/dev/null)
+  echo "all $(echo "$dump" | grep -cE '^\s+[A-Za-z0-9_.$]+\{[0-9a-f]+ ') svg $(echo "$dump" | grep -cE 'RNSVG|Svg')"
+}
+log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list)
 set_mode() { # $1 index 0-4
-  local taps=$(( ($1 - mode + 5) % 5 )) k
+  local taps=$(( ($1 - mode + 6) % 6 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
   mode=$1; sleep 1
 }
@@ -348,12 +354,14 @@ balanced() { # $1 run number, $2.. order (letters A-E)
     idx=$(( $(printf '%d' "'$letter") - 65 ))
     set_mode $idx
     begin "swipes ${mode_names[$idx]} run $run: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-    for i in $(seq 10); do next_swipe; sleep 0.25; done; sleep 2
+    log "native views at rest after ${mode_names[$idx]} run $run: $(view_count)"
+    # The way back is a move of its own (its pauses and page draws must not be added to the run before it).
+    begin "return after ${mode_names[$idx]} run $run: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
   done
 }
-balanced 1 A B C D E
-balanced 2 E D C B A
-balanced 3 B D A E C
+balanced 1 A B C D E F
+balanced 2 F E D C B A
+balanced 3 C E A F B D
 set_mode 0
 set_mode 3
 begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
