@@ -3,7 +3,7 @@
 import "../platform/crypto.ts";
 import { createContext, useCallback, useContext, useMemo, useRef, useSyncExternalStore, type ReactNode } from "react";
 import { Alert, useColorScheme } from "react-native";
-import type { AppState } from "../application/store.ts";
+import type { AppState, Channel } from "../application/store.ts";
 import type { LedgerTx } from "../domain/change.ts";
 import type { Env } from "../domain/env.ts";
 import { DomainError } from "../domain/errors.ts";
@@ -43,10 +43,16 @@ function sameSettingsButMask(a: LedgerData["settings"], b: LedgerData["settings"
 // operations filtered, sorted, grouped, the lists laid out again: ~170 ms of the JavaScript thread per tap, 65 ms on an empty one).
 // What is drawn masked reads the masking from the money format (useMoney), not from here: do not read `settings.hidden` from this.
 export function useLedgerView(): LedgerData {
-  const data = useLedger();
-  const kept = useRef(data);
-  if (kept.current !== data && !onlyMaskChanged(kept.current, data)) kept.current = data;
-  return kept.current;
+  return useSyncExternalStore(subscribeView, viewSnapshot);
+}
+const VIEW_CHANNELS: Channel[] = ["ops", "refs", "look"];
+const subscribeView = (l: () => void) => appStore().subscribe(l, VIEW_CHANNELS);
+let viewKept: LedgerData | null = null;
+function viewSnapshot(): LedgerData {
+  const state = appStore().getState();
+  if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
+  if (viewKept && viewKept !== state.data && onlyMaskChanged(viewKept, state.data)) return viewKept;
+  return (viewKept = state.data);
 }
 function onlyMaskChanged(a: LedgerData, b: LedgerData): boolean {
   for (const key of Object.keys(b) as (keyof LedgerData)[]) if (key !== "settings" && a[key] !== b[key]) return false;
@@ -56,9 +62,12 @@ function onlyMaskChanged(a: LedgerData, b: LedgerData): boolean {
 // One part of the ledger: the component draws again only when that part changes (an unchanged part keeps
 // its identity), not on every change of the ledger. The part has to be a plain value or an object of the
 // ledger itself, never a new object.
+const LOOK_CHANNEL: Channel[] = ["look"];
+const channelOf = (key: keyof LedgerData): Channel => (key === "ops" || key === "scheduled" ? "ops" : key === "settings" ? "look" : "refs");
+const subscribeLook = (l: () => void) => appStore().subscribe(l, LOOK_CHANNEL);
 function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
   const s = appStore();
-  return useSyncExternalStore(s.subscribe, () => {
+  return useSyncExternalStore(subscribeLook, () => {
     const state = s.getState();
     if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
     return pick(state.data);
@@ -72,7 +81,9 @@ const partsCache = new Map<string, Partial<LedgerData>>();
 export function useLedgerParts<K extends keyof LedgerData>(...keys: K[]): Pick<LedgerData, K> {
   const s = appStore();
   const name = keys.join(" ");
-  return useSyncExternalStore(s.subscribe, () => {
+  const channels = useMemo(() => [...new Set(keys.map(channelOf))], [name]); // eslint-disable-line react-hooks/exhaustive-deps
+  const subscribe = useCallback((l: () => void) => s.subscribe(l, channels), [s, channels]);
+  return useSyncExternalStore(subscribe, () => {
     const state = s.getState();
     if (state.status !== "ready" && state.status !== "welcome") throw new Error("the ledger is not open");
     const data = state.data;
@@ -148,9 +159,18 @@ const maskOf = (): string => {
   const { hidden, hiddenValues } = state.data.settings;
   return hidden ? (hiddenValues === "Balances only" ? "balances" : "all") : "";
 };
+const MASK_CHANNEL: Channel[] = ["mask"];
+const subscribeMask = (l: () => void) => appStore().subscribe(l, MASK_CHANNEL);
+// Whether the figures are hidden (the eye): heard on the mask channel alone.
+export function useHidden(): boolean {
+  return useSyncExternalStore(subscribeMask, () => {
+    const state = appStore().getState();
+    return (state.status === "ready" || state.status === "welcome") && !!state.data.settings.hidden;
+  });
+}
 export function useMoney(): Money {
   const { currency, format } = fromLook(useContext(MoneyContext));
-  const mask = useSyncExternalStore(appStore().subscribe, maskOf);
+  const mask = useSyncExternalStore(subscribeMask, maskOf);
   return useMemo<Money>(
     () =>
       (n, code = currency, balance = false) =>

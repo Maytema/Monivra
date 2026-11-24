@@ -11,7 +11,7 @@ import { enableFreeze } from "react-native-screens";
 import { setAppVersion, watchStore } from "../application/store.ts";
 import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
-import { perfLog, PERF_BUILD, probeEngine, watchStalls } from "../platform/perf.ts";
+import { perfLog, perfNote, PERF_BUILD, probeEngine, watchStalls } from "../platform/perf.ts";
 import { PerfSwitch } from "../ui/perf-switch.tsx";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
@@ -157,7 +157,7 @@ export default function Layout() {
   // Only in the build made for the speed check: every long pause of the JavaScript thread is written down.
   useEffect(watchStalls, []);
   useEffect(() => {
-    if (PERF_BUILD) watchStore(perfLog);
+    if (PERF_BUILD) watchStore(perfLog, perfNote);
   }, []);
   return (
     <SafeAreaProvider>

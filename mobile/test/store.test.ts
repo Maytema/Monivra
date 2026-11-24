@@ -108,3 +108,27 @@ test("renaming and deleting a tag reaches every operation and scheduled payment,
   assert.equal(s.status === "ready" && s.data.ops[0]!.tags.join(), "journey");
   assert.deepEqual(compareLedgers(s.status === "ready" ? s.data : (null as never), loadLedger(db)!), []);
 });
+
+test("channels: the eye (mask) wakes only mask listeners, an operation wakes ops but not mask or look", () => {
+  const env = testEnv();
+  const store = createStore(memoryDb(), env, () => "en");
+  store.open();
+  store.begin("starter", (s) => s);
+  const heard = { all: 0, mask: 0, look: 0, ops: 0, refs: 0 };
+  store.subscribe(() => heard.all++);
+  for (const channel of ["mask", "look", "ops", "refs"] as const) store.subscribe(() => heard[channel]++, [channel]);
+  store.run((tx) => (tx.setSettings({ hidden: true }), true));
+  assert.deepEqual(heard, { all: 1, mask: 1, look: 0, ops: 0, refs: 0 });
+  const before = store.getState();
+  if (before.status !== "ready") throw new Error("not ready");
+  const account = before.data.accounts[0]!.id;
+  const category = before.data.categories[0]!.id;
+  store.run((tx) => putOperation(tx, { id: "", type: "expense", from: account, category, amount: 500, date: "2026-11-10", comment: "", tags: [] }, env));
+  assert.equal(heard.ops, 1);
+  assert.equal(heard.mask, 1);
+  assert.equal(heard.look, 0);
+  store.run((tx) => (tx.setSettings({ accent: "#123456" }), true));
+  assert.equal(heard.look, 1);
+  assert.equal(heard.mask, 1);
+  assert.equal(heard.ops, 1);
+});

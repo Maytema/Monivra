@@ -3,14 +3,14 @@
 import { countRender, PERF_BUILD, sinceTouch } from "../platform/perf.ts";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { overallBalance } from "../domain/ledger.ts";
-import { useCommand, useLedger } from "../ui/app-context.tsx";
+import { useCommand, useHidden, useLedgerView } from "../ui/app-context.tsx";
 import { Hero, HeroFigure } from "../ui/parts.tsx";
 
 export function RootHero({ icon, label, onAction, below }: { icon?: string; label?: string; onAction?: () => void; below?: ReactNode }) {
   countRender("root hero");
-  const data = useLedger();
+  const data = useLedgerView();
   const run = useCommand();
-  const hidden = !!data.settings.hidden;
+  const hidden = useHidden();
   // Speed-check build: the time from the finger to the figures drawn masked (or shown again).
   const first = useRef(true);
   useLayoutEffect(() => {

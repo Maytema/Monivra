@@ -25,8 +25,34 @@ export function setAppVersion(version: string): void {
 
 // Speed-check build only (set from app/_layout.tsx): how long a command takes in its parts.
 let timing: ((label: string, ms: number) => void) | null = null;
-export function watchStore(report: (label: string, ms: number) => void): void {
+let noteCalls: ((text: string) => void) | null = null;
+export function watchStore(report: (label: string, ms: number) => void, note?: (text: string) => void): void {
   timing = report;
+  noteCalls = note ?? null;
+}
+
+// What a listener may ask to hear about. A change of the ledger is told only to the listeners of the channels it touched, so a tap
+// on the eye (mask) wakes the ones that draw masked figures and no page that draws rows (ops), accounts and the like (refs) or
+// the look. A listener without channels hears every change (it reads the whole state).
+export type Channel = "mask" | "look" | "ops" | "refs";
+const MASK_KEYS = new Set(["hidden", "hiddenValues"]);
+// The channels in which `next` differs from `prev`; null when the states are not two states of one open ledger (everyone hears it).
+export function changedChannels(prev: AppState, next: AppState): Set<Channel> | null {
+  if (prev.status !== next.status || (next.status !== "ready" && next.status !== "welcome") || (prev.status !== "ready" && prev.status !== "welcome")) return null;
+  const a = prev.data;
+  const b = next.data;
+  const out = new Set<Channel>();
+  if (a.ops !== b.ops || a.scheduled !== b.scheduled) out.add("ops");
+  if (a.accounts !== b.accounts || a.categories !== b.categories || a.tags !== b.tags || a.budgets !== b.budgets || a.rates !== b.rates || a.backups !== b.backups) out.add("refs");
+  if (a.settings !== b.settings) {
+    const x = a.settings as unknown as Record<string, unknown>;
+    const y = b.settings as unknown as Record<string, unknown>;
+    for (const key of new Set([...Object.keys(x), ...Object.keys(y)])) {
+      if (x[key] === y[key]) continue;
+      out.add(MASK_KEYS.has(key) ? "mask" : "look");
+    }
+  }
+  return out;
 }
 
 export type AppState =
@@ -39,7 +65,8 @@ export type AppState =
 export type { Step };
 export interface Store {
   getState(): AppState;
-  subscribe(listener: () => void): () => void;
+  // Without `channels` the listener hears every change.
+  subscribe(listener: () => void, channels?: Channel[]): () => void;
   open(): void;
   begin(start: "empty" | "starter", translate: (s: string) => string): void;
   run<T>(command: (tx: LedgerTx, env: Env) => T): T;
@@ -79,10 +106,17 @@ export interface Store {
 export function createStore(firstDb: SqlDriver, env: Env, language: () => string, setAside?: () => SqlDriver): Store {
   let db = firstDb;
   let state: AppState = { status: "loading" };
-  const listeners = new Set<() => void>();
+  const listeners = new Map<() => void, Channel[] | undefined>();
   const set = (next: AppState) => {
+    const changed = changedChannels(state, next);
     state = next;
-    for (const listener of listeners) listener();
+    let called = 0;
+    for (const [listener, channels] of [...listeners]) {
+      if (changed && channels && !channels.some((c) => changed.has(c))) continue;
+      called++;
+      listener();
+    }
+    noteCalls?.(`store: listeners called ${called} of ${listeners.size}`);
   };
   const ready = (data: LedgerData, posted: string[] = []) =>
     set({ status: "ready", data, revision: state.status === "ready" ? state.revision + 1 : 1, posted });
@@ -112,8 +146,8 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
     env,
     busy: () => locked,
     getState: () => state,
-    subscribe(listener) {
-      listeners.add(listener);
+    subscribe(listener, channels) {
+      listeners.set(listener, channels);
       return () => listeners.delete(listener);
     },
 
