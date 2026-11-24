@@ -9,7 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { enableFreeze } from "react-native-screens";
 import { setAppVersion, watchStore } from "../application/store.ts";
-import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, LedgerLook, useAppPhase, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { perfLog, perfNote, PERF_BUILD, probeEngine, watchStalls } from "../platform/perf.ts";
 import { PerfSwitch } from "../ui/perf-switch.tsx";
@@ -125,7 +125,7 @@ function Ready() {
 }
 
 function Root() {
-  const state = useAppState();
+  const state = useAppPhase();
   if (state.status === "loading")
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

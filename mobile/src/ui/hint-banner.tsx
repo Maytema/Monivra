@@ -2,13 +2,13 @@
 // the first application (js/ui/hint.js).
 import { Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
-import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
+import { useCommand, useLedgerParts, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
 
 // `plain`: a row of a menu (the More tab, MR 001) instead of a tinted card.
 // `icon`/`onClose`: the same banner for a notice that is not a one-time hint (it goes away by `onClose`).
 export function HintBanner({ id, text, onPress, plain = false, icon = "info", onClose }: { id: string; text: string; onPress?: () => void; plain?: boolean; icon?: string; onClose?: () => void }) {
-  const data = useLedger();
+  const data = useLedgerParts("settings");
   const p = usePalette();
   const t = useT();
   const run = useCommand();

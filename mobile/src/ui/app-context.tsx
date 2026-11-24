@@ -23,6 +23,27 @@ export function useAppState(): AppState {
   return useSyncExternalStore(s.subscribe, s.getState);
 }
 
+// The phase of the application for the root: the state itself while loading, failed or welcome, one constant while the ledger is open, so a
+// change of the ledger (the eye included) does not draw the root and everything under it again.
+const OPEN = { status: "ready" } as AppState;
+export function useAppPhase(): AppState {
+  const s = appStore();
+  return useSyncExternalStore(s.subscribe, () => {
+    const state = s.getState();
+    return state.status === "ready" ? OPEN : state;
+  });
+}
+
+const NO_POSTED: string[] = [];
+// The operations posted by the application that the person has not seen yet (the same array until they change).
+export function usePosted(): string[] {
+  const s = appStore();
+  return useSyncExternalStore(s.subscribe, () => {
+    const state = s.getState();
+    return state.status === "ready" ? state.posted : NO_POSTED;
+  });
+}
+
 // The ledger of a ready application (screens are shown only then).
 export function useLedger(): LedgerData {
   const state = useAppState();
