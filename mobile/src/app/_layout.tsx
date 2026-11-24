@@ -7,6 +7,7 @@ import { Stack, usePathname } from "expo-router";
 import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import { enableFreeze } from "react-native-screens";
 import { setAppVersion, watchStore } from "../application/store.ts";
 import { appStore, LedgerLook, useAppState, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
@@ -146,6 +147,11 @@ function Root() {
     </LedgerLook>
   );
 }
+
+// A tab that is not shown is frozen (app/(tabs)/_layout.tsx, freezeOnBlur). The switch is turned on here, not left to the default:
+// in the speed check (build 161) every tap on the eye of the balance drew the Operations tab (5 pages, their rows and icons, ~150 ms)
+// while Statistics, Categories or Accounts was in front.
+enableFreeze(true);
 
 export default function Layout() {
   // Only in the build made for the speed check: every long pause of the JavaScript thread is written down.
