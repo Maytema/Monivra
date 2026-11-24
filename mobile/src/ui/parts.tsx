@@ -179,9 +179,9 @@ export function MoneyLine({ children, style }: { children: (money: ReturnType<ty
 }
 
 // An amount in the default currency, coloured by its sign, drawn again by itself on the eye.
-export function MoneyAmount({ value, size = 18, style }: { value: number; size?: number; style?: StyleProp<TextStyle> }) {
+export function MoneyAmount({ value, size = 18, style, currency, balance }: { value: number; size?: number; style?: StyleProp<TextStyle>; currency?: string; balance?: boolean }) {
   const money = useMoney();
-  return <MoneyText text={money(value)} value={value} size={size} style={style} />;
+  return <MoneyText text={money(value, currency, balance)} value={value} size={size} style={style} />;
 }
 
 export function MoneyText({ text, value, size = 18, style }: { text: string; value: number; size?: number; style?: StyleProp<TextStyle> }) {

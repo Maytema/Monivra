@@ -15,10 +15,10 @@ import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } f
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
-import { appStore, useCommand, useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Icon } from "../ui/kit.tsx";
-import { Fab, MoneyText, useFabCollapse } from "../ui/parts.tsx";
+import { Fab, MoneyAmount, useFabCollapse } from "../ui/parts.tsx";
 import { useSpotlit } from "../ui/spotlight.tsx";
 import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
@@ -218,7 +218,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
-  const money = useMoney();
   const filters = useViewFilters();
   const ready = usePageReady();
   const ops = useMemo(() => timed("page: operations of the period", () => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
@@ -266,7 +265,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
               {([["Opening balance", balances.opening], ["Closing balance", balances.closing]] as const).map(([label, value]) => (
                 <View key={label} style={{ alignItems: "center" }}>
                   <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(label)}</Text>
-                  <MoneyText text={money(value, data.settings.currency, true)} value={value} size={17} style={{ marginTop: 4 }} />
+                  <MoneyAmount value={value} currency={data.settings.currency} balance size={17} style={{ marginTop: 4 }} />
                 </View>
               ))}
             </View>
@@ -274,7 +273,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         </View>
       </View>
     ),
-    [balances, p, t, money, data.settings.currency],
+    [balances, p, t, data.settings.currency],
   );
   const renderItem = useCallback(
     ({ item }: { item: Item }) =>

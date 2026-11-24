@@ -8,7 +8,9 @@ export default function TabsLayout() {
   const p = usePalette();
   const t = useT();
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{
+    // React Activity (Expo SDK 58): a tab that is not shown is hidden, its effects are released and what it draws is deferred; freezing
+    // alone did not stop the draws a change of the masking or the data caused in the tabs behind (speed check build 163).
+    <Tabs activityEnabled tabBar={(props) => <TabBar {...props} />} screenOptions={{
         headerShown: false,
         // A tab that is not shown is frozen: it does not draw while the others change the period or the data (with
         // freezing off, three period swipes in Operations took 1.6 s of the JavaScript thread instead of 0.37 s,
