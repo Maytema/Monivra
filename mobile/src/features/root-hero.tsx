@@ -3,13 +3,12 @@
 import { countRender, PERF_BUILD, sinceTouch } from "../platform/perf.ts";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { overallBalance } from "../domain/ledger.ts";
-import { useCommand, useLedger, useMoney } from "../ui/app-context.tsx";
-import { Hero } from "../ui/parts.tsx";
+import { useCommand, useLedger } from "../ui/app-context.tsx";
+import { Hero, HeroFigure } from "../ui/parts.tsx";
 
 export function RootHero({ icon, label, onAction, below }: { icon?: string; label?: string; onAction?: () => void; below?: ReactNode }) {
   countRender("root hero");
   const data = useLedger();
-  const money = useMoney();
   const run = useCommand();
   const hidden = !!data.settings.hidden;
   // Speed-check build: the time from the finger to the figures drawn masked (or shown again).
@@ -22,7 +21,7 @@ export function RootHero({ icon, label, onAction, below }: { icon?: string; labe
   return (
     <Hero
       caption="Overall balance"
-      figure={money(overallBalance(data), data.settings.currency, true)}
+      figure={<HeroFigure value={overallBalance(data)} currency={data.settings.currency} />}
       hidden={hidden}
       onToggleHidden={() => void run((tx) => (tx.setSettings({ hidden: !hidden }), true))}
       actionIcon={icon}

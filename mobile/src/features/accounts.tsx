@@ -9,10 +9,10 @@ import { moveInOrder } from "../domain/accounts.ts";
 import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { Account } from "../domain/types.ts";
-import { useCommand, useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
-import { Meter, MoneyText, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
+import { Meter, MoneyAmount, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { Pager } from "../ui/pager.tsx";
 import { HintBanner } from "../ui/hint-banner.tsx";
@@ -26,18 +26,17 @@ type AccountTab = "Accounts" | "Debts" | "Total";
 
 function useAccountParts() {
   const data = useLedgerView();
-  const money = useMoney();
   const balanceOf = (a: Account) => accountBalance(data, a.id);
   const inMain = (n: number, from: string) => convert(n, from, data.settings.currency, data.rates);
   const isFinished = (a: Account) => {
     const progress = progressForBalance(a, balanceOf(a));
     return a.type === "Debt" ? balanceOf(a) === 0 : !!progress && progress.kind === "goal" && progress.left <= 0;
   };
-  return { data, money, balanceOf, inMain, isFinished };
+  return { data, balanceOf, inMain, isFinished };
 }
 
 function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () => boolean }) {
-  const { data, money, balanceOf } = useAccountParts();
+  const { data, balanceOf } = useAccountParts();
   const p = usePalette();
   const t = useT();
   const balance = balanceOf(account);
@@ -73,7 +72,7 @@ function AccountRow({ account, ignoreTap }: { account: Account; ignoreTap?: () =
           {account.name}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <MoneyText text={money(balance, account.currency, true)} value={balance} />
+          <MoneyAmount value={balance} currency={account.currency} balance />
           {progress ? (
             <>
               <Meter percent={progress.percent} owed={isOwed(progress.kind, progress.left, debtDirection(data, account) === "I owe")} />
@@ -132,7 +131,7 @@ function Folder({ title, icon, items }: { title: string; icon: string; items: Ac
 }
 
 function Totals() {
-  const { data, money, balanceOf } = useAccountParts();
+  const { data, balanceOf } = useAccountParts();
   const p = usePalette();
   const t = useT();
   const run = useCommand();
@@ -155,7 +154,7 @@ function Totals() {
                 return (
                   <View key={c} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 18, paddingHorizontal: 15 }}>
                     <Text style={{ flex: 1, color: p.ink, fontSize: 19 }}>{c}</Text>
-                    <MoneyText text={money(sum, c)} value={sum} size={19} />
+                    <MoneyAmount value={sum} currency={c} size={19} />
                   </View>
                 );
               })}
@@ -164,7 +163,7 @@ function Totals() {
                 onPress={() => openCurrencySheet(to, (code) => void run((tx) => (tx.setSettings({ totalCurrency: { ...data.settings.totalCurrency, [type]: code } }), true)))}
                 style={{ padding: 18, alignItems: "center", backgroundColor: mix(p.positive, p.bg, 0.1), borderTopWidth: 1, borderTopColor: p.line }}
               >
-                <MoneyText text={money(converted, to)} value={converted} size={20} />
+                <MoneyAmount value={converted} currency={to} size={20} />
               </Pressable>
             </View>
           </View>
@@ -180,7 +179,7 @@ function Totals() {
 }
 
 export function AccountsScreen() {
-  const { data, money, balanceOf, inMain, isFinished } = useAccountParts();
+  const { data, balanceOf, inMain, isFinished } = useAccountParts();
   const p = usePalette();
   const [tab, setTab] = useState<AccountTab>("Accounts");
   const [held, setHeld] = useState(false);
@@ -227,7 +226,7 @@ export function AccountsScreen() {
                   const total = rows.reduce((n, a) => n + inMain(balanceOf(a), a.currency), 0);
                   return (
                     <View key={type}>
-                      <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyText text={money(total, data.settings.currency, true)} value={total} size={19} />} />
+                      <SectionLabel first={index === 0} title={type === "Regular" ? "Accounts" : type} right={<MoneyAmount value={total} currency={data.settings.currency} balance size={19} />} />
                       {rows.length ? <Group accounts={rows} onHold={setHeld} /> : null}
                     </View>
                   );

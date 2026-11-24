@@ -13,10 +13,10 @@ import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
 import { operationsIn, periodBounds, type Period } from "../domain/periods.ts";
-import { useLedgerView, useMoney, usePalette, useT } from "../ui/app-context.tsx";
+import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
-import { SumTabs, ToneBadge } from "../ui/parts.tsx";
+import { SumTabs, ToneBadge, WithMoney } from "../ui/parts.tsx";
 import { numberText } from "../ui/number-text.ts";
 import { EmptyState } from "../ui/empty-state.tsx";
 import { openCategorySheet } from "./category-sheet.tsx";
@@ -61,7 +61,6 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
-  const money = useMoney();
   const asked = useViewCatType();
   const filters = useViewFilters();
   // The open page draws the chosen type in the same moment as the tab (the owner saw the tab switched while the page
@@ -121,7 +120,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
     flow: () => (
       <Card key="flow" borderColor={income >= expense ? p.positive : p.negative}>
         <Heading>Cash flow</Heading>
-        <Text style={{ color: income - expense >= 0 ? p.positiveInk : p.negativeInk, fontSize: 23, textAlign: "center" }}>{money(income - expense, main)}</Text>
+        <Text style={{ color: income - expense >= 0 ? p.positiveInk : p.negativeInk, fontSize: 23, textAlign: "center" }}><WithMoney>{(money) => money(income - expense, main)}</WithMoney></Text>
       </Card>
     ),
     scheduled: () => (
@@ -131,7 +130,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
           return (
             <Pressable key={type} accessibilityRole="button" onPress={() => router.push("/scheduled")} style={{ paddingVertical: 24, paddingHorizontal: 12, borderTopWidth: i ? 1 : 0, borderTopColor: p.line }}>
               <Text style={{ color: p.ink, fontSize: 16, textAlign: "center", marginBottom: 12 }}>{t.t(type === "expense" ? "Scheduled expenses" : type === "income" ? "Scheduled incomes" : "Scheduled transfers")}</Text>
-              <Text style={{ color: type === "expense" ? p.negativeInk : type === "income" ? p.positiveInk : p.muted, fontSize: 22, textAlign: "center" }}>{money(sum, main)}</Text>
+              <Text style={{ color: type === "expense" ? p.negativeInk : type === "income" ? p.positiveInk : p.muted, fontSize: 22, textAlign: "center" }}><WithMoney>{(money) => money(sum, main)}</WithMoney></Text>
             </Pressable>
           );
         })}
@@ -193,7 +192,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
           {([["Day", 1], ["Week", 7]] as const).map(([label, n]) => (
             <View key={label} style={{ flexDirection: "row", width: "100%" }}>
               <Text style={{ flex: 1, color: p.ink, fontSize: 14 }}>{t.t(label)}</Text>
-              <Text style={{ flex: 2, color: p.ink, fontSize: 14, textAlign: "right" }}>{money(Math.round(((catType === "expense" ? expense : income) / days) * n), main)}</Text>
+              <Text style={{ flex: 2, color: p.ink, fontSize: 14, textAlign: "right" }}><WithMoney>{(money) => money(Math.round(((catType === "expense" ? expense : income) / days) * n), main)}</WithMoney></Text>
             </View>
           ))}
         </View>
@@ -242,6 +241,8 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
               })}
             </Svg>
             {/* For screen readers the ring is one adjustable element: swipe up and down to go through the slices. */}
+            <WithMoney>
+              {(money) => (
             <Pressable
               accessibilityRole="adjustable"
               accessibilityLabel={t.t("Category distribution")}
@@ -255,6 +256,8 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
               onPress={(e) => touch(e.nativeEvent.locationX, e.nativeEvent.locationY)}
               style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
             />
+              )}
+            </WithMoney>
             <View pointerEvents="box-none" style={{ position: "absolute", top: "24%", bottom: "24%", left: "24%", right: "24%", alignItems: "center", justifyContent: "center", gap: 4 }}>
               {chosen ? (
                 <>
@@ -262,7 +265,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
                     <Icon name={chosen.icon ?? "dollar"} size={22} color={chosen.color} />
                   </View>
                   <Text pointerEvents="none" numberOfLines={1} style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{label(chosen)}</Text>
-                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 18, fontWeight: "600", textAlign: "center" }}>{money(chosen.total, main)}</Text>
+                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 18, fontWeight: "600", textAlign: "center" }}><WithMoney>{(money) => money(chosen.total, main)}</WithMoney></Text>
                   <Text pointerEvents="none" style={{ color: p.ink, fontSize: 14 }}>{percentText(sliceTotal ? (chosen.total / sliceTotal) * 100 : 0, t.locale)}</Text>
                   <Pressable accessibilityRole="button" hitSlop={8} onPress={() => openOperations(chosen.id, chosen.members)}>
                     <Text style={{ color: p.accentInk, fontSize: 15, fontWeight: "500" }}>{t.t("Operations")}</Text>
@@ -271,7 +274,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
               ) : (
                 <>
                   <Text pointerEvents="none" style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{t.t(catType === "expense" ? "Expenses" : "Income")}</Text>
-                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 21, fontWeight: "600", textAlign: "center" }}>{money(total, main)}</Text>
+                  <Text pointerEvents="none" numberOfLines={1} adjustsFontSizeToFit style={{ color: tone, fontSize: 21, fontWeight: "600", textAlign: "center" }}><WithMoney>{(money) => money(total, main)}</WithMoney></Text>
                   {slices.length ? <Text pointerEvents="none" style={{ color: p.muted, fontSize: 12, textAlign: "center", marginTop: 2 }}>{t.t("Tap a part of the ring")}</Text> : null}
                 </>
               )}
@@ -292,7 +295,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
               </View>
             </View>
             <View style={{ alignItems: "flex-end" }}>
-              <Text style={{ color: tone, fontSize: 15 }}>{money(g.total, main)}</Text>
+              <Text style={{ color: tone, fontSize: 15 }}><WithMoney>{(money) => money(g.total, main)}</WithMoney></Text>
               <Text style={{ color: p.muted, fontSize: 12 }}>{percentText(total ? (g.total / total) * 100 : 0, t.locale)}</Text>
             </View>
           </Pressable>
@@ -316,7 +319,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
               <Text numberOfLines={1} style={{ flex: 1, color: p.ink, fontSize: 16 }}>
                 {tag}
               </Text>
-              <Text style={{ color: tone, fontSize: 16 }}>{money(sum, main)}</Text>
+              <Text style={{ color: tone, fontSize: 16 }}><WithMoney>{(money) => money(sum, main)}</WithMoney></Text>
             </Pressable>
           ))}
         </Card>
@@ -329,7 +332,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
       <View style={{ flex: 1 }}>
         {hasOperations ? (
           <>
-            <SumTabs active={asked} expense={money(expense, main)} income={money(income, main)} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
+            <SumTabs active={asked} expense={<WithMoney>{(money) => money(expense, main)}</WithMoney>} income={<WithMoney>{(money) => money(income, main)}</WithMoney>} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
             <ScrollBlocks current={current}>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>

@@ -26,7 +26,7 @@ export function Hero({
   below,
 }: {
   caption: string;
-  figure: string;
+  figure: ReactNode;
   hidden: boolean;
   onToggleHidden: () => void;
   actionIcon?: string;
@@ -50,7 +50,7 @@ export function Hero({
         <Text style={{ color: p.ink, fontSize: 13 }}>{t.t(caption)}</Text>
         <Icon name={hidden ? "eye" : "eyeOpen"} size={16} color={p.ink} />
       </Pressable>
-      <RollingFigure text={figure} color={p.ink} />
+      {figure}
       {actionIcon && onAction ? (
       <Pressable
         accessibilityRole="button"
@@ -171,6 +171,20 @@ export function ActionGrid({ children, columns = 3 }: { children: ReactNode; col
   );
 }
 
+// Anything drawn from amounts (a string inside someone else's Text, a label, a whole element): drawn again by itself when the eye hides
+// or shows the figures, while the screen that holds it is not. A screen never calls useMoney() itself.
+export function WithMoney({ children }: { children: (money: ReturnType<typeof useMoney>) => ReactNode }) {
+  const money = useMoney();
+  return <>{children(money)}</>;
+}
+
+// The overall balance in the header of a root screen (rolls when the figure changes), masked by the eye.
+export function HeroFigure({ value, currency }: { value: number; currency: string }) {
+  const money = useMoney();
+  const p = usePalette();
+  return <RollingFigure text={money(value, currency, true)} color={p.ink} />;
+}
+
 // One line of text made from amounts, drawn again by itself when the eye hides or shows the figures: the row that holds it
 // does not know about the masking (the 5 pages of Operations with their rows were drawn again at every tap on the eye).
 export function MoneyLine({ children, style }: { children: (money: ReturnType<typeof useMoney>) => string; style?: StyleProp<TextStyle> }) {
@@ -256,7 +270,7 @@ export function SegmentTabs<T extends string>({ tabs, active, onChange }: { tabs
 // The two sums of the categories and statistics tabs (components.css .sum-tabs): the chosen one is
 // lifted, the other one is muted; expenses in red, incomes in green.
 // `tinted` is the statistics look: the open tab takes the colour of its type.
-export function SumTabs({ active, expense, income, onChange, tinted = false }: { active: "expense" | "income"; expense: string; income: string; onChange: (type: "expense" | "income") => void; tinted?: boolean }) {
+export function SumTabs({ active, expense, income, onChange, tinted = false }: { active: "expense" | "income"; expense: ReactNode; income: ReactNode; onChange: (type: "expense" | "income") => void; tinted?: boolean }) {
   const p = usePalette();
   const t = useT();
   // The press is shown at once; the heavy part (the tiles or charts of the other type) is drawn as a
@@ -268,7 +282,7 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
     setShown(type);
     startTransition(() => onChange(type));
   };
-  const tab = (type: "expense" | "income", label: string, text: string) => {
+  const tab = (type: "expense" | "income", label: string, text: ReactNode) => {
     const on = shown === type;
     const tint = type === "expense" ? p.negative : p.positive;
     return (
@@ -290,7 +304,7 @@ export function SumTabs({ active, expense, income, onChange, tinted = false }: {
 }
 
 // A tile of a category (categories.css .cat-tile): badge, name, the sum of the period.
-export const CategoryTile = memo(function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: string; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
+export const CategoryTile = memo(function CategoryTile({ icon, color, name, figure, tone, onPress, onLongPress, width = "48.5%" }: { icon: string; color: string; name: string; figure: ReactNode; tone: "pos" | "neg" | "muted"; onPress: () => void; onLongPress?: () => void; width?: `${number}%` }) {
   const p = usePalette();
   // A figure other than zero takes the colour of the category (CT 002), zero is muted.
   const ink = tone === "muted" ? p.muted : color;
