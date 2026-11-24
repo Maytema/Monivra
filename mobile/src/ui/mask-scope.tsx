@@ -59,7 +59,11 @@ export function useMaskSubscriber(): (listener: () => void) => () => void {
   return ref.current.subscribe;
 }
 
-type Navigation = ReturnType<typeof useNavigation>;
+// The part of the navigator used here.
+interface Navigation {
+  isFocused(): boolean;
+  addListener(event: "focus" | "blur", listener: () => void): () => void;
+}
 function MaskScopeInner({ active, navigation, children }: { active: boolean; navigation?: Navigation; children: ReactNode }) {
   const parent = useContext(ScopeContext);
   const ref = useRef<Scope | null>(null);
@@ -104,7 +108,7 @@ export function MaskScope({ active, children }: { active: boolean; children: Rea
 
 // A tab: in front while its screen is the focused one.
 export function TabScope({ children }: { children: ReactNode }) {
-  const navigation = useNavigation();
+  const navigation = useNavigation() as unknown as Navigation;
   return (
     <MaskScopeInner active navigation={navigation}>
       {children}
