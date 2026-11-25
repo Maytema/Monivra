@@ -12,7 +12,8 @@ import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } f
 import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
-import { operationsIn, periodBounds, type Period } from "../domain/periods.ts";
+import { firstDay, periodIndex } from "../domain/period-index.ts";
+import { periodBounds, type Period } from "../domain/periods.ts";
 import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { mix } from "../ui/theme.ts";
@@ -23,6 +24,7 @@ import { openCategorySheet } from "./category-sheet.tsx";
 import { filtersActive, openFilters as openFiltersSheet } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
+import { periodOps } from "./period-read.ts";
 import { RootHero } from "./root-hero.tsx";
 import { getView, setView, useViewCatType, useViewFilters } from "./ui-state.ts";
 
@@ -71,11 +73,14 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const [selected, setSelected] = useState<string | null>(null);
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
-  const rows = useMemo(() => reportRows(data, operationsIn(data, period, filters)), [data, period, filters]);
+  const rows = useMemo(() => reportRows(data, periodOps(data, period, filters)), [data, period, filters]);
   const income = totalByType(rows, "income");
   const expense = totalByType(rows, "expense");
   const main = data.settings.currency;
-  const firstOperation = useMemo(() => data.ops.reduce((s, o) => (o.date < s ? o.date : s), today), [data.ops, today]);
+  const firstOperation = useMemo(() => {
+    const first = firstDay(periodIndex(data.ops));
+    return first !== null && first < today ? first : today;
+  }, [data.ops, today]);
 
   const [from, to] = periodBounds(period, data.settings);
   const start = from.startsWith("0000") ? firstOperation : from;

@@ -54,10 +54,10 @@ let probing = false;
 // `plainRows` draws a row as a bare text line. scripts/emulator-perf.sh taps the small box PerfSwitch draws at the top left; each
 // tap moves to the next setting: all on, icons off, plain rows, warm off (no page drawn beforehand: neighbours, other tabs, both kinds), old period object (a page is
 // given a new Period object after each swipe, as before 0.3.19), all on again.
-export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false, noDayHeads: false, noPeriodBar: false, noFab: false };
+export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false, noDayHeads: false, noPeriodBar: false, noFab: false, noIndex: false };
 let setting = 0;
 export function nextPerfSetting(): string {
-  setting = (setting + 1) % 9;
+  setting = (setting + 1) % 10;
   perfFlags.noIcons = setting === 1;
   perfFlags.plainRows = setting === 2;
   perfFlags.noWarm = setting === 3;
@@ -66,7 +66,8 @@ export function nextPerfSetting(): string {
   perfFlags.noDayHeads = setting === 6;
   perfFlags.noPeriodBar = setting === 7;
   perfFlags.noFab = setting === 8;
-  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list", "no day heads", "no period bar", "no add button"][setting]!;
+  perfFlags.noIndex = setting === 9;
+  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list", "no day heads", "no period bar", "no add button", "plain scans"][setting]!;
   console.log(`[perf] setting ${name}`);
   return name;
 }

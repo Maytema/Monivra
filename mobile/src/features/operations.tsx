@@ -10,8 +10,8 @@ import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
-import { balancesAround, newestFirst } from "../domain/ledger.ts";
-import { emptyFilters, operationsIn, periodBounds, type Filters, type Period } from "../domain/periods.ts";
+import { newestFirst } from "../domain/ledger.ts";
+import { emptyFilters, periodBounds, type Filters, type Period } from "../domain/periods.ts";
 import type { Operation } from "../domain/types.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
@@ -24,6 +24,7 @@ import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
+import { periodBalances, periodOps } from "./period-read.ts";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useViewFilters, useViewPeriodWhile } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
@@ -57,7 +58,7 @@ export function OperationsScreen() {
   const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
   // The operations of the period are needed here only for "select all" of the selection; the pages list their own.
   // (Made on every swipe before, for nothing.)
-  const ops = useMemo(() => (selection && period ? operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
+  const ops = useMemo(() => (selection && period ? periodOps(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
 
   // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
   useFocusEffect(
@@ -220,7 +221,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const t = useT();
   const filters = useViewFilters();
   const ready = usePageReady();
-  const ops = useMemo(() => timed("page: operations of the period", () => operationsIn(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
+  const ops = useMemo(() => timed("page: operations of the period", () => periodOps(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
   const items = useMemo(() => timed("page: rows and days", () => {
     const out: Item[] = [];
     // One pass: the list is already newest first, so the days follow each other.
@@ -252,7 +253,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   );
   const [from, to] = periodBounds(period, data.settings);
   const summary = data.settings.opening && ops.length > 0 && !active;
-  const balances = useMemo(() => (summary ? timed("page: opening and closing balances", () => balancesAround(data, filters.accounts, from, to)) : null), [summary, data, filters.accounts, from, to]);
+  const balances = useMemo(() => (summary ? timed("page: opening and closing balances", () => periodBalances(data, filters.accounts, from, to)) : null), [summary, data, filters.accounts, from, to]);
   // The list is given the same pieces while nothing in them changed, so a scroll or the tick of the Add
   // button does not make it go through its rows again.
   const header = useMemo(
