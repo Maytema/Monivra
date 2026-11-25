@@ -414,6 +414,55 @@ series_block() { # $1 operations
   for run in 1 2 3 4; do series "$1" "$run"; done
 }
 series_block 3000
+
+# The eye on a period that has rows (the ledger is in the past, so two months back from the empty current one): after the tap every amount on
+# every tab must be masked, the tabs that were behind included. Screens are looked at by eye (builds/N/perf/mask-*.png), not decided by a script.
+mask_check() {
+  set_mode 0
+  adb shell input tap $ops; sleep 2
+  back_swipe; sleep 1; back_swipe; sleep 2
+  shot mask-0-operations-shown 0
+  local eye; eye=$(where "Toggle balance visibility")
+  if [ -z "$eye" ]; then log "NOT FOUND: the eye for the masking check"; return; fi
+  adb shell input tap $eye; sleep 1
+  shot mask-1-operations-masked 0
+  adb shell input swipe 540 1800 540 900 300; sleep 1
+  shot mask-1b-operations-scrolled 0
+  adb shell input tap $stats; sleep 2
+  shot mask-2-statistics-masked 0
+  adb shell input swipe 540 1800 540 700 300; sleep 1
+  shot mask-2b-statistics-scrolled 0
+  adb shell input tap $cats; sleep 2
+  shot mask-3-categories-masked 0
+  adb shell input tap $accs; sleep 2
+  adb shell input tap 270 430; sleep 1
+  shot mask-4-accounts-list-masked 0
+  adb shell input tap 675 430; sleep 1
+  shot mask-4b-accounts-total-masked 0
+  adb shell input tap $eye; sleep 1
+  shot mask-5-accounts-shown-again 0
+  adb shell input tap $ops; sleep 2
+  shot mask-6-operations-shown-again 0
+  next_swipe; sleep 1; next_swipe; sleep 2
+}
+mask_check
+
+# The first return to Operations after the tab was left for a while (build 172: ten pauses of 50-90 ms in the four seconds after the tab was
+# drawn, "tabs again" 744 ms against 112 ms in the series), under the switches of PerfSwitch in balanced order: all on, no list, no day heads,
+# no period bar, plain rows.
+away_return() { # $1 letter
+  local idx=$(( $(printf '%d' "'$1") - 65 ))
+  set_mode $idx
+  adb shell input tap $stats; sleep 6
+  begin "away: return to Operations after 6 s (${mode_names[$idx]})"
+  adb shell input tap $ops
+  finish 5
+}
+for pass in 1 2; do
+  if [ $pass = 1 ]; then order="A F G H C"; else order="C H G F A"; fi
+  for letter in $order; do away_return $letter; done
+done
+set_mode 0
 set_mode 3
 begin "tab mix (warm off): 12 taps"; while read -r x y pause _; do adb shell input tap $x $y </dev/null; sleep $pause; done <<< "$mix"; finish 3
 adb shell input tap $ops; sleep 2

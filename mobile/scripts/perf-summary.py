@@ -199,3 +199,10 @@ for (ops, mode, what), items in sorted(groups.items()):
     calls = [c for _, c in items if c is not None]
     med = busy[len(busy) // 2] if len(busy) % 2 else (busy[len(busy) // 2 - 1] + busy[len(busy) // 2]) / 2
     print(f"{f'{ops} ops, {mode}, {what}':48} {len(busy):4d} {med:7.0f}ms {busy[0]:5.0f}-{busy[-1]:.0f}ms {(str(percentile(calls, 0.5)) if calls else '-'):>17}")
+
+# The return to Operations after a stay on another tab, by the switch of PerfSwitch: the JS busy time and the number of pauses over the five seconds.
+print()
+print(f"{'away: return to Operations after 6 s':48} {'JS busy':>8} {'pauses':>6} {'longest':>8}")
+for move in moves:
+    if move["name"].startswith("away: return to Operations"):
+        print(f"{move['name'][:48]:48} {sum(move['stalls']):7.0f}ms {len(move['stalls']):6d} {max(move['stalls'], default=0):7.0f}ms")
