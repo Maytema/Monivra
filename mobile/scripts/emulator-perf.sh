@@ -170,7 +170,7 @@ eye6() { # $1 tab centre ("x y"), $2 name
   local xy; xy=$(where "Toggle balance visibility")
   [ -z "$xy" ] && { log "NOT FOUND: the eye on $2"; return; }
   begin "eye ($2): 6 taps 0.4 s apart"
-  for i in $(seq 6); do adb shell input tap $xy; sleep 0.4; [ "$i" = 1 ] && case "$2" in *"none 3 "*|*"activity 4 "*) shot "eye-masked-$(echo "$2" | tr -c 'A-Za-z0-9\n' '-')" 0;; esac; done
+  for i in $(seq 6); do adb shell input tap $xy; sleep 0.4; [ "$i" = 1 ] && case "$2" in *"tabs 3 "*) shot "eye-masked-$(echo "$2" | tr -c 'A-Za-z0-9\n' '-')" 0;; esac; done
   finish 2
 }
 last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')
@@ -379,9 +379,9 @@ view_count() {
 }
 log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button no-activity)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button)
 set_mode() { # $1 index 0-4
-  local taps=$(( ($1 - mode + 10) % 10 )) k
+  local taps=$(( ($1 - mode + 9) % 9 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
   mode=$1; sleep 1
 }
@@ -399,23 +399,19 @@ balanced() { # $1 run number, $2.. order (letters A-E)
 balanced 1 A B C D E F G H I
 balanced 2 I H G F E D C B A
 balanced 3 C F I B E H A D G
-# Series by the volume of the ledger, with React Activity ("activity", setting A) and without it ("none", setting J): the 12 taps every 0.2 s and
-# the eye on each tab, in the order A B B A twice, in one build (perf-summary.py: "profile x series"). The 0-operation series are the
-# "empty" moves above; here the 3000 ledger is in, then the 10000 one is restored over it.
-series() { # $1 operations, $2 mode name (activity|none), $3 run
-  case $2 in activity) set_mode 0;; none) set_mode 9;; esac
-  tabs200 "series $1 $2 $3"
-  eye6 "$accs" "series $1 $2 $3 Accounts"
-  eye6 "$ops" "series $1 $2 $3 Operations"
-  eye6 "$stats" "series $1 $2 $3 Statistics"
-  eye6 "$cats" "series $1 $2 $3 Categories"
+# Series by the volume of the ledger: the 12 taps every 0.2 s and the eye on each tab, four runs (perf-summary.py: "profile x series"). The
+# 0-operation series are the "empty" moves above; here the 3000 ledger is in, then the 10000 one is restored over it.
+series() { # $1 operations, $2 run
+  set_mode 0
+  tabs200 "series $1 tabs $2"
+  eye6 "$accs" "series $1 tabs $2 Accounts"
+  eye6 "$ops" "series $1 tabs $2 Operations"
+  eye6 "$stats" "series $1 tabs $2 Statistics"
+  eye6 "$cats" "series $1 tabs $2 Categories"
 }
 series_block() { # $1 operations
-  local run=0 order
-  for order in "activity none none activity" "activity none none activity"; do
-    for m in $order; do run=$((run + 1)); series "$1" "$m" "$run"; done
-  done
-  set_mode 0
+  local run
+  for run in 1 2 3 4; do series "$1" "$run"; done
 }
 series_block 3000
 set_mode 3
