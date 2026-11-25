@@ -170,7 +170,7 @@ eye6() { # $1 tab centre ("x y"), $2 name
   local xy; xy=$(where "Toggle balance visibility")
   [ -z "$xy" ] && { log "NOT FOUND: the eye on $2"; return; }
   begin "eye ($2): 6 taps 0.4 s apart"
-  for i in $(seq 6); do adb shell input tap $xy; sleep 0.4; done
+  for i in $(seq 6); do adb shell input tap $xy; sleep 0.4; [ "$i" = 1 ] && case "$2" in *"none 3 "*|*"activity 4 "*) shot "eye-masked-$(echo "$2" | tr -c 'A-Za-z0-9\n' '-')" 0;; esac; done
   finish 2
 }
 last_tab=$(echo "$mix" | tail -1 | awk '{print $4}')

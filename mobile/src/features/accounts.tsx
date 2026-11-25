@@ -12,7 +12,6 @@ import type { Account } from "../domain/types.ts";
 import { useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
-import { MaskScope } from "../ui/mask-scope.tsx";
 import { Meter, MoneyAmount, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
 import { Pager } from "../ui/pager.tsx";
@@ -208,13 +207,12 @@ export function AccountsScreen() {
         current={shown}
         step={(key, n) => tabs[tabs.indexOf(key) + n] ?? null}
         onMove={(d) => setTab((was) => tabs[tabs.indexOf(was) + d] ?? was)}
-        render={(page, isCurrent) => {
+        render={(page) => {
           const list = page === "Debts" ? live.filter((a) => a.type === "Debt") : live.filter((a) => a.type !== "Debt");
           const completed = list.filter(isFinished);
           const open = list.filter((a) => !isFinished(a));
           const groups = page === "Debts" ? (["Owe me", "I owe"] as const) : (["Regular", "Savings"] as const);
           return (
-          <MaskScope active={isCurrent}>
           <ScrollView scrollEnabled={!held} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}>
             <PostedBanner />
             {page !== "Total" && list.length > 1 ? <HintBanner id="account-reorder" text="Hold an account to drag and reorder" /> : null}
@@ -238,7 +236,6 @@ export function AccountsScreen() {
             )}
             <Folder title="Archive" icon="archive" items={archived} />
           </ScrollView>
-          </MaskScope>
           );
         }}
       />

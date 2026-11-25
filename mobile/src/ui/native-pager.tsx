@@ -15,6 +15,7 @@ import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, u
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
+import { MaskScope } from "./mask-scope.tsx";
 import { PagerContext } from "./pager-motion.ts";
 import { pagerState } from "./gesture-lock.ts";
 
@@ -362,7 +363,11 @@ export function Pager<K extends string>({
         >
           {row.keys.map((key, i) => (
             <Slot key={key}>
-              {Math.abs(i - shown) <= reach || i === index ? PERF_BUILD ? <PageReady.Provider value={readyFor(key)}>{render(key, i === shown)}</PageReady.Provider> : render(key, i === shown) : null}
+              {Math.abs(i - shown) <= reach || i === index ? (
+                <MaskScope active={i === shown || i === index}>
+                  {PERF_BUILD ? <PageReady.Provider value={readyFor(key)}>{render(key, i === shown)}</PageReady.Provider> : render(key, i === shown)}
+                </MaskScope>
+              ) : null}
             </Slot>
           ))}
         </AnimatedPagerView>
