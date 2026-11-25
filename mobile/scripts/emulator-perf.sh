@@ -379,7 +379,7 @@ view_count() {
 }
 log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button plain-scans)
 set_mode() { # $1 index 0-4
   local taps=$(( ($1 - mode + 9) % 9 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
@@ -399,6 +399,37 @@ balanced() { # $1 run number, $2.. order (letters A-E)
 balanced 1 A B C D E F G H I
 balanced 2 I H G F E D C B A
 balanced 3 C F I B E H A D G
+# A new expense with the keys, saved: the list must take it without drawing everything again. $1: a note for the name of the move
+# (" (10000)" for the same on the larger ledger, which takes no pictures).
+add_expense() {
+  adb shell input tap $ops; sleep 2
+  # The swipe blocks leave the period wherever the swipes ended (builds 141-143: August, September, December 2026). The new
+  # expense has to go to a month that has operations and is not in the future, so the period is brought to the current month.
+  this_month=$(date +"%B %Y")
+  for step in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do
+    now_title=$(period_title)
+    [ "$now_title" = "$this_month" ] && break
+    case "$now_title" in "?") break;; esac
+    if [ "$(date -d "1 $now_title" +%s)" -lt "$(date -d "1 $this_month" +%s)" ]; then tap "Next period" 0.6 || break; else tap "Previous period" 0.6 || break; fi
+  done
+  log "period for the new expense: $(period_title) (wanted $this_month)"
+  log "before the add menu: shown $(shown_tab) (expected Operations)"
+  xy=$(where "New operation")
+  begin "open the add menu"; adb shell input tap $xy; finish 3
+  begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2 last; tap "Expenses" 0 last; finish 2
+  [ -z "$1" ] && shot 05a-add-menu 0
+  # The last match: a row of the list under the sheet can carry the same word ("Food"); the sheet is later in the tree.
+  begin "choose a category (the editor opens)"; tap "Food" 0 last || tap "Internet" 0 last; finish 3
+  [ -z "$1" ] && shot 05b-editor-opened 0
+  k1=$(where "1"); k2=$(where "2"); k5=$(where "5"); save=$(where "Save operation")
+  begin "type 1 2 5 on the keys"
+  adb shell input tap $k1; sleep 0.4; adb shell input tap $k2; sleep 0.4; adb shell input tap $k5
+  finish 2
+  [ -z "$1" ] && shot 05c-keys-typed 0
+  log "keys at $k1 $k2 $k5, save at $save"
+  begin "save the operation$1"; adb shell input tap $save; finish 5
+}
+
 # Series by the volume of the ledger: the 12 taps every 0.2 s and the eye on each tab, four runs (perf-summary.py: "profile x series"). The
 # 0-operation series are the "empty" moves above; here the 3000 ledger is in, then the 10000 one is restored over it.
 series() { # $1 operations, $2 run
@@ -412,6 +443,39 @@ series() { # $1 operations, $2 run
 series_block() { # $1 operations
   local run
   for run in 1 2 3 4; do series "$1" "$run"; done
+  # The page read through the index (mode 0) and by the plain scans (mode 9), in balanced order, four runs each.
+  local m n=0
+  for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
+  tabs_again_series "$1"
+  n=0
+  for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); set_mode $m; add_expense " ($1 $([ $m = 0 ] && echo index || echo scans) $n)"; done
+  set_mode 0
+}
+# Ten fast swipes back and the way forward, the same at every volume of the ledger (the periods are paged the same way; what is asked is whether the
+# cost of a page follows the number of operations).
+swipes_series() { # $1 operations, $2 mode (0 index, 9 plain scans), $3 run
+  local label=index; [ "$2" = 9 ] && label=scans
+  set_mode $2
+  adb shell input tap $ops; sleep 2
+  begin "series $1 $label swipes $3: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+  begin "series $1 $label return $3: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
+}
+# The move "tabs again" five times in a row, each of two kinds in balanced order (c d d c c d d c c d): "c" taps the four tabs at known places,
+# "d" asks the screen where each tab is before every tap (a dump of the screen's tree between the taps, as the first measurement did). Both
+# wait 2 s after each tap. Do the dumps themselves cost the pauses?
+tabs_again_series() { # $1 operations
+  local k=0 kind
+  for kind in c d d c c d d c c d; do
+    k=$((k + 1))
+    adb shell input tap $accs; sleep 2
+    begin "tabsagain $1 $kind $k"
+    for name in Operations Statistics Categories Accounts; do
+      case $name in Operations) xy=$ops;; Statistics) xy=$stats;; Categories) xy=$cats;; Accounts) xy=$accs;; esac
+      [ $kind = d ] && xy=$(where "$name")
+      adb shell input tap $xy; sleep 2
+    done
+    finish 2
+  done
 }
 series_block 3000
 
@@ -494,33 +558,7 @@ shot 26-bench 0
 back
 # (The colour square is checked by the smoke test, which reaches the colour page.)
 
-# A new expense with the keys, saved: the list must take it without drawing everything again.
-adb shell input tap $ops; sleep 2
-# The swipe blocks leave the period wherever the swipes ended (builds 141-143: August, September, December 2026). The new
-# expense has to go to a month that has operations and is not in the future, so the period is brought to the current month.
-this_month=$(date +"%B %Y")
-for step in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do
-  now_title=$(period_title)
-  [ "$now_title" = "$this_month" ] && break
-  case "$now_title" in "?") break;; esac
-  if [ "$(date -d "1 $now_title" +%s)" -lt "$(date -d "1 $this_month" +%s)" ]; then tap "Next period" 0.6 || break; else tap "Previous period" 0.6 || break; fi
-done
-log "period for the new expense: $(period_title) (wanted $this_month)"
-log "before the add menu: shown $(shown_tab) (expected Operations)"
-xy=$(where "New operation")
-begin "open the add menu"; adb shell input tap $xy; finish 3
-begin "add menu: tap the tab Incomes, then Expenses"; tap "Incomes" 1.2 last; tap "Expenses" 0 last; finish 2
-shot 05a-add-menu 0
-# The last match: a row of the list under the sheet can carry the same word ("Food"); the sheet is later in the tree.
-begin "choose a category (the editor opens)"; tap "Food" 0 last || tap "Internet" 0 last; finish 3
-shot 05b-editor-opened 0
-k1=$(where "1"); k2=$(where "2"); k5=$(where "5"); save=$(where "Save operation")
-begin "type 1 2 5 on the keys"
-adb shell input tap $k1; sleep 0.4; adb shell input tap $k2; sleep 0.4; adb shell input tap $k5
-finish 2
-shot 05c-keys-typed 0
-log "keys at $k1 $k2 $k5, save at $save"
-begin "save the operation"; adb shell input tap $save; finish 5
+add_expense ""
 shot 05-after-save 0
 
 # The report of all 3000 operations (many pages): the first preview waits for its first pages behind the dialog,

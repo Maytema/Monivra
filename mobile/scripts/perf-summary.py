@@ -206,3 +206,56 @@ print(f"{'away: return to Operations after 6 s':48} {'JS busy':>8} {'pauses':>6}
 for move in moves:
     if move["name"].startswith("away: return to Operations"):
         print(f"{move['name'][:48]:48} {sum(move['stalls']):7.0f}ms {len(move['stalls']):6d} {max(move['stalls'], default=0):7.0f}ms")
+
+# By volume of the ledger: 10 fast swipes back (JS busy, longest pause, the drawing of a page: "operations page built" and "page: operations of the
+# period" as medians over the notes of the runs), the tab move "tabs again" repeated (c: taps at known places, d: the screen asked where each tab
+# is before each tap), and the save of an expense.
+def middle(values):
+    values = sorted(values)
+    if not values:
+        return None
+    n = len(values)
+    return values[n // 2] if n % 2 else (values[n // 2 - 1] + values[n // 2]) / 2
+
+print()
+print(f"{'swipes back by volume (median of runs)':48} {'runs':>4} {'JS busy':>8} {'range':>13} {'longest':>8} {'page built':>10} {'ops of period':>13}")
+swipes = {}
+for move in moves:
+    m = re.match(r"series (\d+) (\w+) swipes (\d+): 10 fast", move["name"])
+    if m:
+        swipes.setdefault((int(m.group(1)), m.group(2)), []).append(move)
+for (ops_count, how), runs in sorted(swipes.items()):
+    busy = [sum(r["stalls"]) for r in runs]
+    longest = [max(r["stalls"], default=0) for r in runs]
+    built = [float(c.group(1)) for r in runs for n in r["notes"] for c in [re.match(r"operations page built ([\d.]+)ms", n)] if c]
+    asked = [float(c.group(1)) for r in runs for n in r["notes"] for c in [re.match(r"page: operations of the period ([\d.]+)ms", n)] if c]
+    mb = middle(built)
+    ma = middle(asked)
+    print(f"{f'{ops_count} ops, {how}, 10 swipes back':48} {len(runs):4d} {middle(busy):7.0f}ms {min(busy):5.0f}-{max(busy):.0f}ms {middle(longest):7.0f}ms {(f'{mb:.1f}ms' if mb is not None else '-'):>10} {(f'{ma:.2f}ms' if ma is not None else '-'):>13}")
+
+print()
+print(f"{'tabs again, repeated (c: known places, d: dump)':48} {'runs':>4} {'JS busy':>8} {'range':>13} {'pauses':>7}")
+again = {}
+for move in moves:
+    m = re.match(r"tabsagain (\d+) (\w) (\d+)", move["name"])
+    if m:
+        again.setdefault((int(m.group(1)), m.group(2)), []).append(move)
+for (ops_count, kind), runs in sorted(again.items()):
+    busy = [sum(r["stalls"]) for r in runs]
+    print(f"{f'{ops_count} ops, {kind}':48} {len(runs):4d} {middle(busy):7.0f}ms {min(busy):5.0f}-{max(busy):.0f}ms {middle([len(r['stalls']) for r in runs]):7.0f}")
+
+print()
+print(f"{'save the operation':48} {'JS busy':>8} {'longest':>8}")
+for move in moves:
+    if move["name"].startswith("save the operation"):
+        print(f"{move['name'][:48]:48} {sum(move['stalls']):7.0f}ms {max(move['stalls'], default=0):7.0f}ms")
+
+print()
+print(f"{'save the operation by volume (median of runs)':48} {'runs':>4} {'JS busy':>8} {'range':>13}")
+saves = {}
+for move in moves:
+    m = re.match(r"save the operation \((\d+) (\w+) (\d+)\)", move["name"])
+    if m:
+        saves.setdefault((int(m.group(1)), m.group(2)), []).append(sum(move["stalls"]))
+for (ops_count, how), busy in sorted(saves.items()):
+    print(f"{f'{ops_count} ops, {how}':48} {len(busy):4d} {middle(busy):7.0f}ms {min(busy):5.0f}-{max(busy):.0f}ms")
