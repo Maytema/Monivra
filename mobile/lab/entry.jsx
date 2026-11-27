@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { LedgerLook } from "@src/ui/app-context.tsx";
 import { OperationsScreen } from "@src/features/operations.tsx";
+import { StatisticsScreen } from "@src/features/statistics.tsx";
+import { CategoriesScreen } from "@src/features/categories.tsx";
 import { handle } from "./pagerview-stub.jsx";
 import { deckHandle } from "./reanimated-stub.jsx";
 import { counts } from "./flash-stub.jsx";
@@ -14,11 +16,12 @@ const tick = () => new Promise((r) => setTimeout(r, 0));
 const count = (re) => lines.filter((l) => re.test(l)).length;
 
 // Ten swipes back, one after another; each: the pager takes the page, the screen draws, the task of the pager follows.
-window.runSwipes = async (n = 10) => {
+window.runSwipes = async (n = 10, screen = "operations") => {
+  const Screen = { operations: OperationsScreen, statistics: StatisticsScreen, categories: CategoriesScreen }[screen];
   const el = document.createElement("div");
   document.body.append(el);
   const root = createRoot(el);
-  flushSync(() => root.render(<LedgerLook><OperationsScreen /></LedgerLook>));
+  flushSync(() => root.render(<LedgerLook><Screen /></LedgerLook>));
   await tick(); await new Promise((r) => setTimeout(r, 700)); // the neighbours are drawn after 500 ms
   const subs = globalThis.__labSubs();
   const deck = !!deckHandle.props;
@@ -26,6 +29,9 @@ window.runSwipes = async (n = 10) => {
   const out = [];
   for (let i = 0; i < n; i++) {
     lines.length = 0; counts.listMounts = 0; counts.listRenders = 0; counts.rowMounts = 0;
+    let added = 0;
+    const seen = new MutationObserver((list) => { for (const m of list) added += m.addedNodes.length; });
+    seen.observe(el, { childList: true, subtree: true });
     const t = performance.now();
     if (deck) {
       // The finger goes down, the scroll view settles one page back, JavaScript hears the end.
@@ -44,7 +50,8 @@ window.runSwipes = async (n = 10) => {
       await tick(); await tick();
       flushSync(() => handle.props.onPageScrollStateChanged({ nativeEvent: { pageScrollState: "idle" } }));
     }
-    out.push({ ms: +(performance.now() - t).toFixed(1), pageMounts: count(/operations page mount/), pageBuilt: count(/operations page built/), listMounts: counts.listMounts, listRenders: counts.listRenders, rowMounts: counts.rowMounts });
+    seen.disconnect();
+    out.push({ added, ms: +(performance.now() - t).toFixed(1), pageMounts: count(/operations page mount/), pageBuilt: count(/operations page built/), listMounts: counts.listMounts, listRenders: counts.listRenders, rowMounts: counts.rowMounts });
   }
   root.unmount(); el.remove();
   out.subs = subs;
