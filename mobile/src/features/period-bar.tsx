@@ -11,6 +11,7 @@ import { Icon } from "../ui/kit.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
 import { Pager, usePagerMotion } from "../ui/pager.tsx";
+import { RingPager } from "../ui/ring-pager.tsx";
 import { periodTitle } from "../ui/period-title.ts";
 import { getView, setView, useViewPeriodWhile } from "./ui-state.ts";
 import { useNavigation } from "expo-router";
@@ -135,7 +136,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 
 // The pages of a screen with a period: the period before, this one and the one after, drawn side by side,
 // with the period bar (and whatever else stays in place) above them.
-export function PeriodPager({ header, render, around }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number }) {
+export function PeriodPager({ header, render, around, ring = false }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number; ring?: boolean }) {
   const data = useLedgerView();
   const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
@@ -164,22 +165,21 @@ export function PeriodPager({ header, render, around }: { header?: ReactNode; re
     return next;
   };
   const settings = data.settings;
-  return (
-    <Pager
-      current={keyOf(period)}
-      instant={caughtUp}
-      around={around}
-      step={(key, n) => {
-        const shown = periodOf(key);
-        return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
-      }}
-      header={header}
-      render={(key, isCurrent) => render(pageOf(key), isCurrent)}
-      onMove={(steps) => {
-        let next = getView().period;
-        for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);
-        setView({ period: next }, false);
-      }}
-    />
-  );
+  const pages = {
+    current: keyOf(period),
+    instant: caughtUp,
+    step: (key: string, n: 1 | -1) => {
+      const shown = periodOf(key);
+      return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
+    },
+    header,
+    render: (key: string, isCurrent: boolean) => render(pageOf(key), isCurrent),
+    onMove: (steps: number) => {
+      let next = getView().period;
+      for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);
+      setView({ period: next }, false);
+    },
+  };
+  // The pages made once and told a new period (ui/ring-pager.tsx), for the screens that ask for it (the speed-check setting "ring pager").
+  return ring ? <RingPager {...pages} /> : <Pager {...pages} around={around} />;
 }

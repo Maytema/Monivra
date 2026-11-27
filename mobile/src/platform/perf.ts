@@ -54,10 +54,20 @@ let probing = false;
 // `plainRows` draws a row as a bare text line. scripts/emulator-perf.sh taps the small box PerfSwitch draws at the top left; each
 // tap moves to the next setting: all on, icons off, plain rows, warm off (no page drawn beforehand: neighbours, other tabs, both kinds), old period object (a page is
 // given a new Period object after each swipe, as before 0.3.19), all on again.
-export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false, noDayHeads: false, noPeriodBar: false, noFab: false, noIndex: false };
+export const perfFlags = { noIcons: false, plainRows: false, noWarm: false, oldPeriod: false, noList: false, noDayHeads: false, noPeriodBar: false, noFab: false, noIndex: false, ringPager: false };
+const epochListeners = new Set<() => void>();
+let epoch = 0;
+// A change of setting is a new epoch, for the parts that read a flag only when they are drawn (the pager of Operations: ringPager).
+export const perfEpoch = {
+  subscribe(listener: () => void): () => void {
+    epochListeners.add(listener);
+    return () => void epochListeners.delete(listener);
+  },
+  get: (): number => epoch,
+};
 let setting = 0;
 export function nextPerfSetting(): string {
-  setting = (setting + 1) % 10;
+  setting = (setting + 1) % 11;
   perfFlags.noIcons = setting === 1;
   perfFlags.plainRows = setting === 2;
   perfFlags.noWarm = setting === 3;
@@ -67,7 +77,10 @@ export function nextPerfSetting(): string {
   perfFlags.noPeriodBar = setting === 7;
   perfFlags.noFab = setting === 8;
   perfFlags.noIndex = setting === 9;
-  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list", "no day heads", "no period bar", "no add button", "plain scans"][setting]!;
+  perfFlags.ringPager = setting === 10;
+  epoch++;
+  for (const listener of epochListeners) listener();
+  const name = ["all on", "icons off", "plain rows", "warm off", "old period object", "no list", "no day heads", "no period bar", "no add button", "plain scans", "ring pager"][setting]!;
   console.log(`[perf] setting ${name}`);
   return name;
 }

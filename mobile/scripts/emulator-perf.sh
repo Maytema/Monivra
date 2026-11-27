@@ -379,7 +379,7 @@ view_count() {
 }
 log "native views at rest after the cold block: $(view_count)"
 mode=0
-mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button plain-scans)
+mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button plain-scans ring-pager)
 set_mode() { # $1 index 0-4
   local taps=$(( ($1 - mode + 9) % 9 )) k
   for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
@@ -446,6 +446,12 @@ series_block() { # $1 operations
   # The page read through the index (mode 0) and by the plain scans (mode 9), in balanced order, four runs each.
   local m n=0
   for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
+  # The pages made once and told a new period (ring pager, mode 10) against the native pager (mode 0), balanced.
+  n=0
+  for m in 0 10 10 0 0 10 10 0; do n=$((n + 1)); swipes_series "$1" "$m" "$((n + 8))"; done
+  # The eye on Operations with the ring pager on.
+  for n in 1 2 3 4; do set_mode 10; eye6 "$ops" "series $1 ring $n Operations"; done
+  set_mode 0
   tabs_again_series "$1"
   n=0
   for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); set_mode $m; add_expense " ($1 $([ $m = 0 ] && echo index || echo scans) $n)"; done
@@ -454,7 +460,7 @@ series_block() { # $1 operations
 # Ten fast swipes back and the way forward, the same at every volume of the ledger (the periods are paged the same way; what is asked is whether the
 # cost of a page follows the number of operations).
 swipes_series() { # $1 operations, $2 mode (0 index, 9 plain scans), $3 run
-  local label=index; [ "$2" = 9 ] && label=scans
+  local label=index; [ "$2" = 9 ] && label=scans; [ "$2" = 10 ] && label=ring
   set_mode $2
   adb shell input tap $ops; sleep 2
   begin "series $1 $label swipes $3: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
@@ -465,8 +471,10 @@ swipes_series() { # $1 operations, $2 mode (0 index, 9 plain scans), $3 run
 # wait 2 s after each tap. Do the dumps themselves cost the pauses?
 tabs_again_series() { # $1 operations
   local k=0 kind
-  for kind in c d d c c d d c c d; do
+  for kind in c d d c c d d c c d r c r r c; do
     k=$((k + 1))
+    # "r": the same as "c" with the ring pager on (mode 10), the others with it off (mode 0).
+    if [ $kind = r ]; then set_mode 10; else set_mode 0; fi
     adb shell input tap $accs; sleep 2
     begin "tabsagain $1 $kind $k"
     for name in Operations Statistics Categories Accounts; do
@@ -476,6 +484,7 @@ tabs_again_series() { # $1 operations
     done
     finish 2
   done
+  set_mode 0
 }
 series_block 3000
 
@@ -510,6 +519,26 @@ mask_check() {
   next_swipe; sleep 1; next_swipe; sleep 2
 }
 mask_check
+# The same for Operations with the ring pager on: pages told a new period must show the mask on the period they are given.
+mask_check_ring() {
+  set_mode 10
+  adb shell input tap $ops; sleep 2
+  back_swipe; sleep 1; back_swipe; sleep 2
+  local eye; eye=$(where "Toggle balance visibility")
+  [ -z "$eye" ] && { log "NOT FOUND: the eye for the ring masking check"; set_mode 0; return; }
+  shot mask-ring-0-shown 0
+  adb shell input tap $eye; sleep 1
+  shot mask-ring-1-masked 0
+  back_swipe; sleep 1.5
+  shot mask-ring-2-previous-period-masked 0
+  next_swipe; sleep 1.5
+  shot mask-ring-3-back-masked 0
+  adb shell input tap $eye; sleep 1
+  shot mask-ring-4-shown-again 0
+  next_swipe; sleep 1; next_swipe; sleep 2
+  set_mode 0
+}
+mask_check_ring
 
 # The first return to Operations after the tab was left for a while (build 172: ten pauses of 50-90 ms in the four seconds after the tab was
 # drawn, "tabs again" 744 ms against 112 ms in the series), under the switches of PerfSwitch in balanced order: all on, no list, no day heads,

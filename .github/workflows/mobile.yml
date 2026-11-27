@@ -147,7 +147,7 @@ jobs:
     needs: build
     if: needs.build.result == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 80
+    timeout-minutes: 110
     permissions:
       contents: read
     steps:

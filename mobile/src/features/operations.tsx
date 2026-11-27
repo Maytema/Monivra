@@ -1,8 +1,8 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfFlags, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { countRender, now, perfEpoch, perfFlags, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { usePageReady } from "../ui/pager.tsx";
 import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
@@ -39,6 +39,8 @@ type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: 
 
 export function OperationsScreen() {
   countRender("operations screen");
+  // Speed-check build: a change of setting (the ring pager) draws the screen again.
+  useSyncExternalStore(perfEpoch.subscribe, perfEpoch.get);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -154,6 +156,7 @@ export function OperationsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <PeriodPager
+        ring={PERF_BUILD && perfFlags.ringPager}
         // Experiment (task "stable paging", 2026-11-21): the lists of two periods on each side are drawn beforehand —
         // a new list takes the longest to show its first rows of all the paged screens (speed check: 268 ms on the
         // emulator), and quick swipes reached undrawn pages here only (12–39 % of quick swipes, builds 117–119).
@@ -236,6 +239,10 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   }), [ops]);
 
   const list = useRef<FlashListRef<Item>>(null);
+  // A page of the ring pager is told a new period and keeps its list: the list starts at the top for the new period.
+  useLayoutEffect(() => {
+    if (PERF_BUILD && perfFlags.ringPager) list.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [period]);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
   const lit = useSpotlit();
   useEffect(() => {
