@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { enableFreeze } from "react-native-screens";
 import { setAppVersion } from "../application/store.ts";
+import { probeEngine, watchStalls } from "../platform/perf.ts";
 import { appStore, LedgerLook, useAppPhase, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
@@ -41,6 +42,7 @@ function KeepCurrent() {
     };
     refresh();
     void registerBackgroundPosting();
+    const probe = setTimeout(probeEngine, 5000);
     const timer = setInterval(() => (store.postDueNow(), askAboutMissed()), 60_000);
     const subscription = SystemAppState.addEventListener("change", (s) => s === "active" && refresh());
     // The system's reminders follow every change, once a burst of changes is over.
@@ -60,6 +62,7 @@ function KeepCurrent() {
     plan();
     const unsubscribe = store.subscribe(plan);
     return () => {
+      clearTimeout(probe);
       clearInterval(timer);
       subscription.remove();
       unsubscribe();
@@ -150,6 +153,8 @@ function Root() {
 enableFreeze(true);
 
 export default function Layout() {
+  // Speed-check lab only: every long pause of the JavaScript thread is written down.
+  useEffect(watchStalls, []);
   return (
     <SafeAreaProvider>
       <Root />
