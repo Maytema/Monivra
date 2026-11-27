@@ -1,0 +1,25 @@
+installed
+tapped: Start
+empty profile, tab centres: accounts 108 2263, categories 324 2263, operations 540 2263, statistics 756 2263, more 972 2263
+empty, after Accounts → Statistics → Accounts: shown Accounts (expected Accounts)
+empty, after Categories → Operations → Categories: shown Categories (expected Categories)
+empty, after 12 random taps: shown Operations (expected index 2 of Accounts, Categories, Operations, Statistics, More)
+empty, after 12 taps every 0.2 s: shown Operations (expected index 2)
+tapped: Add
+tapped: Next period
+tapped: Add
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: More
+tapped: Data
+tapped: Data file
+tapped: Restore from file
+tapped: perf-data.json
+tapped: Replace data
+tapped: Confirm
+series 3000 tabs 1, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 tabs 2, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 tabs 3, after 12 taps every 0.2 s: shown Operations (expected index 2)
+result: measured
