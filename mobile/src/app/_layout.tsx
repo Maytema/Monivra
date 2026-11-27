@@ -8,11 +8,9 @@ import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { enableFreeze } from "react-native-screens";
-import { setAppVersion, watchStore } from "../application/store.ts";
+import { setAppVersion } from "../application/store.ts";
 import { appStore, LedgerLook, useAppPhase, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
-import { perfLog, perfNote, PERF_BUILD, probeEngine, watchStalls } from "../platform/perf.ts";
-import { PerfSwitch } from "../ui/perf-switch.tsx";
 import { registerBackgroundPosting } from "../platform/background.ts";
 import { rebuildReminders } from "../platform/notifications.ts";
 import { askAboutMissed } from "../features/due-payments.tsx";
@@ -43,7 +41,6 @@ function KeepCurrent() {
     };
     refresh();
     void registerBackgroundPosting();
-    const probe = setTimeout(probeEngine, 5000);
     const timer = setInterval(() => (store.postDueNow(), askAboutMissed()), 60_000);
     const subscription = SystemAppState.addEventListener("change", (s) => s === "active" && refresh());
     // The system's reminders follow every change, once a burst of changes is over.
@@ -64,7 +61,6 @@ function KeepCurrent() {
     const unsubscribe = store.subscribe(plan);
     return () => {
       clearInterval(timer);
-      clearTimeout(probe);
       subscription.remove();
       unsubscribe();
       if (pending) clearTimeout(pending);
@@ -154,15 +150,9 @@ function Root() {
 enableFreeze(true);
 
 export default function Layout() {
-  // Only in the build made for the speed check: every long pause of the JavaScript thread is written down.
-  useEffect(watchStalls, []);
-  useEffect(() => {
-    if (PERF_BUILD) watchStore(perfLog, perfNote);
-  }, []);
   return (
     <SafeAreaProvider>
       <Root />
-      <PerfSwitch />
     </SafeAreaProvider>
   );
 }

@@ -5,7 +5,7 @@ name: Mobile (React Native)
 
 on:
   push:
-    branches: [rn-migration]
+    branches: [rn-migration, perf-lab]
     paths: ["mobile/**", "!mobile/**/*.md", ".github/workflows/mobile.yml"]
   workflow_dispatch:
 

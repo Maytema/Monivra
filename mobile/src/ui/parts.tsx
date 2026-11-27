@@ -3,14 +3,15 @@
 // the tinted badge, the progress meter and the round action tiles of a sheet.
 import { useCoachTarget } from "./coach.tsx";
 import { RollingFigure } from "./rolling.tsx";
-import { countRender } from "../platform/perf.ts";
 import { createContext, memo, startTransition, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, Text, View, type NativeScrollEvent, type NativeSyntheticEvent, type StyleProp, type TextStyle } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMoney, usePalette, useT } from "./app-context.tsx";
 import { Icon } from "./kit.tsx";
-import { usePagerMotion, WIDE_RETENTION } from "./pager.tsx";
+import { usePagerMotion, WIDE_RETENTION } from "./pager-motion.ts";
+import type { PagerMotion } from "./pager-motion.ts";
+import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 import { alpha, chrome, mix } from "./theme.ts";
 
 // Header of a root screen: a caption with the eye, the figure, and one round action at the right.
@@ -100,15 +101,16 @@ export function TopTabs<T extends string>({ tabs, active, onChange, followPager 
           <Text style={{ color: p.ink, fontSize: 14, fontWeight: tab.id === active ? "600" : "500" }}>{t.t(tab.label)}</Text>
         </Pressable>
       ))}
-      {moving ? (
-        // Placed by the pager's count of moves, moved by its offset: −offset / page width tabs.
-        <Animated.View
-          pointerEvents="none"
-          style={{ position: "absolute", bottom: -1, height: 3, width: tabWidth, left: (index - motion.base) * tabWidth, backgroundColor: p.accent, transform: [{ translateX: Animated.multiply(motion.x, -tabWidth / motion.width) }] }}
-        />
-      ) : null}
+      {moving ? <Underline motion={motion} tabWidth={tabWidth} left={(index - motion.base) * tabWidth} color={p.accent} /> : null}
     </View>
   );
+}
+
+// The line under the open tab while a swipe moves the pages. Placed by the pager's count of moves, moved by its offset: −offset / page width tabs.
+function Underline({ motion, tabWidth, left, color }: { motion: PagerMotion; tabWidth: number; left: number; color: string }) {
+  const { x, width } = motion;
+  const style = useAnimatedStyle(() => ({ transform: [{ translateX: (-x.value * tabWidth) / width }] }), [tabWidth, width]);
+  return <Reanimated.View pointerEvents="none" style={[{ position: "absolute", bottom: -1, height: 3, width: tabWidth, left, backgroundColor: color }, style]} />;
 }
 
 // A title of a group, with its total at the right (components.css .section-label).
@@ -209,7 +211,6 @@ export function MoneyText({ text, value, size = 18, style }: { text: string; val
 // list its name shows next to the plus, scrolled it shrinks to the plus alone, smoothly both ways. It sits
 // above the tab bar (the scene ends there) at the design's gap from the edge.
 export function Fab({ label, collapsed, onPress }: { label: string; collapsed: boolean; onPress: () => void }) {
-  countRender("fab");
   const p = usePalette();
   const t = useT();
   const [labelWidth, setLabelWidth] = useState(0);

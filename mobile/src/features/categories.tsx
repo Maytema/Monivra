@@ -1,9 +1,7 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
-import { perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { useCoachTarget } from "../ui/coach.tsx";
-import { memo, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
-import { usePageReady } from "../ui/pager.tsx";
 import { router } from "expo-router";
 import { categoriesEmptyOf, categoriesNone } from "../domain/categories.ts";
 import { categoryTotalIn, reportRows, totalByType } from "../domain/ledger.ts";
@@ -15,7 +13,7 @@ import { CategoryTile, SumTabs, WithMoney } from "../ui/parts.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
 import { RootHero } from "./root-hero.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { periodOps } from "./period-read.ts";
+import { operationsInIndexed } from "../domain/period-index.ts";
 import { setView, useViewCatType } from "./ui-state.ts";
 import { dateOfShownPeriod, openEditor } from "./editor/editor-sheet.tsx";
 import { openAccountSheet } from "./account-sheet.tsx";
@@ -33,13 +31,8 @@ export function CategoriesScreen() {
 
 // The sums and the tiles of one period (drawn beforehand for the neighbouring periods too).
 const CategoriesPage = memo(function CategoriesPage({ period, catType }: { period: Period; catType: "expense" | "income" }) {
-  // Speed-check build: the page's content is on the screen once it is first committed (no virtualized parts).
-  const ready = usePageReady();
-  useLayoutEffect(() => {
-    if (PERF_BUILD) ready();
-  }, [ready]);
   const data = useLedgerView();
-  const rows = useMemo(() => reportRows(data, periodOps(data, period, emptyFilters())), [data, period]);
+  const rows = useMemo(() => reportRows(data, operationsInIndexed(data, period, emptyFilters())), [data, period]);
   // Both kinds are kept drawn once the page has settled and only shown or hidden: switching Expenses / Incomes then
   // changes a style and the highlighted tab instead of building a dozen tiles with their icons on the spot.
   const [warm, setWarm] = useState(false);
@@ -57,7 +50,7 @@ const CategoriesPage = memo(function CategoriesPage({ period, catType }: { perio
           <EmptyState kind="categories" title="Categories will be here" hint="So far, it's empty. Create your first category?" action="Create" onAction={create} />
         ) : null}
         {(["expense", "income"] as const).map((kind) =>
-          (kind === catType || (warm && !(PERF_BUILD && perfFlags.noWarm))) && !emptyOf(kind) ? (
+          (kind === catType || warm) && !emptyOf(kind) ? (
             <View key={kind} style={kind === catType ? undefined : { display: "none" }}>
               <TileGrid data={data} rows={rows} kind={kind} />
             </View>

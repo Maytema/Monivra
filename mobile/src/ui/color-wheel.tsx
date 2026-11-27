@@ -5,7 +5,6 @@ import { memo, useRef, useState } from "react";
 import { PanResponder, View } from "react-native";
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from "react-native-svg";
 import { hexToHsv, hsvToHex } from "./color-tools.ts";
-import { perfNote, PERF_BUILD } from "../platform/perf.ts";
 
 const RING_INNER = 0.76; // where the ring starts, share of the radius
 const SQUARE_HALF = 0.5; // half a side of the square, share of the radius
@@ -39,8 +38,6 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
   hold.current = onHold;
   const shown = live ?? [h, s, v];
   const origin = useRef({ x: 0, y: 0 });
-  const lastMove = useRef<{ x: number; y: number; s: number; v: number } | null>(null);
-  const moves = useRef(0);
   const update = (x: number, y: number) => {
     const radius = state.current.size / 2;
     const dx = (x - radius) / radius;
@@ -53,13 +50,6 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
       const clamp = (n: number) => Math.min(1, Math.max(0, n));
       ns = clamp((lx / SQUARE_HALF + 1) / 2);
       nv = clamp(1 - (ly / SQUARE_HALF + 1) / 2);
-    }
-    // Speed-check build: a finger moving a few px in the square that moves the point far is a jump.
-    if (PERF_BUILD && state.current.mode === "square") {
-      const last = lastMove.current;
-      if (last && Math.hypot(x - last.x, y - last.y) < 30 && Math.abs(ns - last.s) + Math.abs(nv - last.v) > 0.2) perfNote(`wheel: jump at ${Math.round(x)},${Math.round(y)} (s ${last.s.toFixed(2)}→${ns.toFixed(2)}, v ${last.v.toFixed(2)}→${nv.toFixed(2)})`);
-      lastMove.current = { x, y, s: ns, v: nv };
-      moves.current++;
     }
     state.current = { ...state.current, h: nh, s: ns, v: nv };
     hue.current = nh;
@@ -85,9 +75,6 @@ export function ColorWheel({ color, size, onChange, onHold }: { color: string; s
       },
       onPanResponderMove: (e: { nativeEvent: { pageX: number; pageY: number } }) => update(e.nativeEvent.pageX - origin.current.x, e.nativeEvent.pageY - origin.current.y),
       onPanResponderRelease: () => {
-        if (PERF_BUILD) perfNote(`wheel: finger lifted after ${moves.current} moves`);
-        lastMove.current = null;
-        moves.current = 0;
         setLive(null);
         hold.current?.(false);
       },

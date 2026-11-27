@@ -1,7 +1,6 @@
 // Files the person picks or shares: the data file for moving data between the applications.
 import * as DocumentPicker from "expo-document-picker";
 import { Directory, File, Paths } from "expo-file-system";
-import { now, perfLog } from "./perf.ts";
 import * as Sharing from "expo-sharing";
 
 
@@ -11,9 +10,7 @@ export async function pickFile(): Promise<{ name: string; text: string } | null>
   if (result.canceled) return null;
   const asset = result.assets[0];
   if (!asset) return null;
-  const started = now();
   const text = await new File(asset.uri).text();
-  perfLog(`file read: ${text.length} characters`, now() - started);
   return { name: asset.name, text };
 }
 

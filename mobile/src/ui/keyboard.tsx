@@ -6,10 +6,8 @@
 // `useRevealFocusedField` goes on a scrolling body: when the keyboard comes up and the focused field lies below
 // the keyboard's top edge, the body scrolls just far enough to bring it above — and only the body that holds
 // the field does it.
-import { PERF_BUILD, noteTouch } from "../platform/perf.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Keyboard, TextInput, View, type KeyboardEvent, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
-import type { GestureResponderEvent } from "react-native";
 
 type Measure = { measureInWindow(done: (x: number, y: number, w: number, h: number) => void): void };
 
@@ -59,7 +57,6 @@ export function KeyboardPad({ children }: { children: ReactNode }) {
       ref={(node: unknown) => void (frame.current = node as Measure | null)}
       collapsable={false}
       style={{ flex: 1 }}
-      onTouchStart={PERF_BUILD ? (e: GestureResponderEvent) => noteTouch(e.nativeEvent.timestamp, e.nativeEvent.touches.length) : undefined}
       onStartShouldSetResponder={() => pad > 0}
       onResponderGrant={() => false}
       onResponderRelease={dismissKeyboard}

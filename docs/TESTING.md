@@ -85,17 +85,15 @@ the first application imports whole and reads back the same").
 
 - **A screen looks wrong**: compare its emulator PNG with the first application's window (crawler) and
   the owner's reference; read the XML of the step for bounds and labels.
-- **Something is slow**: read `perf.txt` (`layer … shown` = time from asking for a sheet to its first frame;
-  `engine …` = cost of platform calls). Add `perfLog(label, ms)` (`src/platform/perf.ts`) around a
-  suspect and push; never guess. Typical causes: platform formatting in rows, a list that is not
+- **Something is slow**: count what the move builds (pages, lists, rows) on the stand in the branch `perf-lab`
+  (`mobile/lab`, a browser with the real screens on React Native stubs, a second per run); never guess, and do not
+  judge by the "JavaScript busy" time of a run (it hides short work and varies 3× between identical builds). Typical causes: platform formatting in rows, a list that is not
   virtualized, a hook that reads the whole ledger, an animation on the JavaScript thread.
-- **Tabs feel slow or ignore taps**: `perf-summary.txt` ends with a table of the tab moves (presses, presses dropped as
-  true repeats, press-to-shown p50/p90, JavaScript pauses). The moves named `empty: ...` run on the empty profile (the
-  owner's case: every tab has an animated empty state) before the large ledger is restored; the later moves never see
-  empty states. Acceptance on the weak profile: no dropped press that was not a repeat, p90 under 200 ms.
+- **Tabs feel slow or ignore taps**: the speed-check scripts of the branch `perf-lab` (`emulator-perf.sh`) write a table of the
+  tab moves (presses, presses dropped as true repeats, press-to-shown p50/p90). The moves named `empty: ...` run on the empty
+  profile (the owner's case: every tab has an animated empty state).
 - **A crash at start**: `crash.txt` and `js-log.txt` of the run.
-- **Touches do nothing**: a responder that never released (see `ui/pager.tsx`
-  `onPanResponderTerminationRequest`), or an invisible layer left open (`ui/sheets.tsx`).
+- **Touches do nothing**: a responder that never released (see `ui/pressable.tsx`), or an invisible layer left open (`ui/sheets.tsx`).
 
 ## Animated empty states run on the JavaScript thread
 

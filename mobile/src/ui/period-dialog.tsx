@@ -10,7 +10,6 @@ import { useCommand, useLedger, usePalette, useT } from "./app-context.tsx";
 import { openCalendar, openRangeDialog, TextButton } from "./calendar-sheet.tsx";
 import { HintBanner } from "./hint-banner.tsx";
 import { sheets, useCloseLayer } from "./sheets.tsx";
-import { now, perfMark, perfNote, PERF_BUILD } from "../platform/perf.ts";
 
 type Mode = "range" | "all" | "day" | "week" | "today" | "year" | "month";
 const TILES: [Mode, string][] = [
@@ -70,7 +69,6 @@ function MonthStartDialog() {
 }
 export const openMonthStart = (): number => sheets.open(<MonthStartDialog />, "dialog");
 
-let legacyOrder = false;
 function PeriodDialog({ period, onPick }: { period: Period; onPick: (p: Period) => void }) {
   const data = useLedger();
   const p = usePalette();
@@ -80,20 +78,9 @@ function PeriodDialog({ period, onPick }: { period: Period; onPick: (p: Period) 
   const note = (mode: Mode): string => (["week", "today", "year", "month"].includes(mode) ? periodTitle({ mode: mode === "today" ? "day" : (mode as Period["mode"]), anchor: today }, t, data.settings) : "");
   const current: Mode = period.mode === "day" ? (period.anchor === today ? "today" : "day") : (period.mode as Mode);
   // The dialog closes first and the period is applied when it is gone: picking redraws the pages under the dialog on the
-  // JavaScript thread (the pager), and the 160 ms fade used to start only after that. (Speed-check build: every other
-  // pick keeps the old order, picking first, so that one run shows both and writes the time from the tap to the dialog gone.)
-  const pick = (next: Period) => {
-    if (PERF_BUILD && (legacyOrder = !legacyOrder)) {
-      perfNote("period dialog: old order (pick, then close)");
-      onPick(next);
-      close();
-    } else {
-      perfNote("period dialog: new order (close, then pick)");
-      close(() => onPick(next));
-    }
-  };
+  // JavaScript thread (the pager), and the 160 ms fade used to start only after that.
+  const pick = (next: Period) => close(() => onPick(next));
   const choose = (mode: Mode) => {
-    if (PERF_BUILD) perfMark.tap = now();
     if (mode === "range") {
       const [a, b] = period.mode === "range" ? periodBounds(period, data.settings) : [null, null];
       openRangeDialog(a, b, (from, to) => pick({ mode: "range", from, to, anchor: from }));

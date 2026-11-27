@@ -1,21 +1,17 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfEpoch, perfFlags, perfLog, PERF_BUILD, selfTime, swipeMark } from "../platform/perf.ts";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
-import { usePageReady } from "../ui/pager.tsx";
 import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
-import { newestFirst } from "../domain/ledger.ts";
-import { emptyFilters, periodBounds, type Filters, type Period } from "../domain/periods.ts";
-import type { Operation } from "../domain/types.ts";
+import { emptyFilters, type Filters, type Period } from "../domain/periods.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
-import { appStore, useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedgerParts, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { Fab, MoneyAmount, useFabCollapse } from "../ui/parts.tsx";
@@ -24,7 +20,7 @@ import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { periodBalances, periodOps } from "./period-read.ts";
+import { narrowed, operationsPage, type PageItem } from "./period-page.ts";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useViewFilters, useViewPeriodWhile } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
@@ -35,12 +31,9 @@ import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
 
-type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
+type Item = PageItem;
 
 export function OperationsScreen() {
-  countRender("operations screen");
-  // Speed-check build: a change of setting (the ring pager) draws the screen again.
-  useSyncExternalStore(perfEpoch.subscribe, perfEpoch.get);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -57,10 +50,10 @@ export function OperationsScreen() {
   // does not draw the screen (its hero, its bars) again.
   const period = useViewPeriodWhile(selection);
   const fab = useFabCollapse();
-  const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
+  const active = narrowed(filters, query);
   // The operations of the period are needed here only for "select all" of the selection; the pages list their own.
   // (Made on every swipe before, for nothing.)
-  const ops = useMemo(() => (selection && period ? periodOps(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
+  const here = useMemo(() => (selection && period ? operationsPage(data, period, filters, query).items.flatMap((x) => (x.kind === "op" ? [x.op.id] : [])) : []), [selection, data, period, query, filters]);
 
   // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
   useFocusEffect(
@@ -104,7 +97,6 @@ export function OperationsScreen() {
     live.current.toggle(id);
   }, []);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
-  const here = ops.map((o) => o.id);
   const chosen = here.filter((id) => selected.includes(id)).length;
   const all = !!here.length && chosen === here.length;
 
@@ -156,14 +148,9 @@ export function OperationsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <PeriodPager
-        ring={PERF_BUILD && perfFlags.ringPager}
-        // Experiment (task "stable paging", 2026-11-21): the lists of two periods on each side are drawn beforehand —
-        // a new list takes the longest to show its first rows of all the paged screens (speed check: 268 ms on the
-        // emulator), and quick swipes reached undrawn pages here only (12–39 % of quick swipes, builds 117–119).
-        around={2}
         header={
           <>
-            {PERF_BUILD && perfFlags.noPeriodBar ? null : <PeriodBar />}
+            <PeriodBar />
             {active ? <FilteredBanner onChange={() => openFilters(filters, setFilters)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
           </>
         }
@@ -190,7 +177,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        PERF_BUILD && perfFlags.noFab ? null : <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
+        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
       )}
     </View>
   );
@@ -199,49 +186,17 @@ export function OperationsScreen() {
 // The list of one period: drawn for the current period and, beforehand, for its neighbours, all alike (nothing on a
 // page depends on whether it is the current one, so a swipe does not draw the pages that are already there).
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
-  countRender("operations page");
-  const done = selfTime("page body");
-  const began = PERF_BUILD ? now() : 0;
-  // Speed-check build: a page drawn again, and which input changed (a new page counts as a mount).
-  const seen = useRef<Record<string, unknown> | null>(null);
-  if (PERF_BUILD) {
-    const now_ = { period, query, active, selection, selectedSet, onPress, onLongPress, onTop };
-    if (seen.current === null) (perfLog("operations page mount", 0), swipeMark("page: render starts (mount)"));
-    else
-      for (const k of Object.keys(now_) as (keyof typeof now_)[])
-        if (seen.current[k] !== now_[k]) perfLog(`operations page prop changed: ${k}`, 0);
-    seen.current = now_;
-  }
-  useLayoutEffect(() => {
-    if (PERF_BUILD) (perfLog("operations page built", now() - began), swipeMark("page: render and commit done (layout effect)"));
-  });
-  // (An empty period has no rows to load: its picture is the content.)
-  useLayoutEffect(() => {
-    if (PERF_BUILD && (items.length === 0 || perfFlags.noList)) ready();
-  });
   const data = useLedgerView();
+  const parts = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const filters = useViewFilters();
-  const ready = usePageReady();
-  const ops = useMemo(() => timed("page: operations of the period", () => periodOps(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
-  const items = useMemo(() => timed("page: rows and days", () => {
-    const out: Item[] = [];
-    // One pass: the list is already newest first, so the days follow each other.
-    const days = new Map<string, Operation[]>();
-    for (const o of ops) {
-      const day = days.get(o.date);
-      if (day) day.push(o);
-      else days.set(o.date, [o]);
-    }
-    for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
-    return out;
-  }), [ops]);
+  const { items, sticky, balances } = useMemo(() => operationsPage(data, period, filters, query), [data, period, filters, query]);
 
   const list = useRef<FlashListRef<Item>>(null);
-  // A page of the ring pager is told a new period and keeps its list: the list starts at the top for the new period.
+  // A page of the deck is told a new period and keeps its list: the list starts at the top for the new period.
   useLayoutEffect(() => {
-    if (PERF_BUILD && perfFlags.ringPager) list.current?.scrollToOffset({ offset: 0, animated: false });
+    list.current?.scrollToOffset({ offset: 0, animated: false });
   }, [period]);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
   const lit = useSpotlit();
@@ -258,9 +213,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     },
     [onTop],
   );
-  const [from, to] = periodBounds(period, data.settings);
-  const summary = data.settings.opening && ops.length > 0 && !active;
-  const balances = useMemo(() => (summary ? timed("page: opening and closing balances", () => periodBalances(data, filters.accounts, from, to)) : null), [summary, data, filters.accounts, from, to]);
   // The list is given the same pieces while nothing in them changed, so a scroll or the tick of the Add
   // button does not make it go through its rows again.
   const header = useMemo(
@@ -283,49 +235,24 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     ),
     [balances, p, t, data.settings.currency],
   );
-  const firstRow = useRef(true);
   const renderItem = useCallback(
-    ({ item }: { item: Item }) => {
-      if (PERF_BUILD && firstRow.current) {
-        firstRow.current = false;
-        swipeMark("list: first row rendered");
-      }
-      return (
+    ({ item }: { item: Item }) =>
       // The side margins are on each item, not on the list: the sticky head is drawn over the list without the list's
       // padding, and with it there its first letters were cut at the edge of the screen.
-      item.kind === "day" && PERF_BUILD && perfFlags.noDayHeads ? (
-        <View style={{ height: 70 }} />
-      ) : item.kind === "day" ? (
+      item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
-          <DayHead date={item.date} ops={item.ops} />
-        </View>
-      ) : PERF_BUILD && perfFlags.plainRows ? (
-        <View style={{ paddingHorizontal: 16, minHeight: 70 }}>
-          <Text numberOfLines={1}>{item.op.id}</Text>
+          <DayHead date={item.date} ops={item.ops} data={parts} />
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
-          <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
+          <OperationRow op={item.op} data={parts} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
         </View>
-      )
-      );
-    },
-    [selection, selectedSet, onPress, onLongPress, p.bg],
+      ),
+    [selection, selectedSet, onPress, onLongPress, p.bg, parts],
   );
-  // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
-  const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
-  const page = (
+  return (
     <View style={{ flex: 1 }}>
-      {PERF_BUILD && perfFlags.noList ? (
-        // Speed-check build: the same rows without a list (the first 14, one after another): what the list itself costs.
-        <View>
-          {header}
-          {items.slice(0, 14).map((item) => (
-            <View key={keyOfItem(item)}>{renderItem({ item })}</View>
-          ))}
-        </View>
-      ) : (
       <FlashList
         ref={list}
         // No scroll bar on a swiped page (components.css .swipe-page > .content).
@@ -346,24 +273,11 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
-        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), swipeMark("list: onLoad (rows laid out)"), ready()) : undefined}
-        onLayout={PERF_BUILD ? () => swipeMark("list: onLayout") : undefined}
       />
-      )}
     </View>
   );
-  done();
-  return page;
 });
 
-// Speed-check build: the time of one part of drawing a page.
-function timed<T>(label: string, work: () => T): T {
-  if (!PERF_BUILD) return work();
-  const start = now();
-  const result = work();
-  perfLog(label, now() - start);
-  return result;
-}
 const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);
 const typeOfItem = (x: Item): string => x.kind;
 const STICKY = { useNativeDriver: true, hideRelatedCell: true } as const;

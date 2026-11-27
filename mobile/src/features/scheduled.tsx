@@ -201,6 +201,7 @@ export function ScheduledScreen() {
                     <Spot key={o.id} id={o.id} reach={8}>
                       <OperationRow
                         op={o}
+                        data={data}
                         spot={false}
                         selecting={selection.on}
                         selected={selection.chosen.has(o.id)}

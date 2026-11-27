@@ -391,21 +391,8 @@ app_setting() {
   local got; got=$(adb logcat -d -s ReactNativeJS:V 2>/dev/null | grep "\[perf\] setting " | tail -1 | sed 's/.*\[perf\] setting //' | tr -d '\r')
   echo "${got:-all on}"
 }
-set_mode() { # $1 index of the setting (0 .. count-1)
-  local count=${#app_names[@]} taps k tries got
-  taps=$(( ($1 - mode + count) % count ))
-  for k in $(seq 1 $taps); do adb shell input tap 20 335; sleep 0.4; done
-  sleep 1
-  # A tap on the box can be lost (or the script and the application can disagree about the count): the setting is read back from the application's
-  # log and the box is tapped until it is the one asked for. What was measured under which setting is then what the name says.
-  for tries in 1 2 3 4 5 6 7 8 9 10 11 12; do
-    got=$(app_setting)
-    [ "$got" = "${app_names[$1]}" ] && break
-    adb shell input tap 20 335; sleep 0.6
-  done
-  [ "$got" = "${app_names[$1]}" ] || log "SETTING MISMATCH: wanted ${app_names[$1]}, the application says $got"
-  mode=$1
-}
+# The application has no setting box any more (the settings were measuring switches): there is one way to draw, mode 0.
+set_mode() { mode=$1; }
 balanced() { # $1 run number, $2.. order (letters A-E)
   local run=$1 letter idx; shift
   for letter in "$@"; do

@@ -27,6 +27,9 @@ scan(SRC);
 const stubFor = (pkg) => `const make = () => new Proxy(function () { return make(); }, { get: (t, k) => (k === "then" ? undefined : k === Symbol.toPrimitive ? () => "" : make()), apply: () => make(), construct: () => make() });
 ${[...(wanted.get(pkg) ?? [])].filter((n) => /^[A-Za-z_$][\w$]*$/.test(n)).map((n) => `export const ${n} = make();`).join("\n")}
 export default make();`;
+function readdirSyncDeep(dir) {
+  return readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? readdirSyncDeep(join(dir, f)) : /\.tsx?$/.test(f) ? [join(dir, f)] : []));
+}
 const plugin = {
   name: "stubs",
   setup(b) {
@@ -44,9 +47,10 @@ const plugin = {
     b.onLoad({ filter: /.*/, namespace: "stub" }, (a) => ({ contents: stubFor(a.path), loader: "js" }));
   },
 };
+const entries = process.env.ALL ? readdirSyncDeep(join(SRC, "app")) : [R("entry.jsx")];
 await build({
-  entryPoints: [R("entry.jsx")], bundle: true, outfile: R("out/app.js"), format: "iife", platform: "browser", jsx: "automatic", logLevel: "warning",
-  loader: { ".ts": "ts", ".tsx": "tsx", ".json": "json" }, define: { "process.env.EXPO_PUBLIC_PERF": '"1"', "process.env.NODE_ENV": '"production"', __DEV__: "false" },
+  entryPoints: entries, bundle: true, ...(process.env.ALL ? { outdir: R("out/all"), splitting: false, write: false } : { outfile: R("out/app.js") }), format: "iife", platform: "browser", jsx: "automatic", logLevel: "warning",
+  loader: { ".ts": "ts", ".tsx": "tsx", ".json": "json", ".jpg": "empty", ".png": "empty", ".ttf": "empty", ".svg": "empty", ".webp": "empty" }, define: { "process.env.EXPO_PUBLIC_PERF": '"1"', "process.env.NODE_ENV": '"production"', __DEV__: "false" },
   plugins: [plugin], nodePaths: ["/opt/npm-tools/node_modules"],
 });
 console.log("built");
