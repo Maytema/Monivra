@@ -10,9 +10,7 @@ import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { systemClock } from "../domain/dates.ts";
-import { newestFirst } from "../domain/ledger.ts";
-import { emptyFilters, periodBounds, type Filters, type Period } from "../domain/periods.ts";
-import type { Operation } from "../domain/types.ts";
+import { emptyFilters, type Filters, type Period } from "../domain/periods.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
 import { appStore, useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
@@ -24,7 +22,7 @@ import { chrome } from "../ui/theme.ts";
 import { openAddMenu } from "./add-menu.tsx";
 import { DayHead, FilteredBanner, OperationRow } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { periodBalances, periodOps } from "./period-read.ts";
+import { narrowed, operationsPage, type PageItem } from "./period-page.ts";
 import { RootHero } from "./root-hero.tsx";
 import { setView, useViewFilters, useViewPeriodWhile } from "./ui-state.ts";
 import { openFilters } from "./filters-panel.tsx";
@@ -35,7 +33,7 @@ import { openBulkEdit } from "./bulk-edit.tsx";
 import { confirmDialog, toast } from "../ui/dialogs.tsx";
 import { EmptyState } from "../ui/empty-state.tsx";
 
-type Item = { kind: "day"; date: string; ops: Operation[] } | { kind: "op"; op: Operation };
+type Item = PageItem;
 
 export function OperationsScreen() {
   countRender("operations screen");
@@ -57,10 +55,10 @@ export function OperationsScreen() {
   // does not draw the screen (its hero, its bars) again.
   const period = useViewPeriodWhile(selection);
   const fab = useFabCollapse();
-  const active = !!(filters.accounts || filters.categories || filters.types || filters.tags || filters.origin || query);
+  const active = narrowed(filters, query);
   // The operations of the period are needed here only for "select all" of the selection; the pages list their own.
   // (Made on every swipe before, for nothing.)
-  const ops = useMemo(() => (selection && period ? periodOps(data, period, { ...filters, comment: query }).sort(newestFirst) : []), [selection, data, period, query, filters]);
+  const here = useMemo(() => (selection && period ? operationsPage(data, period, filters, query).items.flatMap((x) => (x.kind === "op" ? [x.op.id] : [])) : []), [selection, data, period, query, filters]);
 
   // The list is on the screen while this tab is in focus (a saved operation is lit there, else a notice leads to it).
   useFocusEffect(
@@ -104,7 +102,6 @@ export function OperationsScreen() {
     live.current.toggle(id);
   }, []);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
-  const here = ops.map((o) => o.id);
   const chosen = here.filter((id) => selected.includes(id)).length;
   const all = !!here.length && chosen === here.length;
 
@@ -224,19 +221,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const t = useT();
   const filters = useViewFilters();
   const ready = usePageReady();
-  const ops = useMemo(() => timed("page: operations of the period", () => periodOps(data, period, { ...filters, comment: query }).sort(newestFirst)), [data, period, query, filters]);
-  const items = useMemo(() => timed("page: rows and days", () => {
-    const out: Item[] = [];
-    // One pass: the list is already newest first, so the days follow each other.
-    const days = new Map<string, Operation[]>();
-    for (const o of ops) {
-      const day = days.get(o.date);
-      if (day) day.push(o);
-      else days.set(o.date, [o]);
-    }
-    for (const [date, dayOps] of days) out.push({ kind: "day", date, ops: dayOps }, ...dayOps.map((op): Item => ({ kind: "op", op })));
-    return out;
-  }), [ops]);
+  const { items, sticky, balances } = useMemo(() => timed("page: operations of the period", () => operationsPage(data, period, filters, query)), [data, period, filters, query]);
 
   const list = useRef<FlashListRef<Item>>(null);
   // A page of the ring pager is told a new period and keeps its list: the list starts at the top for the new period.
@@ -258,9 +243,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     },
     [onTop],
   );
-  const [from, to] = periodBounds(period, data.settings);
-  const summary = data.settings.opening && ops.length > 0 && !active;
-  const balances = useMemo(() => (summary ? timed("page: opening and closing balances", () => periodBalances(data, filters.accounts, from, to)) : null), [summary, data, filters.accounts, from, to]);
   // The list is given the same pieces while nothing in them changed, so a scroll or the tick of the Add
   // button does not make it go through its rows again.
   const header = useMemo(
@@ -312,8 +294,6 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     },
     [selection, selectedSet, onPress, onLongPress, p.bg],
   );
-  // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
-  const sticky = useMemo(() => items.flatMap((x, i) => (x.kind === "day" ? [i] : [])), [items]);
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   const page = (
     <View style={{ flex: 1 }}>
