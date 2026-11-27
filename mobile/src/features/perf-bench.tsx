@@ -13,7 +13,7 @@ import { Icon } from "../ui/kit.tsx";
 import { OperationRow } from "./operation-row.tsx";
 
 const noop = (): void => undefined;
-import type { Operation } from "../domain/types.ts";
+import type { LedgerData, Operation } from "../domain/types.ts";
 
 const PIXEL = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 const GLYPHS = ["★", "☆", "✓", "✕", "♥", "☀", "☂", "✈"];
@@ -24,7 +24,7 @@ const range = (n: number): number[] => Array.from({ length: n }, (_, i) => i);
 interface Scenario {
   name: string;
   // Draws the scenario; `ready` is called when it counts as done (the layout of the container by default, a list's own load).
-  draw(ready: () => void, ops: Operation[]): ReactNode;
+  draw(ready: () => void, ops: Operation[], data: LedgerData): ReactNode;
   needsOps?: boolean;
 }
 
@@ -53,14 +53,14 @@ const SCENARIOS: Scenario[] = [
   { name: "35 Image raster", draw: (ready) => <View onLayout={ready} style={wrap}>{range(35).map((i) => <Image key={i} source={{ uri: `data:image/png;base64,${PIXEL}` }} style={{ width: 24, height: 24 }} />)}</View> },
   { name: "15 flat rows, plain View", draw: (ready) => <View onLayout={ready}>{range(15).map((i) => <View key={i}>{flatRow(i)}</View>)}</View> },
   { name: "15 absolute rows, plain View", draw: (ready) => <View onLayout={ready}>{range(15).map((i) => <View key={i}>{absoluteRow(i)}</View>)}</View> },
-  { name: "15 our rows, plain View", needsOps: true, draw: (ready, ops) => <View onLayout={ready}>{ops.slice(0, 15).map((op) => <View key={op.id} style={{ paddingHorizontal: 16 }}><OperationRow op={op} onPress={noop} /></View>)}</View> },
+  { name: "15 our rows, plain View", needsOps: true, draw: (ready, ops, data) => <View onLayout={ready}>{ops.slice(0, 15).map((op) => <View key={op.id} style={{ paddingHorizontal: 16 }}><OperationRow op={op} data={data} onPress={noop} /></View>)}</View> },
   { name: "15 flat rows, FlashList", draw: (ready) => <View style={{ height: 700 }}><FlashList data={range(15)} renderItem={({ item }) => flatRow(item)} keyExtractor={(i) => String(i)} onLoad={ready} /></View> },
   { name: "15 absolute rows, FlashList", draw: (ready) => <View style={{ height: 700 }}><FlashList data={range(15)} renderItem={({ item }) => absoluteRow(item)} keyExtractor={(i) => String(i)} onLoad={ready} /></View> },
-  { name: "15 our rows, FlashList", needsOps: true, draw: (ready, ops) => <View style={{ height: 700 }}><FlashList data={ops.slice(0, 15)} renderItem={({ item }) => <View style={{ paddingHorizontal: 16 }}><OperationRow op={item} onPress={noop} /></View>} keyExtractor={(o) => o.id} onLoad={ready} /></View> },
+  { name: "15 our rows, FlashList", needsOps: true, draw: (ready, ops, data) => <View style={{ height: 700 }}><FlashList data={ops.slice(0, 15)} renderItem={({ item }) => <View style={{ paddingHorizontal: 16 }}><OperationRow op={item} data={data} onPress={noop} /></View>} keyExtractor={(o) => o.id} onLoad={ready} /></View> },
 ];
 
 // A scenario drawn once; says when it was committed and when its second frame came.
-function Run({ scenario, run, started, ops, finished }: { scenario: Scenario; run: number; started: number; ops: Operation[]; finished: () => void }) {
+function Run({ scenario, run, started, data, finished }: { scenario: Scenario; run: number; started: number; data: LedgerData; finished: () => void }) {
   const done = useRef(false);
   useLayoutEffect(() => {
     perfLog(`bench ${scenario.name} run ${run}: commit`, now() - started);
@@ -75,7 +75,7 @@ function Run({ scenario, run, started, ops, finished }: { scenario: Scenario; ru
       }),
     );
   };
-  return <>{scenario.draw(ready, ops)}</>;
+  return <>{scenario.draw(ready, data.ops, data)}</>;
 }
 
 function Bench() {
@@ -108,7 +108,7 @@ function Bench() {
   }, [ledger]);
   return (
     <View style={{ flex: 1, paddingTop: 120 }}>
-      {shown ? <Run key={`${shown.scenario.name}${shown.run}`} scenario={shown.scenario} run={shown.run} started={shown.started} ops={ledger.ops} finished={() => finish.current?.()} /> : null}
+      {shown ? <Run key={`${shown.scenario.name}${shown.run}`} scenario={shown.scenario} run={shown.run} started={shown.started} data={ledger} finished={() => finish.current?.()} /> : null}
     </View>
   );
 }

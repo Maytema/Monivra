@@ -13,7 +13,7 @@ import { systemClock } from "../domain/dates.ts";
 import { emptyFilters, type Filters, type Period } from "../domain/periods.ts";
 import { applyBulkChanges, deleteOperations, emptyBulkChanges } from "../domain/operations.ts";
 import { haptic } from "../platform/haptics.ts";
-import { appStore, useCommand, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
+import { appStore, useCommand, useLedgerParts, useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { Fab, MoneyAmount, useFabCollapse } from "../ui/parts.tsx";
@@ -217,6 +217,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     if (PERF_BUILD && (items.length === 0 || perfFlags.noList)) ready();
   });
   const data = useLedgerView();
+  const parts = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const filters = useViewFilters();
@@ -279,7 +280,7 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         <View style={{ height: 70 }} />
       ) : item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
-          <DayHead date={item.date} ops={item.ops} />
+          <DayHead date={item.date} ops={item.ops} data={parts} />
         </View>
       ) : PERF_BUILD && perfFlags.plainRows ? (
         <View style={{ paddingHorizontal: 16, minHeight: 70 }}>
@@ -287,12 +288,12 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
-          <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
+          <OperationRow op={item.op} data={parts} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
         </View>
       )
       );
     },
-    [selection, selectedSet, onPress, onLongPress, p.bg],
+    [selection, selectedSet, onPress, onLongPress, p.bg, parts],
   );
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
   const page = (

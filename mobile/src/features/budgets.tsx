@@ -231,9 +231,9 @@ export function BudgetDetails() {
         {ops.length ? (
           dates.map((date) => (
             <View key={date}>
-              <DayHead date={date} ops={ops.filter((o) => o.date === date)} />
+              <DayHead date={date} ops={ops.filter((o) => o.date === date)} data={data} />
               {ops.filter((o) => o.date === date).map((o) => (
-                <OperationRow key={o.id} op={o} onPress={() => openEditor({ id: o.id })} />
+                <OperationRow key={o.id} op={o} data={data} onPress={() => openEditor({ id: o.id })} />
               ))}
             </View>
           ))

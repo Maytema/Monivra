@@ -8,7 +8,7 @@ import { Pressable } from "../ui/pressable.tsx";
 import { accountById, amountPair, categoryById, offRate, transferRoles } from "../domain/ledger.ts";
 import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
-import { useLedgerParts, usePalette, useT } from "../ui/app-context.tsx";
+import { usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { WIDE_RETENTION } from "../ui/pager.tsx";
 import { MoneyAmount, MoneyLine, ToneBadge } from "../ui/parts.tsx";
@@ -16,6 +16,8 @@ import { Spot } from "../ui/spotlight.tsx";
 import { alpha } from "../ui/theme.ts";
 
 type Translate = ReturnType<typeof useT>;
+// What a row and the head of a day read from the ledger; the screen gives it (one subscription for a page, not one for every row).
+export type RowData = Pick<LedgerData, "accounts" | "categories" | "rates" | "settings">;
 
 // Name of a category as an operation shows it: a subcategory follows its category.
 function categoryTitle(data: Pick<LedgerData, "categories">, id: string | undefined, t: Translate): string {
@@ -45,13 +47,11 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
   return t.t("1 {from} = {rate} {to}", { from: base, rate: Number(rate.toPrecision(6)), to: quote });
 }
 
-// Memoised: the list passes stable handlers (they receive the id), and the row reads only the parts of the
-// ledger it shows (accounts, categories, rates, settings), so it is drawn again only when its own operation
-// or its selection changes — not on every scroll, selection of another row or saved operation.
-export const OperationRow = memo(function OperationRow({ op, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
+// Memoised: the list passes stable handlers (they receive the id) and the parts of the ledger the row shows, so it is drawn again only when
+// its own operation, its selection or those parts change — not on every scroll, selection of another row or saved operation.
+export const OperationRow = memo(function OperationRow({ op, data, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; data: RowData; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
   countRender("operation row");
   const done = selfTime("row body");
-  const data = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const compact = useWindowDimensions().width <= 360;
@@ -145,10 +145,9 @@ function dayTotal(data: Pick<LedgerData, "accounts" | "rates" | "settings">, ops
 }
 
 // The date of a group with its day total, and a line under it.
-export const DayHead = memo(function DayHead({ date, ops }: { date: string; ops: Operation[] }) {
+export const DayHead = memo(function DayHead({ date, ops, data }: { date: string; ops: Operation[]; data: RowData }) {
   countRender("day head");
   const done = selfTime("day head body");
-  const data = useLedgerParts("accounts", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const weekday = t.weekday(date, "long");
