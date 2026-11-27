@@ -270,11 +270,10 @@ export function Pager<K extends string>({
     passed.current.add(String(row.keys[page]));
     unstable_batchedUpdates(() => {
       setIndex(page);
-      // One commit for the swipe: the page reached and the pages drawn around it (it was two, the second in a task of its own).
-      setShown(page);
       live.current.onMove(page - from);
     }, undefined);
     swipeMark("pager: setIndex and onMove done (period set)");
+    follow(page);
   };
   // Near the end of the row (not a real end), the row is laid out again around the current page once the pager is
   // quiet; the pages are drawn again once, which happens after SPAN − MARGIN swipes in one direction.
