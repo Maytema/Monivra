@@ -1,0 +1,511 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+operations-month: normal ×5 back, run 1                     0ms        0ms      0       0            -      -      -
+operations-month: normal ×5 forward, run 1                  0ms        0ms      0       0            -      -      -
+operations-month: normal ×5 back, run 2                     0ms        0ms      0       0            -      -      -
+operations-month: normal ×5 forward, run 2                  0ms        0ms      0       0            -      -      -
+operations-month: normal ×5 back, run 3                     0ms        0ms      0       0            -      -      -
+operations-month: normal ×5 forward, run 3                  0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 back, run 1                     0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 forward, run 1                  0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 back, run 2                     0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 forward, run 2                  0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 back, run 3                     0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 forward, run 3                  0ms        0ms      0       0            -      -      -
+operations-month: reverse back/forward ×6                   0ms        0ms      0       0            -      -      -
+operations-month: revisit 10 back, 10 forward (1 s a        0ms        0ms      0       0            -      -      -
+operations-month: stress ×30 back, no pause                 0ms        0ms      0       0            -      -      -
+operations-month: stress ×30 forward, no pause              0ms        0ms      0       0            -      -      -
+operations-month: quick ×10 into empty future months        0ms        0ms      0       0            -      -      -
+operations-month: back from the future                      0ms        0ms      0       0            -      -      -
+operations-month: 5 quick swipes, tab Statistics, ta        0ms        0ms      0      81  69 (85.19%)  121ms  250ms
+operations-week: normal ×5 back, run 1                      0ms        0ms      0      52  48 (92.31%)  129ms  150ms
+operations-week: normal ×5 forward, run 1                   0ms        0ms      0      61  42 (68.85%)   65ms   81ms
+operations-week: normal ×5 back, run 2                      0ms        0ms      0      60  44 (73.33%)   65ms   97ms
+operations-week: normal ×5 forward, run 2                   0ms        0ms      0      59  41 (69.49%)   69ms   81ms
+operations-week: normal ×5 back, run 3                      0ms        0ms      0      62  45 (72.58%)   65ms   81ms
+operations-week: normal ×5 forward, run 3                   0ms        0ms      0      59  43 (72.88%)   69ms   85ms
+operations-week: quick ×10 back, run 1                      0ms        0ms      0     110 103 (93.64%)  121ms  150ms
+operations-week: quick ×10 forward, run 1                   0ms        0ms      0     115  78 (67.83%)   69ms   85ms
+operations-week: quick ×10 back, run 2                      0ms        0ms      0     116  81 (69.83%)   69ms   81ms
+operations-week: quick ×10 forward, run 2                   0ms        0ms      0     121  82 (67.77%)   69ms  101ms
+operations-week: quick ×10 back, run 3                      0ms        0ms      0     116  77 (66.38%)   65ms   97ms
+operations-week: quick ×10 forward, run 3                   0ms        0ms      0     120  79 (65.83%)   69ms   93ms
+operations-week: reverse back/forward ×6                    0ms        0ms      0      60  44 (73.33%)   77ms  101ms
+operations-week: revisit 10 back, 10 forward (1 s ap        0ms        0ms      0     245 164 (66.94%)   65ms   81ms
+operations-day: normal ×5 back, run 1                       0ms        0ms      0      65  58 (89.23%)  117ms  133ms
+operations-day: normal ×5 forward, run 1                    0ms        0ms      0      74  48 (64.86%)   73ms   89ms
+operations-day: normal ×5 back, run 2                       0ms        0ms      0      62  45 (72.58%)   65ms  101ms
+operations-day: normal ×5 forward, run 2                    0ms        0ms      0      59  41 (69.49%)   69ms   77ms
+operations-day: normal ×5 back, run 3                       0ms        0ms      0      62  44 (70.97%)   65ms   97ms
+operations-day: normal ×5 forward, run 3                    0ms        0ms      0      60  46 (76.67%)   73ms   93ms
+operations-day: quick ×10 back, run 1                       0ms        0ms      0     103  95 (92.23%)  117ms  150ms
+operations-day: quick ×10 forward, run 1                    0ms        0ms      0     121  81 (66.94%)   69ms   93ms
+operations-day: quick ×10 back, run 2                       0ms        0ms      0     122  83 (68.03%)   73ms   85ms
+operations-day: quick ×10 forward, run 2                    0ms        0ms      0     130  94 (72.31%)   85ms   97ms
+operations-day: quick ×10 back, run 3                       0ms        0ms      0     121  83 (68.60%)   73ms   97ms
+operations-day: quick ×10 forward, run 3                    0ms        0ms      0     117  85 (72.65%)   69ms   89ms
+operations-day: reverse back/forward ×6                     0ms        0ms      0      62  47 (75.81%)   77ms   97ms
+operations-day: revisit 10 back, 10 forward (1 s apa        0ms        0ms      0     252 172 (68.25%)   65ms   81ms
+categories-month: normal ×5 back, run 1                     0ms        0ms      0      52  49 (94.23%)  129ms  150ms
+categories-month: normal ×5 forward, run 1                  0ms        0ms      0      70  52 (74.29%)   73ms  101ms
+categories-month: normal ×5 back, run 2                     0ms        0ms      0      68  52 (76.47%)   77ms   85ms
+categories-month: normal ×5 forward, run 2                  0ms        0ms      0      56  41 (73.21%)   73ms   81ms
+categories-month: normal ×5 back, run 3                     0ms        0ms      0      59  47 (79.66%)   69ms   85ms
+categories-month: normal ×5 forward, run 3                  0ms        0ms      0      57  39 (68.42%)   77ms   85ms
+categories-month: quick ×10 back, run 1                     0ms        0ms      0      90  85 (94.44%)  117ms  150ms
+categories-month: quick ×10 forward, run 1                  0ms        0ms      0     116  87 (75.00%)   73ms   97ms
+categories-month: quick ×10 back, run 2                     0ms        0ms      0     119  95 (79.83%)   77ms   89ms
+categories-month: quick ×10 forward, run 2                  0ms        0ms      0     115  83 (72.17%)   69ms   81ms
+categories-month: quick ×10 back, run 3                     0ms        0ms      0     113  89 (78.76%)   77ms   93ms
+categories-month: quick ×10 forward, run 3                  0ms        0ms      0     114  85 (74.56%)   73ms   81ms
+categories-month: reverse back/forward ×6                   0ms        0ms      0      77  60 (77.92%)   85ms   93ms
+categories-month: revisit 10 back, 10 forward (1 s a        0ms        0ms      0     257 198 (77.04%)   69ms   89ms
+statistics-month: normal ×5 back, run 1                     0ms        0ms      0      60  54 (90.00%)  105ms  133ms
+statistics-month: normal ×5 forward, run 1                  0ms        0ms      0      59  42 (71.19%)   77ms   93ms
+statistics-month: normal ×5 back, run 2                     0ms        0ms      0      58  44 (75.86%)   77ms  101ms
+statistics-month: normal ×5 forward, run 2                  0ms        0ms      0      60  43 (71.67%)   61ms  105ms
+statistics-month: normal ×5 back, run 3                     0ms        0ms      0      58  44 (75.86%)   69ms   93ms
+statistics-month: normal ×5 forward, run 3                  0ms        0ms      0      74  52 (70.27%)   73ms   93ms
+statistics-month: quick ×10 back, run 1                     0ms        0ms      0     106  97 (91.51%)  117ms  150ms
+statistics-month: quick ×10 forward, run 1                  0ms        0ms      0     116  82 (70.69%)   73ms   93ms
+statistics-month: quick ×10 back, run 2                     0ms        0ms      0     117  84 (71.79%)   69ms   89ms
+statistics-month: quick ×10 forward, run 2                  0ms        0ms      0     114  79 (69.30%)   77ms   97ms
+statistics-month: quick ×10 back, run 3                     0ms        0ms      0     117  85 (72.65%)   69ms   89ms
+statistics-month: quick ×10 forward, run 3                  0ms        0ms      0     114  80 (70.18%)   65ms   85ms
+statistics-month: reverse back/forward ×6                   0ms        0ms      0      65  53 (81.54%)   89ms  105ms
+statistics-month: revisit 10 back, 10 forward (1 s a        0ms        0ms      0     237 163 (68.78%)   69ms   85ms
+all moves                                                   0ms
+
+operations-month: 5 quick swipes, tab St | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 2
+operations-month: 5 quick swipes, tab St | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-month: 5 quick swipes, tab St | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-month: 5 quick swipes, tab St | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-week: normal ×5 back, run 1   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 back, run 1   | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 back, run 1   | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 back, run 1   | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 back, run 1   | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: normal ×5 back, run 2   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 back, run 2   | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 back, run 2   | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 back, run 2   | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 back, run 2   | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: normal ×5 back, run 3   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 back, run 3   | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 back, run 3   | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 back, run 3   | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 back, run 3   | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: normal ×5 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 back, run 1   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: quick ×10 back, run 1   | deck: settled at 18514.28515625 from page 49, reached 45, page 45, swipes begun 7
+operations-week: quick ×10 back, run 1   | deck: settled at 18514.28515625 from page 45, reached 45, page 45, swipes begun 2
+operations-week: quick ×10 forward, run  | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 2
+operations-week: quick ×10 back, run 2   | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: quick ×10 back, run 2   | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: quick ×10 back, run 3   | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+operations-week: quick ×10 forward, run  | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+operations-week: reverse back/forward ×6 | deck: settled at 23040 from page 56, reached 56, page 56, swipes begun 12
+operations-week: revisit 10 back, 10 for | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+operations-week: revisit 10 back, 10 for | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+operations-day: normal ×5 back, run 1    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 back, run 1    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 back, run 1    | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 back, run 1    | deck: settled at 19337.142578125 from page 47, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 back, run 1    | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: normal ×5 forward, run 1 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 forward, run 1 | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 forward, run 1 | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 forward, run 1 | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-day: normal ×5 forward, run 1 | deck: settled at 20571.427734375 from page 50, reached 50, page 50, swipes begun 1
+operations-day: normal ×5 back, run 2    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 back, run 2    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 back, run 2    | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 back, run 2    | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: normal ×5 back, run 2    | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-day: normal ×5 forward, run 2 | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-day: normal ×5 forward, run 2 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 forward, run 2 | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 forward, run 2 | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 forward, run 2 | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-day: normal ×5 back, run 3    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 back, run 3    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 back, run 3    | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 back, run 3    | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: normal ×5 back, run 3    | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-day: normal ×5 forward, run 3 | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-day: normal ×5 forward, run 3 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: normal ×5 forward, run 3 | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: normal ×5 forward, run 3 | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: normal ×5 forward, run 3 | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-day: quick ×10 back, run 1    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: quick ×10 back, run 1    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 2
+operations-day: quick ×10 back, run 1    | deck: settled at 18514.28515625 from page 48, reached 45, page 45, swipes begun 7
+operations-day: quick ×10 forward, run 1 | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+operations-day: quick ×10 forward, run 1 | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 2
+operations-day: quick ×10 back, run 2    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: quick ×10 back, run 2    | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: quick ×10 forward, run 2 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: quick ×10 forward, run 2 | deck: settled at 20982.857421875 from page 47, reached 51, page 51, swipes begun 8
+operations-day: quick ×10 forward, run 2 | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 18102.857421875 from page 45, reached 44, page 44, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 17691.427734375 from page 44, reached 43, page 43, swipes begun 1
+operations-day: quick ×10 back, run 3    | deck: settled at 17280 from page 43, reached 42, page 42, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 17691.427734375 from page 42, reached 43, page 43, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 18102.857421875 from page 43, reached 44, page 44, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 18514.28515625 from page 44, reached 45, page 45, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+operations-day: quick ×10 forward, run 3 | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 2
+operations-day: quick ×10 forward, run 3 | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+operations-day: reverse back/forward ×6  | deck: settled at 20571.427734375 from page 52, reached 50, page 50, swipes begun 12
+operations-day: revisit 10 back, 10 forw | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18102.857421875 from page 45, reached 44, page 44, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 17691.427734375 from page 44, reached 43, page 43, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 17280 from page 43, reached 42, page 42, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 16868.572265625 from page 42, reached 41, page 41, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 16457.142578125 from page 41, reached 40, page 40, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 16868.572265625 from page 40, reached 41, page 41, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 17280 from page 41, reached 42, page 42, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 17691.427734375 from page 42, reached 43, page 43, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18102.857421875 from page 43, reached 44, page 44, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18514.28515625 from page 44, reached 45, page 45, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+operations-day: revisit 10 back, 10 forw | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: normal ×5 back, run 1  | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: normal ×5 back, run 1  | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 back, run 1  | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 back, run 1  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 back, run 1  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19748.572265625 from page 48, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: normal ×5 back, run 2  | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 back, run 2  | deck: settled at 19748.572265625 from page 48, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 back, run 2  | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 back, run 2  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 back, run 2  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: normal ×5 back, run 3  | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: normal ×5 back, run 3  | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 back, run 3  | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 back, run 3  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 back, run 3  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: normal ×5 forward, run | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 back, run 1  | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 back, run 1  | deck: settled at 19196.953125 from page 49, reached 47, page 47, swipes begun 5
+categories-month: quick ×10 back, run 1  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 2
+categories-month: quick ×10 back, run 1  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 2
+categories-month: quick ×10 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 52, reached 54, page 54, swipes begun 2
+categories-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 21805.71484375 from page 55, reached 53, page 53, swipes begun 2
+categories-month: quick ×10 back, run 2  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: quick ×10 back, run 2  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: quick ×10 back, run 3  | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+categories-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+categories-month: reverse back/forward × | deck: settled at 22628.572265625 from page 55, reached 55, page 55, swipes begun 12
+categories-month: revisit 10 back, 10 fo | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 19748.572265625 from page 49, reached 48, page 48, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 19337.142578125 from page 48, reached 47, page 47, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 18925.71484375 from page 47, reached 46, page 46, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 18514.28515625 from page 46, reached 45, page 45, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 18925.71484375 from page 45, reached 46, page 46, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 19337.142578125 from page 46, reached 47, page 47, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 19748.572265625 from page 47, reached 48, page 48, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20160 from page 48, reached 49, page 49, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+categories-month: revisit 10 back, 10 fo | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: normal ×5 back, run 1  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 back, run 1  | deck: settled at 22217.142578125 from page 54, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 back, run 1  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 back, run 1  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 back, run 1  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: normal ×5 back, run 2  | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+statistics-month: normal ×5 back, run 2  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 back, run 2  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 back, run 2  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 back, run 2  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: normal ×5 back, run 3  | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+statistics-month: normal ×5 back, run 3  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 back, run 3  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 back, run 3  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 back, run 3  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21394.28515625 from page 52, reached 52, page 52, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: normal ×5 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: quick ×10 back, run 1  | deck: settled at 22025.904296875 from page 55, reached 54, page 54, swipes begun 3
+statistics-month: quick ×10 back, run 1  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: quick ×10 back, run 1  | deck: settled at 20571.427734375 from page 53, reached 50, page 50, swipes begun 6
+statistics-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 21805.71484375 from page 51, reached 53, page 53, swipes begun 2
+statistics-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 2
+statistics-month: quick ×10 forward, run | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23451.427734375 from page 56, reached 57, page 57, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23862.857421875 from page 57, reached 58, page 58, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24274.28515625 from page 58, reached 59, page 59, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24685.71484375 from page 59, reached 60, page 60, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 24274.28515625 from page 60, reached 59, page 59, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 23862.857421875 from page 59, reached 58, page 58, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 23451.427734375 from page 58, reached 57, page 57, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 23040 from page 57, reached 56, page 56, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: quick ×10 back, run 2  | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23451.427734375 from page 56, reached 57, page 57, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23862.857421875 from page 57, reached 58, page 58, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24274.28515625 from page 58, reached 59, page 59, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24685.71484375 from page 59, reached 60, page 60, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 24274.28515625 from page 60, reached 59, page 59, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 23862.857421875 from page 59, reached 58, page 58, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 23451.427734375 from page 58, reached 57, page 57, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 23040 from page 57, reached 56, page 56, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: quick ×10 back, run 3  | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23451.427734375 from page 56, reached 57, page 57, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 23862.857421875 from page 57, reached 58, page 58, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24274.28515625 from page 58, reached 59, page 59, swipes begun 1
+statistics-month: quick ×10 forward, run | deck: settled at 24685.71484375 from page 59, reached 60, page 60, swipes begun 1
+statistics-month: reverse back/forward × | deck: settled at 24274.28515625 from page 60, reached 59, page 59, swipes begun 12
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23862.857421875 from page 59, reached 58, page 58, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23451.427734375 from page 58, reached 57, page 57, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23040 from page 57, reached 56, page 56, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 22628.572265625 from page 56, reached 55, page 55, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 22217.142578125 from page 55, reached 54, page 54, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 21805.71484375 from page 54, reached 53, page 53, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 21394.28515625 from page 53, reached 52, page 52, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 20982.857421875 from page 52, reached 51, page 51, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 20571.427734375 from page 51, reached 50, page 50, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 20160 from page 50, reached 49, page 49, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 20571.427734375 from page 49, reached 50, page 50, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 20982.857421875 from page 50, reached 51, page 51, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 21394.28515625 from page 51, reached 52, page 52, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 21805.71484375 from page 52, reached 53, page 53, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 22217.142578125 from page 53, reached 54, page 54, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 22628.572265625 from page 54, reached 55, page 55, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23040 from page 55, reached 56, page 56, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23451.427734375 from page 56, reached 57, page 57, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 23862.857421875 from page 57, reached 58, page 58, swipes begun 1
+statistics-month: revisit 10 back, 10 fo | deck: settled at 24274.28515625 from page 58, reached 59, page 59, swipes begun 1
+
+tab moves                                                      presses dropped pill p50 pill p90 frame p50 frame p90 shown     p50     p90  JS busy  longest
+
+eye moves                                                      taps text p50 text max  apply  write notify  JS busy  longest
+
+layers                                                          sheet shown  dialog gone, old  dialog gone, new
+
+pictures (one tab each)                                         JS busy  frames        janky    p90   shown
+
+Component bodies (own time)                                              part  draws    total
+
+profile x series (median of runs)                runs  JS busy         range  listeners called
+
+away: return to Operations after 6 s              JS busy pauses  longest
+
+swipes back by volume (median of runs)           runs  JS busy         range  longest page built ops of period
+
+tabs again, repeated (c: known places, d: dump)  runs  JS busy         range  pauses
+
+save the operation                                JS busy  longest
+
+save the operation by volume (median of runs)    runs  JS busy         range
+
+swipe timeline (ms after the page was taken)                      how    n  median   min   max
