@@ -4,7 +4,7 @@
 // speed check builds 166–174, a page mounted per swipe, ~180 ms of the JavaScript thread, the same on 3000 and 10000 operations).
 // The interface is that of Pager (native-pager.tsx): `current`, `step`, `render`, `onMove`, `header`, and the motion the period bar reads.
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import { useNavigation } from "expo-router";
 import { countRender, now, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
@@ -13,6 +13,19 @@ import { MaskScope } from "./mask-scope.tsx";
 import { PagerContext } from "./pager-motion.ts";
 
 const SPAN = 50;
+
+// The number of the page at rest, told to the cells through a context: the function that draws a cell does not depend on it, so a swipe
+// asks the list to draw nothing again (only the cells themselves, which read it, are drawn; the pages in them keep their props).
+const AtContext = createContext(0);
+function Cell<K>({ item, i, width, height, render }: { item: K; i: number; width: number; height: number; render: (key: K, isCurrent: boolean) => ReactNode }) {
+  countRender("ring cell");
+  const at = useContext(AtContext);
+  return (
+    <View collapsable={false} style={{ width, height }}>
+      <MaskScope active={i === at}>{render(item, i === at)}</MaskScope>
+    </View>
+  );
+}
 const MARGIN = 4;
 
 interface Row<K> {
@@ -163,17 +176,13 @@ export function RingPager<K extends string>({
 
   const renderItem = useMemo(
     () =>
-      ({ item, index: i }: { item: K; index: number }) => (
-        <View collapsable={false} style={{ width, height: size.height }}>
-          <MaskScope active={i === index}>{render(item, i === index)}</MaskScope>
-        </View>
-      ),
+      ({ item, index: i }: { item: K; index: number }) => <Cell item={item} i={i} width={width} height={size.height} render={render} />,
     // `render` is a new function at every draw of the screen; the page it makes is what changes, so it is read at the time of drawing.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [width, size.height, index, render],
+    [width, size.height, render],
   );
 
   return (
+    <AtContext.Provider value={index}>
     <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
       <View
         style={{ flex: 1 }}
@@ -194,7 +203,7 @@ export function RingPager<K extends string>({
               snapToAlignment="start"
               disableIntervalMomentum
               data={row.keys}
-              extraData={index}
+              extraData={render}
               keyExtractor={(k) => k}
               renderItem={renderItem}
               initialScrollIndex={index}
@@ -215,5 +224,6 @@ export function RingPager<K extends string>({
         </View>
       </View>
     </PagerContext.Provider>
+    </AtContext.Provider>
   );
 }
