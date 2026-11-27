@@ -3,6 +3,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const R = (f) => join(here, f);
+// The sources to build: the ones next to the lab, or SRC=<path to another src>.
+const SRC = process.env.SRC ?? join(here, "../src");
 const own = { "react-native": "rn-stub.jsx", "react-native-pager-view": "pagerview-stub.jsx", "@shopify/flash-list": "flash-stub.jsx", "expo-router": "router-stub.js" };
 const keep = new Set(["react", "react-dom", "react/jsx-runtime", "react-dom/client", "scheduler"]);
 // The names every stubbed package is asked for, found in the sources: each becomes a harmless export.
@@ -21,7 +23,7 @@ const scan = (dir) => {
     }
   }
 };
-scan(join(here, "../src"));
+scan(SRC);
 const stubFor = (pkg) => `const make = () => new Proxy(function () { return make(); }, { get: (t, k) => (k === "then" ? undefined : k === Symbol.toPrimitive ? () => "" : make()), apply: () => make(), construct: () => make() });
 ${[...(wanted.get(pkg) ?? [])].filter((n) => /^[A-Za-z_$][\w$]*$/.test(n)).map((n) => `export const ${n} = make();`).join("\n")}
 export default make();`;
@@ -30,6 +32,7 @@ const plugin = {
   setup(b) {
     b.onResolve({ filter: /.*/ }, (a) => {
       if (a.kind === "entry-point") return null;
+      if (a.path.startsWith("@src/")) return { path: join(SRC, a.path.slice(5)) };
       if (a.path.startsWith(".") || a.path.startsWith("/")) {
         if (/platform\/app-store\.ts$/.test(a.path)) return { path: R("store-stub.js") };
         return null;

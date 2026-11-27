@@ -1,8 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { LedgerLook } from "../src/ui/app-context.tsx";
-import { OperationsScreen } from "../src/features/operations.tsx";
+import { LedgerLook } from "@src/ui/app-context.tsx";
+import { OperationsScreen } from "@src/features/operations.tsx";
 import { handle } from "./pagerview-stub.jsx";
 import { counts } from "./flash-stub.jsx";
 
