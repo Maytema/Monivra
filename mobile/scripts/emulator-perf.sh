@@ -466,12 +466,9 @@ series() { # $1 operations, $2 run
 series_block() { # $1 operations
   local run m n
   for run in 1 2 3; do series "$1" "$run"; done
-  # The swipes: the native pager (mode 0) and the ring pager (mode 10), balanced (A B B A), four runs each.
+  # The swipes on the native pager (the ring pager is out of the measurements: build 179), six runs.
   n=0
-  for m in 0 10 10 0 0 10 10 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
-  # The eye on Operations with the ring pager on.
-  for n in 1 2; do set_mode 10; eye6 "$ops" "series $1 ring $n Operations"; done
-  set_mode 0
+  for m in 0 0 0 0 0 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
   tabs_again_series "$1"
 }
 # Ten fast swipes back and the way forward, the same at every volume of the ledger (the periods are paged the same way; what is asked is whether the
@@ -488,7 +485,7 @@ swipes_series() { # $1 operations, $2 mode (0 index, 9 plain scans), $3 run
 # wait 2 s after each tap. Do the dumps themselves cost the pauses?
 tabs_again_series() { # $1 operations
   local k=0 kind
-  for kind in c r r c c r r c; do
+  for kind in c c c c; do
     k=$((k + 1))
     # "r": the same as "c" with the ring pager on (mode 10), the others with it off (mode 0).
     if [ $kind = r ]; then set_mode 10; else set_mode 0; fi
@@ -555,7 +552,6 @@ mask_check_ring() {
   next_swipe; sleep 1; next_swipe; sleep 2
   set_mode 0
 }
-mask_check_ring
 
 if [ "${QUICK:-1}" != 1 ]; then
 # The first return to Operations after the tab was left for a while (build 172: ten pauses of 50-90 ms in the four seconds after the tab was

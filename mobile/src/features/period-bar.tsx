@@ -1,7 +1,7 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
 import { countRender, perfFlags, PERF_BUILD } from "../platform/perf.ts";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, periodBounds, shiftPeriod } from "../domain/periods.ts";
@@ -97,20 +97,26 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   // While a swipe moves the pages, the titles move along between the arrows and fade out before they
   // reach them; the arrows stay where they are. The titles are placed by the pager's count of moves and follow
   // its offset on the native side, so after a move nothing is put back (no flash of the previous title).
-  let titles: ReactNode = title(period);
-  if (motion && room && !fixed) {
+  // The interpolations depend on the offset, the page count, the width and the room only: made once, not at every draw of the bar.
+  const moving = useMemo(() => {
+    if (!motion || !room) return null;
     const { width: w, base, x } = motion;
     const rest = -base * w;
-    // Opacity of the title `k` places away (-1 previous, 0 this, 1 next) by the offset from rest.
-    const opacity = (k: -1 | 0 | 1) =>
-      k === 0
-        ? x.interpolate({ inputRange: [rest - w * 0.45, rest, rest + w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" })
-        : x.interpolate({ inputRange: k === -1 ? [rest + w * 0.55, rest + w] : [rest - w, rest - w * 0.55], outputRange: k === -1 ? [0, 1] : [1, 0], extrapolate: "clamp" });
+    const opacities = {
+      "-1": x.interpolate({ inputRange: [rest + w * 0.55, rest + w], outputRange: [0, 1], extrapolate: "clamp" }),
+      "0": x.interpolate({ inputRange: [rest - w * 0.45, rest, rest + w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" }),
+      "1": x.interpolate({ inputRange: [rest - w, rest - w * 0.55], outputRange: [1, 0], extrapolate: "clamp" }),
+    };
+    return { opacities, translate: Animated.multiply(x, room / w) };
+  }, [motion?.x, motion?.base, motion?.width, room]); // eslint-disable-line react-hooks/exhaustive-deps
+  let titles: ReactNode = title(period);
+  if (motion && room && !fixed && moving) {
+    const { width: w, base } = motion;
     const shown = (k: -1 | 0 | 1) => (k === 0 ? period : shiftPeriod(period, k, data.settings));
     titles = (
-      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: room, transform: [{ translateX: Animated.multiply(x, room / w) }] }}>
+      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: room, transform: [{ translateX: moving.translate }] }}>
         {([-1, 0, 1] as const).map((k) => (
-          <Animated.View key={JSON.stringify(shown(k))} style={{ position: "absolute", top: 0, bottom: 0, left: (base + k) * room, width: room, justifyContent: "center", opacity: opacity(k) }}>
+          <Animated.View key={JSON.stringify(shown(k))} style={{ position: "absolute", top: 0, bottom: 0, left: (base + k) * room, width: room, justifyContent: "center", opacity: moving.opacities[String(k) as "-1" | "0" | "1"] }}>
             {title(shown(k))}
           </Animated.View>
         ))}

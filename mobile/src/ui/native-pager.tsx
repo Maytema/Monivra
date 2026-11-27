@@ -70,10 +70,21 @@ export function usePageReady(): () => void {
   return page.ready;
 }
 
-const Slot = memo(function Slot({ children }: { children: ReactNode }) {
+// One page of the row. Its properties are plain values (the key, whether it draws, whether it is the current one), and `render` is given
+// only to a page that draws: a page that stays empty is not asked again at the draws of the pager (the row has 101 of them, 5 draw).
+interface SlotProps {
+  id: string;
+  draws: boolean;
+  current: boolean;
+  scoped: boolean;
+  render: ((key: string, isCurrent: boolean) => ReactNode) | null;
+  ready: Readiness | null;
+}
+const Slot = memo(function Slot({ id, draws, current, scoped, render, ready }: SlotProps) {
+  const content = draws && render ? render(id, current) : null;
   return (
     <View collapsable={false} style={{ flex: 1 }}>
-      {children}
+      {draws ? <MaskScope active={scoped}>{ready ? <PageReady.Provider value={ready}>{content}</PageReady.Provider> : content}</MaskScope> : null}
     </View>
   );
 });
@@ -320,9 +331,10 @@ export function Pager<K extends string>({
     }
     return fn;
   };
+  const motion = useMemo(() => ({ x, base: index - row.origin, width }), [x, index, row.origin, width]);
   const drawn = (page: number) => Math.abs(page - drawnAround.current) <= reach || page === index;
   return (
-    <PagerContext.Provider value={{ x, base: index - row.origin, width }}>
+    <PagerContext.Provider value={motion}>
       <View
         style={{ flex: 1 }}
         onTouchStart={() => (fingerAt.current = Date.now())}
@@ -367,15 +379,10 @@ export function Pager<K extends string>({
             }
           }}
         >
-          {row.keys.map((key, i) => (
-            <Slot key={key}>
-              {Math.abs(i - shown) <= reach || i === index ? (
-                <MaskScope active={i === shown || i === index}>
-                  {PERF_BUILD ? <PageReady.Provider value={readyFor(key)}>{render(key, i === shown)}</PageReady.Provider> : render(key, i === shown)}
-                </MaskScope>
-              ) : null}
-            </Slot>
-          ))}
+          {row.keys.map((key, i) => {
+            const draws = Math.abs(i - shown) <= reach || i === index;
+            return <Slot key={key} id={key} draws={draws} current={i === shown} scoped={i === shown || i === index} render={draws ? (render as unknown as SlotProps["render"]) : null} ready={draws && PERF_BUILD ? readyFor(key) : null} />;
+          })}
         </AnimatedPagerView>
       </View>
     </PagerContext.Provider>
