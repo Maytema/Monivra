@@ -1,0 +1,14 @@
+import { chromium } from "/opt/npm-tools/node_modules/playwright/index.mjs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+const here = dirname(fileURLToPath(import.meta.url));
+const b = await chromium.launch({ executablePath: "/usr/bin/google-chrome", args: ["--no-sandbox"] });
+const p = await b.newPage();
+p.on("pageerror", (e) => console.log("pageerror", e.stack?.split("\n").slice(0,6).join("\n")));
+await p.setContent("<html><body></body></html>");
+await p.addScriptTag({ path: join(here, "out/app.js") });
+const r = await p.evaluate(() => window.runSwipes(10));
+const med = (k) => r.map((x) => x[k]).sort((a, c) => a - c)[Math.floor(r.length / 2)];
+console.log(r);
+console.log("median ms", med("ms"), "| per swipe: page mounts", med("pageMounts"), "page builds", med("pageBuilt"), "list mounts", med("listMounts"), "list renders", med("listRenders"), "row mounts", med("rowMounts"));
+await b.close();
