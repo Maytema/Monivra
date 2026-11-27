@@ -12,7 +12,8 @@
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
 import { countRender, now, perfFlags, perfLog, perfNote, PERF_BUILD, swipeMark, swipeStart } from "../platform/perf.ts";
 import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
+import { Dimensions, View, unstable_batchedUpdates } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 import PagerView from "react-native-pager-view";
 import { useNavigation } from "expo-router";
 import { MaskScope } from "./mask-scope.tsx";
@@ -28,7 +29,6 @@ export { usePagerMotion } from "./pager-motion.ts";
 export const WIDE_RETENTION = { top: 24, bottom: 24, left: 24, right: 24 } as const;
 
 
-const AnimatedPagerView = Animated.createAnimatedComponent(PagerView);
 const SPAN = 50;
 // A row laid out again this close to its end (so a quick run of swipes never reaches the end).
 const MARGIN = 4;
@@ -183,22 +183,17 @@ export function Pager<K extends string>({
     setShown(fresh.origin);
   }, [current, row, index, instant]);
 
-  // position + offset of the native pager, and the two constants that turn them into x.
-  const position = useRef(new Animated.Value(index)).current;
-  const offset = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(-width)).current;
-  const shift = useRef(new Animated.Value(0)).current;
-  const x = useRef(Animated.add(Animated.multiply(Animated.add(position, offset), scale), shift)).current;
-  useLayoutEffect(() => {
-    scale.setValue(-width);
-    shift.setValue(row.origin * width);
-  }, [width, row, scale, shift]);
+  // The offset of the pages in px for whatever moves with them (the period bar, the tabs): page `index` at rest is at (origin − index) × width.
+  const x = useSharedValue((row.origin - index) * width);
+  const place = useRef({ origin: row.origin, width });
+  place.current = { origin: row.origin, width };
   // A row laid out again starts at rest on its page (the pager sends no offset before the next swipe).
   useLayoutEffect(() => {
-    position.setValue(at.current);
-    offset.setValue(0);
-  }, [row, position, offset]);
-  const onScroll = useMemo(() => Animated.event([{ nativeEvent: { position, offset } }], { useNativeDriver: true }), [position, offset]);
+    x.value = (row.origin - at.current) * width;
+  }, [row, width, x]);
+  const onScroll = (e: { nativeEvent: { position: number; offset: number } }) => {
+    x.value = place.current.origin * place.current.width - (e.nativeEvent.position + e.nativeEvent.offset) * place.current.width;
+  };
 
   // The neighbours draw once the first page is on the screen and has settled.
   const [warm, setWarm] = useState(false);
@@ -347,15 +342,14 @@ export function Pager<K extends string>({
           if (w && hidden.current) {
             hidden.current = false;
             pager.current?.setPageWithoutAnimation(at.current);
-            position.setValue(at.current);
-            offset.setValue(0);
+            x.value = (row.origin - at.current) * width;
           }
           if (!w) hidden.current = true;
           setWidth(w || width);
         }}
       >
         {header}
-        <AnimatedPagerView
+        <PagerView
           key={row.id}
           ref={(node: unknown) => {
             pager.current = node as Controls | null;
@@ -383,7 +377,7 @@ export function Pager<K extends string>({
             const draws = Math.abs(i - shown) <= reach || i === index;
             return <Slot key={key} id={key} draws={draws} current={i === shown} scoped={i === shown || i === index} render={draws ? (render as unknown as SlotProps["render"]) : null} ready={draws && PERF_BUILD ? readyFor(key) : null} />;
           })}
-        </AnimatedPagerView>
+        </PagerView>
       </View>
     </PagerContext.Provider>
   );

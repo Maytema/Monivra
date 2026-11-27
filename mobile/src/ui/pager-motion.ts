@@ -2,14 +2,14 @@
 // and the retention offset rows use inside a pager. (The hand-made pager that used to live next to these is gone: the screens use
 // native-pager.tsx, the platform's own.)
 import { createContext, useContext } from "react";
-import type { Animated } from "react-native";
+import type { SharedValue } from "react-native-reanimated";
 
 // Where the pages are: `x` is the offset of the row of pages in px, and the page in the middle at rest is at
 // x = -base × width. `base` counts the moves made (+1 to the next page, -1 to the previous one). Whatever moves
 // with the pages (the period titles, the underline of the tabs) places itself by `base` in React and follows `x`
 // on the native side: the offset after a move is −width × (number of the move), so nothing has to be put back.
-interface PagerMotion {
-  x: Animated.AnimatedInterpolation<number>;
+export interface PagerMotion {
+  x: SharedValue<number>;
   base: number;
   width: number;
 }

@@ -1,8 +1,9 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
 import { countRender, perfFlags, PERF_BUILD } from "../platform/perf.ts";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Animated, Text, View } from "react-native";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Text, View } from "react-native";
+import Reanimated, { Extrapolation, interpolate, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { Pressable } from "../ui/pressable.tsx";
 import { canShiftPeriod, periodBounds, shiftPeriod } from "../domain/periods.ts";
 import type { Period } from "../domain/periods.ts";
@@ -11,7 +12,8 @@ import { Icon } from "../ui/kit.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
 import { Pager, usePagerMotion } from "../ui/pager.tsx";
-import { RingPager } from "../ui/ring-pager.tsx";
+import type { PagerMotion } from "../ui/pager-motion.ts";
+import { PeriodDeck } from "../ui/period-deck.tsx";
 import { periodTitle } from "../ui/period-title.ts";
 import { getView, setView, useViewPeriodWhile } from "./ui-state.ts";
 import { useNavigation } from "expo-router";
@@ -66,6 +68,37 @@ function useScreenPeriod(): { period: Period; caughtUp: boolean } {
   return { period: kept.current, caughtUp };
 }
 
+// While a swipe moves the pages, the titles move along between the arrows and fade out before they reach them; the arrows stay where they
+// are. The titles are placed by the pager's count of moves and follow its offset on the UI thread (a shared value), so after a move nothing
+// is put back (no flash of the previous title).
+function MovingTitles({ motion, room, children }: { motion: PagerMotion; room: number; children: ReactNode[] }) {
+  const { x, base, width: w } = motion;
+  const rest = -base * w;
+  const slide = useAnimatedStyle(() => ({ transform: [{ translateX: (x.value * room) / w }] }), [room, w]);
+  return (
+    <Reanimated.View style={[{ position: "absolute", left: 0, top: 0, bottom: 0, width: room }, slide]}>
+      {children.map((child, i) => (
+        <Fade key={i} k={(i - 1) as -1 | 0 | 1} x={x} rest={rest} w={w} left={(base + i - 1) * room} room={room}>
+          {child}
+        </Fade>
+      ))}
+    </Reanimated.View>
+  );
+}
+// Opacity of the title `k` places away (-1 previous, 0 this, 1 next) by the offset from rest.
+function Fade({ k, x, rest, w, left, room, children }: { k: -1 | 0 | 1; x: SharedValue<number>; rest: number; w: number; left: number; room: number; children: ReactNode }) {
+  const style = useAnimatedStyle(
+    () => ({
+      opacity:
+        k === 0
+          ? interpolate(x.value, [rest - w * 0.45, rest, rest + w * 0.45], [0, 1, 0], Extrapolation.CLAMP)
+          : interpolate(x.value, k === -1 ? [rest + w * 0.55, rest + w] : [rest - w, rest - w * 0.55], k === -1 ? [0, 1] : [1, 0], Extrapolation.CLAMP),
+    }),
+    [k, rest, w],
+  );
+  return <Reanimated.View style={[{ position: "absolute", top: 0, bottom: 0, left, width: room, justifyContent: "center" }, style]}>{children}</Reanimated.View>;
+}
+
 // `dayPicker`: the title opens the calendar and the period of the same kind around the chosen day is
 // shown (the budgets of the first application, period-picker.js dayPicker).
 export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
@@ -97,30 +130,13 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
   // While a swipe moves the pages, the titles move along between the arrows and fade out before they
   // reach them; the arrows stay where they are. The titles are placed by the pager's count of moves and follow
   // its offset on the native side, so after a move nothing is put back (no flash of the previous title).
-  // The interpolations depend on the offset, the page count, the width and the room only: made once, not at every draw of the bar.
-  const moving = useMemo(() => {
-    if (!motion || !room) return null;
-    const { width: w, base, x } = motion;
-    const rest = -base * w;
-    const opacities = {
-      "-1": x.interpolate({ inputRange: [rest + w * 0.55, rest + w], outputRange: [0, 1], extrapolate: "clamp" }),
-      "0": x.interpolate({ inputRange: [rest - w * 0.45, rest, rest + w * 0.45], outputRange: [0, 1, 0], extrapolate: "clamp" }),
-      "1": x.interpolate({ inputRange: [rest - w, rest - w * 0.55], outputRange: [1, 0], extrapolate: "clamp" }),
-    };
-    return { opacities, translate: Animated.multiply(x, room / w) };
-  }, [motion?.x, motion?.base, motion?.width, room]); // eslint-disable-line react-hooks/exhaustive-deps
   let titles: ReactNode = title(period);
-  if (motion && room && !fixed && moving) {
-    const { width: w, base } = motion;
-    const shown = (k: -1 | 0 | 1) => (k === 0 ? period : shiftPeriod(period, k, data.settings));
+  if (motion && room && !fixed) {
+    // Three titles that keep their places in the bar (the previous, this and the next period): a swipe changes their text, not them.
     titles = (
-      <Animated.View style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: room, transform: [{ translateX: moving.translate }] }}>
-        {([-1, 0, 1] as const).map((k) => (
-          <Animated.View key={JSON.stringify(shown(k))} style={{ position: "absolute", top: 0, bottom: 0, left: (base + k) * room, width: room, justifyContent: "center", opacity: moving.opacities[String(k) as "-1" | "0" | "1"] }}>
-            {title(shown(k))}
-          </Animated.View>
-        ))}
-      </Animated.View>
+      <MovingTitles motion={motion} room={room}>
+        {([-1, 0, 1] as const).map((k) => title(k === 0 ? period : shiftPeriod(period, k, data.settings)))}
+      </MovingTitles>
     );
   }
   return (
@@ -142,7 +158,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 
 // The pages of a screen with a period: the period before, this one and the one after, drawn side by side,
 // with the period bar (and whatever else stays in place) above them.
-export function PeriodPager({ header, render, around, ring = false }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number; ring?: boolean }) {
+export function PeriodPager({ header, render, around, deck = false }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number; deck?: boolean }) {
   const data = useLedgerView();
   const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
@@ -186,6 +202,6 @@ export function PeriodPager({ header, render, around, ring = false }: { header?:
       setView({ period: next }, false);
     },
   };
-  // The pages made once and told a new period (ui/ring-pager.tsx), for the screens that ask for it (the speed-check setting "ring pager").
-  return ring ? <RingPager {...pages} /> : <Pager {...pages} around={around} />;
+  // `deck`: five pages made once and told a new period (ui/period-deck.tsx), for the screens that have moved to it.
+  return deck ? <PeriodDeck {...pages} render={(key) => pages.render(key, false)} /> : <Pager {...pages} around={around} />;
 }

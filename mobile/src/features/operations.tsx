@@ -153,7 +153,7 @@ export function OperationsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <PeriodPager
-        ring={PERF_BUILD && perfFlags.ringPager}
+        deck
         // Experiment (task "stable paging", 2026-11-21): the lists of two periods on each side are drawn beforehand —
         // a new list takes the longest to show its first rows of all the paged screens (speed check: 268 ms on the
         // emulator), and quick swipes reached undrawn pages here only (12–39 % of quick swipes, builds 117–119).
@@ -225,9 +225,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const { items, sticky, balances } = useMemo(() => timed("page: operations of the period", () => operationsPage(data, period, filters, query)), [data, period, filters, query]);
 
   const list = useRef<FlashListRef<Item>>(null);
-  // A page of the ring pager is told a new period and keeps its list: the list starts at the top for the new period.
+  // A page of the deck is told a new period and keeps its list: the list starts at the top for the new period.
   useLayoutEffect(() => {
-    if (PERF_BUILD && perfFlags.ringPager) list.current?.scrollToOffset({ offset: 0, animated: false });
+    list.current?.scrollToOffset({ offset: 0, animated: false });
   }, [period]);
   // What was just saved or looked for is scrolled to: one row to the middle, several from the top one on.
   const lit = useSpotlit();
