@@ -2,6 +2,7 @@
 import data from "./ledger.json";
 const state = { status: "ready", data, posted: [] };
 const listeners = new Set();
+globalThis.__labSubs = () => listeners.size;
 export const appStore = () => ({
   getState: () => state,
   subscribe: (l) => (listeners.add(l), () => listeners.delete(l)),

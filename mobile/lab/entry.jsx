@@ -19,6 +19,7 @@ window.runSwipes = async (n = 10) => {
   const root = createRoot(el);
   flushSync(() => root.render(<LedgerLook><OperationsScreen /></LedgerLook>));
   await tick(); await new Promise((r) => setTimeout(r, 700)); // the neighbours are drawn after 500 ms
+  const subs = globalThis.__labSubs();
   let pos = handle.props.initialPage;
   const out = [];
   for (let i = 0; i < n; i++) {
@@ -34,5 +35,6 @@ window.runSwipes = async (n = 10) => {
     out.push({ ms: +(performance.now() - t).toFixed(1), pageMounts: count(/operations page mount/), pageBuilt: count(/operations page built/), listMounts: counts.listMounts, listRenders: counts.listRenders, rowMounts: counts.rowMounts });
   }
   root.unmount(); el.remove();
+  out.subs = subs;
   return out;
 };
