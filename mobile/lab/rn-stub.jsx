@@ -7,6 +7,8 @@ const clean = (style) => {
   return out;
 };
 const box = (tag) => React.forwardRef(function Box({ style, children, onLayout, testID, ...rest }, ref) {
+  // Every view has a size of the stand's phone once it is shown.
+  React.useEffect(() => { onLayout?.({ nativeEvent: { layout: { width: 400, height: 700, x: 0, y: 0 } } }); }, []);
   const props = { style: clean(style), "data-t": testID };
   if (rest.accessibilityLabel) props["aria-label"] = rest.accessibilityLabel;
   return React.createElement(tag, { ...props, ref }, typeof children === "function" ? null : children);

@@ -5,7 +5,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const R = (f) => join(here, f);
 // The sources to build: the ones next to the lab, or SRC=<path to another src>.
 const SRC = process.env.SRC ?? join(here, "../src");
-const own = { "react-native": "rn-stub.jsx", "react-native-pager-view": "pagerview-stub.jsx", "@shopify/flash-list": "flash-stub.jsx", "expo-router": "router-stub.js" };
+const own = { "react-native": "rn-stub.jsx", "react-native-pager-view": "pagerview-stub.jsx", "@shopify/flash-list": "flash-stub.jsx", "expo-router": "router-stub.js", "react-native-reanimated": "reanimated-stub.jsx" };
 const keep = new Set(["react", "react-dom", "react/jsx-runtime", "react-dom/client", "scheduler"]);
 // The names every stubbed package is asked for, found in the sources: each becomes a harmless export.
 import { readdirSync, readFileSync, statSync } from "node:fs";

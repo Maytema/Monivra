@@ -11,7 +11,7 @@ export const FlashList = React.forwardRef(function FlashList({ data, renderItem,
   useLayoutEffect(() => { counts.listMounts++; }, []);
   useEffect(() => { onLoad?.({ elapsedTimeInMs: 0 }); }, []);
   React.useImperativeHandle(ref, () => ({ scrollToOffset() {}, scrollToIndex() {}, scrollToTop() {} }), []);
-  const key = (it, i) => (keyExtractor ? keyExtractor(it, i) : i);
+  const key = (it, i) => i; // cells are recycled by place: a new item in a cell is an update, not a mount
   return (
     <div>
       {ListHeaderComponent ? (typeof ListHeaderComponent === "function" ? <ListHeaderComponent /> : ListHeaderComponent) : null}
