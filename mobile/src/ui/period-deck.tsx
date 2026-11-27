@@ -9,7 +9,7 @@ import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type React
 import { Dimensions, View, unstable_batchedUpdates } from "react-native";
 import Reanimated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useNavigation } from "expo-router";
-import { pagerState } from "./gesture-lock.ts";
+import { pagerState } from "./swipe-busy.ts";
 import { MaskScope } from "./mask-scope.tsx";
 import { PagerContext } from "./pager-motion.ts";
 

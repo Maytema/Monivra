@@ -1,7 +1,6 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { countRender, selfTime } from "../platform/perf.ts";
 import { memo } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -10,7 +9,7 @@ import { convert } from "../domain/money.ts";
 import type { LedgerData, Operation } from "../domain/types.ts";
 import { usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
-import { WIDE_RETENTION } from "../ui/pager.tsx";
+import { WIDE_RETENTION } from "../ui/pager-motion.ts";
 import { MoneyAmount, MoneyLine, ToneBadge } from "../ui/parts.tsx";
 import { Spot } from "../ui/spotlight.tsx";
 import { alpha } from "../ui/theme.ts";
@@ -50,8 +49,6 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
 // Memoised: the list passes stable handlers (they receive the id) and the parts of the ledger the row shows, so it is drawn again only when
 // its own operation, its selection or those parts change — not on every scroll, selection of another row or saved operation.
 export const OperationRow = memo(function OperationRow({ op, data, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; data: RowData; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
-  countRender("operation row");
-  const done = selfTime("row body");
   const p = usePalette();
   const t = useT();
   const compact = useWindowDimensions().width <= 360;
@@ -129,9 +126,7 @@ export const OperationRow = memo(function OperationRow({ op, data, selecting = f
   );
   // The row is lit when it is what was just saved or looked for; a page that lights more than the row (the
   // scheduled payments, with the details under it) does it itself.
-  const out = spot ? <Spot id={op.id}>{row}</Spot> : row;
-  done();
-  return out;
+  return spot ? <Spot id={op.id}>{row}</Spot> : row;
 });
 
 // Net result of one day (income minus expenses) in the main currency.
@@ -146,8 +141,6 @@ function dayTotal(data: Pick<LedgerData, "accounts" | "rates" | "settings">, ops
 
 // The date of a group with its day total, and a line under it.
 export const DayHead = memo(function DayHead({ date, ops, data }: { date: string; ops: Operation[]; data: RowData }) {
-  countRender("day head");
-  const done = selfTime("day head body");
   const p = usePalette();
   const t = useT();
   const weekday = t.weekday(date, "long");
@@ -162,7 +155,6 @@ export const DayHead = memo(function DayHead({ date, ops, data }: { date: string
       </View>
     </View>
   );
-  done();
   return head;
 });
 

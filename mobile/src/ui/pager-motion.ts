@@ -1,6 +1,5 @@
-// What the pager tells what moves with its pages (the period bar's title, the underline of the tabs): the offset of the pages
-// and the retention offset rows use inside a pager. (The hand-made pager that used to live next to these is gone: the screens use
-// native-pager.tsx, the platform's own.)
+// What the deck of pages (period-deck.tsx) tells what moves with its pages (the period bar's title, the underline of the tabs): the offset of
+// the pages, and the retention offset rows use inside it.
 import { createContext, useContext } from "react";
 import type { SharedValue } from "react-native-reanimated";
 
@@ -20,4 +19,4 @@ export const usePagerMotion = (): PagerMotion | null => useContext(PagerContext)
 // holds the place the page ended at, not where it was put back: a press then looks "moved out of the row" at
 // its first touch move and is cancelled (no long press). Rows inside a pager are pressed with this retention
 // offset, so a long press survives; scrolling and swiping still take the touch away through the responders.
-export const WIDE_RETENTION = { top: 4000, bottom: 4000, left: 4000, right: 4000 } as const;
+export const WIDE_RETENTION = { top: 24, bottom: 24, left: 24, right: 24 } as const;

@@ -1,6 +1,5 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
-import { countRender, perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Text, View } from "react-native";
 import Reanimated, { Extrapolation, interpolate, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
@@ -11,8 +10,7 @@ import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
-import { usePagerMotion } from "../ui/pager.tsx";
-import type { PagerMotion } from "../ui/pager-motion.ts";
+import { usePagerMotion, type PagerMotion } from "../ui/pager-motion.ts";
 import { PeriodDeck } from "../ui/period-deck.tsx";
 import { periodTitle } from "../ui/period-title.ts";
 import { getView, setView, useViewPeriodWhile } from "./ui-state.ts";
@@ -102,7 +100,6 @@ function Fade({ k, x, rest, w, left, room, children }: { k: -1 | 0 | 1; x: Share
 // `dayPicker`: the title opens the calendar and the period of the same kind around the chosen day is
 // shown (the budgets of the first application, period-picker.js dayPicker).
 export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
-  countRender("period bar");
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -179,7 +176,6 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
   const shownAs = useRef(new Map<string, Period>());
   const pageOf = (key: string): Period => {
     const next = periodOf(key);
-    if (PERF_BUILD && perfFlags.oldPeriod) return next;
     const before = shownAs.current.get(key);
     if (before) return before;
     if (shownAs.current.size > 300) shownAs.current.clear();

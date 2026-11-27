@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { WIDE_RETENTION } from "../ui/pager.tsx";
+import { WIDE_RETENTION } from "../ui/pager-motion.ts";
 import { router } from "expo-router";
 import { moveInOrder } from "../domain/accounts.ts";
 import { accountBalance, debtDirection, progressForBalance } from "../domain/ledger.ts";

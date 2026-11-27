@@ -6,22 +6,17 @@ import Svg, { Path } from "react-native-svg";
 import { ICON_FILLS, ICONS } from "./icon-paths.ts";
 import { useRevealFocusedField } from "./keyboard.tsx";
 import { usePalette, useT } from "./app-context.tsx";
-import { PERF_BUILD, perfFlags, selfTime } from "../platform/perf.ts";
 import { font, radius, space } from "./theme.ts";
 
 export function Icon({ name, size = 22, color, filled = false }: { name: string; size?: number; color?: ColorValue; filled?: boolean }) {
   const p = usePalette();
-  if (PERF_BUILD && perfFlags.noIcons) return <View style={{ width: size, height: size }} />;
-  const done = selfTime("icon body");
   const heavy = name === "more" || name === "apps";
-  const svg = (
+  return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? (color ?? p.ink) : "none"} stroke={color ?? p.ink} strokeWidth={heavy ? 3.8 : 1.7} strokeLinecap="round" strokeLinejoin="round">
       <Path d={ICONS[name] ?? ICONS.wallet ?? ""} />
       {ICON_FILLS[name] ? <Path d={ICON_FILLS[name]} fill={color ?? p.ink} /> : null}
     </Svg>
   );
-  done();
-  return svg;
 }
 
 // A page. The stack (app/_layout.tsx) keeps every page above the system's bottom bar and the tab

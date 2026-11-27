@@ -60,7 +60,7 @@ over both.
 - **Speed and smoothness are requirements.** Animations on the native driver (`transform`, `opacity`),
   long lists virtualized, no platform `Intl`/`toLocaleString`/`localeCompare` in code that runs per row
   ([decisions/0003](decisions/0003-no-platform-formatting-in-hot-paths.md)). Measure before and after
-  (`[perf]` lines in the emulator log).
+  (the speed-check stand and scripts live in the branch `perf-lab`: `mobile/lab` counts what a swipe builds).
 - **A bug fix brings a regression test** when the bug is in logic (domain, data, store, keypad, filters…);
   a visual fix brings a screenshot step in the emulator tour.
 - **Verify, then report honestly**: what was changed, how it was checked (command and result, screenshot),

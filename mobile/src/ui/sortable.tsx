@@ -4,7 +4,6 @@
 import { useRef, useState, type ReactNode } from "react";
 import { Animated, Easing, View, type StyleProp, type ViewStyle } from "react-native";
 import { haptic } from "../platform/haptics.ts";
-import { gestureLock } from "./gesture-lock.ts";
 import { usePalette } from "./app-context.tsx";
 
 const HOLD_MS = 380;
@@ -64,7 +63,6 @@ export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, it
     // From the moment the item is lifted, the touch that holds it must not open it when the finger is released.
     recent.current = true;
     drag.current = { key, keys, home: keys.indexOf(key), slot: keys.indexOf(key), x: found.x, y: found.y };
-    gestureLock.set(true);
     onHold?.(true);
     setLifted(key);
   };
@@ -108,7 +106,6 @@ export function Sortable<T>({ items, keyOf, render, onReorder, onHold, style, it
       value.stopAnimation();
       value.setValue({ x: 0, y: 0 });
     }
-    gestureLock.set(false);
     onHold?.(false);
     setLifted(null);
     recent.current = true;

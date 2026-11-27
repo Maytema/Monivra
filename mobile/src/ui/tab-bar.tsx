@@ -1,9 +1,8 @@
 // The bottom navigation bar of the first application (css/navbar.css): a tinted bar, an icon in a
 // pill that is filled for the open tab, a label under it. It is drawn edge to edge, so its bottom
 // padding is the larger of the design's minimum and the system's inset (gesture bar or three buttons).
-import { countRender, PERF_BUILD, perfNote, sinceTouch } from "../platform/perf.ts";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, type GestureResponderEvent } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette, useT } from "./app-context.tsx";
@@ -43,7 +42,6 @@ interface TabBarProps {
 }
 
 export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarProps) {
-  countRender("tab bar");
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
@@ -52,8 +50,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // asked for AND what is shown: a tab is dropped only when it is both (a true repeat). A tab that is merely the pending
   // target is not dropped (re-asking it is harmless), and a stale `asked` never blocks going back: on a slow phone a
   // timer that rewrote `asked` after 1.5 s made the next press on the old tab "already asked" and lost it.
-  // Tabs are told apart by name, not by route key: the keys in the navigator's state can change (the perf log showed the
-  // asked tab's key missing from `state.routes` at the second of two quick presses), the names do not.
+  // Tabs are told apart by name, not by route key: the keys in the navigator's state can change (the asked tab's key was missing
+  // from `state.routes` at the second of two quick presses), the names do not.
   const asked = useRef(state.routes[state.index]?.name);
   const shown = useRef(state);
   shown.current = state;
@@ -64,41 +62,20 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   // The press that is current: a navigation waiting for its frame is dropped when a newer press came meanwhile, and the
   // route key is read from the latest state at that frame (a key captured when the bar was drawn can be stale).
   const pressSeq = useRef(0);
-  // The key of every tab as last seen, to write down when a key changes under the same name (the churn that cost build 133
-  // the pill, see above).
-  const keys = useRef<Record<string, string>>({});
   useEffect(() => {
-    for (const r of state.routes) {
-      const was = keys.current[r.name];
-      if (was !== undefined && was !== r.key) perfNote(`tab key changed ${r.name}: ${was} -> ${r.key}`);
-      keys.current[r.name] = r.key;
-    }
     const name = state.routes[state.index]?.name;
     // Take `asked` from the navigator only when no newer target is pending (nothing asked, or the asked tab was reached);
     // a slow navigation to B that commits after the person already asked for A must not overwrite A.
     if (asked.current === undefined || asked.current === name) asked.current = name;
     // The pill is released only when the navigator reached the pressed tab.
     setPressed((cur) => (cur === null || cur === name ? null : cur));
-    sinceTouch("tab shown " + (state.routes[state.index]?.name ?? "?"));
-    // Speed-check build: the second frame after the commit (the screen's own native work is in it, which "tab shown" cannot see).
-    if (PERF_BUILD) {
-      const shownName = state.routes[state.index]?.name ?? "?";
-      requestAnimationFrame(() => requestAnimationFrame(() => sinceTouch("tab frame " + shownName)));
-    }
   }, [state.index, state.routes]);
-  // Speed-check build: the time from the finger to the pill drawn on the pressed tab.
-  useLayoutEffect(() => {
-    if (PERF_BUILD && pressed) sinceTouch("pill shown " + pressed);
-  }, [pressed]);
   // A screen hides the bar while it has its own actions there (the selection of operations).
   const current = state.routes[state.index];
   const style = current ? StyleSheet.flatten(descriptors[current.key]?.options.tabBarStyle as Parameters<typeof StyleSheet.flatten>[0]) : undefined;
   if (style?.display === "none") return null;
-  // Speed-check build: a finger on the bar is noted, so a press that never reached a tab shows as "bar touched" with no
-  // "tab press" after it.
   return (
     <View
-      onTouchStart={PERF_BUILD ? (e: GestureResponderEvent) => perfNote(`bar touched (${e.nativeEvent.touches.length} touches)`) : undefined}
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -115,8 +92,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
         const active = pressed ? pressed === route.name : state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
-          perfNote(`tab press ${route.name} (asked ${asked.current}, shown ${state.routes[state.index]?.name})`);
-          if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return perfNote("tab press dropped: already asked");
+          if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return;
           // The picture of the screen being left stops now, before the new tab is built.
           stopPictures();
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
@@ -125,7 +101,7 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
           setPressed(route.name);
           const seq = ++pressSeq.current;
           requestAnimationFrame(() => {
-            if (seq !== pressSeq.current) return perfNote(`tab navigation skipped: ${route.name} was replaced by a newer press`);
+            if (seq !== pressSeq.current) return;
             navigateToTab(shown.current.routes.find((r) => r.name === route.name)?.key ?? route.key);
           });
         };

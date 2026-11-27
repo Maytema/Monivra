@@ -7,7 +7,6 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, type Rea
 import { useNavigation } from "expo-router";
 import type { Channel } from "../application/store.ts";
 import { appStore } from "../platform/app-store.ts";
-import { perfNote, PERF_BUILD } from "../platform/perf.ts";
 
 interface Scope {
   active: boolean;
@@ -28,15 +27,11 @@ const wake = (s: Scope): number => {
   return n;
 };
 const MASK: Channel[] = ["mask"];
-let figures = 0;
 let listening = false;
 function listen(): void {
   if (listening) return;
   listening = true;
-  appStore().subscribe(() => {
-    const woken = wake(root);
-    if (PERF_BUILD) perfNote(`mask: figures woken ${woken} of ${figures}`);
-  }, MASK);
+  appStore().subscribe(() => void wake(root), MASK);
 }
 
 // For useMoney: hears the mask while the scope this figure is in is in front.
@@ -49,10 +44,7 @@ export function useMaskSubscriber(): (listener: () => void) => () => void {
       subscribe: (listener) => {
         listen();
         scope.listeners.add(listener);
-        figures++;
-        return () => {
-          if (scope.listeners.delete(listener)) figures--;
-        };
+        return () => void scope.listeners.delete(listener);
       },
     };
   }

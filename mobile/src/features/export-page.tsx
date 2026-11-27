@@ -17,7 +17,6 @@ import { emptyFilters, operationsIn, type Filters, type Period } from "../domain
 import type { LedgerData } from "../domain/types.ts";
 import { saveTextFile, shareTextFile } from "../platform/files.ts";
 import { canPrint, canRenderPdf, dropReportPreviews, printPdf, renderPdfPages, writeReportPdf } from "../platform/native.ts";
-import { now, perfLog } from "../platform/perf.ts";
 import type { Translator } from "../i18n/index.ts";
 import { showError, useLedger, usePalette, useT } from "../ui/app-context.tsx";
 import { toast } from "../ui/dialogs.tsx";
@@ -81,7 +80,6 @@ function prepareCsv(data: LedgerData, d: Draft): Job {
 
 // The pages of a report, behind the progress dialog (undefined when it was cancelled).
 async function preparePages(data: LedgerData, t: Translator, d: Draft): Promise<Job | undefined> {
-  const started = now();
   const day = new Date();
   const two = (n: number) => String(n).padStart(2, "0");
   const today = `${day.getFullYear()}-${two(day.getMonth() + 1)}-${two(day.getDate())}`;
@@ -90,18 +88,15 @@ async function preparePages(data: LedgerData, t: Translator, d: Draft): Promise<
     layoutReport(data, words, { mode: d.mode === "detail" ? "detail" : "summary", filters: d.filters, period: d.period, sections: d.sections, parts: d.parts }, (done, total) => say(`${done} / ${total}`), signal),
   );
   if (!report) return undefined;
-  perfLog(`report ${d.mode}: ${report.pages.length} pages laid out`, now() - started);
   return { kind: "pdf", report, name: report.name, pages: report.pages };
 }
 
 // The PDF file of a prepared report: made once, behind the same progress dialog.
 async function fileOf(t: Translator, job: Extract<Job, { kind: "pdf" }>): Promise<Uint8Array | undefined> {
   if (job.file) return job.file;
-  const started = now();
   const bytes = await withProgress("Preparing the report", t.t("Preparing…"), (say, signal) => pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
   if (bytes) {
     job.file = bytes;
-    perfLog(`report file: ${bytes.length} bytes`, now() - started);
   }
   return bytes;
 }
@@ -137,7 +132,6 @@ const FIRST_PAGES = 3;
 async function previewImages(t: Translator, job: Extract<Job, { kind: "pdf" }>, widthPx: number): Promise<PageImages | undefined> {
   if (job.images && !job.images.stopped) return job.images;
   if (!canRenderPdf()) return undefined;
-  const started = now();
   const images = await withProgress("Preparing the report", t.t("Preparing…"), async (say, signal) => {
     const bytes = job.file ?? (await pdfOfPages(job.report, (done, total) => say(t.t("Page {n} of {total}", { n: done, total })), signal));
     job.file = bytes;
@@ -150,7 +144,6 @@ async function previewImages(t: Translator, job: Extract<Job, { kind: "pdf" }>, 
     return made;
   });
   if (!images) return undefined;
-  perfLog(`report preview: first ${images.ready} of ${images.total} pages`, now() - started);
   job.images = images;
   images.continueInBackground();
   return images;

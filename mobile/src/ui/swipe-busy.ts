@@ -1,15 +1,4 @@
-// While an item is lifted for reordering, sideways swipes of the screen must not take the touch.
-let held = false;
-export const gestureLock = {
-  get held(): boolean {
-    return held;
-  },
-  set(value: boolean): void {
-    held = value;
-  },
-};
-
-// Until when a press is still taken for the end of a swipe of a native pager (ui/pressable.tsx ignores it then). Every
+// Until when a press is still taken for the end of a swipe of a pager (ui/pressable.tsx ignores it then). Every
 // state the pager reports moves it a little ahead (0.4 s while swiping or settling, 0.15 s after it stopped). Not a
 // "swiping" flag: the pager's states reach JavaScript out of order ("idle" before "settling"), and such a flag stayed
 // up for 1.5 s after a swipe — every tap in that time was dropped (the first tap on Expenses/Incomes after swiping a

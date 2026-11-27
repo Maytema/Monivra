@@ -508,7 +508,7 @@ adb shell cmd overlay enable com.android.internal.systemui.navbar.gestural >/dev
 adb shell pidof $PKG > "$OUT/pid.txt" && log "OK: running" || { log "FAIL: not running"; FAILED=1; }
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1
-grep "\[perf\]" "$OUT/js-log.txt" > "$OUT/perf.txt"; log "perf lines: $(wc -l < "$OUT/perf.txt")"
+
 if grep -q "FATAL\|AndroidRuntime" "$OUT/crash.txt"; then log "FAIL: crash (see crash.txt)"; FAILED=1; fi
 log "result: $([ $FAILED = 0 ] && echo passed || echo failed)"
 exit $FAILED

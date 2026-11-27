@@ -1,10 +1,8 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfEpoch, perfFlags, perfLog, PERF_BUILD, selfTime, swipeMark } from "../platform/perf.ts";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
-import { usePageReady } from "../ui/pager.tsx";
 import { BackHandler, Text, TextInput, View, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
 import { useFocusEffect, useNavigation } from "expo-router";
@@ -36,9 +34,6 @@ import { EmptyState } from "../ui/empty-state.tsx";
 type Item = PageItem;
 
 export function OperationsScreen() {
-  countRender("operations screen");
-  // Speed-check build: a change of setting (the ring pager) draws the screen again.
-  useSyncExternalStore(perfEpoch.subscribe, perfEpoch.get);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -155,7 +150,7 @@ export function OperationsScreen() {
       <PeriodPager
         header={
           <>
-            {PERF_BUILD && perfFlags.noPeriodBar ? null : <PeriodBar />}
+            <PeriodBar />
             {active ? <FilteredBanner onChange={() => openFilters(filters, setFilters)} onClear={() => (setFilters(emptyFilters()), setQuery(""))} /> : null}
           </>
         }
@@ -182,7 +177,7 @@ export function OperationsScreen() {
           ))}
         </View>
       ) : (
-        PERF_BUILD && perfFlags.noFab ? null : <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
+        <Fab label="Add" collapsed={fab.collapsed} onPress={() => openAddMenu(undefined, dateOfShownPeriod())} />
       )}
     </View>
   );
@@ -191,33 +186,12 @@ export function OperationsScreen() {
 // The list of one period: drawn for the current period and, beforehand, for its neighbours, all alike (nothing on a
 // page depends on whether it is the current one, so a swipe does not draw the pages that are already there).
 export const OperationsPage = memo(function OperationsPage({ period, query, active, selection, selectedSet, onPress, onLongPress, onTop }: { period: Period; query: string; active: boolean; selection: boolean; selectedSet: Set<string>; onPress: (id: string) => void; onLongPress: (id: string) => void; onTop?: (top: boolean) => void }) {
-  countRender("operations page");
-  const done = selfTime("page body");
-  const began = PERF_BUILD ? now() : 0;
-  // Speed-check build: a page drawn again, and which input changed (a new page counts as a mount).
-  const seen = useRef<Record<string, unknown> | null>(null);
-  if (PERF_BUILD) {
-    const now_ = { period, query, active, selection, selectedSet, onPress, onLongPress, onTop };
-    if (seen.current === null) (perfLog("operations page mount", 0), swipeMark("page: render starts (mount)"));
-    else
-      for (const k of Object.keys(now_) as (keyof typeof now_)[])
-        if (seen.current[k] !== now_[k]) perfLog(`operations page prop changed: ${k}`, 0);
-    seen.current = now_;
-  }
-  useLayoutEffect(() => {
-    if (PERF_BUILD) (perfLog("operations page built", now() - began), swipeMark("page: render and commit done (layout effect)"));
-  });
-  // (An empty period has no rows to load: its picture is the content.)
-  useLayoutEffect(() => {
-    if (PERF_BUILD && (items.length === 0 || perfFlags.noList)) ready();
-  });
   const data = useLedgerView();
   const parts = useLedgerParts("accounts", "categories", "rates", "settings");
   const p = usePalette();
   const t = useT();
   const filters = useViewFilters();
-  const ready = usePageReady();
-  const { items, sticky, balances } = useMemo(() => timed("page: operations of the period", () => operationsPage(data, period, filters, query)), [data, period, filters, query]);
+  const { items, sticky, balances } = useMemo(() => operationsPage(data, period, filters, query), [data, period, filters, query]);
 
   const list = useRef<FlashListRef<Item>>(null);
   // A page of the deck is told a new period and keeps its list: the list starts at the top for the new period.
@@ -261,47 +235,24 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     ),
     [balances, p, t, data.settings.currency],
   );
-  const firstRow = useRef(true);
   const renderItem = useCallback(
-    ({ item }: { item: Item }) => {
-      if (PERF_BUILD && firstRow.current) {
-        firstRow.current = false;
-        swipeMark("list: first row rendered");
-      }
-      return (
+    ({ item }: { item: Item }) =>
       // The side margins are on each item, not on the list: the sticky head is drawn over the list without the list's
       // padding, and with it there its first letters were cut at the edge of the screen.
-      item.kind === "day" && PERF_BUILD && perfFlags.noDayHeads ? (
-        <View style={{ height: 70 }} />
-      ) : item.kind === "day" ? (
+      item.kind === "day" ? (
         <View style={{ paddingHorizontal: 16, backgroundColor: p.bg }}>
           <DayHead date={item.date} ops={item.ops} data={parts} />
-        </View>
-      ) : PERF_BUILD && perfFlags.plainRows ? (
-        <View style={{ paddingHorizontal: 16, minHeight: 70 }}>
-          <Text numberOfLines={1}>{item.op.id}</Text>
         </View>
       ) : (
         <View style={{ paddingHorizontal: 16 }}>
           <OperationRow op={item.op} data={parts} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
         </View>
-      )
-      );
-    },
+      ),
     [selection, selectedSet, onPress, onLongPress, p.bg, parts],
   );
   const content = useMemo(() => ({ paddingBottom: selection ? 4 : chrome.fab + chrome.edgeGap * 2 }), [selection]);
-  const page = (
+  return (
     <View style={{ flex: 1 }}>
-      {PERF_BUILD && perfFlags.noList ? (
-        // Speed-check build: the same rows without a list (the first 14, one after another): what the list itself costs.
-        <View>
-          {header}
-          {items.slice(0, 14).map((item) => (
-            <View key={keyOfItem(item)}>{renderItem({ item })}</View>
-          ))}
-        </View>
-      ) : (
       <FlashList
         ref={list}
         // No scroll bar on a swiped page (components.css .swipe-page > .content).
@@ -322,24 +273,11 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
-        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), swipeMark("list: onLoad (rows laid out)"), ready()) : undefined}
-        onLayout={PERF_BUILD ? () => swipeMark("list: onLayout") : undefined}
       />
-      )}
     </View>
   );
-  done();
-  return page;
 });
 
-// Speed-check build: the time of one part of drawing a page.
-function timed<T>(label: string, work: () => T): T {
-  if (!PERF_BUILD) return work();
-  const start = now();
-  const result = work();
-  perfLog(label, now() - start);
-  return result;
-}
 const keyOfItem = (x: Item): string => (x.kind === "day" ? "d" + x.date : x.op.id);
 const typeOfItem = (x: Item): string => x.kind;
 const STICKY = { useNativeDriver: true, hideRelatedCell: true } as const;

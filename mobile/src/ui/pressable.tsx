@@ -8,7 +8,7 @@
 // Every screen imports Pressable from this file (scripts/check-boundaries.mjs refuses react-native's own).
 import { useRef } from "react";
 import { usePalette } from "./app-context.tsx";
-import { pagerBusy } from "./gesture-lock.ts";
+import { pagerBusy } from "./swipe-busy.ts";
 import { Animated, Easing, Pressable as NativePressable, type GestureResponderEvent, type PressableProps, type PressableStateCallbackType } from "react-native";
 
 const AnimatedPressable = Animated.createAnimatedComponent(NativePressable);

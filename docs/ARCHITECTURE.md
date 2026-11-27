@@ -25,9 +25,9 @@ built, see "Known problems") is in [architecture/](architecture/README.md).
   `sheets.open(content, kind)` (`kind`: `sheet`, `dialog`, `full`), stacked, closed by Back
   (`useCloseLayer`). This mirrors the first application's sheet stack.
 - Root screens begin with `features/root-hero.tsx` (balance and one action). Screens with a period put the
-  period bar and their content in `features/period-bar.tsx PeriodPager`, which uses `ui/pager.tsx`: the
-  previous, current and next period are drawn side by side so a swipe uncovers a ready page; the arrows stay
-  and the title slides between them.
+  period bar and their content in `features/period-bar.tsx PeriodPager`, which uses `ui/period-deck.tsx`: five pages
+  are made once and live as long as the screen; a swipe builds nothing, it tells the page left behind the new period
+  (a slot is never keyed by a period). The arrows stay and the title slides between them (shared value, UI thread).
 
 ## 3. Layers and their boundaries
 
@@ -122,7 +122,6 @@ Details and invariants: [FINANCIAL_RULES.md](FINANCIAL_RULES.md).
 | PIN in the keystore, biometric prompt | `platform/lock.ts` | expo-secure-store, expo-local-authentication |
 | Network for rates | `platform/network.ts` | fetch |
 | Secure random | `platform/crypto.ts` | expo-crypto |
-| Timing log | `platform/perf.ts` | console → logcat (`[perf] …`) |
 | Privacy screen (FLAG_SECURE), printing a PDF, taking and shrinking photos | `platform/native.ts` | the application's own module `mobile/modules/monivra-native` (Kotlin, linked by Expo autolinking; no package to install) |
 
 ## 11. Performance

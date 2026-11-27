@@ -9,7 +9,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { usePalette } from "./app-context.tsx";
 import { dismissKeyboard, useRevealFocusedField } from "./keyboard.tsx";
 import { chrome } from "./theme.ts";
-import { now, perfLog, perfMark } from "../platform/perf.ts";
 import { stopPictures } from "./picture-stop.ts";
 
 // A "full" layer is a page over the whole screen (the icon list, the colour page).
@@ -26,8 +25,6 @@ interface Layer {
   scrolls: boolean;
   // A full page that a swipe down closes (an information page without its own scrolling).
   swipeDown: boolean;
-  // When it was asked for (the emulator test reads how long a layer takes to appear).
-  asked: number;
   // Asked to close: when (the emulator test reads how long a layer takes to go) and what to do once it is gone.
   closeAsked?: number;
   then?: () => void;
@@ -58,14 +55,14 @@ export const sheets = {
     // does not blur when a sheet or a dialog opens).
     stopPictures(true);
     const id = ++counter;
-    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown, asked: now() }]);
+    publish([...layers, { id, kind, content, closing: false, bare: !!options.bare, scrolls: !!options.scrolls, swipeDown: !!options.swipeDown }]);
     return id;
   },
   // Starts closing a layer (the animation removes it).
   // `then` runs when the layer is gone (its closing animation is over): a change the layer's choice makes to the screen
   // below waits for it, so that the screen is not redrawn (on the JavaScript thread) while the layer is fading.
   close(id: number, then?: () => void): void {
-    publish(layers.map((l) => (l.id === id && !l.closing ? { ...l, closing: true, closeAsked: now(), then } : l)));
+    publish(layers.map((l) => (l.id === id && !l.closing ? { ...l, closing: true, then } : l)));
   },
   closeTop(): boolean {
     const top = [...layers].reverse().find((l) => !l.closing);
@@ -121,14 +118,8 @@ function LayerView({ layer, first }: { layer: Layer; first: boolean }) {
   const reveal = useRevealFocusedField();
 
   useEffect(() => {
-    if (!layer.closing) perfLog(`layer ${layer.kind} shown`, now() - layer.asked);
     Animated.timing(progress, { toValue: layer.closing ? 0 : 1, duration: layer.closing ? 160 : 220, useNativeDriver: true }).start(({ finished }) => {
       if (layer.closing && finished) {
-        if (layer.closeAsked !== undefined) perfLog(`layer ${layer.kind} gone`, now() - layer.closeAsked);
-        if (perfMark.tap) {
-          perfLog("period dialog: tile tap to dialog gone", now() - perfMark.tap);
-          perfMark.tap = 0;
-        }
         publish(layers.filter((l) => l.id !== layer.id));
         layer.then?.();
       }

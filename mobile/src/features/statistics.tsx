@@ -1,10 +1,8 @@
 // The Statistics tab (js/screens/statistics.js): the blocks the person switched on, in their order —
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
-import { PERF_BUILD } from "../platform/perf.ts";
-import { Fragment, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { usePageReady } from "../ui/pager.tsx";
 import { Pressable } from "../ui/pressable.tsx";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
@@ -12,7 +10,7 @@ import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } f
 import { parseDate, systemClock } from "../domain/dates.ts";
 import { accountById, categoryById, categoryFamily, reportRows, totalByType } from "../domain/ledger.ts";
 import { convert, shownPercent } from "../domain/money.ts";
-import { firstDay, periodIndex } from "../domain/period-index.ts";
+import { firstDay, operationsInIndexed, periodIndex } from "../domain/period-index.ts";
 import { periodBounds, type Period } from "../domain/periods.ts";
 import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
@@ -24,7 +22,6 @@ import { openCategorySheet } from "./category-sheet.tsx";
 import { filtersActive, openFilters as openFiltersSheet } from "./filters-panel.tsx";
 import { FilteredBanner } from "./operation-row.tsx";
 import { PeriodBar, PeriodPager } from "./period-bar.tsx";
-import { periodOps } from "./period-read.ts";
 import { RootHero } from "./root-hero.tsx";
 import { getView, setView, useViewCatType, useViewFilters } from "./ui-state.ts";
 
@@ -55,11 +52,6 @@ export function StatisticsScreen() {
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
 const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
-  // Speed-check build: the page's content is on the screen once it is first committed (no virtualized parts).
-  const ready = usePageReady();
-  useLayoutEffect(() => {
-    if (PERF_BUILD) ready();
-  }, [ready]);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -74,7 +66,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   const setSelected = (id: string | null) => setPick({ key: pageKey, id });
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
-  const rows = useMemo(() => reportRows(data, periodOps(data, period, filters)), [data, period, filters]);
+  const rows = useMemo(() => reportRows(data, operationsInIndexed(data, period, filters)), [data, period, filters]);
   const income = totalByType(rows, "income");
   const expense = totalByType(rows, "expense");
   const main = data.settings.currency;

@@ -23,14 +23,6 @@ export function setAppVersion(version: string): void {
   APP_VERSION = version;
 }
 
-// Speed-check build only (set from app/_layout.tsx): how long a command takes in its parts.
-let timing: ((label: string, ms: number) => void) | null = null;
-let noteCalls: ((text: string) => void) | null = null;
-export function watchStore(report: (label: string, ms: number) => void, note?: (text: string) => void): void {
-  timing = report;
-  noteCalls = note ?? null;
-}
-
 // What a listener may ask to hear about. A change of the ledger is told only to the listeners of the channels it touched, so a tap
 // on the eye (mask) wakes the ones that draw masked figures and no page that draws rows (ops), accounts and the like (refs) or
 // the look. A listener without channels hears every change (it reads the whole state).
@@ -110,13 +102,10 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
   const set = (next: AppState) => {
     const changed = changedChannels(state, next);
     state = next;
-    let called = 0;
     for (const [listener, channels] of [...listeners]) {
       if (changed && channels && !channels.some((c) => changed.has(c))) continue;
-      called++;
       listener();
     }
-    noteCalls?.(`store: listeners called ${called} of ${listeners.size}`);
   };
   const ready = (data: LedgerData, posted: string[] = []) =>
     set({ status: "ready", data, revision: state.status === "ready" ? state.revision + 1 : 1, posted });
@@ -177,18 +166,9 @@ export function createStore(firstDb: SqlDriver, env: Env, language: () => string
       const tx = new LedgerTx(before);
       const result = command(tx, env);
       if (isEmptyChange(tx.change)) return result;
-      const t0 = timing ? performance.now() : 0;
       const next = applyChange(before, tx.change);
-      const t1 = timing ? performance.now() : 0;
       persistChange(db, tx.change, next, env.clock.nowIso());
-      const t2 = timing ? performance.now() : 0;
       ready(next, state.status === "ready" ? state.posted : []);
-      if (timing) {
-        const t3 = performance.now();
-        timing("command: change applied", t1 - t0);
-        timing("command: written to the database", t2 - t1);
-        timing("command: state set, listeners told", t3 - t2);
-      }
       return result;
     },
 
