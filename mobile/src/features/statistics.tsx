@@ -2,7 +2,7 @@
 // cash flow, scheduled payments, a bar chart by day, average values, a donut, categories, tags — all
 // from the same report rows as the reports and budgets.
 import { PERF_BUILD } from "../platform/perf.ts";
-import { Fragment, memo, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { usePageReady } from "../ui/pager.tsx";
 import { Pressable } from "../ui/pressable.tsx";
@@ -48,13 +48,13 @@ export function StatisticsScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       <RootHero icon="filter" label="Filters" onAction={openFilters} />
-      <PeriodPager header={<PeriodBar />} render={(period, isCurrent) => <StatisticsPage period={period} openFilters={openFilters} current={isCurrent} />} />
+      <PeriodPager header={<PeriodBar />} render={(period) => <StatisticsPage period={period} openFilters={openFilters} />} />
     </View>
   );
 }
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
-const StatisticsPage = memo(function StatisticsPage({ period, openFilters, current }: { period: Period; openFilters: () => void; current: boolean }) {
+const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
   // Speed-check build: the page's content is on the screen once it is first committed (no virtualized parts).
   const ready = usePageReady();
   useLayoutEffect(() => {
@@ -65,11 +65,8 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
   const t = useT();
   const asked = useViewCatType();
   const filters = useViewFilters();
-  // The open page draws the chosen type in the same moment as the tab (the owner saw the tab switched while the page
-  // still showed the other type: the deferred drawing of the charts waited behind everything else on the phone); only
-  // the neighbouring pages follow a moment later.
-  const later = useDeferredValue(asked);
-  const catType = current ? asked : later;
+  // Every page draws the chosen type: a page does not depend on whether it is the one in front (a swipe draws no page again for it).
+  const catType = asked;
   const [selected, setSelected] = useState<string | null>(null);
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
@@ -339,7 +336,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
           <>
             <SumTabs active={asked} expense={<WithMoney>{(money) => money(expense, main)}</WithMoney>} income={<WithMoney>{(money) => money(income, main)}</WithMoney>} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
-            <ScrollBlocks current={current}>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
+            <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
         ) : (
           <EmptyState kind="statistics" title="Statistics would be here" hint="Start adding expenses or income and the data will appear" />
@@ -353,8 +350,10 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters, curre
 type Scroller = { scrollTo(options: { x?: number; y?: number; animated?: boolean }): void };
 const scrollers = new Set<Scroller>();
 let sharedOffset = 0;
+// The scroller the finger is on: only it passes its offset on (the others are moved by it and do not answer).
+let driving: Scroller | null = null;
 
-function ScrollBlocks({ children, current }: { children: ReactNode; current: boolean }) {
+function ScrollBlocks({ children }: { children: ReactNode }) {
   const mine = useRef<Scroller | null>(null);
   useEffect(
     () => () => {
@@ -373,8 +372,11 @@ function ScrollBlocks({ children, current }: { children: ReactNode; current: boo
         if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
       }}
       scrollEventThrottle={16}
+      onScrollBeginDrag={() => {
+        driving = mine.current;
+      }}
       onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
-        if (!current) return;
+        if (driving !== mine.current) return;
         sharedOffset = e.nativeEvent.contentOffset.y;
         for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
       }}

@@ -1,7 +1,7 @@
 // Categories: the tiles with what each received or spent in the period, and the category editor.
 import { perfFlags, PERF_BUILD } from "../platform/perf.ts";
 import { useCoachTarget } from "../ui/coach.tsx";
-import { memo, type ReactNode, useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { memo, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { usePageReady } from "../ui/pager.tsx";
 import { router } from "expo-router";
@@ -23,12 +23,10 @@ import { openCategorySheet } from "./category-sheet.tsx";
 
 export function CategoriesScreen() {
   const catType = useViewCatType();
-  // The neighbouring pages follow the type a moment later, at low priority: the shown page switches first.
-  const later = useDeferredValue(catType);
   return (
     <View style={{ flex: 1 }}>
       <RootHero icon="edit" label="Change categories" onAction={() => router.push({ pathname: "/categories-manage" })} />
-      <PeriodPager header={<PeriodBar />} render={(period, isCurrent) => <CategoriesPage period={period} catType={isCurrent ? catType : later} />} />
+      <PeriodPager header={<PeriodBar />} render={(period) => <CategoriesPage period={period} catType={catType} />} />
     </View>
   );
 }
