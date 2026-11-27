@@ -59,6 +59,8 @@ export function RingPager<K extends string>({
   const passed = useRef(new Set<string>());
   const list = useRef<FlashListRef<K>>(null);
   const touched = useRef(false);
+  // The swipes begun since the list last stopped: quick swipes one after another stop once, that many pages away at most.
+  const drags = useRef(0);
 
   let navigation: { isFocused(): boolean } | null = null;
   try {
@@ -128,8 +130,16 @@ export function RingPager<K extends string>({
     touched.current = false;
     pagerState("idle");
     if (!width || !focused()) return;
-    const page = Math.max(0, Math.min(row.keys.length - 1, Math.round(offset / width)));
     const from = at.current;
+    // Never more pages than swipes were begun (a fast fling must not run on over several periods): corrected by sliding if it did.
+    const allowed = Math.max(1, drags.current);
+    drags.current = 0;
+    const reached = Math.round(offset / width);
+    const page = Math.max(0, Math.min(row.keys.length - 1, Math.max(from - allowed, Math.min(from + allowed, reached))));
+    if (page !== reached) {
+      perfNote(`ring pager: fling reached page ${reached} from ${from}, held to ${page}`);
+      list.current?.scrollToIndex({ index: page, animated: true });
+    }
     if (page !== from) {
       if (PERF_BUILD) chosenAt.current = now();
       at.current = page;
@@ -179,7 +189,10 @@ export function RingPager<K extends string>({
               key={row.id}
               ref={list}
               horizontal
-              pagingEnabled
+              // One page to a swipe, as the native pager: the interval is a page and a fling does not pass the next stop.
+              snapToInterval={width}
+              snapToAlignment="start"
+              disableIntervalMomentum
               data={row.keys}
               extraData={index}
               keyExtractor={(k) => k}
@@ -193,6 +206,7 @@ export function RingPager<K extends string>({
               onScroll={onScroll}
               onScrollBeginDrag={() => {
                 touched.current = true;
+                drags.current++;
                 pagerState("dragging");
               }}
               onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { x: number } } }) => settle(e.nativeEvent.contentOffset.x)}
