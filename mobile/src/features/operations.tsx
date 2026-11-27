@@ -1,7 +1,7 @@
 // The Operations tab (js/screens/operations/list.js): the header with the search, the period bar,
 // the filter banner, the opening and closing balance, days with their operations, the round Add
 // button, and the selection mode with its own header and actions.
-import { countRender, now, perfEpoch, perfFlags, perfLog, PERF_BUILD, selfTime } from "../platform/perf.ts";
+import { countRender, now, perfEpoch, perfFlags, perfLog, PERF_BUILD, selfTime, swipeMark } from "../platform/perf.ts";
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { FlashList, type FlashListRef } from "@shopify/flash-list";
 import { usePageReady } from "../ui/pager.tsx";
@@ -206,14 +206,14 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
   const seen = useRef<Record<string, unknown> | null>(null);
   if (PERF_BUILD) {
     const now_ = { period, query, active, selection, selectedSet, onPress, onLongPress, onTop };
-    if (seen.current === null) perfLog("operations page mount", 0);
+    if (seen.current === null) (perfLog("operations page mount", 0), swipeMark("page: render starts (mount)"));
     else
       for (const k of Object.keys(now_) as (keyof typeof now_)[])
         if (seen.current[k] !== now_[k]) perfLog(`operations page prop changed: ${k}`, 0);
     seen.current = now_;
   }
   useLayoutEffect(() => {
-    if (PERF_BUILD) perfLog("operations page built", now() - began);
+    if (PERF_BUILD) (perfLog("operations page built", now() - began), swipeMark("page: render and commit done (layout effect)"));
   });
   // (An empty period has no rows to load: its picture is the content.)
   useLayoutEffect(() => {
@@ -283,8 +283,14 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
     ),
     [balances, p, t, data.settings.currency],
   );
+  const firstRow = useRef(true);
   const renderItem = useCallback(
-    ({ item }: { item: Item }) =>
+    ({ item }: { item: Item }) => {
+      if (PERF_BUILD && firstRow.current) {
+        firstRow.current = false;
+        swipeMark("list: first row rendered");
+      }
+      return (
       // The side margins are on each item, not on the list: the sticky head is drawn over the list without the list's
       // padding, and with it there its first letters were cut at the edge of the screen.
       item.kind === "day" && PERF_BUILD && perfFlags.noDayHeads ? (
@@ -301,7 +307,9 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         <View style={{ paddingHorizontal: 16 }}>
           <OperationRow op={item.op} selecting={selection} selected={selectedSet.has(item.op.id)} onPress={onPress} onLongPress={onLongPress} />
         </View>
-      ),
+      )
+      );
+    },
     [selection, selectedSet, onPress, onLongPress, p.bg],
   );
   // The head of a day stays at the top while that day's rows pass under it, until the next day pushes it away.
@@ -338,7 +346,8 @@ export const OperationsPage = memo(function OperationsPage({ period, query, acti
         ListHeaderComponent={header}
         ListEmptyComponent={EMPTY}
         renderItem={renderItem}
-        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), ready()) : undefined}
+        onLoad={PERF_BUILD ? ({ elapsedTimeInMs }: { elapsedTimeInMs: number }) => (perfLog("list ready", elapsedTimeInMs), swipeMark("list: onLoad (rows laid out)"), ready()) : undefined}
+        onLayout={PERF_BUILD ? () => swipeMark("list: onLayout") : undefined}
       />
       )}
     </View>

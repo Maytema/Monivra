@@ -259,3 +259,21 @@ for move in moves:
         saves.setdefault((int(m.group(1)), m.group(2)), []).append(sum(move["stalls"]))
 for (ops_count, how), busy in sorted(saves.items()):
     print(f"{f'{ops_count} ops, {how}':48} {len(busy):4d} {middle(busy):7.0f}ms {min(busy):5.0f}-{max(busy):.0f}ms")
+
+# Where the time of a swipe goes: for each step the swipe passes ("swipe t+N <step>"), how many times it was written in the runs of ten swipes and the
+# median and the range of N, the milliseconds after the pager took the page. The stalls ("stall of N ms ends here") show where the JavaScript
+# thread was busy: the step just before a stall is what ran. By the native pager (mode 0) and by the ring pager (mode 10).
+print()
+print(f"{'swipe timeline (ms after the page was taken)':62} {'how':>6} {'n':>4} {'median':>7} {'min':>5} {'max':>5}")
+steps = {}
+for move in moves:
+    m = re.match(r"series (\d+) (\w+) swipes (\d+): 10 fast", move["name"])
+    if not m:
+        continue
+    for n in move["notes"]:
+        c = re.match(r"swipe t\+(\d+) (.*)", n)
+        if c:
+            name = re.sub(r"stall of \d+ ms", "stall", c.group(2))
+            steps.setdefault((m.group(2), name), []).append(int(c.group(1)))
+for (how, name), values in sorted(steps.items(), key=lambda kv: (kv[0][0], middle(kv[1]))):
+    print(f"{name[:62]:62} {how:>6} {len(values):4d} {middle(values):6.0f}ms {min(values):4d}  {max(values):4d}")

@@ -230,6 +230,11 @@ tap "Replace data" 1.5 last; tap "Confirm" 1
 finish 20
 shot 01-after-restore 1
 
+back_swipe() { adb shell input swipe 250 1500 900 1500 ${1:-90}; }
+next_swipe() { adb shell input swipe 900 1500 250 1500 ${1:-90}; }
+# QUICK=1 (the default): the moves that find the cost of a page, a tab and the eye (the series at the end) and nothing else; QUICK=0 runs
+# every move of the long check as well.
+if [ "${QUICK:-1}" != 1 ]; then
 # The first visit of every tab after a start with the large ledger (the owner's phone: Operations and Statistics took ~470 ms the
 # first time, a repeat 100-170 ms), then the same visits again. Taps by coordinates, a pause long enough for the screen to settle.
 adb shell am force-stop $PKG; sleep 2
@@ -353,8 +358,6 @@ adb shell input tap $ops; sleep 2
 record() { adb shell "screenrecord --time-limit $2 /sdcard/$1.mp4" >/dev/null 2>&1 & REC=$!; sleep 1; }
 stop_record() { wait $REC 2>/dev/null; sleep 1; adb pull "/sdcard/$1.mp4" "$OUT/$1.mp4" >/dev/null 2>&1 && log "video: $1.mp4" || log "video: $1 not recorded"; }
 pss() { adb shell dumpsys meminfo $PKG | grep -m1 "TOTAL PSS" | awk '{print $3}'; }
-back_swipe() { adb shell input swipe 250 1500 900 1500 ${1:-90}; }
-next_swipe() { adb shell input swipe 900 1500 250 1500 ${1:-90}; }
 fast_block() { # $1 tab centre, $2 name
   adb shell input tap $1; sleep 2
   log "memory before $2: $(pss) kB"
@@ -378,6 +381,7 @@ view_count() {
   echo "all $(echo "$dump" | grep -cE '^\s+[A-Za-z0-9_.$]+\{[0-9a-f]+ ') svg $(echo "$dump" | grep -cE 'RNSVG|Svg')"
 }
 log "native views at rest after the cold block: $(view_count)"
+fi
 mode=0
 mode_names=(all-on icons-off plain-rows warm-off old-period no-list no-day-heads no-period-bar no-add-button plain-scans ring-pager)
 # The names the application writes ("[perf] setting <name>") for each setting, in the order the box cycles through them.
@@ -413,9 +417,11 @@ balanced() { # $1 run number, $2.. order (letters A-E)
     begin "return after ${mode_names[$idx]} run $run: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
   done
 }
+if [ "${QUICK:-1}" != 1 ]; then
 balanced 1 A B C D E F G H I
 balanced 2 I H G F E D C B A
 balanced 3 C F I B E H A D G
+fi
 # A new expense with the keys, saved: the list must take it without drawing everything again. $1: a note for the name of the move
 # (" (10000)" for the same on the larger ledger, which takes no pictures).
 add_expense() {
@@ -458,21 +464,15 @@ series() { # $1 operations, $2 run
   eye6 "$cats" "series $1 tabs $2 Categories"
 }
 series_block() { # $1 operations
-  local run
-  for run in 1 2 3 4; do series "$1" "$run"; done
-  # The page read through the index (mode 0) and by the plain scans (mode 9), in balanced order, four runs each.
-  local m n=0
-  for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
-  # The pages made once and told a new period (ring pager, mode 10) against the native pager (mode 0), balanced.
+  local run m n
+  for run in 1 2 3; do series "$1" "$run"; done
+  # The swipes: the native pager (mode 0) and the ring pager (mode 10), balanced (A B B A), four runs each.
   n=0
-  for m in 0 10 10 0 0 10 10 0; do n=$((n + 1)); swipes_series "$1" "$m" "$((n + 8))"; done
+  for m in 0 10 10 0 0 10 10 0; do n=$((n + 1)); swipes_series "$1" "$m" "$n"; done
   # The eye on Operations with the ring pager on.
-  for n in 1 2 3 4; do set_mode 10; eye6 "$ops" "series $1 ring $n Operations"; done
+  for n in 1 2; do set_mode 10; eye6 "$ops" "series $1 ring $n Operations"; done
   set_mode 0
   tabs_again_series "$1"
-  n=0
-  for m in 0 9 9 0 0 9 9 0; do n=$((n + 1)); set_mode $m; add_expense " ($1 $([ $m = 0 ] && echo index || echo scans) $n)"; done
-  set_mode 0
 }
 # Ten fast swipes back and the way forward, the same at every volume of the ledger (the periods are paged the same way; what is asked is whether the
 # cost of a page follows the number of operations).
@@ -488,7 +488,7 @@ swipes_series() { # $1 operations, $2 mode (0 index, 9 plain scans), $3 run
 # wait 2 s after each tap. Do the dumps themselves cost the pauses?
 tabs_again_series() { # $1 operations
   local k=0 kind
-  for kind in c d d c c d d c c d r c r r c; do
+  for kind in c r r c c r r c; do
     k=$((k + 1))
     # "r": the same as "c" with the ring pager on (mode 10), the others with it off (mode 0).
     if [ $kind = r ]; then set_mode 10; else set_mode 0; fi
@@ -557,6 +557,7 @@ mask_check_ring() {
 }
 mask_check_ring
 
+if [ "${QUICK:-1}" != 1 ]; then
 # The first return to Operations after the tab was left for a while (build 172: ten pauses of 50-90 ms in the four seconds after the tab was
 # drawn, "tabs again" 744 ms against 112 ms in the series), under the switches of PerfSwitch in balanced order: all on, no list, no day heads,
 # no period bar, plain rows.
@@ -627,19 +628,6 @@ begin "report preview, second time"; tap "Preview" 0; sleep 3; finish 1
 shot 10-preview-again 0
 back; back; back
 
-# After the report (which is about the 3000 ledger) and before the lock (a locked application hides the tabs): nothing else runs on the larger ledger.
-# The ledger of 10000 operations (the same accounts and categories, 36 months) replaces the 3000 one the same way.
-node "$HERE/perf-data.mjs" 10000 36 > /tmp/perf-data.json && adb push /tmp/perf-data.json /sdcard/Download/perf-data.json >/dev/null 2>&1
-adb shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d "file:///sdcard/Download/perf-data.json" >/dev/null 2>&1
-tap "More"; tap "Data"; tap "Data file"; tap "Restore from file" 4
-begin "read the file and open the restore page (10000)"
-tap "perf-data.json" 6 || { tap "Show roots"; tap "Downloads"; tap "List view"; tap "perf-data.json" 6; }
-finish 1
-begin "restore 10000 operations"
-tap "Replace data" 1.5 last; tap "Confirm" 1
-finish 60
-adb shell input tap $accs; sleep 3
-series_block 10000
 
 # The lock: a PIN is set, the screen locked, the PIN typed (time from the last digit to the open screen).
 tap "More"; tap "Settings"; tap "Security"
@@ -659,6 +647,8 @@ adb shell input tap $k1; sleep 0.25; adb shell input tap $k2; sleep 0.25; adb sh
 finish 4
 shot 07-unlocked 0
 
+
+fi
 
 adb logcat -d -b crash > "$OUT/crash.txt" 2>&1
 adb logcat -d -s ReactNativeJS:V > "$OUT/js-log.txt" 2>&1

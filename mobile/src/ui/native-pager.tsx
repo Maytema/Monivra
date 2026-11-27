@@ -10,7 +10,7 @@
 //
 // `x` keeps the meaning the period bar and the tabs read (pager-motion.ts): the offset of the pages in px, the page in
 // the middle at rest at x = −base × width, where base counts the moves since the row was laid out.
-import { countRender, now, perfFlags, perfLog, perfNote, PERF_BUILD } from "../platform/perf.ts";
+import { countRender, now, perfFlags, perfLog, perfNote, PERF_BUILD, swipeMark, swipeStart } from "../platform/perf.ts";
 import { createContext, memo, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Animated, Dimensions, View, unstable_batchedUpdates } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -119,6 +119,7 @@ export function Pager<K extends string>({
     pendingShow.current = true;
     setTimeout(() => {
       pendingShow.current = false;
+      swipeMark("pager: follow task starts (setShown)");
       setShown(at.current);
     }, 0);
   };
@@ -202,6 +203,7 @@ export function Pager<K extends string>({
     const since = chosenAt.current;
     chosenAt.current = 0;
     perfLog("swipe: pages built", now() - since);
+    swipeMark("pager: first commit (index) done");
     requestAnimationFrame(() => perfLog("swipe: next frame", now() - since));
   }, [index]);
   // A page is taken only from the person's swipe (between "dragging" and "idle") or from a move this pager asked for.
@@ -243,6 +245,8 @@ export function Pager<K extends string>({
     }
     asked.current = false;
     if (PERF_BUILD) chosenAt.current = now();
+    swipeStart();
+    swipeMark("pager: page taken");
     if (PERF_BUILD) {
       chosen.current.set(page, now());
       const key = String(row.keys[page]);
@@ -257,6 +261,7 @@ export function Pager<K extends string>({
       setIndex(page);
       live.current.onMove(page - from);
     }, undefined);
+    swipeMark("pager: setIndex and onMove done (period set)");
     follow(page);
   };
   // Near the end of the row (not a real end), the row is laid out again around the current page once the pager is
@@ -281,6 +286,7 @@ export function Pager<K extends string>({
   useLayoutEffect(() => {
     if (!PERF_BUILD) return;
     drawnAround.current = shown;
+    swipeMark("pager: second commit (neighbours drawn) done");
     const t = chosen.current.get(shown);
     if (t !== undefined) perfLog(`pager: contents around page ${shown} drawn (lag ${index - shown})`, now() - t);
   }, [shown]);

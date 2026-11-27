@@ -19,6 +19,19 @@ export function perfNote(text: string): void {
   if (PERF_BUILD) console.log(`[perf] ${text}`);
 }
 
+// The timeline of one swipe (speed-check build): `swipeStart()` when the pager takes the page, then `swipeMark(name)` at the places the work of the
+// swipe passes ("[perf] swipe t+84 page layout done"): how long after the swipe each step happens, to see where the ~150 ms of the
+// JavaScript thread go. Marks later than 1.5 s after the swipe are not written (they belong to nothing).
+let swipeAt = 0;
+export function swipeStart(): void {
+  if (PERF_BUILD) swipeAt = now();
+}
+export function swipeMark(name: string): void {
+  if (!PERF_BUILD || !swipeAt) return;
+  const t = now() - swipeAt;
+  if (t < 1500) console.log(`[perf] swipe t+${t.toFixed(0)} ${name}`);
+}
+
 // Touches (speed-check build only). The system stamps a touch when the finger lands; the JavaScript thread sees it
 // when it is free. The two clocks have different starts, so the delay is read against the quickest touch seen:
 // "touch lag 180ms" means this touch waited 180 ms longer than the quickest one for the thread.
@@ -131,7 +144,7 @@ export function watchStalls(): void {
   setInterval(() => {
     const at = now();
     const late = at - last - STEP_MS;
-    if (late > WORTH_MS && !away && !probing) perfLog("stall", late);
+    if (late > WORTH_MS && !away && !probing) (perfLog("stall", late), swipeMark(`stall of ${late.toFixed(0)} ms ends here`));
     last = at;
   }, STEP_MS);
 }
