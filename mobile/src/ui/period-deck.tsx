@@ -84,8 +84,10 @@ export function PeriodDeck<K extends string>({
   // The pages chosen by the person's own swipes since the deck was last quiet: a period the screen draws late is not a change from outside.
   const passed = useRef(new Set<string>());
   const scroller = useRef<Scroller | null>(null);
-  // The swipes begun since the deck last stopped: quick swipes one after another stop once, that many pages away at most.
-  const drags = useRef(0);
+  // The swipes since the deck last stopped, each one page in its direction (+1 to the next page): quick swipes one after another that catch the
+  // scroll view still moving would otherwise add less than a page each (10 quick swipes moved 5–7 pages), and the native pager moved 10.
+  const swipes = useRef(0);
+  const dragFrom = useRef(0);
   const hidden = useRef(false);
 
   let navigation: { isFocused(): boolean } | null = null;
@@ -163,12 +165,14 @@ export function PeriodDeck<K extends string>({
     // A deck on a screen that is not in front never takes a page (its tab was just left and the scroll view lost its size).
     if (!width || !focused()) return;
     const from = at.current;
-    // Never more pages than swipes were begun (a quick fling must not run on over several periods): corrected by sliding if it did.
-    const allowed = Math.max(1, drags.current);
-    drags.current = 0;
+    // As many pages as swipes, in their directions (a quick fling must not run on over several periods, and a swipe must not be lost); without
+    // a swipe (a slide the deck was asked for) the page reached. When the scroll view stopped elsewhere it is put on the page, sliding for a page.
+    const counted = swipes.current;
+    swipes.current = 0;
     const reached = Math.round(offset / width);
-    const page = Math.max(0, Math.min(row.keys.length - 1, Math.max(from - allowed, Math.min(from + allowed, reached))));
-    if (page !== reached) goTo(page, true);
+    const wanted = counted !== 0 ? from + counted : Math.max(from - 1, Math.min(from + 1, reached));
+    const page = Math.max(0, Math.min(row.keys.length - 1, wanted));
+    if (page !== reached) goTo(page, Math.abs(page - reached) <= 1);
     if (page !== from) {
       at.current = page;
       passed.current.add(String(row.keys[page]));
@@ -230,9 +234,15 @@ export function PeriodDeck<K extends string>({
               scrollEnabled={row.keys.length > 1}
               scrollEventThrottle={16}
               onScroll={onScroll}
-              onScrollBeginDrag={() => {
-                drags.current++;
+              onScrollBeginDrag={(e: { nativeEvent: { contentOffset: { x: number } } }) => {
+                dragFrom.current = e.nativeEvent.contentOffset.x;
                 pagerState("dragging");
+              }}
+              onScrollEndDrag={(e: { nativeEvent: { contentOffset: { x: number }; velocity?: { x: number } } }) => {
+                // a swipe that moved the pages a third of a page, or flicked them, counts, in the direction it moved them.
+                const moved = e.nativeEvent.contentOffset.x - dragFrom.current;
+                const flick = e.nativeEvent.velocity?.x ?? 0;
+                if (Math.abs(moved) > width * 0.35 || Math.abs(flick) > 0.3) swipes.current += (Math.abs(moved) > 2 ? moved : flick) > 0 ? 1 : -1;
               }}
               onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { x: number } } }) => settle(e.nativeEvent.contentOffset.x)}
               onContentSizeChange={() => {
