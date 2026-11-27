@@ -14,7 +14,7 @@ import { Icon } from "../ui/kit.tsx";
 import { openCurrencySheet } from "../ui/currency-sheet.tsx";
 import { Meter, MoneyAmount, SectionLabel, ToneBadge, TopTabs } from "../ui/parts.tsx";
 import { Sortable } from "../ui/sortable.tsx";
-import { Pager } from "../ui/pager.tsx";
+import { PeriodDeck } from "../ui/period-deck.tsx";
 import { HintBanner } from "../ui/hint-banner.tsx";
 import { PostedBanner } from "./posted-banner.tsx";
 import { mix } from "../ui/theme.ts";
@@ -202,7 +202,7 @@ export function AccountsScreen() {
       {header}
       {/* The three tabs are pages side by side, all drawn, so a swipe uncovers the next one ready; the tabs
           sit in the pager's header so their underline follows the finger. */}
-      <Pager
+      <PeriodDeck
         header={<TopTabs tabs={tabs.map((id) => ({ id, label: id }))} active={shown} onChange={setTab} followPager />}
         current={shown}
         step={(key, n) => tabs[tabs.indexOf(key) + n] ?? null}

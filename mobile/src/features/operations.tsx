@@ -153,11 +153,6 @@ export function OperationsScreen() {
     <View style={{ flex: 1, backgroundColor: p.bg }}>
       {header}
       <PeriodPager
-        deck
-        // Experiment (task "stable paging", 2026-11-21): the lists of two periods on each side are drawn beforehand —
-        // a new list takes the longest to show its first rows of all the paged screens (speed check: 268 ms on the
-        // emulator), and quick swipes reached undrawn pages here only (12–39 % of quick swipes, builds 117–119).
-        around={2}
         header={
           <>
             {PERF_BUILD && perfFlags.noPeriodBar ? null : <PeriodBar />}

@@ -11,7 +11,7 @@ import { useLedgerView, usePalette, useT } from "../ui/app-context.tsx";
 import { Icon } from "../ui/kit.tsx";
 import { openCalendar } from "../ui/calendar-sheet.tsx";
 import { openPeriodDialog } from "../ui/period-dialog.tsx";
-import { Pager, usePagerMotion } from "../ui/pager.tsx";
+import { usePagerMotion } from "../ui/pager.tsx";
 import type { PagerMotion } from "../ui/pager-motion.ts";
 import { PeriodDeck } from "../ui/period-deck.tsx";
 import { periodTitle } from "../ui/period-title.ts";
@@ -158,7 +158,7 @@ export function PeriodBar({ dayPicker = false }: { dayPicker?: boolean } = {}) {
 
 // The pages of a screen with a period: the period before, this one and the one after, drawn side by side,
 // with the period bar (and whatever else stays in place) above them.
-export function PeriodPager({ header, render, around, deck = false }: { header?: ReactNode; render: (period: Period, isCurrent: boolean) => ReactNode; around?: number; deck?: boolean }) {
+export function PeriodPager({ header, render }: { header?: ReactNode; render: (period: Period) => ReactNode }) {
   const data = useLedgerView();
   const { period, caughtUp } = useScreenPeriod();
   // The pager names its pages by a key; the periods it was given are kept by their keys to be drawn.
@@ -195,13 +195,12 @@ export function PeriodPager({ header, render, around, deck = false }: { header?:
       return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
     },
     header,
-    render: (key: string, isCurrent: boolean) => render(pageOf(key), isCurrent),
+    render: (key: string) => render(pageOf(key)),
     onMove: (steps: number) => {
       let next = getView().period;
       for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);
       setView({ period: next }, false);
     },
   };
-  // `deck`: five pages made once and told a new period (ui/period-deck.tsx), for the screens that have moved to it.
-  return deck ? <PeriodDeck {...pages} render={(key) => pages.render(key, false)} /> : <Pager {...pages} around={around} />;
+  return <PeriodDeck {...pages} />;
 }

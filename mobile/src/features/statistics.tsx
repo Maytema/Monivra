@@ -67,7 +67,11 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   const filters = useViewFilters();
   // Every page draws the chosen type: a page does not depend on whether it is the one in front (a swipe draws no page again for it).
   const catType = asked;
-  const [selected, setSelected] = useState<string | null>(null);
+  // The slice picked in the ring belongs to the period it was picked in: the page lives on for the next period and shows none picked.
+  const pageKey = periodBounds(period, data.settings).join("~");
+  const [pick, setPick] = useState<{ key: string; id: string | null }>({ key: pageKey, id: null });
+  const selected = pick.key === pageKey ? pick.id : null;
+  const setSelected = (id: string | null) => setPick({ key: pageKey, id });
   const [ringSize, setRingSize] = useState(0);
   const today = systemClock.today();
   const rows = useMemo(() => reportRows(data, periodOps(data, period, filters)), [data, period, filters]);
