@@ -4,5 +4,7 @@ versionCode = CI run number = the number in the file name.
 Monivra-rn-159.apk  first build with the version name 0.3.19 (main branch commit be8ab09f7); the owner's last phone build.
 Monivra-rn-194.apk  current checked build (main branch commit 9903d27e5), new period deck.
 
+Monivra-rn-200.apk  current checked build (main branch commit 4152268f1); the first one whose version name carries the build number (0.3.19.200).
+
 Android refuses an older versionCode over a newer one: save the data file in the app first
 (Data > Data file > Save), uninstall, install the old build, restore the data file.
