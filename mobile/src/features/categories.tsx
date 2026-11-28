@@ -65,32 +65,34 @@ const TileGrid = memo(function TileGrid({ data, rows, kind }: { data: ReturnType
   // A debt account can stand among the categories, as an expense or as an income.
   const debts = data.accounts.filter((a) => a.type === "Debt" && !a.archived && (kind === "expense" ? a.showExpense : a.showIncome));
   const tone = (total: number) => (total === 0 ? "muted" : kind === "income" ? "pos" : "neg");
+  // Settings → Elements → Categories → "Categories in one column": a tile takes the whole width.
+  const width = data.settings.oneColumn ? "100%" : undefined;
   return (
     <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingHorizontal: 16, paddingBottom: 16 }}>
       {tiles.map((c, index) => {
         const total = categoryTotalIn(data, rows, c);
-        return <CategoryCell key={c.id} first={index === 0} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={<WithMoney>{(money) => money(total, c.currency)}</WithMoney>} tone={tone(total)} />;
+        return <CategoryCell key={c.id} first={index === 0} width={width} id={c.id} type={c.type} icon={c.icon} color={c.color} name={c.name} figure={<WithMoney>{(money) => money(total, c.currency)}</WithMoney>} tone={tone(total)} />;
       })}
       {debts.map((a) => {
         const asCategory: Category = { id: "debt:" + a.id, name: a.name, type: kind, icon: a.icon, color: a.color, currency: a.currency, parent: null, archived: false };
         const total = categoryTotalIn(data, rows, asCategory);
-        return <CategoryTile key={asCategory.id} icon={a.icon} color={a.color} name={a.name} figure={<WithMoney>{(money) => money(total, a.currency)}</WithMoney>} tone={tone(total)} onPress={() => openAccountSheet(a.id)} />;
+        return <CategoryTile key={asCategory.id} width={width} icon={a.icon} color={a.color} name={a.name} figure={<WithMoney>{(money) => money(total, a.currency)}</WithMoney>} tone={tone(total)} onPress={() => openAccountSheet(a.id)} />;
       })}
     </View>
   );
 });
 
 // A tile with handlers of its own, so a redraw of the page leaves tiles whose sum did not change alone.
-const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone, first = false }: { first?: boolean; id: string; type: string; icon: string; color: string; name: string; figure: ReactNode; tone: "pos" | "neg" | "muted" }) {
+const CategoryCell = memo(function CategoryCell({ id, type, icon, color, name, figure, tone, first = false, width }: { first?: boolean; width?: `${number}%`; id: string; type: string; icon: string; color: string; name: string; figure: ReactNode; tone: "pos" | "neg" | "muted" }) {
   const open = useCallback(() => openEditor({ type: type === "income" ? "income" : "expense", category: id, date: dateOfShownPeriod() }), [id, type]);
   const hold = useCallback(() => openCategorySheet(id), [id]);
   const coach = useCoachTarget("first-category");
   // The first tile can be lit by the introduction tour; it sits in a box of its own for that (the box has the tile's width).
   if (first)
     return (
-      <View ref={coach} collapsable={false} style={{ width: "48.5%" }}>
+      <View ref={coach} collapsable={false} style={{ width: width ?? "48.5%" }}>
         <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} width="100%" />
       </View>
     );
-  return <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} />;
+  return <CategoryTile icon={icon} color={color} name={name} figure={figure} tone={tone} onPress={open} onLongPress={hold} width={width} />;
 });

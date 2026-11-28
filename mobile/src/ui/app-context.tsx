@@ -87,7 +87,7 @@ function onlyMaskChanged(a: LedgerData, b: LedgerData): boolean {
 const LOOK_CHANNEL: Channel[] = ["look"];
 const channelOf = (key: keyof LedgerData): Channel => (key === "ops" || key === "scheduled" ? "ops" : key === "settings" ? "look" : "refs");
 const subscribeLook = (l: () => void) => appStore().subscribe(l, LOOK_CHANNEL);
-function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
+export function useLedgerPart<T>(pick: (data: LedgerData) => T): T {
   const s = appStore();
   return useSyncExternalStore(subscribeLook, () => {
     const state = s.getState();

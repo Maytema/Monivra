@@ -16,13 +16,13 @@ import type { EditorSession } from "./session.ts";
 
 type Tab = "category" | "account";
 
-const Tile = memo(function Tile({ icon, color, name, figure, onPress }: { icon: string; color: string; name: string; figure: string; onPress: () => void }) {
+const Tile = memo(function Tile({ icon, color, name, figure, onPress, wide = false }: { icon: string; color: string; name: string; figure: string; onPress: () => void; wide?: boolean }) {
   const p = usePalette();
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => ({ width: "48.5%", minHeight: 68, flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 9, paddingHorizontal: 6, borderWidth: 1, borderColor: p.line, borderRadius: 17, backgroundColor: pressed ? p.soft : p.key })}
+      style={({ pressed }) => ({ width: wide ? "100%" : "48.5%", minHeight: 68, flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 9, paddingHorizontal: 6, borderWidth: 1, borderColor: p.line, borderRadius: 17, backgroundColor: pressed ? p.soft : p.key })}
     >
       <ToneBadge icon={icon} color={color} size={45} iconSize={24} />
       <View style={{ flex: 1, minWidth: 0 }}>
@@ -128,7 +128,7 @@ function Picker({ session, incoming, accountsOnly, toAccount = false, title, onC
             id === "category" ? (
               <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
                 {categories.map((c) => (
-                  <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => pickCategory(c.id)} />
+                  <Tile key={c.id} wide={!!data.settings.onePicker} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => pickCategory(c.id)} />
                 ))}
               </View>
             ) : (
@@ -176,7 +176,7 @@ function ChoiceSheet({ mode, onPick }: { mode: "account" | "category"; onPick: (
           render={(k) => (
             <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 12, paddingTop: 18, paddingBottom: 30 }}>
               {data.categories.filter((c) => !c.archived && !c.parent && c.type === k).map((c) => (
-                <Tile key={c.id} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => done(c.id)} />
+                <Tile key={c.id} wide={!!data.settings.onePicker} icon={c.icon} color={c.color} name={c.name} figure={money(sum(data, c), c.currency ?? data.settings.currency)} onPress={() => done(c.id)} />
               ))}
             </View>
           )}

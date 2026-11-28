@@ -316,7 +316,34 @@ for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Securi
       tap "Lock now" && {
         shot 15q5-lock-screen 2
         for k in 1 1 1 1; do tap "$k"; done
-        shot 15q6-wrong-pin 1
+        shot 15q6-wrong-pin 0
+        # After the shake every dot must be empty (red) and the next digit must count as the first: one dot filled, not two.
+        shot 15q6a-wrong-pin-later 1
+        tap "2" && shot 15q6b-first-digit-after-wrong 1
+        tap "Backspace"
+        shot 15q6c-after-backspace 1
+        # A burst in one go: four wrong digits and a fifth at once (the fifth lands while or after the check: it is lost or it is the first of
+        # the next try, never a dot left hanging after the shake).
+        adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1; adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+        keys=$(python3 - <<'PY'
+import re, xml.etree.ElementTree as ET
+pos = {}
+for n in ET.parse("/tmp/ui.xml").iter("node"):
+    for w in ("1", "2", "Backspace"):
+        if n.get("text") == w or n.get("content-desc") == w:
+            a, b, c, d = map(int, re.findall(r"\d+", n.get("bounds")))
+            pos[w] = f"{(a + c) // 2} {(b + d) // 2}"
+print(pos.get("1", "0 0"), "|", pos.get("2", "0 0"), "|", pos.get("Backspace", "0 0"))
+PY
+)
+        k1=${keys%% | *}; rest=${keys#* | }; k2=${rest%% | *}; kb=${rest#* | }
+        adb shell "input tap $k1; input tap $k1; input tap $k1; input tap $k1; input tap $k2" >/dev/null 2>&1
+        shot 15q6d-burst-after-wrong 1
+        shot 15q6e-burst-later 2
+        # Whatever stayed typed is cleared with the backspace key before the right PIN.
+        adb shell "input tap $kb; input tap $kb; input tap $kb; input tap $kb; input tap $kb" >/dev/null 2>&1; sleep 1
+        for k in 1 2 3 4; do tap "$k"; done
+        shot 15q6f-after-more-digits 1
         for k in 1 2 3 4; do tap "$k"; done
         shot 15q7-unlocked 3
         tap "PIN code" && {
@@ -330,7 +357,35 @@ for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Securi
   fi
   back
 done
+# The settings that change how screens look, each seen on and off: the names under the bottom navigation (never / selected only / always),
+# the categories in one column, the category selection in one column. Each helper starts on "Settings" and ends on the tab "More".
+nav_labels() { # $1 the option, $2 the shot name
+  tap "Settings"
+  tap "Styles and elements" && tap "Bottom navigation" && tap "Element names" && tap "$1"
+  back; back; back; sleep 1
+  shot "$2" 2
+}
+elements_switch() { # $1 the switch
+  tap "Settings"
+  tap "Styles and elements" && tap "Elements" && tap "Categories" && tap "$1"
+  back; back; back; back; sleep 1
+}
 back
+nav_labels "Never show" 15t1-nav-labels-never
+nav_labels "Show only for selected" 15t2-nav-labels-selected
+nav_labels "Always show" 15t3-nav-labels-always
+elements_switch "Categories in one column"
+tap "Categories" && shot 15t4-categories-one-column 3
+tap "More"
+elements_switch "Categories in one column"
+tap "Categories" && shot 15t5-categories-two-columns 3
+tap "More"
+elements_switch "Category selection in one column"
+tap "Operations"; sleep 2
+tap "New operation" && tap "Food" && sleep 3 && tap "Food" && shot 15t6-picker-one-column 3
+back; back; back
+tap "More"
+elements_switch "Category selection in one column"
 # The other pages of "More", for a side by side look with the first application.
 more_page() { # page, shot name
   tap "$1" && shot "$2" 3

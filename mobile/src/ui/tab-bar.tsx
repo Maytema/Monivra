@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Pressable } from "./pressable.tsx";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePalette, useT } from "./app-context.tsx";
+import { useLedgerPart, usePalette, useT } from "./app-context.tsx";
 import { ICONS } from "./icon-paths.ts";
 import { chrome } from "./theme.ts";
 import { coachRef } from "./coach.tsx";
@@ -45,6 +45,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
   const p = usePalette();
   const t = useT();
   const insets = useSafeAreaInsets();
+  // Settings → Styles → Bottom navigation → Element names: the labels of all the tabs, of the open one only, or of none (the bar keeps its height).
+  const labels = useLedgerPart((d) => d.settings.navLabels);
   // The tab asked for last. The bar is redrawn only after the new screen has been built (the first visit of a tab takes
   // a moment), and in that moment `state` still names the old tab. The decision to drop a press is made from what was
   // asked for AND what is shown: a tab is dropped only when it is both (a true repeat). A tab that is merely the pending
@@ -133,9 +135,11 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
               ) : null}
               <TabIcon name={tab.icon} active={active} color={color} />
             </View>
-            <Text numberOfLines={1} style={{ color, fontSize: 12, lineHeight: 16, fontWeight: active ? "600" : "400" }}>
-              {t.t(tab.title)}
-            </Text>
+            {labels === "never" ? null : (
+              <Text numberOfLines={1} style={{ color, fontSize: 12, lineHeight: 16, fontWeight: active ? "600" : "400", opacity: labels === "active" && !active ? 0 : 1 }}>
+                {t.t(tab.title)}
+              </Text>
+            )}
           </Pressable>
         );
       })}
