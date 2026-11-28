@@ -301,7 +301,11 @@ for page in "Formatting" "Styles and elements" "Backups" "Notifications" "Securi
     # screen under the lock must still be the Security page), then turn the PIN off again.
     tap "PIN code" && {
       shot 15q-pin-setup 2
-      for k in 1 2 3 4; do tap "$k"; done
+      for k in 1 2; do tap "$k"; done
+      shot 15q1a-pin-two 1
+      for k in 3 4; do tap "$k"; done
+      shot 15q1b-pin-four 1
+      tap "5" && shot 15q1c-pin-five 1 && tap "Backspace"
       tap "Save"
       shot 15q2-pin-confirm 1
       for k in 1 2 3 4; do tap "$k"; done

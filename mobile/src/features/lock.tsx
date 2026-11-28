@@ -217,7 +217,8 @@ function PinDot({ filled, failed, big }: { filled: boolean; failed: boolean; big
   );
 }
 
-function PinDots({ length, value, failed = false, big = false }: { length: number; value: string; failed?: boolean; big?: boolean }) {
+// `more`: dots that may follow the first `length` (a PIN can be longer): shown pale to the right of the row once the row is full, filled as digits come.
+function PinDots({ length, value, failed = false, big = false, more = 0 }: { length: number; value: string; failed?: boolean; big?: boolean; more?: number }) {
   const t = useT();
   const shake = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -231,9 +232,20 @@ function PinDots({ length, value, failed = false, big = false }: { length: numbe
   }, [failed, shake]);
   return (
     <Animated.View accessibilityRole="image" accessibilityLabel={t.t("{typed} of {size} digits", { typed: value.length, size: length })} style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: big ? 22 : 16, height: big ? 30 : 44, marginBottom: big ? 0 : 16, transform: [{ translateX: shake }] }}>
-      {Array.from({ length }, (_, i) => (
-        <PinDot key={i} filled={i < value.length} failed={failed} big={big} />
-      ))}
+      <View style={{ flexDirection: "row", alignItems: "center", gap: big ? 22 : 16 }}>
+        {Array.from({ length }, (_, i) => (
+          <PinDot key={i} filled={i < value.length} failed={failed} big={big} />
+        ))}
+        {more > 0 && value.length >= length ? (
+          <View pointerEvents="none" style={{ position: "absolute", left: "100%", flexDirection: "row", gap: big ? 22 : 16, marginLeft: big ? 22 : 16 }}>
+            {Array.from({ length: more }, (_, i) => (
+              <View key={i} style={{ opacity: length + i < value.length ? 1 : 0.35 }}>
+                <PinDot filled={length + i < value.length} failed={failed} big={big} />
+              </View>
+            ))}
+          </View>
+        ) : null}
+      </View>
     </Animated.View>
   );
 }
@@ -328,20 +340,23 @@ function PinSetup({ remove, length }: { remove: boolean; length: number }) {
   };
   // The dots of the lock screen instead of fields: one row for the PIN being typed, a line above saying which one.
   const typed = values[active];
-  const dots = remove ? length : active === "second" && PIN_LENGTHS.includes(first.length) ? first.length : size;
-  const hint = !remove && active === "first" && !first ? "Enter 4 or 6 digits" : "";
+  // A new PIN is first shown as four dots; once the fourth digit is in, two pale ones to the right say it may go on (to six).
+  const shortest = Math.min(...PIN_LENGTHS);
+  const dots = remove ? length : active === "second" && PIN_LENGTHS.includes(first.length) ? first.length : shortest;
+  const more = !remove && active === "first" ? size - shortest : 0;
+  const hint = !remove && active === "first" && first.length < shortest ? "Enter 4 or 6 digits" : "";
   return (
     <View>
       <DialogTitle>{t.t(remove ? "Turn off PIN" : "Set PIN")}</DialogTitle>
       <Text style={{ color: p.muted, fontSize: 15, textAlign: "center" }}>{t.t(remove ? "Current PIN" : active === "first" ? "New PIN" : "Confirm PIN")}</Text>
       <View style={{ marginTop: 16 }}>
-        <PinDots length={dots} value={typed} failed={!!problem} />
+        <PinDots length={dots} value={typed} failed={!!problem} more={more} />
       </View>
       <Text accessibilityRole={problem ? "alert" : undefined} style={{ minHeight: 20, color: problem ? p.negative : p.muted, fontSize: 14, textAlign: "center", marginTop: 6 }}>
         {problem || hint ? t.t(problem || hint) : ""}
       </Text>
       <View style={{ marginTop: 10 }}>
-        <DigitPad onKey={press} onConfirm={confirm} confirmLabel="Save" />
+        <DigitPad onKey={press} onConfirm={confirm} confirmLabel="Save" confirmDisabled={!remove && active === "first" && first.length < shortest} />
       </View>
     </View>
   );

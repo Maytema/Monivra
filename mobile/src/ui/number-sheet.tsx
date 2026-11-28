@@ -25,7 +25,7 @@ function Key({ label, onPress, flex = 1, confirm = false, disabled = false, chil
 
 // The keys of a number sheet (js/ui/number-picker.js digitPadHtml): three columns of digits, the zero (and the dot) below,
 // and a column with the backspace and the confirm check. Used by the number sheet and the PIN sheet.
-export function DigitPad({ onKey, onConfirm, decimal = false, dotDisabled = false, confirmLabel = "Save" }: { onKey: (key: string) => void; onConfirm: () => void; decimal?: boolean; dotDisabled?: boolean; confirmLabel?: string }) {
+export function DigitPad({ onKey, onConfirm, decimal = false, dotDisabled = false, confirmLabel = "Save", confirmDisabled = false }: { onKey: (key: string) => void; onConfirm: () => void; decimal?: boolean; dotDisabled?: boolean; confirmLabel?: string; confirmDisabled?: boolean }) {
   const data = useLedger();
   const p = usePalette();
   const t = useT();
@@ -57,7 +57,7 @@ export function DigitPad({ onKey, onConfirm, decimal = false, dotDisabled = fals
         <Key label={t.t("Backspace")} onPress={() => onKey("⌫")}>
           <Icon name="backspace" size={26} color={p.ink} />
         </Key>
-        <Pressable accessibilityRole="button" accessibilityLabel={t.t(confirmLabel)} onPress={onConfirm} style={{ flex: 1, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: mix(p.accent, p.bg, 0.18) }}>
+        <Pressable accessibilityRole="button" accessibilityLabel={t.t(confirmLabel)} accessibilityState={{ disabled: confirmDisabled }} disabled={confirmDisabled} onPress={onConfirm} style={{ flex: 1, borderRadius: 15, alignItems: "center", justifyContent: "center", backgroundColor: mix(p.accent, p.bg, 0.18), opacity: confirmDisabled ? 0.4 : 1 }}>
           <Icon name="check" size={30} color={p.accentInk} />
         </Pressable>
       </View>
