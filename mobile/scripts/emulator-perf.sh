@@ -519,6 +519,48 @@ screens_series() {
 }
 screens_series
 
+# Variants compared inside this one build (platform/lab-flags.ts): the application is started with `monivra:///?lab=<flags>`, the flags are read
+# before anything is drawn, and each variant is measured in blocks in the order A B C D D C B A (every variant twice, in both halves), so
+# the runner's drift falls on all of them alike. Numbers are compared only inside this run, never with another build.
+lab_start() { # $1 flags (comma list, or "none")
+  adb shell am force-stop $PKG; sleep 2
+  local link="monivra:///"; [ "$1" != none ] && link="monivra:///?lab=$1"
+  adb shell am start -a android.intent.action.VIEW -d "$link" $PKG >/dev/null 2>&1
+  sleep 14
+}
+declare -A ab_run
+ab_swipes() { # $1 name, $2 flags
+  lab_start "$2"
+  adb shell input tap $ops; sleep 3
+  local k
+  for k in 1 2 3; do
+    ab_run[$1]=$(( ${ab_run[$1]:-0} + 1 ))
+    begin "series 3000 ab_$1 swipes ${ab_run[$1]}: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+    begin "series 3000 ab_$1 return ${ab_run[$1]}: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
+  done
+}
+for v in "base none" "far far" "stable stable" "both far,stable" "both far,stable" "stable stable" "far far" "base none"; do
+  set -- $v; ab_swipes "$1" "$2"
+done
+# The vertical scroll of Statistics, three variants (follow: the pages follow the open one as now; nofollow: they do not; flowonly: one block only).
+ab_scroll() { # $1 name, $2 flags
+  lab_start "$2"
+  adb shell input tap $stats; sleep 3
+  local k
+  for k in 1 2; do
+    ab_run[s_$1]=$(( ${ab_run[s_$1]:-0} + 1 ))
+    begin "scroll stats_$1 ${ab_run[s_$1]}: 3 times down, 3 times up"
+    for i in 1 2 3; do adb shell input swipe 540 1800 540 700 250; sleep 0.6; done
+    for i in 1 2 3; do adb shell input swipe 540 700 540 1800 250; sleep 0.6; done
+    finish 2
+  done
+}
+for v in "follow none" "nofollow nofollow" "flowonly flowonly" "flowonly flowonly" "nofollow nofollow" "follow none"; do
+  set -- $v; ab_scroll "$1" "$2"
+done
+adb shell am force-stop $PKG; sleep 2
+adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 10
+
 # The eye on a period that has rows (the ledger is in the past, so two months back from the empty current one): after the tap every amount on
 # every tab must be masked, the tabs that were behind included. Screens are looked at by eye (builds/N/perf/mask-*.png), not decided by a script.
 mask_check() {

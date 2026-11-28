@@ -1,6 +1,6 @@
 // The root: opens the ledger, shows the first-start choice, and keeps scheduled payments and rates
 // up to date while the application is open (at start, when it comes back, and every minute).
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, AppState as SystemAppState, View } from "react-native";
 import { dismissKeyboard, KeyboardPad } from "../ui/keyboard.tsx";
 import { Stack, usePathname } from "expo-router";
@@ -10,6 +10,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 import { enableFreeze } from "react-native-screens";
 import { setAppVersion } from "../application/store.ts";
 import { probeEngine, watchStalls } from "../platform/perf.ts";
+import { readLabFlags } from "../platform/lab-flags.ts";
 import { appStore, LedgerLook, useAppPhase, usePalette, useT } from "../ui/app-context.tsx";
 import { fetcher } from "../platform/network.ts";
 import { registerBackgroundPosting } from "../platform/background.ts";
@@ -155,9 +156,11 @@ enableFreeze(true);
 export default function Layout() {
   // Speed-check lab only: every long pause of the JavaScript thread is written down.
   useEffect(watchStalls, []);
+  const [flagged, setFlagged] = useState(false);
+  useEffect(() => void readLabFlags().then(() => setFlagged(true)), []);
   return (
     <SafeAreaProvider>
-      <Root />
+      {flagged ? <Root /> : null}
     </SafeAreaProvider>
   );
 }

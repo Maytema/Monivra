@@ -1,6 +1,7 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { lab } from "../platform/lab-flags.ts";
 import { Text, View } from "react-native";
 import Reanimated, { Extrapolation, interpolate, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { Pressable } from "../ui/pressable.tsx";
@@ -183,6 +184,10 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
     return next;
   };
   const settings = data.settings;
+  // Lab variant "stable": the same function for the pages while the screen lives (the latest one is called).
+  const latestRender = useRef((key: string): ReactNode => render(pageOf(key)));
+  latestRender.current = (key: string): ReactNode => render(pageOf(key));
+  const stableRender = useCallback((key: string): ReactNode => latestRender.current(key), []);
   const pages = {
     current: keyOf(period),
     instant: caughtUp,
@@ -191,7 +196,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
       return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
     },
     header,
-    render: (key: string) => render(pageOf(key)),
+    render: lab.stable ? stableRender : (key: string) => render(pageOf(key)),
     onMove: (steps: number) => {
       let next = getView().period;
       for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);

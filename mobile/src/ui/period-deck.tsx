@@ -5,12 +5,13 @@
 //
 // The finger and the settling are the platform's scroll view; the offset goes to a shared value on the UI thread (`x`, read by the period
 // bar and the tabs). JavaScript hears of the end of a swipe only (`settle`).
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Dimensions, View, unstable_batchedUpdates } from "react-native";
 import Reanimated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useNavigation } from "expo-router";
 import { pagerState } from "./swipe-busy.ts";
 import { MaskScope } from "./mask-scope.tsx";
+import { lab, labCount } from "../platform/lab-flags.ts";
 import { PagerContext } from "./pager-motion.ts";
 
 const SPAN = 50;
@@ -47,11 +48,13 @@ interface Scroller {
 
 // One of the five places. `page` is the page (its number in the row) that stands here now; the place is the page's number times the width.
 function Done({ since, label }: { since: number; label: string }) {
-  useLayoutEffect(() => { console.log(`[perf] slot ${label}: drawn and committed in ${Date.now() - since} ms`); });
+  useLayoutEffect(() => { console.log(`[perf] slot ${label}: drawn and committed in ${Date.now() - since} ms, rows drawn ${labCount.rows}`); labCount.rows = 0; });
   return null;
 }
-const Slot = memo(function Slot({ id, page, width, height, current, render }: { id: string | undefined; page: number; width: number; height: number; current: boolean; render: (key: string) => ReactNode }) {
+const Slot = memo(function Slot({ id: asked, page, width, height, current, far, render }: { id: string | undefined; page: number; width: number; height: number; current: boolean; far: boolean; render: (key: string) => ReactNode }) {
   const since = Date.now();
+  const late = useDeferredValue(asked);
+  const id = lab.far && far ? late : asked;
   return (
     <View collapsable={false} style={{ position: "absolute", top: 0, left: page * width, width, height }}>
       {id === undefined ? null : <MaskScope active={current}>{render(id)}</MaskScope>}
@@ -275,7 +278,7 @@ export function PeriodDeck<K extends string>({
               style={{ flex: 1 }}
             >
               {places.map(({ s, page }) => (
-                <Slot key={`slot${s}`} id={row.keys[page]} page={page} width={width} height={height} current={page === index} render={render as (key: string) => ReactNode} />
+                <Slot key={`slot${s}`} id={row.keys[page]} page={page} width={width} height={height} current={page === index} far={Math.abs(page - index) >= 2} render={render as (key: string) => ReactNode} />
               ))}
             </Reanimated.ScrollView>
           ) : null}
