@@ -1,0 +1,1656 @@
+--------- beginning of main
+11-28 04:00:25.932  3890  3890 I ReactNativeJS: [perf] mark cold start
+11-28 04:00:29.545  3981  4054 I ReactNativeJS: Running "main"
+11-28 04:00:30.185  3981  4054 I ReactNativeJS: [perf] stall 438.0ms
+11-28 04:00:30.514  3981  4054 I ReactNativeJS: [perf] stall 220.2ms
+11-28 04:00:30.729  3981  4054 I ReactNativeJS: [perf] stall 138.9ms
+11-28 04:00:51.622  4890  4890 I ReactNativeJS: [perf] mark first screen: start with the basic set
+11-28 04:00:53.977  3981  4054 I ReactNativeJS: [perf] stall 142.6ms
+11-28 04:00:54.146  3981  4054 I ReactNativeJS: [perf] stall 89.8ms
+11-28 04:00:54.418  3981  4054 I ReactNativeJS: [perf] stall 246.5ms
+11-28 04:01:00.049  3981  4054 I ReactNativeJS: [perf] engine toLocaleString x200 1073.0ms
+11-28 04:01:00.050  3981  4054 I ReactNativeJS: [perf] engine plain format x200 0.6ms
+11-28 04:01:00.052  3981  4054 I ReactNativeJS: [perf] engine localeCompare x200 2.4ms
+11-28 04:01:00.636  3981  4054 I ReactNativeJS: [perf] engine toLocaleDateString x200 583.4ms
+11-28 04:01:07.576  3981  4054 I ReactNativeJS: [perf] stall 58.3ms
+11-28 04:01:09.975  5392  5392 I ReactNativeJS: [perf] mark picture operations: visit, playing (3.5 s)
+11-28 04:01:10.170  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 1 ms (kept 0)
+11-28 04:01:10.175  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 1)
+11-28 04:01:10.180  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 2)
+11-28 04:01:10.185  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 3)
+11-28 04:01:10.189  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 4)
+11-28 04:01:10.371  3981  4054 I ReactNativeJS: [perf] stall 228.2ms
+11-28 04:01:10.690  3981  4054 I ReactNativeJS: [perf] stall 171.1ms
+11-28 04:01:10.816  3981  4054 I ReactNativeJS: [perf] stall 62.6ms
+11-28 04:01:11.026  3981  4054 I ReactNativeJS: [perf] stall 82.2ms
+11-28 04:01:11.310  3981  4054 I ReactNativeJS: [perf] stall 67.2ms
+11-28 04:01:11.556  3981  4054 I ReactNativeJS: [perf] stall 60.6ms
+11-28 04:01:12.153  3981  4054 I ReactNativeJS: [perf] stall 55.4ms
+11-28 04:01:12.354  3981  4054 I ReactNativeJS: [perf] stall 58.4ms
+11-28 04:01:13.157  3981  4054 I ReactNativeJS: [perf] stall 71.7ms
+11-28 04:01:14.211  3981  4054 I ReactNativeJS: [perf] stall 61.6ms
+11-28 04:01:14.775  5722  5722 I ReactNativeJS: [perf] mark picture operations: same tab, at rest (3 s, after the run)
+11-28 04:01:15.244  3981  4054 I ReactNativeJS: [perf] stall 73.0ms
+11-28 04:01:19.574  5775  5775 I ReactNativeJS: [perf] mark picture accounts: visit, playing (3.5 s)
+11-28 04:01:23.680  5938  5938 I ReactNativeJS: [perf] mark picture accounts: same tab, at rest (3 s, after the run)
+11-28 04:01:27.005  3981  4054 I ReactNativeJS: [perf] stall 65.1ms
+11-28 04:01:27.269  3981  4054 I ReactNativeJS: [perf] stall 75.0ms
+11-28 04:01:28.318  5960  5960 I ReactNativeJS: [perf] mark picture statistics: visit, playing (3.5 s)
+11-28 04:01:28.683  3981  4054 I ReactNativeJS: [perf] stall 78.7ms
+11-28 04:01:28.811  3981  4054 I ReactNativeJS: [perf] stall 102.8ms
+11-28 04:01:28.900  3981  4054 I ReactNativeJS: [perf] stall 63.9ms
+11-28 04:01:29.634  3981  4054 I ReactNativeJS: [perf] stall 94.8ms
+11-28 04:01:29.957  3981  4054 I ReactNativeJS: [perf] stall 79.3ms
+11-28 04:01:30.107  3981  4054 I ReactNativeJS: [perf] stall 77.4ms
+11-28 04:01:30.182  3981  4054 I ReactNativeJS: [perf] stall 50.5ms
+11-28 04:01:30.426  3981  4054 I ReactNativeJS: [perf] stall 50.3ms
+11-28 04:01:30.514  3981  4054 I ReactNativeJS: [perf] stall 63.4ms
+11-28 04:01:30.717  3981  4054 I ReactNativeJS: [perf] stall 91.9ms
+11-28 04:01:31.187  3981  4054 I ReactNativeJS: [perf] stall 70.4ms
+11-28 04:01:33.826  6036  6036 I ReactNativeJS: [perf] mark picture statistics: same tab, at rest (3 s, after the run)
+11-28 04:01:37.351  3981  4054 I ReactNativeJS: [perf] stall 112.6ms
+11-28 04:01:37.600  3981  4054 I ReactNativeJS: [perf] stall 77.1ms
+11-28 04:01:37.758  3981  4054 I ReactNativeJS: [perf] stall 60.3ms
+11-28 04:01:38.026  3981  4054 I ReactNativeJS: [perf] stall 99.7ms
+11-28 04:01:38.289  3981  4054 I ReactNativeJS: [perf] stall 51.5ms
+11-28 04:01:38.727  3981  4054 I ReactNativeJS: [perf] stall 83.3ms
+11-28 04:01:38.785  6079  6079 I ReactNativeJS: [perf] mark picture categories: visit, playing (3.5 s)
+11-28 04:01:39.041  3981  4054 I ReactNativeJS: [perf] stall 85.9ms
+11-28 04:01:39.231  3981  4054 I ReactNativeJS: [perf] stall 55.6ms
+11-28 04:01:39.364  3981  4054 I ReactNativeJS: [perf] stall 108.1ms
+11-28 04:01:39.638  3981  4054 I ReactNativeJS: [perf] stall 249.0ms
+11-28 04:01:39.761  3981  4054 I ReactNativeJS: [perf] stall 96.7ms
+11-28 04:01:39.843  3981  4054 I ReactNativeJS: [perf] stall 57.6ms
+11-28 04:01:40.937  3981  4054 I ReactNativeJS: [perf] stall 86.1ms
+11-28 04:01:43.483  6135  6135 I ReactNativeJS: [perf] mark picture categories: same tab, at rest (3 s, after the run)
+11-28 04:01:46.548  6163  6163 I ReactNativeJS: [perf] mark empty: Accounts → Statistics → Accounts (0.3 s)
+11-28 04:01:54.121  6217  6217 I ReactNativeJS: [perf] mark empty: Categories → Operations → Categories (0.3 s)
+11-28 04:01:54.538  3981  4054 I ReactNativeJS: [perf] stall 68.7ms
+11-28 04:01:54.670  3981  4054 I ReactNativeJS: [perf] stall 61.7ms
+11-28 04:02:01.738  6269  6269 I ReactNativeJS: [perf] mark empty: 12 taps in random tab order, 0.25-0.5 s apart
+11-28 04:02:02.280  3981  4054 I ReactNativeJS: [perf] stall 60.2ms
+11-28 04:02:03.178  3981  4054 I ReactNativeJS: [perf] stall 77.9ms
+11-28 04:02:05.501  3981  4054 I ReactNativeJS: [perf] stall 109.2ms
+11-28 04:02:05.992  3981  4054 I ReactNativeJS: [perf] stall 53.2ms
+11-28 04:02:06.261  3981  4054 I ReactNativeJS: [perf] stall 56.2ms
+11-28 04:02:07.989  3981  4054 I ReactNativeJS: [perf] stall 64.2ms
+11-28 04:02:08.287  3981  4054 I ReactNativeJS: [perf] stall 62.6ms
+11-28 04:02:08.727  3981  4054 I ReactNativeJS: [perf] stall 52.7ms
+11-28 04:02:09.407  3981  4054 I ReactNativeJS: [perf] stall 92.1ms
+11-28 04:02:10.410  3981  4054 I ReactNativeJS: [perf] stall 54.6ms
+11-28 04:02:11.917  3981  4054 I ReactNativeJS: [perf] stall 51.1ms
+11-28 04:02:13.368  3981  4054 I ReactNativeJS: [perf] stall 83.4ms
+11-28 04:02:15.285  6427  6427 I ReactNativeJS: [perf] mark empty: 12 taps every 0.2 s
+11-28 04:02:15.568  3981  4054 I ReactNativeJS: [perf] stall 63.2ms
+11-28 04:02:15.714  3981  4054 I ReactNativeJS: [perf] stall 50.4ms
+11-28 04:02:15.808  3981  4054 I ReactNativeJS: [perf] stall 68.8ms
+11-28 04:02:16.059  3981  4054 I ReactNativeJS: [perf] stall 116.7ms
+11-28 04:02:16.297  3981  4054 I ReactNativeJS: [perf] stall 92.7ms
+11-28 04:02:17.069  3981  4054 I ReactNativeJS: [perf] stall 126.1ms
+11-28 04:02:17.751  3981  4054 I ReactNativeJS: [perf] stall 65.9ms
+11-28 04:02:18.357  3981  4054 I ReactNativeJS: [perf] stall 61.1ms
+11-28 04:02:18.475  3981  4054 I ReactNativeJS: [perf] stall 54.4ms
+11-28 04:02:18.912  3981  4054 I ReactNativeJS: [perf] stall 51.8ms
+11-28 04:02:20.206  3981  4054 I ReactNativeJS: [perf] stall 51.9ms
+11-28 04:02:20.302  3981  4054 I ReactNativeJS: [perf] stall 54.3ms
+11-28 04:02:20.798  3981  4054 I ReactNativeJS: [perf] stall 86.6ms
+11-28 04:02:21.108  3981  4054 I ReactNativeJS: [perf] stall 51.3ms
+11-28 04:02:21.444  3981  4054 I ReactNativeJS: [perf] stall 55.2ms
+11-28 04:02:22.055  3981  4054 I ReactNativeJS: [perf] stall 82.1ms
+11-28 04:02:22.363  3981  4054 I ReactNativeJS: [perf] stall 51.8ms
+11-28 04:02:28.615  6585  6585 I ReactNativeJS: [perf] mark eye (empty, Accounts): 6 taps 0.4 s apart
+11-28 04:02:30.205  3981  4054 I ReactNativeJS: [perf] stall 53.5ms
+11-28 04:02:30.402  3981  4054 I ReactNativeJS: [perf] stall 61.3ms
+11-28 04:02:31.322  3981  4054 I ReactNativeJS: [perf] stall 79.5ms
+11-28 04:02:37.564  6676  6676 I ReactNativeJS: [perf] mark eye (empty, Operations): 6 taps 0.4 s apart
+11-28 04:02:38.460  3981  4054 I ReactNativeJS: [perf] stall 56.8ms
+11-28 04:02:38.907  3981  4054 I ReactNativeJS: [perf] stall 54.9ms
+11-28 04:02:40.472  3981  4054 I ReactNativeJS: [perf] stall 63.1ms
+11-28 04:02:44.482  6724  6724 I ReactNativeJS: [perf] mark empty: add sheet 0.7 s after entering Operations, picture running
+11-28 04:02:47.665  3981  4054 I ReactNativeJS: [perf] stall 150.8ms
+11-28 04:02:55.768  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 5)
+11-28 04:02:55.971  3981  4054 I ReactNativeJS: [perf] stall 113.0ms
+11-28 04:02:56.073  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20983 (page 51.00)
+11-28 04:02:56.073  3981  4054 I ReactNativeJS: [perf] deck: settled from page 51, reached 51, swipes counted 0, page 51
+11-28 04:03:00.846  6824  6824 I ReactNativeJS: [perf] mark empty: add sheet 0.7 s after entering Operations, picture at rest
+11-28 04:03:05.864  3981  4054 I ReactNativeJS: [perf] stall 61.7ms
+11-28 04:03:05.980  3981  4054 I ReactNativeJS: [perf] stall 73.8ms
+11-28 04:03:06.949  6883  6883 I ReactNativeJS: [perf] mark empty: period dialog, tile pick 1
+11-28 04:03:10.986  3981  4054 I ReactNativeJS: [perf] stall 108.6ms
+11-28 04:03:13.156  3981  4054 I ReactNativeJS: [perf] stall 71.6ms
+11-28 04:03:13.257  3981  4054 I ReactNativeJS: [perf] stall 69.3ms
+11-28 04:03:13.605  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:03:13.606  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 50, swipes counted 0, page 50
+11-28 04:03:15.061  6963  6963 I ReactNativeJS: [perf] mark empty: period dialog, tile pick 2
+11-28 04:03:17.398  3981  4054 I ReactNativeJS: [perf] stall 76.1ms
+11-28 04:03:17.522  3981  4054 I ReactNativeJS: [perf] stall 66.4ms
+11-28 04:03:23.096  7022  7022 I ReactNativeJS: [perf] mark empty: period dialog, tile pick 3
+11-28 04:03:27.238  3981  4054 I ReactNativeJS: [perf] stall 64.6ms
+11-28 04:03:31.120  7088  7088 I ReactNativeJS: [perf] mark empty: period dialog, tile pick 4
+11-28 04:03:33.415  3981  4054 I ReactNativeJS: [perf] stall 59.5ms
+11-28 04:03:35.074  3981  4054 I ReactNativeJS: [perf] stall 102.1ms
+11-28 04:03:35.190  3981  4054 I ReactNativeJS: [perf] stall 91.6ms
+11-28 04:03:37.353  3981  4054 I ReactNativeJS: [perf] stall 61.1ms
+11-28 04:03:45.666  3981  4054 I ReactNativeJS: [perf] stall 222.1ms
+11-28 04:03:45.811  3981  4054 I ReactNativeJS: [perf] stall 52.1ms
+11-28 04:03:49.141  3981  4054 I ReactNativeJS: [perf] stall 93.3ms
+11-28 04:03:56.518  7350  7350 I ReactNativeJS: [perf] mark read the file and open the restore page
+11-28 04:03:59.264  3981  4054 I ReactNativeJS: [perf] stall 471.8ms
+11-28 04:03:59.633  3981  4054 I ReactNativeJS: [perf] stall 344.7ms
+11-28 04:03:59.901  3981  4054 I ReactNativeJS: [perf] stall 132.2ms
+11-28 04:04:00.000  3981  4054 I ReactNativeJS: [perf] stall 73.1ms
+11-28 04:04:00.084  3981  4054 I ReactNativeJS: [perf] stall 59.0ms
+11-28 04:04:00.161  3981  4054 I ReactNativeJS: [perf] stall 51.8ms
+11-28 04:04:00.248  3981  4054 I ReactNativeJS: [perf] stall 62.1ms
+11-28 04:04:07.975  7470  7470 I ReactNativeJS: [perf] mark restore 3000 operations
+11-28 04:04:10.332  3981  4054 I ReactNativeJS: [perf] stall 67.4ms
+11-28 04:04:11.870  3981  4054 I ReactNativeJS: [perf] stall 52.1ms
+11-28 04:04:14.274  3981  4054 I ReactNativeJS: [perf] stall 289.7ms
+11-28 04:04:14.382  3981  4054 I ReactNativeJS: [perf] stall 77.9ms
+11-28 04:04:14.671  3981  4054 I ReactNativeJS: [perf] stall 244.3ms
+11-28 04:04:14.780  3981  4054 I ReactNativeJS: [perf] stall 83.9ms
+11-28 04:04:14.868  3981  4054 I ReactNativeJS: [perf] stall 62.9ms
+11-28 04:04:14.958  3981  4054 I ReactNativeJS: [perf] stall 64.9ms
+11-28 04:04:15.059  3981  4054 I ReactNativeJS: [perf] stall 74.0ms
+11-28 04:04:15.141  3981  4054 I ReactNativeJS: [perf] stall 56.3ms
+11-28 04:04:15.222  3981  4054 I ReactNativeJS: [perf] stall 55.9ms
+11-28 04:04:15.313  3981  4054 I ReactNativeJS: [perf] stall 61.9ms
+11-28 04:04:15.405  3981  4054 I ReactNativeJS: [perf] stall 66.7ms
+11-28 04:04:15.490  3981  4054 I ReactNativeJS: [perf] stall 60.5ms
+11-28 04:04:15.577  3981  4054 I ReactNativeJS: [perf] stall 59.4ms
+11-28 04:04:15.718  3981  4054 I ReactNativeJS: [perf] stall 115.1ms
+11-28 04:04:16.333  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 1 ms (kept 0)
+11-28 04:04:16.338  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 1)
+11-28 04:04:16.338  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 2)
+11-28 04:04:16.340  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 1 ms (kept 3)
+11-28 04:04:16.348  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 4 ms (kept 4)
+11-28 04:04:16.817  3981  4054 I ReactNativeJS: [perf] stall 809.1ms
+11-28 04:04:16.819  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:04:16.819  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:04:16.819  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:04:16.819  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:04:16.820  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:04:16.985  3981  4054 I ReactNativeJS: [perf] stall 143.3ms
+11-28 04:04:17.115  3981  4054 I ReactNativeJS: [perf] stall 102.9ms
+11-28 04:04:17.235  3981  4054 I ReactNativeJS: [perf] stall 94.4ms
+11-28 04:04:17.438  3981  4054 I ReactNativeJS: [perf] stall 55.4ms
+11-28 04:04:38.200  7564  7564 I ReactNativeJS: [perf] mark series 3000 tabs 1: 12 taps every 0.2 s
+11-28 04:04:39.236  3981  4054 I ReactNativeJS: [perf] stall 50.4ms
+11-28 04:04:40.172  3981  4054 I ReactNativeJS: [perf] stall 252.7ms
+11-28 04:04:50.537  7705  7705 I ReactNativeJS: [perf] mark eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apart
+11-28 04:04:50.695  3981  4054 I ReactNativeJS: [perf] stall 57.0ms
+11-28 04:04:51.382  3981  4054 I ReactNativeJS: [perf] stall 63.9ms
+11-28 04:04:53.299  3981  4054 I ReactNativeJS: [perf] stall 73.9ms
+11-28 04:04:59.493  7783  7783 I ReactNativeJS: [perf] mark eye (series 3000 tabs 1 Operations): 6 taps 0.4 s apart
+11-28 04:05:04.596  3981  4054 I ReactNativeJS: [perf] stall 74.4ms
+11-28 04:05:08.555  7853  7853 I ReactNativeJS: [perf] mark eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s apart
+11-28 04:05:17.568  7931  7931 I ReactNativeJS: [perf] mark eye (series 3000 tabs 1 Categories): 6 taps 0.4 s apart
+11-28 04:05:17.940  3981  4054 I ReactNativeJS: [perf] stall 70.2ms
+11-28 04:05:24.448  7986  7986 I ReactNativeJS: [perf] mark series 3000 tabs 2: 12 taps every 0.2 s
+11-28 04:05:36.437  8101  8101 I ReactNativeJS: [perf] mark eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apart
+11-28 04:05:38.039  3981  4054 I ReactNativeJS: [perf] stall 54.1ms
+11-28 04:05:39.137  3981  4054 I ReactNativeJS: [perf] stall 56.0ms
+11-28 04:05:45.450  8168  8168 I ReactNativeJS: [perf] mark eye (series 3000 tabs 2 Operations): 6 taps 0.4 s apart
+11-28 04:05:54.455  8245  8245 I ReactNativeJS: [perf] mark eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s apart
+11-28 04:05:55.105  3981  4054 I ReactNativeJS: [perf] stall 75.6ms
+11-28 04:06:03.451  8316  8316 I ReactNativeJS: [perf] mark eye (series 3000 tabs 2 Categories): 6 taps 0.4 s apart
+11-28 04:06:04.285  3981  4054 I ReactNativeJS: [perf] stall 79.5ms
+11-28 04:06:05.070  3981  4054 I ReactNativeJS: [perf] stall 68.8ms
+11-28 04:06:10.334  8365  8365 I ReactNativeJS: [perf] mark series 3000 tabs 3: 12 taps every 0.2 s
+11-28 04:06:22.317  8477  8477 I ReactNativeJS: [perf] mark eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apart
+11-28 04:06:25.413  3981  4054 I ReactNativeJS: [perf] stall 51.6ms
+11-28 04:06:31.633  8550  8550 I ReactNativeJS: [perf] mark eye (series 3000 tabs 3 Operations): 6 taps 0.4 s apart
+11-28 04:06:31.977  3981  4054 I ReactNativeJS: [perf] stall 50.7ms
+11-28 04:06:33.651  3981  4054 I ReactNativeJS: [perf] stall 59.7ms
+11-28 04:06:36.978  3981  4054 I ReactNativeJS: [perf] stall 57.8ms
+11-28 04:06:40.973  8619  8619 I ReactNativeJS: [perf] mark eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s apart
+11-28 04:06:50.265  8691  8691 I ReactNativeJS: [perf] mark eye (series 3000 tabs 3 Categories): 6 taps 0.4 s apart
+11-28 04:06:53.392  3981  4054 I ReactNativeJS: [perf] stall 53.4ms
+11-28 04:06:57.513  8744  8744 I ReactNativeJS: [perf] mark series 3000 index swipes 1: 10 fast swipes back
+11-28 04:06:57.577  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:06:57.671  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20360, moved -212 (-0.51 pages), velocity 2.75, counted true
+11-28 04:06:57.927  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:06:57.927  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 04:06:57.934  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 5)
+11-28 04:06:58.000  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:06:58.084  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19991, moved -169 (-0.41 pages), velocity 2.75, counted true
+11-28 04:06:58.376  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:06:58.376  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 04:06:58.381  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 1 ms (kept 6)
+11-28 04:06:58.420  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:06:58.466  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19589, moved -160 (-0.39 pages), velocity 2.75, counted true
+11-28 04:06:58.726  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:06:58.726  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:06:58.730  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 1 ms (kept 7)
+11-28 04:06:58.800  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:06:58.902  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19149, moved -189 (-0.46 pages), velocity 2.75, counted true
+11-28 04:06:59.181  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:06:59.181  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:06:59.188  3981  4054 I ReactNativeJS: [perf] page: built 211 items in 1 ms (kept 8)
+11-28 04:06:59.232  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:06:59.303  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18749, moved -177 (-0.43 pages), velocity 2.75, counted true
+11-28 04:06:59.610  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:06:59.610  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:06:59.618  3981  4054 I ReactNativeJS: [perf] page: built 221 items in 1 ms (kept 9)
+11-28 04:06:59.647  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:06:59.708  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18329, moved -186 (-0.45 pages), velocity 2.75, counted true
+11-28 04:06:59.895  3981  4054 I ReactNativeJS: [perf] stall 64.1ms
+11-28 04:06:59.959  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:06:59.960  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:06:59.969  3981  4054 I ReactNativeJS: [perf] page: built 209 items in 1 ms (kept 10)
+11-28 04:07:00.039  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:07:00.118  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18002, moved -101 (-0.24 pages), velocity 2.75, counted true
+11-28 04:07:00.427  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:00.427  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:07:00.428  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:07:00.435  3981  4054 I ReactNativeJS: [perf] page: built 179 items in 1 ms (kept 11)
+11-28 04:07:00.520  3981  4054 I ReactNativeJS: [perf] stall 85.8ms
+11-28 04:07:00.547  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17464, moved -227 (-0.55 pages), velocity 2.75, counted true
+11-28 04:07:00.777  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:00.777  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:07:00.781  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:07:00.880  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:00.971  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17152, moved -128 (-0.31 pages), velocity 2.75, counted true
+11-28 04:07:01.226  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:01.226  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 04:07:01.232  3981  4054 I ReactNativeJS: [perf] page: built 193 items in 0 ms (kept 12)
+11-28 04:07:01.307  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:07:01.410  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16682, moved -187 (-0.45 pages), velocity 2.75, counted true
+11-28 04:07:01.693  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:07:01.693  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:07:01.697  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 0 ms (kept 12)
+11-28 04:07:03.709  8806  8806 I ReactNativeJS: [perf] mark series 3000 index return 1: 10 swipes forward
+11-28 04:07:03.777  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:07:03.867  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16617, moved 160 (0.39 pages), velocity 0.00, counted true
+11-28 04:07:04.266  3981  4054 I ReactNativeJS: [perf] stall 59.2ms
+11-28 04:07:04.267  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16546 (page 40.21, sliding null, deck on 40)
+11-28 04:07:04.346  3981  4054 I ReactNativeJS: [perf] stall 55.9ms
+11-28 04:07:04.347  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16722, moved 176 (0.43 pages), velocity 0.00, counted true
+11-28 04:07:04.704  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16786 (page 40.80, sliding null, deck on 40)
+11-28 04:07:04.818  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17000, moved 215 (0.52 pages), velocity 0.00, counted true
+11-28 04:07:05.132  3981  4054 I ReactNativeJS: [perf] stall 51.2ms
+11-28 04:07:05.256  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16910 (page 41.10, sliding null, deck on 40)
+11-28 04:07:05.324  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17065, moved 154 (0.37 pages), velocity 0.00, counted true
+11-28 04:07:05.663  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16997 (page 41.31, sliding null, deck on 40)
+11-28 04:07:05.832  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17231, moved 234 (0.57 pages), velocity 0.00, counted true
+11-28 04:07:06.237  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 40)
+11-28 04:07:06.327  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17506, moved 226 (0.55 pages), velocity -2.75, counted true
+11-28 04:07:06.594  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:06.594  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 43, swipes counted 6, page 46
+11-28 04:07:06.799  3981  4054 I ReactNativeJS: [perf] stall 197.6ms
+11-28 04:07:06.811  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 46)
+11-28 04:07:06.812  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17848, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:07:06.933  3981  4054 I ReactNativeJS: [perf] stall 50.8ms
+11-28 04:07:07.064  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:07:07.065  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:07:07.065  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 1, page 47
+11-28 04:07:07.159  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19082, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:07:07.437  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:07.437  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 47, swipes counted 1, page 48
+11-28 04:07:07.442  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 1 ms (kept 12)
+11-28 04:07:07.523  3981  4054 I ReactNativeJS: [perf] stall 64.3ms
+11-28 04:07:07.525  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding 48, deck on 48)
+11-28 04:07:07.592  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19436, moved 99 (0.24 pages), velocity 0.00, counted false
+11-28 04:07:07.822  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:07.822  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 48, swipes counted 0, page 48
+11-28 04:07:07.944  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:07.944  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 48, swipes counted 0, page 48
+11-28 04:07:07.961  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:08.063  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19978, moved 230 (0.56 pages), velocity -2.75, counted true
+11-28 04:07:08.161  3981  4054 I ReactNativeJS: [perf] stall 53.9ms
+11-28 04:07:08.343  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:07:08.343  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 04:07:08.347  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:07:12.378  8872  8872 I ReactNativeJS: [perf] mark series 3000 index swipes 2: 10 fast swipes back
+11-28 04:07:12.444  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:07:12.536  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20013, moved -147 (-0.36 pages), velocity 2.75, counted true
+11-28 04:07:12.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:12.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 04:07:12.877  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:12.966  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19546, moved -202 (-0.49 pages), velocity 2.75, counted true
+11-28 04:07:13.260  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:13.260  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:07:13.314  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:13.426  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19189, moved -149 (-0.36 pages), velocity 0.00, counted true
+11-28 04:07:13.774  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19259 (page 46.81, sliding null, deck on 47)
+11-28 04:07:13.863  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19124, moved -134 (-0.33 pages), velocity 0.00, counted false
+11-28 04:07:14.183  3981  4054 I ReactNativeJS: [perf] stall 75.1ms
+11-28 04:07:14.201  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19056 (page 46.32, sliding null, deck on 47)
+11-28 04:07:14.300  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18834, moved -223 (-0.54 pages), velocity 0.00, counted true
+11-28 04:07:14.653  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18895 (page 45.93, sliding null, deck on 47)
+11-28 04:07:14.795  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18689, moved -206 (-0.50 pages), velocity 0.00, counted true
+11-28 04:07:15.247  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18584 (page 45.17, sliding null, deck on 47)
+11-28 04:07:15.310  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18483, moved -102 (-0.25 pages), velocity 0.00, counted false
+11-28 04:07:15.665  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 47)
+11-28 04:07:15.772  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18288, moved -226 (-0.55 pages), velocity 2.75, counted true
+11-28 04:07:16.094  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:07:16.094  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 44, swipes counted -4, page 43
+11-28 04:07:16.121  3981  4054 I ReactNativeJS: [perf] page: built 209 items in 1 ms (kept 12)
+11-28 04:07:16.141  3981  4054 I ReactNativeJS: [perf] page: built 221 items in 0 ms (kept 12)
+11-28 04:07:16.290  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding 43, deck on 43)
+11-28 04:07:16.290  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17924, moved -179 (-0.43 pages), velocity 2.75, counted true
+11-28 04:07:16.298  3981  4054 I ReactNativeJS: [perf] stall 179.9ms
+11-28 04:07:16.511  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:16.511  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 43, swipes counted -1, page 42
+11-28 04:07:16.516  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 0 ms (kept 12)
+11-28 04:07:16.542  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding 42, deck on 42)
+11-28 04:07:16.603  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17648, moved -43 (-0.11 pages), velocity 2.75, counted true
+11-28 04:07:16.704  3981  4054 I ReactNativeJS: [perf] stall 54.5ms
+11-28 04:07:16.840  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:16.840  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted -1, page 41
+11-28 04:07:16.851  3981  4054 I ReactNativeJS: [perf] page: built 193 items in 1 ms (kept 12)
+11-28 04:07:16.917  3981  4054 I ReactNativeJS: [perf] stall 52.4ms
+11-28 04:07:16.999  3981  4054 I ReactNativeJS: [perf] stall 56.7ms
+11-28 04:07:17.099  3981  4054 I ReactNativeJS: [perf] stall 54.0ms
+11-28 04:07:17.233  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:17.234  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 04:07:17.333  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:17.333  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 04:07:18.915  8933  8933 I ReactNativeJS: [perf] mark series 3000 index return 2: 10 swipes forward
+11-28 04:07:18.977  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:07:19.078  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17087, moved 219 (0.53 pages), velocity -2.75, counted true
+11-28 04:07:19.361  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:19.361  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:07:19.402  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:19.493  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17493, moved 213 (0.52 pages), velocity -2.75, counted true
+11-28 04:07:19.760  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:19.761  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:07:19.846  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:07:19.975  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17890, moved 198 (0.48 pages), velocity 0.00, counted true
+11-28 04:07:20.219  3981  4054 I ReactNativeJS: [perf] stall 60.7ms
+11-28 04:07:20.355  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17802 (page 43.27, sliding null, deck on 43)
+11-28 04:07:20.437  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17995, moved 193 (0.47 pages), velocity -2.75, counted true
+11-28 04:07:20.709  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:07:20.709  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 2, page 45
+11-28 04:07:20.724  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 12)
+11-28 04:07:20.766  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+11-28 04:07:20.824  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18157, moved 54 (0.13 pages), velocity -2.75, counted true
+11-28 04:07:21.037  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:07:21.037  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 1, page 46
+11-28 04:07:21.088  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 30 ms (kept 12)
+11-28 04:07:21.278  3981  4054 I ReactNativeJS: [perf] stall 216.4ms
+11-28 04:07:21.285  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding 46, deck on 46)
+11-28 04:07:21.285  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18674, moved 160 (0.39 pages), velocity -2.75, counted true
+11-28 04:07:21.401  3981  4054 I ReactNativeJS: [perf] stall 56.1ms
+11-28 04:07:21.551  3981  4054 I ReactNativeJS: [perf] stall 55.2ms
+11-28 04:07:21.565  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:07:21.565  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 1, page 47
+11-28 04:07:21.576  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 1 ms (kept 12)
+11-28 04:07:21.687  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding 47, deck on 47)
+11-28 04:07:21.727  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19033, moved 107 (0.26 pages), velocity 0.00, counted false
+11-28 04:07:22.014  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:22.015  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 47, swipes counted 0, page 47
+11-28 04:07:22.111  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:22.212  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19552, moved 214 (0.52 pages), velocity -2.75, counted true
+11-28 04:07:22.415  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:22.415  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:07:22.434  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 6 ms (kept 12)
+11-28 04:07:22.594  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:22.667  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19948, moved 199 (0.48 pages), velocity -2.75, counted true
+11-28 04:07:22.943  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:07:22.943  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 04:07:22.947  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:07:22.965  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:07:23.096  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20384, moved 224 (0.55 pages), velocity -2.75, counted true
+11-28 04:07:23.393  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:07:23.393  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 04:07:23.396  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:07:27.416  9001  9001 I ReactNativeJS: [perf] mark series 3000 index swipes 3: 10 fast swipes back
+11-28 04:07:27.477  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:07:27.598  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20350, moved -221 (-0.54 pages), velocity 2.75, counted true
+11-28 04:07:27.876  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:07:27.877  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 04:07:27.928  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:07:28.006  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19951, moved -209 (-0.51 pages), velocity 2.75, counted true
+11-28 04:07:28.294  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:28.294  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 04:07:28.327  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:28.438  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19589, moved -160 (-0.39 pages), velocity 2.75, counted true
+11-28 04:07:28.693  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:28.693  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:07:28.764  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:28.840  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19198, moved -139 (-0.34 pages), velocity 2.75, counted true
+11-28 04:07:29.143  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:07:29.143  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:07:29.180  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:07:29.277  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18740, moved -186 (-0.45 pages), velocity 2.75, counted true
+11-28 04:07:29.453  3981  4054 I ReactNativeJS: [perf] stall 50.7ms
+11-28 04:07:29.560  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:07:29.560  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:07:29.589  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:07:29.677  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18312, moved -202 (-0.49 pages), velocity 2.75, counted true
+11-28 04:07:29.943  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:07:29.944  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:07:29.949  3981  4054 I ReactNativeJS: [perf] page: built 209 items in 0 ms (kept 12)
+11-28 04:07:30.012  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:07:30.123  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17958, moved -144 (-0.35 pages), velocity 2.75, counted true
+11-28 04:07:30.409  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:30.409  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:07:30.416  3981  4054 I ReactNativeJS: [perf] page: built 179 items in 0 ms (kept 12)
+11-28 04:07:30.453  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:07:30.547  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17546, moved -146 (-0.35 pages), velocity 2.75, counted true
+11-28 04:07:30.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:30.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:07:30.847  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:07:30.888  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:30.988  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17068, moved -212 (-0.51 pages), velocity 2.75, counted true
+11-28 04:07:31.162  3981  4054 I ReactNativeJS: [perf] stall 55.0ms
+11-28 04:07:31.243  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:31.243  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 04:07:31.248  3981  4054 I ReactNativeJS: [perf] page: built 193 items in 1 ms (kept 12)
+11-28 04:07:31.314  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:07:31.404  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16682, moved -187 (-0.45 pages), velocity 2.75, counted true
+11-28 04:07:31.693  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:07:31.693  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:07:31.699  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 0 ms (kept 12)
+11-28 04:07:33.728  9062  9062 I ReactNativeJS: [perf] mark series 3000 index return 3: 10 swipes forward
+11-28 04:07:33.794  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:07:33.897  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16659, moved 202 (0.49 pages), velocity -2.75, counted true
+11-28 04:07:34.210  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:34.210  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:07:34.252  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:07:34.354  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17042, moved 173 (0.42 pages), velocity -2.75, counted true
+11-28 04:07:34.610  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:34.610  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:07:34.648  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:34.791  3981  4054 I ReactNativeJS: [perf] stall 65.9ms
+11-28 04:07:34.792  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17533, moved 253 (0.62 pages), velocity 0.00, counted true
+11-28 04:07:35.058  3981  4054 I ReactNativeJS: [perf] stall 63.8ms
+11-28 04:07:35.173  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17598 (page 42.77, sliding null, deck on 42)
+11-28 04:07:35.270  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17830, moved 231 (0.56 pages), velocity -2.75, counted true
+11-28 04:07:35.482  3981  4054 I ReactNativeJS: [perf] stall 56.5ms
+11-28 04:07:35.543  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:07:35.543  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 44, swipes counted 2, page 44
+11-28 04:07:35.601  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:07:35.692  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18264, moved 161 (0.39 pages), velocity -2.75, counted true
+11-28 04:07:35.873  3981  4054 I ReactNativeJS: [perf] stall 69.3ms
+11-28 04:07:35.976  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:07:35.976  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:07:36.013  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:07:36.084  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18674, moved 160 (0.39 pages), velocity -2.75, counted true
+11-28 04:07:36.410  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:07:36.410  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:07:36.411  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:07:36.417  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 1 ms (kept 12)
+11-28 04:07:36.519  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19102, moved 176 (0.43 pages), velocity 0.00, counted true
+11-28 04:07:36.878  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19029 (page 46.25, sliding null, deck on 46)
+11-28 04:07:36.985  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19252, moved 223 (0.54 pages), velocity 0.00, counted true
+11-28 04:07:37.302  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19311 (page 46.94, sliding null, deck on 46)
+11-28 04:07:37.401  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19496, moved 184 (0.45 pages), velocity -2.75, counted true
+11-28 04:07:37.483  3981  4054 I ReactNativeJS: [perf] stall 57.1ms
+11-28 04:07:37.680  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:37.680  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 48, swipes counted 3, page 49
+11-28 04:07:37.687  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 1 ms (kept 12)
+11-28 04:07:37.717  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:07:37.723  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 1 ms (kept 12)
+11-28 04:07:37.921  3981  4054 I ReactNativeJS: [perf] stall 215.7ms
+11-28 04:07:37.930  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding 49, deck on 49)
+11-28 04:07:37.933  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19960, moved 211 (0.51 pages), velocity -2.75, counted true
+11-28 04:07:38.109  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:07:38.109  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 49, swipes counted 1, page 50
+11-28 04:07:38.113  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:07:38.442  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:07:38.442  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 50, swipes counted 0, page 50
+11-28 04:07:42.148  9128  9128 I ReactNativeJS: [perf] mark series 3000 index swipes 4: 10 fast swipes back
+11-28 04:07:42.210  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:07:42.304  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20368, moved -204 (-0.50 pages), velocity 2.75, counted true
+11-28 04:07:42.611  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:07:42.611  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 04:07:42.658  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:07:42.719  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20018, moved -142 (-0.34 pages), velocity 2.75, counted true
+11-28 04:07:42.977  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:42.977  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 04:07:43.032  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:43.110  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19607, moved -142 (-0.34 pages), velocity 2.75, counted true
+11-28 04:07:43.427  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:43.427  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:07:43.457  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:43.560  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19144, moved -193 (-0.47 pages), velocity 2.75, counted true
+11-28 04:07:43.799  3981  4054 I ReactNativeJS: [perf] stall 50.9ms
+11-28 04:07:43.861  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 47)
+11-28 04:07:44.015  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18681, moved -245 (-0.60 pages), velocity 2.75, counted true
+11-28 04:07:44.230  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:07:44.230  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 45, swipes counted -2, page 45
+11-28 04:07:44.357  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:07:44.429  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18338, moved -176 (-0.43 pages), velocity 0.00, counted true
+11-28 04:07:44.806  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18418 (page 44.76, sliding null, deck on 45)
+11-28 04:07:44.885  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18236, moved -181 (-0.44 pages), velocity 0.00, counted true
+11-28 04:07:45.293  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18151 (page 44.12, sliding null, deck on 45)
+11-28 04:07:45.340  3981  4054 I ReactNativeJS: [perf] stall 54.5ms
+11-28 04:07:45.390  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17967, moved -184 (-0.45 pages), velocity 0.00, counted true
+11-28 04:07:45.703  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18019 (page 43.80, sliding null, deck on 45)
+11-28 04:07:45.815  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17856, moved -162 (-0.39 pages), velocity 0.00, counted true
+11-28 04:07:46.200  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17785 (page 43.23, sliding null, deck on 45)
+11-28 04:07:46.283  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17573, moved -212 (-0.51 pages), velocity 0.00, counted true
+11-28 04:07:46.921  3981  4054 I ReactNativeJS: [perf] stall 52.9ms
+11-28 04:07:47.027  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:47.027  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 43, swipes counted -5, page 40
+11-28 04:07:47.043  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:07:47.084  3981  4054 I ReactNativeJS: [perf] page: built 179 items in 1 ms (kept 12)
+11-28 04:07:47.100  3981  4054 I ReactNativeJS: [perf] page: built 209 items in 1 ms (kept 12)
+11-28 04:07:47.113  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 1 ms (kept 12)
+11-28 04:07:47.124  3981  4054 I ReactNativeJS: [perf] page: built 193 items in 0 ms (kept 12)
+11-28 04:07:47.170  3981  4054 I ReactNativeJS: [perf] stall 133.6ms
+11-28 04:07:48.590  9189  9189 I ReactNativeJS: [perf] mark series 3000 index return 4: 10 swipes forward
+11-28 04:07:48.660  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:07:48.777  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16653, moved 195 (0.48 pages), velocity 0.00, counted true
+11-28 04:07:49.117  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16591 (page 40.33, sliding null, deck on 40)
+11-28 04:07:49.208  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16768, moved 176 (0.43 pages), velocity -2.75, counted true
+11-28 04:07:49.476  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:49.477  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 2, page 42
+11-28 04:07:49.535  3981  4054 I ReactNativeJS: [perf] stall 50.6ms
+11-28 04:07:49.579  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding 42, deck on 42)
+11-28 04:07:49.579  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:07:49.579  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted 0, page 41
+11-28 04:07:49.678  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17025, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:07:49.943  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:49.943  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:07:49.974  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:50.086  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17511, moved 231 (0.56 pages), velocity -2.75, counted true
+11-28 04:07:50.343  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:50.343  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:07:50.381  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:07:50.481  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17900, moved 209 (0.51 pages), velocity -2.75, counted true
+11-28 04:07:50.742  3981  4054 I ReactNativeJS: [perf] stall 66.4ms
+11-28 04:07:50.810  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 43)
+11-28 04:07:50.811  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:07:50.811  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 04:07:50.896  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18312, moved 209 (0.51 pages), velocity -2.75, counted true
+11-28 04:07:51.176  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:07:51.176  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:07:51.215  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:07:51.316  3981  4054 I ReactNativeJS: [perf] stall 63.1ms
+11-28 04:07:51.336  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18743, moved 229 (0.56 pages), velocity 0.00, counted true
+11-28 04:07:51.753  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18836 (page 45.78, sliding null, deck on 45)
+11-28 04:07:51.895  3981  4054 I ReactNativeJS: [perf] stall 56.8ms
+11-28 04:07:51.895  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19078, moved 242 (0.59 pages), velocity -2.75, counted true
+11-28 04:07:52.160  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:52.161  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 47, swipes counted 2, page 47
+11-28 04:07:52.165  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 0 ms (kept 12)
+11-28 04:07:52.181  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 0 ms (kept 12)
+11-28 04:07:52.214  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:52.274  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19429, moved 92 (0.22 pages), velocity 0.00, counted false
+11-28 04:07:52.626  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19368 (page 47.08, sliding null, deck on 47)
+11-28 04:07:52.733  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19591, moved 223 (0.54 pages), velocity -2.75, counted true
+11-28 04:07:53.043  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:07:53.043  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:07:53.048  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 1 ms (kept 12)
+11-28 04:07:57.054  9255  9255 I ReactNativeJS: [perf] mark series 3000 index swipes 5: 10 fast swipes back
+11-28 04:07:57.127  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:07:57.219  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19565, moved -183 (-0.45 pages), velocity 2.75, counted true
+11-28 04:07:57.493  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:07:57.493  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:07:57.548  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:07:57.654  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19132, moved -205 (-0.50 pages), velocity 0.00, counted true
+11-28 04:07:58.009  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19201 (page 46.67, sliding null, deck on 47)
+11-28 04:07:58.182  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18953, moved -248 (-0.60 pages), velocity 0.00, counted true
+11-28 04:07:58.565  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 47)
+11-28 04:07:58.659  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18763, moved -162 (-0.39 pages), velocity 0.00, counted true
+11-28 04:07:58.776  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18763 (page 45.61)
+11-28 04:07:58.776  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -3, page 44
+11-28 04:07:58.852  3981  4054 I ReactNativeJS: [perf] stall 68.2ms
+11-28 04:07:58.994  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:07:59.077  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17916, moved -187 (-0.45 pages), velocity 2.75, counted true
+11-28 04:07:59.225  3981  4054 I ReactNativeJS: [perf] stall 64.1ms
+11-28 04:07:59.393  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:07:59.393  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:07:59.418  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:07:59.494  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17494, moved -197 (-0.48 pages), velocity 2.75, counted true
+11-28 04:07:59.744  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:07:59.744  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:07:59.749  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:07:59.857  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:07:59.932  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17074, moved -206 (-0.50 pages), velocity 2.75, counted true
+11-28 04:08:00.176  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:08:00.177  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 04:08:00.279  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:08:00.379  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16687, moved -182 (-0.44 pages), velocity 0.00, counted true
+11-28 04:08:00.837  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16780 (page 40.78, sliding null, deck on 41)
+11-28 04:08:00.882  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16560, moved -220 (-0.53 pages), velocity 2.75, counted true
+11-28 04:08:01.110  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:08:01.110  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -2, page 39
+11-28 04:08:01.118  3981  4054 I ReactNativeJS: [perf] page: built 207 items in 2 ms (kept 12)
+11-28 04:08:01.134  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 0 ms (kept 12)
+11-28 04:08:01.213  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding 39, deck on 39)
+11-28 04:08:01.213  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:08:01.213  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 0, page 40
+11-28 04:08:01.310  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16312, moved -146 (-0.35 pages), velocity 2.75, counted true
+11-28 04:08:01.594  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:08:01.594  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:08:03.600  9316  9316 I ReactNativeJS: [perf] mark series 3000 index return 5: 10 swipes forward
+11-28 04:08:03.660  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:08:03.762  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16262, moved 216 (0.53 pages), velocity -2.75, counted true
+11-28 04:08:04.060  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:08:04.060  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:08:04.086  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:08:04.155  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16640, moved 183 (0.44 pages), velocity -2.75, counted true
+11-28 04:08:04.477  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 40)
+11-28 04:08:04.494  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:08:04.494  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:08:04.622  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17086, moved 218 (0.53 pages), velocity -2.75, counted true
+11-28 04:08:04.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:08:04.844  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:08:04.945  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:08:05.078  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17493, moved 213 (0.52 pages), velocity 0.00, counted true
+11-28 04:08:05.433  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17561 (page 42.68, sliding null, deck on 42)
+11-28 04:08:05.505  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17652, moved 91 (0.22 pages), velocity 0.00, counted false
+11-28 04:08:05.857  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17688 (page 42.99, sliding null, deck on 42)
+11-28 04:08:05.969  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17859, moved 171 (0.41 pages), velocity 0.00, counted true
+11-28 04:08:06.358  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17781 (page 43.22, sliding null, deck on 42)
+11-28 04:08:06.449  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18003, moved 223 (0.54 pages), velocity -2.75, counted true
+11-28 04:08:06.632  3981  4054 I ReactNativeJS: [perf] stall 60.4ms
+11-28 04:08:06.709  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:08:06.709  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 44, swipes counted 3, page 45
+11-28 04:08:06.724  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 0 ms (kept 12)
+11-28 04:08:06.738  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 12)
+11-28 04:08:06.788  3981  4054 I ReactNativeJS: [perf] stall 70.2ms
+11-28 04:08:06.789  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+11-28 04:08:06.912  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18202, moved 99 (0.24 pages), velocity 0.00, counted false
+11-28 04:08:07.118  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:08:07.118  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 0, page 45
+11-28 04:08:07.244  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:08:07.244  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 0, page 45
+11-28 04:08:07.262  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:08:07.350  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18715, moved 201 (0.49 pages), velocity -2.75, counted true
+11-28 04:08:07.662  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:08:07.662  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:08:07.663  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:08:07.670  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 1 ms (kept 12)
+11-28 04:08:07.762  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19113, moved 187 (0.45 pages), velocity 0.00, counted true
+11-28 04:08:08.260  3981  4054 I ReactNativeJS: [perf] stall 70.1ms
+11-28 04:08:08.726  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:08:08.726  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 1, page 47
+11-28 04:08:08.732  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 1 ms (kept 12)
+11-28 04:08:09.057  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:08:09.067  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 47, swipes counted 0, page 47
+11-28 04:08:12.097  9382  9382 I ReactNativeJS: [perf] mark series 3000 index swipes 6: 10 fast swipes back
+11-28 04:08:12.160  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:08:12.238  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19138, moved -199 (-0.48 pages), velocity 2.75, counted true
+11-28 04:08:12.478  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:08:12.478  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:08:12.574  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:08:12.672  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18700, moved -226 (-0.55 pages), velocity 2.75, counted true
+11-28 04:08:12.926  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:08:12.926  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:08:12.999  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:08:13.080  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18359, moved -155 (-0.38 pages), velocity 2.75, counted true
+11-28 04:08:13.210  3981  4054 I ReactNativeJS: [perf] stall 56.8ms
+11-28 04:08:13.376  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:08:13.376  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:08:13.403  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:08:13.477  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17921, moved -182 (-0.44 pages), velocity 2.75, counted true
+11-28 04:08:13.760  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:08:13.760  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:08:13.765  3981  4054 I ReactNativeJS: [perf] page: built 179 items in 1 ms (kept 12)
+11-28 04:08:13.812  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:08:13.912  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17549, moved -143 (-0.35 pages), velocity 0.00, counted false
+11-28 04:08:14.256  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17612 (page 42.81, sliding null, deck on 43)
+11-28 04:08:14.341  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17417, moved -195 (-0.47 pages), velocity 0.00, counted true
+11-28 04:08:14.714  3981  4054 I ReactNativeJS: [perf] stall 82.3ms
+11-28 04:08:14.716  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17371 (page 42.22, sliding null, deck on 43)
+11-28 04:08:14.781  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17157, moved -214 (-0.52 pages), velocity 2.75, counted true
+11-28 04:08:15.093  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:08:15.093  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 41, swipes counted -2, page 41
+11-28 04:08:15.100  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:08:15.115  3981  4054 I ReactNativeJS: [perf] page: built 193 items in 1 ms (kept 12)
+11-28 04:08:15.172  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:08:15.176  3981  4054 I ReactNativeJS: [perf] stall 57.9ms
+11-28 04:08:15.215  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16720, moved -149 (-0.36 pages), velocity 2.75, counted true
+11-28 04:08:15.497  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:08:15.497  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:08:15.501  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 0 ms (kept 12)
+11-28 04:08:15.534  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:08:15.638  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16262, moved -195 (-0.48 pages), velocity 2.75, counted true
+11-28 04:08:15.909  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:08:15.909  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:08:15.916  3981  4054 I ReactNativeJS: [perf] page: built 207 items in 3 ms (kept 12)
+11-28 04:08:15.948  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:08:16.072  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15843, moved -202 (-0.49 pages), velocity 2.75, counted true
+11-28 04:08:16.294  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:08:16.294  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 38, swipes counted -1, page 38
+11-28 04:08:16.299  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:08:18.366  9454  9454 I ReactNativeJS: [perf] mark series 3000 index return 6: 10 swipes forward
+11-28 04:08:18.427  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:08:18.512  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15831, moved 197 (0.48 pages), velocity 0.00, counted true
+11-28 04:08:18.835  3981  4054 I ReactNativeJS: [perf] stall 57.8ms
+11-28 04:08:18.889  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15743 (page 38.26, sliding null, deck on 38)
+11-28 04:08:18.957  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15916, moved 173 (0.42 pages), velocity 0.00, counted true
+11-28 04:08:19.318  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15984 (page 38.85, sliding null, deck on 38)
+11-28 04:08:19.448  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16190, moved 206 (0.50 pages), velocity -2.75, counted true
+11-28 04:08:19.747  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:08:19.747  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 40, swipes counted 3, page 41
+11-28 04:08:19.817  3981  4054 I ReactNativeJS: [perf] stall 65.7ms
+11-28 04:08:19.818  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding 41, deck on 41)
+11-28 04:08:19.881  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16559, moved 102 (0.25 pages), velocity -2.75, counted true
+11-28 04:08:20.129  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:08:20.129  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 1, page 42
+11-28 04:08:20.280  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding 42, deck on 42)
+11-28 04:08:20.280  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:08:20.281  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted 0, page 41
+11-28 04:08:20.420  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17034, moved 165 (0.40 pages), velocity 0.00, counted true
+11-28 04:08:20.420  3981  4054 I ReactNativeJS: [perf] stall 115.7ms
+11-28 04:08:20.493  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17034 (page 41.40)
+11-28 04:08:20.493  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 1, page 42
+11-28 04:08:20.693  3981  4054 I ReactNativeJS: [perf] stall 56.1ms
+11-28 04:08:20.809  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17238 (page 41.90, sliding 42, deck on 42)
+11-28 04:08:20.810  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17238 (page 41.90)
+11-28 04:08:20.810  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted 0, page 42
+11-28 04:08:20.825  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17365, moved 126 (0.31 pages), velocity 0.00, counted false
+11-28 04:08:21.310  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17283 (page 42.01, sliding null, deck on 42)
+11-28 04:08:21.377  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17448, moved 165 (0.40 pages), velocity 0.00, counted true
+11-28 04:08:21.725  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17383 (page 42.25, sliding null, deck on 42)
+11-28 04:08:21.821  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17576, moved 193 (0.47 pages), velocity -2.75, counted true
+11-28 04:08:22.109  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:08:22.109  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 2, page 44
+11-28 04:08:22.113  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 0 ms (kept 12)
+11-28 04:08:22.127  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 1 ms (kept 12)
+11-28 04:08:22.155  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding 44, deck on 44)
+11-28 04:08:22.287  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17805, moved 113 (0.28 pages), velocity 0.00, counted false
+11-28 04:08:22.483  3981  4054 I ReactNativeJS: [perf] stall 63.8ms
+11-28 04:08:22.489  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:08:22.489  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted 0, page 44
+11-28 04:08:22.611  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:08:22.611  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted 0, page 44
+11-28 04:08:22.644  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:08:22.736  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18315, moved 212 (0.51 pages), velocity -2.75, counted true
+11-28 04:08:23.027  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:08:23.028  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:08:23.036  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 2 ms (kept 12)
+11-28 04:08:27.068  9520  9520 I ReactNativeJS: [perf] mark tabsagain 3000 c 1
+11-28 04:08:29.370  3981  4054 I ReactNativeJS: [perf] stall 153.7ms
+11-28 04:08:29.371  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:08:29.371  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:08:29.371  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:08:29.604  3981  4054 I ReactNativeJS: [perf] stall 207.6ms
+11-28 04:08:31.288  3981  4054 I ReactNativeJS: [perf] stall 85.6ms
+11-28 04:08:39.251  9557  9557 I ReactNativeJS: [perf] mark tabsagain 3000 c 2
+11-28 04:08:51.446  9593  9593 I ReactNativeJS: [perf] mark tabsagain 3000 c 3
+11-28 04:09:03.635  9629  9629 I ReactNativeJS: [perf] mark tabsagain 3000 c 4
+11-28 04:09:20.095  9674  9674 I ReactNativeJS: [perf] mark series 3000 operations swipes 1: 10 fast swipes back
+11-28 04:09:20.177  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:09:20.229  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18399, moved -115 (-0.28 pages), velocity 2.75, counted true
+11-28 04:09:20.476  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:09:20.476  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:09:20.577  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:09:20.665  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17926, moved -177 (-0.43 pages), velocity 2.75, counted true
+11-28 04:09:20.945  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:20.945  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:09:20.981  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:09:21.083  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17489, moved -202 (-0.49 pages), velocity 2.75, counted true
+11-28 04:09:21.161  3981  4054 I ReactNativeJS: [perf] stall 53.7ms
+11-28 04:09:21.376  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:09:21.377  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:09:21.415  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:09:21.468  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17090, moved -190 (-0.46 pages), velocity 2.75, counted true
+11-28 04:09:21.743  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:21.743  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 04:09:21.777  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:09:21.852  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16649, moved -220 (-0.53 pages), velocity 2.75, counted true
+11-28 04:09:22.110  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:09:22.110  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:09:22.179  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:09:22.277  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16243, moved -214 (-0.52 pages), velocity 2.75, counted true
+11-28 04:09:22.543  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:22.543  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:09:22.613  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:22.712  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15897, moved -149 (-0.36 pages), velocity 2.75, counted true
+11-28 04:09:22.931  3981  4054 I ReactNativeJS: [perf] stall 57.0ms
+11-28 04:09:23.009  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:23.009  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 38, swipes counted -1, page 38
+11-28 04:09:23.047  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:09:23.143  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15486, moved -149 (-0.36 pages), velocity 2.75, counted true
+11-28 04:09:23.321  3981  4054 I ReactNativeJS: [perf] stall 53.1ms
+11-28 04:09:23.393  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15223 (page 37.00)
+11-28 04:09:23.393  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 37, swipes counted -1, page 37
+11-28 04:09:23.412  3981  4054 I ReactNativeJS: [perf] page: built 215 items in 4 ms (kept 12)
+11-28 04:09:23.467  3981  4054 I ReactNativeJS: [perf] stall 62.0ms
+11-28 04:09:23.468  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+11-28 04:09:23.532  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15066, moved -157 (-0.38 pages), velocity 2.75, counted true
+11-28 04:09:23.692  3981  4054 I ReactNativeJS: [perf] stall 54.5ms
+11-28 04:09:23.861  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 14811 (page 36.00, sliding null, deck on 37)
+11-28 04:09:23.861  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 14811 (page 36.00)
+11-28 04:09:23.861  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 36, swipes counted -1, page 36
+11-28 04:09:23.866  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 0 ms (kept 12)
+11-28 04:09:24.007  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 14562, moved -249 (-0.61 pages), velocity 0.00, counted true
+11-28 04:09:24.485  3981  4054 I ReactNativeJS: [perf] stall 61.4ms
+11-28 04:09:24.862  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 14400 (page 35.00)
+11-28 04:09:24.863  3981  4054 I ReactNativeJS: [perf] deck: settled from page 36, reached 35, swipes counted -1, page 35
+11-28 04:09:24.869  3981  4054 I ReactNativeJS: [perf] page: built 185 items in 0 ms (kept 12)
+11-28 04:09:27.585  9764  9764 I ReactNativeJS: [perf] mark series 3000 operations return 1: 10 swipes forward
+11-28 04:09:27.644  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 14400 (page 35.00, sliding null, deck on 35)
+11-28 04:09:27.733  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 14623, moved 223 (0.54 pages), velocity -2.75, counted true
+11-28 04:09:27.993  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 14811 (page 36.00)
+11-28 04:09:27.993  3981  4054 I ReactNativeJS: [perf] deck: settled from page 35, reached 36, swipes counted 1, page 36
+11-28 04:09:28.069  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 14811 (page 36.00, sliding null, deck on 36)
+11-28 04:09:28.158  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15016, moved 205 (0.50 pages), velocity -2.75, counted true
+11-28 04:09:28.428  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15223 (page 37.00)
+11-28 04:09:28.428  3981  4054 I ReactNativeJS: [perf] deck: settled from page 36, reached 37, swipes counted 1, page 37
+11-28 04:09:28.499  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+11-28 04:09:28.602  3981  4054 I ReactNativeJS: [perf] stall 63.7ms
+11-28 04:09:28.606  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15360, moved 138 (0.33 pages), velocity -2.75, counted true
+11-28 04:09:28.878  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:28.878  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 38, swipes counted 1, page 38
+11-28 04:09:28.911  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:09:29.020  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15850, moved 216 (0.53 pages), velocity -2.75, counted true
+11-28 04:09:29.293  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:29.293  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 39, swipes counted 1, page 39
+11-28 04:09:29.318  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:29.386  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16190, moved 144 (0.35 pages), velocity -2.75, counted true
+11-28 04:09:29.659  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:09:29.659  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:09:29.699  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:09:29.791  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16680, moved 223 (0.54 pages), velocity -2.75, counted true
+11-28 04:09:30.110  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:30.110  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:09:30.115  3981  4054 I ReactNativeJS: [perf] page: built 221 items in 1 ms (kept 12)
+11-28 04:09:30.139  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:09:30.240  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17098, moved 230 (0.56 pages), velocity -2.75, counted true
+11-28 04:09:30.495  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:09:30.495  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:09:30.502  3981  4054 I ReactNativeJS: [perf] page: built 211 items in 1 ms (kept 12)
+11-28 04:09:30.532  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:09:30.654  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17475, moved 195 (0.47 pages), velocity 0.00, counted true
+11-28 04:09:31.031  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17395 (page 42.28, sliding null, deck on 42)
+11-28 04:09:31.193  3981  4054 I ReactNativeJS: [perf] stall 80.7ms
+11-28 04:09:31.210  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17642, moved 248 (0.60 pages), velocity 0.00, counted true
+11-28 04:09:31.359  3981  4054 I ReactNativeJS: [perf] stall 55.5ms
+11-28 04:09:31.564  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17683 (page 42.98, sliding null, deck on 42)
+11-28 04:09:31.673  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17890, moved 206 (0.50 pages), velocity 0.00, counted true
+11-28 04:09:32.576  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:32.577  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 3, page 45
+11-28 04:09:32.582  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 1 ms (kept 12)
+11-28 04:09:32.608  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 1 ms (kept 12)
+11-28 04:09:32.623  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 12)
+11-28 04:09:32.658  3981  4054 I ReactNativeJS: [perf] stall 56.7ms
+11-28 04:09:35.253  9829  9829 I ReactNativeJS: [perf] mark series 3000 operations swipes 2: 10 fast swipes back
+11-28 04:09:35.311  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:09:35.446  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18276, moved -238 (-0.58 pages), velocity 2.75, counted true
+11-28 04:09:35.582  3981  4054 I ReactNativeJS: [perf] stall 56.5ms
+11-28 04:09:35.671  3981  4054 I ReactNativeJS: [perf] stall 52.3ms
+11-28 04:09:35.776  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:09:35.776  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:09:35.777  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:09:35.875  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17899, moved -203 (-0.49 pages), velocity 2.75, counted true
+11-28 04:09:36.159  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:36.159  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:09:36.228  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:09:36.329  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17506, moved -186 (-0.45 pages), velocity 0.00, counted true
+11-28 04:09:36.675  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17579 (page 42.73, sliding null, deck on 43)
+11-28 04:09:36.787  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17406, moved -173 (-0.42 pages), velocity 0.00, counted true
+11-28 04:09:37.169  3981  4054 I ReactNativeJS: [perf] stall 56.1ms
+11-28 04:09:37.170  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17344 (page 42.16, sliding null, deck on 43)
+11-28 04:09:37.247  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17165, moved -179 (-0.43 pages), velocity 0.00, counted true
+11-28 04:09:37.632  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17231 (page 41.88, sliding null, deck on 43)
+11-28 04:09:37.709  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17041, moved -190 (-0.46 pages), velocity 2.75, counted true
+11-28 04:09:38.014  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 43)
+11-28 04:09:38.015  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:38.015  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 41, swipes counted -4, page 39
+11-28 04:09:38.034  3981  4054 I ReactNativeJS: [perf] page: built 207 items in 1 ms (kept 12)
+11-28 04:09:38.308  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16661, moved -208 (-0.50 pages), velocity 2.75, counted true
+11-28 04:09:38.310  3981  4054 I ReactNativeJS: [perf] stall 271.1ms
+11-28 04:09:38.462  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:38.462  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:38.462  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 39, swipes counted -1, page 38
+11-28 04:09:38.466  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 0 ms (kept 12)
+11-28 04:09:38.590  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15949, moved -96 (-0.23 pages), velocity 2.75, counted true
+11-28 04:09:38.808  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:38.808  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 38, swipes counted -1, page 37
+11-28 04:09:38.822  3981  4054 I ReactNativeJS: [perf] page: built 215 items in 1 ms (kept 12)
+11-28 04:09:38.928  3981  4054 I ReactNativeJS: [perf] stall 95.9ms
+11-28 04:09:38.971  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding 37, deck on 37)
+11-28 04:09:38.972  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:38.975  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 38, swipes counted 0, page 38
+11-28 04:09:38.975  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:38.975  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 38, swipes counted 0, page 38
+11-28 04:09:39.068  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15416, moved -218 (-0.53 pages), velocity 2.75, counted true
+11-28 04:09:39.377  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15223 (page 37.00)
+11-28 04:09:39.377  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 37, swipes counted -1, page 37
+11-28 04:09:39.440  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+11-28 04:09:39.541  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15007, moved -216 (-0.53 pages), velocity 2.75, counted true
+11-28 04:09:39.809  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 14811 (page 36.00)
+11-28 04:09:39.810  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 36, swipes counted -1, page 36
+11-28 04:09:39.816  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 0 ms (kept 12)
+11-28 04:09:41.884  9891  9891 I ReactNativeJS: [perf] mark series 3000 operations return 2: 10 swipes forward
+11-28 04:09:41.944  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 14811 (page 36.00, sliding null, deck on 36)
+11-28 04:09:42.062  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15045, moved 234 (0.57 pages), velocity -2.75, counted true
+11-28 04:09:42.327  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15223 (page 37.00)
+11-28 04:09:42.328  3981  4054 I ReactNativeJS: [perf] deck: settled from page 36, reached 37, swipes counted 1, page 37
+11-28 04:09:42.381  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+11-28 04:09:42.448  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15384, moved 161 (0.39 pages), velocity -2.75, counted true
+11-28 04:09:42.710  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:42.710  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 38, swipes counted 1, page 38
+11-28 04:09:42.801  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:09:42.884  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15841, moved 206 (0.50 pages), velocity -2.75, counted true
+11-28 04:09:43.160  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:43.160  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 39, swipes counted 1, page 39
+11-28 04:09:43.216  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:43.323  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16257, moved 211 (0.51 pages), velocity -2.75, counted true
+11-28 04:09:43.593  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:09:43.593  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:09:43.647  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:09:43.760  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16644, moved 187 (0.45 pages), velocity -2.75, counted true
+11-28 04:09:44.026  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:44.027  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:09:44.032  3981  4054 I ReactNativeJS: [perf] page: built 221 items in 1 ms (kept 12)
+11-28 04:09:44.057  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:09:44.128  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17068, moved 200 (0.49 pages), velocity -2.75, counted true
+11-28 04:09:44.361  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:09:44.361  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:09:44.367  3981  4054 I ReactNativeJS: [perf] page: built 211 items in 1 ms (kept 12)
+11-28 04:09:44.432  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:09:44.497  3981  4054 I ReactNativeJS: [perf] stall 62.3ms
+11-28 04:09:44.535  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17434, moved 154 (0.37 pages), velocity -2.75, counted true
+11-28 04:09:44.811  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:44.811  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:09:44.818  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 2 ms (kept 12)
+11-28 04:09:44.865  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:09:45.000  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17912, moved 220 (0.54 pages), velocity 0.00, counted true
+11-28 04:09:45.403  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17999 (page 43.75, sliding null, deck on 43)
+11-28 04:09:45.467  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18197, moved 198 (0.48 pages), velocity -2.75, counted true
+11-28 04:09:45.565  3981  4054 I ReactNativeJS: [perf] stall 72.6ms
+11-28 04:09:45.793  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:09:45.793  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 45, swipes counted 2, page 45
+11-28 04:09:45.801  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 2 ms (kept 12)
+11-28 04:09:45.816  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 12)
+11-28 04:09:45.893  3981  4054 I ReactNativeJS: [perf] stall 84.0ms
+11-28 04:09:45.898  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:09:45.939  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18742, moved 228 (0.55 pages), velocity -2.75, counted true
+11-28 04:09:46.246  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:09:46.246  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:09:46.252  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 1 ms (kept 12)
+11-28 04:09:48.238  9952  9952 I ReactNativeJS: [perf] mark series 3000 operations swipes 3: 10 fast swipes back
+11-28 04:09:48.310  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:09:48.392  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18797, moved -129 (-0.31 pages), velocity 2.75, counted true
+11-28 04:09:48.643  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:09:48.643  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:09:48.706  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:09:48.766  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18353, moved -161 (-0.39 pages), velocity 2.75, counted true
+11-28 04:09:48.852  3981  4054 I ReactNativeJS: [perf] stall 61.2ms
+11-28 04:09:49.027  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:09:49.027  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:09:49.084  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:09:49.186  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17936, moved -166 (-0.40 pages), velocity 2.75, counted true
+11-28 04:09:49.410  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:49.410  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:09:49.500  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:09:49.597  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17524, moved -168 (-0.41 pages), velocity 2.75, counted true
+11-28 04:09:49.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:09:49.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:09:49.931  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:09:50.027  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17087, moved -193 (-0.47 pages), velocity 0.00, counted true
+11-28 04:09:50.457  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17195 (page 41.79, sliding null, deck on 42)
+11-28 04:09:50.560  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16994, moved -201 (-0.49 pages), velocity 2.75, counted true
+11-28 04:09:50.811  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:50.811  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -2, page 40
+11-28 04:09:50.817  3981  4054 I ReactNativeJS: [perf] page: built 172 items in 1 ms (kept 12)
+11-28 04:09:50.882  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding 40, deck on 40)
+11-28 04:09:51.004  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16829, moved -39 (-0.10 pages), velocity 2.75, counted true
+11-28 04:09:51.162  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:09:51.162  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 40, swipes counted -1, page 39
+11-28 04:09:51.175  3981  4054 I ReactNativeJS: [perf] page: built 207 items in 1 ms (kept 12)
+11-28 04:09:51.259  3981  4054 I ReactNativeJS: [perf] stall 72.0ms
+11-28 04:09:51.397  3981  4054 I ReactNativeJS: [perf] stall 60.5ms
+11-28 04:09:51.413  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16355 (page 39.75, sliding 39, deck on 39)
+11-28 04:09:51.413  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16355 (page 39.75)
+11-28 04:09:51.413  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 0, page 40
+11-28 04:09:51.492  3981  4054 I ReactNativeJS: [perf] stall 69.2ms
+11-28 04:09:51.492  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16355, moved 0 (0.00 pages), velocity 0.00, counted false
+11-28 04:09:51.520  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16355 (page 39.75)
+11-28 04:09:51.521  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 40, swipes counted 0, page 40
+11-28 04:09:51.744  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16355 (page 39.75, sliding null, deck on 40)
+11-28 04:09:51.835  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16157, moved -198 (-0.48 pages), velocity 2.75, counted true
+11-28 04:09:51.939  3981  4054 I ReactNativeJS: [perf] stall 51.6ms
+11-28 04:09:52.143  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:52.143  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:09:52.181  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:52.253  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15867, moved -179 (-0.43 pages), velocity 2.75, counted true
+11-28 04:09:52.543  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:09:52.543  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 38, swipes counted -1, page 38
+11-28 04:09:52.550  3981  4054 I ReactNativeJS: [perf] page: built 194 items in 1 ms (kept 12)
+11-28 04:09:54.563 10013 10013 I ReactNativeJS: [perf] mark series 3000 operations return 3: 10 swipes forward
+11-28 04:09:54.610  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:09:54.732  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15857, moved 223 (0.54 pages), velocity -2.75, counted true
+11-28 04:09:54.976  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:09:54.976  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 39, swipes counted 1, page 39
+11-28 04:09:55.014  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:09:55.119  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16216, moved 171 (0.41 pages), velocity -2.75, counted true
+11-28 04:09:55.426  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:09:55.426  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:09:55.451  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:09:55.567  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16627, moved 170 (0.41 pages), velocity -2.75, counted true
+11-28 04:09:55.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:09:55.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:09:55.939  3981  4054 I ReactNativeJS: [perf] stall 88.1ms
+11-28 04:09:55.941  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:09:55.953  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17067, moved 198 (0.48 pages), velocity -2.75, counted true
+11-28 04:09:56.061  3981  4054 I ReactNativeJS: [perf] stall 56.8ms
+11-28 04:09:56.231  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:09:56.231  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:09:56.236  3981  4054 I ReactNativeJS: [perf] page: built 211 items in 1 ms (kept 12)
+11-28 04:09:56.280  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:09:56.375  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17473, moved 193 (0.47 pages), velocity -2.75, counted true
+11-28 04:09:56.630  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:09:56.630  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:09:56.635  3981  4054 I ReactNativeJS: [perf] page: built 189 items in 1 ms (kept 12)
+11-28 04:09:56.697  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:09:56.780  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17888, moved 197 (0.48 pages), velocity -2.75, counted true
+11-28 04:09:57.027  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:09:57.027  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 04:09:57.032  3981  4054 I ReactNativeJS: [perf] page: built 228 items in 0 ms (kept 12)
+11-28 04:09:57.101  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:09:57.248  3981  4054 I ReactNativeJS: [perf] stall 58.7ms
+11-28 04:09:57.248  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18278, moved 175 (0.43 pages), velocity -2.75, counted true
+11-28 04:09:57.526  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:09:57.526  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:09:57.533  3981  4054 I ReactNativeJS: [perf] page: built 199 items in 1 ms (kept 12)
+11-28 04:09:57.565  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:09:57.648  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18672, moved 158 (0.38 pages), velocity 0.00, counted true
+11-28 04:09:57.996  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18608 (page 45.23, sliding null, deck on 45)
+11-28 04:09:58.068  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18792, moved 184 (0.45 pages), velocity -2.75, counted true
+11-28 04:09:58.379  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:09:58.379  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 2, page 47
+11-28 04:09:58.386  3981  4054 I ReactNativeJS: [perf] page: built 195 items in 1 ms (kept 12)
+11-28 04:09:58.439  3981  4054 I ReactNativeJS: [perf] page: built 169 items in 1 ms (kept 12)
+11-28 04:09:58.586  3981  4054 I ReactNativeJS: [perf] stall 198.2ms
+11-28 04:09:58.587  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding 47, deck on 47)
+11-28 04:09:58.587  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19132, moved 206 (0.50 pages), velocity -2.75, counted true
+11-28 04:09:58.679  3981  4054 I ReactNativeJS: [perf] stall 65.7ms
+11-28 04:09:58.810  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:09:58.810  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 47, swipes counted 1, page 48
+11-28 04:09:58.813  3981  4054 I ReactNativeJS: [perf] page: built 191 items in 0 ms (kept 12)
+11-28 04:09:59.141  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:09:59.142  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 48, swipes counted 0, page 48
+11-28 04:10:00.817 10075 10075 I ReactNativeJS: [perf] mark scroll operations: 3 times down, 3 times up
+11-28 04:10:01.390  3981  4054 I ReactNativeJS: [perf] stall 54.4ms
+11-28 04:10:02.368  3981  4054 I ReactNativeJS: [perf] stall 133.6ms
+11-28 04:10:02.491  3981  4054 I ReactNativeJS: [perf] stall 74.0ms
+11-28 04:10:10.966 10124 10124 I ReactNativeJS: [perf] mark slanted swipe operations: back, forward
+11-28 04:10:11.027  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:10:11.164  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19578, moved -170 (-0.41 pages), velocity 1.75, counted true
+11-28 04:10:11.443  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:10:11.443  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:10:12.427  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:10:12.542  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19499, moved 162 (0.39 pages), velocity -1.75, counted true
+11-28 04:10:12.649  3981  4054 I ReactNativeJS: [perf] stall 77.5ms
+11-28 04:10:12.859  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:10:12.860  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:10:19.247  3981  4054 I ReactNativeJS: [perf] stall 78.8ms
+11-28 04:10:19.248  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:19.458  3981  4054 I ReactNativeJS: [perf] stall 161.4ms
+11-28 04:10:23.367 10163 10163 I ReactNativeJS: [perf] mark series 3000 statistics swipes 1: 10 fast swipes back
+11-28 04:10:23.460  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:10:23.551  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19611, moved -138 (-0.33 pages), velocity 2.75, counted true
+11-28 04:10:23.860  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:10:23.860  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:10:23.880  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:10:23.880  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:23.971  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19170, moved -168 (-0.41 pages), velocity 2.75, counted true
+11-28 04:10:24.210  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:10:24.210  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:10:24.301  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:10:24.434  3981  4054 I ReactNativeJS: [perf] stall 63.0ms
+11-28 04:10:24.435  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18733, moved -193 (-0.47 pages), velocity 2.75, counted true
+11-28 04:10:24.744  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 46)
+11-28 04:10:24.744  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:10:24.744  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:10:24.847  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18362, moved -153 (-0.37 pages), velocity 0.00, counted true
+11-28 04:10:25.221  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18426 (page 44.79, sliding null, deck on 45)
+11-28 04:10:25.288  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18214, moved -212 (-0.51 pages), velocity 0.00, counted true
+11-28 04:10:25.698  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18134 (page 44.08, sliding null, deck on 45)
+11-28 04:10:25.812  3981  4054 I ReactNativeJS: [perf] stall 52.8ms
+11-28 04:10:25.829  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17945, moved -190 (-0.46 pages), velocity 0.00, counted true
+11-28 04:10:26.166  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17998 (page 43.74, sliding null, deck on 45)
+11-28 04:10:26.297  3981  4054 I ReactNativeJS: [perf] stall 67.1ms
+11-28 04:10:26.327  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17816, moved -181 (-0.44 pages), velocity 0.00, counted true
+11-28 04:10:26.752  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17728 (page 43.09, sliding null, deck on 45)
+11-28 04:10:26.876  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17626, moved -102 (-0.25 pages), velocity 0.00, counted false
+11-28 04:10:27.213  3981  4054 I ReactNativeJS: [perf] stall 54.0ms
+11-28 04:10:27.214  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17669 (page 42.95, sliding null, deck on 45)
+11-28 04:10:27.295  3981  4054 I ReactNativeJS: [perf] stall 57.6ms
+11-28 04:10:27.296  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17449, moved -220 (-0.53 pages), velocity 0.00, counted true
+11-28 04:10:27.663  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17377 (page 42.24, sliding null, deck on 45)
+11-28 04:10:27.784  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17157, moved -220 (-0.53 pages), velocity 0.00, counted true
+11-28 04:10:28.042  3981  4054 I ReactNativeJS: [perf] stall 52.1ms
+11-28 04:10:28.295  3981  4054 I ReactNativeJS: [perf] stall 54.7ms
+11-28 04:10:28.543  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:10:28.543  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 42, swipes counted -6, page 39
+11-28 04:10:28.649  3981  4054 I ReactNativeJS: [perf] stall 95.9ms
+11-28 04:10:28.670  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:28.670  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:28.670  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:28.670  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:28.794  3981  4054 I ReactNativeJS: [perf] stall 99.5ms
+11-28 04:10:31.361 10229 10229 I ReactNativeJS: [perf] mark series 3000 statistics return 1: 10 swipes forward
+11-28 04:10:31.427  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:10:31.523  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16263, moved 218 (0.53 pages), velocity -2.75, counted true
+11-28 04:10:31.827  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:10:31.827  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:10:31.828  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:10:31.927  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16672, moved 215 (0.52 pages), velocity 0.00, counted true
+11-28 04:10:32.258  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16733 (page 40.67, sliding null, deck on 40)
+11-28 04:10:32.355  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16860, moved 127 (0.31 pages), velocity 0.00, counted false
+11-28 04:10:32.676  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:10:32.676  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:10:32.715  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:10:32.715  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:32.821  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17075, moved 206 (0.50 pages), velocity -2.75, counted true
+11-28 04:10:33.076  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:10:33.076  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:10:33.130  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:10:33.225  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17492, moved 212 (0.51 pages), velocity -2.75, counted true
+11-28 04:10:33.439  3981  4054 I ReactNativeJS: [perf] stall 56.1ms
+11-28 04:10:33.509  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:10:33.509  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:10:33.533  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:33.546  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:10:33.638  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17925, moved 234 (0.57 pages), velocity -2.75, counted true
+11-28 04:10:33.895  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:10:33.895  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 04:10:33.930  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:33.953  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:10:34.075  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18253, moved 150 (0.36 pages), velocity 0.00, counted true
+11-28 04:10:34.484  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18170 (page 44.16, sliding null, deck on 44)
+11-28 04:10:34.529  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18302, moved 132 (0.32 pages), velocity 0.00, counted false
+11-28 04:10:34.860  3981  4054 I ReactNativeJS: [perf] stall 54.4ms
+11-28 04:10:34.976  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18207 (page 44.25, sliding null, deck on 44)
+11-28 04:10:35.052  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18331, moved 124 (0.30 pages), velocity 0.00, counted false
+11-28 04:10:35.522  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18444 (page 44.83, sliding null, deck on 44)
+11-28 04:10:35.593  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18668, moved 224 (0.54 pages), velocity -2.75, counted true
+11-28 04:10:35.910  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:10:35.910  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 46, swipes counted 2, page 46
+11-28 04:10:35.980  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:39.170 10294 10294 I ReactNativeJS: [perf] mark series 3000 statistics swipes 2: 10 fast swipes back
+11-28 04:10:39.261  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:10:39.314  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18808, moved -118 (-0.29 pages), velocity 2.75, counted true
+11-28 04:10:39.645  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 46)
+11-28 04:10:39.646  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:10:39.646  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:10:39.780  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18301, moved -213 (-0.52 pages), velocity 0.00, counted true
+11-28 04:10:40.136  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18234 (page 44.32, sliding null, deck on 45)
+11-28 04:10:40.237  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18146, moved -88 (-0.21 pages), velocity 0.00, counted false
+11-28 04:10:40.550  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18112 (page 44.02, sliding null, deck on 45)
+11-28 04:10:40.697  3981  4054 I ReactNativeJS: [perf] stall 65.5ms
+11-28 04:10:40.714  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17934, moved -179 (-0.43 pages), velocity 0.00, counted true
+11-28 04:10:41.093  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18012 (page 43.78, sliding null, deck on 45)
+11-28 04:10:41.236  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17839, moved -173 (-0.42 pages), velocity 0.00, counted true
+11-28 04:10:41.663  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17740 (page 43.12, sliding null, deck on 45)
+11-28 04:10:41.779  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17523, moved -217 (-0.53 pages), velocity 2.75, counted true
+11-28 04:10:42.043  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:10:42.043  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 42, swipes counted -4, page 41
+11-28 04:10:42.118  3981  4054 I ReactNativeJS: [perf] stall 66.2ms
+11-28 04:10:42.118  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+11-28 04:10:42.119  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:42.119  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:42.119  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:42.263  3981  4054 I ReactNativeJS: [perf] stall 99.8ms
+11-28 04:10:42.280  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17233, moved -47 (-0.11 pages), velocity 0.00, counted false
+11-28 04:10:42.546  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:10:42.547  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 04:10:42.629  3981  4054 I ReactNativeJS: [perf] stall 58.9ms
+11-28 04:10:42.664  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:10:42.760  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16676, moved -192 (-0.47 pages), velocity 0.00, counted true
+11-28 04:10:42.859  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16676 (page 40.53)
+11-28 04:10:42.859  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted -1, page 40
+11-28 04:10:42.896  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:43.185  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16467 (page 40.02, sliding 40, deck on 40)
+11-28 04:10:43.185  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16467 (page 40.02)
+11-28 04:10:43.185  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 40, swipes counted 0, page 40
+11-28 04:10:43.267  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16262, moved -205 (-0.50 pages), velocity 0.00, counted true
+11-28 04:10:43.622  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16323 (page 39.68, sliding null, deck on 40)
+11-28 04:10:43.732  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16095, moved -228 (-0.55 pages), velocity 0.00, counted true
+11-28 04:10:44.293  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:10:44.293  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -2, page 38
+11-28 04:10:44.348  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:44.674  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:10:44.674  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 38, swipes counted 0, page 38
+11-28 04:10:46.035 10355 10355 I ReactNativeJS: [perf] mark series 3000 statistics return 2: 10 swipes forward
+11-28 04:10:46.111  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:10:46.202  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15816, moved 181 (0.44 pages), velocity -2.75, counted true
+11-28 04:10:46.493  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:10:46.493  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 39, swipes counted 1, page 39
+11-28 04:10:46.529  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:46.606  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:10:46.660  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16147, moved 102 (0.25 pages), velocity 0.00, counted false
+11-28 04:10:46.994  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16094 (page 39.12, sliding null, deck on 39)
+11-28 04:10:47.141  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16265, moved 171 (0.41 pages), velocity 0.00, counted true
+11-28 04:10:47.547  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16359 (page 39.76, sliding null, deck on 39)
+11-28 04:10:47.624  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16518, moved 160 (0.39 pages), velocity -2.75, counted true
+11-28 04:10:47.943  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:10:47.943  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 41, swipes counted 2, page 41
+11-28 04:10:48.016  3981  4054 I ReactNativeJS: [perf] stall 61.8ms
+11-28 04:10:48.019  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:10:48.020  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:48.099  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17065, moved 197 (0.48 pages), velocity -2.75, counted true
+11-28 04:10:48.343  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:10:48.343  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:10:48.409  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:10:48.498  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17486, moved 206 (0.50 pages), velocity 0.00, counted true
+11-28 04:10:48.836  3981  4054 I ReactNativeJS: [perf] stall 53.2ms
+11-28 04:10:48.854  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17562 (page 42.68, sliding null, deck on 42)
+11-28 04:10:48.950  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17718, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:10:49.176  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:10:49.176  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 44, swipes counted 2, page 44
+11-28 04:10:49.229  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:49.229  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:49.339  3981  4054 I ReactNativeJS: [perf] stall 84.7ms
+11-28 04:10:49.349  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:10:49.400  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18161, moved 58 (0.14 pages), velocity 0.00, counted false
+11-28 04:10:49.662  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:10:49.662  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 0, page 45
+11-28 04:10:49.695  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:49.712  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:10:49.817  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18710, moved 195 (0.48 pages), velocity -2.75, counted true
+11-28 04:10:50.109  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:10:50.109  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:10:50.131  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:10:50.225  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19088, moved 163 (0.40 pages), velocity -2.75, counted true
+11-28 04:10:50.526  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:10:50.526  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 04:10:52.554 10416 10416 I ReactNativeJS: [perf] mark series 3000 statistics swipes 3: 10 fast swipes back
+11-28 04:10:52.627  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:10:52.741  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19160, moved -178 (-0.43 pages), velocity 2.75, counted true
+11-28 04:10:53.010  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:10:53.010  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:10:53.095  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:10:53.182  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18752, moved -173 (-0.42 pages), velocity 2.75, counted true
+11-28 04:10:53.460  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:10:53.460  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:10:53.545  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:10:53.656  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18356, moved -158 (-0.38 pages), velocity 2.75, counted true
+11-28 04:10:53.711  3981  4054 I ReactNativeJS: [perf] stall 83.9ms
+11-28 04:10:53.893  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:10:53.893  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:10:53.930  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:53.946  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:10:54.037  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17958, moved -144 (-0.35 pages), velocity 2.75, counted true
+11-28 04:10:54.190  3981  4054 I ReactNativeJS: [perf] stall 61.9ms
+11-28 04:10:54.361  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:10:54.361  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:10:54.396  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:10:54.396  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:54.484  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17509, moved -183 (-0.44 pages), velocity 0.00, counted true
+11-28 04:10:54.624  3981  4054 I ReactNativeJS: [perf] stall 50.9ms
+11-28 04:10:54.871  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17595 (page 42.76, sliding null, deck on 43)
+11-28 04:10:54.988  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17405, moved -190 (-0.46 pages), velocity 0.00, counted true
+11-28 04:10:55.318  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17344 (page 42.15, sliding null, deck on 43)
+11-28 04:10:55.433  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17149, moved -195 (-0.47 pages), velocity 0.00, counted true
+11-28 04:10:55.794  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17205 (page 41.82, sliding null, deck on 43)
+11-28 04:10:55.879  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16988, moved -217 (-0.53 pages), velocity 0.00, counted true
+11-28 04:10:56.340  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16901 (page 41.08, sliding null, deck on 43)
+11-28 04:10:56.419  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16659, moved -242 (-0.59 pages), velocity 0.00, counted true
+11-28 04:10:56.848  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16564 (page 40.26, sliding null, deck on 43)
+11-28 04:10:56.917  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16388, moved -176 (-0.43 pages), velocity 0.00, counted true
+11-28 04:10:57.496  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:10:57.496  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 40, swipes counted -6, page 37
+11-28 04:10:57.609  3981  4054 I ReactNativeJS: [perf] stall 106.2ms
+11-28 04:10:57.618  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:57.619  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:57.767  3981  4054 I ReactNativeJS: [perf] stall 123.8ms
+11-28 04:10:59.208 10477 10477 I ReactNativeJS: [perf] mark series 3000 statistics return 3: 10 swipes forward
+11-28 04:10:59.277  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+11-28 04:10:59.375  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15375, moved 152 (0.37 pages), velocity -2.75, counted true
+11-28 04:10:59.660  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 15634 (page 38.00)
+11-28 04:10:59.660  3981  4054 I ReactNativeJS: [perf] deck: settled from page 37, reached 38, swipes counted 1, page 38
+11-28 04:10:59.682  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+11-28 04:10:59.682  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:10:59.745  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 15811, moved 176 (0.43 pages), velocity -2.75, counted true
+11-28 04:11:00.028  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:11:00.028  3981  4054 I ReactNativeJS: [perf] deck: settled from page 38, reached 39, swipes counted 1, page 39
+11-28 04:11:00.078  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:11:00.134  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:11:00.179  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16120, moved 74 (0.18 pages), velocity 0.00, counted false
+11-28 04:11:00.597  3981  4054 I ReactNativeJS: [perf] stall 50.2ms
+11-28 04:11:00.647  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16049 (page 39.01, sliding null, deck on 39)
+11-28 04:11:00.758  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16245, moved 195 (0.48 pages), velocity -2.75, counted true
+11-28 04:11:00.994  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:11:00.994  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:11:01.079  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:11:01.217  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16666, moved 209 (0.51 pages), velocity 0.00, counted true
+11-28 04:11:01.580  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16755 (page 40.72, sliding null, deck on 40)
+11-28 04:11:01.733  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16958, moved 204 (0.50 pages), velocity -2.75, counted true
+11-28 04:11:01.817  3981  4054 I ReactNativeJS: [perf] stall 64.8ms
+11-28 04:11:02.043  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:02.043  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 42, swipes counted 2, page 42
+11-28 04:11:02.099  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:11:02.150  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:11:02.231  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17379, moved 99 (0.24 pages), velocity -2.75, counted true
+11-28 04:11:02.493  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:11:02.493  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:11:02.513  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:11:02.558  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:11:02.631  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17815, moved 124 (0.30 pages), velocity -2.75, counted true
+11-28 04:11:02.893  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:11:02.893  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 04:11:02.955  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:11:02.971  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:11:03.033  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18260, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:11:03.377  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:03.377  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:11:03.378  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:11:03.446  3981  4054 I ReactNativeJS: [perf] stall 59.4ms
+11-28 04:11:03.447  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 0)
+11-28 04:11:03.513  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18717, moved 202 (0.49 pages), velocity 0.00, counted true
+11-28 04:11:04.443  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:04.443  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 1, page 46
+11-28 04:11:04.767  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:11:04.767  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 0, page 46
+11-28 04:11:05.805 10543 10543 I ReactNativeJS: [perf] mark scroll statistics: 3 times down, 3 times up
+11-28 04:11:05.860  3981  4054 I ReactNativeJS: [perf] statistics: scroll begins
+11-28 04:11:06.094  3981  4054 I ReactNativeJS: [perf] statistics: follow at 361 moved 4 pages in 0 ms
+11-28 04:11:06.486  3981  4054 I ReactNativeJS: [perf] stall 76.2ms
+11-28 04:11:06.839  3981  4054 I ReactNativeJS: [perf] statistics: scroll begins
+11-28 04:11:07.102  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1240 moved 4 pages in 0 ms
+11-28 04:11:07.320  3981  4054 I ReactNativeJS: [perf] stall 76.7ms
+11-28 04:11:07.528  3981  4054 I ReactNativeJS: [perf] stall 165.6ms
+11-28 04:11:07.627  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1502 moved 4 pages in 0 ms
+11-28 04:11:07.767  3981  4054 I ReactNativeJS: [perf] stall 58.0ms
+11-28 04:11:07.815  3981  4054 I ReactNativeJS: [perf] statistics: scroll begins
+11-28 04:11:08.050  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1502 moved 4 pages in 0 ms
+11-28 04:11:08.267  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1502 moved 4 pages in 0 ms
+11-28 04:11:15.854 10594 10594 I ReactNativeJS: [perf] mark slanted swipe statistics: back, forward
+11-28 04:11:15.927  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:11:16.032  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18765, moved -161 (-0.39 pages), velocity 1.75, counted true
+11-28 04:11:16.326  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:16.326  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:11:17.293  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:11:17.416  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18695, moved 181 (0.44 pages), velocity -1.75, counted true
+11-28 04:11:17.693  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:11:17.693  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:11:28.218 10633 10633 I ReactNativeJS: [perf] mark series 3000 categories swipes 1: 10 fast swipes back
+11-28 04:11:28.294  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:11:28.379  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18760, moved -165 (-0.40 pages), velocity 2.75, counted true
+11-28 04:11:28.659  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:28.659  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:11:28.708  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:11:28.761  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18377, moved -138 (-0.33 pages), velocity 2.75, counted true
+11-28 04:11:29.060  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:11:29.060  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:11:29.080  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+11-28 04:11:29.143  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18012, moved -91 (-0.22 pages), velocity 0.00, counted false
+11-28 04:11:29.492  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18064 (page 43.91, sliding null, deck on 44)
+11-28 04:11:29.594  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17894, moved -170 (-0.41 pages), velocity 0.00, counted true
+11-28 04:11:29.943  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17838 (page 43.36, sliding null, deck on 44)
+11-28 04:11:30.055  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17613, moved -226 (-0.55 pages), velocity 0.00, counted true
+11-28 04:11:30.298  3981  4054 I ReactNativeJS: [perf] stall 69.6ms
+11-28 04:11:30.393  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17662 (page 42.93, sliding null, deck on 44)
+11-28 04:11:30.506  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17511, moved -151 (-0.37 pages), velocity 2.75, counted true
+11-28 04:11:30.793  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:30.793  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 42, swipes counted -3, page 41
+11-28 04:11:30.828  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+11-28 04:11:30.945  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17218, moved -62 (-0.15 pages), velocity 2.75, counted true
+11-28 04:11:31.124  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:11:31.124  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted -1, page 40
+11-28 04:11:31.298  3981  4054 I ReactNativeJS: [perf] stall 148.5ms
+11-28 04:11:31.436  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16766 (page 40.75, sliding 40, deck on 40)
+11-28 04:11:31.437  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16766 (page 40.75)
+11-28 04:11:31.437  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 0, page 41
+11-28 04:11:31.484  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16684, moved -83 (-0.20 pages), velocity 0.00, counted false
+11-28 04:11:31.595  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16684 (page 40.55)
+11-28 04:11:31.595  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 04:11:31.844  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16684 (page 40.55, sliding null, deck on 41)
+11-28 04:11:31.934  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16530, moved -154 (-0.37 pages), velocity 2.75, counted true
+11-28 04:11:32.138  3981  4054 I ReactNativeJS: [perf] stall 55.3ms
+11-28 04:11:32.209  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:11:32.209  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:11:32.229  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:11:32.323  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16254, moved -203 (-0.49 pages), velocity 2.75, counted true
+11-28 04:11:32.559  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:11:32.559  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:11:35.882 10698 10698 I ReactNativeJS: [perf] mark series 3000 categories return 1: 10 swipes forward
+11-28 04:11:35.944  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:11:36.037  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16271, moved 226 (0.55 pages), velocity 0.00, counted true
+11-28 04:11:36.346  3981  4054 I ReactNativeJS: [perf] stall 54.4ms
+11-28 04:11:36.420  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16345 (page 39.73, sliding null, deck on 39)
+11-28 04:11:36.535  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16549, moved 204 (0.50 pages), velocity -2.75, counted true
+11-28 04:11:36.844  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:11:36.844  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 41, swipes counted 2, page 41
+11-28 04:11:36.845  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:11:36.962  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17042, moved 173 (0.42 pages), velocity -2.75, counted true
+11-28 04:11:37.261  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:37.261  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:11:37.279  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:11:37.369  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17456, moved 176 (0.43 pages), velocity -2.75, counted true
+11-28 04:11:37.677  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 42)
+11-28 04:11:37.678  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:11:37.678  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:11:37.804  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17880, moved 188 (0.46 pages), velocity 0.00, counted true
+11-28 04:11:38.184  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17806 (page 43.28, sliding null, deck on 43)
+11-28 04:11:38.265  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18015, moved 209 (0.51 pages), velocity -2.75, counted true
+11-28 04:11:38.543  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:11:38.543  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 2, page 45
+11-28 04:11:38.578  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+11-28 04:11:38.670  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18168, moved 65 (0.16 pages), velocity -2.75, counted true
+11-28 04:11:38.711  3981  4054 I ReactNativeJS: [perf] stall 52.7ms
+11-28 04:11:38.857  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:38.858  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 1, page 46
+11-28 04:11:39.095  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18743 (page 45.56, sliding 46, deck on 46)
+11-28 04:11:39.096  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18743 (page 45.56)
+11-28 04:11:39.096  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 0, page 46
+11-28 04:11:39.146  3981  4054 I ReactNativeJS: [perf] stall 50.7ms
+11-28 04:11:39.191  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18822, moved 80 (0.19 pages), velocity 0.00, counted false
+11-28 04:11:39.276  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18822 (page 45.75)
+11-28 04:11:39.276  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 0, page 46
+11-28 04:11:39.527  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18822 (page 45.75, sliding null, deck on 46)
+11-28 04:11:39.633  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19007, moved 184 (0.45 pages), velocity -2.75, counted true
+11-28 04:11:39.946  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:11:39.946  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 04:11:39.980  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:11:40.060  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19544, moved 206 (0.50 pages), velocity -2.75, counted true
+11-28 04:11:40.116  3981  4054 I ReactNativeJS: [perf] stall 59.7ms
+11-28 04:11:40.376  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:11:40.376  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:11:43.642 10763 10763 I ReactNativeJS: [perf] mark series 3000 categories swipes 2: 10 fast swipes back
+11-28 04:11:43.710  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:11:43.813  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19558, moved -190 (-0.46 pages), velocity 0.00, counted true
+11-28 04:11:44.265  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19659 (page 47.78, sliding null, deck on 48)
+11-28 04:11:44.398  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19442, moved -217 (-0.53 pages), velocity 0.00, counted true
+11-28 04:11:44.828  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19364 (page 47.07, sliding null, deck on 48)
+11-28 04:11:44.932  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19150, moved -214 (-0.52 pages), velocity 2.75, counted true
+11-28 04:11:45.244  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:11:45.244  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 46, swipes counted -3, page 45
+11-28 04:11:45.293  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding 45, deck on 45)
+11-28 04:11:45.331  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18824, moved -102 (-0.25 pages), velocity 2.75, counted true
+11-28 04:11:45.608  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:45.609  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted -1, page 44
+11-28 04:11:45.745  3981  4054 I ReactNativeJS: [perf] stall 50.0ms
+11-28 04:11:45.763  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18475 (page 44.90, sliding 44, deck on 44)
+11-28 04:11:45.764  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18475 (page 44.90)
+11-28 04:11:45.764  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 0, page 45
+11-28 04:11:45.843  3981  4054 I ReactNativeJS: [perf] stall 55.4ms
+11-28 04:11:45.909  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18250, moved -226 (-0.55 pages), velocity 0.00, counted true
+11-28 04:11:45.994  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18250 (page 44.36)
+11-28 04:11:45.994  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 04:11:46.212  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18250 (page 44.36, sliding null, deck on 44)
+11-28 04:11:46.276  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18093, moved -157 (-0.38 pages), velocity 2.75, counted true
+11-28 04:11:46.576  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:11:46.576  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 04:11:46.614  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:11:46.719  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17494, moved -197 (-0.48 pages), velocity 2.75, counted true
+11-28 04:11:47.043  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:47.043  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 04:11:47.070  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:11:47.149  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17085, moved -195 (-0.47 pages), velocity 2.75, counted true
+11-28 04:11:47.242  3981  4054 I ReactNativeJS: [perf] stall 50.3ms
+11-28 04:11:47.476  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:11:47.476  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 04:11:47.512  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+11-28 04:11:47.579  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16713, moved -155 (-0.38 pages), velocity 2.75, counted true
+11-28 04:11:47.860  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:11:47.860  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 04:11:47.931  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:11:48.035  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16285, moved -172 (-0.42 pages), velocity 2.75, counted true
+11-28 04:11:48.343  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16046 (page 39.00)
+11-28 04:11:48.343  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 39, swipes counted -1, page 39
+11-28 04:11:50.395 10824 10824 I ReactNativeJS: [perf] mark series 3000 categories return 2: 10 swipes forward
+11-28 04:11:50.444  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+11-28 04:11:50.546  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16277, moved 231 (0.56 pages), velocity -2.75, counted true
+11-28 04:11:50.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16457 (page 40.00)
+11-28 04:11:50.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 39, reached 40, swipes counted 1, page 40
+11-28 04:11:50.890  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+11-28 04:11:50.968  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16603, moved 146 (0.35 pages), velocity -2.75, counted true
+11-28 04:11:51.311  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16869 (page 41.00, sliding null, deck on 40)
+11-28 04:11:51.328  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:11:51.328  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 04:11:51.414  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17086, moved 218 (0.53 pages), velocity -2.75, counted true
+11-28 04:11:51.661  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:51.661  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 04:11:51.715  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+11-28 04:11:51.786  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17477, moved 197 (0.48 pages), velocity -2.75, counted true
+11-28 04:11:51.862  3981  4054 I ReactNativeJS: [perf] stall 54.3ms
+11-28 04:11:52.076  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:11:52.076  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 04:11:52.095  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+11-28 04:11:52.193  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17901, moved 209 (0.51 pages), velocity -2.75, counted true
+11-28 04:11:52.391  3981  4054 I ReactNativeJS: [perf] stall 62.6ms
+11-28 04:11:52.544  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18103 (page 44.00, sliding null, deck on 43)
+11-28 04:11:52.561  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18103 (page 44.00)
+11-28 04:11:52.561  3981  4054 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 04:11:52.614  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18243, moved 141 (0.34 pages), velocity -2.75, counted true
+11-28 04:11:52.910  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:52.910  3981  4054 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 04:11:52.929  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:11:53.016  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18744, moved 230 (0.56 pages), velocity -2.75, counted true
+11-28 04:11:53.278  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:11:53.278  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:11:53.345  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:11:53.427  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19093, moved 168 (0.41 pages), velocity -2.75, counted true
+11-28 04:11:53.558  3981  4054 I ReactNativeJS: [perf] stall 54.1ms
+11-28 04:11:53.714  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:11:53.714  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 04:11:53.748  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:11:53.828  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19542, moved 205 (0.50 pages), velocity -2.75, counted true
+11-28 04:11:54.060  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:11:54.060  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:11:54.194  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:11:54.282  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19922, moved 173 (0.42 pages), velocity -2.75, counted true
+11-28 04:11:54.472  3981  4054 I ReactNativeJS: [perf] stall 52.8ms
+11-28 04:11:54.544  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:11:54.544  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 04:11:56.565 10885 10885 I ReactNativeJS: [perf] mark series 3000 categories swipes 3: 10 fast swipes back
+11-28 04:11:56.643  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:11:56.701  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19998, moved -162 (-0.39 pages), velocity 2.75, counted true
+11-28 04:11:56.976  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:11:56.976  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 04:11:57.012  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:11:57.083  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19571, moved -178 (-0.43 pages), velocity 2.75, counted true
+11-28 04:11:57.327  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:11:57.327  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 04:11:57.416  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+11-28 04:11:57.466  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19200, moved -138 (-0.33 pages), velocity 2.75, counted true
+11-28 04:11:57.559  3981  4054 I ReactNativeJS: [perf] stall 53.4ms
+11-28 04:11:57.811  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:11:57.811  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 04:11:57.812  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:11:57.939  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18692, moved -234 (-0.57 pages), velocity 2.75, counted true
+11-28 04:11:58.229  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18514 (page 45.00)
+11-28 04:11:58.229  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 04:11:58.261  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+11-28 04:11:58.349  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18349, moved -165 (-0.40 pages), velocity 0.00, counted true
+11-28 04:11:58.702  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18421 (page 44.77, sliding null, deck on 45)
+11-28 04:11:58.791  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18193, moved -228 (-0.55 pages), velocity 0.00, counted true
+11-28 04:11:59.112  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18150 (page 44.12, sliding null, deck on 45)
+11-28 04:11:59.184  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17991, moved -159 (-0.39 pages), velocity 2.75, counted true
+11-28 04:11:59.428  3981  4054 I ReactNativeJS: [perf] stall 50.3ms
+11-28 04:11:59.476  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:11:59.476  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 43, swipes counted -3, page 42
+11-28 04:11:59.514  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding 42, deck on 42)
+11-28 04:11:59.566  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17598, moved -94 (-0.23 pages), velocity 2.75, counted true
+11-28 04:11:59.814  3981  4054 I ReactNativeJS: [perf] stall 59.2ms
+11-28 04:11:59.814  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17280 (page 42.00)
+11-28 04:11:59.814  3981  4054 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted -1, page 41
+11-28 04:11:59.906  3981  4054 I ReactNativeJS: [perf] stall 67.1ms
+11-28 04:11:59.907  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+11-28 04:11:59.970  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17194, moved -86 (-0.21 pages), velocity 2.75, counted true
+11-28 04:12:00.184  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16869 (page 41.00)
+11-28 04:12:00.186  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted -1, page 40
+11-28 04:12:00.421  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16800 (page 40.83, sliding 40, deck on 40)
+11-28 04:12:00.421  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16800 (page 40.83)
+11-28 04:12:00.421  3981  4054 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 0, page 41
+11-28 04:12:00.456  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 16800, moved 0 (0.00 pages), velocity 0.00, counted false
+11-28 04:12:00.510  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 16800 (page 40.83)
+11-28 04:12:00.510  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 04:12:02.713 10946 10946 I ReactNativeJS: [perf] mark series 3000 categories return 3: 10 swipes forward
+11-28 04:12:02.761  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16800 (page 40.83, sliding null, deck on 41)
+11-28 04:12:02.860  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17001, moved 201 (0.49 pages), velocity 0.00, counted true
+11-28 04:12:03.225  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 16933 (page 41.16, sliding null, deck on 41)
+11-28 04:12:03.346  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17148, moved 215 (0.52 pages), velocity 0.00, counted true
+11-28 04:12:03.681  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17199 (page 41.80, sliding null, deck on 41)
+11-28 04:12:03.808  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17370, moved 171 (0.41 pages), velocity 0.00, counted true
+11-28 04:12:04.270  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17287 (page 42.02, sliding null, deck on 41)
+11-28 04:12:04.343  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 17455, moved 168 (0.41 pages), velocity -2.75, counted true
+11-28 04:12:04.611  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 17691 (page 43.00)
+11-28 04:12:04.611  3981  4054 I ReactNativeJS: [perf] deck: settled from page 41, reached 43, swipes counted 4, page 45
+11-28 04:12:04.696  3981  4054 I ReactNativeJS: [perf] stall 77.6ms
+11-28 04:12:04.696  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 17691 (page 43.00, sliding null, deck on 45)
+11-28 04:12:04.800  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 18654, moved 963 (2.34 pages), velocity -2.75, counted true
+11-28 04:12:05.043  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 18926 (page 46.00)
+11-28 04:12:05.043  3981  4054 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 04:12:05.096  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+11-28 04:12:05.178  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19086, moved 161 (0.39 pages), velocity -2.75, counted true
+11-28 04:12:05.393  3981  4054 I ReactNativeJS: [perf] stall 67.6ms
+11-28 04:12:05.494  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19337 (page 47.00, sliding null, deck on 46)
+11-28 04:12:05.494  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19337 (page 47.00)
+11-28 04:12:05.494  3981  4054 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 04:12:05.580  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19517, moved 180 (0.44 pages), velocity -2.75, counted true
+11-28 04:12:05.893  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 19749 (page 48.00)
+11-28 04:12:05.893  3981  4054 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 04:12:05.911  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+11-28 04:12:05.998  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 19925, moved 176 (0.43 pages), velocity -2.75, counted true
+11-28 04:12:06.243  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:12:06.243  3981  4054 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 04:12:06.348  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:12:06.393  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20284, moved 124 (0.30 pages), velocity -2.75, counted true
+11-28 04:12:06.643  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:12:06.643  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 04:12:06.717  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:12:06.763  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20724, moved 152 (0.37 pages), velocity -2.75, counted true
+11-28 04:12:07.060  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20983 (page 51.00)
+11-28 04:12:07.060  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 04:12:09.102 11007 11007 I ReactNativeJS: [perf] mark scroll categories: 3 times down, 3 times up
+11-28 04:12:18.953 11056 11056 I ReactNativeJS: [perf] mark slanted swipe categories: back, forward
+11-28 04:12:19.027  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20983 (page 51.00, sliding null, deck on 51)
+11-28 04:12:19.142  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20826, moved -157 (-0.38 pages), velocity 1.75, counted true
+11-28 04:12:19.460  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:12:19.460  3981  4054 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 04:12:20.410  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:12:20.525  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20711, moved 140 (0.34 pages), velocity -1.75, counted true
+11-28 04:12:20.843  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20983 (page 51.00)
+11-28 04:12:20.843  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 04:12:25.133  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:12:25.141  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:12:25.149  3981  4054 I ReactNativeJS: [perf] page: built 0 items in 0 ms (kept 12)
+11-28 04:12:25.319  3981  4054 I ReactNativeJS: [perf] stall 70.8ms
+11-28 04:12:25.487  3981  4054 I ReactNativeJS: [perf] stall 65.8ms
+11-28 04:12:27.093  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20983 (page 51.00, sliding null, deck on 51)
+11-28 04:12:27.182  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20794, moved -189 (-0.46 pages), velocity 2.75, counted true
+11-28 04:12:27.293  3981  4054 I ReactNativeJS: [perf] stall 65.8ms
+11-28 04:12:27.389  3981  4054 I ReactNativeJS: [perf] stall 53.5ms
+11-28 04:12:27.527  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:12:27.527  3981  4054 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 04:12:28.260  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:12:28.321  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20421, moved -150 (-0.36 pages), velocity 2.75, counted true
+11-28 04:12:28.611  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20160 (page 49.00)
+11-28 04:12:28.611  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 04:12:34.372  3981  4054 I ReactNativeJS: [perf] stall 58.2ms
+11-28 04:12:34.469  3981  4054 I ReactNativeJS: [perf] stall 72.1ms
+11-28 04:12:35.735  3981  4054 I ReactNativeJS: [perf] stall 50.7ms
+11-28 04:12:35.833  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 1502)
+11-28 04:12:35.833  3981  4054 I ReactNativeJS: [perf] statistics: content size changed (shared 1502)
+11-28 04:12:35.868  3981  4054 I ReactNativeJS: [perf] stall 107.9ms
+11-28 04:12:35.972  3981  4054 I ReactNativeJS: [perf] stall 78.9ms
+11-28 04:12:37.944  3981  4054 I ReactNativeJS: [perf] statistics: scroll begins
+11-28 04:12:38.283  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1502 moved 4 pages in 0 ms
+11-28 04:12:38.491  3981  4054 I ReactNativeJS: [perf] statistics: follow at 1502 moved 4 pages in 0 ms
+11-28 04:12:38.570  3981  4054 I ReactNativeJS: [perf] stall 54.4ms
+11-28 04:12:38.710  3981  4054 I ReactNativeJS: [perf] stall 67.5ms
+11-28 04:12:45.431  3981  4054 I ReactNativeJS: [perf] stall 126.2ms
+11-28 04:12:45.469  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 411 (page 1.00)
+11-28 04:12:45.470  3981  4054 I ReactNativeJS: [perf] deck: settled from page 1, reached 1, swipes counted 0, page 1
+11-28 04:12:50.028  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+11-28 04:12:50.124  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20376, moved 216 (0.53 pages), velocity -2.75, counted true
+11-28 04:12:50.443  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20571 (page 50.00)
+11-28 04:12:50.443  3981  4054 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 04:12:51.193  3981  4054 I ReactNativeJS: [perf] deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+11-28 04:12:51.277  3981  4054 I ReactNativeJS: [perf] deck: drag ends at 20728, moved 157 (0.38 pages), velocity -2.75, counted true
+11-28 04:12:51.559  3981  4054 I ReactNativeJS: [perf] deck: momentum ends at 20983 (page 51.00)
+11-28 04:12:51.559  3981  4054 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51

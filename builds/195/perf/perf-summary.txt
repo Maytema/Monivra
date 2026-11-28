@@ -1,0 +1,1409 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                797ms      438ms      3      10 10 (100.00%)  450ms  450ms
+first screen: start with the basic set                    537ms      246ms      4       5  5 (100.00%)  400ms  400ms
+picture operations: visit, playing (3.5 s)                919ms      228ms     10      84  78 (92.86%)  129ms  200ms
+picture operations: same tab, at rest (3 s, after th       73ms       73ms      1      15  13 (86.67%)  117ms  133ms
+picture accounts: visit, playing (3.5 s)                    0ms        0ms      0       2  2 (100.00%)   65ms   65ms
+picture accounts: same tab, at rest (3 s, after the       140ms       75ms      2       0            -      -      -
+picture statistics: visit, playing (3.5 s)                823ms      103ms     11      51  48 (94.12%)  133ms  150ms
+picture statistics: same tab, at rest (3 s, after th      484ms      113ms      6       0            -      -      -
+picture categories: visit, playing (3.5 s)                739ms      249ms      7      10 10 (100.00%)  200ms  200ms
+picture categories: same tab, at rest (3 s, after th        0ms        0ms      0       0            -      -      -
+empty: Accounts → Statistics → Accounts (0.3 s)             0ms        0ms      0      13  11 (84.62%)  109ms  109ms
+empty: Categories → Operations → Categories (0.3 s)       130ms       69ms      2      12  11 (91.67%)  117ms  117ms
+empty: 12 taps in random tab order, 0.25-0.5 s apart      817ms      109ms     12     179 148 (82.68%)  101ms  121ms
+empty: 12 taps every 0.2 s                               1184ms      126ms     17     143 126 (88.11%)  101ms  117ms
+eye (empty, Accounts): 6 taps 0.4 s apart                 194ms       80ms      3      73  55 (75.34%)   69ms   89ms
+eye (empty, Operations): 6 taps 0.4 s apart               175ms       63ms      3      77  59 (76.62%)   77ms  101ms
+empty: add sheet 0.7 s after entering Operations, pi      264ms      151ms      2      10   8 (80.00%)  200ms  200ms
+empty: add sheet 0.7 s after entering Operations, pi      136ms       74ms      2      12  10 (83.33%)  117ms  121ms
+empty: period dialog, tile pick 1                         250ms      109ms      3      33  31 (93.94%)  105ms  150ms
+empty: period dialog, tile pick 2                         142ms       76ms      2      21 21 (100.00%)  101ms  133ms
+empty: period dialog, tile pick 3                          65ms       65ms      1      22  17 (77.27%)  125ms  150ms
+empty: period dialog, tile pick 4                         682ms      222ms      7      23  21 (91.30%)  117ms  150ms
+read the file and open the restore page                  1195ms      472ms      7      26  23 (88.46%)  150ms  200ms
+restore 3000 operations                                  2698ms      809ms     21      79  73 (92.41%)  117ms  150ms
+series 3000 tabs 1: 12 taps every 0.2 s                   303ms      253ms      2      25  21 (84.00%)   81ms  300ms
+eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apar      195ms       74ms      3      72  52 (72.22%)   77ms  101ms
+eye (series 3000 tabs 1 Operations): 6 taps 0.4 s ap       74ms       74ms      1      77  59 (76.62%)   69ms   89ms
+eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s ap        0ms        0ms      0      79  61 (77.22%)   65ms   85ms
+eye (series 3000 tabs 1 Categories): 6 taps 0.4 s ap       70ms       70ms      1      71  61 (85.92%)   69ms  117ms
+series 3000 tabs 2: 12 taps every 0.2 s                     0ms        0ms      0      24  21 (87.50%)   48ms   65ms
+eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apar      110ms       56ms      2      72  55 (76.39%)   73ms   93ms
+eye (series 3000 tabs 2 Operations): 6 taps 0.4 s ap        0ms        0ms      0      76  50 (65.79%)   69ms   89ms
+eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s ap       76ms       76ms      1      75  55 (73.33%)   85ms  117ms
+eye (series 3000 tabs 2 Categories): 6 taps 0.4 s ap      148ms       80ms      2      71  55 (77.46%)   73ms  101ms
+series 3000 tabs 3: 12 taps every 0.2 s                     0ms        0ms      0      24  17 (70.83%)   57ms   65ms
+eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apar       52ms       52ms      1      76  59 (77.63%)   73ms  109ms
+eye (series 3000 tabs 3 Operations): 6 taps 0.4 s ap      168ms       60ms      3      79  61 (77.22%)   73ms  101ms
+eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s ap        0ms        0ms      0      77  55 (71.43%)   65ms   85ms
+eye (series 3000 tabs 3 Categories): 6 taps 0.4 s ap       53ms       53ms      1      77  63 (81.82%)   73ms   85ms
+series 3000 index swipes 1: 10 fast swipes back           150ms       86ms      2     105  80 (76.19%)   77ms  101ms
+series 3000 index return 1: 10 swipes forward             533ms      198ms      7     126 101 (80.16%)   93ms  117ms
+series 3000 index swipes 2: 10 fast swipes back           473ms      180ms      6     136 106 (77.94%)   89ms  109ms
+series 3000 index return 2: 10 swipes forward             388ms      216ms      4     117  86 (73.50%)   81ms  105ms
+series 3000 index swipes 3: 10 fast swipes back           106ms       55ms      2     107  72 (67.29%)   73ms   97ms
+series 3000 index return 3: 10 swipes forward             528ms      216ms      6     128  97 (75.78%)   81ms  101ms
+series 3000 index swipes 4: 10 fast swipes back           292ms      134ms      4     134  97 (72.39%)   81ms  117ms
+series 3000 index return 4: 10 swipes forward             237ms       66ms      4     115  88 (76.52%)   85ms  105ms
+series 3000 index swipes 5: 10 fast swipes back           132ms       68ms      2     115  87 (75.65%)   85ms  101ms
+series 3000 index return 5: 10 swipes forward             201ms       70ms      3     148 109 (73.65%)   89ms  105ms
+series 3000 index swipes 6: 10 fast swipes back           197ms       82ms      3     110  84 (76.36%)   81ms   97ms
+series 3000 index return 6: 10 swipes forward             359ms      116ms      5     127  93 (73.23%)   85ms  109ms
+tabsagain 3000 c 1                                        447ms      208ms      3      14  12 (85.71%)  250ms  250ms
+tabsagain 3000 c 2                                          0ms        0ms      0       8  8 (100.00%)   69ms   69ms
+tabsagain 3000 c 3                                          0ms        0ms      0       8   7 (87.50%)   97ms   97ms
+tabsagain 3000 c 4                                          0ms        0ms      0       8   7 (87.50%)   65ms   65ms
+series 3000 operations swipes 1: 10 fast swipes back      342ms       62ms      6     122  91 (74.59%)   77ms  101ms
+series 3000 operations return 1: 10 swipes forward        257ms       81ms      4     134 105 (78.36%)   77ms   97ms
+series 3000 operations swipes 2: 10 fast swipes back      532ms      271ms      5     119  92 (77.31%)   89ms  105ms
+series 3000 operations return 2: 10 swipes forward        219ms       84ms      3     112  85 (75.89%)   73ms  101ms
+series 3000 operations swipes 3: 10 fast swipes back      314ms       72ms      5     102  85 (83.33%)   77ms  101ms
+series 3000 operations return 3: 10 swipes forward        468ms      198ms      5     120  86 (71.67%)   81ms  101ms
+scroll operations: 3 times down, 3 times up               262ms      134ms      3      54  44 (81.48%)   85ms  105ms
+slanted swipe operations: back, forward                   318ms      161ms      3      27  18 (66.67%)   81ms  113ms
+series 3000 statistics swipes 1: 10 fast swipes back      597ms      100ms      9     142 106 (74.65%)   93ms  150ms
+series 3000 statistics return 1: 10 swipes forward        110ms       56ms      2     121  88 (72.73%)   85ms  105ms
+series 3000 statistics swipes 2: 10 fast swipes back      290ms      100ms      4     133 106 (79.70%)   97ms  150ms
+series 3000 statistics return 2: 10 swipes forward        200ms       85ms      3     111  83 (74.77%)   85ms  109ms
+series 3000 statistics swipes 3: 10 fast swipes back      427ms      124ms      5     136 101 (74.26%)   85ms  150ms
+series 3000 statistics return 3: 10 swipes forward        174ms       65ms      3     142 102 (71.83%)   81ms  101ms
+scroll statistics: 3 times down, 3 times up               376ms      166ms      4      61  50 (81.97%)  125ms  200ms
+slanted swipe statistics: back, forward                     0ms        0ms      0      27  20 (74.07%)   69ms   77ms
+series 3000 categories swipes 1: 10 fast swipes back      273ms      148ms      3     104  80 (76.92%)   85ms  113ms
+series 3000 categories return 1: 10 swipes forward        218ms       60ms      4     105  82 (78.10%)   89ms  117ms
+series 3000 categories swipes 2: 10 fast swipes back      156ms       55ms      3     113  88 (77.88%)   89ms  101ms
+series 3000 categories return 2: 10 swipes forward        224ms       63ms      4     102  86 (84.31%)   77ms  101ms
+series 3000 categories swipes 3: 10 fast swipes back      230ms       67ms      4     101  86 (85.15%)   89ms  121ms
+series 3000 categories return 3: 10 swipes forward        145ms       78ms      2     112  90 (80.36%)   81ms  101ms
+scroll categories: 3 times down, 3 times up                 0ms        0ms      0       0            -      -      -
+slanted swipe categories: back, forward                   872ms      126ms     12      26  22 (84.62%)   81ms   85ms
+all moves                                               24740ms
+
+first screen: start with the basic set   | engine toLocaleString x200 1073.0ms
+first screen: start with the basic set   | engine plain format x200 0.6ms
+first screen: start with the basic set   | engine localeCompare x200 2.4ms
+first screen: start with the basic set   | engine toLocaleDateString x200 583.4ms
+picture operations: visit, playing (3.5  | page: built 0 items in 1 ms (kept 0)
+picture operations: visit, playing (3.5  | page: built 0 items in 0 ms (kept 1)
+picture operations: visit, playing (3.5  | page: built 0 items in 0 ms (kept 2)
+picture operations: visit, playing (3.5  | page: built 0 items in 0 ms (kept 3)
+picture operations: visit, playing (3.5  | page: built 0 items in 0 ms (kept 4)
+empty: add sheet 0.7 s after entering Op | page: built 0 items in 0 ms (kept 5)
+empty: add sheet 0.7 s after entering Op | deck: momentum ends at 20983 (page 51.00)
+empty: add sheet 0.7 s after entering Op | deck: settled from page 51, reached 51, swipes counted 0, page 51
+empty: period dialog, tile pick 1        | deck: momentum ends at 20571 (page 50.00)
+empty: period dialog, tile pick 1        | deck: settled from page 50, reached 50, swipes counted 0, page 50
+restore 3000 operations                  | page: built 191 items in 1 ms (kept 0)
+restore 3000 operations                  | page: built 0 items in 0 ms (kept 1)
+restore 3000 operations                  | page: built 0 items in 0 ms (kept 2)
+restore 3000 operations                  | page: built 195 items in 1 ms (kept 3)
+restore 3000 operations                  | page: built 169 items in 4 ms (kept 4)
+restore 3000 operations                  | statistics: content size changed (shared 0)
+restore 3000 operations                  | statistics: content size changed (shared 0)
+restore 3000 operations                  | statistics: content size changed (shared 0)
+restore 3000 operations                  | statistics: content size changed (shared 0)
+restore 3000 operations                  | statistics: content size changed (shared 0)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 20360, moved -212 (-0.51 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 20160 (page 49.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 1: 10 fast swip | page: built 199 items in 1 ms (kept 5)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 19991, moved -169 (-0.41 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 1: 10 fast swip | page: built 228 items in 1 ms (kept 6)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 19589, moved -160 (-0.39 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 1: 10 fast swip | page: built 189 items in 1 ms (kept 7)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 19149, moved -189 (-0.46 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 1: 10 fast swip | page: built 211 items in 1 ms (kept 8)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 18749, moved -177 (-0.43 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 1: 10 fast swip | page: built 221 items in 1 ms (kept 9)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 18329, moved -186 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 1: 10 fast swip | page: built 209 items in 1 ms (kept 10)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 18002, moved -101 (-0.24 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index swipes 1: 10 fast swip | page: built 179 items in 1 ms (kept 11)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 17464, moved -227 (-0.55 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 1: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 17152, moved -128 (-0.31 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 1: 10 fast swip | page: built 193 items in 0 ms (kept 12)
+series 3000 index swipes 1: 10 fast swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index swipes 1: 10 fast swip | deck: drag ends at 16682, moved -187 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 1: 10 fast swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index swipes 1: 10 fast swip | page: built 172 items in 0 ms (kept 12)
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 16617, moved 160 (0.39 pages), velocity 0.00, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 16546 (page 40.21, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 16722, moved 176 (0.43 pages), velocity 0.00, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 16786 (page 40.80, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 17000, moved 215 (0.52 pages), velocity 0.00, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 16910 (page 41.10, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 17065, moved 154 (0.37 pages), velocity 0.00, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 16997 (page 41.31, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 17231, moved 234 (0.57 pages), velocity 0.00, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 17280 (page 42.00, sliding null, deck on 40)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 17506, moved 226 (0.55 pages), velocity -2.75, counted true
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 17691 (page 43.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 40, reached 43, swipes counted 6, page 46
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 17691 (page 43.00, sliding null, deck on 46)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 17848, moved 157 (0.38 pages), velocity -2.75, counted true
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 18926 (page 46.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 46, reached 46, swipes counted 1, page 47
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 19082, moved 157 (0.38 pages), velocity -2.75, counted true
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 19337 (page 47.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 1, page 48
+series 3000 index return 1: 10 swipes fo | page: built 191 items in 1 ms (kept 12)
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 19337 (page 47.00, sliding 48, deck on 48)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 19436, moved 99 (0.24 pages), velocity 0.00, counted false
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 19749 (page 48.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 19749 (page 48.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 index return 1: 10 swipes fo | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index return 1: 10 swipes fo | deck: drag ends at 19978, moved 230 (0.56 pages), velocity -2.75, counted true
+series 3000 index return 1: 10 swipes fo | deck: momentum ends at 20160 (page 49.00)
+series 3000 index return 1: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index return 1: 10 swipes fo | page: built 0 items in 0 ms (kept 12)
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 20013, moved -147 (-0.36 pages), velocity 2.75, counted true
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 19546, moved -202 (-0.49 pages), velocity 2.75, counted true
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 19189, moved -149 (-0.36 pages), velocity 0.00, counted true
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 19259 (page 46.81, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 19124, moved -134 (-0.33 pages), velocity 0.00, counted false
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 19056 (page 46.32, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 18834, moved -223 (-0.54 pages), velocity 0.00, counted true
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 18895 (page 45.93, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 18689, moved -206 (-0.50 pages), velocity 0.00, counted true
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 18584 (page 45.17, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 18483, moved -102 (-0.25 pages), velocity 0.00, counted false
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 47)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 18288, moved -226 (-0.55 pages), velocity 2.75, counted true
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 47, reached 44, swipes counted -4, page 43
+series 3000 index swipes 2: 10 fast swip | page: built 209 items in 1 ms (kept 12)
+series 3000 index swipes 2: 10 fast swip | page: built 221 items in 0 ms (kept 12)
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 18103 (page 44.00, sliding 43, deck on 43)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 17924, moved -179 (-0.43 pages), velocity 2.75, counted true
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 43, reached 43, swipes counted -1, page 42
+series 3000 index swipes 2: 10 fast swip | page: built 194 items in 0 ms (kept 12)
+series 3000 index swipes 2: 10 fast swip | deck: drag begins at 17691 (page 43.00, sliding 42, deck on 42)
+series 3000 index swipes 2: 10 fast swip | deck: drag ends at 17648, moved -43 (-0.11 pages), velocity 2.75, counted true
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 42, reached 42, swipes counted -1, page 41
+series 3000 index swipes 2: 10 fast swip | page: built 193 items in 1 ms (kept 12)
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 index swipes 2: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 17087, moved 219 (0.53 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 17280 (page 42.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 17493, moved 213 (0.52 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 17691 (page 43.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 17890, moved 198 (0.48 pages), velocity 0.00, counted true
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 17802 (page 43.27, sliding null, deck on 43)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 17995, moved 193 (0.47 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 2, page 45
+series 3000 index return 2: 10 swipes fo | page: built 199 items in 1 ms (kept 12)
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 18157, moved 54 (0.13 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 45, reached 45, swipes counted 1, page 46
+series 3000 index return 2: 10 swipes fo | page: built 195 items in 30 ms (kept 12)
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 18514 (page 45.00, sliding 46, deck on 46)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 18674, moved 160 (0.39 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 18926 (page 46.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 46, reached 46, swipes counted 1, page 47
+series 3000 index return 2: 10 swipes fo | page: built 169 items in 1 ms (kept 12)
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 18926 (page 46.00, sliding 47, deck on 47)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 19033, moved 107 (0.26 pages), velocity 0.00, counted false
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 19337 (page 47.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 19552, moved 214 (0.52 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 19749 (page 48.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 2: 10 swipes fo | page: built 191 items in 6 ms (kept 12)
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 19948, moved 199 (0.48 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 20160 (page 49.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index return 2: 10 swipes fo | page: built 0 items in 0 ms (kept 12)
+series 3000 index return 2: 10 swipes fo | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 index return 2: 10 swipes fo | deck: drag ends at 20384, moved 224 (0.55 pages), velocity -2.75, counted true
+series 3000 index return 2: 10 swipes fo | deck: momentum ends at 20571 (page 50.00)
+series 3000 index return 2: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index return 2: 10 swipes fo | page: built 0 items in 0 ms (kept 12)
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 20350, moved -221 (-0.54 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 20160 (page 49.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 19951, moved -209 (-0.51 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 19589, moved -160 (-0.39 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 19198, moved -139 (-0.34 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 18740, moved -186 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 18312, moved -202 (-0.49 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 3: 10 fast swip | page: built 209 items in 0 ms (kept 12)
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 17958, moved -144 (-0.35 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 3: 10 fast swip | page: built 179 items in 0 ms (kept 12)
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 17546, moved -146 (-0.35 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 3: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 17068, moved -212 (-0.51 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 3: 10 fast swip | page: built 193 items in 1 ms (kept 12)
+series 3000 index swipes 3: 10 fast swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index swipes 3: 10 fast swip | deck: drag ends at 16682, moved -187 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 3: 10 fast swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index swipes 3: 10 fast swip | page: built 172 items in 0 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 16659, moved 202 (0.49 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 17042, moved 173 (0.42 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 17280 (page 42.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 17533, moved 253 (0.62 pages), velocity 0.00, counted true
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 17598 (page 42.77, sliding null, deck on 42)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 17830, moved 231 (0.56 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 42, reached 44, swipes counted 2, page 44
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 18264, moved 161 (0.39 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 18674, moved 160 (0.39 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 18926 (page 46.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index return 3: 10 swipes fo | page: built 195 items in 1 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 19102, moved 176 (0.43 pages), velocity 0.00, counted true
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 19029 (page 46.25, sliding null, deck on 46)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 19252, moved 223 (0.54 pages), velocity 0.00, counted true
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 19311 (page 46.94, sliding null, deck on 46)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 19496, moved 184 (0.45 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 19749 (page 48.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 46, reached 48, swipes counted 3, page 49
+series 3000 index return 3: 10 swipes fo | page: built 191 items in 1 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | page: built 0 items in 0 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | page: built 169 items in 1 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | deck: drag begins at 19749 (page 48.00, sliding 49, deck on 49)
+series 3000 index return 3: 10 swipes fo | deck: drag ends at 19960, moved 211 (0.51 pages), velocity -2.75, counted true
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 20160 (page 49.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 49, reached 49, swipes counted 1, page 50
+series 3000 index return 3: 10 swipes fo | page: built 0 items in 0 ms (kept 12)
+series 3000 index return 3: 10 swipes fo | deck: momentum ends at 20571 (page 50.00)
+series 3000 index return 3: 10 swipes fo | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 20368, moved -204 (-0.50 pages), velocity 2.75, counted true
+series 3000 index swipes 4: 10 fast swip | deck: momentum ends at 20160 (page 49.00)
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 20018, moved -142 (-0.34 pages), velocity 2.75, counted true
+series 3000 index swipes 4: 10 fast swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 19607, moved -142 (-0.34 pages), velocity 2.75, counted true
+series 3000 index swipes 4: 10 fast swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 19144, moved -193 (-0.47 pages), velocity 2.75, counted true
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 47)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 18681, moved -245 (-0.60 pages), velocity 2.75, counted true
+series 3000 index swipes 4: 10 fast swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 47, reached 45, swipes counted -2, page 45
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 18338, moved -176 (-0.43 pages), velocity 0.00, counted true
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 18418 (page 44.76, sliding null, deck on 45)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 18236, moved -181 (-0.44 pages), velocity 0.00, counted true
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 18151 (page 44.12, sliding null, deck on 45)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 17967, moved -184 (-0.45 pages), velocity 0.00, counted true
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 18019 (page 43.80, sliding null, deck on 45)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 17856, moved -162 (-0.39 pages), velocity 0.00, counted true
+series 3000 index swipes 4: 10 fast swip | deck: drag begins at 17785 (page 43.23, sliding null, deck on 45)
+series 3000 index swipes 4: 10 fast swip | deck: drag ends at 17573, moved -212 (-0.51 pages), velocity 0.00, counted true
+series 3000 index swipes 4: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 45, reached 43, swipes counted -5, page 40
+series 3000 index swipes 4: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index swipes 4: 10 fast swip | page: built 179 items in 1 ms (kept 12)
+series 3000 index swipes 4: 10 fast swip | page: built 209 items in 1 ms (kept 12)
+series 3000 index swipes 4: 10 fast swip | page: built 172 items in 1 ms (kept 12)
+series 3000 index swipes 4: 10 fast swip | page: built 193 items in 0 ms (kept 12)
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 16653, moved 195 (0.48 pages), velocity 0.00, counted true
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 16591 (page 40.33, sliding null, deck on 40)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 16768, moved 176 (0.43 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 2, page 42
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 16869 (page 41.00, sliding 42, deck on 42)
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 42, reached 41, swipes counted 0, page 41
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 17025, moved 157 (0.38 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 17280 (page 42.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 17511, moved 231 (0.56 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 17691 (page 43.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 17900, moved 209 (0.51 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 18103 (page 44.00, sliding null, deck on 43)
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 18312, moved 209 (0.51 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 18743, moved 229 (0.56 pages), velocity 0.00, counted true
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 18836 (page 45.78, sliding null, deck on 45)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 19078, moved 242 (0.59 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 19337 (page 47.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 45, reached 47, swipes counted 2, page 47
+series 3000 index return 4: 10 swipes fo | page: built 195 items in 0 ms (kept 12)
+series 3000 index return 4: 10 swipes fo | page: built 169 items in 0 ms (kept 12)
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 19429, moved 92 (0.22 pages), velocity 0.00, counted false
+series 3000 index return 4: 10 swipes fo | deck: drag begins at 19368 (page 47.08, sliding null, deck on 47)
+series 3000 index return 4: 10 swipes fo | deck: drag ends at 19591, moved 223 (0.54 pages), velocity -2.75, counted true
+series 3000 index return 4: 10 swipes fo | deck: momentum ends at 19749 (page 48.00)
+series 3000 index return 4: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 4: 10 swipes fo | page: built 191 items in 1 ms (kept 12)
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 19565, moved -183 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 19132, moved -205 (-0.50 pages), velocity 0.00, counted true
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 19201 (page 46.67, sliding null, deck on 47)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 18953, moved -248 (-0.60 pages), velocity 0.00, counted true
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 47)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 18763, moved -162 (-0.39 pages), velocity 0.00, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 18763 (page 45.61)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -3, page 44
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 17916, moved -187 (-0.45 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 17494, moved -197 (-0.48 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 5: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 17074, moved -206 (-0.50 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 16687, moved -182 (-0.44 pages), velocity 0.00, counted true
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 16780 (page 40.78, sliding null, deck on 41)
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 16560, moved -220 (-0.53 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -2, page 39
+series 3000 index swipes 5: 10 fast swip | page: built 207 items in 2 ms (kept 12)
+series 3000 index swipes 5: 10 fast swip | page: built 172 items in 0 ms (kept 12)
+series 3000 index swipes 5: 10 fast swip | deck: drag begins at 16457 (page 40.00, sliding 39, deck on 39)
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 39, reached 40, swipes counted 0, page 40
+series 3000 index swipes 5: 10 fast swip | deck: drag ends at 16312, moved -146 (-0.35 pages), velocity 2.75, counted true
+series 3000 index swipes 5: 10 fast swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 16262, moved 216 (0.53 pages), velocity -2.75, counted true
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 16457 (page 40.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 16640, moved 183 (0.44 pages), velocity -2.75, counted true
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 16869 (page 41.00, sliding null, deck on 40)
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 17086, moved 218 (0.53 pages), velocity -2.75, counted true
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 17280 (page 42.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 17493, moved 213 (0.52 pages), velocity 0.00, counted true
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 17561 (page 42.68, sliding null, deck on 42)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 17652, moved 91 (0.22 pages), velocity 0.00, counted false
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 17688 (page 42.99, sliding null, deck on 42)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 17859, moved 171 (0.41 pages), velocity 0.00, counted true
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 17781 (page 43.22, sliding null, deck on 42)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 18003, moved 223 (0.54 pages), velocity -2.75, counted true
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 42, reached 44, swipes counted 3, page 45
+series 3000 index return 5: 10 swipes fo | page: built 228 items in 0 ms (kept 12)
+series 3000 index return 5: 10 swipes fo | page: built 199 items in 1 ms (kept 12)
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 18202, moved 99 (0.24 pages), velocity 0.00, counted false
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 45, reached 45, swipes counted 0, page 45
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 45, reached 45, swipes counted 0, page 45
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 18715, moved 201 (0.49 pages), velocity -2.75, counted true
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 18926 (page 46.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 5: 10 swipes fo | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index return 5: 10 swipes fo | page: built 195 items in 1 ms (kept 12)
+series 3000 index return 5: 10 swipes fo | deck: drag ends at 19113, moved 187 (0.45 pages), velocity 0.00, counted true
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 18926 (page 46.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 46, reached 46, swipes counted 1, page 47
+series 3000 index return 5: 10 swipes fo | page: built 169 items in 1 ms (kept 12)
+series 3000 index return 5: 10 swipes fo | deck: momentum ends at 19337 (page 47.00)
+series 3000 index return 5: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 19138, moved -199 (-0.48 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 18700, moved -226 (-0.55 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 18359, moved -155 (-0.38 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 17921, moved -182 (-0.44 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 6: 10 fast swip | page: built 179 items in 1 ms (kept 12)
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 17549, moved -143 (-0.35 pages), velocity 0.00, counted false
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 17612 (page 42.81, sliding null, deck on 43)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 17417, moved -195 (-0.47 pages), velocity 0.00, counted true
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 17371 (page 42.22, sliding null, deck on 43)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 17157, moved -214 (-0.52 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 43, reached 41, swipes counted -2, page 41
+series 3000 index swipes 6: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index swipes 6: 10 fast swip | page: built 193 items in 1 ms (kept 12)
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 16720, moved -149 (-0.36 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index swipes 6: 10 fast swip | page: built 172 items in 0 ms (kept 12)
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 16262, moved -195 (-0.48 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 index swipes 6: 10 fast swip | page: built 207 items in 3 ms (kept 12)
+series 3000 index swipes 6: 10 fast swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 index swipes 6: 10 fast swip | deck: drag ends at 15843, moved -202 (-0.49 pages), velocity 2.75, counted true
+series 3000 index swipes 6: 10 fast swip | deck: momentum ends at 15634 (page 38.00)
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 39, reached 38, swipes counted -1, page 38
+series 3000 index swipes 6: 10 fast swip | page: built 194 items in 1 ms (kept 12)
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 15831, moved 197 (0.48 pages), velocity 0.00, counted true
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 15743 (page 38.26, sliding null, deck on 38)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 15916, moved 173 (0.42 pages), velocity 0.00, counted true
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 15984 (page 38.85, sliding null, deck on 38)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 16190, moved 206 (0.50 pages), velocity -2.75, counted true
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 16457 (page 40.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 38, reached 40, swipes counted 3, page 41
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 16457 (page 40.00, sliding 41, deck on 41)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 16559, moved 102 (0.25 pages), velocity -2.75, counted true
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 41, reached 41, swipes counted 1, page 42
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 16869 (page 41.00, sliding 42, deck on 42)
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 16869 (page 41.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 42, reached 41, swipes counted 0, page 41
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 17034, moved 165 (0.40 pages), velocity 0.00, counted true
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 17034 (page 41.40)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 41, reached 41, swipes counted 1, page 42
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 17238 (page 41.90, sliding 42, deck on 42)
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 17238 (page 41.90)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 42, reached 42, swipes counted 0, page 42
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 17365, moved 126 (0.31 pages), velocity 0.00, counted false
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 17283 (page 42.01, sliding null, deck on 42)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 17448, moved 165 (0.40 pages), velocity 0.00, counted true
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 17383 (page 42.25, sliding null, deck on 42)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 17576, moved 193 (0.47 pages), velocity -2.75, counted true
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 17691 (page 43.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 2, page 44
+series 3000 index return 6: 10 swipes fo | page: built 189 items in 0 ms (kept 12)
+series 3000 index return 6: 10 swipes fo | page: built 228 items in 1 ms (kept 12)
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 17691 (page 43.00, sliding 44, deck on 44)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 17805, moved 113 (0.28 pages), velocity 0.00, counted false
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 18103 (page 44.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 index return 6: 10 swipes fo | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 index return 6: 10 swipes fo | deck: drag ends at 18315, moved 212 (0.51 pages), velocity -2.75, counted true
+series 3000 index return 6: 10 swipes fo | deck: momentum ends at 18514 (page 45.00)
+series 3000 index return 6: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 6: 10 swipes fo | page: built 199 items in 2 ms (kept 12)
+tabsagain 3000 c 1                       | statistics: content size changed (shared 0)
+tabsagain 3000 c 1                       | statistics: content size changed (shared 0)
+tabsagain 3000 c 1                       | statistics: content size changed (shared 0)
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 18399, moved -115 (-0.28 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 18103 (page 44.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 17926, moved -177 (-0.43 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 17489, moved -202 (-0.49 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 17090, moved -190 (-0.46 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 16649, moved -220 (-0.53 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 16457 (page 40.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 16243, moved -214 (-0.52 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 15897, moved -149 (-0.36 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 39, reached 38, swipes counted -1, page 38
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 15486, moved -149 (-0.36 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 15223 (page 37.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 38, reached 37, swipes counted -1, page 37
+series 3000 operations swipes 1: 10 fast | page: built 215 items in 4 ms (kept 12)
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 15066, moved -157 (-0.38 pages), velocity 2.75, counted true
+series 3000 operations swipes 1: 10 fast | deck: drag begins at 14811 (page 36.00, sliding null, deck on 37)
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 14811 (page 36.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 37, reached 36, swipes counted -1, page 36
+series 3000 operations swipes 1: 10 fast | page: built 189 items in 0 ms (kept 12)
+series 3000 operations swipes 1: 10 fast | deck: drag ends at 14562, moved -249 (-0.61 pages), velocity 0.00, counted true
+series 3000 operations swipes 1: 10 fast | deck: momentum ends at 14400 (page 35.00)
+series 3000 operations swipes 1: 10 fast | deck: settled from page 36, reached 35, swipes counted -1, page 35
+series 3000 operations swipes 1: 10 fast | page: built 185 items in 0 ms (kept 12)
+series 3000 operations return 1: 10 swip | deck: drag begins at 14400 (page 35.00, sliding null, deck on 35)
+series 3000 operations return 1: 10 swip | deck: drag ends at 14623, moved 223 (0.54 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 14811 (page 36.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 35, reached 36, swipes counted 1, page 36
+series 3000 operations return 1: 10 swip | deck: drag begins at 14811 (page 36.00, sliding null, deck on 36)
+series 3000 operations return 1: 10 swip | deck: drag ends at 15016, moved 205 (0.50 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 15223 (page 37.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 36, reached 37, swipes counted 1, page 37
+series 3000 operations return 1: 10 swip | deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+series 3000 operations return 1: 10 swip | deck: drag ends at 15360, moved 138 (0.33 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 37, reached 38, swipes counted 1, page 38
+series 3000 operations return 1: 10 swip | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 operations return 1: 10 swip | deck: drag ends at 15850, moved 216 (0.53 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 38, reached 39, swipes counted 1, page 39
+series 3000 operations return 1: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations return 1: 10 swip | deck: drag ends at 16190, moved 144 (0.35 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 operations return 1: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 operations return 1: 10 swip | deck: drag ends at 16680, moved 223 (0.54 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 operations return 1: 10 swip | page: built 221 items in 1 ms (kept 12)
+series 3000 operations return 1: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 operations return 1: 10 swip | deck: drag ends at 17098, moved 230 (0.56 pages), velocity -2.75, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 operations return 1: 10 swip | page: built 211 items in 1 ms (kept 12)
+series 3000 operations return 1: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 operations return 1: 10 swip | deck: drag ends at 17475, moved 195 (0.47 pages), velocity 0.00, counted true
+series 3000 operations return 1: 10 swip | deck: drag begins at 17395 (page 42.28, sliding null, deck on 42)
+series 3000 operations return 1: 10 swip | deck: drag ends at 17642, moved 248 (0.60 pages), velocity 0.00, counted true
+series 3000 operations return 1: 10 swip | deck: drag begins at 17683 (page 42.98, sliding null, deck on 42)
+series 3000 operations return 1: 10 swip | deck: drag ends at 17890, moved 206 (0.50 pages), velocity 0.00, counted true
+series 3000 operations return 1: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations return 1: 10 swip | deck: settled from page 42, reached 43, swipes counted 3, page 45
+series 3000 operations return 1: 10 swip | page: built 189 items in 1 ms (kept 12)
+series 3000 operations return 1: 10 swip | page: built 228 items in 1 ms (kept 12)
+series 3000 operations return 1: 10 swip | page: built 199 items in 1 ms (kept 12)
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 18276, moved -238 (-0.58 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 18103 (page 44.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 17899, moved -203 (-0.49 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 17506, moved -186 (-0.45 pages), velocity 0.00, counted true
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 17579 (page 42.73, sliding null, deck on 43)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 17406, moved -173 (-0.42 pages), velocity 0.00, counted true
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 17344 (page 42.16, sliding null, deck on 43)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 17165, moved -179 (-0.43 pages), velocity 0.00, counted true
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 17231 (page 41.88, sliding null, deck on 43)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 17041, moved -190 (-0.46 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 16869 (page 41.00, sliding null, deck on 43)
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 43, reached 41, swipes counted -4, page 39
+series 3000 operations swipes 2: 10 fast | page: built 207 items in 1 ms (kept 12)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 16661, moved -208 (-0.50 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 39, reached 39, swipes counted -1, page 38
+series 3000 operations swipes 2: 10 fast | page: built 194 items in 0 ms (kept 12)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 15949, moved -96 (-0.23 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 38, reached 38, swipes counted -1, page 37
+series 3000 operations swipes 2: 10 fast | page: built 215 items in 1 ms (kept 12)
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 15634 (page 38.00, sliding 37, deck on 37)
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 37, reached 38, swipes counted 0, page 38
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 38, reached 38, swipes counted 0, page 38
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 15416, moved -218 (-0.53 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 15223 (page 37.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 38, reached 37, swipes counted -1, page 37
+series 3000 operations swipes 2: 10 fast | deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+series 3000 operations swipes 2: 10 fast | deck: drag ends at 15007, moved -216 (-0.53 pages), velocity 2.75, counted true
+series 3000 operations swipes 2: 10 fast | deck: momentum ends at 14811 (page 36.00)
+series 3000 operations swipes 2: 10 fast | deck: settled from page 37, reached 36, swipes counted -1, page 36
+series 3000 operations swipes 2: 10 fast | page: built 189 items in 0 ms (kept 12)
+series 3000 operations return 2: 10 swip | deck: drag begins at 14811 (page 36.00, sliding null, deck on 36)
+series 3000 operations return 2: 10 swip | deck: drag ends at 15045, moved 234 (0.57 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 15223 (page 37.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 36, reached 37, swipes counted 1, page 37
+series 3000 operations return 2: 10 swip | deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+series 3000 operations return 2: 10 swip | deck: drag ends at 15384, moved 161 (0.39 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 37, reached 38, swipes counted 1, page 38
+series 3000 operations return 2: 10 swip | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 operations return 2: 10 swip | deck: drag ends at 15841, moved 206 (0.50 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 38, reached 39, swipes counted 1, page 39
+series 3000 operations return 2: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations return 2: 10 swip | deck: drag ends at 16257, moved 211 (0.51 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 operations return 2: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 operations return 2: 10 swip | deck: drag ends at 16644, moved 187 (0.45 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 operations return 2: 10 swip | page: built 221 items in 1 ms (kept 12)
+series 3000 operations return 2: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 operations return 2: 10 swip | deck: drag ends at 17068, moved 200 (0.49 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 operations return 2: 10 swip | page: built 211 items in 1 ms (kept 12)
+series 3000 operations return 2: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 operations return 2: 10 swip | deck: drag ends at 17434, moved 154 (0.37 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 operations return 2: 10 swip | page: built 189 items in 2 ms (kept 12)
+series 3000 operations return 2: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 operations return 2: 10 swip | deck: drag ends at 17912, moved 220 (0.54 pages), velocity 0.00, counted true
+series 3000 operations return 2: 10 swip | deck: drag begins at 17999 (page 43.75, sliding null, deck on 43)
+series 3000 operations return 2: 10 swip | deck: drag ends at 18197, moved 198 (0.48 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 43, reached 45, swipes counted 2, page 45
+series 3000 operations return 2: 10 swip | page: built 228 items in 2 ms (kept 12)
+series 3000 operations return 2: 10 swip | page: built 199 items in 1 ms (kept 12)
+series 3000 operations return 2: 10 swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 operations return 2: 10 swip | deck: drag ends at 18742, moved 228 (0.55 pages), velocity -2.75, counted true
+series 3000 operations return 2: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 operations return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 operations return 2: 10 swip | page: built 195 items in 1 ms (kept 12)
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 18797, moved -129 (-0.31 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 18353, moved -161 (-0.39 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 18103 (page 44.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 17936, moved -166 (-0.40 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 17524, moved -168 (-0.41 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 17087, moved -193 (-0.47 pages), velocity 0.00, counted true
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 17195 (page 41.79, sliding null, deck on 42)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 16994, moved -201 (-0.49 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 42, reached 41, swipes counted -2, page 40
+series 3000 operations swipes 3: 10 fast | page: built 172 items in 1 ms (kept 12)
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 16869 (page 41.00, sliding 40, deck on 40)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 16829, moved -39 (-0.10 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 16457 (page 40.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 40, reached 40, swipes counted -1, page 39
+series 3000 operations swipes 3: 10 fast | page: built 207 items in 1 ms (kept 12)
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 16355 (page 39.75, sliding 39, deck on 39)
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 16355 (page 39.75)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 39, reached 40, swipes counted 0, page 40
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 16355, moved 0 (0.00 pages), velocity 0.00, counted false
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 16355 (page 39.75)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 40, reached 40, swipes counted 0, page 40
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 16355 (page 39.75, sliding null, deck on 40)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 16157, moved -198 (-0.48 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 operations swipes 3: 10 fast | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations swipes 3: 10 fast | deck: drag ends at 15867, moved -179 (-0.43 pages), velocity 2.75, counted true
+series 3000 operations swipes 3: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 operations swipes 3: 10 fast | deck: settled from page 39, reached 38, swipes counted -1, page 38
+series 3000 operations swipes 3: 10 fast | page: built 194 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 operations return 3: 10 swip | deck: drag ends at 15857, moved 223 (0.54 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 38, reached 39, swipes counted 1, page 39
+series 3000 operations return 3: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 operations return 3: 10 swip | deck: drag ends at 16216, moved 171 (0.41 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 operations return 3: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 operations return 3: 10 swip | deck: drag ends at 16627, moved 170 (0.41 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 operations return 3: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 operations return 3: 10 swip | deck: drag ends at 17067, moved 198 (0.48 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 operations return 3: 10 swip | page: built 211 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 operations return 3: 10 swip | deck: drag ends at 17473, moved 193 (0.47 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 operations return 3: 10 swip | page: built 189 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 operations return 3: 10 swip | deck: drag ends at 17888, moved 197 (0.48 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 operations return 3: 10 swip | page: built 228 items in 0 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 operations return 3: 10 swip | deck: drag ends at 18278, moved 175 (0.43 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 operations return 3: 10 swip | page: built 199 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 operations return 3: 10 swip | deck: drag ends at 18672, moved 158 (0.38 pages), velocity 0.00, counted true
+series 3000 operations return 3: 10 swip | deck: drag begins at 18608 (page 45.23, sliding null, deck on 45)
+series 3000 operations return 3: 10 swip | deck: drag ends at 18792, moved 184 (0.45 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 45, reached 46, swipes counted 2, page 47
+series 3000 operations return 3: 10 swip | page: built 195 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | page: built 169 items in 1 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: drag begins at 18926 (page 46.00, sliding 47, deck on 47)
+series 3000 operations return 3: 10 swip | deck: drag ends at 19132, moved 206 (0.50 pages), velocity -2.75, counted true
+series 3000 operations return 3: 10 swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 47, reached 47, swipes counted 1, page 48
+series 3000 operations return 3: 10 swip | page: built 191 items in 0 ms (kept 12)
+series 3000 operations return 3: 10 swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 operations return 3: 10 swip | deck: settled from page 48, reached 48, swipes counted 0, page 48
+slanted swipe operations: back, forward  | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+slanted swipe operations: back, forward  | deck: drag ends at 19578, moved -170 (-0.41 pages), velocity 1.75, counted true
+slanted swipe operations: back, forward  | deck: momentum ends at 19337 (page 47.00)
+slanted swipe operations: back, forward  | deck: settled from page 48, reached 47, swipes counted -1, page 47
+slanted swipe operations: back, forward  | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+slanted swipe operations: back, forward  | deck: drag ends at 19499, moved 162 (0.39 pages), velocity -1.75, counted true
+slanted swipe operations: back, forward  | deck: momentum ends at 19749 (page 48.00)
+slanted swipe operations: back, forward  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+slanted swipe operations: back, forward  | statistics: content size changed (shared 0)
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 19611, moved -138 (-0.33 pages), velocity 2.75, counted true
+series 3000 statistics swipes 1: 10 fast | deck: momentum ends at 19337 (page 47.00)
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 statistics swipes 1: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 19170, moved -168 (-0.41 pages), velocity 2.75, counted true
+series 3000 statistics swipes 1: 10 fast | deck: momentum ends at 18926 (page 46.00)
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 18733, moved -193 (-0.47 pages), velocity 2.75, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 46)
+series 3000 statistics swipes 1: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 18362, moved -153 (-0.37 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 18426 (page 44.79, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 18214, moved -212 (-0.51 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 18134 (page 44.08, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 17945, moved -190 (-0.46 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 17998 (page 43.74, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 17816, moved -181 (-0.44 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 17728 (page 43.09, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 17626, moved -102 (-0.25 pages), velocity 0.00, counted false
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 17669 (page 42.95, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 17449, moved -220 (-0.53 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: drag begins at 17377 (page 42.24, sliding null, deck on 45)
+series 3000 statistics swipes 1: 10 fast | deck: drag ends at 17157, moved -220 (-0.53 pages), velocity 0.00, counted true
+series 3000 statistics swipes 1: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 45, reached 42, swipes counted -6, page 39
+series 3000 statistics swipes 1: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 1: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 1: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 1: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics return 1: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 16263, moved 218 (0.53 pages), velocity -2.75, counted true
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 statistics return 1: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 16672, moved 215 (0.52 pages), velocity 0.00, counted true
+series 3000 statistics return 1: 10 swip | deck: drag begins at 16733 (page 40.67, sliding null, deck on 40)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 16860, moved 127 (0.31 pages), velocity 0.00, counted false
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 statistics return 1: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 statistics return 1: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 17075, moved 206 (0.50 pages), velocity -2.75, counted true
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 statistics return 1: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 17492, moved 212 (0.51 pages), velocity -2.75, counted true
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 statistics return 1: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 1: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 17925, moved 234 (0.57 pages), velocity -2.75, counted true
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 statistics return 1: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 1: 10 swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 18253, moved 150 (0.36 pages), velocity 0.00, counted true
+series 3000 statistics return 1: 10 swip | deck: drag begins at 18170 (page 44.16, sliding null, deck on 44)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 18302, moved 132 (0.32 pages), velocity 0.00, counted false
+series 3000 statistics return 1: 10 swip | deck: drag begins at 18207 (page 44.25, sliding null, deck on 44)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 18331, moved 124 (0.30 pages), velocity 0.00, counted false
+series 3000 statistics return 1: 10 swip | deck: drag begins at 18444 (page 44.83, sliding null, deck on 44)
+series 3000 statistics return 1: 10 swip | deck: drag ends at 18668, moved 224 (0.54 pages), velocity -2.75, counted true
+series 3000 statistics return 1: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 statistics return 1: 10 swip | deck: settled from page 44, reached 46, swipes counted 2, page 46
+series 3000 statistics return 1: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 18808, moved -118 (-0.29 pages), velocity 2.75, counted true
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 46)
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 18301, moved -213 (-0.52 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 18234 (page 44.32, sliding null, deck on 45)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 18146, moved -88 (-0.21 pages), velocity 0.00, counted false
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 18112 (page 44.02, sliding null, deck on 45)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 17934, moved -179 (-0.43 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 18012 (page 43.78, sliding null, deck on 45)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 17839, moved -173 (-0.42 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 17740 (page 43.12, sliding null, deck on 45)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 17523, moved -217 (-0.53 pages), velocity 2.75, counted true
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 45, reached 42, swipes counted -4, page 41
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+series 3000 statistics swipes 2: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 17233, moved -47 (-0.11 pages), velocity 0.00, counted false
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 16676, moved -192 (-0.47 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 16676 (page 40.53)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 41, reached 41, swipes counted -1, page 40
+series 3000 statistics swipes 2: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 16467 (page 40.02, sliding 40, deck on 40)
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 16467 (page 40.02)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 40, reached 40, swipes counted 0, page 40
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 16262, moved -205 (-0.50 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: drag begins at 16323 (page 39.68, sliding null, deck on 40)
+series 3000 statistics swipes 2: 10 fast | deck: drag ends at 16095, moved -228 (-0.55 pages), velocity 0.00, counted true
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 40, reached 39, swipes counted -2, page 38
+series 3000 statistics swipes 2: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 2: 10 fast | deck: momentum ends at 15634 (page 38.00)
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 38, reached 38, swipes counted 0, page 38
+series 3000 statistics return 2: 10 swip | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 15816, moved 181 (0.44 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 38, reached 39, swipes counted 1, page 39
+series 3000 statistics return 2: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 2: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 16147, moved 102 (0.25 pages), velocity 0.00, counted false
+series 3000 statistics return 2: 10 swip | deck: drag begins at 16094 (page 39.12, sliding null, deck on 39)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 16265, moved 171 (0.41 pages), velocity 0.00, counted true
+series 3000 statistics return 2: 10 swip | deck: drag begins at 16359 (page 39.76, sliding null, deck on 39)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 16518, moved 160 (0.39 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 39, reached 41, swipes counted 2, page 41
+series 3000 statistics return 2: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 statistics return 2: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 17065, moved 197 (0.48 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 statistics return 2: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 17486, moved 206 (0.50 pages), velocity 0.00, counted true
+series 3000 statistics return 2: 10 swip | deck: drag begins at 17562 (page 42.68, sliding null, deck on 42)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 17718, moved 157 (0.38 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 42, reached 44, swipes counted 2, page 44
+series 3000 statistics return 2: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 2: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 2: 10 swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 18161, moved 58 (0.14 pages), velocity 0.00, counted false
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 44, reached 45, swipes counted 0, page 45
+series 3000 statistics return 2: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 2: 10 swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 18710, moved 195 (0.48 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 statistics return 2: 10 swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 statistics return 2: 10 swip | deck: drag ends at 19088, moved 163 (0.40 pages), velocity -2.75, counted true
+series 3000 statistics return 2: 10 swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 statistics return 2: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 19160, moved -178 (-0.43 pages), velocity 2.75, counted true
+series 3000 statistics swipes 3: 10 fast | deck: momentum ends at 18926 (page 46.00)
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 18752, moved -173 (-0.42 pages), velocity 2.75, counted true
+series 3000 statistics swipes 3: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 18356, moved -158 (-0.38 pages), velocity 2.75, counted true
+series 3000 statistics swipes 3: 10 fast | deck: momentum ends at 18103 (page 44.00)
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 statistics swipes 3: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 17958, moved -144 (-0.35 pages), velocity 2.75, counted true
+series 3000 statistics swipes 3: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 17509, moved -183 (-0.44 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 17595 (page 42.76, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 17405, moved -190 (-0.46 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 17344 (page 42.15, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 17149, moved -195 (-0.47 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 17205 (page 41.82, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 16988, moved -217 (-0.53 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 16901 (page 41.08, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 16659, moved -242 (-0.59 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: drag begins at 16564 (page 40.26, sliding null, deck on 43)
+series 3000 statistics swipes 3: 10 fast | deck: drag ends at 16388, moved -176 (-0.43 pages), velocity 0.00, counted true
+series 3000 statistics swipes 3: 10 fast | deck: momentum ends at 16457 (page 40.00)
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 43, reached 40, swipes counted -6, page 37
+series 3000 statistics swipes 3: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics swipes 3: 10 fast | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag begins at 15223 (page 37.00, sliding null, deck on 37)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 15375, moved 152 (0.37 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 15634 (page 38.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 37, reached 38, swipes counted 1, page 38
+series 3000 statistics return 3: 10 swip | deck: drag begins at 15634 (page 38.00, sliding null, deck on 38)
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 15811, moved 176 (0.43 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 16046 (page 39.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 38, reached 39, swipes counted 1, page 39
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 16120, moved 74 (0.18 pages), velocity 0.00, counted false
+series 3000 statistics return 3: 10 swip | deck: drag begins at 16049 (page 39.01, sliding null, deck on 39)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 16245, moved 195 (0.48 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 statistics return 3: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 16666, moved 209 (0.51 pages), velocity 0.00, counted true
+series 3000 statistics return 3: 10 swip | deck: drag begins at 16755 (page 40.72, sliding null, deck on 40)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 16958, moved 204 (0.50 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 40, reached 42, swipes counted 2, page 42
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 17379, moved 99 (0.24 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 17815, moved 124 (0.30 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 18260, moved 157 (0.38 pages), velocity -2.75, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 statistics return 3: 10 swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 statistics return 3: 10 swip | statistics: content size changed (shared 0)
+series 3000 statistics return 3: 10 swip | deck: drag ends at 18717, moved 202 (0.49 pages), velocity 0.00, counted true
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 45, reached 45, swipes counted 1, page 46
+series 3000 statistics return 3: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 statistics return 3: 10 swip | deck: settled from page 46, reached 46, swipes counted 0, page 46
+scroll statistics: 3 times down, 3 times | statistics: scroll begins
+scroll statistics: 3 times down, 3 times | statistics: follow at 361 moved 4 pages in 0 ms
+scroll statistics: 3 times down, 3 times | statistics: scroll begins
+scroll statistics: 3 times down, 3 times | statistics: follow at 1240 moved 4 pages in 0 ms
+scroll statistics: 3 times down, 3 times | statistics: follow at 1502 moved 4 pages in 0 ms
+scroll statistics: 3 times down, 3 times | statistics: scroll begins
+scroll statistics: 3 times down, 3 times | statistics: follow at 1502 moved 4 pages in 0 ms
+scroll statistics: 3 times down, 3 times | statistics: follow at 1502 moved 4 pages in 0 ms
+slanted swipe statistics: back, forward  | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+slanted swipe statistics: back, forward  | deck: drag ends at 18765, moved -161 (-0.39 pages), velocity 1.75, counted true
+slanted swipe statistics: back, forward  | deck: momentum ends at 18514 (page 45.00)
+slanted swipe statistics: back, forward  | deck: settled from page 46, reached 45, swipes counted -1, page 45
+slanted swipe statistics: back, forward  | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+slanted swipe statistics: back, forward  | deck: drag ends at 18695, moved 181 (0.44 pages), velocity -1.75, counted true
+slanted swipe statistics: back, forward  | deck: momentum ends at 18926 (page 46.00)
+slanted swipe statistics: back, forward  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 18760, moved -165 (-0.40 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 18377, moved -138 (-0.33 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 18103 (page 44.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 18103 (page 44.00, sliding null, deck on 44)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 18012, moved -91 (-0.22 pages), velocity 0.00, counted false
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 18064 (page 43.91, sliding null, deck on 44)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 17894, moved -170 (-0.41 pages), velocity 0.00, counted true
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 17838 (page 43.36, sliding null, deck on 44)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 17613, moved -226 (-0.55 pages), velocity 0.00, counted true
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 17662 (page 42.93, sliding null, deck on 44)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 17511, moved -151 (-0.37 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 44, reached 42, swipes counted -3, page 41
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 17218, moved -62 (-0.15 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 41, reached 41, swipes counted -1, page 40
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 16766 (page 40.75, sliding 40, deck on 40)
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 16766 (page 40.75)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 40, reached 41, swipes counted 0, page 41
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 16684, moved -83 (-0.20 pages), velocity 0.00, counted false
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 16684 (page 40.55)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 16684 (page 40.55, sliding null, deck on 41)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 16530, moved -154 (-0.37 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 16457 (page 40.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 categories swipes 1: 10 fast | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 categories swipes 1: 10 fast | deck: drag ends at 16254, moved -203 (-0.49 pages), velocity 2.75, counted true
+series 3000 categories swipes 1: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 categories swipes 1: 10 fast | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 categories return 1: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 categories return 1: 10 swip | deck: drag ends at 16271, moved 226 (0.55 pages), velocity 0.00, counted true
+series 3000 categories return 1: 10 swip | deck: drag begins at 16345 (page 39.73, sliding null, deck on 39)
+series 3000 categories return 1: 10 swip | deck: drag ends at 16549, moved 204 (0.50 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 39, reached 41, swipes counted 2, page 41
+series 3000 categories return 1: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 categories return 1: 10 swip | deck: drag ends at 17042, moved 173 (0.42 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 categories return 1: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 categories return 1: 10 swip | deck: drag ends at 17456, moved 176 (0.43 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 42)
+series 3000 categories return 1: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 categories return 1: 10 swip | deck: drag ends at 17880, moved 188 (0.46 pages), velocity 0.00, counted true
+series 3000 categories return 1: 10 swip | deck: drag begins at 17806 (page 43.28, sliding null, deck on 43)
+series 3000 categories return 1: 10 swip | deck: drag ends at 18015, moved 209 (0.51 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 43, reached 44, swipes counted 2, page 45
+series 3000 categories return 1: 10 swip | deck: drag begins at 18103 (page 44.00, sliding 45, deck on 45)
+series 3000 categories return 1: 10 swip | deck: drag ends at 18168, moved 65 (0.16 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 45, reached 45, swipes counted 1, page 46
+series 3000 categories return 1: 10 swip | deck: drag begins at 18743 (page 45.56, sliding 46, deck on 46)
+series 3000 categories return 1: 10 swip | deck: momentum ends at 18743 (page 45.56)
+series 3000 categories return 1: 10 swip | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 categories return 1: 10 swip | deck: drag ends at 18822, moved 80 (0.19 pages), velocity 0.00, counted false
+series 3000 categories return 1: 10 swip | deck: momentum ends at 18822 (page 45.75)
+series 3000 categories return 1: 10 swip | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 categories return 1: 10 swip | deck: drag begins at 18822 (page 45.75, sliding null, deck on 46)
+series 3000 categories return 1: 10 swip | deck: drag ends at 19007, moved 184 (0.45 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 1: 10 swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 categories return 1: 10 swip | deck: drag ends at 19544, moved 206 (0.50 pages), velocity -2.75, counted true
+series 3000 categories return 1: 10 swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 categories return 1: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 19558, moved -190 (-0.46 pages), velocity 0.00, counted true
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 19659 (page 47.78, sliding null, deck on 48)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 19442, moved -217 (-0.53 pages), velocity 0.00, counted true
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 19364 (page 47.07, sliding null, deck on 48)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 19150, moved -214 (-0.52 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 18926 (page 46.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 48, reached 46, swipes counted -3, page 45
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 18926 (page 46.00, sliding 45, deck on 45)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 18824, moved -102 (-0.25 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 45, reached 45, swipes counted -1, page 44
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 18475 (page 44.90, sliding 44, deck on 44)
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 18475 (page 44.90)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 44, reached 45, swipes counted 0, page 45
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 18250, moved -226 (-0.55 pages), velocity 0.00, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 18250 (page 44.36)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 18250 (page 44.36, sliding null, deck on 44)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 18093, moved -157 (-0.38 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 17494, moved -197 (-0.48 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 17085, moved -195 (-0.47 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 16869 (page 41.00, sliding null, deck on 41)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 16713, moved -155 (-0.38 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 16457 (page 40.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 categories swipes 2: 10 fast | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 categories swipes 2: 10 fast | deck: drag ends at 16285, moved -172 (-0.42 pages), velocity 2.75, counted true
+series 3000 categories swipes 2: 10 fast | deck: momentum ends at 16046 (page 39.00)
+series 3000 categories swipes 2: 10 fast | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 categories return 2: 10 swip | deck: drag begins at 16046 (page 39.00, sliding null, deck on 39)
+series 3000 categories return 2: 10 swip | deck: drag ends at 16277, moved 231 (0.56 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 16457 (page 40.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 categories return 2: 10 swip | deck: drag begins at 16457 (page 40.00, sliding null, deck on 40)
+series 3000 categories return 2: 10 swip | deck: drag ends at 16603, moved 146 (0.35 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: drag begins at 16869 (page 41.00, sliding null, deck on 40)
+series 3000 categories return 2: 10 swip | deck: momentum ends at 16869 (page 41.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 categories return 2: 10 swip | deck: drag ends at 17086, moved 218 (0.53 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 17280 (page 42.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 categories return 2: 10 swip | deck: drag begins at 17280 (page 42.00, sliding null, deck on 42)
+series 3000 categories return 2: 10 swip | deck: drag ends at 17477, moved 197 (0.48 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 categories return 2: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 43)
+series 3000 categories return 2: 10 swip | deck: drag ends at 17901, moved 209 (0.51 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: drag begins at 18103 (page 44.00, sliding null, deck on 43)
+series 3000 categories return 2: 10 swip | deck: momentum ends at 18103 (page 44.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 categories return 2: 10 swip | deck: drag ends at 18243, moved 141 (0.34 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 18514 (page 45.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 categories return 2: 10 swip | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 categories return 2: 10 swip | deck: drag ends at 18744, moved 230 (0.56 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 2: 10 swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 categories return 2: 10 swip | deck: drag ends at 19093, moved 168 (0.41 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 2: 10 swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 categories return 2: 10 swip | deck: drag ends at 19542, moved 205 (0.50 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 2: 10 swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 categories return 2: 10 swip | deck: drag ends at 19922, moved 173 (0.42 pages), velocity -2.75, counted true
+series 3000 categories return 2: 10 swip | deck: momentum ends at 20160 (page 49.00)
+series 3000 categories return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 19998, moved -162 (-0.39 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 19749 (page 48.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 19571, moved -178 (-0.43 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 19337 (page 47.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 19337 (page 47.00, sliding null, deck on 47)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 19200, moved -138 (-0.33 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 18926 (page 46.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 18692, moved -234 (-0.57 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 18514 (page 45.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 18514 (page 45.00, sliding null, deck on 45)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 18349, moved -165 (-0.40 pages), velocity 0.00, counted true
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 18421 (page 44.77, sliding null, deck on 45)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 18193, moved -228 (-0.55 pages), velocity 0.00, counted true
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 18150 (page 44.12, sliding null, deck on 45)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 17991, moved -159 (-0.39 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 17691 (page 43.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 45, reached 43, swipes counted -3, page 42
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 17691 (page 43.00, sliding 42, deck on 42)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 17598, moved -94 (-0.23 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 17280 (page 42.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 42, reached 42, swipes counted -1, page 41
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 17280 (page 42.00, sliding 41, deck on 41)
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 17194, moved -86 (-0.21 pages), velocity 2.75, counted true
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 16869 (page 41.00)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 41, reached 41, swipes counted -1, page 40
+series 3000 categories swipes 3: 10 fast | deck: drag begins at 16800 (page 40.83, sliding 40, deck on 40)
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 16800 (page 40.83)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 40, reached 41, swipes counted 0, page 41
+series 3000 categories swipes 3: 10 fast | deck: drag ends at 16800, moved 0 (0.00 pages), velocity 0.00, counted false
+series 3000 categories swipes 3: 10 fast | deck: momentum ends at 16800 (page 40.83)
+series 3000 categories swipes 3: 10 fast | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 categories return 3: 10 swip | deck: drag begins at 16800 (page 40.83, sliding null, deck on 41)
+series 3000 categories return 3: 10 swip | deck: drag ends at 17001, moved 201 (0.49 pages), velocity 0.00, counted true
+series 3000 categories return 3: 10 swip | deck: drag begins at 16933 (page 41.16, sliding null, deck on 41)
+series 3000 categories return 3: 10 swip | deck: drag ends at 17148, moved 215 (0.52 pages), velocity 0.00, counted true
+series 3000 categories return 3: 10 swip | deck: drag begins at 17199 (page 41.80, sliding null, deck on 41)
+series 3000 categories return 3: 10 swip | deck: drag ends at 17370, moved 171 (0.41 pages), velocity 0.00, counted true
+series 3000 categories return 3: 10 swip | deck: drag begins at 17287 (page 42.02, sliding null, deck on 41)
+series 3000 categories return 3: 10 swip | deck: drag ends at 17455, moved 168 (0.41 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 17691 (page 43.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 41, reached 43, swipes counted 4, page 45
+series 3000 categories return 3: 10 swip | deck: drag begins at 17691 (page 43.00, sliding null, deck on 45)
+series 3000 categories return 3: 10 swip | deck: drag ends at 18654, moved 963 (2.34 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 18926 (page 46.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 3: 10 swip | deck: drag begins at 18926 (page 46.00, sliding null, deck on 46)
+series 3000 categories return 3: 10 swip | deck: drag ends at 19086, moved 161 (0.39 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: drag begins at 19337 (page 47.00, sliding null, deck on 46)
+series 3000 categories return 3: 10 swip | deck: momentum ends at 19337 (page 47.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 3: 10 swip | deck: drag ends at 19517, moved 180 (0.44 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 19749 (page 48.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 3: 10 swip | deck: drag begins at 19749 (page 48.00, sliding null, deck on 48)
+series 3000 categories return 3: 10 swip | deck: drag ends at 19925, moved 176 (0.43 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 20160 (page 49.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories return 3: 10 swip | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+series 3000 categories return 3: 10 swip | deck: drag ends at 20284, moved 124 (0.30 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 20571 (page 50.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 categories return 3: 10 swip | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+series 3000 categories return 3: 10 swip | deck: drag ends at 20724, moved 152 (0.37 pages), velocity -2.75, counted true
+series 3000 categories return 3: 10 swip | deck: momentum ends at 20983 (page 51.00)
+series 3000 categories return 3: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+slanted swipe categories: back, forward  | deck: drag begins at 20983 (page 51.00, sliding null, deck on 51)
+slanted swipe categories: back, forward  | deck: drag ends at 20826, moved -157 (-0.38 pages), velocity 1.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20571 (page 50.00)
+slanted swipe categories: back, forward  | deck: settled from page 51, reached 50, swipes counted -1, page 50
+slanted swipe categories: back, forward  | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+slanted swipe categories: back, forward  | deck: drag ends at 20711, moved 140 (0.34 pages), velocity -1.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20983 (page 51.00)
+slanted swipe categories: back, forward  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+slanted swipe categories: back, forward  | page: built 0 items in 0 ms (kept 12)
+slanted swipe categories: back, forward  | page: built 0 items in 0 ms (kept 12)
+slanted swipe categories: back, forward  | page: built 0 items in 0 ms (kept 12)
+slanted swipe categories: back, forward  | deck: drag begins at 20983 (page 51.00, sliding null, deck on 51)
+slanted swipe categories: back, forward  | deck: drag ends at 20794, moved -189 (-0.46 pages), velocity 2.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20571 (page 50.00)
+slanted swipe categories: back, forward  | deck: settled from page 51, reached 50, swipes counted -1, page 50
+slanted swipe categories: back, forward  | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+slanted swipe categories: back, forward  | deck: drag ends at 20421, moved -150 (-0.36 pages), velocity 2.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20160 (page 49.00)
+slanted swipe categories: back, forward  | deck: settled from page 50, reached 49, swipes counted -1, page 49
+slanted swipe categories: back, forward  | statistics: content size changed (shared 1502)
+slanted swipe categories: back, forward  | statistics: content size changed (shared 1502)
+slanted swipe categories: back, forward  | statistics: scroll begins
+slanted swipe categories: back, forward  | statistics: follow at 1502 moved 4 pages in 0 ms
+slanted swipe categories: back, forward  | statistics: follow at 1502 moved 4 pages in 0 ms
+slanted swipe categories: back, forward  | deck: momentum ends at 411 (page 1.00)
+slanted swipe categories: back, forward  | deck: settled from page 1, reached 1, swipes counted 0, page 1
+slanted swipe categories: back, forward  | deck: drag begins at 20160 (page 49.00, sliding null, deck on 49)
+slanted swipe categories: back, forward  | deck: drag ends at 20376, moved 216 (0.53 pages), velocity -2.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20571 (page 50.00)
+slanted swipe categories: back, forward  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+slanted swipe categories: back, forward  | deck: drag begins at 20571 (page 50.00, sliding null, deck on 50)
+slanted swipe categories: back, forward  | deck: drag ends at 20728, moved 157 (0.38 pages), velocity -2.75, counted true
+slanted swipe categories: back, forward  | deck: momentum ends at 20983 (page 51.00)
+slanted swipe categories: back, forward  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+
+tab moves                                                      presses dropped pill p50 pill p90 frame p50 frame p90 shown     p50     p90  JS busy  longest
+
+eye moves                                                      taps text p50 text max  apply  write notify  JS busy  longest
+
+layers                                                          sheet shown  dialog gone, old  dialog gone, new
+
+pictures (one tab each)                                         JS busy  frames        janky    p90   shown
+picture operations: visit, playing (3.5 s)                         919ms      84  78 (92.86%)  129ms       -
+picture operations: same tab, at rest (3 s, after the run)          73ms      15  13 (86.67%)  117ms       -
+picture accounts: visit, playing (3.5 s)                             0ms       2  2 (100.00%)   65ms       -
+picture accounts: same tab, at rest (3 s, after the run)           140ms       0    0 (0.00%) 4950ms       -
+picture statistics: visit, playing (3.5 s)                         823ms      51  48 (94.12%)  133ms       -
+picture statistics: same tab, at rest (3 s, after the run)         484ms       0    0 (0.00%) 4950ms       -
+picture categories: visit, playing (3.5 s)                         739ms      10 10 (100.00%)  200ms       -
+picture categories: same tab, at rest (3 s, after the run)           0ms       0    0 (0.00%) 4950ms       -
+
+Component bodies (own time)                                              part  draws    total
+
+profile x series (median of runs)                runs  JS busy         range  listeners called
+3000 ops, tabs, 12 taps                             3       0ms     0-303ms                 -
+3000 ops, tabs, eye Accounts                        3     110ms    52-195ms                 -
+3000 ops, tabs, eye Categories                      3      70ms    53-148ms                 -
+3000 ops, tabs, eye Operations                      3      74ms     0-168ms                 -
+3000 ops, tabs, eye Statistics                      3       0ms     0-76ms                 -
+
+away: return to Operations after 6 s              JS busy pauses  longest
+
+swipes back by volume (median of runs)           runs  JS busy         range  longest page built ops of period
+3000 ops, categories, 10 swipes back                3     230ms   156-273ms      67ms          -             -
+3000 ops, index, 10 swipes back                     6     173ms   106-473ms      84ms          -             -
+3000 ops, operations, 10 swipes back                3     342ms   314-532ms      72ms          -             -
+3000 ops, statistics, 10 swipes back                3     427ms   290-597ms     100ms          -             -
+
+tabs again, repeated (c: known places, d: dump)  runs  JS busy         range  pauses
+3000 ops, c                                         4       0ms     0-447ms       0
+
+save the operation                                JS busy  longest
+
+save the operation by volume (median of runs)    runs  JS busy         range
+
+swipe timeline (ms after the page was taken)                      how    n  median   min   max
