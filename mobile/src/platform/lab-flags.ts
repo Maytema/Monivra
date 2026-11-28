@@ -2,7 +2,7 @@
 // `monivra:///?lab=far` (the flag is read from the start link before anything is drawn) and the variant is on for the whole run.
 import { Linking } from "react-native";
 
-export const lab = { far: false };
+export const lab = { far: false, warm: false };
 
 export async function readLabFlags(): Promise<void> {
   try {
@@ -12,5 +12,5 @@ export async function readLabFlags(): Promise<void> {
   } catch {
     // no start link: the flag stays off
   }
-  console.log(`[perf] lab flags: ${lab.far ? "far" : "none"}`);
+  console.log(`[perf] lab flags: ${Object.entries(lab).filter(([, on]) => on).map(([name]) => name).join(",") || "none"}`);
 }

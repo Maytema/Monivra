@@ -172,6 +172,7 @@ export function PeriodDeck<K extends string>({
   }, [row, width]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // The end of a swipe (or of a slide the deck was asked for): the page reached becomes the current one.
+  useLayoutEffect(() => { if (height > 0) console.log("[perf] deck content mounted"); }, [height > 0]); // eslint-disable-line react-hooks/exhaustive-deps
   const settle = (offset: number) => {
     pagerState("idle");
     // A deck on a screen that is not in front never takes a page (its tab was just left and the scroll view lost its size).

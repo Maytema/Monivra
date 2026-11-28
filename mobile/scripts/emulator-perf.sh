@@ -525,23 +525,24 @@ screens_series
 lab_start() { # $1 flags (comma list, or "none")
   adb shell am force-stop $PKG; sleep 2
   local link="monivra:///"; [ "$1" != none ] && link="monivra:///?lab=$1"
-  adb shell am start -a android.intent.action.VIEW -d "$link" $PKG >/dev/null 2>&1
-  sleep 14
+  log "launch $1: $(adb shell am start -W -a android.intent.action.VIEW -d "$link" $PKG 2>&1 | grep -E 'TotalTime|WaitTime' | tr '\n' ' ')"
+  sleep 12
 }
-declare -A ab_run
-ab_swipes() { # $1 name, $2 flags: a start, then two runs of ten swipes back and ten forward
+# Tabs, cold: base (A) and warm (B) in A B B A blocks, three times. A block: a cold start, a pause for the warming, the first tap on each
+# of Categories, Operations and Statistics (the log tells when each tab's content was mounted), then two series of twelve quick taps
+# (the log tells how many presses the bar saw).
+ab_tabs() { # $1 name, $2 flags
   lab_start "$2"
-  adb shell input tap $ops; sleep 3
-  local k
-  for k in 1 2; do
-    ab_run[$1]=$(( ${ab_run[$1]:-0} + 1 ))
-    begin "series 3000 ab_$1 swipes ${ab_run[$1]}: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
-    begin "series 3000 ab_$1 return ${ab_run[$1]}: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
+  local tabname xy
+  for tabname in categories operations statistics; do
+    case $tabname in operations) xy=$ops;; statistics) xy=$stats;; categories) xy=$cats;; esac
+    begin "tabs ab_$1 first tap $tabname"; adb shell input tap $xy; finish 3
   done
+  tabs200 "series 3000 ab_$1 tabs a"
+  tabs200 "series 3000 ab_$1 tabs b"
 }
-# base (A) and far (B): A B B A three times: twelve runs of each, in blocks of two.
-for v in "base none" "far far" "far far" "base none" "base none" "far far" "far far" "base none" "base none" "far far" "far far" "base none"; do
-  set -- $v; ab_swipes "$1" "$2"
+for v in "base none" "warm warm" "warm warm" "base none" "base none" "warm warm" "warm warm" "base none" "base none" "warm warm" "warm warm" "base none"; do
+  set -- $v; ab_tabs "$1" "$2"
 done
 adb shell am force-stop $PKG; sleep 2
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 10

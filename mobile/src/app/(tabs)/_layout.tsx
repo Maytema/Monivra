@@ -1,12 +1,25 @@
 // The five tabs of the first application. Each tab draws its own header block (the "hero"), as the
 // first application does, so the navigator shows no header; the bar is `ui/tab-bar.tsx`.
-import { Tabs } from "expo-router";
+import { useEffect } from "react";
+import { InteractionManager } from "react-native";
+import { Tabs, router } from "expo-router";
+import { lab } from "../../platform/lab-flags.ts";
 import { usePalette, useT } from "../../ui/app-context.tsx";
 import { TABS, TabBar } from "../../ui/tab-bar.tsx";
 
 export default function TabsLayout() {
   const p = usePalette();
   const t = useT();
+  // Lab variant "warm": once the start is over, the other tabs are made in the background, one at a time, a second apart.
+  useEffect(() => {
+    if (!lab.warm) return;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const task = InteractionManager.runAfterInteractions(() => {
+      ["/categories", "/operations", "/statistics"].forEach((href, i) =>
+        timers.push(setTimeout(() => { console.log(`[perf] warm: prefetch ${href}`); router.prefetch(href); }, 2500 + i * 1500)));
+    });
+    return () => { task.cancel(); timers.forEach(clearTimeout); };
+  }, []);
   return (
     // No React Activity: with it a tab that is not shown is hidden and its effects are released, so the eye is cheap, but every tap on a tab
     // costs ~2 s of the JavaScript thread in 12 taps (effects destroyed and made again; speed check builds 167-171, 12 taps 1800-2300 ms

@@ -92,7 +92,8 @@ export function TabBar({ state, descriptors, emitter, navigateToTab }: TabBarPro
         const active = pressed ? pressed === route.name : state.index === index;
         const color = active ? p.accentInk : p.inkSoft;
         const press = () => {
-          if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return;
+          if (asked.current === route.name && shown.current.routes[shown.current.index]?.name === route.name) return void console.log(`[perf] tab press dropped ${route.name}`);
+          console.log(`[perf] tab press ${route.name}`);
           // The picture of the screen being left stops now, before the new tab is built.
           stopPictures();
           const event = emitter.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
