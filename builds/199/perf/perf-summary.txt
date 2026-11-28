@@ -1,0 +1,892 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                                819ms      326ms      4       8   7 (87.50%)  350ms  350ms
+first screen: start with the basic set                    483ms      165ms      5       5   3 (60.00%)  150ms  150ms
+picture operations: visit, playing (3.5 s)                791ms      108ms     12      92  82 (89.13%)  133ms  150ms
+picture operations: same tab, at rest (3 s, after th        0ms        0ms      0      18  16 (88.89%)   81ms   85ms
+picture accounts: visit, playing (3.5 s)                    0ms        0ms      0       2  2 (100.00%)   32ms   32ms
+picture accounts: same tab, at rest (3 s, after the       126ms       68ms      2       0            -      -      -
+picture statistics: visit, playing (3.5 s)                456ms       96ms      7      70  55 (78.57%)  101ms  117ms
+picture statistics: same tab, at rest (3 s, after th        0ms        0ms      0       0            -      -      -
+picture categories: visit, playing (3.5 s)                340ms      186ms      3       5  5 (100.00%)  129ms  129ms
+picture categories: same tab, at rest (3 s, after th        0ms        0ms      0       0            -      -      -
+empty: Accounts → Statistics → Accounts (0.3 s)            68ms       68ms      1      15  11 (73.33%)  101ms  101ms
+empty: Categories → Operations → Categories (0.3 s)        51ms       51ms      1      12  10 (83.33%)   89ms  101ms
+empty: 12 taps in random tab order, 0.25-0.5 s apart      540ms      124ms      7     203 161 (79.31%)   93ms  129ms
+empty: 12 taps every 0.2 s                                422ms       93ms      6     156 119 (76.28%)   97ms  129ms
+eye (empty, Accounts): 6 taps 0.4 s apart                 212ms       77ms      3      83  56 (67.47%)   61ms   85ms
+eye (empty, Operations): 6 taps 0.4 s apart                 0ms        0ms      0      78  55 (70.51%)   65ms   89ms
+empty: add sheet 0.7 s after entering Operations, pi      183ms      126ms      2      11   9 (81.82%)  150ms  150ms
+empty: add sheet 0.7 s after entering Operations, pi       50ms       50ms      1      13   9 (69.23%)   77ms   81ms
+empty: period dialog, tile pick 1                         400ms       84ms      6      35  29 (82.86%)  101ms  150ms
+empty: period dialog, tile pick 2                          53ms       53ms      1      25  22 (88.00%)  101ms  109ms
+empty: period dialog, tile pick 3                         173ms       64ms      3      25  21 (84.00%)  101ms  125ms
+empty: period dialog, tile pick 4                         617ms      184ms      8      25  21 (84.00%)  101ms  129ms
+read the file and open the restore page                  1004ms      317ms      5      27  22 (81.48%)  200ms  200ms
+restore 3000 operations                                  2487ms      822ms     17      81  67 (82.72%)   97ms  200ms
+series 3000 tabs 1: 12 taps every 0.2 s                   175ms      175ms      1      25  22 (88.00%)   48ms  200ms
+eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apar      118ms       61ms      2      80  55 (68.75%)   61ms  101ms
+eye (series 3000 tabs 1 Operations): 6 taps 0.4 s ap        0ms        0ms      0      79  53 (67.09%)   65ms   81ms
+eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s ap        0ms        0ms      0      82  56 (68.29%)   69ms   81ms
+eye (series 3000 tabs 1 Categories): 6 taps 0.4 s ap       54ms       54ms      1      80  56 (70.00%)   65ms  101ms
+series 3000 tabs 2: 12 taps every 0.2 s                    97ms       97ms      1      24  20 (83.33%)   48ms  129ms
+eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apar      141ms       80ms      2      82  52 (63.41%)   65ms   97ms
+eye (series 3000 tabs 2 Operations): 6 taps 0.4 s ap       56ms       56ms      1      81  55 (67.90%)   61ms  101ms
+eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s ap        0ms        0ms      0      78  51 (65.38%)   53ms   77ms
+eye (series 3000 tabs 2 Categories): 6 taps 0.4 s ap        0ms        0ms      0      76  54 (71.05%)   65ms   97ms
+series 3000 tabs 3: 12 taps every 0.2 s                    81ms       81ms      1      24  21 (87.50%)   48ms  117ms
+eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apar        0ms        0ms      0      81  58 (71.60%)   61ms   85ms
+eye (series 3000 tabs 3 Operations): 6 taps 0.4 s ap        0ms        0ms      0      83  56 (67.47%)   61ms   85ms
+eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s ap       70ms       70ms      1      81  56 (69.14%)   65ms   85ms
+eye (series 3000 tabs 3 Categories): 6 taps 0.4 s ap        0ms        0ms      0      77  58 (75.32%)   61ms   97ms
+series 3000 index swipes 1: 10 fast swipes back           125ms       74ms      2     111  76 (68.47%)   73ms   81ms
+series 3000 index return 1: 10 swipes forward             117ms       65ms      2     115  79 (68.70%)   69ms   81ms
+series 3000 index swipes 2: 10 fast swipes back             0ms        0ms      0     106  69 (65.09%)   65ms   93ms
+series 3000 index return 2: 10 swipes forward               0ms        0ms      0     117  79 (67.52%)   73ms   97ms
+series 3000 index swipes 3: 10 fast swipes back             0ms        0ms      0     114  76 (66.67%)   65ms   85ms
+series 3000 index return 3: 10 swipes forward             237ms      115ms      3     119  87 (73.11%)   73ms   97ms
+series 3000 index swipes 4: 10 fast swipes back           174ms      101ms      2     117  81 (69.23%)   73ms   89ms
+series 3000 index return 4: 10 swipes forward             336ms       84ms      5     156 105 (67.31%)   81ms  109ms
+series 3000 index swipes 5: 10 fast swipes back            54ms       54ms      1     127  86 (67.72%)   69ms   85ms
+series 3000 index return 5: 10 swipes forward              58ms       58ms      1     117  77 (65.81%)   69ms   89ms
+series 3000 index swipes 6: 10 fast swipes back           168ms       63ms      3     128  96 (75.00%)   69ms   97ms
+series 3000 index return 6: 10 swipes forward             288ms       68ms      5     116  79 (68.10%)   73ms  105ms
+tabsagain 3000 c 1                                         59ms       59ms      1      10   8 (80.00%)   89ms   89ms
+tabsagain 3000 c 2                                         66ms       66ms      1       8   6 (75.00%)  101ms  101ms
+tabsagain 3000 c 3                                          0ms        0ms      0       8   7 (87.50%)   36ms   36ms
+tabsagain 3000 c 4                                          0ms        0ms      0       8  8 (100.00%)   61ms   61ms
+series 3000 operations swipes 1: 10 fast swipes back        0ms        0ms      0     129  91 (70.54%)   69ms  101ms
+series 3000 operations return 1: 10 swipes forward         87ms       87ms      1     118  76 (64.41%)   69ms   93ms
+series 3000 operations swipes 2: 10 fast swipes back       52ms       52ms      1     112  70 (62.50%)   69ms   85ms
+series 3000 operations return 2: 10 swipes forward          0ms        0ms      0     110  76 (69.09%)   65ms   81ms
+series 3000 operations swipes 3: 10 fast swipes back       50ms       50ms      1     114  75 (65.79%)   65ms   81ms
+series 3000 operations return 3: 10 swipes forward        185ms       67ms      3     115  76 (66.09%)   73ms   93ms
+scroll operations: 3 times down, 3 times up                 0ms        0ms      0       0            -      -      -
+slanted swipe operations: back, forward                    68ms       68ms      1      27  20 (74.07%)   61ms   69ms
+series 3000 statistics swipes 1: 10 fast swipes back      476ms      263ms      4     104  71 (68.27%)   81ms  113ms
+series 3000 statistics return 1: 10 swipes forward        346ms       65ms      6     140 102 (72.86%)   85ms  113ms
+series 3000 statistics swipes 2: 10 fast swipes back      109ms       58ms      2     119  87 (73.11%)   77ms   85ms
+series 3000 statistics return 2: 10 swipes forward        162ms       55ms      3     134  95 (70.90%)   85ms  101ms
+series 3000 statistics swipes 3: 10 fast swipes back      561ms      132ms      8     149 103 (69.13%)   81ms  150ms
+series 3000 statistics return 3: 10 swipes forward         52ms       52ms      1     121  83 (68.60%)   81ms   89ms
+scroll statistics: 3 times down, 3 times up               272ms      151ms      3      69  52 (75.36%)  105ms  200ms
+slanted swipe statistics: back, forward                     0ms        0ms      0      60  43 (71.67%)   73ms   97ms
+series 3000 categories swipes 1: 10 fast swipes back      172ms       66ms      3     126  95 (75.40%)   81ms  101ms
+series 3000 categories return 1: 10 swipes forward        171ms       65ms      3     111  78 (70.27%)   69ms  105ms
+series 3000 categories swipes 2: 10 fast swipes back       56ms       56ms      1     122  93 (76.23%)   73ms   93ms
+series 3000 categories return 2: 10 swipes forward        160ms       54ms      3     126  91 (72.22%)   73ms   97ms
+series 3000 categories swipes 3: 10 fast swipes back       52ms       52ms      1     113  80 (70.80%)   73ms   93ms
+series 3000 categories return 3: 10 swipes forward        184ms       74ms      3     128  95 (74.22%)   77ms   97ms
+scroll categories: 3 times down, 3 times up                 0ms        0ms      0       0            -      -      -
+slanted swipe categories: back, forward                  1413ms      504ms     11      25  20 (80.00%)   85ms   85ms
+series 3000 ab_base swipes 1: 10 fast swipes back         478ms      135ms      6     130  83 (63.85%)   97ms  150ms
+series 3000 ab_base return 1: 10 swipes forward           243ms       71ms      4     178 121 (67.98%)   89ms  113ms
+series 3000 ab_base swipes 2: 10 fast swipes back         394ms      116ms      6     169 118 (69.82%)   85ms  109ms
+series 3000 ab_base return 2: 10 swipes forward          1885ms      344ms     16     183 131 (71.58%)   89ms  117ms
+series 3000 ab_far swipes 1: 10 fast swipes back          608ms       97ms      9     126  90 (71.43%)  101ms  150ms
+series 3000 ab_far return 1: 10 swipes forward            124ms       64ms      2     184 126 (68.48%)   89ms  113ms
+series 3000 ab_far swipes 2: 10 fast swipes back          327ms      113ms      5     133  93 (69.92%)   89ms  117ms
+series 3000 ab_far return 2: 10 swipes forward           1397ms      279ms     12     192 132 (68.75%)   89ms  117ms
+series 3000 ab_far swipes 3: 10 fast swipes back          492ms      239ms      4     132  90 (68.18%)  101ms  150ms
+series 3000 ab_far return 3: 10 swipes forward            218ms       58ms      4     180 126 (70.00%)  101ms  117ms
+series 3000 ab_far swipes 4: 10 fast swipes back          253ms      115ms      3     118  81 (68.64%)   89ms  133ms
+series 3000 ab_far return 4: 10 swipes forward           1727ms      411ms     15     185 130 (70.27%)   85ms  105ms
+series 3000 ab_base swipes 3: 10 fast swipes back         384ms      115ms      4     119  82 (68.91%)   97ms  150ms
+series 3000 ab_base return 3: 10 swipes forward           230ms       67ms      4     188 130 (69.15%)   93ms  113ms
+series 3000 ab_base swipes 4: 10 fast swipes back         606ms      142ms      6     137 102 (74.45%)   97ms  113ms
+series 3000 ab_base return 4: 10 swipes forward          1706ms      250ms     17     177 133 (75.14%)  101ms  129ms
+series 3000 ab_base swipes 5: 10 fast swipes back         701ms      100ms     10     131  94 (71.76%)   93ms  150ms
+series 3000 ab_base return 5: 10 swipes forward           420ms      103ms      6     196 141 (71.94%)   89ms  105ms
+series 3000 ab_base swipes 6: 10 fast swipes back         363ms       78ms      6     128  88 (68.75%)   81ms  101ms
+series 3000 ab_base return 6: 10 swipes forward          1834ms      506ms     16     186 126 (67.74%)   85ms  109ms
+series 3000 ab_far swipes 5: 10 fast swipes back          672ms      125ms     10     121  89 (73.55%)  101ms  150ms
+series 3000 ab_far return 5: 10 swipes forward            464ms       76ms      7     184 120 (65.22%)   89ms  129ms
+series 3000 ab_far swipes 6: 10 fast swipes back          339ms       82ms      5     171 116 (67.84%)   85ms  117ms
+series 3000 ab_far return 6: 10 swipes forward           1782ms      423ms     17     188 131 (69.68%)   89ms  117ms
+series 3000 ab_far swipes 7: 10 fast swipes back          487ms       98ms      7     127  90 (70.87%)   93ms  150ms
+series 3000 ab_far return 7: 10 swipes forward            242ms       79ms      4     183 123 (67.21%)   97ms  133ms
+series 3000 ab_far swipes 8: 10 fast swipes back          413ms      106ms      6     162 111 (68.52%)   97ms  109ms
+series 3000 ab_far return 8: 10 swipes forward           1688ms      208ms     17     186 129 (69.35%)   89ms  117ms
+series 3000 ab_base swipes 7: 10 fast swipes back         579ms      101ms      8     107  74 (69.16%)  101ms  133ms
+series 3000 ab_base return 7: 10 swipes forward           339ms       61ms      6     177 122 (68.93%)   97ms  117ms
+series 3000 ab_base swipes 8: 10 fast swipes back         333ms      206ms      3     133  97 (72.93%)   93ms  117ms
+series 3000 ab_base return 8: 10 swipes forward          1815ms      388ms     16     183 132 (72.13%)   93ms  117ms
+series 3000 ab_base swipes 9: 10 fast swipes back         474ms      114ms      6     152 114 (75.00%)   97ms  150ms
+series 3000 ab_base return 9: 10 swipes forward           301ms      113ms      4     181 133 (73.48%)   85ms  101ms
+series 3000 ab_base swipes 10: 10 fast swipes back        360ms      246ms      3     119  85 (71.43%)   93ms  117ms
+series 3000 ab_base return 10: 10 swipes forward         1974ms      504ms     15     186 134 (72.04%)   89ms  113ms
+series 3000 ab_far swipes 9: 10 fast swipes back          455ms      172ms      6     131  95 (72.52%)   97ms  133ms
+series 3000 ab_far return 9: 10 swipes forward            180ms       66ms      3     180 131 (72.78%)   89ms  117ms
+series 3000 ab_far swipes 10: 10 fast swipes back         378ms       80ms      6     136 102 (75.00%)   97ms  117ms
+series 3000 ab_far return 10: 10 swipes forward          1952ms      332ms     17     192 141 (73.44%)   85ms  117ms
+series 3000 ab_far swipes 11: 10 fast swipes back         436ms      121ms      5     127  90 (70.87%)   97ms  133ms
+series 3000 ab_far return 11: 10 swipes forward           284ms       62ms      5     183 122 (66.67%)   89ms  109ms
+series 3000 ab_far swipes 12: 10 fast swipes back         302ms       67ms      5     147 101 (68.71%)   89ms  117ms
+series 3000 ab_far return 12: 10 swipes forward          1762ms      246ms     17     192 136 (70.83%)   89ms  117ms
+series 3000 ab_base swipes 11: 10 fast swipes back        978ms      234ms     10     131 100 (76.34%)  101ms  150ms
+series 3000 ab_base return 11: 10 swipes forward          244ms       84ms      4     186 127 (68.28%)   89ms  109ms
+series 3000 ab_base swipes 12: 10 fast swipes back        338ms       67ms      6     154 104 (67.53%)   85ms  105ms
+series 3000 ab_base return 12: 10 swipes forward         2305ms      319ms     21     191 140 (73.30%)   89ms  117ms
+all moves                                               52637ms
+
+cold start                               | lab flags: none
+first screen: start with the basic set   | engine toLocaleString x200 485.4ms
+first screen: start with the basic set   | engine plain format x200 2.4ms
+first screen: start with the basic set   | engine localeCompare x200 4.3ms
+first screen: start with the basic set   | engine toLocaleDateString x200 422.1ms
+empty: add sheet 0.7 s after entering Op | deck: settled from page 51, reached 51, swipes counted 0, page 51
+empty: period dialog, tile pick 1        | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index return 1: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 1: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 2, page 44
+series 3000 index return 1: 10 swipes fo | deck: settled from page 44, reached 43, swipes counted 0, page 43
+series 3000 index return 1: 10 swipes fo | deck: settled from page 43, reached 45, swipes counted 2, page 45
+series 3000 index return 1: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 1: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 1: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 1: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index return 1: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index return 2: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 2: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 2: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 2: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 2: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 2: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 2: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 2: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 2: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 index return 3: 10 swipes fo | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 index return 3: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 3: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 2, page 43
+series 3000 index return 3: 10 swipes fo | deck: settled from page 43, reached 43, swipes counted 1, page 44
+series 3000 index return 3: 10 swipes fo | deck: settled from page 44, reached 43, swipes counted 0, page 43
+series 3000 index return 3: 10 swipes fo | deck: settled from page 43, reached 43, swipes counted 1, page 44
+series 3000 index return 3: 10 swipes fo | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 index return 3: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 3: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 3: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 3: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -2, page 45
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 45, reached 45, swipes counted -1, page 44
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 44, reached 45, swipes counted 0, page 45
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 45, reached 44, swipes counted 0, page 44
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 43, reached 44, swipes counted 0, page 44
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index return 4: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 4: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 2, page 43
+series 3000 index return 4: 10 swipes fo | deck: settled from page 43, reached 43, swipes counted 1, page 44
+series 3000 index return 4: 10 swipes fo | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 index return 4: 10 swipes fo | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 index return 4: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 4: 10 swipes fo | deck: settled from page 45, reached 47, swipes counted 3, page 48
+series 3000 index return 4: 10 swipes fo | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 41, reached 40, swipes counted -1, page 40
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 40, reached 39, swipes counted -1, page 39
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 39, reached 39, swipes counted 0, page 39
+series 3000 index return 5: 10 swipes fo | deck: settled from page 39, reached 40, swipes counted 1, page 40
+series 3000 index return 5: 10 swipes fo | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 index return 5: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 5: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 5: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 5: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 5: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 5: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 5: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index return 6: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 6: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 6: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 6: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 6: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 6: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 6: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index return 6: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index return 6: 10 swipes fo | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 index return 6: 10 swipes fo | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 operations swipes 1: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 operations swipes 1: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 operations swipes 1: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 operations swipes 1: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 operations swipes 1: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 1: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 operations swipes 1: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 operations swipes 1: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations swipes 1: 10 fast | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 operations return 1: 10 swip | deck: settled from page 44, reached 46, swipes counted 2, page 46
+series 3000 operations return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 operations return 1: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 operations return 1: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 operations return 1: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 operations return 1: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 1: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 operations return 1: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 operations swipes 2: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 operations swipes 2: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 operations swipes 2: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 operations swipes 2: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 operations swipes 2: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 operations swipes 2: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 2: 10 fast | deck: settled from page 47, reached 45, swipes counted -2, page 45
+series 3000 operations swipes 2: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations swipes 2: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 operations return 2: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 operations return 2: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 operations return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 operations return 2: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 operations return 2: 10 swip | deck: settled from page 47, reached 49, swipes counted 2, page 49
+series 3000 operations return 2: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 operations return 2: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 2: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 operations return 2: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 operations swipes 3: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 operations swipes 3: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 operations swipes 3: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 operations swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 operations swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 operations swipes 3: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 operations swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 operations swipes 3: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 operations return 3: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 operations return 3: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 operations return 3: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 operations return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 2, page 49
+series 3000 operations return 3: 10 swip | deck: settled from page 49, reached 49, swipes counted 0, page 49
+series 3000 operations return 3: 10 swip | deck: settled from page 49, reached 50, swipes counted 0, page 50
+series 3000 operations return 3: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 3: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 operations return 3: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+slanted swipe operations: back, forward  | deck: settled from page 53, reached 52, swipes counted -1, page 52
+slanted swipe operations: back, forward  | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 48, reached 46, swipes counted -2, page 46
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 46, reached 45, swipes counted 0, page 45
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 statistics return 1: 10 swip | deck: settled from page 43, reached 45, swipes counted 2, page 45
+series 3000 statistics return 1: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 statistics return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 statistics return 1: 10 swip | deck: settled from page 47, reached 48, swipes counted 2, page 49
+series 3000 statistics return 1: 10 swip | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 statistics return 1: 10 swip | deck: settled from page 48, reached 50, swipes counted 2, page 50
+series 3000 statistics return 1: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 50, reached 48, swipes counted -2, page 48
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 44, reached 43, swipes counted 0, page 43
+series 3000 statistics return 2: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 statistics return 2: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 statistics return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 2, page 47
+series 3000 statistics return 2: 10 swip | deck: settled from page 47, reached 46, swipes counted 0, page 46
+series 3000 statistics return 2: 10 swip | deck: settled from page 46, reached 48, swipes counted 2, page 48
+series 3000 statistics return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 2, page 50
+series 3000 statistics return 2: 10 swip | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 48, reached 46, swipes counted -5, page 43
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 43, reached 42, swipes counted -2, page 41
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 statistics return 3: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 statistics return 3: 10 swip | deck: settled from page 42, reached 44, swipes counted 2, page 44
+series 3000 statistics return 3: 10 swip | deck: settled from page 44, reached 45, swipes counted 2, page 46
+series 3000 statistics return 3: 10 swip | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 statistics return 3: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 statistics return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 statistics return 3: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+slanted swipe statistics: back, forward  | deck: settled from page 49, reached 48, swipes counted -1, page 48
+slanted swipe statistics: back, forward  | deck: settled from page 48, reached 48, swipes counted 1, page 49
+slanted swipe statistics: back, forward  | deck: settled from page 49, reached 49, swipes counted 0, page 49
+series 3000 categories swipes 1: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 categories swipes 1: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 categories swipes 1: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 categories swipes 1: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 categories swipes 1: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 categories swipes 1: 10 fast | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 categories swipes 1: 10 fast | deck: settled from page 43, reached 41, swipes counted -3, page 40
+series 3000 categories swipes 1: 10 fast | deck: settled from page 40, reached 40, swipes counted 0, page 40
+series 3000 categories return 1: 10 swip | deck: settled from page 40, reached 41, swipes counted 1, page 41
+series 3000 categories return 1: 10 swip | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 categories return 1: 10 swip | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 categories return 1: 10 swip | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 categories return 1: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 categories return 1: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 1: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 1: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories return 1: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 categories swipes 2: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 categories swipes 2: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 categories swipes 2: 10 fast | deck: settled from page 48, reached 47, swipes counted -2, page 46
+series 3000 categories swipes 2: 10 fast | deck: settled from page 46, reached 47, swipes counted 0, page 47
+series 3000 categories swipes 2: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 categories swipes 2: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 categories swipes 2: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 categories swipes 2: 10 fast | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 categories return 2: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 categories return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 2: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 2: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories return 2: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 categories return 2: 10 swip | deck: settled from page 50, reached 52, swipes counted 3, page 53
+series 3000 categories return 2: 10 swip | deck: settled from page 53, reached 53, swipes counted 0, page 53
+series 3000 categories swipes 3: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 categories swipes 3: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 categories swipes 3: 10 fast | deck: settled from page 51, reached 50, swipes counted -2, page 49
+series 3000 categories swipes 3: 10 fast | deck: settled from page 49, reached 50, swipes counted 0, page 50
+series 3000 categories swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 categories swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 categories swipes 3: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 categories swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 categories swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 categories swipes 3: 10 fast | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 categories return 3: 10 swip | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 categories return 3: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 3: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 3: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories return 3: 10 swip | deck: settled from page 49, reached 52, swipes counted 4, page 53
+series 3000 categories return 3: 10 swip | deck: settled from page 53, reached 53, swipes counted 0, page 53
+slanted swipe categories: back, forward  | deck: settled from page 53, reached 52, swipes counted -1, page 52
+slanted swipe categories: back, forward  | deck: settled from page 52, reached 53, swipes counted 1, page 53
+slanted swipe categories: back, forward  | lab flags: none
+slanted swipe categories: back, forward  | engine toLocaleString x200 258.8ms
+slanted swipe categories: back, forward  | engine plain format x200 0.6ms
+slanted swipe categories: back, forward  | engine localeCompare x200 1.6ms
+slanted swipe categories: back, forward  | engine toLocaleDateString x200 275.2ms
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -2, page 47
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base swipes 1: 10 fast sw | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 0, page 51
+series 3000 ab_base return 1: 10 swipes  | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 51, reached 49, swipes counted -2, page 49
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 47, reached 45, swipes counted -3, page 44
+series 3000 ab_base swipes 2: 10 fast sw | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 51, reached 52, swipes counted 2, page 53
+series 3000 ab_base return 2: 10 swipes  | deck: settled from page 53, reached 53, swipes counted 0, page 53
+series 3000 ab_base return 2: 10 swipes  | lab flags: far
+series 3000 ab_base return 2: 10 swipes  | engine toLocaleString x200 256.9ms
+series 3000 ab_base return 2: 10 swipes  | engine plain format x200 0.6ms
+series 3000 ab_base return 2: 10 swipes  | engine localeCompare x200 1.7ms
+series 3000 ab_base return 2: 10 swipes  | engine toLocaleDateString x200 271.4ms
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 50, reached 48, swipes counted -2, page 48
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 47, reached 45, swipes counted -3, page 44
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 43, reached 44, swipes counted 0, page 44
+series 3000 ab_far swipes 1: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 2, page 48
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 48, reached 47, swipes counted 0, page 47
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 47, reached 50, swipes counted 4, page 51
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 51, reached 51, swipes counted 1, page 52
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 ab_far return 1: 10 swipes f | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 ab_far swipes 2: 10 fast swi | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 ab_far swipes 2: 10 fast swi | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 ab_far swipes 2: 10 fast swi | deck: settled from page 50, reached 48, swipes counted -2, page 48
+series 3000 ab_far swipes 2: 10 fast swi | deck: settled from page 48, reached 46, swipes counted -2, page 46
+series 3000 ab_far swipes 2: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 50, reached 52, swipes counted 2, page 52
+series 3000 ab_far return 2: 10 swipes f | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 ab_far return 2: 10 swipes f | lab flags: far
+series 3000 ab_far return 2: 10 swipes f | engine toLocaleString x200 270.7ms
+series 3000 ab_far return 2: 10 swipes f | engine plain format x200 0.5ms
+series 3000 ab_far return 2: 10 swipes f | engine localeCompare x200 1.9ms
+series 3000 ab_far return 2: 10 swipes f | engine toLocaleDateString x200 251.6ms
+series 3000 ab_far swipes 3: 10 fast swi | deck: settled from page 50, reached 48, swipes counted -4, page 46
+series 3000 ab_far swipes 3: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 3: 10 fast swi | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 3: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far swipes 3: 10 fast swi | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 3: 10 swipes f | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 50, reached 49, swipes counted 0, page 49
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far swipes 4: 10 fast swi | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 2, page 45
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 45, reached 44, swipes counted 0, page 44
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 4: 10 swipes f | deck: settled from page 50, reached 51, swipes counted 0, page 51
+series 3000 ab_far return 4: 10 swipes f | lab flags: none
+series 3000 ab_far return 4: 10 swipes f | engine toLocaleString x200 260.9ms
+series 3000 ab_far return 4: 10 swipes f | engine plain format x200 0.5ms
+series 3000 ab_far return 4: 10 swipes f | engine localeCompare x200 1.9ms
+series 3000 ab_far return 4: 10 swipes f | engine toLocaleDateString x200 266.9ms
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base swipes 3: 10 fast sw | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 43, reached 45, swipes counted 3, page 46
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 46, reached 45, swipes counted 0, page 45
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 3: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 50, reached 49, swipes counted 0, page 49
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 49, reached 46, swipes counted -5, page 44
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 43, reached 43, swipes counted -1, page 42
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 42, reached 43, swipes counted 0, page 43
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 43, reached 43, swipes counted 0, page 43
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_base swipes 4: 10 fast sw | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 47, reached 49, swipes counted 2, page 49
+series 3000 ab_base return 4: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 4: 10 swipes  | lab flags: none
+series 3000 ab_base return 4: 10 swipes  | engine toLocaleString x200 261.1ms
+series 3000 ab_base return 4: 10 swipes  | engine plain format x200 0.5ms
+series 3000 ab_base return 4: 10 swipes  | engine localeCompare x200 2.2ms
+series 3000 ab_base return 4: 10 swipes  | engine toLocaleDateString x200 256.2ms
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 5: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 44, reached 46, swipes counted 4, page 48
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base return 5: 10 swipes  | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 52, reached 50, swipes counted -2, page 50
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -2, page 48
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 6: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 46, reached 48, swipes counted 2, page 48
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 ab_base return 6: 10 swipes  | deck: settled from page 53, reached 53, swipes counted 0, page 53
+series 3000 ab_base return 6: 10 swipes  | lab flags: far
+series 3000 ab_base return 6: 10 swipes  | engine toLocaleString x200 271.3ms
+series 3000 ab_base return 6: 10 swipes  | engine plain format x200 0.5ms
+series 3000 ab_base return 6: 10 swipes  | engine localeCompare x200 1.9ms
+series 3000 ab_base return 6: 10 swipes  | engine toLocaleDateString x200 260.1ms
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 50, reached 47, swipes counted -4, page 46
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 46, reached 46, swipes counted -1, page 45
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 45, reached 46, swipes counted 0, page 46
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 5: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_far return 5: 10 swipes f | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 ab_far swipes 6: 10 fast swi | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 ab_far swipes 6: 10 fast swi | deck: settled from page 51, reached 48, swipes counted -5, page 46
+series 3000 ab_far swipes 6: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -2, page 44
+series 3000 ab_far swipes 6: 10 fast swi | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 50, reached 51, swipes counted 0, page 51
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 ab_far return 6: 10 swipes f | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 ab_far return 6: 10 swipes f | lab flags: far
+series 3000 ab_far return 6: 10 swipes f | engine toLocaleString x200 266.5ms
+series 3000 ab_far return 6: 10 swipes f | engine plain format x200 0.5ms
+series 3000 ab_far return 6: 10 swipes f | engine localeCompare x200 1.7ms
+series 3000 ab_far return 6: 10 swipes f | engine toLocaleDateString x200 250.9ms
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 49, reached 47, swipes counted -3, page 46
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far swipes 7: 10 fast swi | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 7: 10 swipes f | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_far swipes 8: 10 fast swi | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_far swipes 8: 10 fast swi | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_far swipes 8: 10 fast swi | deck: settled from page 48, reached 46, swipes counted -4, page 44
+series 3000 ab_far swipes 8: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -2, page 42
+series 3000 ab_far swipes 8: 10 fast swi | deck: settled from page 42, reached 42, swipes counted 0, page 42
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 50, reached 51, swipes counted 2, page 52
+series 3000 ab_far return 8: 10 swipes f | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 ab_far return 8: 10 swipes f | lab flags: none
+series 3000 ab_far return 8: 10 swipes f | engine toLocaleString x200 285.0ms
+series 3000 ab_far return 8: 10 swipes f | engine plain format x200 0.5ms
+series 3000 ab_far return 8: 10 swipes f | engine localeCompare x200 1.7ms
+series 3000 ab_far return 8: 10 swipes f | engine toLocaleDateString x200 267.8ms
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 50, reached 49, swipes counted 0, page 49
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base swipes 7: 10 fast sw | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 46, reached 48, swipes counted 2, page 48
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 2, page 50
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 50, reached 49, swipes counted 0, page 49
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 50, reached 50, swipes counted 1, page 51
+series 3000 ab_base return 7: 10 swipes  | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 50, reached 48, swipes counted -3, page 47
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 47, reached 47, swipes counted -1, page 46
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base swipes 8: 10 fast sw | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 47, reached 49, swipes counted 3, page 50
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 50, reached 50, swipes counted 1, page 51
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 51, reached 50, swipes counted 0, page 50
+series 3000 ab_base return 8: 10 swipes  | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_base return 8: 10 swipes  | lab flags: none
+series 3000 ab_base return 8: 10 swipes  | engine toLocaleString x200 260.2ms
+series 3000 ab_base return 8: 10 swipes  | engine plain format x200 0.5ms
+series 3000 ab_base return 8: 10 swipes  | engine localeCompare x200 1.8ms
+series 3000 ab_base return 8: 10 swipes  | engine toLocaleDateString x200 264.6ms
+series 3000 ab_base swipes 9: 10 fast sw | deck: settled from page 50, reached 47, swipes counted -6, page 44
+series 3000 ab_base swipes 9: 10 fast sw | deck: settled from page 44, reached 42, swipes counted -3, page 41
+series 3000 ab_base swipes 9: 10 fast sw | deck: settled from page 41, reached 41, swipes counted 0, page 41
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 42, reached 44, swipes counted 2, page 44
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 9: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 50, reached 48, swipes counted -2, page 48
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 10: 10 fast s | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 10: 10 swipes | deck: settled from page 50, reached 52, swipes counted 2, page 52
+series 3000 ab_base return 10: 10 swipes | lab flags: far
+series 3000 ab_base return 10: 10 swipes | engine toLocaleString x200 275.2ms
+series 3000 ab_base return 10: 10 swipes | engine plain format x200 7.7ms
+series 3000 ab_base return 10: 10 swipes | engine localeCompare x200 2.1ms
+series 3000 ab_base return 10: 10 swipes | engine toLocaleDateString x200 251.1ms
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 50, reached 48, swipes counted -3, page 47
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 47, reached 47, swipes counted -1, page 46
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 46, reached 46, swipes counted 0, page 46
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 ab_far swipes 9: 10 fast swi | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 43, reached 44, swipes counted 2, page 45
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 45, reached 44, swipes counted 0, page 44
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 9: 10 swipes f | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 49, reached 47, swipes counted -4, page 45
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -2, page 43
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 43, reached 43, swipes counted -1, page 42
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 42, reached 43, swipes counted 0, page 43
+series 3000 ab_far swipes 10: 10 fast sw | deck: settled from page 43, reached 42, swipes counted 0, page 42
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 45, reached 48, swipes counted 4, page 49
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 49, reached 49, swipes counted 1, page 50
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_far return 10: 10 swipes  | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_far return 10: 10 swipes  | lab flags: far
+series 3000 ab_far return 10: 10 swipes  | engine toLocaleString x200 265.6ms
+series 3000 ab_far return 10: 10 swipes  | engine plain format x200 0.5ms
+series 3000 ab_far return 10: 10 swipes  | engine localeCompare x200 1.9ms
+series 3000 ab_far return 10: 10 swipes  | engine toLocaleDateString x200 263.8ms
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 11: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_far return 11: 10 swipes  | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 51, reached 49, swipes counted -3, page 48
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 44, reached 43, swipes counted -2, page 42
+series 3000 ab_far swipes 12: 10 fast sw | deck: settled from page 42, reached 42, swipes counted 0, page 42
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_far return 12: 10 swipes  | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_far return 12: 10 swipes  | lab flags: none
+series 3000 ab_far return 12: 10 swipes  | engine toLocaleString x200 261.5ms
+series 3000 ab_far return 12: 10 swipes  | engine plain format x200 0.5ms
+series 3000 ab_far return 12: 10 swipes  | engine localeCompare x200 1.7ms
+series 3000 ab_far return 12: 10 swipes  | engine toLocaleDateString x200 256.9ms
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 50, reached 47, swipes counted -4, page 46
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 46, reached 46, swipes counted -1, page 45
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 45, reached 45, swipes counted -1, page 44
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 43, reached 43, swipes counted -1, page 42
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 42, reached 43, swipes counted 0, page 43
+series 3000 ab_base swipes 11: 10 fast s | deck: settled from page 43, reached 43, swipes counted 0, page 43
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 43, reached 43, swipes counted 1, page 44
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 44, reached 44, swipes counted 0, page 44
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 11: 10 swipes | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 51, reached 49, swipes counted -2, page 49
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 49, reached 47, swipes counted -2, page 47
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 ab_base swipes 12: 10 fast s | deck: settled from page 43, reached 43, swipes counted 0, page 43
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 45, reached 47, swipes counted 4, page 49
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 50, reached 51, swipes counted 2, page 52
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 ab_base return 12: 10 swipes | lab flags: none
+series 3000 ab_base return 12: 10 swipes | engine toLocaleString x200 264.7ms
+series 3000 ab_base return 12: 10 swipes | engine plain format x200 0.5ms
+series 3000 ab_base return 12: 10 swipes | engine localeCompare x200 2.0ms
+series 3000 ab_base return 12: 10 swipes | engine toLocaleDateString x200 262.0ms
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 49, reached 49, swipes counted -1, page 48
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 1, reached 1, swipes counted 0, page 1
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 ab_base return 12: 10 swipes | deck: settled from page 49, reached 50, swipes counted 1, page 50
+
+tab moves                                                      presses dropped pill p50 pill p90 frame p50 frame p90 shown     p50     p90  JS busy  longest
+
+eye moves                                                      taps text p50 text max  apply  write notify  JS busy  longest
+
+layers                                                          sheet shown  dialog gone, old  dialog gone, new
+
+pictures (one tab each)                                         JS busy  frames        janky    p90   shown
+picture operations: visit, playing (3.5 s)                         791ms      92  82 (89.13%)  133ms       -
+picture operations: same tab, at rest (3 s, after the run)           0ms      18  16 (88.89%)   81ms       -
+picture accounts: visit, playing (3.5 s)                             0ms       2  2 (100.00%)   32ms       -
+picture accounts: same tab, at rest (3 s, after the run)           126ms       0    0 (0.00%) 4950ms       -
+picture statistics: visit, playing (3.5 s)                         456ms      70  55 (78.57%)  101ms       -
+picture statistics: same tab, at rest (3 s, after the run)           0ms       0    0 (0.00%) 4950ms       -
+picture categories: visit, playing (3.5 s)                         340ms       5  5 (100.00%)  129ms       -
+picture categories: same tab, at rest (3 s, after the run)           0ms       0    0 (0.00%) 4950ms       -
+
+Component bodies (own time)                                              part  draws    total
+
+profile x series (median of runs)                runs  JS busy         range  listeners called
+3000 ops, tabs, 12 taps                             3      97ms    81-175ms                 -
+3000 ops, tabs, eye Accounts                        3     118ms     0-141ms                 -
+3000 ops, tabs, eye Categories                      3       0ms     0-54ms                 -
+3000 ops, tabs, eye Operations                      3       0ms     0-56ms                 -
+3000 ops, tabs, eye Statistics                      3       0ms     0-70ms                 -
+
+away: return to Operations after 6 s              JS busy pauses  longest
+
+swipes back by volume (median of runs)           runs  JS busy         range  longest page built ops of period
+3000 ops, ab_base, 10 swipes back                  12     434ms   333-978ms     115ms          -             -
+3000 ops, ab_far, 10 swipes back                   12     424ms   253-672ms     110ms          -             -
+3000 ops, categories, 10 swipes back                3      56ms    52-172ms      56ms          -             -
+3000 ops, index, 10 swipes back                     6      90ms     0-174ms      59ms          -             -
+3000 ops, operations, 10 swipes back                3      50ms     0-52ms      50ms          -             -
+3000 ops, statistics, 10 swipes back                3     476ms   109-561ms     132ms          -             -
+
+tabs again, repeated (c: known places, d: dump)  runs  JS busy         range  pauses
+3000 ops, c                                         4      30ms     0-66ms       0
+
+save the operation                                JS busy  longest
+
+save the operation by volume (median of runs)    runs  JS busy         range
+
+swipe timeline (ms after the page was taken)                      how    n  median   min   max
