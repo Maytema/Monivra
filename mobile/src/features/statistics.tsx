@@ -354,8 +354,10 @@ function ScrollBlocks({ children }: { children: ReactNode }) {
   const mine = useRef<Scroller | null>(null);
   const follow = (e: { nativeEvent: { contentOffset: { y: number } } }) => {
     if (driving !== mine.current) return;
+    const began = Date.now();
     sharedOffset = e.nativeEvent.contentOffset.y;
     for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
+    console.log(`[perf] statistics: follow at ${Math.round(sharedOffset)} moved ${scrollers.size - 1} pages in ${Date.now() - began} ms`);
   };
   useEffect(
     () => () => {
@@ -371,9 +373,11 @@ function ScrollBlocks({ children }: { children: ReactNode }) {
         if (node) scrollers.add(node);
       }}
       onContentSizeChange={() => {
+        console.log(`[perf] statistics: content size changed (shared ${Math.round(sharedOffset)})`);
         if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
       }}
       onScrollBeginDrag={() => {
+        console.log('[perf] statistics: scroll begins');
         driving = mine.current;
       }}
       onScrollEndDrag={follow}
