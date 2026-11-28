@@ -145,8 +145,8 @@ function Root() {
 }
 
 // A tab that is not shown is frozen (app/(tabs)/_layout.tsx, freezeOnBlur). The switch is turned on here, not left to the default:
-// in the speed check (build 161) every tap on the eye of the balance drew the Operations tab (5 pages, their rows and icons, ~150 ms)
-// while Statistics, Categories or Accounts was in front.
+// every tap on the eye of the balance drew the Operations tab (5 pages, their rows and icons) while Statistics,
+// Categories or Accounts was in front.
 enableFreeze(true);
 
 export default function Layout() {

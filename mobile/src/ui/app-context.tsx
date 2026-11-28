@@ -61,8 +61,8 @@ function sameSettingsButMask(a: LedgerData["settings"], b: LedgerData["settings"
 
 // The ledger for what is worked out from it (the rows of a period, the report, the tiles): the same object while the only change is the
 // masking of the figures (the eye), which changes none of them. Without it every page that is drawn (a period pager keeps five)
-// worked its rows out again and gave its list new data at each tap on the eye (speed check build 160: 5 pages × the 3000
-// operations filtered, sorted, grouped, the lists laid out again: ~170 ms of the JavaScript thread per tap, 65 ms on an empty one).
+// worked its rows out again and gave its list new data at each tap on the eye (every operation filtered, sorted and
+// grouped five times, the lists laid out again).
 // What is drawn masked reads the masking from the money format (useMoney), not from here: do not read `settings.hidden` from this.
 export function useLedgerView(): LedgerData {
   return useSyncExternalStore(subscribeView, viewSnapshot);

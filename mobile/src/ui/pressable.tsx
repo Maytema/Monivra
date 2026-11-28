@@ -44,7 +44,7 @@ function Squishy({ squish, style, onPressIn, onPressOut, children, ...props }: P
 const HELD_MS = 450;
 // A touch that ended far from where it began is a swipe, not a tap, whatever React Native reports: the emulator's `input swipe`
 // (and a flick while the JavaScript thread is stalled) can reach a tile as a touch down and a touch up with no move between,
-// and the tile then opened its page (build 140: the Statistics tile "Scheduled transfers" pushed /scheduled during a swipe run).
+// and the tile then opened its page (a tile of Statistics pushed its screen during a swipe).
 const TRAVEL = 16;
 function Held({ feedback, onPressIn, onPress, ...props }: PressableProps & { feedback: boolean }) {
   const since = useRef(0);
@@ -66,10 +66,9 @@ function Held({ feedback, onPressIn, onPress, ...props }: PressableProps & { fee
 }
 
 // No press blocks the platform's own gestures (blockNativeResponder off): a row of a list held by a finger had told
-// its parents not to take the touch, so the native pager could not start a sideways swipe that began on a row, and
-// the finger lifted far away was then taken for a tap on the row (speed check, build 100: a sheet opened during a
-// quick back-and-forth swipe). Now the pager or the list takes the touch as soon as it moves, and the press is
-// cancelled.
+// its parents not to take the touch, so the period deck could not start a sideways swipe that began on a row, and
+// the finger lifted far away was then taken for a tap on the row. Now the deck or the list takes the touch as soon
+// as it moves, and the press is cancelled.
 export function Pressable({ feedback = false, squish, style, ...props }: PressableProps & { feedback?: boolean; squish?: number }) {
   const free = { blockNativeResponder: false, ...props } as PressableProps;
   if (squish) return <Squishy squish={squish} style={style} {...free} />;

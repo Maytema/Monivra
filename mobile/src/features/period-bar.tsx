@@ -20,8 +20,8 @@ export { periodTitle };
 
 // The shared period, followed only while this screen is in front. The tabs Operations, Categories and Statistics
 // share the period; a tab that is not shown is frozen, but React still draws its frozen part in the gaps between
-// the shown one's work: each swipe in Categories or Statistics drew the hidden Operations pages again (11–13 pages
-// committed during 10 swipes, speed check build 111), taking the JavaScript thread from the screen being swiped.
+// the shown one's work: each swipe in Categories or Statistics drew the hidden Operations pages again, taking the
+// JavaScript thread from the screen being swiped.
 // A hidden screen keeps the period it had and takes the current one when it is shown again (`caughtUp` then tells
 // the pager to go there at once, without sliding).
 function useScreenPeriod(): { period: Period; caughtUp: boolean } {
@@ -171,8 +171,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
   const periodOf = (key: string): Period => known.current.get(key) ?? period;
   // A page is given the same Period object for as long as its key stays: the swipe made the period of the page it
   // landed on again (the real current period replaces the one the neighbour was drawn with, same days, a new object),
-  // every page memoised on the period drew again — rows, days, the list laid out once more (speed check build 157:
-  // 9 draws of the page reached in 10 swipes). The days of a page are what its key names, so the first object stays.
+  // every page memoised on the period drew again — rows, days, the list laid out once more. The days of a page are what its key names, so the first object stays.
   const shownAs = useRef(new Map<string, Period>());
   const pageOf = (key: string): Period => {
     const next = periodOf(key);

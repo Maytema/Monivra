@@ -1,7 +1,6 @@
 // Who hears the eye. A figure that is masked listens to the mask (useMoney), and a tab keeps hundreds of them (every row of five
-// pages of Operations): a tap on the eye drew all of them again, the ones on the pages nobody sees too (speed check build 168:
-// 55 of 103 listeners on Operations, 59 of 66 on Statistics). A scope says whether what is inside is in front: a tab (TabScope) and
-// the page of a period pager that is the current one (PeriodPager). The eye is told only to the figures of scopes in front; a scope
+// pages of Operations): a tap on the eye drew all of them again, the ones on the pages nobody sees too. A scope says whether what is inside is in front: a tab (TabScope) and
+// the page of the period deck that is the current one (PeriodDeck). The eye is told only to the figures of scopes in front; a scope
 // that comes in front wakes its figures, and they take the mask as it is now (a figure that is drawn reads the live mask anyway).
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import { useNavigation } from "expo-router";
