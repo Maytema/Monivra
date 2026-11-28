@@ -1,7 +1,6 @@
 // The five tabs of the first application. Each tab draws its own header block (the "hero"), as the
 // first application does, so the navigator shows no header; the bar is `ui/tab-bar.tsx`.
 import { useEffect } from "react";
-import { InteractionManager } from "react-native";
 import { Tabs, router } from "expo-router";
 import { lab } from "../../platform/lab-flags.ts";
 import { usePalette, useT } from "../../ui/app-context.tsx";
@@ -14,11 +13,9 @@ export default function TabsLayout() {
   useEffect(() => {
     if (!lab.warm) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
-    const task = InteractionManager.runAfterInteractions(() => {
-      ["/categories", "/operations", "/statistics"].forEach((href, i) =>
-        timers.push(setTimeout(() => { console.log(`[perf] warm: prefetch ${href}`); router.prefetch(href); }, 2500 + i * 1500)));
-    });
-    return () => { task.cancel(); timers.forEach(clearTimeout); };
+    ["/categories", "/operations", "/statistics"].forEach((href, i) =>
+      timers.push(setTimeout(() => { console.log(`[perf] warm: prefetch ${href}`); router.prefetch(href); }, 3000 + i * 1500)));
+    return () => timers.forEach(clearTimeout);
   }, []);
   return (
     // No React Activity: with it a tab that is not shown is hidden and its effects are released, so the eye is cheap, but every tap on a tab
