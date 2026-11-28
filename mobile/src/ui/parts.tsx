@@ -226,8 +226,10 @@ export function Fab({ label, collapsed, onPress }: { label: string; collapsed: b
       onPress={onPress}
       style={{ position: "absolute", right: chrome.edgeGap, bottom: chrome.edgeGap, height: chrome.fab, paddingHorizontal: 18, borderRadius: 22, flexDirection: "row", alignItems: "center", backgroundColor: p.tint, elevation: 3 }}
     >
-      <Animated.View style={{ width, overflow: "hidden", opacity: progress }}>
-        <Text numberOfLines={1} style={{ marginRight: 10, color: p.ink, fontSize: 19, fontWeight: "600", width: labelWidth + 1 }}>
+      {/* Until the name has been measured (a frame after the button, later when the JavaScript thread is busy) an open button takes the
+          name's own width, so the name is there together with the button instead of arriving after it. */}
+      <Animated.View style={{ width: labelWidth || collapsed ? width : undefined, paddingRight: labelWidth ? 0 : 1, overflow: "hidden", opacity: progress }}>
+        <Text numberOfLines={1} style={{ marginRight: 10, color: p.ink, fontSize: 19, fontWeight: "600", width: labelWidth ? labelWidth + 1 : undefined }}>
           {t.t(label)}
         </Text>
       </Animated.View>
