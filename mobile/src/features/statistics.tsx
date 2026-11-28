@@ -52,6 +52,7 @@ export function StatisticsScreen() {
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
 const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
+  console.log(`[perf] statistics: page drawn ${period.mode}`);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
