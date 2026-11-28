@@ -1,0 +1,591 @@
+--------- beginning of main
+11-28 01:46:11.436  4207  4329 I ReactNativeJS: Running "main"
+11-28 01:46:11.737  4207  4329 I ReactNativeJS: [perf] stall 181.4ms
+11-28 01:46:11.853  4207  4329 I ReactNativeJS: [perf] stall 65.2ms
+11-28 01:46:12.160  4207  4329 I ReactNativeJS: [perf] stall 82.3ms
+11-28 01:46:12.316  4207  4329 I ReactNativeJS: [perf] stall 79.4ms
+11-28 01:46:31.103  4207  4329 I ReactNativeJS: [perf] stall 84.3ms
+11-28 01:46:31.520  4207  4329 I ReactNativeJS: [perf] stall 391.3ms
+11-28 01:46:31.607  4207  4329 I ReactNativeJS: [perf] stall 62.3ms
+11-28 01:46:34.824  4207  4329 I ReactNativeJS: [perf] stall 55.4ms
+11-28 01:46:36.570  4207  4329 I ReactNativeJS: [perf] engine toLocaleString x200 459.7ms
+11-28 01:46:36.580  4207  4329 I ReactNativeJS: [perf] engine plain format x200 9.6ms
+11-28 01:46:36.582  4207  4329 I ReactNativeJS: [perf] engine localeCompare x200 1.9ms
+11-28 01:46:36.879  4207  4329 I ReactNativeJS: [perf] engine toLocaleDateString x200 296.8ms
+11-28 01:46:38.800  4207  4329 I ReactNativeJS: [perf] stall 106.2ms
+11-28 01:46:39.063  4207  4329 I ReactNativeJS: [perf] stall 200.9ms
+11-28 01:46:44.089  4207  4329 I ReactNativeJS: [perf] stall 62.9ms
+11-28 01:46:52.489  4207  4329 I ReactNativeJS: [perf] stall 185.5ms
+11-28 01:46:52.723  4207  4329 I ReactNativeJS: [perf] stall 208.7ms
+11-28 01:47:03.856  4207  4329 I ReactNativeJS: [perf] stall 126.0ms
+11-28 01:47:04.020  4207  4329 I ReactNativeJS: [perf] stall 106.5ms
+11-28 01:47:04.123  4207  4329 I ReactNativeJS: [perf] stall 66.5ms
+11-28 01:47:04.212  4207  4329 I ReactNativeJS: [perf] stall 60.8ms
+11-28 01:47:04.359  4207  4329 I ReactNativeJS: [perf] stall 111.1ms
+11-28 01:47:04.857  4207  4329 I ReactNativeJS: [perf] stall 98.1ms
+11-28 01:47:05.176  4207  4329 I ReactNativeJS: [perf] stall 91.3ms
+11-28 01:47:05.689  4207  4329 I ReactNativeJS: [perf] stall 75.8ms
+11-28 01:47:36.817  6492  6492 I ReactNativeJS: [perf] mark operations-month: normal ×5 back, run 1
+11-28 01:47:57.113  6600  6600 I ReactNativeJS: [perf] mark operations-month: normal ×5 forward, run 1
+11-28 01:48:08.329  6674  6674 I ReactNativeJS: [perf] mark operations-month: normal ×5 back, run 2
+11-28 01:48:21.515  6760  6760 I ReactNativeJS: [perf] mark operations-month: normal ×5 forward, run 2
+11-28 01:48:32.724  6833  6833 I ReactNativeJS: [perf] mark operations-month: normal ×5 back, run 3
+11-28 01:48:45.948  6901  6901 I ReactNativeJS: [perf] mark operations-month: normal ×5 forward, run 3
+11-28 01:48:58.166  6973  6973 I ReactNativeJS: [perf] mark operations-month: quick ×10 back, run 1
+11-28 01:49:14.363  7075  7075 I ReactNativeJS: [perf] mark operations-month: quick ×10 forward, run 1
+11-28 01:49:21.167  7169  7169 I ReactNativeJS: [perf] mark operations-month: quick ×10 back, run 2
+11-28 01:49:29.940  7267  7267 I ReactNativeJS: [perf] mark operations-month: quick ×10 forward, run 2
+11-28 01:49:36.717  7347  7347 I ReactNativeJS: [perf] mark operations-month: quick ×10 back, run 3
+11-28 01:49:45.478  7439  7439 I ReactNativeJS: [perf] mark operations-month: quick ×10 forward, run 3
+11-28 01:49:52.267  7513  7513 I ReactNativeJS: [perf] mark operations-month: reverse back/forward ×6
+11-28 01:49:58.360  7618  7618 I ReactNativeJS: [perf] mark operations-month: revisit 10 back, 10 forward (1 s apart)
+11-28 01:50:26.811  7803  7803 I ReactNativeJS: [perf] mark operations-month: stress ×30 back, no pause
+11-28 01:50:49.031  8009  8009 I ReactNativeJS: [perf] mark operations-month: stress ×30 forward, no pause
+11-28 01:50:56.682  8244  8244 I ReactNativeJS: [perf] mark operations-month: quick ×10 into empty future months
+11-28 01:51:08.905  8349  8349 I ReactNativeJS: [perf] mark operations-month: back from the future
+11-28 01:51:15.696  8423  8423 I ReactNativeJS: [perf] mark operations-month: 5 quick swipes, tab Statistics, tab Operations
+11-28 01:51:16.325  4207  4329 I ReactNativeJS: [perf] stall 87.7ms
+11-28 01:51:16.493  4207  4329 I ReactNativeJS: [perf] stall 142.6ms
+11-28 01:51:18.429  4207  4329 I ReactNativeJS: [perf] stall 58.7ms
+11-28 01:51:25.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 2, page 52
+11-28 01:51:25.797  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 52, swipes counted 0, page 52
+11-28 01:51:26.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 01:51:26.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 54, swipes counted 1, page 54
+11-28 01:51:27.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 54, reached 55, swipes counted 1, page 55
+11-28 01:51:32.259  4207  4329 I ReactNativeJS: [perf] stall 70.1ms
+11-28 01:51:35.879  4207  4329 I ReactNativeJS: [perf] stall 73.4ms
+11-28 01:51:35.972  4207  4329 I ReactNativeJS: [perf] stall 68.1ms
+11-28 01:51:40.645  8601  8601 I ReactNativeJS: [perf] mark operations-week: normal ×5 back, run 1
+11-28 01:51:41.143  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:51:42.529  4207  4329 I ReactNativeJS: [perf] stall 51.8ms
+11-28 01:51:42.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:51:44.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:51:46.144  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:51:47.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:52:01.089  8839  8839 I ReactNativeJS: [perf] mark operations-week: normal ×5 forward, run 1
+11-28 01:52:01.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:52:03.210  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:52:04.810  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:52:06.394  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:52:08.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 49, swipes counted 0, page 49
+11-28 01:52:12.422  8923  8923 I ReactNativeJS: [perf] mark operations-week: normal ×5 back, run 2
+11-28 01:52:12.860  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:52:14.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:52:16.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:52:17.743  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:52:19.394  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:52:25.850  8991  8991 I ReactNativeJS: [perf] mark operations-week: normal ×5 forward, run 2
+11-28 01:52:26.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:52:27.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:52:29.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:52:31.144  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:52:32.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:52:37.127  9041  9041 I ReactNativeJS: [perf] mark operations-week: normal ×5 back, run 3
+11-28 01:52:37.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:52:39.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:52:40.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:52:42.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:52:44.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:52:50.445  9107  9107 I ReactNativeJS: [perf] mark operations-week: normal ×5 forward, run 3
+11-28 01:52:50.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:52:52.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:52:54.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:52:55.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:52:57.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:53:02.722  9176  9176 I ReactNativeJS: [perf] mark operations-week: quick ×10 back, run 1
+11-28 01:53:04.140  4207  4329 I ReactNativeJS: [perf] stall 54.3ms
+11-28 01:53:04.746  4207  4329 I ReactNativeJS: [perf] stall 57.6ms
+11-28 01:53:05.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 46, swipes counted -4, page 45
+11-28 01:53:05.259  4207  4329 I ReactNativeJS: [perf] stall 57.4ms
+11-28 01:53:05.352  4207  4329 I ReactNativeJS: [perf] stall 67.8ms
+11-28 01:53:05.505  4207  4329 I ReactNativeJS: [perf] stall 81.3ms
+11-28 01:53:05.609  4207  4329 I ReactNativeJS: [perf] stall 52.3ms
+11-28 01:53:05.609  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 0, page 45
+11-28 01:53:05.779  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 0, page 45
+11-28 01:53:06.144  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:53:06.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:53:07.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:53:07.708  4207  4329 I ReactNativeJS: [perf] stall 53.7ms
+11-28 01:53:08.094  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted -1, page 41
+11-28 01:53:08.417  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 01:53:19.118  9347  9347 I ReactNativeJS: [perf] mark operations-week: quick ×10 forward, run 1
+11-28 01:53:19.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 01:53:19.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:53:20.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:53:20.661  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:53:21.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:53:21.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:53:21.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:53:22.261  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:53:22.694  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:53:23.094  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:53:26.211  9433  9433 I ReactNativeJS: [perf] mark operations-week: quick ×10 back, run 2
+11-28 01:53:26.645  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:53:27.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:53:27.214  4207  4329 I ReactNativeJS: [perf] stall 54.7ms
+11-28 01:53:27.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:53:27.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:53:28.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:53:28.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:53:28.994  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:53:29.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:53:30.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -2, page 41
+11-28 01:53:30.505  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 41, swipes counted 0, page 41
+11-28 01:53:35.433  9527  9527 I ReactNativeJS: [perf] mark operations-week: quick ×10 forward, run 2
+11-28 01:53:35.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 01:53:36.211  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:53:36.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:53:37.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:53:37.395  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:53:37.828  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:53:38.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:53:38.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:53:39.927  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:53:42.494  9600  9600 I ReactNativeJS: [perf] mark operations-week: quick ×10 back, run 3
+11-28 01:53:42.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:53:43.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:53:43.534  4207  4329 I ReactNativeJS: [perf] stall 54.8ms
+11-28 01:53:43.660  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:53:44.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:53:44.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:53:44.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:53:45.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:53:45.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:53:45.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 01:53:46.344  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 40, swipes counted -1, page 40
+11-28 01:53:51.481  9691  9691 I ReactNativeJS: [perf] mark operations-week: quick ×10 forward, run 3
+11-28 01:53:51.911  4207  4329 I ReactNativeJS: [perf] deck: settled from page 40, reached 41, swipes counted 1, page 41
+11-28 01:53:52.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 01:53:52.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:53:53.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:53:53.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:53:53.810  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:53:54.261  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:53:54.643  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:53:55.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:53:55.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:53:58.500  9765  9765 I ReactNativeJS: [perf] mark operations-week: reverse back/forward ×6
+11-28 01:54:00.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 52, swipes counted 2, page 52
+11-28 01:54:05.301  9865  9865 I ReactNativeJS: [perf] mark operations-week: revisit 10 back, 10 forward (1 s apart)
+11-28 01:54:05.694  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:54:06.860  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:54:07.927  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:54:09.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:54:10.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:54:11.261  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:54:12.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:54:13.543  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:54:14.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:54:15.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:54:16.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:54:18.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:54:19.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:54:20.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:54:21.427  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:54:22.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:54:23.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:54:24.810  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:54:25.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:54:27.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:54:35.088  4207  4329 I ReactNativeJS: [perf] stall 64.3ms
+11-28 01:54:43.438 10080 10080 I ReactNativeJS: [perf] mark operations-day: normal ×5 back, run 1
+11-28 01:54:43.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:54:46.047  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 49, swipes counted 0, page 49
+11-28 01:54:47.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:54:48.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:54:50.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:55:03.651 10250 10250 I ReactNativeJS: [perf] mark operations-day: normal ×5 forward, run 1
+11-28 01:55:04.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:55:05.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:55:07.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:55:08.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:55:10.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:55:14.946 10301 10301 I ReactNativeJS: [perf] mark operations-day: normal ×5 back, run 2
+11-28 01:55:15.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:55:17.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:55:18.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:55:20.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:55:21.894  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:55:28.283 10367 10367 I ReactNativeJS: [perf] mark operations-day: normal ×5 forward, run 2
+11-28 01:55:28.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:55:30.361  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:55:32.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:55:33.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:55:35.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:55:39.643 10415 10415 I ReactNativeJS: [perf] mark operations-day: normal ×5 back, run 3
+11-28 01:55:40.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:55:41.694  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:55:43.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:55:44.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:55:46.447  4207  4329 I ReactNativeJS: [perf] stall 66.5ms
+11-28 01:55:46.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:55:52.972 10484 10484 I ReactNativeJS: [perf] mark operations-day: normal ×5 forward, run 3
+11-28 01:55:53.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:55:55.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:55:56.710  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:55:58.344  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:55:59.927  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:56:05.270 10553 10553 I ReactNativeJS: [perf] mark operations-day: quick ×10 back, run 1
+11-28 01:56:05.710  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:56:06.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:56:06.457  4207  4329 I ReactNativeJS: [perf] stall 54.5ms
+11-28 01:56:06.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:56:06.706  4207  4329 I ReactNativeJS: [perf] stall 50.1ms
+11-28 01:56:06.927  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:56:07.216  4207  4329 I ReactNativeJS: [perf] stall 53.3ms
+11-28 01:56:07.944  4207  4329 I ReactNativeJS: [perf] stall 50.8ms
+11-28 01:56:08.169  4207  4329 I ReactNativeJS: [perf] stall 65.4ms
+11-28 01:56:08.767  4207  4329 I ReactNativeJS: [perf] stall 58.2ms
+11-28 01:56:09.212  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 45, swipes counted -2, page 45
+11-28 01:56:09.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted 0, page 44
+11-28 01:56:21.502 10704 10704 I ReactNativeJS: [perf] mark operations-day: quick ×10 forward, run 1
+11-28 01:56:21.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:56:22.310  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:56:22.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:56:23.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:56:23.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:56:23.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:56:24.227  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:56:24.560  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:56:24.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 01:56:25.327  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 54, swipes counted 1, page 54
+11-28 01:56:28.430 10786 10786 I ReactNativeJS: [perf] mark operations-day: quick ×10 back, run 2
+11-28 01:56:28.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 54, reached 53, swipes counted -1, page 53
+11-28 01:56:29.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 52, swipes counted -1, page 52
+11-28 01:56:29.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:56:30.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:56:30.394  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:56:30.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:56:31.160  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:56:31.740  4207  4329 I ReactNativeJS: [perf] stall 51.7ms
+11-28 01:56:32.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 45, swipes counted -3, page 44
+11-28 01:56:32.778  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted 0, page 44
+11-28 01:56:37.583 10881 10881 I ReactNativeJS: [perf] mark operations-day: quick ×10 forward, run 2
+11-28 01:56:37.977  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:56:38.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:56:38.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:56:39.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:56:39.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:56:39.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:56:40.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:56:40.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:56:41.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 01:56:41.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 54, swipes counted 1, page 54
+11-28 01:56:44.561 10954 10954 I ReactNativeJS: [perf] mark operations-day: quick ×10 back, run 3
+11-28 01:56:44.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 54, reached 53, swipes counted -1, page 53
+11-28 01:56:45.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 52, swipes counted -1, page 52
+11-28 01:56:45.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:56:46.093  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:56:46.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:56:46.862  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:56:47.193  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:56:48.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -2, page 45
+11-28 01:56:48.311  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted -1, page 44
+11-28 01:56:48.675  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted 0, page 44
+11-28 01:56:48.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted 0, page 44
+11-28 01:56:53.588 11044 11044 I ReactNativeJS: [perf] mark operations-day: quick ×10 forward, run 3
+11-28 01:56:54.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:56:54.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:56:54.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:56:55.160  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:56:55.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:56:55.994  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:56:56.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:56:56.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:56:57.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 01:56:57.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 54, swipes counted 1, page 54
+11-28 01:57:00.653 11117 11117 I ReactNativeJS: [perf] mark operations-day: reverse back/forward ×6
+11-28 01:57:02.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 54, reached 54, swipes counted -2, page 52
+11-28 01:57:07.378 11217 11217 I ReactNativeJS: [perf] mark operations-day: revisit 10 back, 10 forward (1 s apart)
+11-28 01:57:07.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:57:08.860  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:57:09.994  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:57:11.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:57:12.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:57:13.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:57:14.543  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:57:15.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:57:16.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:57:17.799  4207  4329 I ReactNativeJS: [perf] stall 54.9ms
+11-28 01:57:17.911  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:57:19.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:57:20.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:57:21.310  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:57:22.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:57:23.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:57:24.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:57:25.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:57:26.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:57:28.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:57:29.227  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:57:40.835  4207  4329 I ReactNativeJS: [perf] stall 62.2ms
+11-28 01:57:40.942  4207  4329 I ReactNativeJS: [perf] stall 82.2ms
+11-28 01:57:49.617 11433 11433 I ReactNativeJS: [perf] mark categories-month: normal ×5 back, run 1
+11-28 01:57:50.131  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:57:51.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:57:53.378  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:57:55.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:57:55.107  4207  4329 I ReactNativeJS: [perf] stall 53.9ms
+11-28 01:57:56.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:58:09.830 11725 11725 I ReactNativeJS: [perf] mark categories-month: normal ×5 forward, run 1
+11-28 01:58:10.763  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 45, swipes counted 1, page 46
+11-28 01:58:11.069  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 46, swipes counted 0, page 46
+11-28 01:58:11.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:58:13.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:58:15.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:58:16.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:58:21.128 11859 11859 I ReactNativeJS: [perf] mark categories-month: normal ×5 back, run 2
+11-28 01:58:21.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:58:23.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:58:24.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:58:26.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:58:28.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:58:34.448 11924 11924 I ReactNativeJS: [perf] mark categories-month: normal ×5 forward, run 2
+11-28 01:58:34.860  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:58:36.494  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:58:38.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:58:39.743  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:58:41.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:58:45.760 11973 11973 I ReactNativeJS: [perf] mark categories-month: normal ×5 back, run 3
+11-28 01:58:46.144  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:58:47.651  4207  4329 I ReactNativeJS: [perf] stall 64.2ms
+11-28 01:58:47.810  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:58:49.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:58:51.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:58:52.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:58:58.996 12039 12039 I ReactNativeJS: [perf] mark categories-month: normal ×5 forward, run 3
+11-28 01:58:59.394  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:59:00.977  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:59:02.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:59:04.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:59:05.943  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:59:11.261 12108 12108 I ReactNativeJS: [perf] mark categories-month: quick ×10 back, run 1
+11-28 01:59:11.437  4207  4329 I ReactNativeJS: [perf] stall 50.6ms
+11-28 01:59:11.744  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:59:13.185  4207  4329 I ReactNativeJS: [perf] stall 77.8ms
+11-28 01:59:14.618  4207  4329 I ReactNativeJS: [perf] stall 51.2ms
+11-28 01:59:15.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 46, swipes counted -5, page 44
+11-28 01:59:15.318  4207  4329 I ReactNativeJS: [perf] stall 232.9ms
+11-28 01:59:15.545  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 44, swipes counted -1, page 43
+11-28 01:59:15.704  4207  4329 I ReactNativeJS: [perf] stall 50.3ms
+11-28 01:59:15.876  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 43, swipes counted -1, page 42
+11-28 01:59:15.972  4207  4329 I ReactNativeJS: [perf] stall 71.1ms
+11-28 01:59:16.264  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted 0, page 42
+11-28 01:59:16.396  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 42, swipes counted 0, page 42
+11-28 01:59:27.424 12259 12259 I ReactNativeJS: [perf] mark categories-month: quick ×10 forward, run 1
+11-28 01:59:27.911  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:59:28.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:59:28.454  4207  4329 I ReactNativeJS: [perf] stall 51.1ms
+11-28 01:59:28.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:59:29.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:59:29.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:59:29.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:59:30.177  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:59:30.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:59:30.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:59:31.344  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:59:34.463 12341 12341 I ReactNativeJS: [perf] mark categories-month: quick ×10 back, run 2
+11-28 01:59:34.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:59:35.243  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:59:35.660  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:59:36.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:59:36.393  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:59:36.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:59:37.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:59:37.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:59:37.803  4207  4329 I ReactNativeJS: [perf] stall 50.0ms
+11-28 01:59:38.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:59:38.344  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:59:43.507 12434 12434 I ReactNativeJS: [perf] mark categories-month: quick ×10 forward, run 2
+11-28 01:59:43.978  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 01:59:44.327  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 01:59:44.694  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 01:59:45.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 01:59:45.494  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 01:59:45.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 01:59:46.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 01:59:46.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 01:59:47.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 01:59:47.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 01:59:50.522 12507 12507 I ReactNativeJS: [perf] mark categories-month: quick ×10 back, run 3
+11-28 01:59:50.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 01:59:51.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 01:59:51.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 01:59:52.094  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 01:59:52.478  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 01:59:52.827  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 01:59:53.243  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 01:59:53.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 01:59:54.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 01:59:54.394  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 01:59:59.549 12598 12598 I ReactNativeJS: [perf] mark categories-month: quick ×10 forward, run 3
+11-28 02:00:00.211  4207  4329 I ReactNativeJS: [perf] stall 50.7ms
+11-28 02:00:00.379  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 02:00:00.760  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 02:00:01.211  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:00:01.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:00:01.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:00:02.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 49, swipes counted 2, page 49
+11-28 02:00:03.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:00:03.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:00:06.686 12691 12691 I ReactNativeJS: [perf] mark categories-month: reverse back/forward ×6
+11-28 02:00:08.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 51, swipes counted 0, page 51
+11-28 02:00:13.329 12792 12792 I ReactNativeJS: [perf] mark categories-month: revisit 10 back, 10 forward (1 s apart)
+11-28 02:00:13.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:00:14.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:00:15.993  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:00:17.143  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:00:18.227  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:00:19.202  4207  4329 I ReactNativeJS: [perf] stall 61.4ms
+11-28 02:00:19.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 02:00:20.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 02:00:21.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 02:00:22.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 02:00:23.860  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 41, swipes counted -1, page 41
+11-28 02:00:24.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 41, reached 42, swipes counted 1, page 42
+11-28 02:00:26.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 02:00:27.227  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 02:00:28.310  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:00:29.444  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:00:30.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:00:31.744  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:00:32.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:00:34.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:00:35.160  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:00:46.036 12969 12969 I ReactNativeJS: [perf] mark statistics-month: normal ×5 back, run 1
+11-28 02:00:46.221  4207  4329 I ReactNativeJS: [perf] stall 50.4ms
+11-28 02:00:46.745  4207  4329 I ReactNativeJS: [perf] stall 55.2ms
+11-28 02:00:47.031  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 51, swipes counted -1, page 50
+11-28 02:00:47.386  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 50, swipes counted 0, page 50
+11-28 02:00:48.148  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:00:50.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 49, swipes counted -1, page 48
+11-28 02:00:50.762  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 48, swipes counted 0, page 48
+11-28 02:00:51.427  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:00:53.110  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:01:06.169 13146 13146 I ReactNativeJS: [perf] mark statistics-month: normal ×5 forward, run 1
+11-28 02:01:06.594  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:01:08.243  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:01:09.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:01:11.460  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:01:13.110  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:01:17.468 13196 13196 I ReactNativeJS: [perf] mark statistics-month: normal ×5 back, run 2
+11-28 02:01:17.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:01:19.461  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:01:21.110  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:01:22.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:01:24.343  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:01:30.721 13266 13266 I ReactNativeJS: [perf] mark statistics-month: normal ×5 forward, run 2
+11-28 02:01:31.143  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:01:32.793  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:01:34.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:01:36.044  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:01:37.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:01:42.042 13315 13315 I ReactNativeJS: [perf] mark statistics-month: normal ×5 back, run 3
+11-28 02:01:42.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:01:44.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:01:45.744  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:01:47.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:01:49.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:01:55.365 13381 13381 I ReactNativeJS: [perf] mark statistics-month: normal ×5 forward, run 3
+11-28 02:01:55.729  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:01:57.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:01:59.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:02:00.643  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:02:02.277  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:02:07.623 13449 13449 I ReactNativeJS: [perf] mark statistics-month: quick ×10 back, run 1
+11-28 02:02:08.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:02:08.511  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:02:08.638  4207  4329 I ReactNativeJS: [perf] stall 54.2ms
+11-28 02:02:09.397  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:02:09.805  4207  4329 I ReactNativeJS: [perf] stall 62.2ms
+11-28 02:02:09.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:02:10.648  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 45, swipes counted -1, page 46
+11-28 02:02:10.733  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted 0, page 45
+11-28 02:02:10.903  4207  4329 I ReactNativeJS: [perf] stall 145.4ms
+11-28 02:02:11.059  4207  4329 I ReactNativeJS: [perf] stall 61.3ms
+11-28 02:02:11.244  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 02:02:11.309  4207  4329 I ReactNativeJS: [perf] stall 57.0ms
+11-28 02:02:11.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 02:02:12.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 02:02:23.934 13612 13612 I ReactNativeJS: [perf] mark statistics-month: quick ×10 forward, run 1
+11-28 02:02:24.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 02:02:24.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 02:02:25.160  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:02:25.527  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:02:25.894  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:02:26.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:02:26.694  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:02:27.094  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:02:27.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:02:27.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 02:02:31.017 13694 13694 I ReactNativeJS: [perf] mark statistics-month: quick ×10 back, run 2
+11-28 02:02:31.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 02:02:31.777  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:02:32.210  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:02:32.660  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:02:33.010  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:02:33.377  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:02:33.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 02:02:34.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 02:02:34.994  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 02:02:40.128 13788 13788 I ReactNativeJS: [perf] mark statistics-month: quick ×10 forward, run 2
+11-28 02:02:40.510  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 02:02:40.877  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:02:41.263  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:02:41.627  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:02:42.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:02:42.494  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:02:42.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:02:43.260  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:02:43.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 02:02:44.060  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 02:02:47.156 13861 13861 I ReactNativeJS: [perf] mark statistics-month: quick ×10 back, run 3
+11-28 02:02:47.543  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 52, swipes counted -1, page 52
+11-28 02:02:47.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 02:02:48.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -2, page 49
+11-28 02:02:48.897  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 0, page 50
+11-28 02:02:48.995  4207  4329 I ReactNativeJS: [perf] stall 54.5ms
+11-28 02:02:49.194  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted 0, page 49
+11-28 02:02:49.593  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:02:49.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:02:50.343  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:02:50.510  4207  4329 I ReactNativeJS: [perf] stall 52.5ms
+11-28 02:02:50.727  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 02:02:51.127  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 02:02:56.211 13953 13953 I ReactNativeJS: [perf] mark statistics-month: quick ×10 forward, run 3
+11-28 02:02:56.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:02:56.960  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:02:57.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:02:57.745  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:02:58.144  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 49, swipes counted 1, page 49
+11-28 02:02:58.910  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 2, page 51
+11-28 02:02:58.989  4207  4329 I ReactNativeJS: [perf] stall 53.9ms
+11-28 02:02:59.015  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted 0, page 50
+11-28 02:02:59.294  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 0, page 51
+11-28 02:02:59.710  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
+11-28 02:03:00.061  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 53, swipes counted 1, page 53
+11-28 02:03:03.167 14115 14115 I ReactNativeJS: [perf] mark statistics-month: reverse back/forward ×6
+11-28 02:03:05.610  4207  4329 I ReactNativeJS: [perf] deck: settled from page 53, reached 51, swipes counted -1, page 52
+11-28 02:03:05.902  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 52, swipes counted 0, page 52
+11-28 02:03:09.882 14222 14222 I ReactNativeJS: [perf] mark statistics-month: revisit 10 back, 10 forward (1 s apart)
+11-28 02:03:10.343  4207  4329 I ReactNativeJS: [perf] deck: settled from page 52, reached 51, swipes counted -1, page 51
+11-28 02:03:11.410  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 50, swipes counted -1, page 50
+11-28 02:03:12.544  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 49, swipes counted -1, page 49
+11-28 02:03:13.677  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 48, swipes counted -1, page 48
+11-28 02:03:14.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 47, swipes counted -1, page 47
+11-28 02:03:15.944  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 46, swipes counted -1, page 46
+11-28 02:03:17.027  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 45, swipes counted -1, page 45
+11-28 02:03:18.210  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 44, swipes counted -1, page 44
+11-28 02:03:19.360  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 43, swipes counted -1, page 43
+11-28 02:03:20.443  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 42, swipes counted -1, page 42
+11-28 02:03:21.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 42, reached 43, swipes counted 1, page 43
+11-28 02:03:22.644  4207  4329 I ReactNativeJS: [perf] deck: settled from page 43, reached 44, swipes counted 1, page 44
+11-28 02:03:23.794  4207  4329 I ReactNativeJS: [perf] deck: settled from page 44, reached 45, swipes counted 1, page 45
+11-28 02:03:24.977  4207  4329 I ReactNativeJS: [perf] deck: settled from page 45, reached 46, swipes counted 1, page 46
+11-28 02:03:26.077  4207  4329 I ReactNativeJS: [perf] deck: settled from page 46, reached 47, swipes counted 1, page 47
+11-28 02:03:27.227  4207  4329 I ReactNativeJS: [perf] deck: settled from page 47, reached 48, swipes counted 1, page 48
+11-28 02:03:28.844  4207  4329 I ReactNativeJS: [perf] deck: settled from page 48, reached 48, swipes counted 1, page 49
+11-28 02:03:29.143  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 49, swipes counted 0, page 49
+11-28 02:03:29.477  4207  4329 I ReactNativeJS: [perf] deck: settled from page 49, reached 50, swipes counted 1, page 50
+11-28 02:03:30.577  4207  4329 I ReactNativeJS: [perf] deck: settled from page 50, reached 51, swipes counted 1, page 51
+11-28 02:03:31.711  4207  4329 I ReactNativeJS: [perf] deck: settled from page 51, reached 52, swipes counted 1, page 52
