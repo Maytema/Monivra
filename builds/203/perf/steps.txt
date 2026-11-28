@@ -1,0 +1,61 @@
+installed
+tapped: Start
+empty profile, tab centres: accounts 108 2263, categories 324 2263, operations 540 2263, statistics 756 2263, more 972 2263
+empty, after Accounts → Statistics → Accounts: shown Accounts (expected Accounts)
+empty, after Categories → Operations → Categories: shown Categories (expected Categories)
+empty, after 12 random taps: shown Operations (expected index 2 of Accounts, Categories, Operations, Statistics, More)
+empty, after 12 taps every 0.2 s: shown Operations (expected index 2)
+tapped: Add
+tapped: Next period
+tapped: Add
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: Month
+tapped: More
+tapped: Data
+tapped: Data file
+tapped: Restore from file
+tapped: perf-data.json
+tapped: Replace data
+tapped: Confirm
+series 3000 tabs 1, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 tabs 2, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 tabs 3, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 3114 WaitTime: 3124 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2739 WaitTime: 2756 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2553 WaitTime: 2567 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 2686 WaitTime: 2697 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 2678 WaitTime: 2680 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2717 WaitTime: 2735 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2634 WaitTime: 2644 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 2819 WaitTime: 2845 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 2900 WaitTime: 2905 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2551 WaitTime: 2555 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch warm: TotalTime: 2464 WaitTime: 2472 
+series 3000 ab_warm tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_warm tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+launch none: TotalTime: 2548 WaitTime: 2576 
+series 3000 ab_base tabs a, after 12 taps every 0.2 s: shown Operations (expected index 2)
+series 3000 ab_base tabs b, after 12 taps every 0.2 s: shown Operations (expected index 2)
+result: measured

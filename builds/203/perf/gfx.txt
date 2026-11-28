@@ -1,0 +1,1529 @@
+== cold start
+Total frames rendered: 7
+Janky frames: 7 (100.00%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 200ms
+90th percentile: 400ms
+95th percentile: 400ms
+99th percentile: 400ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 7
+Number Frame deadline missed (legacy): 7
+== first screen: start with the basic set
+Total frames rendered: 4
+Janky frames: 4 (100.00%)
+Janky frames (legacy): 4 (100.00%)
+50th percentile: 250ms
+90th percentile: 350ms
+95th percentile: 350ms
+99th percentile: 350ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 4
+Number Frame deadline missed (legacy): 4
+== picture operations: visit, playing (3.5 s)
+Total frames rendered: 75
+Janky frames: 73 (97.33%)
+Janky frames (legacy): 75 (100.00%)
+50th percentile: 105ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 200ms
+Number Slow UI thread: 71
+Number Frame deadline missed: 73
+Number Frame deadline missed (legacy): 75
+== picture operations: same tab, at rest (3 s, after the run)
+Total frames rendered: 12
+Janky frames: 12 (100.00%)
+Janky frames (legacy): 12 (100.00%)
+50th percentile: 101ms
+90th percentile: 150ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 12
+Number Frame deadline missed: 12
+Number Frame deadline missed (legacy): 12
+== picture accounts: visit, playing (3.5 s)
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 32ms
+90th percentile: 32ms
+95th percentile: 32ms
+99th percentile: 32ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== picture accounts: same tab, at rest (3 s, after the run)
+Total frames rendered: 0
+Janky frames: 0 (0.00%)
+Janky frames (legacy): 0 (0.00%)
+50th percentile: 4950ms
+90th percentile: 4950ms
+95th percentile: 4950ms
+99th percentile: 4950ms
+Number Slow UI thread: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 0
+== picture statistics: visit, playing (3.5 s)
+Total frames rendered: 54
+Janky frames: 50 (92.59%)
+Janky frames (legacy): 52 (96.30%)
+50th percentile: 97ms
+90th percentile: 133ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 47
+Number Frame deadline missed: 50
+Number Frame deadline missed (legacy): 48
+== picture statistics: same tab, at rest (3 s, after the run)
+Total frames rendered: 0
+Janky frames: 0 (0.00%)
+Janky frames (legacy): 0 (0.00%)
+50th percentile: 4950ms
+90th percentile: 4950ms
+95th percentile: 4950ms
+99th percentile: 4950ms
+Number Slow UI thread: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 0
+== picture categories: visit, playing (3.5 s)
+Total frames rendered: 6
+Janky frames: 5 (83.33%)
+Janky frames (legacy): 5 (83.33%)
+50th percentile: 53ms
+90th percentile: 101ms
+95th percentile: 101ms
+99th percentile: 101ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 5
+Number Frame deadline missed (legacy): 4
+== picture categories: same tab, at rest (3 s, after the run)
+Total frames rendered: 0
+Janky frames: 0 (0.00%)
+Janky frames (legacy): 0 (0.00%)
+50th percentile: 4950ms
+90th percentile: 4950ms
+95th percentile: 4950ms
+99th percentile: 4950ms
+Number Slow UI thread: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 0
+== empty: Accounts → Statistics → Accounts (0.3 s)
+Total frames rendered: 13
+Janky frames: 9 (69.23%)
+Janky frames (legacy): 12 (92.31%)
+50th percentile: 48ms
+90th percentile: 93ms
+95th percentile: 101ms
+99th percentile: 101ms
+Number Slow UI thread: 6
+Number Frame deadline missed: 9
+Number Frame deadline missed (legacy): 9
+== empty: Categories → Operations → Categories (0.3 s)
+Total frames rendered: 13
+Janky frames: 11 (84.62%)
+Janky frames (legacy): 12 (92.31%)
+50th percentile: 69ms
+90th percentile: 117ms
+95th percentile: 121ms
+99th percentile: 121ms
+Number Slow UI thread: 11
+Number Frame deadline missed: 11
+Number Frame deadline missed (legacy): 11
+== empty: 12 taps in random tab order, 0.25-0.5 s apart
+Total frames rendered: 182
+Janky frames: 156 (85.71%)
+Janky frames (legacy): 175 (96.15%)
+50th percentile: 81ms
+90th percentile: 101ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 148
+Number Frame deadline missed: 156
+Number Frame deadline missed (legacy): 149
+== empty: 12 taps every 0.2 s
+Total frames rendered: 150
+Janky frames: 127 (84.67%)
+Janky frames (legacy): 144 (96.00%)
+50th percentile: 81ms
+90th percentile: 101ms
+95th percentile: 113ms
+99th percentile: 117ms
+Number Slow UI thread: 117
+Number Frame deadline missed: 127
+Number Frame deadline missed (legacy): 122
+== eye (empty, Accounts): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 56 (73.68%)
+Janky frames (legacy): 72 (94.74%)
+50th percentile: 48ms
+90th percentile: 81ms
+95th percentile: 85ms
+99th percentile: 101ms
+Number Slow UI thread: 20
+Number Frame deadline missed: 56
+Number Frame deadline missed (legacy): 54
+== eye (empty, Operations): 6 taps 0.4 s apart
+Total frames rendered: 79
+Janky frames: 54 (68.35%)
+Janky frames (legacy): 66 (83.54%)
+50th percentile: 36ms
+90th percentile: 65ms
+95th percentile: 73ms
+99th percentile: 89ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 54
+Number Frame deadline missed (legacy): 45
+== empty: add sheet 0.7 s after entering Operations, picture running
+Total frames rendered: 10
+Janky frames: 9 (90.00%)
+Janky frames (legacy): 7 (70.00%)
+50th percentile: 57ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 9
+Number Frame deadline missed (legacy): 6
+== empty: add sheet 0.7 s after entering Operations, picture at rest
+Total frames rendered: 13
+Janky frames: 11 (84.62%)
+Janky frames (legacy): 11 (84.62%)
+50th percentile: 65ms
+90th percentile: 109ms
+95th percentile: 121ms
+99th percentile: 121ms
+Number Slow UI thread: 8
+Number Frame deadline missed: 11
+Number Frame deadline missed (legacy): 10
+== empty: period dialog, tile pick 1
+Total frames rendered: 35
+Janky frames: 31 (88.57%)
+Janky frames (legacy): 35 (100.00%)
+50th percentile: 65ms
+90th percentile: 101ms
+95th percentile: 109ms
+99th percentile: 150ms
+Number Slow UI thread: 14
+Number Frame deadline missed: 31
+Number Frame deadline missed (legacy): 31
+== empty: period dialog, tile pick 2
+Total frames rendered: 23
+Janky frames: 21 (91.30%)
+Janky frames (legacy): 23 (100.00%)
+50th percentile: 65ms
+90th percentile: 101ms
+95th percentile: 113ms
+99th percentile: 150ms
+Number Slow UI thread: 9
+Number Frame deadline missed: 21
+Number Frame deadline missed (legacy): 21
+== empty: period dialog, tile pick 3
+Total frames rendered: 23
+Janky frames: 20 (86.96%)
+Janky frames (legacy): 23 (100.00%)
+50th percentile: 73ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 20
+Number Frame deadline missed (legacy): 21
+== empty: period dialog, tile pick 4
+Total frames rendered: 21
+Janky frames: 18 (85.71%)
+Janky frames (legacy): 21 (100.00%)
+50th percentile: 77ms
+90th percentile: 121ms
+95th percentile: 133ms
+99th percentile: 150ms
+Number Slow UI thread: 8
+Number Frame deadline missed: 18
+Number Frame deadline missed (legacy): 19
+== read the file and open the restore page
+Total frames rendered: 27
+Janky frames: 22 (81.48%)
+Janky frames (legacy): 26 (96.30%)
+50th percentile: 85ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 250ms
+Number Slow UI thread: 12
+Number Frame deadline missed: 22
+Number Frame deadline missed (legacy): 23
+== restore 3000 operations
+Total frames rendered: 82
+Janky frames: 71 (86.59%)
+Janky frames (legacy): 80 (97.56%)
+50th percentile: 65ms
+90th percentile: 113ms
+95th percentile: 125ms
+99th percentile: 200ms
+Number Slow UI thread: 26
+Number Frame deadline missed: 71
+Number Frame deadline missed (legacy): 74
+== series 3000 tabs 1: 12 taps every 0.2 s
+Total frames rendered: 25
+Janky frames: 22 (88.00%)
+Janky frames (legacy): 16 (64.00%)
+50th percentile: 36ms
+90th percentile: 101ms
+95th percentile: 450ms
+99th percentile: 450ms
+Number Slow UI thread: 10
+Number Frame deadline missed: 22
+Number Frame deadline missed (legacy): 15
+== eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 60 (78.95%)
+Janky frames (legacy): 74 (97.37%)
+50th percentile: 48ms
+90th percentile: 73ms
+95th percentile: 77ms
+99th percentile: 97ms
+Number Slow UI thread: 21
+Number Frame deadline missed: 60
+Number Frame deadline missed (legacy): 59
+== eye (series 3000 tabs 1 Operations): 6 taps 0.4 s apart
+Total frames rendered: 77
+Janky frames: 53 (68.83%)
+Janky frames (legacy): 74 (96.10%)
+50th percentile: 42ms
+90th percentile: 65ms
+95th percentile: 81ms
+99th percentile: 85ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 53
+Number Frame deadline missed (legacy): 55
+== eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 60 (78.95%)
+Janky frames (legacy): 74 (97.37%)
+50th percentile: 48ms
+90th percentile: 69ms
+95th percentile: 77ms
+99th percentile: 105ms
+Number Slow UI thread: 19
+Number Frame deadline missed: 60
+Number Frame deadline missed (legacy): 61
+== eye (series 3000 tabs 1 Categories): 6 taps 0.4 s apart
+Total frames rendered: 73
+Janky frames: 50 (68.49%)
+Janky frames (legacy): 68 (93.15%)
+50th percentile: 46ms
+90th percentile: 81ms
+95th percentile: 85ms
+99th percentile: 97ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 50
+Number Frame deadline missed (legacy): 50
+== series 3000 tabs 2: 12 taps every 0.2 s
+Total frames rendered: 24
+Janky frames: 20 (83.33%)
+Janky frames (legacy): 12 (50.00%)
+50th percentile: 21ms
+90th percentile: 61ms
+95th percentile: 81ms
+99th percentile: 117ms
+Number Slow UI thread: 10
+Number Frame deadline missed: 20
+Number Frame deadline missed (legacy): 12
+== eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apart
+Total frames rendered: 73
+Janky frames: 56 (76.71%)
+Janky frames (legacy): 69 (94.52%)
+50th percentile: 53ms
+90th percentile: 81ms
+95th percentile: 85ms
+99th percentile: 125ms
+Number Slow UI thread: 26
+Number Frame deadline missed: 56
+Number Frame deadline missed (legacy): 53
+== eye (series 3000 tabs 2 Operations): 6 taps 0.4 s apart
+Total frames rendered: 77
+Janky frames: 61 (79.22%)
+Janky frames (legacy): 71 (92.21%)
+50th percentile: 42ms
+90th percentile: 73ms
+95th percentile: 85ms
+99th percentile: 113ms
+Number Slow UI thread: 20
+Number Frame deadline missed: 61
+Number Frame deadline missed (legacy): 58
+== eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 56 (73.68%)
+Janky frames (legacy): 69 (90.79%)
+50th percentile: 38ms
+90th percentile: 69ms
+95th percentile: 81ms
+99th percentile: 93ms
+Number Slow UI thread: 18
+Number Frame deadline missed: 56
+Number Frame deadline missed (legacy): 51
+== eye (series 3000 tabs 2 Categories): 6 taps 0.4 s apart
+Total frames rendered: 74
+Janky frames: 57 (77.03%)
+Janky frames (legacy): 69 (93.24%)
+50th percentile: 48ms
+90th percentile: 73ms
+95th percentile: 85ms
+99th percentile: 101ms
+Number Slow UI thread: 14
+Number Frame deadline missed: 57
+Number Frame deadline missed (legacy): 54
+== series 3000 tabs 3: 12 taps every 0.2 s
+Total frames rendered: 24
+Janky frames: 21 (87.50%)
+Janky frames (legacy): 11 (45.83%)
+50th percentile: 19ms
+90th percentile: 48ms
+95th percentile: 57ms
+99th percentile: 65ms
+Number Slow UI thread: 10
+Number Frame deadline missed: 21
+Number Frame deadline missed (legacy): 11
+== eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 60 (78.95%)
+Janky frames (legacy): 70 (92.11%)
+50th percentile: 44ms
+90th percentile: 73ms
+95th percentile: 77ms
+99th percentile: 89ms
+Number Slow UI thread: 17
+Number Frame deadline missed: 60
+Number Frame deadline missed (legacy): 54
+== eye (series 3000 tabs 3 Operations): 6 taps 0.4 s apart
+Total frames rendered: 77
+Janky frames: 62 (80.52%)
+Janky frames (legacy): 74 (96.10%)
+50th percentile: 44ms
+90th percentile: 69ms
+95th percentile: 77ms
+99th percentile: 89ms
+Number Slow UI thread: 22
+Number Frame deadline missed: 62
+Number Frame deadline missed (legacy): 60
+== eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s apart
+Total frames rendered: 77
+Janky frames: 54 (70.13%)
+Janky frames (legacy): 76 (98.70%)
+50th percentile: 46ms
+90th percentile: 65ms
+95th percentile: 77ms
+99th percentile: 101ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 54
+Number Frame deadline missed (legacy): 53
+== eye (series 3000 tabs 3 Categories): 6 taps 0.4 s apart
+Total frames rendered: 76
+Janky frames: 56 (73.68%)
+Janky frames (legacy): 71 (93.42%)
+50th percentile: 48ms
+90th percentile: 77ms
+95th percentile: 89ms
+99th percentile: 109ms
+Number Slow UI thread: 13
+Number Frame deadline missed: 56
+Number Frame deadline missed (legacy): 53
+== series 3000 index swipes 1: 10 fast swipes back
+Total frames rendered: 133
+Janky frames: 104 (78.20%)
+Janky frames (legacy): 128 (96.24%)
+50th percentile: 61ms
+90th percentile: 89ms
+95th percentile: 101ms
+99th percentile: 113ms
+Number Slow UI thread: 66
+Number Frame deadline missed: 104
+Number Frame deadline missed (legacy): 101
+== series 3000 index return 1: 10 swipes forward
+Total frames rendered: 114
+Janky frames: 86 (75.44%)
+Janky frames (legacy): 111 (97.37%)
+50th percentile: 57ms
+90th percentile: 81ms
+95th percentile: 97ms
+99th percentile: 109ms
+Number Slow UI thread: 49
+Number Frame deadline missed: 86
+Number Frame deadline missed (legacy): 84
+== series 3000 index swipes 2: 10 fast swipes back
+Total frames rendered: 112
+Janky frames: 79 (70.54%)
+Janky frames (legacy): 108 (96.43%)
+50th percentile: 53ms
+90th percentile: 81ms
+95th percentile: 85ms
+99th percentile: 113ms
+Number Slow UI thread: 43
+Number Frame deadline missed: 79
+Number Frame deadline missed (legacy): 78
+== series 3000 index return 2: 10 swipes forward
+Total frames rendered: 114
+Janky frames: 90 (78.95%)
+Janky frames (legacy): 109 (95.61%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 97ms
+99th percentile: 105ms
+Number Slow UI thread: 56
+Number Frame deadline missed: 90
+Number Frame deadline missed (legacy): 86
+== series 3000 index swipes 3: 10 fast swipes back
+Total frames rendered: 114
+Janky frames: 84 (73.68%)
+Janky frames (legacy): 112 (98.25%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 101ms
+Number Slow UI thread: 52
+Number Frame deadline missed: 84
+Number Frame deadline missed (legacy): 84
+== series 3000 index return 3: 10 swipes forward
+Total frames rendered: 121
+Janky frames: 98 (80.99%)
+Janky frames (legacy): 117 (96.69%)
+50th percentile: 65ms
+90th percentile: 93ms
+95th percentile: 105ms
+99th percentile: 150ms
+Number Slow UI thread: 62
+Number Frame deadline missed: 98
+Number Frame deadline missed (legacy): 99
+== series 3000 index swipes 4: 10 fast swipes back
+Total frames rendered: 119
+Janky frames: 92 (77.31%)
+Janky frames (legacy): 115 (96.64%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 117ms
+Number Slow UI thread: 48
+Number Frame deadline missed: 92
+Number Frame deadline missed (legacy): 89
+== series 3000 index return 4: 10 swipes forward
+Total frames rendered: 119
+Janky frames: 90 (75.63%)
+Janky frames (legacy): 112 (94.12%)
+50th percentile: 48ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 117ms
+Number Slow UI thread: 35
+Number Frame deadline missed: 90
+Number Frame deadline missed (legacy): 85
+== series 3000 index swipes 5: 10 fast swipes back
+Total frames rendered: 106
+Janky frames: 72 (67.92%)
+Janky frames (legacy): 101 (95.28%)
+50th percentile: 48ms
+90th percentile: 73ms
+95th percentile: 85ms
+99th percentile: 97ms
+Number Slow UI thread: 40
+Number Frame deadline missed: 72
+Number Frame deadline missed (legacy): 70
+== series 3000 index return 5: 10 swipes forward
+Total frames rendered: 131
+Janky frames: 104 (79.39%)
+Janky frames (legacy): 128 (97.71%)
+50th percentile: 61ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 105ms
+Number Slow UI thread: 73
+Number Frame deadline missed: 104
+Number Frame deadline missed (legacy): 102
+== series 3000 index swipes 6: 10 fast swipes back
+Total frames rendered: 121
+Janky frames: 93 (76.86%)
+Janky frames (legacy): 119 (98.35%)
+50th percentile: 53ms
+90th percentile: 89ms
+95th percentile: 97ms
+99th percentile: 117ms
+Number Slow UI thread: 52
+Number Frame deadline missed: 93
+Number Frame deadline missed (legacy): 93
+== series 3000 index return 6: 10 swipes forward
+Total frames rendered: 129
+Janky frames: 96 (74.42%)
+Janky frames (legacy): 120 (93.02%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 133ms
+Number Slow UI thread: 55
+Number Frame deadline missed: 96
+Number Frame deadline missed (legacy): 90
+== tabsagain 3000 c 1
+Total frames rendered: 13
+Janky frames: 10 (76.92%)
+Janky frames (legacy): 9 (69.23%)
+50th percentile: 32ms
+90th percentile: 150ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 10
+Number Frame deadline missed (legacy): 7
+== tabsagain 3000 c 2
+Total frames rendered: 8
+Janky frames: 8 (100.00%)
+Janky frames (legacy): 5 (62.50%)
+50th percentile: 32ms
+90th percentile: 48ms
+95th percentile: 48ms
+99th percentile: 48ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 5
+== tabsagain 3000 c 3
+Total frames rendered: 8
+Janky frames: 8 (100.00%)
+Janky frames (legacy): 4 (50.00%)
+50th percentile: 34ms
+90th percentile: 65ms
+95th percentile: 65ms
+99th percentile: 65ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 4
+== tabsagain 3000 c 4
+Total frames rendered: 8
+Janky frames: 6 (75.00%)
+Janky frames (legacy): 5 (62.50%)
+50th percentile: 32ms
+90th percentile: 101ms
+95th percentile: 101ms
+99th percentile: 101ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 5
+== series 3000 operations swipes 1: 10 fast swipes back
+Total frames rendered: 148
+Janky frames: 113 (76.35%)
+Janky frames (legacy): 143 (96.62%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 117ms
+Number Slow UI thread: 64
+Number Frame deadline missed: 113
+Number Frame deadline missed (legacy): 113
+== series 3000 operations return 1: 10 swipes forward
+Total frames rendered: 117
+Janky frames: 84 (71.79%)
+Janky frames (legacy): 112 (95.73%)
+50th percentile: 53ms
+90th percentile: 85ms
+95th percentile: 97ms
+99th percentile: 121ms
+Number Slow UI thread: 43
+Number Frame deadline missed: 84
+Number Frame deadline missed (legacy): 83
+== series 3000 operations swipes 2: 10 fast swipes back
+Total frames rendered: 102
+Janky frames: 75 (73.53%)
+Janky frames (legacy): 97 (95.10%)
+50th percentile: 53ms
+90th percentile: 81ms
+95th percentile: 89ms
+99th percentile: 109ms
+Number Slow UI thread: 40
+Number Frame deadline missed: 75
+Number Frame deadline missed (legacy): 71
+== series 3000 operations return 2: 10 swipes forward
+Total frames rendered: 110
+Janky frames: 81 (73.64%)
+Janky frames (legacy): 101 (91.82%)
+50th percentile: 46ms
+90th percentile: 77ms
+95th percentile: 85ms
+99th percentile: 97ms
+Number Slow UI thread: 33
+Number Frame deadline missed: 81
+Number Frame deadline missed (legacy): 75
+== series 3000 operations swipes 3: 10 fast swipes back
+Total frames rendered: 108
+Janky frames: 79 (73.15%)
+Janky frames (legacy): 102 (94.44%)
+50th percentile: 48ms
+90th percentile: 77ms
+95th percentile: 85ms
+99th percentile: 93ms
+Number Slow UI thread: 46
+Number Frame deadline missed: 79
+Number Frame deadline missed (legacy): 77
+== series 3000 operations return 3: 10 swipes forward
+Total frames rendered: 132
+Janky frames: 100 (75.76%)
+Janky frames (legacy): 125 (94.70%)
+50th percentile: 53ms
+90th percentile: 81ms
+95th percentile: 89ms
+99th percentile: 93ms
+Number Slow UI thread: 58
+Number Frame deadline missed: 100
+Number Frame deadline missed (legacy): 96
+== scroll operations: 3 times down, 3 times up
+Total frames rendered: 0
+Janky frames: 0 (0.00%)
+Janky frames (legacy): 0 (0.00%)
+50th percentile: 4950ms
+90th percentile: 4950ms
+95th percentile: 4950ms
+99th percentile: 4950ms
+Number Slow UI thread: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 0
+== slanted swipe operations: back, forward
+Total frames rendered: 27
+Janky frames: 18 (66.67%)
+Janky frames (legacy): 22 (81.48%)
+50th percentile: 34ms
+90th percentile: 61ms
+95th percentile: 65ms
+99th percentile: 65ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 18
+Number Frame deadline missed (legacy): 15
+== series 3000 statistics swipes 1: 10 fast swipes back
+Total frames rendered: 128
+Janky frames: 96 (75.00%)
+Janky frames (legacy): 124 (96.88%)
+50th percentile: 61ms
+90th percentile: 89ms
+95th percentile: 97ms
+99th percentile: 250ms
+Number Slow UI thread: 56
+Number Frame deadline missed: 96
+Number Frame deadline missed (legacy): 92
+== series 3000 statistics return 1: 10 swipes forward
+Total frames rendered: 116
+Janky frames: 92 (79.31%)
+Janky frames (legacy): 114 (98.28%)
+50th percentile: 57ms
+90th percentile: 81ms
+95th percentile: 101ms
+99th percentile: 200ms
+Number Slow UI thread: 53
+Number Frame deadline missed: 92
+Number Frame deadline missed (legacy): 90
+== series 3000 statistics swipes 2: 10 fast swipes back
+Total frames rendered: 124
+Janky frames: 98 (79.03%)
+Janky frames (legacy): 122 (98.39%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 101ms
+99th percentile: 150ms
+Number Slow UI thread: 68
+Number Frame deadline missed: 98
+Number Frame deadline missed (legacy): 99
+== series 3000 statistics return 2: 10 swipes forward
+Total frames rendered: 114
+Janky frames: 92 (80.70%)
+Janky frames (legacy): 111 (97.37%)
+50th percentile: 61ms
+90th percentile: 85ms
+95th percentile: 97ms
+99th percentile: 113ms
+Number Slow UI thread: 48
+Number Frame deadline missed: 92
+Number Frame deadline missed (legacy): 90
+== series 3000 statistics swipes 3: 10 fast swipes back
+Total frames rendered: 106
+Janky frames: 78 (73.58%)
+Janky frames (legacy): 102 (96.23%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 101ms
+Number Slow UI thread: 41
+Number Frame deadline missed: 78
+Number Frame deadline missed (legacy): 77
+== series 3000 statistics return 3: 10 swipes forward
+Total frames rendered: 111
+Janky frames: 85 (76.58%)
+Janky frames (legacy): 106 (95.50%)
+50th percentile: 57ms
+90th percentile: 81ms
+95th percentile: 89ms
+99th percentile: 101ms
+Number Slow UI thread: 45
+Number Frame deadline missed: 85
+Number Frame deadline missed (legacy): 83
+== scroll statistics: 3 times down, 3 times up
+Total frames rendered: 52
+Janky frames: 47 (90.38%)
+Janky frames (legacy): 51 (98.08%)
+50th percentile: 81ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 200ms
+Number Slow UI thread: 21
+Number Frame deadline missed: 47
+Number Frame deadline missed (legacy): 46
+== slanted swipe statistics: back, forward
+Total frames rendered: 24
+Janky frames: 19 (79.17%)
+Janky frames (legacy): 22 (91.67%)
+50th percentile: 44ms
+90th percentile: 69ms
+95th percentile: 77ms
+99th percentile: 81ms
+Number Slow UI thread: 10
+Number Frame deadline missed: 19
+Number Frame deadline missed (legacy): 19
+== series 3000 categories swipes 1: 10 fast swipes back
+Total frames rendered: 134
+Janky frames: 117 (87.31%)
+Janky frames (legacy): 126 (94.03%)
+50th percentile: 61ms
+90th percentile: 81ms
+95th percentile: 89ms
+99th percentile: 101ms
+Number Slow UI thread: 59
+Number Frame deadline missed: 117
+Number Frame deadline missed (legacy): 111
+== series 3000 categories return 1: 10 swipes forward
+Total frames rendered: 109
+Janky frames: 93 (85.32%)
+Janky frames (legacy): 106 (97.25%)
+50th percentile: 61ms
+90th percentile: 97ms
+95th percentile: 113ms
+99th percentile: 125ms
+Number Slow UI thread: 55
+Number Frame deadline missed: 93
+Number Frame deadline missed (legacy): 93
+== series 3000 categories swipes 2: 10 fast swipes back
+Total frames rendered: 131
+Janky frames: 105 (80.15%)
+Janky frames (legacy): 121 (92.37%)
+50th percentile: 53ms
+90th percentile: 85ms
+95th percentile: 101ms
+99th percentile: 109ms
+Number Slow UI thread: 42
+Number Frame deadline missed: 105
+Number Frame deadline missed (legacy): 99
+== series 3000 categories return 2: 10 swipes forward
+Total frames rendered: 120
+Janky frames: 100 (83.33%)
+Janky frames (legacy): 111 (92.50%)
+50th percentile: 57ms
+90th percentile: 85ms
+95th percentile: 89ms
+99th percentile: 109ms
+Number Slow UI thread: 42
+Number Frame deadline missed: 100
+Number Frame deadline missed (legacy): 94
+== series 3000 categories swipes 3: 10 fast swipes back
+Total frames rendered: 134
+Janky frames: 110 (82.09%)
+Janky frames (legacy): 127 (94.78%)
+50th percentile: 61ms
+90th percentile: 85ms
+95th percentile: 93ms
+99th percentile: 105ms
+Number Slow UI thread: 55
+Number Frame deadline missed: 110
+Number Frame deadline missed (legacy): 107
+== series 3000 categories return 3: 10 swipes forward
+Total frames rendered: 113
+Janky frames: 85 (75.22%)
+Janky frames (legacy): 105 (92.92%)
+50th percentile: 57ms
+90th percentile: 81ms
+95th percentile: 89ms
+99th percentile: 93ms
+Number Slow UI thread: 36
+Number Frame deadline missed: 85
+Number Frame deadline missed (legacy): 77
+== scroll categories: 3 times down, 3 times up
+Total frames rendered: 0
+Janky frames: 0 (0.00%)
+Janky frames (legacy): 0 (0.00%)
+50th percentile: 4950ms
+90th percentile: 4950ms
+95th percentile: 4950ms
+99th percentile: 4950ms
+Number Slow UI thread: 0
+Number Frame deadline missed: 0
+Number Frame deadline missed (legacy): 0
+== slanted swipe categories: back, forward
+Total frames rendered: 39
+Janky frames: 31 (79.49%)
+Janky frames (legacy): 34 (87.18%)
+50th percentile: 53ms
+90th percentile: 85ms
+95th percentile: 89ms
+99th percentile: 89ms
+Number Slow UI thread: 18
+Number Frame deadline missed: 31
+Number Frame deadline missed (legacy): 29
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 5 (83.33%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 133ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 5
+Number Frame deadline missed (legacy): 5
+== tabs ab_base first tap operations
+Total frames rendered: 73
+Janky frames: 61 (83.56%)
+Janky frames (legacy): 73 (100.00%)
+50th percentile: 97ms
+90th percentile: 117ms
+95th percentile: 133ms
+99th percentile: 150ms
+Number Slow UI thread: 59
+Number Frame deadline missed: 61
+Number Frame deadline missed (legacy): 63
+== tabs ab_base first tap statistics
+Total frames rendered: 10
+Janky frames: 9 (90.00%)
+Janky frames (legacy): 10 (100.00%)
+50th percentile: 101ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 9
+Number Frame deadline missed: 9
+Number Frame deadline missed (legacy): 9
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 116 (83.45%)
+Janky frames (legacy): 133 (95.68%)
+50th percentile: 85ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 117ms
+Number Slow UI thread: 109
+Number Frame deadline missed: 116
+Number Frame deadline missed (legacy): 115
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 135
+Janky frames: 110 (81.48%)
+Janky frames (legacy): 128 (94.81%)
+50th percentile: 81ms
+90th percentile: 105ms
+95th percentile: 117ms
+99th percentile: 121ms
+Number Slow UI thread: 101
+Number Frame deadline missed: 110
+Number Frame deadline missed (legacy): 104
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 200ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 72
+Janky frames: 64 (88.89%)
+Janky frames (legacy): 72 (100.00%)
+50th percentile: 101ms
+90th percentile: 121ms
+95th percentile: 133ms
+99th percentile: 150ms
+Number Slow UI thread: 62
+Number Frame deadline missed: 64
+Number Frame deadline missed (legacy): 64
+== tabs ab_warm first tap statistics
+Total frames rendered: 8
+Janky frames: 6 (75.00%)
+Janky frames (legacy): 8 (100.00%)
+50th percentile: 150ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 6
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 140
+Janky frames: 121 (86.43%)
+Janky frames (legacy): 135 (96.43%)
+50th percentile: 85ms
+90th percentile: 117ms
+95th percentile: 117ms
+99th percentile: 121ms
+Number Slow UI thread: 113
+Number Frame deadline missed: 121
+Number Frame deadline missed (legacy): 116
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 140
+Janky frames: 120 (85.71%)
+Janky frames (legacy): 133 (95.00%)
+50th percentile: 81ms
+90th percentile: 117ms
+95th percentile: 117ms
+99th percentile: 129ms
+Number Slow UI thread: 112
+Number Frame deadline missed: 120
+Number Frame deadline missed (legacy): 114
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 150ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 78
+Janky frames: 71 (91.03%)
+Janky frames (legacy): 78 (100.00%)
+50th percentile: 89ms
+90th percentile: 117ms
+95th percentile: 125ms
+99th percentile: 150ms
+Number Slow UI thread: 70
+Number Frame deadline missed: 71
+Number Frame deadline missed (legacy): 71
+== tabs ab_warm first tap statistics
+Total frames rendered: 10
+Janky frames: 7 (70.00%)
+Janky frames (legacy): 10 (100.00%)
+50th percentile: 101ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 7
+Number Frame deadline missed: 7
+Number Frame deadline missed (legacy): 7
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 128
+Janky frames: 109 (85.16%)
+Janky frames (legacy): 122 (95.31%)
+50th percentile: 85ms
+90th percentile: 133ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 103
+Number Frame deadline missed: 109
+Number Frame deadline missed (legacy): 105
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 118 (84.89%)
+Janky frames (legacy): 132 (94.96%)
+50th percentile: 81ms
+90th percentile: 105ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 108
+Number Frame deadline missed: 118
+Number Frame deadline missed (legacy): 112
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 6 (100.00%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 105ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== tabs ab_base first tap operations
+Total frames rendered: 76
+Janky frames: 61 (80.26%)
+Janky frames (legacy): 76 (100.00%)
+50th percentile: 85ms
+90th percentile: 113ms
+95th percentile: 121ms
+99th percentile: 200ms
+Number Slow UI thread: 60
+Number Frame deadline missed: 61
+Number Frame deadline missed (legacy): 62
+== tabs ab_base first tap statistics
+Total frames rendered: 10
+Janky frames: 8 (80.00%)
+Janky frames (legacy): 10 (100.00%)
+50th percentile: 97ms
+90th percentile: 350ms
+95th percentile: 350ms
+99th percentile: 350ms
+Number Slow UI thread: 7
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 8
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 143
+Janky frames: 113 (79.02%)
+Janky frames (legacy): 137 (95.80%)
+50th percentile: 85ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 125ms
+Number Slow UI thread: 105
+Number Frame deadline missed: 113
+Number Frame deadline missed (legacy): 109
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 128
+Janky frames: 114 (89.06%)
+Janky frames (legacy): 122 (95.31%)
+50th percentile: 89ms
+90th percentile: 121ms
+95th percentile: 133ms
+99th percentile: 150ms
+Number Slow UI thread: 107
+Number Frame deadline missed: 114
+Number Frame deadline missed (legacy): 109
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 6 (100.00%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 150ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== tabs ab_base first tap operations
+Total frames rendered: 75
+Janky frames: 60 (80.00%)
+Janky frames (legacy): 75 (100.00%)
+50th percentile: 93ms
+90th percentile: 113ms
+95th percentile: 125ms
+99th percentile: 200ms
+Number Slow UI thread: 59
+Number Frame deadline missed: 60
+Number Frame deadline missed (legacy): 61
+== tabs ab_base first tap statistics
+Total frames rendered: 9
+Janky frames: 6 (66.67%)
+Janky frames (legacy): 9 (100.00%)
+50th percentile: 81ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 6
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 119 (85.61%)
+Janky frames (legacy): 132 (94.96%)
+50th percentile: 81ms
+90th percentile: 105ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 113
+Number Frame deadline missed: 119
+Number Frame deadline missed (legacy): 115
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 136
+Janky frames: 112 (82.35%)
+Janky frames (legacy): 129 (94.85%)
+50th percentile: 81ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 103
+Number Frame deadline missed: 112
+Number Frame deadline missed (legacy): 106
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 200ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 78
+Janky frames: 68 (87.18%)
+Janky frames (legacy): 78 (100.00%)
+50th percentile: 89ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 67
+Number Frame deadline missed: 68
+Number Frame deadline missed (legacy): 69
+== tabs ab_warm first tap statistics
+Total frames rendered: 7
+Janky frames: 6 (85.71%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 105ms
+90th percentile: 350ms
+95th percentile: 350ms
+99th percentile: 350ms
+Number Slow UI thread: 6
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 115 (82.73%)
+Janky frames (legacy): 130 (93.53%)
+50th percentile: 85ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 104
+Number Frame deadline missed: 115
+Number Frame deadline missed (legacy): 107
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 138
+Janky frames: 116 (84.06%)
+Janky frames (legacy): 130 (94.20%)
+50th percentile: 81ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 105
+Number Frame deadline missed: 116
+Number Frame deadline missed (legacy): 109
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 250ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 76
+Janky frames: 59 (77.63%)
+Janky frames (legacy): 76 (100.00%)
+50th percentile: 89ms
+90th percentile: 117ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 58
+Number Frame deadline missed: 59
+Number Frame deadline missed (legacy): 61
+== tabs ab_warm first tap statistics
+Total frames rendered: 9
+Janky frames: 8 (88.89%)
+Janky frames (legacy): 9 (100.00%)
+50th percentile: 97ms
+90th percentile: 300ms
+95th percentile: 300ms
+99th percentile: 300ms
+Number Slow UI thread: 8
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 8
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 117 (84.17%)
+Janky frames (legacy): 131 (94.24%)
+50th percentile: 81ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 117ms
+Number Slow UI thread: 108
+Number Frame deadline missed: 117
+Number Frame deadline missed (legacy): 109
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 140
+Janky frames: 114 (81.43%)
+Janky frames (legacy): 133 (95.00%)
+50th percentile: 81ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 117ms
+Number Slow UI thread: 106
+Number Frame deadline missed: 114
+Number Frame deadline missed (legacy): 109
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 5 (83.33%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 129ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 5
+Number Frame deadline missed (legacy): 5
+== tabs ab_base first tap operations
+Total frames rendered: 76
+Janky frames: 62 (81.58%)
+Janky frames (legacy): 76 (100.00%)
+50th percentile: 85ms
+90th percentile: 113ms
+95th percentile: 121ms
+99th percentile: 133ms
+Number Slow UI thread: 61
+Number Frame deadline missed: 62
+Number Frame deadline missed (legacy): 61
+== tabs ab_base first tap statistics
+Total frames rendered: 11
+Janky frames: 8 (72.73%)
+Janky frames (legacy): 11 (100.00%)
+50th percentile: 97ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 8
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 8
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 137
+Janky frames: 112 (81.75%)
+Janky frames (legacy): 130 (94.89%)
+50th percentile: 81ms
+90th percentile: 105ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 102
+Number Frame deadline missed: 112
+Number Frame deadline missed (legacy): 109
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 143
+Janky frames: 113 (79.02%)
+Janky frames (legacy): 137 (95.80%)
+50th percentile: 77ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 104
+Number Frame deadline missed: 113
+Number Frame deadline missed (legacy): 111
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 6 (100.00%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 117ms
+90th percentile: 150ms
+95th percentile: 150ms
+99th percentile: 150ms
+Number Slow UI thread: 4
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== tabs ab_base first tap operations
+Total frames rendered: 74
+Janky frames: 62 (83.78%)
+Janky frames (legacy): 74 (100.00%)
+50th percentile: 89ms
+90th percentile: 117ms
+95th percentile: 129ms
+99th percentile: 150ms
+Number Slow UI thread: 61
+Number Frame deadline missed: 62
+Number Frame deadline missed (legacy): 62
+== tabs ab_base first tap statistics
+Total frames rendered: 10
+Janky frames: 8 (80.00%)
+Janky frames (legacy): 10 (100.00%)
+50th percentile: 101ms
+90th percentile: 350ms
+95th percentile: 350ms
+99th percentile: 350ms
+Number Slow UI thread: 7
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 9
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 136
+Janky frames: 119 (87.50%)
+Janky frames (legacy): 130 (95.59%)
+50th percentile: 85ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 112
+Number Frame deadline missed: 119
+Number Frame deadline missed (legacy): 115
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 136
+Janky frames: 114 (83.82%)
+Janky frames (legacy): 132 (97.06%)
+50th percentile: 85ms
+90th percentile: 109ms
+95th percentile: 117ms
+99th percentile: 121ms
+Number Slow UI thread: 107
+Number Frame deadline missed: 114
+Number Frame deadline missed (legacy): 111
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 200ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 76
+Janky frames: 61 (80.26%)
+Janky frames (legacy): 76 (100.00%)
+50th percentile: 85ms
+90th percentile: 117ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 60
+Number Frame deadline missed: 61
+Number Frame deadline missed (legacy): 62
+== tabs ab_warm first tap statistics
+Total frames rendered: 8
+Janky frames: 8 (100.00%)
+Janky frames (legacy): 8 (100.00%)
+50th percentile: 101ms
+90th percentile: 350ms
+95th percentile: 350ms
+99th percentile: 350ms
+Number Slow UI thread: 8
+Number Frame deadline missed: 8
+Number Frame deadline missed (legacy): 8
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 133
+Janky frames: 108 (81.20%)
+Janky frames (legacy): 125 (93.98%)
+50th percentile: 81ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 125ms
+Number Slow UI thread: 98
+Number Frame deadline missed: 108
+Number Frame deadline missed (legacy): 104
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 143
+Janky frames: 118 (82.52%)
+Janky frames (legacy): 136 (95.10%)
+50th percentile: 81ms
+90th percentile: 105ms
+95th percentile: 113ms
+99th percentile: 125ms
+Number Slow UI thread: 107
+Number Frame deadline missed: 118
+Number Frame deadline missed (legacy): 115
+== tabs ab_warm first tap categories
+Total frames rendered: 2
+Janky frames: 2 (100.00%)
+Janky frames (legacy): 2 (100.00%)
+50th percentile: 200ms
+90th percentile: 200ms
+95th percentile: 200ms
+99th percentile: 200ms
+Number Slow UI thread: 1
+Number Frame deadline missed: 2
+Number Frame deadline missed (legacy): 2
+== tabs ab_warm first tap operations
+Total frames rendered: 77
+Janky frames: 63 (81.82%)
+Janky frames (legacy): 77 (100.00%)
+50th percentile: 89ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 62
+Number Frame deadline missed: 63
+Number Frame deadline missed (legacy): 63
+== tabs ab_warm first tap statistics
+Total frames rendered: 7
+Janky frames: 6 (85.71%)
+Janky frames (legacy): 7 (100.00%)
+50th percentile: 117ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 6
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== series 3000 ab_warm tabs a: 12 taps every 0.2 s
+Total frames rendered: 139
+Janky frames: 114 (82.01%)
+Janky frames (legacy): 133 (95.68%)
+50th percentile: 85ms
+90th percentile: 117ms
+95th percentile: 121ms
+99th percentile: 133ms
+Number Slow UI thread: 107
+Number Frame deadline missed: 114
+Number Frame deadline missed (legacy): 113
+== series 3000 ab_warm tabs b: 12 taps every 0.2 s
+Total frames rendered: 138
+Janky frames: 115 (83.33%)
+Janky frames (legacy): 133 (96.38%)
+50th percentile: 81ms
+90th percentile: 117ms
+95th percentile: 121ms
+99th percentile: 150ms
+Number Slow UI thread: 106
+Number Frame deadline missed: 115
+Number Frame deadline missed (legacy): 111
+== tabs ab_base first tap categories
+Total frames rendered: 6
+Janky frames: 6 (100.00%)
+Janky frames (legacy): 6 (100.00%)
+50th percentile: 101ms
+90th percentile: 250ms
+95th percentile: 250ms
+99th percentile: 250ms
+Number Slow UI thread: 3
+Number Frame deadline missed: 6
+Number Frame deadline missed (legacy): 6
+== tabs ab_base first tap operations
+Total frames rendered: 72
+Janky frames: 60 (83.33%)
+Janky frames (legacy): 72 (100.00%)
+50th percentile: 93ms
+90th percentile: 117ms
+95th percentile: 117ms
+99th percentile: 150ms
+Number Slow UI thread: 59
+Number Frame deadline missed: 60
+Number Frame deadline missed (legacy): 61
+== tabs ab_base first tap statistics
+Total frames rendered: 10
+Janky frames: 7 (70.00%)
+Janky frames (legacy): 10 (100.00%)
+50th percentile: 101ms
+90th percentile: 300ms
+95th percentile: 300ms
+99th percentile: 300ms
+Number Slow UI thread: 7
+Number Frame deadline missed: 7
+Number Frame deadline missed (legacy): 7
+== series 3000 ab_base tabs a: 12 taps every 0.2 s
+Total frames rendered: 122
+Janky frames: 107 (87.70%)
+Janky frames (legacy): 117 (95.90%)
+50th percentile: 81ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 133ms
+Number Slow UI thread: 99
+Number Frame deadline missed: 107
+Number Frame deadline missed (legacy): 108
+== series 3000 ab_base tabs b: 12 taps every 0.2 s
+Total frames rendered: 135
+Janky frames: 106 (78.52%)
+Janky frames (legacy): 128 (94.81%)
+50th percentile: 81ms
+90th percentile: 113ms
+95th percentile: 117ms
+99th percentile: 117ms
+Number Slow UI thread: 96
+Number Frame deadline missed: 106
+Number Frame deadline missed (legacy): 103

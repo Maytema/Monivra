@@ -1,0 +1,1221 @@
+move                                                   JS busy   longest pauses  frames        janky    p90    p99
+cold start                                               1411ms      499ms      7       7  7 (100.00%)  400ms  400ms
+first screen: start with the basic set                    515ms      193ms      4       4  4 (100.00%)  350ms  350ms
+picture operations: visit, playing (3.5 s)               1152ms      197ms     15      75  73 (97.33%)  150ms  200ms
+picture operations: same tab, at rest (3 s, after th      310ms      109ms      4      12 12 (100.00%)  150ms  200ms
+picture accounts: visit, playing (3.5 s)                    0ms        0ms      0       2  2 (100.00%)   32ms   32ms
+picture accounts: same tab, at rest (3 s, after the       200ms      143ms      2       0            -      -      -
+picture statistics: visit, playing (3.5 s)                707ms      210ms      8      54  50 (92.59%)  133ms  150ms
+picture statistics: same tab, at rest (3 s, after th        0ms        0ms      0       0            -      -      -
+picture categories: visit, playing (3.5 s)                315ms      261ms      2       6   5 (83.33%)  101ms  101ms
+picture categories: same tab, at rest (3 s, after th        0ms        0ms      0       0            -      -      -
+empty: Accounts → Statistics → Accounts (0.3 s)             0ms        0ms      0      13   9 (69.23%)   93ms  101ms
+empty: Categories → Operations → Categories (0.3 s)        52ms       52ms      1      13  11 (84.62%)  117ms  121ms
+empty: 12 taps in random tab order, 0.25-0.5 s apart     1002ms       84ms     16     182 156 (85.71%)  101ms  133ms
+empty: 12 taps every 0.2 s                                751ms       98ms     12     150 127 (84.67%)  101ms  117ms
+eye (empty, Accounts): 6 taps 0.4 s apart                 333ms       83ms      5      76  56 (73.68%)   81ms  101ms
+eye (empty, Operations): 6 taps 0.4 s apart                 0ms        0ms      0      79  54 (68.35%)   65ms   89ms
+empty: add sheet 0.7 s after entering Operations, pi      291ms      155ms      3      10   9 (90.00%)  200ms  200ms
+empty: add sheet 0.7 s after entering Operations, pi       57ms       57ms      1      13  11 (84.62%)  109ms  121ms
+empty: period dialog, tile pick 1                         214ms       88ms      3      35  31 (88.57%)  101ms  150ms
+empty: period dialog, tile pick 2                          76ms       76ms      1      23  21 (91.30%)  101ms  150ms
+empty: period dialog, tile pick 3                         144ms       72ms      2      23  20 (86.96%)  113ms  150ms
+empty: period dialog, tile pick 4                        1016ms      230ms     13      21  18 (85.71%)  121ms  150ms
+read the file and open the restore page                  1001ms      446ms      8      27  22 (81.48%)  200ms  250ms
+restore 3000 operations                                  2381ms      661ms     19      82  71 (86.59%)  113ms  200ms
+series 3000 tabs 1: 12 taps every 0.2 s                   613ms      415ms      4      25  22 (88.00%)  101ms  450ms
+eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apar       58ms       58ms      1      76  60 (78.95%)   73ms   97ms
+eye (series 3000 tabs 1 Operations): 6 taps 0.4 s ap       59ms       59ms      1      77  53 (68.83%)   65ms   85ms
+eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s ap      141ms       75ms      2      76  60 (78.95%)   69ms  105ms
+eye (series 3000 tabs 1 Categories): 6 taps 0.4 s ap       54ms       54ms      1      73  50 (68.49%)   81ms   97ms
+series 3000 tabs 2: 12 taps every 0.2 s                    70ms       70ms      1      24  20 (83.33%)   61ms  117ms
+eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apar      204ms       75ms      3      73  56 (76.71%)   81ms  125ms
+eye (series 3000 tabs 2 Operations): 6 taps 0.4 s ap      133ms       79ms      2      77  61 (79.22%)   73ms  113ms
+eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s ap        0ms        0ms      0      76  56 (73.68%)   69ms   93ms
+eye (series 3000 tabs 2 Categories): 6 taps 0.4 s ap      134ms       78ms      2      74  57 (77.03%)   73ms  101ms
+series 3000 tabs 3: 12 taps every 0.2 s                     0ms        0ms      0      24  21 (87.50%)   48ms   65ms
+eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apar        0ms        0ms      0      76  60 (78.95%)   73ms   89ms
+eye (series 3000 tabs 3 Operations): 6 taps 0.4 s ap      120ms       70ms      2      77  62 (80.52%)   69ms   89ms
+eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s ap       54ms       54ms      1      77  54 (70.13%)   65ms  101ms
+eye (series 3000 tabs 3 Categories): 6 taps 0.4 s ap      122ms       70ms      2      76  56 (73.68%)   77ms  109ms
+series 3000 index swipes 1: 10 fast swipes back           580ms      134ms      8     133 104 (78.20%)   89ms  113ms
+series 3000 index return 1: 10 swipes forward             349ms      166ms      4     114  86 (75.44%)   81ms  109ms
+series 3000 index swipes 2: 10 fast swipes back           300ms      176ms      3     112  79 (70.54%)   81ms  113ms
+series 3000 index return 2: 10 swipes forward             549ms      155ms      5     114  90 (78.95%)   85ms  105ms
+series 3000 index swipes 3: 10 fast swipes back           410ms      168ms      5     114  84 (73.68%)   85ms  101ms
+series 3000 index return 3: 10 swipes forward             392ms       84ms      6     121  98 (80.99%)   93ms  150ms
+series 3000 index swipes 4: 10 fast swipes back           331ms      120ms      4     119  92 (77.31%)   85ms  117ms
+series 3000 index return 4: 10 swipes forward             342ms       96ms      5     119  90 (75.63%)   85ms  117ms
+series 3000 index swipes 5: 10 fast swipes back           278ms      204ms      2     106  72 (67.92%)   73ms   97ms
+series 3000 index return 5: 10 swipes forward             336ms       97ms      4     131 104 (79.39%)   85ms  105ms
+series 3000 index swipes 6: 10 fast swipes back           569ms      113ms      7     121  93 (76.86%)   89ms  117ms
+series 3000 index return 6: 10 swipes forward             765ms      306ms      4     129  96 (74.42%)   85ms  133ms
+tabsagain 3000 c 1                                        169ms       93ms      2      13  10 (76.92%)  150ms  200ms
+tabsagain 3000 c 2                                          0ms        0ms      0       8  8 (100.00%)   48ms   48ms
+tabsagain 3000 c 3                                          0ms        0ms      0       8  8 (100.00%)   65ms   65ms
+tabsagain 3000 c 4                                         58ms       58ms      1       8   6 (75.00%)  101ms  101ms
+series 3000 operations swipes 1: 10 fast swipes back      346ms      109ms      5     148 113 (76.35%)   85ms  117ms
+series 3000 operations return 1: 10 swipes forward        543ms      170ms      7     117  84 (71.79%)   85ms  121ms
+series 3000 operations swipes 2: 10 fast swipes back      267ms       80ms      4     102  75 (73.53%)   81ms  109ms
+series 3000 operations return 2: 10 swipes forward        216ms       57ms      4     110  81 (73.64%)   77ms   97ms
+series 3000 operations swipes 3: 10 fast swipes back      126ms       69ms      2     108  79 (73.15%)   77ms   93ms
+series 3000 operations return 3: 10 swipes forward        229ms       73ms      4     132 100 (75.76%)   81ms   93ms
+scroll operations: 3 times down, 3 times up                 0ms        0ms      0       0            -      -      -
+slanted swipe operations: back, forward                   117ms       62ms      2      27  18 (66.67%)   61ms   65ms
+series 3000 statistics swipes 1: 10 fast swipes back      724ms      203ms      8     128  96 (75.00%)   89ms  250ms
+series 3000 statistics return 1: 10 swipes forward        344ms      125ms      4     116  92 (79.31%)   81ms  200ms
+series 3000 statistics swipes 2: 10 fast swipes back      652ms      184ms      7     124  98 (79.03%)   85ms  150ms
+series 3000 statistics return 2: 10 swipes forward        143ms       77ms      2     114  92 (80.70%)   85ms  113ms
+series 3000 statistics swipes 3: 10 fast swipes back      298ms       67ms      5     106  78 (73.58%)   85ms  101ms
+series 3000 statistics return 3: 10 swipes forward        298ms       66ms      5     111  85 (76.58%)   81ms  101ms
+scroll statistics: 3 times down, 3 times up               625ms      160ms      7      52  47 (90.38%)  150ms  200ms
+slanted swipe statistics: back, forward                     0ms        0ms      0      24  19 (79.17%)   69ms   81ms
+series 3000 categories swipes 1: 10 fast swipes back      180ms       70ms      3     134 117 (87.31%)   81ms  101ms
+series 3000 categories return 1: 10 swipes forward        239ms       64ms      4     109  93 (85.32%)   97ms  125ms
+series 3000 categories swipes 2: 10 fast swipes back      196ms       82ms      3     131 105 (80.15%)   85ms  109ms
+series 3000 categories return 2: 10 swipes forward        308ms       81ms      5     120 100 (83.33%)   85ms  109ms
+series 3000 categories swipes 3: 10 fast swipes back      429ms       72ms      7     134 110 (82.09%)   85ms  105ms
+series 3000 categories return 3: 10 swipes forward        536ms      200ms      5     113  85 (75.22%)   81ms   93ms
+scroll categories: 3 times down, 3 times up                 0ms        0ms      0       0            -      -      -
+slanted swipe categories: back, forward                   847ms      272ms      6      39  31 (79.49%)   85ms   89ms
+tabs ab_base first tap categories                         148ms       86ms      2       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         613ms      131ms      8      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         470ms      207ms      4      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           522ms      118ms      8     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          2427ms      421ms     22     135 106 (78.52%)  113ms  117ms
+tabs ab_warm first tap categories                         122ms      122ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         490ms      102ms      7      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         427ms      222ms      4       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s          1224ms      117ms     19     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          1990ms      701ms     17     138 115 (83.33%)  117ms  150ms
+tabs ab_warm first tap categories                         125ms      125ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         252ms       83ms      4      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         282ms      201ms      2       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s           936ms      140ms     15     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          1702ms      266ms     16     138 115 (83.33%)  117ms  150ms
+tabs ab_base first tap categories                         180ms       99ms      2       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         294ms      135ms      3      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         555ms      201ms      5      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           622ms      113ms      9     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          2280ms      586ms     24     135 106 (78.52%)  113ms  117ms
+tabs ab_base first tap categories                         285ms      143ms      3       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         478ms       97ms      7      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         435ms      207ms      3      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           749ms      132ms     10     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          2974ms      817ms     20     135 106 (78.52%)  113ms  117ms
+tabs ab_warm first tap categories                         121ms      121ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         204ms       80ms      3      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         290ms      232ms      2       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s           674ms      146ms      9     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          1954ms      289ms     16     138 115 (83.33%)  117ms  150ms
+tabs ab_warm first tap categories                         161ms      161ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         282ms       94ms      4      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         341ms      229ms      3       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s           810ms      100ms     12     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          1556ms      338ms     11     138 115 (83.33%)  117ms  150ms
+tabs ab_base first tap categories                         178ms       91ms      2       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         466ms      127ms      6      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         499ms      198ms      4      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           727ms       96ms     11     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          1648ms      600ms     12     135 106 (78.52%)  113ms  117ms
+tabs ab_base first tap categories                         149ms       88ms      2       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         577ms      220ms      6      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         646ms      212ms      5      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           406ms       78ms      6     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          2411ms      363ms     20     135 106 (78.52%)  113ms  117ms
+tabs ab_warm first tap categories                         139ms      139ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         348ms       97ms      5      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         364ms      257ms      3       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s          1124ms      127ms     17     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          2764ms      360ms     26     138 115 (83.33%)  117ms  150ms
+tabs ab_warm first tap categories                         125ms      125ms      1       2  2 (100.00%)  200ms  200ms
+tabs ab_warm first tap operations                         338ms       94ms      5      77  63 (81.82%)  113ms  150ms
+tabs ab_warm first tap statistics                         200ms      200ms      1       7   6 (85.71%)  250ms  250ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s           922ms      107ms     12     139 114 (82.01%)  117ms  133ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s          1849ms      548ms     15     138 115 (83.33%)  117ms  150ms
+tabs ab_base first tap categories                         304ms      153ms      2       6  6 (100.00%)  250ms  250ms
+tabs ab_base first tap operations                         481ms      222ms      4      72  60 (83.33%)  117ms  150ms
+tabs ab_base first tap statistics                         426ms      214ms      2      10   7 (70.00%)  300ms  300ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s           364ms      133ms      4     122 107 (87.70%)  113ms  133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s          4169ms      634ms     39     135 106 (78.52%)  113ms  117ms
+all moves                                               75380ms
+
+cold start                               | lab flags: none
+first screen: start with the basic set   | deck content mounted
+first screen: start with the basic set   | engine toLocaleString x200 868.1ms
+first screen: start with the basic set   | engine plain format x200 0.9ms
+first screen: start with the basic set   | engine localeCompare x200 6.1ms
+first screen: start with the basic set   | engine toLocaleDateString x200 485.1ms
+first screen: start with the basic set   | tab press dropped index
+picture operations: visit, playing (3.5  | tab press operations
+picture operations: visit, playing (3.5  | route mounted operations
+picture operations: visit, playing (3.5  | deck content mounted
+picture operations: same tab, at rest (3 | tab press dropped operations
+picture accounts: visit, playing (3.5 s) | tab press index
+picture accounts: same tab, at rest (3 s | tab press operations
+picture statistics: visit, playing (3.5  | tab press statistics
+picture statistics: visit, playing (3.5  | route mounted statistics
+picture statistics: visit, playing (3.5  | deck content mounted
+picture categories: visit, playing (3.5  | tab press categories
+picture categories: visit, playing (3.5  | route mounted categories
+picture categories: visit, playing (3.5  | deck content mounted
+empty: Accounts → Statistics → Accounts  | tab press statistics
+empty: Accounts → Statistics → Accounts  | tab press index
+empty: Accounts → Statistics → Accounts  | tab press categories
+empty: Categories → Operations → Categor | tab press operations
+empty: Categories → Operations → Categor | tab press categories
+empty: Categories → Operations → Categor | tab press index
+empty: 12 taps in random tab order, 0.25 | tab press operations
+empty: 12 taps in random tab order, 0.25 | tab press more
+empty: 12 taps in random tab order, 0.25 | tab press operations
+empty: 12 taps in random tab order, 0.25 | tab press categories
+empty: 12 taps in random tab order, 0.25 | tab press index
+empty: 12 taps in random tab order, 0.25 | tab press operations
+empty: 12 taps in random tab order, 0.25 | tab press index
+empty: 12 taps in random tab order, 0.25 | tab press statistics
+empty: 12 taps in random tab order, 0.25 | tab press operations
+empty: 12 taps in random tab order, 0.25 | tab press categories
+empty: 12 taps in random tab order, 0.25 | tab press statistics
+empty: 12 taps in random tab order, 0.25 | tab press operations
+empty: 12 taps in random tab order, 0.25 | tab press index
+empty: 12 taps every 0.2 s               | tab press operations
+empty: 12 taps every 0.2 s               | tab press more
+empty: 12 taps every 0.2 s               | tab press operations
+empty: 12 taps every 0.2 s               | tab press categories
+empty: 12 taps every 0.2 s               | tab press index
+empty: 12 taps every 0.2 s               | tab press operations
+empty: 12 taps every 0.2 s               | tab press index
+empty: 12 taps every 0.2 s               | tab press statistics
+empty: 12 taps every 0.2 s               | tab press operations
+empty: 12 taps every 0.2 s               | tab press categories
+empty: 12 taps every 0.2 s               | tab press statistics
+empty: 12 taps every 0.2 s               | tab press operations
+empty: 12 taps every 0.2 s               | tab press index
+eye (empty, Accounts): 6 taps 0.4 s apar | tab press operations
+eye (empty, Operations): 6 taps 0.4 s ap | tab press index
+empty: add sheet 0.7 s after entering Op | tab press operations
+empty: add sheet 0.7 s after entering Op | tab press index
+empty: add sheet 0.7 s after entering Op | tab press operations
+empty: add sheet 0.7 s after entering Op | deck: settled from page 51, reached 51, swipes counted 0, page 51
+empty: add sheet 0.7 s after entering Op | tab press index
+empty: add sheet 0.7 s after entering Op | tab press operations
+empty: add sheet 0.7 s after entering Op | tab press index
+empty: add sheet 0.7 s after entering Op | tab press operations
+empty: period dialog, tile pick 1        | deck: settled from page 50, reached 50, swipes counted 0, page 50
+empty: period dialog, tile pick 4        | tab press more
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press more
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 1: 12 taps every 0.2 s  | tab press index
+eye (series 3000 tabs 1 Accounts): 6 tap | tab press operations
+eye (series 3000 tabs 1 Operations): 6 t | tab press statistics
+eye (series 3000 tabs 1 Statistics): 6 t | tab press categories
+eye (series 3000 tabs 1 Categories): 6 t | tab press index
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press more
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 2: 12 taps every 0.2 s  | tab press index
+eye (series 3000 tabs 2 Accounts): 6 tap | tab press operations
+eye (series 3000 tabs 2 Operations): 6 t | tab press statistics
+eye (series 3000 tabs 2 Statistics): 6 t | tab press categories
+eye (series 3000 tabs 2 Categories): 6 t | tab press index
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press more
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press index
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press categories
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press statistics
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press operations
+series 3000 tabs 3: 12 taps every 0.2 s  | tab press index
+eye (series 3000 tabs 3 Accounts): 6 tap | tab press operations
+eye (series 3000 tabs 3 Operations): 6 t | tab press statistics
+eye (series 3000 tabs 3 Statistics): 6 t | tab press categories
+eye (series 3000 tabs 3 Categories): 6 t | tab press operations
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 49, reached 47, swipes counted -2, page 47
+series 3000 index swipes 1: 10 fast swip | deck: settled from page 47, reached 45, swipes counted -5, page 42
+series 3000 index return 1: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 1: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 1: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 1: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 1: 10 swipes fo | deck: settled from page 46, reached 48, swipes counted 3, page 49
+series 3000 index return 1: 10 swipes fo | deck: settled from page 49, reached 49, swipes counted 1, page 50
+series 3000 index return 1: 10 swipes fo | deck: settled from page 50, reached 49, swipes counted 0, page 49
+series 3000 index return 1: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index return 1: 10 swipes fo | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 index return 1: 10 swipes fo | tab press dropped operations
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 50, reached 48, swipes counted -2, page 48
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index swipes 2: 10 fast swip | deck: settled from page 42, reached 41, swipes counted -1, page 41
+series 3000 index return 2: 10 swipes fo | deck: settled from page 41, reached 42, swipes counted 1, page 42
+series 3000 index return 2: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 2: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 2: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 2, page 46
+series 3000 index return 2: 10 swipes fo | deck: settled from page 46, reached 46, swipes counted 1, page 47
+series 3000 index return 2: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 1, page 48
+series 3000 index return 2: 10 swipes fo | deck: settled from page 48, reached 48, swipes counted 1, page 49
+series 3000 index return 2: 10 swipes fo | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 index return 2: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 0, page 49
+series 3000 index return 2: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index return 2: 10 swipes fo | tab press dropped operations
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 47, reached 46, swipes counted -2, page 45
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 45, reached 46, swipes counted 0, page 46
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 46, reached 45, swipes counted -2, page 44
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 44, reached 44, swipes counted -1, page 43
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 43, reached 44, swipes counted 0, page 44
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 3: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index return 3: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 3: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 3: 10 swipes fo | deck: settled from page 44, reached 46, swipes counted 3, page 47
+series 3000 index return 3: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index return 3: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index return 3: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 3: 10 swipes fo | deck: settled from page 48, reached 50, swipes counted 2, page 50
+series 3000 index return 3: 10 swipes fo | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 index return 3: 10 swipes fo | tab press dropped operations
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 47, reached 45, swipes counted -3, page 44
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 44, reached 45, swipes counted 0, page 45
+series 3000 index swipes 4: 10 fast swip | deck: settled from page 45, reached 43, swipes counted -2, page 43
+series 3000 index return 4: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 4: 10 swipes fo | deck: settled from page 44, reached 46, swipes counted 3, page 47
+series 3000 index return 4: 10 swipes fo | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index return 4: 10 swipes fo | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 index return 4: 10 swipes fo | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 index return 4: 10 swipes fo | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 index return 4: 10 swipes fo | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 index return 4: 10 swipes fo | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 index return 4: 10 swipes fo | tab press dropped operations
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 47, reached 45, swipes counted -2, page 45
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 44, reached 43, swipes counted -1, page 43
+series 3000 index swipes 5: 10 fast swip | deck: settled from page 43, reached 42, swipes counted -1, page 42
+series 3000 index return 5: 10 swipes fo | deck: settled from page 42, reached 43, swipes counted 1, page 43
+series 3000 index return 5: 10 swipes fo | deck: settled from page 43, reached 44, swipes counted 1, page 44
+series 3000 index return 5: 10 swipes fo | deck: settled from page 44, reached 45, swipes counted 1, page 45
+series 3000 index return 5: 10 swipes fo | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 index return 5: 10 swipes fo | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 index return 5: 10 swipes fo | deck: settled from page 47, reached 49, swipes counted 3, page 50
+series 3000 index return 5: 10 swipes fo | deck: settled from page 50, reached 50, swipes counted 1, page 51
+series 3000 index return 5: 10 swipes fo | deck: settled from page 51, reached 51, swipes counted 1, page 52
+series 3000 index return 5: 10 swipes fo | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 index return 5: 10 swipes fo | deck: settled from page 52, reached 52, swipes counted 0, page 52
+series 3000 index return 5: 10 swipes fo | tab press dropped operations
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 50, reached 49, swipes counted -2, page 48
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 48, reached 48, swipes counted -1, page 47
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 47, reached 48, swipes counted 0, page 48
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 48, reached 48, swipes counted -1, page 47
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 47, reached 45, swipes counted -2, page 45
+series 3000 index swipes 6: 10 fast swip | deck: settled from page 45, reached 44, swipes counted -1, page 44
+series 3000 index return 6: 10 swipes fo | deck: settled from page 44, reached 47, swipes counted 5, page 49
+series 3000 index return 6: 10 swipes fo | deck: settled from page 49, reached 49, swipes counted 1, page 50
+series 3000 index return 6: 10 swipes fo | deck: settled from page 50, reached 50, swipes counted 1, page 51
+series 3000 index return 6: 10 swipes fo | deck: settled from page 51, reached 51, swipes counted 1, page 52
+series 3000 index return 6: 10 swipes fo | deck: settled from page 52, reached 51, swipes counted 0, page 51
+series 3000 index return 6: 10 swipes fo | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 index return 6: 10 swipes fo | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 index return 6: 10 swipes fo | tab press index
+tabsagain 3000 c 1                       | tab press operations
+tabsagain 3000 c 1                       | tab press statistics
+tabsagain 3000 c 1                       | tab press categories
+tabsagain 3000 c 1                       | tab press index
+tabsagain 3000 c 1                       | tab press dropped index
+tabsagain 3000 c 2                       | tab press operations
+tabsagain 3000 c 2                       | tab press statistics
+tabsagain 3000 c 2                       | tab press categories
+tabsagain 3000 c 2                       | tab press index
+tabsagain 3000 c 2                       | tab press dropped index
+tabsagain 3000 c 3                       | tab press operations
+tabsagain 3000 c 3                       | tab press statistics
+tabsagain 3000 c 3                       | tab press categories
+tabsagain 3000 c 3                       | tab press index
+tabsagain 3000 c 3                       | tab press dropped index
+tabsagain 3000 c 4                       | tab press operations
+tabsagain 3000 c 4                       | tab press statistics
+tabsagain 3000 c 4                       | tab press categories
+tabsagain 3000 c 4                       | tab press index
+tabsagain 3000 c 4                       | tab press dropped index
+tabsagain 3000 c 4                       | tab press operations
+series 3000 operations swipes 1: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 operations swipes 1: 10 fast | deck: settled from page 52, reached 51, swipes counted -2, page 50
+series 3000 operations swipes 1: 10 fast | deck: settled from page 50, reached 51, swipes counted -1, page 49
+series 3000 operations swipes 1: 10 fast | deck: settled from page 49, reached 49, swipes counted -1, page 48
+series 3000 operations swipes 1: 10 fast | deck: settled from page 48, reached 49, swipes counted 0, page 49
+series 3000 operations swipes 1: 10 fast | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 operations swipes 1: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 1: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 operations swipes 1: 10 fast | deck: settled from page 46, reached 46, swipes counted -1, page 45
+series 3000 operations swipes 1: 10 fast | deck: settled from page 45, reached 45, swipes counted 0, page 45
+series 3000 operations return 1: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 operations return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 2, page 48
+series 3000 operations return 1: 10 swip | deck: settled from page 48, reached 48, swipes counted 1, page 49
+series 3000 operations return 1: 10 swip | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 operations return 1: 10 swip | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 operations return 1: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 operations return 1: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 operations return 1: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 1: 10 swip | deck: settled from page 51, reached 53, swipes counted 2, page 53
+series 3000 operations return 1: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+series 3000 operations swipes 2: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 operations swipes 2: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 operations swipes 2: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 operations swipes 2: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 operations swipes 2: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 operations swipes 2: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 operations swipes 2: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 2: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 operations swipes 2: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 operations return 2: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 operations return 2: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 operations return 2: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 operations return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 operations return 2: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 operations return 2: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 2: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 operations return 2: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 operations return 2: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+series 3000 operations return 2: 10 swip | deck: settled from page 54, reached 55, swipes counted 1, page 55
+series 3000 operations swipes 3: 10 fast | deck: settled from page 55, reached 54, swipes counted -1, page 54
+series 3000 operations swipes 3: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 operations swipes 3: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 operations swipes 3: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 operations swipes 3: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 operations swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 operations swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 operations swipes 3: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 operations swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 operations swipes 3: 10 fast | deck: settled from page 46, reached 45, swipes counted -1, page 45
+series 3000 operations return 3: 10 swip | deck: settled from page 45, reached 47, swipes counted 2, page 47
+series 3000 operations return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 operations return 3: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 operations return 3: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 operations return 3: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 operations return 3: 10 swip | deck: settled from page 51, reached 53, swipes counted 3, page 54
+series 3000 operations return 3: 10 swip | deck: settled from page 54, reached 54, swipes counted 0, page 54
+slanted swipe operations: back, forward  | deck: settled from page 54, reached 53, swipes counted -1, page 53
+slanted swipe operations: back, forward  | deck: settled from page 53, reached 54, swipes counted 1, page 54
+slanted swipe operations: back, forward  | tab press index
+slanted swipe operations: back, forward  | tab press statistics
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 53, reached 50, swipes counted -5, page 48
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 48, reached 47, swipes counted -2, page 46
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 46, reached 47, swipes counted 0, page 47
+series 3000 statistics swipes 1: 10 fast | deck: settled from page 47, reached 46, swipes counted -1, page 46
+series 3000 statistics return 1: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 statistics return 1: 10 swip | deck: settled from page 47, reached 49, swipes counted 3, page 50
+series 3000 statistics return 1: 10 swip | deck: settled from page 50, reached 50, swipes counted 1, page 51
+series 3000 statistics return 1: 10 swip | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 statistics return 1: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 statistics return 1: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 statistics return 1: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+series 3000 statistics return 1: 10 swip | deck: settled from page 54, reached 55, swipes counted 1, page 55
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 55, reached 54, swipes counted -1, page 54
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 51, reached 49, swipes counted -3, page 48
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 48, reached 48, swipes counted -1, page 47
+series 3000 statistics swipes 2: 10 fast | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 statistics return 2: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 statistics return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 0, page 49
+series 3000 statistics return 2: 10 swip | deck: settled from page 49, reached 50, swipes counted 1, page 50
+series 3000 statistics return 2: 10 swip | deck: settled from page 50, reached 52, swipes counted 3, page 53
+series 3000 statistics return 2: 10 swip | deck: settled from page 53, reached 53, swipes counted 0, page 53
+series 3000 statistics return 2: 10 swip | deck: settled from page 53, reached 53, swipes counted 0, page 53
+series 3000 statistics return 2: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -2, page 48
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 48, reached 48, swipes counted -1, page 47
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 statistics swipes 3: 10 fast | deck: settled from page 47, reached 47, swipes counted 0, page 47
+series 3000 statistics return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 statistics return 3: 10 swip | deck: settled from page 48, reached 50, swipes counted 3, page 51
+series 3000 statistics return 3: 10 swip | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 statistics return 3: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 statistics return 3: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 statistics return 3: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+series 3000 statistics return 3: 10 swip | deck: settled from page 54, reached 55, swipes counted 1, page 55
+series 3000 statistics return 3: 10 swip | deck: settled from page 55, reached 56, swipes counted 1, page 56
+slanted swipe statistics: back, forward  | deck: settled from page 56, reached 55, swipes counted -1, page 55
+slanted swipe statistics: back, forward  | deck: settled from page 55, reached 56, swipes counted 1, page 56
+slanted swipe statistics: back, forward  | tab press index
+slanted swipe statistics: back, forward  | tab press categories
+series 3000 categories swipes 1: 10 fast | deck: settled from page 56, reached 55, swipes counted -1, page 55
+series 3000 categories swipes 1: 10 fast | deck: settled from page 55, reached 54, swipes counted -1, page 54
+series 3000 categories swipes 1: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 categories swipes 1: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 categories swipes 1: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 categories swipes 1: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 categories swipes 1: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 categories swipes 1: 10 fast | deck: settled from page 49, reached 49, swipes counted -1, page 48
+series 3000 categories swipes 1: 10 fast | deck: settled from page 48, reached 48, swipes counted 0, page 48
+series 3000 categories return 1: 10 swip | deck: settled from page 48, reached 50, swipes counted 3, page 51
+series 3000 categories return 1: 10 swip | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 categories return 1: 10 swip | deck: settled from page 51, reached 51, swipes counted 0, page 51
+series 3000 categories return 1: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 categories return 1: 10 swip | deck: settled from page 52, reached 53, swipes counted 2, page 54
+series 3000 categories return 1: 10 swip | deck: settled from page 54, reached 54, swipes counted 1, page 55
+series 3000 categories return 1: 10 swip | deck: settled from page 55, reached 54, swipes counted 0, page 54
+series 3000 categories return 1: 10 swip | deck: settled from page 54, reached 55, swipes counted 0, page 55
+series 3000 categories swipes 2: 10 fast | deck: settled from page 55, reached 54, swipes counted -1, page 54
+series 3000 categories swipes 2: 10 fast | deck: settled from page 54, reached 53, swipes counted -1, page 53
+series 3000 categories swipes 2: 10 fast | deck: settled from page 53, reached 52, swipes counted -1, page 52
+series 3000 categories swipes 2: 10 fast | deck: settled from page 52, reached 51, swipes counted -1, page 51
+series 3000 categories swipes 2: 10 fast | deck: settled from page 51, reached 50, swipes counted -1, page 50
+series 3000 categories swipes 2: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 categories swipes 2: 10 fast | deck: settled from page 49, reached 47, swipes counted -2, page 47
+series 3000 categories swipes 2: 10 fast | deck: settled from page 47, reached 46, swipes counted -2, page 45
+series 3000 categories swipes 2: 10 fast | deck: settled from page 45, reached 45, swipes counted 0, page 45
+series 3000 categories return 2: 10 swip | deck: settled from page 45, reached 47, swipes counted 3, page 48
+series 3000 categories return 2: 10 swip | deck: settled from page 48, reached 48, swipes counted 1, page 49
+series 3000 categories return 2: 10 swip | deck: settled from page 49, reached 48, swipes counted 0, page 48
+series 3000 categories return 2: 10 swip | deck: settled from page 48, reached 49, swipes counted 1, page 49
+series 3000 categories return 2: 10 swip | deck: settled from page 49, reached 49, swipes counted 1, page 50
+series 3000 categories return 2: 10 swip | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 categories return 2: 10 swip | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 categories return 2: 10 swip | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 categories return 2: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 categories return 2: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 categories swipes 3: 10 fast | deck: settled from page 53, reached 51, swipes counted -3, page 50
+series 3000 categories swipes 3: 10 fast | deck: settled from page 50, reached 50, swipes counted -1, page 49
+series 3000 categories swipes 3: 10 fast | deck: settled from page 49, reached 50, swipes counted 0, page 50
+series 3000 categories swipes 3: 10 fast | deck: settled from page 50, reached 49, swipes counted -1, page 49
+series 3000 categories swipes 3: 10 fast | deck: settled from page 49, reached 48, swipes counted -1, page 48
+series 3000 categories swipes 3: 10 fast | deck: settled from page 48, reached 47, swipes counted -1, page 47
+series 3000 categories swipes 3: 10 fast | deck: settled from page 47, reached 46, swipes counted -2, page 45
+series 3000 categories swipes 3: 10 fast | deck: settled from page 45, reached 45, swipes counted 0, page 45
+series 3000 categories return 3: 10 swip | deck: settled from page 45, reached 46, swipes counted 1, page 46
+series 3000 categories return 3: 10 swip | deck: settled from page 46, reached 47, swipes counted 1, page 47
+series 3000 categories return 3: 10 swip | deck: settled from page 47, reached 48, swipes counted 1, page 48
+series 3000 categories return 3: 10 swip | deck: settled from page 48, reached 50, swipes counted 3, page 51
+series 3000 categories return 3: 10 swip | deck: settled from page 51, reached 51, swipes counted 1, page 52
+series 3000 categories return 3: 10 swip | deck: settled from page 52, reached 51, swipes counted 0, page 51
+series 3000 categories return 3: 10 swip | deck: settled from page 51, reached 52, swipes counted 1, page 52
+series 3000 categories return 3: 10 swip | deck: settled from page 52, reached 53, swipes counted 1, page 53
+series 3000 categories return 3: 10 swip | deck: settled from page 53, reached 54, swipes counted 1, page 54
+slanted swipe categories: back, forward  | deck: settled from page 54, reached 53, swipes counted -1, page 53
+slanted swipe categories: back, forward  | deck: settled from page 53, reached 53, swipes counted 0, page 53
+slanted swipe categories: back, forward  | lab flags: none
+slanted swipe categories: back, forward  | deck content mounted
+slanted swipe categories: back, forward  | engine toLocaleString x200 347.3ms
+slanted swipe categories: back, forward  | engine plain format x200 0.7ms
+slanted swipe categories: back, forward  | engine localeCompare x200 3.3ms
+slanted swipe categories: back, forward  | engine toLocaleDateString x200 329.8ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_base tabs b: 12 taps ever | route mounted categories
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_base tabs b: 12 taps ever | route mounted operations
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 345.2ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 2.2ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 325.3ms
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_base tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_warm tabs b: 12 taps ever | route mounted categories
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_warm tabs b: 12 taps ever | route mounted operations
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 351.4ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 4.1ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 2.3ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 326.8ms
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_warm tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: none
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 355.4ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 2.4ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 347.8ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: none
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 339.6ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 3.2ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 322.4ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_base tabs b: 12 taps ever | route mounted categories
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_base tabs b: 12 taps ever | route mounted operations
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 345.2ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 3.1ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 318.8ms
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_base tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_warm tabs b: 12 taps ever | route mounted categories
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_warm tabs b: 12 taps ever | route mounted operations
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 362.5ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 2.3ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 311.7ms
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_warm tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: none
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 364.7ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 2.9ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 339.5ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: none
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 380.9ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 4.1ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 345.4ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_base tabs b: 12 taps ever | route mounted categories
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_base tabs b: 12 taps ever | route mounted operations
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 358.3ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.6ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 3.0ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 338.3ms
+series 3000 ab_base tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_base tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: warm
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /categories
+series 3000 ab_warm tabs b: 12 taps ever | route mounted categories
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /operations
+series 3000 ab_warm tabs b: 12 taps ever | route mounted operations
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 357.6ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 0.9ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 2.3ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 340.4ms
+series 3000 ab_warm tabs b: 12 taps ever | warm: prefetch /statistics
+series 3000 ab_warm tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+tabs ab_warm first tap categories        | tab press categories
+tabs ab_warm first tap operations        | tab press operations
+tabs ab_warm first tap statistics        | tab press statistics
+tabs ab_warm first tap statistics        | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press more
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press categories
+series 3000 ab_warm tabs a: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs a: 12 taps ever | tab press operations
+series 3000 ab_warm tabs a: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press more
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press index
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | tab press categories
+series 3000 ab_warm tabs b: 12 taps ever | tab press statistics
+series 3000 ab_warm tabs b: 12 taps ever | tab press operations
+series 3000 ab_warm tabs b: 12 taps ever | lab flags: none
+series 3000 ab_warm tabs b: 12 taps ever | deck content mounted
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleString x200 362.9ms
+series 3000 ab_warm tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_warm tabs b: 12 taps ever | engine localeCompare x200 4.3ms
+series 3000 ab_warm tabs b: 12 taps ever | engine toLocaleDateString x200 329.7ms
+tabs ab_base first tap categories        | tab press categories
+tabs ab_base first tap categories        | route mounted categories
+tabs ab_base first tap categories        | deck content mounted
+tabs ab_base first tap operations        | tab press operations
+tabs ab_base first tap operations        | route mounted operations
+tabs ab_base first tap operations        | deck content mounted
+tabs ab_base first tap statistics        | tab press statistics
+tabs ab_base first tap statistics        | route mounted statistics
+tabs ab_base first tap statistics        | deck content mounted
+tabs ab_base first tap statistics        | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press more
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press categories
+series 3000 ab_base tabs a: 12 taps ever | tab press statistics
+series 3000 ab_base tabs a: 12 taps ever | tab press operations
+series 3000 ab_base tabs a: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press more
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | lab flags: none
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleString x200 357.6ms
+series 3000 ab_base tabs b: 12 taps ever | engine plain format x200 0.7ms
+series 3000 ab_base tabs b: 12 taps ever | engine localeCompare x200 3.2ms
+series 3000 ab_base tabs b: 12 taps ever | engine toLocaleDateString x200 347.7ms
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | route mounted operations
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_base tabs b: 12 taps ever | deck: settled from page 50, reached 50, swipes counted 0, page 50
+series 3000 ab_base tabs b: 12 taps ever | tab press statistics
+series 3000 ab_base tabs b: 12 taps ever | route mounted statistics
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | tab press categories
+series 3000 ab_base tabs b: 12 taps ever | route mounted categories
+series 3000 ab_base tabs b: 12 taps ever | deck content mounted
+series 3000 ab_base tabs b: 12 taps ever | tab press index
+series 3000 ab_base tabs b: 12 taps ever | deck: settled from page 1, reached 1, swipes counted 0, page 1
+series 3000 ab_base tabs b: 12 taps ever | tab press operations
+series 3000 ab_base tabs b: 12 taps ever | deck: settled from page 50, reached 51, swipes counted 1, page 51
+series 3000 ab_base tabs b: 12 taps ever | deck: settled from page 51, reached 52, swipes counted 1, page 52
+
+tab moves                                                      presses dropped pill p50 pill p90 frame p50 frame p90 shown     p50     p90  JS busy  longest
+first screen: start with the basic set                               0       1        -        -         -         -     0       -       -     515ms     193ms
+picture operations: visit, playing (3.5 s)                           1       0        -        -         -         -     0       -       -    1152ms     197ms
+picture operations: same tab, at rest (3 s, after the run)           0       1        -        -         -         -     0       -       -     310ms     109ms
+picture accounts: visit, playing (3.5 s)                             1       0        -        -         -         -     0       -       -       0ms       0ms
+picture accounts: same tab, at rest (3 s, after the run)             1       0        -        -         -         -     0       -       -     200ms     143ms
+picture statistics: visit, playing (3.5 s)                           1       0        -        -         -         -     0       -       -     707ms     210ms
+picture categories: visit, playing (3.5 s)                           1       0        -        -         -         -     0       -       -     315ms     261ms
+empty: Accounts → Statistics → Accounts (0.3 s)                      3       0        -        -         -         -     0       -       -       0ms       0ms
+empty: Categories → Operations → Categories (0.3 s)                  3       0        -        -         -         -     0       -       -      52ms      52ms
+empty: 12 taps in random tab order, 0.25-0.5 s apart                13       0        -        -         -         -     0       -       -    1002ms      84ms
+empty: 12 taps every 0.2 s                                          13       0        -        -         -         -     0       -       -     751ms      98ms
+eye (empty, Accounts): 6 taps 0.4 s apart                            1       0        -        -         -         -     0       -       -     333ms      83ms
+eye (empty, Operations): 6 taps 0.4 s apart                          1       0        -        -         -         -     0       -       -       0ms       0ms
+empty: add sheet 0.7 s after entering Operations, picture runn       6       0        -        -         -         -     0       -       -     291ms     155ms
+empty: add sheet 0.7 s after entering Operations, picture at r       1       0        -        -         -         -     0       -       -      57ms      57ms
+empty: period dialog, tile pick 4                                    1       0        -        -         -         -     0       -       -    1016ms     230ms
+series 3000 tabs 1: 12 taps every 0.2 s                             13       0        -        -         -         -     0       -       -     613ms     415ms
+eye (series 3000 tabs 1 Accounts): 6 taps 0.4 s apart                1       0        -        -         -         -     0       -       -      58ms      58ms
+eye (series 3000 tabs 1 Operations): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -      59ms      59ms
+eye (series 3000 tabs 1 Statistics): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -     141ms      75ms
+eye (series 3000 tabs 1 Categories): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -      54ms      54ms
+series 3000 tabs 2: 12 taps every 0.2 s                             13       0        -        -         -         -     0       -       -      70ms      70ms
+eye (series 3000 tabs 2 Accounts): 6 taps 0.4 s apart                1       0        -        -         -         -     0       -       -     204ms      75ms
+eye (series 3000 tabs 2 Operations): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -     133ms      79ms
+eye (series 3000 tabs 2 Statistics): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -       0ms       0ms
+eye (series 3000 tabs 2 Categories): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -     134ms      78ms
+series 3000 tabs 3: 12 taps every 0.2 s                             13       0        -        -         -         -     0       -       -       0ms       0ms
+eye (series 3000 tabs 3 Accounts): 6 taps 0.4 s apart                1       0        -        -         -         -     0       -       -       0ms       0ms
+eye (series 3000 tabs 3 Operations): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -     120ms      70ms
+eye (series 3000 tabs 3 Statistics): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -      54ms      54ms
+eye (series 3000 tabs 3 Categories): 6 taps 0.4 s apart              1       0        -        -         -         -     0       -       -     122ms      70ms
+series 3000 index return 1: 10 swipes forward                        0       1        -        -         -         -     0       -       -     349ms     166ms
+series 3000 index return 2: 10 swipes forward                        0       1        -        -         -         -     0       -       -     549ms     155ms
+series 3000 index return 3: 10 swipes forward                        0       1        -        -         -         -     0       -       -     392ms      84ms
+series 3000 index return 4: 10 swipes forward                        0       1        -        -         -         -     0       -       -     342ms      96ms
+series 3000 index return 5: 10 swipes forward                        0       1        -        -         -         -     0       -       -     336ms      97ms
+series 3000 index return 6: 10 swipes forward                        1       0        -        -         -         -     0       -       -     765ms     306ms
+tabsagain 3000 c 1                                                   4       1        -        -         -         -     0       -       -     169ms      93ms
+tabsagain 3000 c 2                                                   4       1        -        -         -         -     0       -       -       0ms       0ms
+tabsagain 3000 c 3                                                   4       1        -        -         -         -     0       -       -       0ms       0ms
+tabsagain 3000 c 4                                                   5       1        -        -         -         -     0       -       -      58ms      58ms
+slanted swipe operations: back, forward                              2       0        -        -         -         -     0       -       -     117ms      62ms
+slanted swipe statistics: back, forward                              2       0        -        -         -         -     0       -       -       0ms       0ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     148ms      86ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     613ms     131ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     470ms     207ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     522ms     118ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    2427ms     421ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     122ms     122ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     490ms     102ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     427ms     222ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -    1224ms     117ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1990ms     701ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     125ms     125ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     252ms      83ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     282ms     201ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     936ms     140ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1702ms     266ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     180ms      99ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     294ms     135ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     555ms     201ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     622ms     113ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    2280ms     586ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     285ms     143ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     478ms      97ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     435ms     207ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     749ms     132ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    2974ms     817ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     121ms     121ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     204ms      80ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     290ms     232ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     674ms     146ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1954ms     289ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     161ms     161ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     282ms      94ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     341ms     229ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     810ms     100ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1556ms     338ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     178ms      91ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     466ms     127ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     499ms     198ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     727ms      96ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1648ms     600ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     149ms      88ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     577ms     220ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     646ms     212ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     406ms      78ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    2411ms     363ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     139ms     139ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     348ms      97ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     364ms     257ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -    1124ms     127ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    2764ms     360ms
+tabs ab_warm first tap categories                                    1       0        -        -         -         -     0       -       -     125ms     125ms
+tabs ab_warm first tap operations                                    1       0        -        -         -         -     0       -       -     338ms      94ms
+tabs ab_warm first tap statistics                                    2       0        -        -         -         -     0       -       -     200ms     200ms
+series 3000 ab_warm tabs a: 12 taps every 0.2 s                     13       0        -        -         -         -     0       -       -     922ms     107ms
+series 3000 ab_warm tabs b: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -    1849ms     548ms
+tabs ab_base first tap categories                                    1       0        -        -         -         -     0       -       -     304ms     153ms
+tabs ab_base first tap operations                                    1       0        -        -         -         -     0       -       -     481ms     222ms
+tabs ab_base first tap statistics                                    2       0        -        -         -         -     0       -       -     426ms     214ms
+series 3000 ab_base tabs a: 12 taps every 0.2 s                     12       0        -        -         -         -     0       -       -     364ms     133ms
+series 3000 ab_base tabs b: 12 taps every 0.2 s                     17       0        -        -         -         -     0       -       -    4169ms     634ms
+
+eye moves                                                      taps text p50 text max  apply  write notify  JS busy  longest
+
+layers                                                          sheet shown  dialog gone, old  dialog gone, new
+
+pictures (one tab each)                                         JS busy  frames        janky    p90   shown
+picture operations: visit, playing (3.5 s)                        1152ms      75  73 (97.33%)  150ms       -
+picture operations: same tab, at rest (3 s, after the run)         310ms      12 12 (100.00%)  150ms       -
+picture accounts: visit, playing (3.5 s)                             0ms       2  2 (100.00%)   32ms       -
+picture accounts: same tab, at rest (3 s, after the run)           200ms       0    0 (0.00%) 4950ms       -
+picture statistics: visit, playing (3.5 s)                         707ms      54  50 (92.59%)  133ms       -
+picture statistics: same tab, at rest (3 s, after the run)           0ms       0    0 (0.00%) 4950ms       -
+picture categories: visit, playing (3.5 s)                         315ms       6   5 (83.33%)  101ms       -
+picture categories: same tab, at rest (3 s, after the run)           0ms       0    0 (0.00%) 4950ms       -
+
+Component bodies (own time)                                              part  draws    total
+
+profile x series (median of runs)                runs  JS busy         range  listeners called
+3000 ops, tabs, 12 taps                             3      70ms     0-613ms                 -
+3000 ops, tabs, eye Accounts                        3      58ms     0-204ms                 -
+3000 ops, tabs, eye Categories                      3     122ms    54-134ms                 -
+3000 ops, tabs, eye Operations                      3     120ms    59-133ms                 -
+3000 ops, tabs, eye Statistics                      3      54ms     0-141ms                 -
+
+away: return to Operations after 6 s              JS busy pauses  longest
+
+swipes back by volume (median of runs)           runs  JS busy         range  longest page built ops of period
+3000 ops, categories, 10 swipes back                3     196ms   180-429ms      72ms          -             -
+3000 ops, index, 10 swipes back                     6     370ms   278-580ms     151ms          -             -
+3000 ops, operations, 10 swipes back                3     267ms   126-346ms      80ms          -             -
+3000 ops, statistics, 10 swipes back                3     652ms   298-724ms     184ms          -             -
+
+tabs again, repeated (c: known places, d: dump)  runs  JS busy         range  pauses
+3000 ops, c                                         4      29ms     0-169ms       0
+
+save the operation                                JS busy  longest
+
+save the operation by volume (median of runs)    runs  JS busy         range
+
+swipe timeline (ms after the page was taken)                      how    n  median   min   max
