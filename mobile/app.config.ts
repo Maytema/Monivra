@@ -3,9 +3,11 @@
 // by a data file (export in the old app, import here).
 import type { ExpoConfig } from "expo/config";
 
-// The version is written once, in package.json.
-const { version } = require("./package.json") as { version: string };
+// The version is written once, in package.json. The name of a build is that version and the number of the build (the CI run number, which is
+// also the Android versionCode): 0.3.19.200. It is shown at the bottom of "More" and written into data files and backups.
+const { version: release } = require("./package.json") as { version: string };
 const versionCode = Number(process.env.MONIVRA_VERSION_CODE ?? "1");
+const version = `${release}.${versionCode}`;
 
 const config: ExpoConfig = {
   name: "Monivra",
