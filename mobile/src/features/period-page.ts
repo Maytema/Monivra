@@ -54,9 +54,7 @@ export function operationsPage(data: LedgerData, period: Period, filters: Filter
     kept.pages.set(key, had);
     return had;
   }
-  const began = Date.now();
   const page = build(data, period, filters, query);
-  console.log(`[perf] page: built ${page.items.length} items in ${Date.now() - began} ms (kept ${kept.pages.size})`);
   kept.pages.set(key, page);
   if (kept.pages.size > KEPT) kept.pages.delete(kept.pages.keys().next().value as string);
   return page;

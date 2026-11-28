@@ -11,7 +11,7 @@ import Reanimated, { useAnimatedScrollHandler, useSharedValue } from "react-nati
 import { useNavigation } from "expo-router";
 import { pagerState } from "./swipe-busy.ts";
 import { MaskScope } from "./mask-scope.tsx";
-import { lab, labCount } from "../platform/lab-flags.ts";
+import { lab } from "../platform/lab-flags.ts";
 import { PagerContext } from "./pager-motion.ts";
 
 const SPAN = 50;
@@ -47,18 +47,12 @@ interface Scroller {
 }
 
 // One of the five places. `page` is the page (its number in the row) that stands here now; the place is the page's number times the width.
-function Done({ since, label }: { since: number; label: string }) {
-  useLayoutEffect(() => { console.log(`[perf] slot ${label}: drawn and committed in ${Date.now() - since} ms, rows drawn ${labCount.rows}`); labCount.rows = 0; });
-  return null;
-}
 const Slot = memo(function Slot({ id: asked, page, width, height, current, far, render }: { id: string | undefined; page: number; width: number; height: number; current: boolean; far: boolean; render: (key: string) => ReactNode }) {
-  const since = Date.now();
   const late = useDeferredValue(asked);
   const id = lab.far && far ? late : asked;
   return (
     <View collapsable={false} style={{ position: "absolute", top: 0, left: page * width, width, height }}>
       {id === undefined ? null : <MaskScope active={current}>{render(id)}</MaskScope>}
-      {id === undefined ? null : <Done since={since} label={`${id} page ${page}${current ? " current" : ""}`} />}
     </View>
   );
 });
@@ -259,7 +253,6 @@ export function PeriodDeck<K extends string>({
               onScroll={onScroll}
               onScrollBeginDrag={(e: { nativeEvent: { contentOffset: { x: number } } }) => {
                 dragFrom.current = e.nativeEvent.contentOffset.x;
-                console.log(`[perf] deck: drag begins at ${Math.round(e.nativeEvent.contentOffset.x)} (page ${(e.nativeEvent.contentOffset.x / width).toFixed(2)}, sliding ${sliding.current}, deck on ${at.current})`);
                 sliding.current = null;
                 pagerState("dragging");
               }}
@@ -267,10 +260,9 @@ export function PeriodDeck<K extends string>({
                 // a swipe that moved the pages a third of a page, or flicked them, counts, in the direction it moved them.
                 const moved = e.nativeEvent.contentOffset.x - dragFrom.current;
                 const flick = e.nativeEvent.velocity?.x ?? 0;
-                console.log(`[perf] deck: drag ends at ${Math.round(e.nativeEvent.contentOffset.x)}, moved ${Math.round(moved)} (${(moved / width).toFixed(2)} pages), velocity ${flick.toFixed(2)}, counted ${Math.abs(moved) > width * 0.35 || Math.abs(flick) > 0.3}`);
                 if (Math.abs(moved) > width * 0.35 || Math.abs(flick) > 0.3) swipes.current += (Math.abs(moved) > 2 ? moved : flick) > 0 ? 1 : -1;
               }}
-              onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { x: number } } }) => (console.log(`[perf] deck: momentum ends at ${Math.round(e.nativeEvent.contentOffset.x)} (page ${(e.nativeEvent.contentOffset.x / width).toFixed(2)})`), settle(e.nativeEvent.contentOffset.x))}
+              onMomentumScrollEnd={(e: { nativeEvent: { contentOffset: { x: number } } }) => settle(e.nativeEvent.contentOffset.x)}
               onContentSizeChange={() => {
                 scroller.current?.scrollTo({ x: at.current * width, animated: false });
               }}

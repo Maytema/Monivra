@@ -529,34 +529,19 @@ lab_start() { # $1 flags (comma list, or "none")
   sleep 14
 }
 declare -A ab_run
-ab_swipes() { # $1 name, $2 flags
+ab_swipes() { # $1 name, $2 flags: a start, then two runs of ten swipes back and ten forward
   lab_start "$2"
   adb shell input tap $ops; sleep 3
   local k
-  for k in 1 2 3; do
+  for k in 1 2; do
     ab_run[$1]=$(( ${ab_run[$1]:-0} + 1 ))
     begin "series 3000 ab_$1 swipes ${ab_run[$1]}: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
     begin "series 3000 ab_$1 return ${ab_run[$1]}: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
   done
 }
-for v in "base none" "far far" "stable stable" "both far,stable" "both far,stable" "stable stable" "far far" "base none"; do
+# base (A) and far (B): A B B A three times: twelve runs of each, in blocks of two.
+for v in "base none" "far far" "far far" "base none" "base none" "far far" "far far" "base none" "base none" "far far" "far far" "base none"; do
   set -- $v; ab_swipes "$1" "$2"
-done
-# The vertical scroll of Statistics, three variants (follow: the pages follow the open one as now; nofollow: they do not; flowonly: one block only).
-ab_scroll() { # $1 name, $2 flags
-  lab_start "$2"
-  adb shell input tap $stats; sleep 3
-  local k
-  for k in 1 2; do
-    ab_run[s_$1]=$(( ${ab_run[s_$1]:-0} + 1 ))
-    begin "scroll stats_$1 ${ab_run[s_$1]}: 3 times down, 3 times up"
-    for i in 1 2 3; do adb shell input swipe 540 1800 540 700 250; sleep 0.6; done
-    for i in 1 2 3; do adb shell input swipe 540 700 540 1800 250; sleep 0.6; done
-    finish 2
-  done
-}
-for v in "follow none" "nofollow nofollow" "flowonly flowonly" "flowonly flowonly" "nofollow nofollow" "follow none"; do
-  set -- $v; ab_scroll "$1" "$2"
 done
 adb shell am force-stop $PKG; sleep 2
 adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1; sleep 10

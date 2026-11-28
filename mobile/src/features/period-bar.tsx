@@ -1,7 +1,6 @@
 // The period bar (js/ui/period-picker.js `periodBar`): arrows to the neighbouring periods and the
 // title that opens the dialog "Time interval". "All time" has no neighbours, so the arrows are dimmed.
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { lab } from "../platform/lab-flags.ts";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Text, View } from "react-native";
 import Reanimated, { Extrapolation, interpolate, useAnimatedStyle, type SharedValue } from "react-native-reanimated";
 import { Pressable } from "../ui/pressable.tsx";
@@ -21,8 +20,8 @@ export { periodTitle };
 
 // The shared period, followed only while this screen is in front. The tabs Operations, Categories and Statistics
 // share the period; a tab that is not shown is frozen, but React still draws its frozen part in the gaps between
-// the shown one's work: each swipe in Categories or Statistics drew the hidden Operations pages again (11–13 pages
-// committed during 10 swipes, speed check build 111), taking the JavaScript thread from the screen being swiped.
+// the shown one's work: each swipe in Categories or Statistics drew the hidden Operations pages again, taking the
+// JavaScript thread from the screen being swiped.
 // A hidden screen keeps the period it had and takes the current one when it is shown again (`caughtUp` then tells
 // the pager to go there at once, without sliding).
 function useScreenPeriod(): { period: Period; caughtUp: boolean } {
@@ -172,8 +171,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
   const periodOf = (key: string): Period => known.current.get(key) ?? period;
   // A page is given the same Period object for as long as its key stays: the swipe made the period of the page it
   // landed on again (the real current period replaces the one the neighbour was drawn with, same days, a new object),
-  // every page memoised on the period drew again — rows, days, the list laid out once more (speed check build 157:
-  // 9 draws of the page reached in 10 swipes). The days of a page are what its key names, so the first object stays.
+  // every page memoised on the period drew again — rows, days, the list laid out once more. The days of a page are what its key names, so the first object stays.
   const shownAs = useRef(new Map<string, Period>());
   const pageOf = (key: string): Period => {
     const next = periodOf(key);
@@ -184,10 +182,6 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
     return next;
   };
   const settings = data.settings;
-  // Lab variant "stable": the same function for the pages while the screen lives (the latest one is called).
-  const latestRender = useRef((key: string): ReactNode => render(pageOf(key)));
-  latestRender.current = (key: string): ReactNode => render(pageOf(key));
-  const stableRender = useCallback((key: string): ReactNode => latestRender.current(key), []);
   const pages = {
     current: keyOf(period),
     instant: caughtUp,
@@ -196,7 +190,7 @@ export function PeriodPager({ header, render }: { header?: ReactNode; render: (p
       return canShiftPeriod(shown) ? keyOf(shiftPeriod(shown, n, settings)) : null;
     },
     header,
-    render: lab.stable ? stableRender : (key: string) => render(pageOf(key)),
+    render: (key: string) => render(pageOf(key)),
     onMove: (steps: number) => {
       let next = getView().period;
       for (let i = 0; i < Math.abs(steps); i++) next = shiftPeriod(next, steps > 0 ? 1 : -1, settings);

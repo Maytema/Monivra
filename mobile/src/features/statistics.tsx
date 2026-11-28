@@ -4,7 +4,6 @@
 import { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
-import { lab } from "../platform/lab-flags.ts";
 import { router } from "expo-router";
 import Svg, { Circle, Path, Rect, Text as SvgText } from "react-native-svg";
 import { chartBins, donutArcs, donutSlices, OTHER_SLICE, sliceAt, type Group } from "../domain/chart.ts";
@@ -53,7 +52,6 @@ export function StatisticsScreen() {
 
 // The blocks of one period (drawn beforehand for the neighbouring periods too).
 const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { period: Period; openFilters: () => void }) {
-  console.log(`[perf] statistics: page drawn ${period.mode}`);
   const data = useLedgerView();
   const p = usePalette();
   const t = useT();
@@ -334,7 +332,7 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
           <>
             <SumTabs active={asked} expense={<WithMoney>{(money) => money(expense, main)}</WithMoney>} income={<WithMoney>{(money) => money(income, main)}</WithMoney>} onChange={(v) => (setView({ catType: v }), setSelected(null))} />
             {filtersActive(filters) ? <FilteredBanner onChange={() => openFilters()} onClear={() => setView({ filters: { ...filters, accounts: null, categories: null, types: null, tags: null, origin: null } })} /> : null}
-            <ScrollBlocks>{data.settings.stats.filter((k) => !lab.flowonly || k === "flow").map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
+            <ScrollBlocks>{data.settings.stats.map((k) => blocks[k]?.() ?? null)}</ScrollBlocks>
           </>
         ) : (
           <EmptyState kind="statistics" title="Statistics would be here" hint="Start adding expenses or income and the data will appear" />
@@ -355,11 +353,9 @@ let driving: Scroller | null = null;
 function ScrollBlocks({ children }: { children: ReactNode }) {
   const mine = useRef<Scroller | null>(null);
   const follow = (e: { nativeEvent: { contentOffset: { y: number } } }) => {
-    if (driving !== mine.current || lab.nofollow) return;
-    const began = Date.now();
+    if (driving !== mine.current) return;
     sharedOffset = e.nativeEvent.contentOffset.y;
     for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
-    console.log(`[perf] statistics: follow at ${Math.round(sharedOffset)} moved ${scrollers.size - 1} pages in ${Date.now() - began} ms`);
   };
   useEffect(
     () => () => {
@@ -375,11 +371,9 @@ function ScrollBlocks({ children }: { children: ReactNode }) {
         if (node) scrollers.add(node);
       }}
       onContentSizeChange={() => {
-        console.log(`[perf] statistics: content size changed (shared ${Math.round(sharedOffset)})`);
         if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
       }}
       onScrollBeginDrag={() => {
-        console.log('[perf] statistics: scroll begins');
         driving = mine.current;
       }}
       onScrollEndDrag={follow}

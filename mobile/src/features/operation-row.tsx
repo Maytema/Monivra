@@ -1,7 +1,6 @@
 // One operation in a list and the heading of a day (js/screens/operations/list.js `opRow`, `dayGroup`):
 // a badge, the name, the account, the schedule note, comment and tags on the left; the amount (and the
 // other amounts of a cross-currency operation) on the right.
-import { labCount } from "../platform/lab-flags.ts";
 import { memo } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import { Pressable } from "../ui/pressable.tsx";
@@ -50,7 +49,6 @@ function rateText(t: Translate, from: string, to: string, ratio: number): string
 // Memoised: the list passes stable handlers (they receive the id) and the parts of the ledger the row shows, so it is drawn again only when
 // its own operation, its selection or those parts change — not on every scroll, selection of another row or saved operation.
 export const OperationRow = memo(function OperationRow({ op, data, selecting = false, selected = false, spot = true, onPress, onLongPress }: { op: Operation; data: RowData; selecting?: boolean; selected?: boolean; spot?: boolean; onPress: (id: string) => void; onLongPress?: (id: string) => void }) {
-  labCount.rows++;
   const p = usePalette();
   const t = useT();
   const compact = useWindowDimensions().width <= 360;
