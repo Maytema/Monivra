@@ -341,8 +341,9 @@ const StatisticsPage = memo(function StatisticsPage({ period, openFilters }: { p
   );
 });
 
-// The pages of the periods share one scroll position: the neighbours follow the open page while it scrolls, so a swipe
-// to another period shows the new page at the same place, not at the top.
+// The pages of the periods share one scroll position: the neighbours are put where the open page stopped (when the finger leaves it and when its
+// fling ends, not at every frame: a scroll event per frame and four moves of the other pages cost ~400 ms of the JavaScript thread in 6 scrolls),
+// so a swipe to another period shows the new page at the same place, not at the top.
 type Scroller = { scrollTo(options: { x?: number; y?: number; animated?: boolean }): void };
 const scrollers = new Set<Scroller>();
 let sharedOffset = 0;
@@ -351,6 +352,11 @@ let driving: Scroller | null = null;
 
 function ScrollBlocks({ children }: { children: ReactNode }) {
   const mine = useRef<Scroller | null>(null);
+  const follow = (e: { nativeEvent: { contentOffset: { y: number } } }) => {
+    if (driving !== mine.current) return;
+    sharedOffset = e.nativeEvent.contentOffset.y;
+    for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
+  };
   useEffect(
     () => () => {
       if (mine.current) scrollers.delete(mine.current);
@@ -367,15 +373,11 @@ function ScrollBlocks({ children }: { children: ReactNode }) {
       onContentSizeChange={() => {
         if (sharedOffset > 0) mine.current?.scrollTo({ y: sharedOffset, animated: false });
       }}
-      scrollEventThrottle={16}
       onScrollBeginDrag={() => {
         driving = mine.current;
       }}
-      onScroll={(e: { nativeEvent: { contentOffset: { y: number } } }) => {
-        if (driving !== mine.current) return;
-        sharedOffset = e.nativeEvent.contentOffset.y;
-        for (const other of scrollers) if (other !== mine.current) other.scrollTo({ y: sharedOffset, animated: false });
-      }}
+      onScrollEndDrag={follow}
+      onMomentumScrollEnd={follow}
       contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16 }}
       showsVerticalScrollIndicator={false}
     >
