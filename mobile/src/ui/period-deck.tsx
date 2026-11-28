@@ -5,7 +5,7 @@
 //
 // The finger and the settling are the platform's scroll view; the offset goes to a shared value on the UI thread (`x`, read by the period
 // bar and the tabs). JavaScript hears of the end of a swipe only (`settle`).
-import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, Profiler } from "react";
 import { Dimensions, View, unstable_batchedUpdates } from "react-native";
 import Reanimated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useNavigation } from "expo-router";
@@ -49,7 +49,7 @@ interface Scroller {
 const Slot = memo(function Slot({ id, page, width, height, current, render }: { id: string | undefined; page: number; width: number; height: number; current: boolean; render: (key: string) => ReactNode }) {
   return (
     <View collapsable={false} style={{ position: "absolute", top: 0, left: page * width, width, height }}>
-      {id === undefined ? null : <MaskScope active={current}>{render(id)}</MaskScope>}
+      {id === undefined ? null : <Profiler id={`${id}`} onRender={(_i, phase, actual) => { console.log(`[perf] slot ${id} page ${page} ${phase} render ${actual.toFixed(1)} ms`); }}><MaskScope active={current}>{render(id)}</MaskScope></Profiler>}
     </View>
   );
 });
