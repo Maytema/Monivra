@@ -488,6 +488,36 @@ tabs_again_series() { # $1 operations
   set_mode 0
 }
 series_block 3000
+# The other paged screens and the vertical scroll inside the deck (the behaviour of the swipes, rn-migration after the deck): on every screen with a
+# period 10 quick swipes back and 10 forward, three runs; the screenshots before, after the way back and after the way forward must show the same
+# period at the start and at the end and a page with its content (no white page). The deck's own log gives the pages moved per run.
+screens_series() {
+  local name xy run
+  for name in operations statistics categories; do
+    case $name in operations) xy=$ops;; statistics) xy=$stats;; categories) xy=$cats;; esac
+    adb shell input tap $accs; sleep 2; adb shell input tap $xy; sleep 3
+    shot "swipes-$name-0-start" 1
+    for run in 1 2 3; do
+      begin "series 3000 $name swipes $run: 10 fast swipes back"; for i in $(seq 10); do back_swipe; sleep 0.25; done; finish 2
+      [ $run = 1 ] && shot "swipes-$name-1-back10" 1
+      begin "series 3000 $name return $run: 10 swipes forward"; for i in $(seq 10); do next_swipe; sleep 0.25; done; finish 2
+      [ $run = 1 ] && shot "swipes-$name-2-forward10" 1
+    done
+    # The vertical scroll inside the page: down, a screenshot, up; the period in the title must not change.
+    begin "scroll $name: 3 times down, 3 times up"
+    for i in 1 2 3; do adb shell input swipe 540 1800 540 700 250; sleep 0.6; done
+    shot "scroll-$name-1-down" 1
+    for i in 1 2 3; do adb shell input swipe 540 700 540 1800 250; sleep 0.6; done
+    finish 2
+    shot "scroll-$name-2-up" 1
+    # Sideways with a slant (a finger rarely goes straight): the page must change by one and the list must not jump.
+    begin "slanted swipe $name: back, forward"
+    adb shell input swipe 300 1700 850 1500 120; sleep 1.2; adb shell input swipe 850 1500 300 1700 120; sleep 1.2
+    finish 2
+    shot "swipes-$name-3-slanted" 1
+  done
+}
+screens_series
 
 # The eye on a period that has rows (the ledger is in the past, so two months back from the empty current one): after the tap every amount on
 # every tab must be masked, the tabs that were behind included. Screens are looked at by eye (builds/N/perf/mask-*.png), not decided by a script.
